@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- F1 on F1 -->
+   <context  id="f1Shell" >
+      <description>A ajuda &quot;infopop&quot; sensível a contexto é fornecida para diversas interfaces, incluindo exibições, assistentes, campos, caixas de seleção, botões e itens de menu. Para acessar esta ajuda, marque o item clicando nele ou utilizando a tecla tab e pressione F1.
+
+Alguns infopops incluem links de tópicos dentro da ajuda online onde é possível encontrar mais informações sobre o item.
+
+Este infopop abriu porque a tecla F1 foi pressionada enquanto um infopop já estava aberto.</description>
+   </context>
+
+<!-- Preference page for help browsers -->
+   <context  id="prefPageBrowsers" >
+      <description>Permite selecionar um navegador da Web.  O navegador da Web selecionado será o navegador da Web padrão utilizado para exibir o conteúdo da ajuda.</description>
+	  <topic label="Diálogo de Preferências" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Path to custom browser on preference page for help browsers -->
+   <context  id="prefPageCustomBrowserPath" >
+      <description>Quando um navegador da Web personalizado for selecionado da lista,
+especifique o caminho para o programa do navegador que ative o navegador.  Se esse
+programa estiver disponível no caminho do sistema, você poderá especificar somente o nome
+do programa.
+
+Se o programa não aceitar URL como seu último parâmetro, você poderá utilizar a cadeia %1 para indicar a posição do parâmetro URL no comando.</description>
+      <topic label="Diálogo de Preferências" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Application server preference page -->
+   <context  id="prefPageAppServer" >
+      <description>Essas definições permitem substituir o endereço da interface de rede
+e o número da porta que o <b>servidor de aplicativos</b> utilizará.  Altere as
+definições quando a porta que ele tenta utilizar tiver sido selecionada, ou quando o
+endereço IP tiver sido alterado.
+
+Para determinar automaticamente o endereço da
+interface, deixe o campo do host <b>em branco</b>.
+
+Para utilizar a porta dinamicamente
+atribuída pelo sistema, especifique <b>0</b> no campo da porta.
+
+Em situações normais,
+utilize as definições <b>Padrão</b>.</description>
+      <topic label="Diálogo de Preferências" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+</contexts>

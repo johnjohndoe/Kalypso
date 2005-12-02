@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the Concepts -->
+<!-- ========================== -->
+<toc label="概念">
+<!-- <topic label="What's new in this release" /> -->
+<topic label="工作台" href="concepts/concepts-2.htm" >
+
+<!--  <topic label="Workspace" /> -->
+
+  <topic label="资源" href="concepts/concepts-12.htm" />
+  <topic label="资源层次结构" href="concepts/concepts-17.htm" />
+  <topic label="链接的资源" href="concepts/concepts-13.htm" />
+  <topic label="路径变量" href="concepts/cpathvars.htm" />
+  <topic label="工作集" href="concepts/cworkset.htm"/>
+<!--  <topic label="Projects and project natures" /> -->
+  <topic label="构建" href="concepts/concepts-22.htm" />
+  <topic label="本地历史记录" href="concepts/concepts-17a.htm" />
+<!--  <topic label="Class path and build class path" /> -->
+</topic>
+<anchor id="c_afterworkbench" />
+<topic label="透视图" href="concepts/concepts-4.htm" >
+<!--  <topic label="Resource perspective" /> -->
+</topic>
+<anchor id="c_afterperspectives" />
+<topic label="编辑器" href="concepts/concepts-6.htm" >
+  <topic label="外部编辑器" href="concepts/concepts-6a.htm" />
+</topic>
+<anchor id="c_aftereditors" />
+<topic label="视图" href="concepts/concepts-5.htm" >
+  <topic label="快速视图" href="concepts/concepts-21.htm" />
+  <topic label="导航器视图" href="concepts/cnav.htm" />
+  <topic label="任务视图" href="concepts/ctskview.htm" />
+  <topic label="大纲视图" href="concepts/coutline.htm" />
+  <topic label="属性视图" href="concepts/cpropview.htm" />
+  <topic label="搜索视图" href="concepts/csearchview.htm" />
+</topic>
+<anchor id="c_afterviews" />
+<topic label="工具栏" href="concepts/concepts-18.htm" />
+<anchor id="c_aftertoolbars" />
+<topic label="标记" href="concepts/concepts-11.htm" />
+<anchor id="c_aftermarkers" />
+<topic label="书签" href="concepts/cbookmrk.htm" />
+<anchor id="c_afterbookmarks" />
+<topic label="标号修饰" href="concepts/cdecorations.htm" />
+<anchor id="c_afterdecorations" />
+<topic label="帮助系统" href="concepts/chelpsys.htm" />
+<anchor id="c_afterhelp" />
+<topic label="外部工具" href="concepts/concepts-exttools.htm" >
+  <topic label="Ant 支持" href="concepts/concepts-antsupport.htm"/>
+</topic>
+<anchor id="c_afterexternaltools" />
+<topic label="CVS 小组编程" href="concepts/concepts-26.htm" >
+  <topic label="版本" href="concepts/concepts-27.htm" />
+  <topic label="分支" href="concepts/concepts-27b.htm" />
+  <topic label="CVS 资源库" href="concepts/concepts-27c.htm" />
+  <topic label="三方比较" href="concepts/concepts-29.htm" />
+  <topic label="与 CVS 资源库同步" href="concepts/concepts-30.htm" />
+  <topic label="查看／编辑" href="concepts/concepts-cvs-watch.htm" />
+</topic>
+<anchor id="c_afterteam" />
+
+<topic label="Eclipse 中的辅助功能部件" href="concepts/accessibility/accessmain.htm">
+    <topic label="使用键盘浏览用户界面"  href="concepts/accessibility/navigation.htm"/>
+    <topic label="Eclipse 中的字体和颜色"  href="concepts/accessibility/fontsandcolors.htm"/>
+</topic>
+<anchor id="c_afteraccessibility" />
+
+<topic label="功能部件" href="concepts/concepts-25.htm" >
+</topic>
+<anchor id="c_afterfeatures" />
+
+</toc>

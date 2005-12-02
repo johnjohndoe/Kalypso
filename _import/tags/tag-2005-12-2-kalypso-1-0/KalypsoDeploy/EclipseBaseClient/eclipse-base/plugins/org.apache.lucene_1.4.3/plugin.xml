@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.apache.lucene"
+   name="%lucene_plugin_name"
+   version="1.4.3"
+   provider-name="%providerName">
+
+   <runtime>
+      <library name="parser.jar">
+         <export name="*"/>
+      </library>
+      <library name="lucene-1.4.3.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+</plugin>

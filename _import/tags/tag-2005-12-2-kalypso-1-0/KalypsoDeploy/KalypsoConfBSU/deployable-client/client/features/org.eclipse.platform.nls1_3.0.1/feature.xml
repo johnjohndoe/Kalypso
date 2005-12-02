@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.eclipse.platform.nls1" image="eclipse_update_120.jpg" label="%featureName" plugin="" provider-name="%providerName" version="3.0.1">
+
+   <description>
+      %description
+   </description>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://update.eclipse.org/updates/3.0"></update>
+      <discovery label="%updateSiteName" url="http://update.eclipse.org/updates/3.0"></discovery>
+   </url>
+
+   <plugin fragment="true" id="org.apache.ant.nl1" version="1.6.2"></plugin>
+
+   
+
+   <plugin fragment="true" id="org.eclipse.ant.core.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.compare.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.core.boot.nl1" version="3.0.0"></plugin>
+         
+   <plugin fragment="true" id="org.eclipse.core.filebuffers.nl1" version="3.0.0"></plugin>
+   
+   <plugin fragment="true" id="org.eclipse.core.expressions.nl1" version="3.0.0"></plugin>
+   
+   <plugin fragment="true" id="org.eclipse.core.resources.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.core.runtime.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.core.runtime.compatibility.nl1" version="3.0.0"></plugin>
+
+   
+
+   <plugin fragment="true" id="org.eclipse.osgi.services.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.osgi.util.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.core.variables.nl1" version="3.0.0"></plugin>
+         
+   <plugin fragment="true" id="org.eclipse.debug.core.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.debug.ui.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.webapp.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.base.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.ui.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.appserver.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.help.ide.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.platform.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.platform.doc.user.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.search.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.swt.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.core.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.cvs.core.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.cvs.ssh.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.cvs.ssh2.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.cvs.ui.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.team.ui.nl1" version="3.0.1"></plugin>
+
+   
+
+   <plugin fragment="true" id="org.eclipse.text.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.jface.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.jface.text.nl1" version="3.0.1"></plugin>
+	
+   <plugin fragment="true" id="org.eclipse.ui.console.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.presentations.r21.nl1" version="3.0.1"></plugin>
+            
+   <plugin fragment="true" id="org.eclipse.ui.intro.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.cheatsheets.nl1" version="3.0.1"></plugin>
+            
+   <plugin fragment="true" id="org.eclipse.ui.workbench.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.workbench.texteditor.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.views.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.editors.nl1" version="3.0.1"></plugin>
+         
+   <plugin fragment="true" id="org.eclipse.ui.forms.nl1" version="3.0.0"></plugin>
+         
+   <plugin fragment="true" id="org.eclipse.ui.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.externaltools.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.ui.ide.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.update.configurator.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.update.core.nl1" version="3.0.1"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.update.scheduler.nl1" version="3.0.0"></plugin>
+
+   <plugin fragment="true" id="org.eclipse.update.ui.nl1" version="3.0.1"></plugin>
+        
+  
+   
+
+  
+  
+  
+  
+  
+  
+
+    
+  
+  
+  
+  
+
+  
+  
+
+      
+  
+  
+  
+
+    
+   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</feature>

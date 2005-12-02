@@ -1,0 +1,1131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+    <!-- Actions -->
+    <context id="add_bookmark_action_context">
+        <description>Les <b>signets</b> placent un &quot;point d'ancrage&quot; sur une ligne spécifique d'une ressource du plan de travail.</description>
+        <topic label="Ajout d'un signet" href="tasks/tasks-81.htm"/>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="add_task_action_context">
+        <description>Les <b>tâches</b> placent un &quot;point d'ancrage&quot; sur une ligne spécifique d'une ressource du plan de travail.</description>
+        <topic label="Ajout d'une tâche" href="tasks/tasks-77b.htm"/>
+        <topic label="Vue Tâches" href="concepts/ctskview.htm"/>
+    </context>
+    <context id="incremental_build_action_context">
+        <description>Une <b>compilation incrémentielle</b> compile uniquement les ressources du projet sélectionné qui ont été modifiées depuis la dernière compilation.</description>
+        <topic label="Vue Navigateur - Recompiler tout" href="reference/ref-27.htm"/>
+        <topic label="Compilations" href="concepts/concepts-22.htm"/>
+        <topic label="Compilation de ressources" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="full_build_action_context">
+        <description>Une <b>compilation complète</b> compile les ressources dans le projet sélectionné sans utiliser de base existante. Ce type de compilation est effectué uniquement lors d'une compilation manuelle.</description>
+        <topic label="Vue Navigateur - Recompiler tout" href="reference/ref-27.htm"/>
+        <topic label="Compilations" href="concepts/concepts-22.htm"/>
+        <topic label="Compilation de ressources" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_incremental_build_action_context">
+        <description>Une compilation incrémentielle compile uniquement les ressources modifiées depuis la dernière compilation.</description>
+        <topic label="Compilations" href="concepts/concepts-22.htm"/>
+        <topic label="Compilation de ressources" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_full_build_action_context">
+        <description>Une <b>compilation complète</b> compile le plan de travail dans son intégralité sans aucune base existante. Ce type de compilation est effectué uniquement lors d'une compilation manuelle.</description>
+        <topic label="Compilations" href="concepts/concepts-22.htm"/>
+        <topic label="Compilation de ressources" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="close_resource_action_context">
+        <description>Cette option permet de fermer la ressource sélectionnée.</description>
+        <topic label="Fermeture des ressources" href="tasks/tasks-47.htm"/>
+        <topic label="Vue Navigateur - Fermer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_resource_action_context">
+        <description>Cette option permet d'ouvrir la ressource sélectionnée.</description>
+        <topic label="Ouverture de ressources" href="tasks/tasks-46.htm"/>
+        <topic label="Vue Navigateur - Ouvrir" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_file_action_context">
+        <description>Cette option permet d'ouvrir la ressource sélectionnée dans la zone de l'éditeur ou dans l'éditeur externe indiqué.</description>
+        <topic label="Vue Navigateur - Ouvrir avec..." href="reference/ref-27.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="open_system_editor_action_context">
+        <description>Cette action ouvre la ressource sélectionnée dans l'éditeur par défaut du système de ce type de fichier.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+        <topic label="Edition externe d'un fichier" href="tasks/tasks-52.htm"/>
+    </context>
+    <context id="refresh_action_context">
+        <description>Cette option permet de régénérer le contenu et l'affichage de la vue.</description>
+        <topic label="Vue Navigateur - Régénérer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_resource_action_context">
+        <description>Cette option permet de déplacer une ressource d'un emplacement à un autre.</description>
+        <topic label="Déplacement des ressources" href="tasks/tasks-63.htm"/>
+        <topic label="Vue Navigateur - Déplacer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_resource_action_context">
+        <description>Cette option permet de copier une ressource d'un emplacement vers un autre.</description>
+        <topic label="Vue Navigateur - Copier" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_project_action_context">
+        <description>Cette option permet de déplacer un projet d'un emplacement à un autre.</description>
+        <topic label="Déplacement des ressources" href="tasks/tasks-63.htm"/>
+        <topic label="Vue Navigateur - Déplacer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_project_action_context">
+        <description>Cette option permet de copier un projet d'un emplacement à un autre.</description>
+        <topic label="Vue Navigateur - Copier" href="reference/ref-27.htm"/>
+    </context>
+    <context id="rename_resource_action_context">
+        <description>Cette option permet de fournir un nouveau nom pour la ressource sélectionnée.</description>
+        <topic label="Modification du nom des ressources" href="tasks/tasks-66.htm"/>
+        <topic label="Vue Navigateur - Renommer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_resource_action_context">
+        <description>Cette option permet de supprimer la ressource sélectionnée.</description>
+        <topic label="Suppression de ressources" href="tasks/tasks-67.htm"/>
+        <topic label="Vue Navigateur - Supprimer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_retarget_action_context">
+        <description>Cette option supprime la ressource ou l'élément sélectionnée.</description>
+        <topic label="Suppression de ressources" href="tasks/tasks-67.htm"/>
+        <topic label="Vue Navigateur - Supprimer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_dialog_action_context">
+        <description>Cette option affiche les diverses propriétés de la ressource sélectionnée.</description>
+        <topic label="Affichage des propriétés des ressources" href="tasks/tasks-49.htm"/>
+        <topic label="Vue Navigateur - Propriétés" href="reference/ref-27.htm"/>
+    </context>
+    <context id="project_property_dialog_action_context">
+        <description>Cette option affiche les diverses propriétés du projet pour la ressource sélectionnée.</description>
+        <topic label="Menu Projet - Propriétés" href="reference/ref-59.htm"/>
+        <topic label="Affichage des propriétés des ressources" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="create_folder_action_context">
+        <description>Cette option permet de créer un conteneur de dossier.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Dossiers" href="tasks/tasks-43.htm"/>
+        <topic label="Assistant Nouveau dossier" href="reference/ref-38.htm"/>
+    </context>
+    <context id="create_file_action_context">
+        <description>Cette option permet de créer un fichier.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Fichiers" href="tasks/tasks-44.htm"/>
+        <topic label="Assistant Nouveau fichier" href="reference/ref-39.htm"/>
+    </context>
+    <context id="new_action_context">
+        <description>Cette option permet de créer un élément, tel qu'une ressource.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Assistants Nouveau du plan de travail" href="reference/ref-37.htm"/>
+    </context>
+    <context id="import_action_context">
+        <description>Cette option permet d'importer des ressources.</description>
+        <topic label="Importation" href="tasks/tasks-53.htm"/>
+        <topic label="Importation à partir d'un répertoire" href="tasks/tasks-55.htm"/>
+        <topic label="Importation à partir d'un fichier zip" href="tasks/tasks-55bg.htm"/>
+        <topic label="Menu Fichier - Importer" href="reference/ref-56.htm"/>
+    </context>
+    <context id="export_action_context">
+        <description>Cette option permet d'exporter des ressources.</description>
+        <topic label="Exportation" href="tasks/tasks-57.htm"/>
+        <topic label="Exportation vers le système de fichiers" href="tasks/tasks-59.htm"/>
+        <topic label="Exportation vers un fichier zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Menu Fichier - Exporter" href="reference/ref-56.htm"/>
+    </context>
+    <context id="scrub_local_action_context">
+        <description>Une compilation va avoir lieu dans le plan de travail.</description>
+        <topic label="Compilations" href="concepts/concepts-22.htm"/>
+    </context>
+    <context id="set_page_action_context">
+        <description>Cette option régénère l'affichage du plan de travail.</description>
+        <topic label="Vue Navigateur - Régénérer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="save_perspective_action_context">
+        <description>Cette option permet de sauvegarder la perspective en cours en tant que perspective définie.</description>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+        <topic label="Sauvegarde des perspectives" href="tasks/tasks-9i.htm"/>
+        <topic label="Menu Fenêtre - Sauvegarder la perspective sous" href="reference/ref-60.htm"/>
+    </context>
+    <context id="save_as_action_context">
+        <description>Cette option permet de sauvegarder les ressources en cours d'édition à un autre emplacement du plan de travail.</description>
+        <topic label="Menu Fichier - Sauvegarder sous" href="reference/ref-56.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_all_action_context">
+        <description>Cette option permet de sauvegarder toutes les ressources ouvertes dans la zone de l'éditeur en une seule opération.</description>
+        <topic label="Menu Fichier - Sauvegarder tout" href="reference/ref-56.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_action_context">
+        <description>Cette option sauvegarde la ressource active dans la zone de l'éditeur.</description>
+        <topic label="Menu Fichier - Sauvegarder" href="reference/ref-56.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="about_action_context">
+        <description>Cette option affiche des informations sur le produit.</description>
+        <topic label="Menu Aide - A propos de" href="reference/ref-61.htm"/>
+    </context>
+    <context id="close_all_action_context">
+        <description>Cette option ferme tous les éditeurs ouverts dans la zone de l'éditeur.</description>
+        <topic label="Menu Fichier - Fermer tout" href="reference/ref-56.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="close_page_action_context">
+        <description>Cette option permet de fermer la perspective active.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Menu Fenêtre - Fermer la perspective" href="reference/ref-60.htm"/>
+        <topic label="Perspectives - Références" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_part_action_context">
+        <description>Cette option ferme l'éditeur en cours d'activité.</description>
+        <topic label="Menu Fichier - Fermer" href="reference/ref-56.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="edit_action_sets_action_context">
+        <description>Cette option permet de personnaliser les jeux d'actions disponibles dans la barre d'outils ou dans la barre de menus du plan de travail.</description>
+        <topic label="Configuration des perspectives" href="tasks/tasks-9k.htm"/>
+        <topic label="Menu Fenêtre - Personnaliser la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="edit_perspectives_action_context">
+        <description>Cette option permet de supprimer ou de réinitialiser les perspectives définies ou de définir la perspective par défaut.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Modification de l'emplacement d'ouverture des perspectives" href="tasks/tasks-24.htm"/>
+        <topic label="Perspectives - Références" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_all_pages_action_context">
+        <description>Cette option permet de fermer toutes les perspectives ouvertes.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Menu Fenêtre - Fermer toutes les perspectives" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_new_page_action_context">
+        <description>Cette option permet d'ouvrir une nouvelle page.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Nouvelles perspectives" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Fenêtre - Ouvrir la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_preferences_action_context">
+        <description>Cette option permet d'ouvrir la boîte de dialogue des préférences.</description>
+        <topic label="Plan de travail - Préférences" href="reference/ref-10.htm"/>
+    </context>
+    <context id="open_new_window_action_context">
+        <description>Cette option permet d'ouvrir une nouvelle fenêtre.</description>
+        <topic label="Ouvertures de perspectives" href="tasks/tasks-9f.htm"/>
+        <topic label="Modification de l'emplacement d'ouverture des perspectives" href="tasks/tasks-24.htm"/>
+        <topic label="Plan de travail" href="concepts/concepts-2.htm"/>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="open_new_action_context">
+        <description>Cette option permet d'ouvrir une nouvelle perspective.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Ouverture de nouvelles perspectives" href="tasks/tasks-24.htm"/>
+        <topic label="Menu Fenêtre - Ouvrir la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="next_page_action_context">
+        <description>Cette option permet d'afficher la perspective ouverte suivante.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Modification de l'emplacement d'ouverture des perspectives" href="tasks/tasks-24.htm"/>
+    </context>
+    <context id="quick_start_action_context">
+        <description>Cette option permet d'ouvrir l'éditeur de la page d'accueil.</description>
+        <topic label="Menu Aide - Page d'accueil" href="reference/ref-61.htm"/>
+    </context>
+    <context id="tips_and_tricks_action_context">
+        <description>Cette option permet d'ouvrir la page d'aide de conseils et d'astuces.</description>
+        <topic label="Menu Aide - Conseils et astuces" href="reference/ref-61.htm"/>
+    </context>
+    <context id="quit_action_context">
+        <description>Cette option permet de sauvegarder l'espace de travail et d'en sortir.</description>
+        <topic label="Menu Fichier - Quitter" href="reference/ref-56.htm"/>
+    </context>
+    <context id="reset_perspective_action_context">
+        <description>Cette option permet de réinitialiser la disposition de la perspective (valeur par défaut).</description>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+        <topic label="Réinitialisation des perspectives" href="tasks/tasks-9j.htm"/>
+        <topic label="Menu Fenêtre - Réinitialiser la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="target_editors_visibility_action_context">
+        <description>Cette option permet de masquer ou d'afficher la zone de l'éditeur. Vous pouvez augmenter la taille de la zone que les autres vues doivent afficher lorsque vous masquez la zone de l'éditeur.</description>
+        <topic label="Menu Fenêtre - Afficher/Masquer les éditeurs" href="reference/ref-60.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="switch_to_perspective_action_context">
+        <description>Cette option permet d'ouvrir une nouvelle perspective à sélectionner par l'utilisateur.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Passage d'une perspective à une autre" href="tasks/tasks-28.htm"/>
+        <topic label="Menu Fenêtre - Ouvrir la perspective" href="reference/ref-60.htm"/>
+        <topic label="Perspectives - Références" href="reference/ref-6.htm"/>
+    </context>
+    <context id="show_view_action_context">
+        <description>Cette option permet d'afficher une vue à sélectionner par l'utilisateur.</description>
+        <topic label="Affichage des vues" href="tasks/tasks-3.htm"/>
+        <topic label="Menu Fenêtre - Afficher la vue" href="reference/ref-60.htm"/>
+    </context>
+    <context id="show_view_other_action_context">
+        <description>Cette option ouvre une boîte de dialogue permettant de sélectionner une vue à afficher.</description>
+        <topic label="Affichage des vues" href="tasks/tasks-3.htm"/>
+        <topic label="Menu Fenêtre - Afficher la vue" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_action_context">
+        <description>Cette option permet d'ouvrir la perspective sélectionnée.</description>
+        <topic label="Ouverture des perspectives" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Fenêtre - Ouvrir la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_other_action_context">
+        <description>Cette option ouvre une boîte de dialogue permettant de sélectionner une perspective à ouvrir.</description>
+        <topic label="Ouverture des perspectives" href="tasks/tasks-9f.htm"/>
+        <topic label="Menu Fenêtre - Ouvrir la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="remove_bookmark_action_context">
+        <description>Cette option permet de supprimer un signet.</description>
+        <topic label="Suppression d'un signet" href="tasks/tasks-82.htm"/>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="open_bookmark_action_context">
+        <description>Cette option permet d'ouvrir la ressource dans laquelle se trouve un signet.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="select_all_bookmark_action_context">
+        <description>Cette option permet de sélectionner tous les signets.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="filter_selection_action_context">
+        <description>Cette option permet de filtrer les types affichés dans le navigateur des ressources.</description>
+        <topic label="Vue Navigateur - Filtres" href="reference/ref-27.htm"/>
+    </context>
+    <context id="goto_resource_action_context">
+        <description>Cette option permet d'accéder à la ressource sélectionnée.</description>
+        <topic label="Vue Navigateur - Aller à" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_move_action_context">
+        <description>Cette option permet de déplacer la ressource sélectionnée vers un autre emplacement.</description>
+        <topic label="Déplacement des ressources" href="tasks/tasks-63.htm"/>
+        <topic label="Vue Navigateur - Déplacer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_rename_action_context">
+        <description>Cette option permet de renommer la ressource sélectionnée.</description>
+        <topic label="Modification du nom des ressources" href="tasks/tasks-66.htm"/>
+        <topic label="Vue Navigateur - Renommer" href="reference/ref-27.htm"/>
+    </context>
+    <context id="show_in_navigator_action_context">
+        <description>Cette option permet d'afficher la ressource sélectionnée dans la vue Navigateur.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Vue Navigateur" href="reference/ref-27.htm"/>
+    </context>
+    <context id="sort_view_action_context">
+        <description>Cette option permet de modifier l'ordre de tri des types affichés dans le navigateur des ressources.</description>
+        <topic label="Tri des ressources" href="tasks/tasks-48.htm"/>
+        <topic label="Vue Navigateur - Trier" href="reference/ref-27.htm"/>
+    </context>
+    <context id="properties_categories_action_context">
+        <description>Cette option permet d'afficher les valeurs des propriétés par catégorie.</description>
+        <topic label="Vue Propriétés" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_defaults_action_context">
+        <description>Cette option permet d'affecter à la propriété sélectionnée sa valeur par défaut.</description>
+        <topic label="Vue Propriétés" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_filter_action_context">
+        <description>Propriétés du filtre.</description>
+        <topic label="Vue Propriétés" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="purge_completed_task_action_context">
+        <description>Cette option permet de supprimer toutes les tâches terminées de la liste.</description>
+        <topic label="Suppression des tâches" href="tasks/tasks-78.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="new_task_action_context">
+        <description>Cette option permet de créer une tâche.</description>
+        <topic label="Ajout d'une tâche non associée" href="tasks/tasks-77.htm"/>
+        <topic label="Ajout d'une tâche associée" href="tasks/tasks-77b.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="remove_task_action_context">
+        <description>Cette option permet de supprimer une tâche de la liste.</description>
+        <topic label="Suppression des tâches" href="tasks/tasks-78.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="goto_task_action_context">
+        <description>Cette option permet d'ouvrir la ressource associée à une tâche.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="undo_action_context">
+        <description>Cette option permet d'annuler la modification précédente.</description>
+        <topic label="Menu Editer - Annuler" href="reference/ref-57.htm"/>
+    </context>
+    <context id="redo_action_context">
+        <description>Cette option permet de rétablir la modification précédente.</description>
+        <topic label="Menu Editer - Rétablir" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cut_action_context">
+        <description>Cette option permet de couper le texte sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Couper" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_action_context">
+        <description>Cette option permet de copier l'élément sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+    </context>
+    <context id="paste_action_context">
+        <description>Cette option permet de coller le contenu du presse-papiers à l'emplacement du curseur.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+    </context>
+    <context id="delete_action_context">
+        <description>Cette option permet de supprimer l'élément sélectionné.</description>
+        <topic label="Menu Editer - Supprimer" href="reference/ref-57.htm"/>
+    </context>
+    <context id="selectAll_action_context">
+        <description>Cette option permet de sélectionner le contenu du fichier.</description>
+        <topic label="Menu Editer - Sélectionner tout" href="reference/ref-57.htm"/>
+    </context>
+    <context id="ShiftLeft_action_context">
+        <description>Cette option permet de décaler le texte vers la gauche pour réduire le retrait.</description>
+    </context>
+    <context id="ShiftRight_action_context">
+        <description>Cette option permet de décaler le texte vers la droite pour augmenter le retrait.</description>
+    </context>
+    <context id="find_action_context">
+        <description>Cette option permet d'ouvrir une boîte de dialogue pour spécifier le texte à rechercher dans l'éditeur.</description>
+        <topic label="Menu Editer - Rechercher/Remplacer" href="reference/ref-57.htm"/>
+    </context>
+    <context id="bookmark_action_context">
+        <description>Cette option permet d'ajouter un signet à cette ressource.</description>
+        <topic label="Menu Editer - Ajouter un signet" href="reference/ref-57.htm"/>
+    </context>
+    <context id="addTask_action_context">
+        <description>Cette option permet d'ajouter une tâche associée à cette ressource.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="revert_action_context">
+        <description>Cette option permet de rétablir le contenu sauvegardé.</description>
+    </context>
+    <context id="GotoLine_action_context">
+        <description>Cette option permet de placer le curseur au début de la ligne spécifiée.</description>
+    </context>
+    <context id="open_workspace_file_action_context">
+        <description>Cette option permet d'ouvrir un éditeur sur une ressource spécifiée.</description>
+        <topic label="Menu Naviguer - Ouvrir la ressource" href="reference/ref-58.htm"/>
+    </context>
+    <context id="print_action_context">
+        <description>Cette option permet d'imprimer la ressource active de la zone de l'éditeur.</description>
+    </context>
+    <context id="select_working_set_action_context">
+        <description>Sélectionne un jeu de documents dans la liste pour qu'il devienne le jeu actif.</description>
+    </context>
+    <context id="clear_working_set_action_context">
+        <description>Désélectionne le jeu de documents actif.</description>
+    </context>
+    <context id="edit_working_set_action_context">
+        <description>Edite le contenu du jeu de documents actif.</description>
+    </context>
+    <context id="show_in_action_context">
+        <description>Affiche la sélection en cours dans la vue spécifiée.</description>
+    </context>
+    <context id="navigation_history_forward">
+        <description>Cette action permet d'avancer dans l'historique.</description>
+        <topic label="Menu Naviguer - En avant" href="reference/ref-58.htm"/>
+    </context>
+    <context id="navigation_history_backward">
+        <description>Cette action permet de reculer dans l'historique.</description>
+        <topic label="Menu Naviguer - En arrière" href="reference/ref-58.htm"/>
+    </context>
+    <!-- Dialogs -->
+    <context id="about_dialog_context">
+        <description>Cette boîte de dialogue permet d'afficher les informations relatives au produit.</description>
+        <topic label="Menu Aide - A propos de" href="reference/ref-61.htm"/>
+    </context>
+    <context id="action_set_selection_dialog_context">
+        <description>Chaque perspective inclut un jeu d'actions prédéfinies accessibles à partir de la barre de menus ainsi qu'à partir de la barre d'outils du plan de travail. Les actions connexes sont regroupées dans des jeux d'actions.</description>
+        <topic label="Configuration des perspectives" href="tasks/tasks-9k.htm"/>
+        <topic label="Menu Fenêtre - Personnaliser la perspective" href="reference/ref-60.htm"/>
+    </context>
+    <context id="editor_selection_dialog_context">
+        <description>Dans cette boîte de dialogue, vous pouvez associer divers éditeurs internes et externes à divers types de ressource du plan de travail.</description>
+        <topic label="Préférences - Associations de fichiers" href="reference/ref-13.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="file_extension_dialog_context">
+        <description>Dans cette boîte de dialogue, indiquez l'extension du type de fichier à identifier.</description>
+        <topic label="Préférences - Associations de fichiers" href="reference/ref-13.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="preference_dialog_context">
+        <description>Cette boîte de dialogue permet de définir les préférences du plan de travail.</description>
+        <topic label="Boîte de dialogue Préférences" href="reference/ref-72.htm"/>
+    </context>
+    <context id="property_dialog_context">
+        <description>Cette boîte de dialogue permet d'afficher ou de modifier les propriétés de la ressource sélectionnée.</description>
+        <topic label="Vue Navigateur - Page Propriétés" href="reference/ref-27.htm"/>
+        <topic label="Propriétés des ressources" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="save_perspective_dialog_context">
+        <description>Cette boîte de dialogue permet de sauvegarder une perspective spécifiée par l'utilisateur.</description>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+        <topic label="Sauvegarde des perspectives" href="tasks/tasks-9i.htm"/>
+    </context>
+    <context id="select_perspective_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner une perspective.</description>
+        <topic label="Perspectives - Concept" href="concepts/concepts-4.htm"/>
+        <topic label="Sauvegarde des perspectives" href="tasks/tasks-9i.htm"/>
+        <topic label="Menu Fenêtre" href="reference/ref-60.htm"/>
+    </context>
+    <context id="project_location_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner l'emplacement d'un projet.</description>
+    </context>
+    <context id="show_view_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner une vue à afficher.</description>
+        <topic label="Affichage des vues" href="tasks/tasks-3.htm"/>
+    </context>
+    <context id="save_as_dialog_context">
+        <description>Cette boîte de dialogue permet d'indiquer le nom et l'emplacement de la ressource à sauvegarder.</description>
+    </context>
+    <context id="type_filtering_dialog_context">
+        <description>Cette boîte de dialogue permet de filtrer les types de fichier.</description>
+        <topic label="Assistant d'exportation" href="reference/ref-71.htm"/>
+        <topic label="Assistant d'importation" href="reference/ref-70.htm"/>
+    </context>
+    <context id="container_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner un dossier.</description>
+    </context>
+    <context id="file_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner un fichier.</description>
+    </context>
+    <context id="list_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner un élément dans une liste.</description>
+    </context>
+    <context id="yes_no_cancel_list_selection_dialog_context">
+        <description>Cette boîte de dialogue permet d'accepter, de rejeter ou d'annuler une sélection dans une liste.</description>
+    </context>
+    <context id="resource_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner une ressource.</description>
+    </context>
+    <context id="goto_resource_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner une ressource à rechercher dans l'espace de travail.</description>
+    </context>
+    <context id="task_filters_dialog_context">
+        <description>Cette boîte de dialogue permet d'afficher ou de masquer les tâches en fonction de certains critères.</description>
+        <topic label="Filtrage de la liste de tâches" href="tasks/tasks-79.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="find_replace_dialog_context">
+        <description>Cette boîte de dialogue permet de rechercher et de remplacer le texte spécifié.</description>
+		<topic label="Expressions régulières disponibles" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+    </context>
+    <context id="goto_line_dialog_context">
+        <description>Cette boîte de dialogue permet d'indiquer une ligne sur laquelle placer le curseur.</description>
+    </context>
+    <!-- Editors -->
+    <context id="welcome_editor_context">
+        <description>Guide simple et rapide présentant les tâches de base aux nouveaux utilisateurs.</description>
+        <topic label="Menu Aide" href="reference/ref-61.htm"/>
+    </context>
+    <context id="text_editor_context">
+        <description>Un éditeur de texte permet d'éditer des fichiers.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="system_summary_editor_context">
+        <description>Affiche les détails de configuration du produit.</description>
+    </context>
+    <!-- Preference pages -->
+    <context id="file_editors_preference_page_context">
+        <description>Dans cette page de préférences, vous pouvez associer divers éditeurs intégrés et externes à différents types de ressources du plan de travail.</description>
+        <topic label="Préférences - Associations de fichiers" href="reference/ref-13.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="build_order_preference_page_context">
+        <description>Cette fenêtre permet de modifier l'ordre de compilation des projets dans l'espace de travail.</description>
+        <topic label="Modification de l'ordre de compilation" href="tasks/tasks-14.htm"/>
+    </context>
+    <context id="file_states_preference_page_context">
+        <description>Cette page de préférences permet de configurer l'historique des fichiers locaux du plan de travail.</description>
+        <topic label="Historique local" href="concepts/concepts-17a.htm"/>
+        <topic label="Préférences - Historique local" href="reference/ref-14.htm"/>
+        <topic label="Navigateur - Historique local" href="reference/ref-27.htm"/>
+    </context>
+    <context id="perspectives_preference_page_context">
+        <description>Permet de définir l'état des perspectives existantes.</description>
+        <topic label="Préférences - Perspectives" href="reference/ref-15.htm"/>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="views_preference_page_context">
+        <description>Cette page de préférences permet de définir des préférences pour l'aspect et l'agencement des vues du plan de travail.</description>
+        <topic label="Préférences - Aspect" href="reference/ref-16.htm"/>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_preference_page_context">
+        <description>Cette boîte de dialogue permet de définir les préférences générales du plan de travail.</description>
+        <topic label="Préférences - Plan de travail" href="reference/ref-10.htm"/>
+    </context>
+    <context id="font_preference_page_context">
+        <description>Cette page de préférence permet de définit les polices utilisées dans le plan de travail.</description>
+        <topic label="Préférences - Polices" href="reference/ref-fonts.htm"/>
+    </context>
+    <context id="workbench_editor_preference_page_context">
+        <description>Cette page est utilisée pour définir les préférences de la zone de l'éditeur dans le plan de travail.</description>
+        <topic label="Préférences - Editeurs" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="compare_viewers_preference_page_context">
+        <description>Cette page de préférences permet de définir des préférences pour les afficheurs de comparaison du plan de travail.</description>
+        <topic label="Préférences - Comparaison" href="reference/ref-11.htm"/>
+        <topic label="Comparaison des ressources" href="reference/ref-25.htm"/>
+    </context>
+    <!-- Property pages -->
+    <context id="project_reference_property_page_context">
+        <description>Cette boîte de dialogue permet de définir des projets référencés.</description>
+        <topic label="Vue Navigateur - Page Propriétés" href="reference/ref-27.htm"/>
+        <topic label="Affichage des propriétés des ressources" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="resource_info_property_page_context">
+        <description>Permet d'afficher les informations relatives à la ressource sélectionnée.</description>
+        <topic label="Vue Navigateur - Page Propriétés" href="reference/ref-27.htm"/>
+        <topic label="Affichage des propriétés des ressources" href="tasks/tasks-49.htm"/>
+    </context>
+    <!-- Views -->
+    <context id="bookmark_view_context">
+        <description>Cette vue permet d'afficher tous les signets.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Signets" href="reference/ref-28.htm"/>
+    </context>
+    <context id="content_outline_context">
+        <description>Cette vue permet d'afficher la structure (le cas échéant) d'une ressource en cours d'édition.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Aperçu" href="concepts/coutline.htm"/>
+    </context>
+    <context id="resource_view_context">
+        <description>Cette vue affiche toutes les ressources de l'espace de travail.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Navigateur" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_sheet_view_context">
+        <description>Cette vue affiche les propriétés d'une ressource sélectionnée.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Propriétés" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="task_list_view_context">
+        <description>Cette vue affiche les tâches et incidents de compilation (rappels) créés par l'utilisateur ou générés lors de la compilation.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <!-- Property sheet -->
+    <context id="property_sheet_page_help_context">
+        <description>La vue Propriétés affiche les propriétés de la ressource sélectionnée.</description>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+        <topic label="Vue Propriétés" href="concepts/cpropview.htm"/>
+    </context>
+    <!-- Windows -->
+    <context id="detached_window_context">
+        <description>Les vues peuvent être détachées d'une fenêtre du plan de travail et apparaître dans des fenêtres flottantes sur le bureau.</description>
+        <topic label="Ancrage des vues" href="tasks/tasks-3e.htm"/>
+        <topic label="Agencement des fenêtres du plan de travail" href="reference/ref-23.htm"/>
+        <topic label="Vues" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_window_context">
+        <description>Chaque fenêtre du plan de travail contient une ou plusieurs perspectives, composées de divers éditeurs et vues.</description>
+        <topic label="Plan de travail" href="concepts/concepts-2.htm"/>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+        <topic label="Gestion du plan de travail" href="tasks/tasks-1.htm"/>
+    </context>
+    <!-- Wizard pages -->
+    <context id="new_project_wizard_page_context">
+        <description>Cet assistant permet de créer un projet dans le plan de travail.</description>
+        <topic label="Assistant Nouveau projet" href="reference/ref-37.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Projets" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="new_project_reference_wizard_page_context">
+        <description>Cet assistant permet de sélectionner d'autres projets auxquels ce projet doit faire référence.</description>
+        <topic label="Page Sélection de projets référencés" href="reference/ref-37.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_folder_wizard_page_context">
+        <description>Assistant permettant de créer une ressource de dossier.</description>
+        <topic label="Assistant Nouveau dossier" href="reference/ref-38.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Dossiers" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_file_wizard_page_context">
+        <description>Assistant permettant de créer une ressource de fichier.</description>
+        <topic label="Assistant Nouveau fichier" href="reference/ref-39.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Fichiers" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_wizard_selection_wizard_page_context">
+        <description>Choisissez le type de ressource à créer.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="export_wizard_selection_wizard_page_context">
+        <description>Choisissez le type d'exportation à effectuer.</description>
+        <topic label="Exportation de fichiers" href="tasks/tasks-57.htm"/>
+        <topic label="Exportation vers le système de fichiers" href="tasks/tasks-59.htm"/>
+        <topic label="Exportation vers un fichier zip" href="tasks/tasks-59ag.htm"/>
+    </context>
+    <context id="import_wizard_selection_wizard_page_context">
+        <description>Choisissez le type d'importation à effectuer.</description>
+        <topic label="Utilisation de l'assistant d'importation" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="file_system_export_wizard_page">
+        <description>Cette page permet d'entrer les informations requises pour l'exportation de ressources dans le système de fichiers.</description>
+        <topic label="Utilisation de l'assistant d'exportation" href="tasks/tasks-59.htm"/>
+        <topic label="Assistant d'exportation" href="reference/ref-71.htm"/>
+    </context>
+    <context id="file_system_import_wizard_page">
+        <description>Cette page permet d'indiquer les informations requises pour l'importation de fichiers à partir du système de fichiers.</description>
+        <topic label="Importation à partir du système de fichiers" href="tasks/tasks-55.htm"/>
+        <topic label="Assistant d'importation" href="reference/ref-70.htm"/>
+    </context>
+    <context id="zip_file_export_wizard_page">
+        <description>Cette page permet d'entrer les informations requises pour l'exportation de ressources de l'espace de travail dans un fichier archive.</description>
+        <topic label="Exportation vers un fichier zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Assistant d'exportation" href="reference/ref-71.htm"/>
+    </context>
+    <context id="zip_file_import_wizard_page">
+        <description>Cette page permet d'entrer les informations requises pour l'importation de fichiers d'un fichier archive dans l'espace de travail.</description>
+        <topic label="Importation à partir d'un fichier zip" href="tasks/tasks-55bg.htm"/>
+        <topic label="Assistant d'importation" href="reference/ref-70.htm"/>
+    </context>
+    <!-- Wizards -->
+    <context id="new_wizard_context">
+        <description>Ces assistants permettent de créer des ressources et/ou de éléments.</description>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_wizard_shortcut_context">
+        <description>Permet d'ouvrir un assistant de création.</description>
+    </context>
+    <context id="new_file_wizard_context">
+        <description>Assistant permettant de créer une ressource de fichier.</description>
+        <topic label="Assistant Nouveau fichier" href="reference/ref-39.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Fichiers" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_folder_wizard_context">
+        <description>Assistant de création d'une ressource de dossier.</description>
+        <topic label="Assistant Nouveau dossier" href="reference/ref-38.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Dossiers" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_project_wizard_context">
+        <description>Assistant permettant de créer un projet.</description>
+        <topic label="Assistant Nouveau projet" href="reference/ref-37.htm"/>
+        <topic label="Ressources" href="concepts/concepts-12.htm"/>
+        <topic label="Création de ressources - Projets" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="import_wizard_context">
+        <description>Assistant permettant d'importer des ressources.</description>
+        <topic label="Utilisation de l'assistant d'importation" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="export_wizard_context">
+        <description>Assistant permettant d'exporter des ressources.</description>
+        <topic label="Exportation de fichiers" href="tasks/tasks-57.htm"/>
+        <topic label="Exportation vers le système de fichiers" href="tasks/tasks-59.htm"/>
+        <topic label="Exportation vers un fichier zip" href="tasks/tasks-59ag.htm"/>
+        <topic label="Assistant d'exportation" href="reference/ref-71.htm"/>
+    </context>
+    <!-- terminal reference commented out in org.eclipse.ui.internal.WorkbenchActionBuilder, line 301 
+  <context id="close_all_saved_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="show_view_menu_action_context">
+        <description>Affichage du menu de la vue active.</description>
+    </context>
+    <context id="workbench_editors_action_context">
+        <description>Affichage de la boîte de dialogue Basculer vers l'éditeur.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- terminal reference in org.eclipse.ui.internal.IHelpContextIds, line 77
+  <context id="new_wizard_shortcut_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="text_cut_action_context">
+        <description>Cette option permet de couper le texte sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Couper" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_copy_action_context">
+        <description>Cette option permet de copier l'élément sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_paste_action_context">
+        <description>Cette option permet de coller le contenu du presse-papiers à l'emplacement du curseur.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_select_all_action_context">
+        <description>Cette option permet de sélectionner tout le contenu.</description>
+        <topic label="Menu Editer - Sélectionner tout" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_delete_action_context">
+        <description>Cette option permet de supprimer l'élément sélectionné.</description>
+        <topic label="Menu Editer - Supprimer" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_cut_action_context">
+        <description>Cette option permet de couper le texte sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Couper" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_copy_action_context">
+        <description>Cette option permet de copier l'élément sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_paste_action_context">
+        <description>Cette option permet de coller le contenu du presse-papiers à l'emplacement du curseur.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_delete_action_context">
+        <description>Cette option permet de supprimer l'élément sélectionné.</description>
+        <topic label="Menu Editer - Supprimer" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_find_action_context">
+        <description>Cette option permet d'ouvrir une boîte de dialogue pour spécifier le texte à rechercher dans l'éditeur.</description>
+        <topic label="Menu Editer - Rechercher/Remplacer" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_select_all_action_context">
+        <description>Cette option permet de sélectionner tout le contenu.</description>
+        <topic label="Menu Editer - Sélectionner tout" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_undo_action_context">
+        <description>Cette option permet d'annuler la modification précédente.</description>
+        <topic label="Menu Editer - Annuler" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_redo_action_context">
+        <description>Cette option permet de rétablir la modification précédente.</description>
+        <topic label="Menu Editer - Rétablir" href="reference/ref-57.htm"/>
+    </context>
+    <context id="working_set_selection_dialog_context">
+        <description>Cette boîte de dialogue permet d'ajouter, de supprimer ou de configurer des jeux de documents en vue de leur utilisation dans le plan de travail. Un jeu de documents est un sous-ensemble de l'espace de travail.</description>
+    </context>
+    <context id="delete_project_dialog_context">
+        <description>Dans cette boîte de dialogue, confirmez si vous voulez supprimer le projet sélectionné, et si tel est le cas, si vous voulez également supprimer les fichiers du projet sous-jacent dans le système de fichiers local correspondant à votre projet.</description>
+    </context>
+    <context id="filter_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner des filtres afin d'isoler des éléments spécifiques de l'espace de travail uniquement.</description>
+    </context>
+    <context id="marker_resolution_selection_dialog_context">
+        <description>Cette boîte de dialogue permet de sélectionner parmi une liste de résolutions possibles.</description>
+    </context>
+    <context id="workbench_editors_dialog">
+        <description>Cette boîte de dialogue affiche tous les éditeurs ouverts, ce qui permet de choisir aisément ceux que vous voulez fermer et ceux que vous voulez conserver.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="welcome_page_selection_dialog">
+        <description>Cette boîte de dialogue permet d'accéder à l'un des ensembles de pages d'accueil disponibles. Les pages d'accueil peuvent vous aider à démarrer en utilisant des parties précises du plan de travail.</description>
+    </context>
+    <context id="decorators_preference_page_context">
+        <description>Cette page permet de spécifier les décorateurs à afficher sur les éléments du plan de travail. Les décorateurs fournissent des informations supplémentaires sur un élément, mais augmentent la charge visuelle.</description>
+        <topic label="Préférences - Décorations d'intitulés" href="reference/ref-decorations.htm"/>
+    </context>
+    <context id="startup_preference_page_context">
+        <description>Cette page affiche tous les plug-in activés lors du démarrage du plan de travail.</description>
+        <topic label="Préférences - Démarrage" href="reference/ref-startup.htm"/>
+    </context>
+    <context id="working_set_new_wizard_context">
+        <description>Cet assistant vous guide dans le processus de création d'un jeu de documents.</description>
+    </context>
+    <context id="working_set_edit_wizard_context">
+        <description>Cet assistant vous guide dans le processus d'édition d'un jeu de documents.</description>
+    </context>
+    <context id="filters_action_context">
+        <description>Cette option ouvre une boîte de dialogue permettant de sélectionner des filtres en vue d'isoler des éléments spécifiques de l'espace de travail uniquement.</description>
+    </context>
+    <context id="mark_completed_action_context">
+        <description>Cette option marque la tâche actuellement sélectionnée comme étant &apos;terminée&apos;.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="resolve_marker_action_context">
+        <description>Cette option affiche une boîte de dialogue permettant de sélectionner dans la liste des résolutions possibles.</description>
+    </context>
+    <context id="select_all_tasks_action_context">
+        <description>Cette option permet de sélectionner toutes les tâches de la vue Tâches.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_action_context">
+        <description>Cette option ouvre une boîte de dialogue permettant de définir les propriétés de la tâche sélectionnée.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="back_action_context">
+        <description>Cadre précédent</description>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="forward_action_context">
+        <description>Cadre suivant</description>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="go_into_action_context">
+        <description>Zoom avant dans l'élément sélectionné</description>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="up_action_context">
+        <description>Cadre supérieur</description>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="lock_toolbar_action_context">
+        <description>Cette option verrouille les barres d'outils dans le plan de travail.</description>
+    </context>
+    <context id="about_plugins_dialog_context">
+        <description>Cette boîte de dialogue affiche les détails relatifs à tous les plug-in installés.</description>
+    </context>
+    <context id="about_features_plugins_dialog_context">
+        <description>Cette boîte de dialogue affiche les détails relatifs à tous les plug-in d'un dispositif particulier. </description>
+    </context>
+    <context id="about_features_dialog_context">
+        <description>Cette boîte de dialogue affiche les détails relatifs à tous les dispositifs installés. </description>
+    </context>
+    <context id="working_set_resource_page">
+        <description>Cette page permet de sélectionner les ressources qui feront partie de votre jeu de documents.</description>
+    </context>
+    <context id="working_set_type_page">
+        <description>Cette page permet de sélectionner le type de jeu de documents à créer.</description>
+    </context>
+    <context id="copy_bookmark_action_context">
+        <description>Cette option copie le signet sélectionné dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="paste_bookmark_action_context">
+        <description>Cette option colle le(s) signet(s) dans le presse-papiers.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_properties_action_context">
+        <description>Cette option affiche une boîte de dialogue permettant de définir les propriétés du signet sélectionné.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_ascending_action_context">
+        <description>Cette option permet de trier les signets en ordre croissant.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_descending_action_context">
+        <description>Cette option permet de trier les signets en ordre décroissant.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_description_action_context">
+        <description>Cette option permet de trier les signets par description.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_resource_action_context">
+        <description>Cette option permet de trier les signets par ressource.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_folder_action_context">
+        <description>Cette option permet de trier les signets par dossier.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_location_action_context">
+        <description>Cette option permet de trier les signets par emplacement.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_creation_time_action_context">
+        <description>Cette option permet de trier les signets par heure de création.</description>
+        <topic label="Signets" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="resource_navigator_copy_action_context">
+        <description>Cette option copie la ressource sélectionnée dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="resource_navigator_paste_action_context">
+        <description>Cette option colle la ressource copiée dans le presse-papiers à l'emplacement de la ressource sélectionnée.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+        <topic label="Vue Navigateur" href="concepts/cnav.htm"/>
+    </context>
+    <context id="properties_copy_action_context">
+        <description>Cette option copie la propriété sélectionnée dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_task_action_context">
+        <description>Cette option copie la tâche sélectionnée dans le presse-papiers.</description>
+        <topic label="Menu Editer - Copier" href="reference/ref-57.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="paste_task_action_context">
+        <description>Cette option permet de coller le contenu du presse-papiers à l'emplacement du curseur.</description>
+        <topic label="Menu Editer - Coller" href="reference/ref-57.htm"/>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_dialog_context">
+        <description>Cette boîte de dialogue permet de définir les propriétés de la tâche sélectionnée.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_type_action_context">
+        <description>Cette option permet de trier les tâches par type.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_completed_action_context">
+        <description>Cette option permet de trier les tâches par achèvement.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_priority_action_context">
+        <description>Cette option permet de trier les tâches par priorité.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_description_action_context">
+        <description>Cette option permet de trier les tâches par description.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_resource_action_context">
+        <description>Cette option permet de trier les tâches par ressource.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_folder_action_context">
+        <description>Cette option permet de trier les tâches par dossier.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_location_action_context">
+        <description>Cette option permet de trier les tâches par emplacement.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_creation_time_action_context">
+        <description> Cette option permet de trier les tâches par heure de création.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_ascending_action_context">
+        <description>Cette option permet de trier les tâches en ordre croissant.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_descending_action_context">
+        <description>Cette option permet de trier les tâches en ordre décroissant.</description>
+        <topic label="Vue Tâches" href="reference/ref-31.htm"/>
+    </context>
+    <context id="show_part_pane_menu_action_context">
+        <description>Cette option ouvre le menu système de la vue ou de l'éditeur actif.</description>
+    </context>
+    <context id="cycle_part_forward_action_context">
+        <description>Cette option afficher un menu permettant de naviguer en avant dans les vues ouvertes.</description>
+    </context>
+    <context id="cycle_part_backward_action_context">
+        <description>Cette option affiche un menu permettant de naviguer en arrière dans les vues ouvertes.</description>
+    </context>
+    <context id="cycle_editor_forward_action_context">
+        <description>Cette option affiche un menu permettant de naviguer en avant dans les éditeurs ouverts.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_editor_backward_action_context">
+        <description>Cette option affiche un menu permettant de naviguer en arrière dans les éditeurs ouverts.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_perspective_forward_action_context">
+        <description>Cette option affiche un menu permettant de naviguer en avant dans les perspectives ouvertes.</description>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="cycle_perspective_backward_action_context">
+        <description>Cette option affiche un menu permettant de naviguer en arrière dans les perspectives ouvertes.</description>
+        <topic label="Perspectives" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="activate_editor_action_context">
+        <description>Cette option active le panneau de l'éditeur.</description>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- part of project capability support. currently unused.
+  <context id="project_capability_property_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_capability_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_review_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_configure_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="show_project_perspective_dialog_context">
+    <description></description>
+  </context>
+
+  <context id="update_capability_wizard_context">
+    <description></description>
+  </context>
+  -->
+
+    <!--new context ids-->
+    <context id="goto_last_edit_position_action_context">
+        <description>Cette option permet de revenir au dernier emplacement d'édition.</description>
+    </context>
+    <context id="ConvertLineDelimitersToMAC_action_context">
+        <description>Cette option convertit le fichier pour utiliser des délimiteurs de ligne MacOS classiques (CR).</description>
+    </context>
+    <context id="ConvertLineDelimitersToUNIX_action_context">
+        <description>Cette option convertit le fichier pour utiliser des délimiteurs de ligne Unix/MacOS X (LF).</description>
+    </context>
+    <context id="ConvertLineDelimitersToWindows_action_context">
+        <description>Cette option convertit le fichier pour utiliser des délimiteurs de ligne Windows (CRLF).</description>
+    </context>
+    <context id="FindIncrementalReverse_action_context">
+        <description>Cette option entre en mode de recherche incrémentielle précédent ou passe à la correspondance précédente si elle est déjà en mode incrémentiel. La touche Echap permet de quitter le mode de recherche incrémentielle.</description>
+    </context>
+    <context id="DeleteLineToBeginning_action_context">
+        <description>Cette option permet de supprimer le texte de l'emplacement du curseur au début de la ligne.</description>
+    </context>
+    <context id="DeleteLineToEnd_action_context">
+        <description>Cette option permet de supprimer le texte de l'emplacement du curseur à la fin de la ligne.</description>
+    </context>
+    <context id="SetMark_action_context">
+        <description>Cette option place une marque dans l'éditeur.</description>
+    </context>
+    <context id="FindNext_action_context">
+        <description>Cette option trouve l'occurrence suivante dans l'éditeur.</description>
+    </context>
+    <context id="CutLine_action_context">
+        <description>Cette option permet de couper la ligne entière et de la placer dans le presse-papiers.</description>
+    </context>
+    <context id="DeleteLine_action_context">
+        <description>Cette option supprime la ligne entière.</description>
+    </context>
+    <context id="CutLineToEnd_action_context">
+        <description>Cette option permet de couper le texte à partir de la position en cours du curseur jusqu'à la fin de la ligne et de le placer dans le presse-papiers.</description>
+    </context>
+    <context id="ClearMark_action_context">
+        <description>Cette option permet d'effacer la marque précédemment placée dans l'éditeur.</description>
+    </context>
+    <context id="SwapMark_action_context">
+        <description>Cette option permet d'échanger la position du curseur avec la marque précédemment placée.</description>
+    </context>
+    <context id="FindIncremental_action_context">
+        <description>Cette option entre en mode de recherche incrémentielle ou passe à la correspondance suivante si elle est déjà en mode incrémentiel. La touche Echap permet de quitter le mode de recherche incrémentielle.</description>
+    </context>
+    <context id="FindPrevious_action_context">
+        <description>Cette option trouve l'occurrence précédente dans l'éditeur.</description>
+    </context>
+    <context id="CutLineToBeginning_action_context">
+        <description>Cette option permet de couper le texte à partir de la position en cours du curseur jusqu'au début de la ligne et de le placer dans le presse-papiers.</description>
+    </context>
+    <context id="US-ASCII_action_context">
+        <description>Cette option définit l'encodage en US-ASCII.</description>
+    </context>
+    <context id="ISO-8859-1_action_context">
+        <description>Cette option définit l'encodage en ISO-8859-1.</description>
+    </context>
+    <context id="UTF-8_action_context">
+        <description>Cette option définit l'encodage en UTF-8.</description>
+    </context>
+    <context id="UTF-16BE_action_context">
+        <description>Cette option définit l'encodage en UTF-16 (big-endian).</description>
+    </context>
+    <context id="UTF-16LE_action_context">
+        <description>Cette option définit l'encodage en UTF-16 (little-endian).</description>
+    </context>
+    <context id="UTF-16_action_context">
+        <description>Cette option définit l'encodage en UTF-16.</description>
+    </context>
+    <context id="System_action_context">
+        <description>Cette option définit l'encodage à l'encodage système en cours. </description>
+    </context>
+    <context id="Default_action_context">
+        <description>Cette option permet d'appliquer le codage par défaut. </description>
+    </context>
+    <context id="Custom_action_context">
+        <description>Cette option permet de définir un encodage personnalisé.</description>
+    </context>
+    <context id="text_editor_preference_page_context">
+        <description>Cette page est utilisée pour définir les préférences de l'éditeur de texte.</description>
+        <topic label="Préférences - Editeur de texte" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="Editeurs" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- Help Menu: Help Contents -->
+    <context  id="help_contents_action_context" >
+        <description>Cette option affiche la vue d'aide. Cette vue contient la documentation, les rubriques et les informations relatives aux composants du plan de travail et aux composants installés.</description>
+        <topic label="Système d'aide en ligne" href="/org.eclipse.platform.doc.user/concepts/chelpsys.htm"/>
+        <topic label="Menu Aide - Rubriques de l'aide" href="/org.eclipse.platform.doc.user/reference/ref-61.htm"/>
+    </context>
+</contexts>

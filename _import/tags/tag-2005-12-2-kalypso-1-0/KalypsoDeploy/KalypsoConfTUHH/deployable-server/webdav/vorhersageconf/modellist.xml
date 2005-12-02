@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="xml.model.kalypso.org" mainImage="Title_FLOWS_Hamburg.png">
+    <model name="Kollau" icon="kollau.png" image="FLOWS_TITEL.png" label="Pilotgebiet Kollau"/>
+</modellist>
+<!--<?xml version="1.0" encoding="UTF-8"?>
+<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="xml.model.kalypso.org" mainImage="Title_Hamburg_gross.png">
+    <model name="Kollau" icon="kollau.png" image="kollau_TUHH.png" label="NA-Modell Einzugsgebiet Kollau"/>
+    <model name="Berner Au" icon="bernerAu_GSP.png" image="bernerAu_GSP.png" label="NA-Modell Einzugsgebiet Berner Au"/>
+    <model name="Falkengraben" icon="falkengraben_TUHH.png" image="falkengraben_TUHH.png" label="NA-Modell Einzugsgebiet Falkengraben"/> 
+    <model name="Oberalster" icon="oberalster_BWS.png" image="oberalster_BWS.png" label="NA-Modell Einzugsgebiet Oberalster"/>                
+    <model name="Tarpenbek" icon="tarpenbek_K+C.png" image="tarpenbek_K+C.png" label="NA-Modell Einzugsgebiet Tarpenbek"/>    
+</modellist>
+-->

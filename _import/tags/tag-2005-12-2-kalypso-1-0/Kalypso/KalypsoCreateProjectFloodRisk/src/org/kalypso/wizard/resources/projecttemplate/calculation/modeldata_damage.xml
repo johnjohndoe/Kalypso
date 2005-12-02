@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateDamageJob">
+	<input id="LanduseRasterData" path="Landuse/landuseData.gml" relativeToCalcCase="false"/>
+	<input id="WaterlevelData" path="Control/waterlevelData.gml" relativeToCalcCase="false"/>
+	<input id="ContextModel" path="Control/contextModell.gml" relativeToCalcCase="false"/>
+	
+	<output id="DamageDirectory" path="Damage" relativeToCalcCase="false"/>
+	<output id="AnnualDamageRasterData" path="Damage/annualDamage.gml" relativeToCalcCase="false"/>
+</modeldata>

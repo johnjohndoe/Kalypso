@@ -1,0 +1,601 @@
+Bocaloco Software LLC
+
+LICENSE TERMS
+
+XMLBuddy(tm)
+
+NOTICE: THIS SOFTWARE PRODUCT (TOGETHER WITH ITS ACCOMPANYING
+DOCUMENTATION, THE "PRODUCT") IS THE PROPERTY OF BOCALOCO SOFTWARE LLC
+("BOCALOCO"). THE PRODUCT IS MADE AVAILABLE TO YOU, THE ORIGINAL
+PURCHASER, SUBJECT TO THE FOLLOWING LICENSE AGREEMENT ("LICENSE").
+PLEASE READ THIS LICENSE CAREFULLY BEFORE INSTALLING OR USING THE
+PRODUCT. A COPY OF THIS LICENSE IS AVAILABLE FOR YOUR FUTURE REFERENCE
+IN THE "LICENSE.TXT" FILE PROVIDED WITH THE PRODUCT.
+
+Bocaloco is only willing to grant you this License if you obtained the
+Product from Bocaloco or a Bocaloco authorized reseller. If you obtained
+the Product from any other source you may not install or use the Product.
+
+1. Ownership.
+
+The Product is proprietary to Bocaloco. The Product is licensed, not
+sold, to you notwithstanding any reference herein to "purchase." You
+acknowledge and agree that: (a) the Product is protected under U.S.
+copyright and other laws; (b) Bocaloco and its licensors retain all
+copyrights and other intellectual property rights in the Product; (c)
+there are no implied licenses under this License, and any rights not
+expressly granted to you hereunder are reserved by Bocaloco; (d) you
+acquire no ownership or other interest (other than your license rights)
+in or to the Product; and (e) Bocaloco owns all copies of the Product,
+however made. You agree that you will not, at any time, contest anywhere
+in the world Bocaloco's ownership of the Product, nor will you
+challenge the validity of Bocaloco's rights in the Product. You have
+no rights hereunder to use any trademark or service mark belonging to
+Bocaloco.
+
+2. Grant of license and scope of use.
+
+2.1 Grant of License.
+
+Subject to the terms and conditions of this Agreement, Bocaloco grants
+to you, as an individual, a personal, nonexclusive, nontransferable and
+limited license to install and execute the Product on one (1) computer
+to create "Works" for personal or commercial use. All rights not
+specifically granted to you herein are retained by Bocaloco.
+
+2.2 Multiple Licensed Copies.
+
+You may purchase from Bocaloco or its authorized reseller the right to
+make multiple copies of the Product (each, a "Licensed Copy) or the
+right to permit multiple Named Users to use a Licensed Copy. Such rights
+will be effective only when granted in writing by Bocaloco or its
+authorized reseller and are conditioned upon your payment of the
+applicable fees. If you purchase the right to make multiple Licensed
+Copies, you are granted, for each Licensed Copy, the personal,
+nonexclusive, nontransferable and limited license to install and execute
+the Licensed Copy on one (1) computer solely as permitted under Section
+2.1, subject to all the terms and conditions of this Agreement. If you
+purchase the right to permit multiple Named Users to use a Licensed Copy
+then you are granted for such Licensed Copy, the personal, nonexclusive,
+nontransferable and limited license to install and execute the Licensed
+Copy on one (1) computer solely as permitted under Section 2.1
+exclusively for use by such number of Named Users, subject to all the
+terms and conditions of this Agreement. You agree that you will not
+install or execute the Product on more computers than the number
+Licensed Copies that Bocaloco or its authorized reseller has expressly
+permitted you to make and you will not allow the Product to be used by
+more users than the number of Named Users that Bocaloco or its
+authorized reseller has expressly permitted to use each Licensed Copy.
+
+3. Special terms.
+
+The following terms and conditions ("Special Terms") are specific to
+certain editions, versions and components of the Product and are in
+addition to the provisions of Section 2. If any provision of the Special
+Terms applicable to the Product conflicts with any other provision of
+this License, then the provision of the Special Terms will supercede and
+control.
+
+3.1 Special terms applicable to Prerelease software.
+
+Prerelease versions of the Product are provided free of charge to
+registered "Testers" in exchange for the Testers' voluntary cooperation
+in finding and reporting bugs in the software for a fixed period of time
+("Test Period") prior to release of the software. Prerelease software
+is, by definition, software that does not work. Testers use Prerelease
+software at their own risk. Bocaloco will not respond to inquiries about
+Prerelease software after the Test Period. Selection of Testers is
+entirely at Bocaloco's discretion. Past participitation as a Tester is
+no guarantee of future participation.
+
+3.2 Special terms applicable to free software.
+
+Special, limited-capability versions of the product, referred to by the
+name "XMLBuddy" with no qualifiers such as "Pro", are provided free of 
+charge. The provisions in Sections 7 and 10 are not applicable to free 
+versions. All other Sections remain in force. In particular, note that 
+you may not re-distribute the Software without written permission of 
+Bocaloco. 
+
+3.3 Special terms applicable to Plugin software.
+
+Plugin editions of the Product will be accompanied by information
+detailing the versions of Eclipse software and operating environments
+the Plugin was tested with. These are the only supported configurations.
+You may, at your own risk, attempt to install and run the Plugin with
+any other version of Eclipse, or any product derived from Eclipse, in
+any other operating environment ("Unsupported Configuration"). The sole
+response, if any, to a problem report involving an Unsupported
+Configuration may be that the configuration is not supported.
+
+3.4 Special terms applicable to products licensed for educational use.
+
+Subject to the terms and conditions of this Agreement, you may exercise
+your rights under this license to use the Product and to create Works
+solely for your own personal use in providing or receiving instruction
+within the limited scope of guided computer programming and/or software
+training courses in which you are a direct and personal participant,
+either as student or instructor ("Courses"). You may only reproduce,
+distribute and use Works, in source or object code form, to other
+participants of the Courses and then only for educational or training
+purposes. You may not use the Products or Works created with the
+products for any commercial, business, governmental or institutional
+purpose of any kind, except to the extent you are an instructor teaching
+a Course. You may also make one (1) backup copy of the Product solely to
+replace the original copy provided to you if the original copy is
+damaged or destroyed. All rights not specifically granted to you herein
+are retained by Bocaloco.
+
+3.5 Special terms applicable to Third-Party Software
+
+Certain components of the Product use or incorporate third-party
+software programs and/or libraries ("Third-Party Software") which are
+loaded (in object or source code form, or both) on the Product media. You
+agree that Bocaloco's third-party licensors and suppliers are intended
+third party beneficiaries of all terms and conditions of this License
+intended to protect intellectual property rights in the Product
+(including the Third-Party Software), limit certain uses thereof and
+disclaim warranty.
+
+3.5.1 Special terms applicable to Eclipse software
+
+Certain Product editions may include unmodified Third Party Software
+from Eclipse.org (http://eclipse.org) and its Contributors ("Eclipse
+software"). Source code for Eclipse software is available directly from
+Eclipse.org or, if such software is included with the Product, from
+Bocaloco. Eclipse software is separately licensed under the terms of the
+Common Public License (CPL) 1.0.
+
+3.5.2 Special terms applicable to Apache software
+
+The Product includes Third Party Software developed by Apache Software
+Foundation (http://www.apache.org/).
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+THE POSSIBILITY OF SUCH DAMAGE.
+
+3.5.3 Special terms applicable to Thai Open Source Software Center Ltd
+software
+
+Copyright (c) 2002, 2003 Thai Open Source Software Center Ltd
+All rights reserved.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+3.5.4 Special terms applicable to DTD Generator and Saxon
+
+The DTD Generator is made available under the terms of the Mozilla
+Public License 1.0. Source code for modifications to DTD Generator and/or
+Saxon are available from Bocaloco upon request.
+
+UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING 
+NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL DEVELOPER, 
+ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF COVERED CODE, OR ANY SUPPLIER 
+OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY INDIRECT, SPECIAL, 
+INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT 
+LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE 
+OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN 
+IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. 
+THIS LIMITATION OF LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR 
+PERSONAL INJURY RESULTING FROM SUCH PARTY'S NEGLIGENCE TO THE EXTENT 
+APPLICABLE LAW PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO NOT ALLOW 
+THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS 
+EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU.
+
+3.5.5 Special terms applicable to Jaxen
+
+Copyright (C) 2000-2002 bob mcwhirter & James Strachan.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions, and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions, and the disclaimer that follows 
+   these conditions in the documentation and/or other materials 
+   provided with the distribution.
+
+3. The name "Jaxen" must not be used to endorse or promote products
+   derived from this software without prior written permission.  For
+   written permission, please contact license@jaxen.org.
+
+4. Products derived from this software may not be called "Jaxen", nor
+   may "Jaxen" appear in their name, without prior written permission
+   from the Jaxen Project Management (pm@jaxen.org).
+
+In addition, we request (but do not require) that you include in the 
+end-user documentation provided with the redistribution and/or in the 
+software itself an acknowledgement equivalent to the following:
+    "This product includes software developed by the
+     Jaxen Project (http://www.jaxen.org/)."
+Alternatively, the acknowledgment may be graphical using the logos 
+available at http://www.jaxen.org/
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED.  IN NO EVENT SHALL THE Jaxen AUTHORS OR THE PROJECT
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+3.5.6 Special terms applicable to Saxpath
+
+Copyright (C) 2000-2002 werken digital.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions, and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions, and the disclaimer that follows 
+   these conditions in the documentation and/or other materials 
+   provided with the distribution.
+
+3. The name "SAXPath" must not be used to endorse or promote products
+   derived from this software without prior written permission.  For
+   written permission, please contact license@saxpath.org.
+
+4. Products derived from this software may not be called "SAXPath", nor
+   may "SAXPath" appear in their name, without prior written permission
+   from the SAXPath Project Management (pm@saxpath.org).
+
+In addition, we request (but do not require) that you include in the 
+end-user documentation provided with the redistribution and/or in the 
+software itself an acknowledgement equivalent to the following:
+    "This product includes software developed by the
+     SAXPath Project (http://www.saxpath.org/)."
+Alternatively, the acknowledgment may be graphical using the logos 
+available at http://www.saxpath.org/
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED.  IN NO EVENT SHALL THE SAXPath AUTHORS OR THE PROJECT
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+4. Limitations.
+
+You may not: (a) modify, adapt, alter, translate, or create derivative
+works of the Product or merge the Product with other software other than
+as described in the Product's accompanying documentation or as
+approved of in writing by Bocaloco; (b) lease, rent or loan the Product
+to any third party; (c) sublicense, distribute or otherwise transfer the
+Product or any component thereof to any third party except as expressly
+authorized under Section 3; (d) reverse engineer, decompile,
+disassemble, or otherwise attempt to derive the source code of the
+Product; (e) remove, alter, or obscure any confidentiality or
+proprietary notices (including copyright and trademark notices) of
+Bocaloco or its suppliers on the Product; (f) allow third parties to
+access or use the Product such as in a time-sharing arrangement or
+operate the Product as part of a service bureau or, except as expressly
+authorized under Sections 2 or 3, otherwise for the use or benefit of
+third parties; (g) reproduce or use the Product except as expressly
+authorized under Sections 2 and 3; or (g) disclose or publish "keys"
+that enable Product functionality. The rights granted under this License
+apply only to this Product. You must procure a separate license to use
+other Bocaloco software. The limitations in this Section 4 apply to your
+use of the Product in whole or in part.
+
+5. LIMITED WARRANTY AND DISCLAIMER.
+
+Bocaloco warrants to you, the original purchaser and to no other party,
+that any physical media included with the Product, as and when provided
+to you, will be free of physical defects in materials and workmanship
+for a period of ninety (90) days after the date that you initially
+acquire the Product. Your exclusive remedy and Bocaloco's sole liability
+for breach of this warranty is that Bocaloco will replace any defective
+media returned to Bocaloco within the ninety (90) day warranty period.
+This warranty does not apply to damages resulting from misuse, abuse or
+neglect. Any replacement media will be warranted as above for the
+remainder of the original warranty period or twenty (20) days from the
+date we ship it to you, whichever is longer. EXCEPT FOR THIS EXPRESS
+LIMITED WARRANTY, THE PRODUCT IS PROVIDED "AS IS" AND WITHOUT WARRANTY
+OF ANY KIND. BOCALOCO HEREBY EXCLUDES AND DISCLAIMS ALL IMPLIED OR
+STATUTORY WARRANTIES, INCLUDING ANY WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, QUALITY, NON-INFRINGEMENT, TITLE,
+RESULTS, EFFORTS OR QUIET ENJOYMENT. THERE IS NO WARRANTY THAT THE
+PRODUCT WILL BE ERROR-FREE OR WILL FUNCTION WITHOUT INTERRUPTION. YOU
+ASSUME THE ENTIRE RISK FOR THE RESULTS OBTAINED USING THE PRODUCT. TO
+THE EXTENT THAT BOCALOCO MAY NOT DISCLAIM ANY WARRANTY AS A MATTER OF
+APPLICABLE LAW, THE SCOPE AND DURATION OF SUCH WARRANTY WILL BE THE
+MINIMUM PERMITTED UNDER SUCH LAW.
+
+SOME STATES DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO THE
+ABOVE EXCLUSION MAY NOT APPLY TO YOU. THIS LIMITED WARRANTY GIVES YOU
+SPECIFIC LEGAL RIGHTS, AND YOU MAY ALSO HAVE OTHER LEGAL RIGHTS, WHICH
+VARY FROM STATE TO STATE.
+
+6. Services, updates and product changes.
+
+Bocaloco is not required under this License to provide any installation,
+training or other services to you. Such services, if available, must be
+purchased separately. If, pursuant to a separate support agreement or
+otherwise, Bocaloco provides you with a new release, error correction,
+update, upgrade or other modification to the Product, such modification
+will be deemed part of the Product, and subject to the terms of this
+License, unless the modification is expressly provided subject to a
+separate license agreement. Bocaloco reserves the right at any time not
+to release or to discontinue release of any Product and to alter prices,
+features, specifications, capabilities, functions, licensing terms,
+release dates, general availability or other characteristics of any
+future releases of the Product.
+
+7. Registration.
+
+You must register the Product with Bocaloco as a condition to your
+rights to use the Product. You will be prompted to register the Product
+at the time of your installation or first use of the Product, at which
+time you will be notified (or directed to online resources explaining)
+how registration information provided by you may be used and you will be
+afforded the opportunity to opt out of certain uses of such information.
+
+8. Confidentiality.
+
+The codes known as License Keys are confidential information of Bocaloco.
+You agree to hold this information in confidence, not disclose it to any 
+person (other than your employees and individual contractors who are 
+otherwise eligible to use the Product and who have agreed to keep
+confidential any of Bocaloco's confidential information that you
+provide to them). If you are required by law or order of a court or other 
+government authority to disclose Bocaloco's confidential information, 
+then you will notify Bocaloco as soon as possible and as permitted by the 
+requiring authority.
+
+9. LIMITATION OF LIABILITY.
+
+IN NO EVENT WILL BOCALOCO BE LIABLE TO ANY PARTY FOR ANY INDIRECT,
+INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, SPECIAL OR PUNITIVE DAMAGES,
+INCLUDING ANY COSTS OF PROGRAM ERRORS, LOSS OF PROFIT, REVENUE, BUSINESS
+OPPORTUNITY OR DATA, NON-COMPLIANCE WITH APPLICABLE LAWS OR
+UNAVAILABILITY AND INTERRUPTION OF OPERATIONS, ARISING FROM OR RELATING
+TO THIS LICENSE OR THE PRODUCT, WHETHER IN CONTRACT, IN TORT OR
+OTHERWISE, EVEN IF BOCALOCO KNEW, SHOULD HAVE KNOWN OR HAS BEEN ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGES. BOCALOCO'S TOTAL CUMULATIVE
+LIABILITY ARISING FROM OR RELATED TO THIS LICENSE OR THE PRODUCT,
+WHETHER IN CONTRACT, IN TORT OR OTHERWISE, WILL NOT EXCEED THE FEES
+ACTUALLY PAID BY YOU UNDER THIS LICENSE. THIS SECTION 9 WILL APPLY EVEN
+IF AN EXCLUSIVE REMEDY HEREUNDER HAS FAILED OF ITS ESSENTIAL PURPOSE.
+
+SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR
+CONSEQUENTIAL DAMAGES, SO THE ABOVE LIMITATION OR EXCLUSION MAY NOT
+APPLY TO YOU.
+
+10. Audit. During the term of this License and for one (1) year
+thereafter, upon reasonable notice and during normal business hours,
+Bocaloco or its outside auditors will have the right to enter your
+premises and access your records and computer systems to verify that you
+have paid to Bocaloco the correct amounts owed under this License and
+determine whether the Products are being used in accordance with the
+terms of this License. You will provide reasonable assistance to
+Bocaloco in connection with this provision. You agree to pay the cost of
+the audit if any underpayments during the period covered by the audit
+amount to more than five percent (5%) of the fees actually owed for that
+period.
+
+11. Term and Termination.
+
+11.1 Term.
+
+The term of this License will begin as of the date that you receive the
+Product and will remain in effect perpetually unless terminated under
+this Section 11.
+
+11.2 Termination for Convenience.
+
+You may terminate this License for any reason, or for no reason, by
+giving Bocaloco five (5) days' written notice.
+
+11.3 Termination for Cause.
+
+Bocaloco may terminate this License if you breach your obligations
+hereunder. Bocaloco will effect such termination by giving you notice of
+termination, specifying therein the alleged breach. If your breach is
+curable, you will have a grace period of thirty (30) days after such
+notice is served to cure the breach described therein. If the breach is
+cured within the thirty (30) day grace period, then this License will
+remain in effect; otherwise, this License will automatically terminate
+upon the conclusion of the thirty (30) day grace period.
+
+11.4 Effect of Termination.
+
+Upon the termination of this License for any reason the following terms
+shall apply: (a) all rights granted under this License will immediately
+terminate and you must stop all use of the Product; (b) you must
+immediately pay to Bocaloco all fees and expenses accrued prior to the
+effective date of termination; (c) you must return to Bocaloco or
+destroy all copies of the Product provided to or made by you, and will,
+within ten (10) days after the effective date of termination, provide
+Bocaloco with written certification that all such copies have been
+returned or destroyed; (d) you must return to Bocaloco all of its other
+confidential information that you have received during the term of this
+License; and (e) all provisions of this Agreement with the exception of
+the licenses granted in Sections 2 and 3, will survive termination of
+this License for any reason.
+
+12. General provisions.
+
+12.1 Canadian Transactions.
+
+If you are subject to Canadian law, you agree to the following:
+
+The parties hereto have expressly required that the present License and
+its Exhibits be drawn up in the English language. / Les parties aux
+presentes ont expressement exige que la presente Convention et ses
+Annexes soient redigees en langue anglaise.
+
+12.2 Hazardous Uses.
+
+The Product is not intended for use, and you may not use or allow others
+to use the Product, in connection with any application requiring
+fail-safe performance such as the operation of nuclear power facilities,
+air traffic control or navigation systems, weapons control systems, life
+support systems, or any other system whose failure could lead to injury,
+death, environmental damage or mass destruction. You agree that Bocaloco
+will have no liability of any nature, and you are solely responsible,
+for any expense, loss, injury or damage incurred as a result of such use
+of the Product.
+
+12.3 Governing Law; Venue and Jurisdiction.
+
+This License will be governed by and construed in accordance with the
+laws of the United States and the State of Minnesota, without giving
+effect to any conflicts or choice of laws principles that would require
+the application of the laws of a different jurisdiction. The parties
+expressly exclude the application of the 1980 United Nations Convention
+on the International Sale of Goods (if applicable). Subject only to the
+provisions of Section 12.6, any legal action, suit or proceeding arising
+out of or relating to this License must be instituted exclusively in a
+court of competent jurisdiction, federal or state, located within the
+State of Minnesota, and in no other venue. Each party further
+irrevocably consents to personal jurisdiction and venue in, and agrees
+to service of process issued or authorized by, any such court.
+
+12.4 No Jury Trials; No Joinder.
+
+Each party hereby irrevocably waives its right to a jury trial in any
+legal action, suit or proceeding between the parties arising out of or
+relating to this License. A copy this License may be filed with the
+court as written consent by both parties to a bench trial. You agree
+that any dispute you may have against Bocaloco cannot be joined with any
+dispute of any other person or entity in a lawsuit, arbitration or any
+other proceeding, or resolved on a classwide basis.
+
+12.5 Severability.
+
+If any provision of this Agreement is held to be illegal, invalid or
+unenforceable for any reason, then such provision will be enforced to
+the maximum extent permissible and the remainder of the provisions of
+this Agreement will remain in full force and effect.
+
+12.6 Equitable Relief.
+
+The parties acknowledge and agree that it is impossible to measure in
+money the damages that will accrue to Bocaloco by reason of your breach
+of this Agreement and that such a breach will cause irreparable harm to
+Bocaloco. In addition to any other right or remedy available at law or
+in equity Bocaloco will be entitled to specific performance or
+injunctive relief to enforce or prevent any breach of Sections 2, 3, 4,
+6 or 8 without posting a bond or other security, and may apply to any
+court of competent jurisdiction for such relief notwithstanding the
+provisions of Section 12.3.
+
+12.7 Attorneys' Fees.
+
+In any action, suit or proceeding arising out of or relating to this
+License, Bocaloco, if it is the prevailing party, will be entitled to
+recover from you its reasonable attorneys' fees and expenses in
+addition to any other relief that may be awarded.
+
+12.8 Notices.
+
+A notice that is required or permitted under this Agreement must be in
+writing and may be delivered by facsimile, electronic mail, hand
+delivery, courier or mail. Notice will be deemed effective upon the
+earlier of actual receipt by the intended recipient or five (5) days
+after deposit with the U.S. Postal Service as certified or registered
+mail (postage prepaid and return receipt requested) addressed to
+recipient at its address set forth on the first page above or as amended
+by notice pursuant to this section.
+
+12.9 Assignment.
+
+You may not assign this License or assign any of your rights or delegate
+any of your obligations under this License, by operation of law or
+otherwise (including by merger, sale of assets or consolidation),
+without Bocaloco's prior written consent, which may be granted,
+conditioned or withheld in Bocaloco's sole discretion. Any attempted
+assignment in violation of this Section 12.9 will be void and will
+constitute a material breach of this Agreement. Notwithstanding the
+foregoing, Bocaloco may assign this License at any time in its sole
+discretion. Subject to the foregoing, this Agreement will be binding
+upon and will inure to the benefit of the parties and their respective
+successors and permitted assigns.
+
+12.10 Export Control.
+
+You may not directly or indirectly transfer the Product, including its
+documentation, to any country if such transfer would be prohibited by
+applicable law, including the U.S. Export Administration Act and the
+regulations issued thereunder. You agree to the foregoing and you are
+representing and warranting that you are not located in, under the
+control of, or a national or resident of any such country. You will be
+solely responsible for identifying and complying with all laws of any
+jurisdiction outside of the United States regarding the import, export
+or use of Products and technical data supplied by Bocaloco. You will
+obtain at your own expense all licenses, permits or approvals required
+by any government to use the Product.
+
+12.11 U.S. Government Rights.
+
+The Product is a "commercial item" as that term is defined at 48 C.F.R.
+2.101, consisting of "commercial computer software" and "commercial
+computer software documentation" as such terms are used in 48 C.F.R.
+12.212. Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1
+through 227.7202-4, all U.S. Government end users acquire the Product
+with only those rights set forth in this License.
+
+12.12 Waiver and Modifications.
+
+All waivers must be in writing. Any waiver or failure to enforce a
+provision of this License on one occasion shall not be deemed a waiver
+of any other provision or such provision on any other occasion. This
+License may only be amended by a written document signed by both parties.
+
+12.13 Entire License.
+
+This License constitutes the entire, final and exclusive agreement
+between you and Bocaloco regarding the specific license transaction
+described herein. No prior agreements, understandings, statements,
+proposals or representations, written or oral, apply. No written or oral
+statement, advertisement or product description not expressly contained
+in this License can be used to alter or supplement its terms. You may
+not rely on any representations or statements not contained in this
+Agreement. Headings in this License are for reference only and have no
+effect on any provision's meaning.
+
+If you have any questions about this License, please contact Bocaloco.
+
+Bocaloco Software LLC
+8138 Archer Lane
+Maple Grove, MN 55311
+

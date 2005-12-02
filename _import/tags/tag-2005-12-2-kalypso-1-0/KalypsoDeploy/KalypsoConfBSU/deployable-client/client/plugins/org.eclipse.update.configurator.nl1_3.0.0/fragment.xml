@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<fragment
+    name="Install/Update Configurator NL Support"
+    id="org.eclipse.update.configurator.nl1"
+    version="3.0.0"
+    plugin-id="org.eclipse.update.configurator"
+    plugin-version="3.0.0"
+>
+<runtime>
+    <library name="nl1.jar"/>
+</runtime>
+</fragment>

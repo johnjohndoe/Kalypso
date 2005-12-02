@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - Mesclando de uma Ramificação para Outra">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+Esta folha de apontamento ativará automaticamente os assistentes, executará as ações e o guiará pelas etapas individuais para mesclar alterações de uma ramificação CVS para outra ou para HEAD. Para saber mais sobre como utilizar as folhas de apontamentos ou para consultar uma lista de folhas de apontamentos disponíveis, clique em Ajuda (?). Para iniciar o trabalho com essa folha de apontamentos, clique no botão "Clicar para Iniciar" abaixo.
+	</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Determinar as Informações de Ramificação e Versão">
+		<description>
+Nesta etapa você deve determinar o nome da ramificação e da versão que contém as alterações e a versão da qual a ramificação foi criada. Essa é uma tarefa manual; você precisará executar o trabalho e clicar no botão "Clicar para Concluir" para mover para a próxima etapa.
+	
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Carregar o Destino no Espaço de Trabalho">
+		<description>
+Selecione o projeto e escolha Substituir por &gt; Outra Ramificação ou Versão do menu de contexto. Em seguida, selecione a ramificação que deseja substituir. Nesta etapa você deve certificar-se de que o destino é carregado no espaço de trabalho. Essa é uma tarefa manual; você precisará executar o trabalho e clicar no botão "Clicar para Concluir" para mover para a próxima etapa.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="Mesclar Detalhes">
+		<description>
+Selecione o projeto, escolha Equipe &gt; Mesclar e conclua o assistente conforme necessário. Esta etapa especifica os detalhes da mesclagem. Essa é uma tarefa manual; você precisará executar o trabalho e clicar no botão "Clicar para Concluir" para mover para a próxima etapa.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Trabalhar com o Editor de Mesclagem">
+		<description>
+No Editor de Mesclagem mescla manualmente as alterações. Esta etapa carrega as alterações no espaço de trabalho. Essa é uma tarefa manual; você precisará executar o trabalho e clicar no botão "Clicar para Concluir" para mover para a próxima etapa.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Consolidar suas Alterações">
+		<description>
+Selecione Equipe &gt; Sincronizar com Repositório e, em seguida, consolide todas as alterações para o repositório. Esta etapa finaliza a transferência das alterações do espaço de trabalho para o repositório CVS. Essa é uma tarefa manual; você precisará executar o trabalho e clicar no botão "Clicar para Concluir" para mover para a próxima etapa.
+	</description>
+	</item>
+
+</cheatsheet>

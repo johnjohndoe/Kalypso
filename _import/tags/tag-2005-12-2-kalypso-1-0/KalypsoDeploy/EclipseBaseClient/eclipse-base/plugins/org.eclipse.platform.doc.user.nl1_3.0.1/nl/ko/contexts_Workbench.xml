@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+    <!-- Actions -->
+    <context id="add_bookmark_action_context">
+        <description><b>책갈피</b>는 &quot;앵커&quot;를 Workbench 자원의 특정 행에 넣습니다.</description>
+        <topic label="책갈피 추가" href="tasks/tasks-81.htm"/>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="add_task_action_context">
+        <description><b>타스크</b>는 &quot;앵커&quot;를 Workbench 자원의 특정 행에 넣습니다.</description>
+        <topic label="타스크 추가" href="tasks/tasks-77b.htm"/>
+        <topic label="타스크 보기" href="concepts/ctskview.htm"/>
+    </context>
+    <context id="incremental_build_action_context">
+        <description><b>증분 빌드</b>는 선택한 프로젝트에서 마지막 빌드 이후 수정된 자원만 컴파일합니다.</description>
+        <topic label="네비게이터 보기 - 모두 다시 빌드" href="reference/ref-27.htm"/>
+        <topic label="빌드" href="concepts/concepts-22.htm"/>
+        <topic label="자원 빌드" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="full_build_action_context">
+        <description><b>전체 빌드</b>는 선택한 프로젝트의 자원을 처음부터 컴파일합니다. 이 빌드는 수동 빌드가 완료될 때만 수행됩니다.</description>
+        <topic label="네비게이터 보기 - 모두 다시 빌드" href="reference/ref-27.htm"/>
+        <topic label="빌드" href="concepts/concepts-22.htm"/>
+        <topic label="자원 빌드" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_incremental_build_action_context">
+        <description>증분 빌드는 마지막 빌드 이후 수정된 자원만 컴파일합니다.</description>
+        <topic label="빌드" href="concepts/concepts-22.htm"/>
+        <topic label="자원 빌드" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="global_full_build_action_context">
+        <description><b>전체 빌드</b>는 모든 Workbench를 처음부터 컴파일합니다. 이 빌드는 수동 빌드가 완료될 때만 수행됩니다.</description>
+        <topic label="빌드" href="concepts/concepts-22.htm"/>
+        <topic label="자원 빌드" href="tasks/tasks-73.htm"/>
+    </context>
+    <context id="close_resource_action_context">
+        <description>선택한 자원이 닫힙니다.</description>
+        <topic label="자원 닫기" href="tasks/tasks-47.htm"/>
+        <topic label="네비게이터 보기 - 닫기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_resource_action_context">
+        <description>선택한 자원이 열립니다.</description>
+        <topic label="자원 열기" href="tasks/tasks-46.htm"/>
+        <topic label="네비게이터 보기 - 열기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="open_file_action_context">
+        <description>선택한 자원이 편집기 영역이나 지정된 외부 편집기에서 열립니다.</description>
+        <topic label="네비게이터 보기 - 연결 프로그램..." href="reference/ref-27.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="open_system_editor_action_context">
+        <description>선택한 자원이 이 파일 유형에 대한 기본 시스템 편집기에서 열립니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+        <topic label="외부에서 파일 편집" href="tasks/tasks-52.htm"/>
+    </context>
+    <context id="refresh_action_context">
+        <description>이 명령은 보기의 컨텐츠 및 표시를 새로 고칩니다.</description>
+        <topic label="네비게이터 보기 - 새로 고치기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_resource_action_context">
+        <description>이 명령을 사용하면 자원을 한 위치에서 다른 위치로 이동할 수 있습니다.</description>
+        <topic label="자원 이동" href="tasks/tasks-63.htm"/>
+        <topic label="네비게이터 보기 - 이동" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_resource_action_context">
+        <description>이 명령을 사용하면 자원을 한 위치에서 다른 위치로 복사할 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 복사" href="reference/ref-27.htm"/>
+    </context>
+    <context id="move_project_action_context">
+        <description>이 명령을 사용하면 프로젝트를 한 위치에서 다른 위치로 이동할 수 있습니다.</description>
+        <topic label="자원 이동" href="tasks/tasks-63.htm"/>
+        <topic label="네비게이터 보기 - 이동" href="reference/ref-27.htm"/>
+    </context>
+    <context id="copy_project_action_context">
+        <description>이 명령을 사용하면 프로젝트를 한 위치에서 다른 위치로 복사할 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 복사" href="reference/ref-27.htm"/>
+    </context>
+    <context id="rename_resource_action_context">
+        <description>이 명령을 사용하면 선택한 자원에 대해 새 이름을 제공할 수 있습니다.</description>
+        <topic label="자원 이름 바꾸기" href="tasks/tasks-66.htm"/>
+        <topic label="네비게이터 보기 - 이름 바꾸기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_resource_action_context">
+        <description>이 명령을 사용하면 선택한 자원을 삭제할 수 있습니다.</description>
+        <topic label="자원 삭제" href="tasks/tasks-67.htm"/>
+        <topic label="네비게이터 보기 - 삭제" href="reference/ref-27.htm"/>
+    </context>
+    <context id="delete_retarget_action_context">
+        <description>이 명령은 선택한 자원 또는 요소를 삭제합니다.</description>
+        <topic label="자원 삭제" href="tasks/tasks-67.htm"/>
+        <topic label="네비게이터 보기 - 삭제" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_dialog_action_context">
+        <description>이 명령은 선택된 자원의 여러 특성을 표시합니다. </description>
+        <topic label="자원 특성 보기" href="tasks/tasks-49.htm"/>
+        <topic label="네비게이터 보기 - 특성" href="reference/ref-27.htm"/>
+    </context>
+    <context id="project_property_dialog_action_context">
+        <description>이 명령은 선택한 자원의 여러 프로젝트 특성을 표시합니다. </description>
+        <topic label="프로젝트 메뉴 - 특성" href="reference/ref-59.htm"/>
+        <topic label="자원 특성 보기" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="create_folder_action_context">
+        <description>이 명령을 사용하면 새 폴더 컨테이너를 작성할 수 있습니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 폴더" href="tasks/tasks-43.htm"/>
+        <topic label="새 폴더 마법사" href="reference/ref-38.htm"/>
+    </context>
+    <context id="create_file_action_context">
+        <description>이 명령을 사용하면 새 파일을 작성할 수 있습니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 파일" href="tasks/tasks-44.htm"/>
+        <topic label="새 파일 마법사" href="reference/ref-39.htm"/>
+    </context>
+    <context id="new_action_context">
+        <description>이 명령을 사용하면 새 항목을 자원으로 작성할 수 있습니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="Workbench 새 마법사" href="reference/ref-37.htm"/>
+    </context>
+    <context id="import_action_context">
+        <description>이 명령을 사용하면 자원을 가져올 수 있습니다.</description>
+        <topic label="가져오기" href="tasks/tasks-53.htm"/>
+        <topic label="디렉토리에서 가져오기" href="tasks/tasks-55.htm"/>
+        <topic label="Zip 파일에서 가져오기" href="tasks/tasks-55bg.htm"/>
+        <topic label="파일 메뉴 - 가져오기" href="reference/ref-56.htm"/>
+    </context>
+    <context id="export_action_context">
+        <description>이 명령을 사용하면 자원을 내보낼 수 있습니다.</description>
+        <topic label="내보내기" href="tasks/tasks-57.htm"/>
+        <topic label="파일 시스템으로 내보내기" href="tasks/tasks-59.htm"/>
+        <topic label="Zip 파일로 내보내기" href="tasks/tasks-59ag.htm"/>
+        <topic label="파일 메뉴 - 내보내기" href="reference/ref-56.htm"/>
+    </context>
+    <context id="scrub_local_action_context">
+        <description>Workbench는 빌드를 준비 중입니다.</description>
+        <topic label="빌드" href="concepts/concepts-22.htm"/>
+    </context>
+    <context id="set_page_action_context">
+        <description>이 명령은 Workbench 표시를 새로 고칩니다.</description>
+        <topic label="네비게이터 보기 - 새로 고치기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="save_perspective_action_context">
+        <description>이 메뉴 옵션을 사용하면 현재 Perspective를 정의된 Perspective로 저장할 수 있습니다.</description>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective 저장" href="tasks/tasks-9i.htm"/>
+        <topic label="창 메뉴 - 다른 이름으로 Perspective 저장" href="reference/ref-60.htm"/>
+    </context>
+    <context id="save_as_action_context">
+        <description>이 명령을 사용하면 편집 중인 자원을 다른 Workbench 위치로 저장할 수 있습니다.</description>
+        <topic label="파일 메뉴 - 다른 이름으로 저장" href="reference/ref-56.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_all_action_context">
+        <description>이 명령을 사용하면 편집기 영역에 열려 있는 모든 자원을 한 번에 저장할 수 있습니다.</description>
+        <topic label="파일 메뉴 - 모두 저장" href="reference/ref-56.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="save_action_context">
+        <description>이 명령은 현재 편집기 영역에서 활성화된 자원을 저장합니다.</description>
+        <topic label="파일 메뉴 - 저장" href="reference/ref-56.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="about_action_context">
+        <description>이 명령은 제품 정보를 표시합니다.</description>
+        <topic label="도움말 메뉴 - 제품 정보" href="reference/ref-61.htm"/>
+    </context>
+    <context id="close_all_action_context">
+        <description>이 명령은 현재 편집기 영역에 열려 있는 모든 편집기를 닫습니다.</description>
+        <topic label="파일 메뉴 - 모두 닫기" href="reference/ref-56.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="close_page_action_context">
+        <description>이 명령은 활성 Perspective를 닫습니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="창 메뉴 - Perspective 닫기" href="reference/ref-60.htm"/>
+        <topic label="Perspective - 참조" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_part_action_context">
+        <description>이 명령은 현재 활성 편집기를 닫습니다.</description>
+        <topic label="파일 메뉴 - 닫기" href="reference/ref-56.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="edit_action_sets_action_context">
+        <description>이 명령을 사용하면 Workbench 메뉴 표시줄이나 도구 모음에서 사용 가능한 조치 세트를 사용자 정의할 수 있습니다.</description>
+        <topic label="Perspective 구성" href="tasks/tasks-9k.htm"/>
+        <topic label="창 메뉴 - Perspective 사용자 정의" href="reference/ref-60.htm"/>
+    </context>
+    <context id="edit_perspectives_action_context">
+        <description>이 명령을 사용하면 정의된 Perspective를 삭제 또는 재설정하거나 기본 Perspective를 정의할 수 있습니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective가 열리는 위치 변경" href="tasks/tasks-24.htm"/>
+        <topic label="Perspective - 참조" href="reference/ref-6.htm"/>
+    </context>
+    <context id="close_all_pages_action_context">
+        <description>이 명령은 현재 열린 모든 Perspective를 닫습니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="창 메뉴 - 모든 Perspective 닫기" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_new_page_action_context">
+        <description>새 페이지가 열립니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="새 Perspective" href="tasks/tasks-9f.htm"/>
+        <topic label="창 메뉴 - Perspective 열기" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_preferences_action_context">
+        <description>환경 설정 대화 상자가 열립니다.</description>
+        <topic label="Workbench - 환경 설정" href="reference/ref-10.htm"/>
+    </context>
+    <context id="open_new_window_action_context">
+        <description>새 창이 열립니다.</description>
+        <topic label="Perspective 열기" href="tasks/tasks-9f.htm"/>
+        <topic label="Perspective가 열리는 위치 변경" href="tasks/tasks-24.htm"/>
+        <topic label="Workbench" href="concepts/concepts-2.htm"/>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="open_new_action_context">
+        <description>새 Perspective가 열립니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="새 Perspective 열기" href="tasks/tasks-24.htm"/>
+        <topic label="창 메뉴 - Perspective 열기" href="reference/ref-60.htm"/>
+    </context>
+    <context id="next_page_action_context">
+        <description>이 명령은 다음의 열린 Perspective를 표시합니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective가 열리는 위치 변경" href="tasks/tasks-24.htm"/>
+    </context>
+    <context id="quick_start_action_context">
+        <description>환영 편집기가 열립니다.</description>
+        <topic label="도움말 메뉴 - 환영" href="reference/ref-61.htm"/>
+    </context>
+    <context id="tips_and_tricks_action_context">
+        <description>탭 및 트릭 도움말 페이지를 엽니다.</description>
+        <topic label="도움말 메뉴 - 팁 및 트릭" href="reference/ref-61.htm"/>
+    </context>
+    <context id="quit_action_context">
+        <description>이 명령은 작업공간을 저장하고 종료합니다.</description>
+        <topic label="파일 메뉴 - 종료" href="reference/ref-56.htm"/>
+    </context>
+    <context id="reset_perspective_action_context">
+        <description>Perspective가 원래(기본) 레이아웃으로 재설정됩니다.</description>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective 재설정" href="tasks/tasks-9j.htm"/>
+        <topic label="창 메뉴 - Perspective 재설정" href="reference/ref-60.htm"/>
+    </context>
+    <context id="target_editors_visibility_action_context">
+        <description>편집기 영역을 숨기거나 표시할 수 있습니다. 편집기 영역을 숨길 때 다른 보기를 표시할 영역을 늘릴 수 있습니다.</description>
+        <topic label="창 메뉴 - 편집기 표시/숨기기" href="reference/ref-60.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="switch_to_perspective_action_context">
+        <description>사용자가 선택할 새 Perspective가 열립니다.</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective 간 전환" href="tasks/tasks-28.htm"/>
+        <topic label="창 메뉴 - Perspective 열기" href="reference/ref-60.htm"/>
+        <topic label="Perspective - 참조" href="reference/ref-6.htm"/>
+    </context>
+    <context id="show_view_action_context">
+        <description>사용자가 선택할 보기가 표시됩니다.</description>
+        <topic label="보기 표시" href="tasks/tasks-3.htm"/>
+        <topic label="창 메뉴 - 보기 표시" href="reference/ref-60.htm"/>
+    </context>
+    <context id="show_view_other_action_context">
+        <description>표시할 보기를 선택하는 대화 상자를 여십시오.</description>
+        <topic label="보기 표시" href="tasks/tasks-3.htm"/>
+        <topic label="창 메뉴 - 보기 표시" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_action_context">
+        <description>선택한 perspective를 여십시오.</description>
+        <topic label="Perspective 열기" href="tasks/tasks-9f.htm"/>
+        <topic label="창 메뉴 - Perspective 열기" href="reference/ref-60.htm"/>
+    </context>
+    <context id="open_perspective_other_action_context">
+        <description>열려는 Perspective를 선택할 수 있는 대화 상자를 엽니다.</description>
+        <topic label="Perspective 열기" href="tasks/tasks-9f.htm"/>
+        <topic label="창 메뉴 - Perspective 열기" href="reference/ref-60.htm"/>
+    </context>
+    <context id="remove_bookmark_action_context">
+        <description>책갈피를 제거합니다.</description>
+        <topic label="책갈피 삭제" href="tasks/tasks-82.htm"/>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="open_bookmark_action_context">
+        <description>책갈피가 상주하는 자원을 엽니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="select_all_bookmark_action_context">
+        <description>모든 책갈피를 선택합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="filter_selection_action_context">
+        <description>이 명령을 사용하면 자원 네비게이터에 표시된 유형을 필터링할 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 필터" href="reference/ref-27.htm"/>
+    </context>
+    <context id="goto_resource_action_context">
+        <description>선택한 자원으로 이동합니다.</description>
+        <topic label="네비게이터 보기 - 이동" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_move_action_context">
+        <description>선택한 자원을 다른 위치로 이동합니다.</description>
+        <topic label="자원 이동" href="tasks/tasks-63.htm"/>
+        <topic label="네비게이터 보기 - 이동" href="reference/ref-27.htm"/>
+    </context>
+    <context id="resource_navigator_rename_action_context">
+        <description>선택한 자원의 이름을 바꿉니다.</description>
+        <topic label="자원 이름 바꾸기" href="tasks/tasks-66.htm"/>
+        <topic label="네비게이터 보기 - 이름 바꾸기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="show_in_navigator_action_context">
+        <description>네비게이터 보기에 선택한 자원을 표시합니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="네비게이터 보기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="sort_view_action_context">
+        <description>이 명령은 자원 네비게이터에 표시된 유형의 정렬 순서를 변경합니다.</description>
+        <topic label="자원 정렬" href="tasks/tasks-48.htm"/>
+        <topic label="네비게이터 보기 - 정렬" href="reference/ref-27.htm"/>
+    </context>
+    <context id="properties_categories_action_context">
+        <description>카테고리에 따라 그룹화된 특성 값을 표시합니다.</description>
+        <topic label="특성 보기" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_defaults_action_context">
+        <description>선택한 특성 값을 기본값으로 설정합니다.</description>
+        <topic label="특성 보기" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="properties_filter_action_context">
+        <description>특성을 필터링합니다.</description>
+        <topic label="특성 보기" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="purge_completed_task_action_context">
+        <description>목록에서 완료된 모든 타스크를 제거합니다.</description>
+        <topic label="타스크 삭제" href="tasks/tasks-78.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="new_task_action_context">
+        <description>새 타스크를 작성합니다.</description>
+        <topic label="연관되지 않은 타스크 추가" href="tasks/tasks-77.htm"/>
+        <topic label="연관된 타스크 추가" href="tasks/tasks-77b.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="remove_task_action_context">
+        <description>이 목록에서 타스크를 제거합니다.</description>
+        <topic label="타스크 삭제" href="tasks/tasks-78.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="goto_task_action_context">
+        <description>타스크와 연관된 자원을 엽니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="undo_action_context">
+        <description>이전 편집을 실행 취소합니다.</description>
+        <topic label="편집 메뉴 - 실행 취소" href="reference/ref-57.htm"/>
+    </context>
+    <context id="redo_action_context">
+        <description>이전 편집을 다시 실행합니다.</description>
+        <topic label="편집 메뉴 - 다시 실행" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cut_action_context">
+        <description>선택한 텍스트를 클립보드에 잘라냅니다.</description>
+        <topic label="편집 메뉴 - 잘라내기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_action_context">
+        <description>선택사항을 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+    </context>
+    <context id="paste_action_context">
+        <description>현재 커서 위치에서 클립보드의 컨텐츠를 붙여넣기합니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="delete_action_context">
+        <description>선택사항을 삭제합니다.</description>
+        <topic label="편집 메뉴 - 삭제" href="reference/ref-57.htm"/>
+    </context>
+    <context id="selectAll_action_context">
+        <description>파일의 모든 컨텐츠를 선택합니다.</description>
+        <topic label="편집 메뉴 - 모두 선택" href="reference/ref-57.htm"/>
+    </context>
+    <context id="ShiftLeft_action_context">
+        <description>선택한 텍스트를 왼쪽으로 이동하여 들여쓰기를 줄입니다.</description>
+    </context>
+    <context id="ShiftRight_action_context">
+        <description>선택한 텍스트를 오른쪽으로 이동하여 들여쓰기를 늘립니다.</description>
+    </context>
+    <context id="find_action_context">
+        <description>편집기에서 검색할 텍스트를 지정하기 위한 대화 상자가 나타납니다.</description>
+        <topic label="편집 메뉴 - 찾기/바꾸기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="bookmark_action_context">
+        <description>이 자원에서 책갈피를 추가합니다.</description>
+        <topic label="편집 메뉴 - 책갈피 추가" href="reference/ref-57.htm"/>
+    </context>
+    <context id="addTask_action_context">
+        <description>이 자원과 연관된 타스크를 추가합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="revert_action_context">
+        <description>저장된 컨텐츠로 되돌립니다.</description>
+    </context>
+    <context id="GotoLine_action_context">
+        <description>지정된 행의 시작 위치에 커서를 놓으십시오.</description>
+    </context>
+    <context id="open_workspace_file_action_context">
+        <description>지정한 자원의 편집기를 엽니다. </description>
+        <topic label="탐색 메뉴 - 자원 열기" href="reference/ref-58.htm"/>
+    </context>
+    <context id="print_action_context">
+        <description>이 명령은 현재 편집기 영역에서 활성화된 자원을 인쇄합니다.</description>
+    </context>
+    <context id="select_working_set_action_context">
+        <description>목록에서 활성화할 작업 세트를 선택합니다.</description>
+    </context>
+    <context id="clear_working_set_action_context">
+        <description>활성 작업 세트를 삭제합니다. </description>
+    </context>
+    <context id="edit_working_set_action_context">
+        <description>활성 작업 세트의 컨텐츠를 편집합니다.</description>
+    </context>
+    <context id="show_in_action_context">
+        <description>지정한 보기의 현재 선택사항을 표시합니다.</description>
+    </context>
+    <context id="navigation_history_forward">
+        <description>탐색 히스토리에서 앞으로 이동합니다.</description>
+        <topic label="탐색 메뉴 - 이송" href="reference/ref-58.htm"/>
+    </context>
+    <context id="navigation_history_backward">
+        <description>탐색 히스토리에서 뒤로 이동합니다.</description>
+        <topic label="탐색 메뉴 - 뒤로" href="reference/ref-58.htm"/>
+    </context>
+    <!-- Dialogs -->
+    <context id="about_dialog_context">
+        <description>이 대화상자에는 제품 정보가 표시됩니다.</description>
+        <topic label="도움말 메뉴 - 제품 정보" href="reference/ref-61.htm"/>
+    </context>
+    <context id="action_set_selection_dialog_context">
+        <description>각 Perspective에는 메뉴 표시줄 및 Workbench 도구 모음에서 액세스할 수 있는 미리 정의된 조치 세트가 포함되어 있습니다. 관련 조치는 조치 세트로 그룹화되어 있습니다.</description>
+        <topic label="Perspective 구성" href="tasks/tasks-9k.htm"/>
+        <topic label="창 메뉴 - Perspective 사용자 정의" href="reference/ref-60.htm"/>
+    </context>
+    <context id="editor_selection_dialog_context">
+        <description>이 대화 상자에서 임베드된 다양한 외부 편집기를 여러 유형의 Workbench 자원과 연관시킬 수 있습니다.</description>
+        <topic label="환경 설정 - 파일 연관" href="reference/ref-13.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="file_extension_dialog_context">
+        <description>이 대화 상자에서 식별할 파일 유형의 확장자를 표시하십시오.</description>
+        <topic label="환경 설정 - 파일 연관" href="reference/ref-13.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="preference_dialog_context">
+        <description>이 대화 상자를 사용하면 Workbench 환경 설정을 설정할 수 있습니다.</description>
+        <topic label="대화 상자 환경 설정" href="reference/ref-72.htm"/>
+    </context>
+    <context id="property_dialog_context">
+        <description>이 대화 상자를 사용하면 선택한 자원의 특성을 보거나 변경할 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 특성 페이지" href="reference/ref-27.htm"/>
+        <topic label="자원 특성" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="save_perspective_dialog_context">
+        <description>사용자가 지정한 Perspective를 저장하는 대화 상자</description>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective 저장" href="tasks/tasks-9i.htm"/>
+    </context>
+    <context id="select_perspective_dialog_context">
+        <description>Perspective를 선택하는 대화 상자</description>
+        <topic label="Perspective - 개념" href="concepts/concepts-4.htm"/>
+        <topic label="Perspective 저장" href="tasks/tasks-9i.htm"/>
+        <topic label="창 메뉴" href="reference/ref-60.htm"/>
+    </context>
+    <context id="project_location_selection_dialog_context">
+        <description>프로젝트의 위치를 선택하는 대화 상자</description>
+    </context>
+    <context id="show_view_dialog_context">
+        <description>표시할 보기를 선택하는 대화 상자</description>
+        <topic label="보기 표시" href="tasks/tasks-3.htm"/>
+    </context>
+    <context id="save_as_dialog_context">
+        <description>저장할 자원의 이름 및 위치를 지정하는 대화 상자</description>
+    </context>
+    <context id="type_filtering_dialog_context">
+        <description>이 대화 상자를 사용하여 파일 유형을 필터링하십시오.</description>
+        <topic label="내보내기 마법사" href="reference/ref-71.htm"/>
+        <topic label="가져오기 마법사" href="reference/ref-70.htm"/>
+    </context>
+    <context id="container_selection_dialog_context">
+        <description>폴더를 선택하는 대화 상자</description>
+    </context>
+    <context id="file_selection_dialog_context">
+        <description>파일을 선택하는 대화 상자</description>
+    </context>
+    <context id="list_selection_dialog_context">
+        <description>목록에서 항목을 선택하는 대화 상자</description>
+    </context>
+    <context id="yes_no_cancel_list_selection_dialog_context">
+        <description>목록에서 선택사항을 허용, 거부 또는 취소하는 대화 상자</description>
+    </context>
+    <context id="resource_selection_dialog_context">
+        <description>자원을 선택하는 대화 상자</description>
+    </context>
+    <context id="goto_resource_dialog_context">
+        <description>Workbench에서 찾을 자원을 선택하는 대화 상자</description>
+    </context>
+    <context id="task_filters_dialog_context">
+        <description>특정 기준에 따라 타스크를 표시하거나 숨길 수 있는 대화 상자</description>
+        <topic label="타스크 목록 필터링" href="tasks/tasks-79.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="find_replace_dialog_context">
+        <description>지정된 텍스트를 찾고 바꾸는 대화 상자</description>
+		<topic label="사용 가능한 일반 표현식" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+    </context>
+    <context id="goto_line_dialog_context">
+        <description>커서를 배치할 행을 지정하는 대화 상자</description>
+    </context>
+    <!-- Editors -->
+    <context id="welcome_editor_context">
+        <description>새 사용자에게 일부 기본 타스크를 소개하는 빠르고 간단한 안내서</description>
+        <topic label="도움말 메뉴" href="reference/ref-61.htm"/>
+    </context>
+    <context id="text_editor_context">
+        <description>텍스트 편집기는 파일을 편집하는 데 사용됩니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="system_summary_editor_context">
+        <description>제품 구성 세부사항을 표시합니다.</description>
+    </context>
+    <!-- Preference pages -->
+    <context id="file_editors_preference_page_context">
+        <description>이 환경 설정 페이지에서 임베드된 다양한 외부 편집기를 여러 유형의 Workbench 자원과 연관시킬 수 있습니다.</description>
+        <topic label="환경 설정 - 파일 연관" href="reference/ref-13.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="build_order_preference_page_context">
+        <description>작업공간에서 프로젝트가 빌드되는 순서를 변경할 수 있습니다.</description>
+        <topic label="빌드 순서 변경" href="tasks/tasks-14.htm"/>
+    </context>
+    <context id="file_states_preference_page_context">
+        <description>이 환경 설정 페이지는 Workbench의 로컬 파일 히스토리를 구성하는 데 사용됩니다.</description>
+        <topic label="로컬 히스토리" href="concepts/concepts-17a.htm"/>
+        <topic label="환경 설정 - 로컬 히스토리" href="reference/ref-14.htm"/>
+        <topic label="네비게이터 - 로컬 히스토리" href="reference/ref-27.htm"/>
+    </context>
+    <context id="perspectives_preference_page_context">
+        <description>기존 Perpective의 상태를 설정할 수 있습니다.</description>
+        <topic label="환경 설정 - Perspective" href="reference/ref-15.htm"/>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="views_preference_page_context">
+        <description>이 환경 설정 페이지는 Workbench에 있는 보기의 모양 및 레이아웃에 대한 환경 설정을 설정하는 데 사용됩니다.</description>
+        <topic label="환경 설정 - 모양" href="reference/ref-16.htm"/>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_preference_page_context">
+        <description>일반 Workbench 환경 설정을 설정할 수 있습니다.</description>
+        <topic label="환경 설정 - Workbench" href="reference/ref-10.htm"/>
+    </context>
+    <context id="font_preference_page_context">
+        <description>이 환경 설정 페이지는 Workbench에서 사용된 글꼴을 설정하는 데 사용됩니다.</description>
+        <topic label="환경 설정 - 글꼴" href="reference/ref-fonts.htm"/>
+    </context>
+    <context id="workbench_editor_preference_page_context">
+        <description>이 환경 설정 페이지는 Workbench에 있는 편집기 영역에 대한 환경 설정을 설정하는 데 사용됩니다.</description>
+        <topic label="환경 설정 - 편집기" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="compare_viewers_preference_page_context">
+        <description>이 환경 설정 페이지는 Workbench에 있는 비교 표시기에 대한 환경 설정을 설정하는 데 사용됩니다.</description>
+        <topic label="환경 설정 - 비교" href="reference/ref-11.htm"/>
+        <topic label="자원 비교" href="reference/ref-25.htm"/>
+    </context>
+    <!-- Property pages -->
+    <context id="project_reference_property_page_context">
+        <description>참조된 프로젝트를 설정할 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 특성 페이지" href="reference/ref-27.htm"/>
+        <topic label="자원 특성 보기" href="tasks/tasks-49.htm"/>
+    </context>
+    <context id="resource_info_property_page_context">
+        <description>선택한 자원에 대한 정보를 볼 수 있습니다.</description>
+        <topic label="네비게이터 보기 - 특성 페이지" href="reference/ref-27.htm"/>
+        <topic label="자원 특성 보기" href="tasks/tasks-49.htm"/>
+    </context>
+    <!-- Views -->
+    <context id="bookmark_view_context">
+        <description>모든 책갈피를 표시하는 보기</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="책갈피 보기" href="reference/ref-28.htm"/>
+    </context>
+    <context id="content_outline_context">
+        <description>편집 중인 자원의 아웃라인(해당되는 경우)을 표시하는 보기</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="아웃라인 보기" href="concepts/coutline.htm"/>
+    </context>
+    <context id="resource_view_context">
+        <description>이 보기는 작업공간에 모든 자원을 표시합니다.</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="네비게이터 보기" href="reference/ref-27.htm"/>
+    </context>
+    <context id="property_sheet_view_context">
+        <description>이 보기는 선택한 자원의 특성을 표시합니다.</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="특성 보기" href="concepts/cpropview.htm"/>
+    </context>
+    <context id="task_list_view_context">
+        <description>이 보기는 빌드 문제점 및 빌드 중 사용자가 작성하거나 자동으로 생성된 타스크(리마인더)를 표시합니다.</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <!-- Property sheet -->
+    <context id="property_sheet_page_help_context">
+        <description>특성 보기는 선택한 자원의 특성을 표시합니다.</description>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+        <topic label="특성 보기" href="concepts/cpropview.htm"/>
+    </context>
+    <!-- Windows -->
+    <context id="detached_window_context">
+        <description>Workbench 창에서 보기를 분리할 수 있으며 데스크탑의 이동가능한 창에 보기가 표시될 수 있습니다.</description>
+        <topic label="보기 놓기" href="tasks/tasks-3e.htm"/>
+        <topic label="Workbench 창 레이아웃" href="reference/ref-23.htm"/>
+        <topic label="보기" href="concepts/concepts-5.htm"/>
+    </context>
+    <context id="workbench_window_context">
+        <description>각 Workbench 창에는 다양한 보기 및 편집기로 구성된 하나 이상의 Perspective가 포함되어 있습니다.</description>
+        <topic label="Workbench" href="concepts/concepts-2.htm"/>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+        <topic label="Workbench 관리" href="tasks/tasks-1.htm"/>
+    </context>
+    <!-- Wizard pages -->
+    <context id="new_project_wizard_page_context">
+        <description>이 마법사는 Workbench에서 새 프로젝트를 작성하는 데 도움을 줍니다.</description>
+        <topic label="새 프로젝트 마법사" href="reference/ref-37.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 프로젝트" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="new_project_reference_wizard_page_context">
+        <description>이 마법사 페이지를 사용하면 이 프로젝트가 참조할 다른 프로젝트를 선택할 수 있습니다.</description>
+        <topic label="참조 프로젝트 페이지 선택" href="reference/ref-37.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_folder_wizard_page_context">
+        <description>새 폴더 자원의 작성 과정을 안내하는 마법사</description>
+        <topic label="새 폴더 마법사" href="reference/ref-38.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 폴더" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_file_wizard_page_context">
+        <description>새 파일 자원의 작성 과정을 안내하는 마법사</description>
+        <topic label="새 파일 마법사" href="reference/ref-39.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 파일" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_wizard_selection_wizard_page_context">
+        <description>작성할 자원 유형을 선택합니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="export_wizard_selection_wizard_page_context">
+        <description>수행할 내보내기 유형을 선택합니다.</description>
+        <topic label="파일 내보내기" href="tasks/tasks-57.htm"/>
+        <topic label="파일 시스템으로 내보내기" href="tasks/tasks-59.htm"/>
+        <topic label="Zip 파일로 내보내기" href="tasks/tasks-59ag.htm"/>
+    </context>
+    <context id="import_wizard_selection_wizard_page_context">
+        <description>수행할 가져오기 유형을 선택합니다.</description>
+        <topic label="가져오기 마법사 사용" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="file_system_export_wizard_page">
+        <description>이 페이지를 사용하여 자원을 파일 시스템으로 내보내는 데 필요한 모든 정보를 제공할 수 있습니다.</description>
+        <topic label="내보내기 마법사 사용" href="tasks/tasks-59.htm"/>
+        <topic label="내보내기 마법사" href="reference/ref-71.htm"/>
+    </context>
+    <context id="file_system_import_wizard_page">
+        <description>이 페이지를 사용하여 파일을 파일 시스템에서 가져오는 데 필요한 모든 정보를 제공할 수 있습니다.</description>
+        <topic label="파일 시스템에서 가져오기" href="tasks/tasks-55.htm"/>
+        <topic label="가져오기 마법사" href="reference/ref-70.htm"/>
+    </context>
+    <context id="zip_file_export_wizard_page">
+        <description>이 페이지를 사용하여 자원을 작업공간에서 아카이브 파일로 내보내는 데 필요한 모든 정보를 제공할 수 있습니다.</description>
+        <topic label="Zip 파일로 내보내기" href="tasks/tasks-59ag.htm"/>
+        <topic label="내보내기 마법사" href="reference/ref-71.htm"/>
+    </context>
+    <context id="zip_file_import_wizard_page">
+        <description>이 페이지를 사용하여 파일을 아카이브 파일에서 작업공간으로 가져오는 데 필요한 모든 정보를 제공할 수 있습니다.</description>
+        <topic label="Zip 파일에서 가져오기" href="tasks/tasks-55bg.htm"/>
+        <topic label="가져오기 마법사" href="reference/ref-70.htm"/>
+    </context>
+    <!-- Wizards -->
+    <context id="new_wizard_context">
+        <description>이 마법사를 사용하면 새 자원 및/또는 요소를 작성할 수 있습니다.</description>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+    </context>
+    <context id="new_wizard_shortcut_context">
+        <description>작성 마법사를 엽니다.</description>
+    </context>
+    <context id="new_file_wizard_context">
+        <description>새 파일 자원을 작성하는 데 도움을 주는 마법사</description>
+        <topic label="새 파일 마법사" href="reference/ref-39.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 파일" href="tasks/tasks-44.htm"/>
+    </context>
+    <context id="new_folder_wizard_context">
+        <description>새 폴더 자원을 작성하는 데 도움을 주는 마법사</description>
+        <topic label="새 폴더 마법사" href="reference/ref-38.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 폴더" href="tasks/tasks-43.htm"/>
+    </context>
+    <context id="new_project_wizard_context">
+        <description>새 프로젝트를 작성하는 데 도움을 주는 마법사</description>
+        <topic label="새 프로젝트 마법사" href="reference/ref-37.htm"/>
+        <topic label="자원" href="concepts/concepts-12.htm"/>
+        <topic label="자원 작성 - 프로젝트" href="tasks/tasks-42.htm"/>
+    </context>
+    <context id="import_wizard_context">
+        <description>자원을 가져오는 데 도움을 주는 마법사</description>
+        <topic label="가져오기 마법사 사용" href="tasks/tasks-55.htm"/>
+    </context>
+    <context id="export_wizard_context">
+        <description>자원을 내보내는 데 도움을 주는 마법사</description>
+        <topic label="파일 내보내기" href="tasks/tasks-57.htm"/>
+        <topic label="파일 시스템으로 내보내기" href="tasks/tasks-59.htm"/>
+        <topic label="Zip 파일로 내보내기" href="tasks/tasks-59ag.htm"/>
+        <topic label="내보내기 마법사" href="reference/ref-71.htm"/>
+    </context>
+    <!-- terminal reference commented out in org.eclipse.ui.internal.WorkbenchActionBuilder, line 301 
+  <context id="close_all_saved_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="show_view_menu_action_context">
+        <description>활성된 보기의 메뉴를 표시합니다.</description>
+    </context>
+    <context id="workbench_editors_action_context">
+        <description>편집기로 전환 대화 상자를 표시합니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- terminal reference in org.eclipse.ui.internal.IHelpContextIds, line 77
+  <context id="new_wizard_shortcut_action_context">
+    <description></description>
+  </context>
+  -->
+    <context id="text_cut_action_context">
+        <description>선택한 텍스트를 클립보드에 잘라냅니다.</description>
+        <topic label="편집 메뉴 - 잘라내기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_copy_action_context">
+        <description>선택사항을 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_paste_action_context">
+        <description>현재 커서 위치에서 클립보드의 컨텐츠를 붙여넣기합니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_select_all_action_context">
+        <description>모든 컨텐츠를 선택합니다.</description>
+        <topic label="편집 메뉴 - 모두 선택" href="reference/ref-57.htm"/>
+    </context>
+    <context id="text_delete_action_context">
+        <description>선택사항을 삭제합니다.</description>
+        <topic label="편집 메뉴 - 삭제" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_cut_action_context">
+        <description>선택한 텍스트를 클립보드에 잘라냅니다.</description>
+        <topic label="편집 메뉴 - 잘라내기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_copy_action_context">
+        <description>선택사항을 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_paste_action_context">
+        <description>현재 커서 위치에서 클립보드의 컨텐츠를 붙여넣기합니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_delete_action_context">
+        <description>선택사항을 삭제합니다.</description>
+        <topic label="편집 메뉴 - 삭제" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_find_action_context">
+        <description>편집기에서 검색할 텍스트를 지정하기 위한 대화 상자가 나타납니다.</description>
+        <topic label="편집 메뉴 - 찾기/바꾸기" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_select_all_action_context">
+        <description>모든 컨텐츠를 선택합니다.</description>
+        <topic label="편집 메뉴 - 모두 선택" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_undo_action_context">
+        <description>이전 편집을 실행 취소합니다.</description>
+        <topic label="편집 메뉴 - 실행 취소" href="reference/ref-57.htm"/>
+    </context>
+    <context id="cell_redo_action_context">
+        <description>이전 편집을 다시 실행합니다.</description>
+        <topic label="편집 메뉴 - 다시 실행" href="reference/ref-57.htm"/>
+    </context>
+    <context id="working_set_selection_dialog_context">
+        <description>이 대화 상자를 사용하여 Workbench에서 사용할 작업 세트를 추가, 제거 또는 구성할 수 있습니다. 작업 세트는 작업공간의 서브세트입니다.
+</description>
+    </context>
+    <context id="delete_project_dialog_context">
+        <description>이 대화 상자는 선택한 프로젝트를 삭제할지 여부 및 삭제하려는 경우 프로젝트에 해당하는 로컬 파일 시스템에서 기본 프로젝트 파일도 삭제할지 여부를 확인하도록 요청합니다.</description>
+    </context>
+    <context id="filter_dialog_context">
+        <description>이 대화 상자를 사용하여 작업공간의 특정 요소만 분리할 필터를 선택할 수 있습니다.</description>
+    </context>
+    <context id="marker_resolution_selection_dialog_context">
+        <description>이 대화 상자를 사용하여 사용 가능한 해상도의 목록에서 선택할 수 있습니다. </description>
+    </context>
+    <context id="workbench_editors_dialog">
+        <description>이 대화 상자는 열려 있는 모든 편집기를 표시하므로 닫거나 저장하려는 편집기를 간단하게 선택할 수 있습니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="welcome_page_selection_dialog">
+        <description>이 대화 상자를 통해 사용 가능한 환영 페이지 세트 중 하나를 사용할 수 있습니다. 환영 페이지는 Workbench의 특정 파트를 사용하여 시작하는 데 도움을 줄 수 있습니다.</description>
+    </context>
+    <context id="decorators_preference_page_context">
+        <description>이 페이지를 사용하면 Workbench 내의 항목에 표시할 데코레이터를 지정할 수 있습니다. 데코레이터는 항목에 대한 자세한 정보를 제공하지만 시각적인 혼란을 야기한다는 단점이 있습니다.</description>
+        <topic label="환경 설정 - 레이블 데코레이션" href="reference/ref-decorations.htm"/>
+    </context>
+    <context id="startup_preference_page_context">
+        <description>이 페이지는 Workbench가 시작할 때 활성화되는 모든 플러그인을 표시합니다. </description>
+        <topic label="환경 설정 - 시작" href="reference/ref-startup.htm"/>
+    </context>
+    <context id="working_set_new_wizard_context">
+        <description>이 마법사는 작업 세트를 작성하는 프로세스를 안내합니다.</description>
+    </context>
+    <context id="working_set_edit_wizard_context">
+        <description>이 마법사는 작업 세트를 편집하는 프로세스를 안내합니다.</description>
+    </context>
+    <context id="filters_action_context">
+        <description>작업공간의 특정 요소만 분리할 필터를 선택할 수 있는 대화 상자를 표시합니다.</description>
+    </context>
+    <context id="mark_completed_action_context">
+        <description>현재 선택한 타스크를 &apos;완료&apos;로 표시합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="resolve_marker_action_context">
+        <description>사용 가능한 해상도의 목록에서 선택할 수 있는 대화 상자를 표시합니다. </description>
+    </context>
+    <context id="select_all_tasks_action_context">
+        <description>타스크 보기에서 모든 타스크를 선택합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_action_context">
+        <description>선택한 타스크의 특성을 설정할 수 있는 대화 상자를 표시합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="back_action_context">
+        <description>한 프레임 뒤로 이동합니다.</description>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="forward_action_context">
+        <description>한 프레임 앞으로 이동합니다.</description>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="go_into_action_context">
+        <description>선택한 요소로 드릴 다운합니다.</description>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="up_action_context">
+        <description>한 프레임 위로 이동합니다.</description>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="lock_toolbar_action_context">
+        <description>Workbench에서 도구 모음을 잠급니다.</description>
+    </context>
+    <context id="about_plugins_dialog_context">
+        <description>이 대화 상자는 설치한 모든 플러그인에 대한 세부사항을 표시합니다.</description>
+    </context>
+    <context id="about_features_plugins_dialog_context">
+        <description>이 대화 상자는 특정 기능 내의 모든 플러그인에 대한 세부사항을 표시합니다. </description>
+    </context>
+    <context id="about_features_dialog_context">
+        <description>이 대화 상자는 설치한 모든 기능에 대한 세부사항을 표시합니다.</description>
+    </context>
+    <context id="working_set_resource_page">
+        <description>이 페이지를 사용하면 작업 세트의 일부가 되는 자원을 선택할 수 있습니다.</description>
+    </context>
+    <context id="working_set_type_page">
+        <description>이 페이지에서는 작성할 작업 세트 유형을 선택할 수 있습니다. </description>
+    </context>
+    <context id="copy_bookmark_action_context">
+        <description>선택한 책갈피를 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="paste_bookmark_action_context">
+        <description>클립보드의 책갈피를 붙여넣습니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_properties_action_context">
+        <description>선택한 책갈피의 특성을 설정할 수 있는 대화 상자를 표시합니다. </description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_ascending_action_context">
+        <description>책갈피를 오름차순으로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_descending_action_context">
+        <description>책갈피를 내림차순으로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_description_action_context">
+        <description>책갈피를 설명별로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_resource_action_context">
+        <description>책갈피를 자원별로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_folder_action_context">
+        <description>책갈피를 폴더별로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_location_action_context">
+        <description>책갈피를 위치별로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="bookmark_sort_creation_time_action_context">
+        <description>책갈피를 작성 시간별로 정렬합니다.</description>
+        <topic label="책갈피" href="concepts/cbookmrk.htm"/>
+    </context>
+    <context id="resource_navigator_copy_action_context">
+        <description>선택한 자원을 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="resource_navigator_paste_action_context">
+        <description>클립보드의 자원을 현재 선택한 자원 위치로 붙여넣습니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+        <topic label="네비게이터 보기" href="concepts/cnav.htm"/>
+    </context>
+    <context id="properties_copy_action_context">
+        <description>선택한 특성을 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+    </context>
+    <context id="copy_task_action_context">
+        <description>선택한 타스크를 클립보드에 복사합니다.</description>
+        <topic label="편집 메뉴 - 복사" href="reference/ref-57.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="paste_task_action_context">
+        <description>현재 커서 위치에서 클립보드의 컨텐츠를 붙여넣기합니다.</description>
+        <topic label="편집 메뉴 - 붙여넣기" href="reference/ref-57.htm"/>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_properties_dialog_context">
+        <description>이 대화 상자를 사용하면 선택한 타스크의 특성을 설정할 수 있습니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_type_action_context">
+        <description>타스크를 유형별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_completed_action_context">
+        <description>타스크를 완료순으로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_priority_action_context">
+        <description>타스크를 우선순위별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_description_action_context">
+        <description>타스크를 설명별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_resource_action_context">
+        <description>타스크를 자원별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_folder_action_context">
+        <description>타스크를 폴더별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_location_action_context">
+        <description>타스크를 위치별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_creation_time_action_context">
+        <description> 타스크를 작성 시간별로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_ascending_action_context">
+        <description>타스크를 오름차순으로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="task_sort_descending_action_context">
+        <description>타스크를 내림차순으로 정렬합니다.</description>
+        <topic label="타스크 보기" href="reference/ref-31.htm"/>
+    </context>
+    <context id="show_part_pane_menu_action_context">
+        <description>활성된 보기 또는 편집기의 시스템 메뉴를 엽니다.</description>
+    </context>
+    <context id="cycle_part_forward_action_context">
+        <description>현재 열려 있는 보기에서 앞으로 탐색할 수 있는 메뉴를 표시합니다.</description>
+    </context>
+    <context id="cycle_part_backward_action_context">
+        <description>현재 열려 있는 보기에서 뒤로 탐색할 수 있는 메뉴를 표시합니다.</description>
+    </context>
+    <context id="cycle_editor_forward_action_context">
+        <description>현재 열려 있는 편집기에서 앞으로 탐색할 수 있는 메뉴를 표시합니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_editor_backward_action_context">
+        <description>현재 열려 있는 편집기에서 뒤로 탐색할 수 있는 메뉴를 표시합니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <context id="cycle_perspective_forward_action_context">
+        <description>현재 열려 있는 Perspective에서 앞으로 탐색할 수 있는 메뉴를 표시합니다.</description>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="cycle_perspective_backward_action_context">
+        <description>현재 열려 있는 Perspective에서 뒤로 탐색할 수 있는 메뉴를 표시합니다.</description>
+        <topic label="Perspective" href="concepts/concepts-4.htm"/>
+    </context>
+    <context id="activate_editor_action_context">
+        <description>편집기 분할창을 활성화합니다.</description>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- part of project capability support. currently unused.
+  <context id="project_capability_property_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_capability_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_review_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="new_project_configure_wizard_page_context">
+    <description></description>
+  </context>
+
+  <context id="show_project_perspective_dialog_context">
+    <description></description>
+  </context>
+
+  <context id="update_capability_wizard_context">
+    <description></description>
+  </context>
+  -->
+
+    <!--new context ids-->
+    <context id="goto_last_edit_position_action_context">
+        <description>이 명령은 마지막 편집 위치를 탐색합니다. </description>
+    </context>
+    <context id="ConvertLineDelimitersToMAC_action_context">
+        <description>이 명령은 기본 MacOS 행 분리문자(CR)를 사용하도록 파일을 변환합니다.</description>
+    </context>
+    <context id="ConvertLineDelimitersToUNIX_action_context">
+        <description>이 명령은 Unix/MacOS X 행 분리문자(LF)를 사용하도록 파일을 변환합니다.</description>
+    </context>
+    <context id="ConvertLineDelimitersToWindows_action_context">
+        <description>이 명령은 Windows 행 분리문자(CRLF)를 사용하도록 파일을 변환합니다.</description>
+    </context>
+    <context id="FindIncrementalReverse_action_context">
+        <description>이 명령은 이전 증분 찾기 모드에 들어가거나 이미 증분 모드에 있는 경우 이전 일치사항으로 이동합니다. Esc는 증분 찾기 모드를 종료합니다.</description>
+    </context>
+    <context id="DeleteLineToBeginning_action_context">
+        <description>이 명령은 현재 캐럿 위치에서 행 시작 부분까지의 텍스트를 삭제합니다.</description>
+    </context>
+    <context id="DeleteLineToEnd_action_context">
+        <description>이 명령은 현재 캐럿 위치에서 행 마지막 부분까지의 텍스트를 삭제합니다.</description>
+    </context>
+    <context id="SetMark_action_context">
+        <description>이 명령은 편집기에서 표시를 설정합니다.</description>
+    </context>
+    <context id="FindNext_action_context">
+        <description>이 명령은 편집기에서 다음 일치사항을 찾습니다.</description>
+    </context>
+    <context id="CutLine_action_context">
+        <description>이 명령은 전체 행을 클립보드에 잘라냅니다.</description>
+    </context>
+    <context id="DeleteLine_action_context">
+        <description>이 명령은 전체 행을 삭제합니다.</description>
+    </context>
+    <context id="CutLineToEnd_action_context">
+        <description>이 명령은 현재 캐럿 위치에서 행 마지막 부분까지의 텍스트를 클립보드에 잘라냅니다.</description>
+    </context>
+    <context id="ClearMark_action_context">
+        <description>이 명령은 편집기에서 이전에 설정한 표시를 지웁니다.</description>
+    </context>
+    <context id="SwapMark_action_context">
+        <description>현재 캐럿 위치를 이전에 설정한 표시와 스왑합니다. </description>
+    </context>
+    <context id="FindIncremental_action_context">
+        <description>이 명령은 증분 찾기 모드에 들어가거나 이미 증분 모드에 있는 경우 다음 일치사항으로 이동합니다. Esc는 증분 찾기 모드를 종료합니다.</description>
+    </context>
+    <context id="FindPrevious_action_context">
+        <description>이 명령은 편집기에서 이전 일치사항을 찾습니다.</description>
+    </context>
+    <context id="CutLineToBeginning_action_context">
+        <description>이 명령은 현재 캐럿 위치에서 행 시작 부분까지의 텍스트를 클립보드에 잘라냅니다.</description>
+    </context>
+    <context id="US-ASCII_action_context">
+        <description>이 명령은 인코딩을 US-ASCII로 설정합니다.</description>
+    </context>
+    <context id="ISO-8859-1_action_context">
+        <description>이 명령은 인코딩을 ISO-8859-1로 설정합니다.</description>
+    </context>
+    <context id="UTF-8_action_context">
+        <description>이 명령은 인코딩을 UTF-8로 설정합니다.</description>
+    </context>
+    <context id="UTF-16BE_action_context">
+        <description>이 명령은 인코딩을 UTF-16(big-endian)으로 설정합니다.</description>
+    </context>
+    <context id="UTF-16LE_action_context">
+        <description>이 명령은 인코딩을 UTF-16(little-endian)으로 설정합니다.</description>
+    </context>
+    <context id="UTF-16_action_context">
+        <description>이 명령은 인코딩을 UTF-16으로 설정합니다.</description>
+    </context>
+    <context id="System_action_context">
+        <description>이 명령은 인코딩을 현재 시스템 인코딩으로 설정합니다.</description>
+    </context>
+    <context id="Default_action_context">
+        <description>이 명령은 인코딩을 기본 인코딩으로 설정합니다.</description>
+    </context>
+    <context id="Custom_action_context">
+        <description>이 명령을 사용하면 사용자 정의 인코딩을 설정할 수 있습니다.</description>
+    </context>
+    <context id="text_editor_preference_page_context">
+        <description>이 환경 설정 페이지는 문서 편집기에 대한 환경 설정하는 데 사용됩니다.</description>
+        <topic label="환경 설정 - 문서 편집기" href="reference/ref-texteditorprefs.htm"/>
+        <topic label="편집기" href="concepts/concepts-6.htm"/>
+    </context>
+    <!-- Help Menu: Help Contents -->
+    <context  id="help_contents_action_context" >
+        <description>이 명령은 도움말 보기를 표시합니다. 도움말 보기에는 도움말 서적, 주제, Workbench 및 설치된 구성요소와 관련된 정보가 포함되어 있습니다.</description>
+        <topic label="온라인 도움말 시스템" href="/org.eclipse.platform.doc.user/concepts/chelpsys.htm"/>
+        <topic label="도움말 메뉴 - 도움말 목차" href="/org.eclipse.platform.doc.user/reference/ref-61.htm"/>
+    </context>
+</contexts>

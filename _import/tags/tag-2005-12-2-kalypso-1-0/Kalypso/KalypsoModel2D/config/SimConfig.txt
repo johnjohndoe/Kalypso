@@ -1,0 +1,4 @@
+bc.txt
+back2Ascii.2d
+2d
+0

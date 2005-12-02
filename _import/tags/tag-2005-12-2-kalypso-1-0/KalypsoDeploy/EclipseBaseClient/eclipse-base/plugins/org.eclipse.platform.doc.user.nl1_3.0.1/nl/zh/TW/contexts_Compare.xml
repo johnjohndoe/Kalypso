@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+<!-- Compare plugin -->
+
+	<context id="compare_editor_context">
+		<description>比較及合併「比較編輯器」中的檔案和資料夾。</description>
+ 		<topic label="比較編輯器" href="reference/ref-25.htm"/>
+ 		<topic label="比較資源" href="tasks/tasks-68.htm"/>
+ 		<topic label="瞭解比較" href="tasks/tasks-68bg.htm"/>
+ 		<topic label="合併比較編輯器中的變更" href="tasks/tasks-68dg.htm"/>
+ 		<topic label="三向比較" href="concepts/concepts-29.htm"/>
+	</context>
+
+	<context id="patch_input_wizard_page_context">
+		<description>這個精靈可協助您將修補程式套用到工作區中的檔案和資料夾。在第一頁中，您可以選取要套用修補程式的檔案或資料夾，以及要從外部檔或剪貼簿來載入修補程式。</description>
+ 		<topic label="使用修補程式" href="tasks/tasks-68c.htm"/>
+	</context>
+
+	<context id="patch_preview_wizard_page_context">
+		<description>在這個頁面中，您可以察看修補程式與工作區的相符情況。您可以調整某些參數來影響相符結果。</description>
+ 		<topic label="使用修補程式" href="tasks/tasks-68c.htm"/>
+	</context>
+
+	<context id="compare_dialog_context">
+		<description>這個對話框會顯示比較檔案的結果。</description>
+ 		<topic label="比較資源" href="tasks/tasks-68.htm"/>
+ 		<topic label="瞭解比較" href="tasks/tasks-68bg.htm"/>
+	</context>
+	
+	<context id="add_from_history_dialog_context">
+		<description>這個對話框可讓您從本端歷程來還原已刪除的檔案。</description>
+ 		<topic label="從本端歷程還原已刪除的資源" href="tasks/tasks-87b.htm"/>
+ 		<topic label="本端歷程" href="concepts/concepts-17a.htm"/>
+ 		<topic label="使用本端歷程" href="tasks/tasks-1f.htm"/>
+ 		<topic label="本端歷程" href="reference/ref-6a.htm"/>
+	</context>
+	
+	<context id="compare_with_edition_dialog_context">
+		<description>這個對話框可讓您將檔案與本端歷程中的項目互相比較。</description>
+ 		<topic label="比較資源與本端歷程" href="tasks/tasks-70.htm"/>
+ 		<topic label="本端歷程" href="concepts/concepts-17a.htm"/>
+ 		<topic label="使用本端歷程" href="tasks/tasks-1f.htm"/>
+ 		<topic label="本端歷程" href="reference/ref-6a.htm"/>
+	</context>
+	
+	<context id="replace_with_edition_dialog_context">
+		<description>這個對話框可讓您將檔案取代為本端歷程中的項目。</description>
+ 		<topic label="將資源取代為本端歷程" href="tasks/tasks-87.htm"/>
+ 		<topic label="本端歷程" href="concepts/concepts-17a.htm"/>
+ 		<topic label="使用本端歷程" href="tasks/tasks-1f.htm"/>
+ 		<topic label="本端歷程" href="reference/ref-6a.htm"/>
+	</context>
+	
+	
+		
+	<context id="text_merge_view_context">
+		<description>這個編輯器可支援文字檔的比較和合併。</description>
+	</context>
+		
+	<context id="image_compare_view_context">
+		<description>這個視圖會顯示兩個並列的影像。</description>
+	</context>
+
+	<context id="binary_compare_view_context">
+		<description>這個視圖會顯示兩個檔案不同的第一個位置。</description>
+	</context>
+		
+
+	<context id="global_next_diff_action_context">
+		<description>移至下一個整體差異。</description>
+	</context>
+	
+	<context id="global_previous_diff_action_context">
+		<description>移至前一個整體差異。</description>
+	</context>
+	
+	<context id="next_diff_action_context">
+		<description>移至下一個差異。</description>
+	</context>
+	
+	<context id="previous_diff_action_context">
+		<description>移至前一個差異。</description>
+	</context>
+	
+	<context id="ignore_whitespace_action_context">
+		<description>忽略空格。</description>
+	</context>
+
+	
+  	<context id="compare_preference_page_context" >
+		<description>這個喜好設定頁面是用來設定工作台中的比較、合併及修正功能的喜好設定。
+</description>
+ 		<topic label="設定比較檔案的喜好設定" href="tasks/tasks-68b.htm"/>
+ 		<topic label="喜好設定 - 比較/修正" href="reference/ref-11.htm"/>
+   		<topic label="比較資源" href="reference/ref-25.htm"/>
+	</context>
+
+</contexts>

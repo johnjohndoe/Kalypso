@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="KalypsoConfBSU: data" default="deploy-localhost">
+
+	<!-- Project full path -->
+	<property name="project.path" value="${workspace}/KalypsoConfBSU" />
+	<property name="dist" value="${project.path}/deploy/server" />
+	<property name="dist.data" value="${dist}/data" />
+	<property name="dist.prognose" value="${dist.data}/mirrored/prognose" />
+
+	<property file="${project.path}/deployable-services/deploy.properties" />
+	
+	<target name="prepare" depends="clean" description="Creates the build directory">
+		<echo message="Creating the required directories...." />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist.data}" />
+		<mkdir dir="${dist.prognose}" />
+	</target>
+
+	<target name="clean" description="Removes the build directories">
+		<delete dir="${dist.data}" />
+		<delete file="${dist}/data.zip" />
+	</target>
+
+	<!-- copy data -->
+	<target name="copy-data" depends="prepare" description="Copy the data files to the deploy dir" >
+		<copy todir="${dist.data}">
+			<fileset dir="${project.path}/deployable-data/data" excludes="**/CVS/**" />
+		</copy>
+	</target>
+
+		
+	<!-- copy data to the kalypso server -->
+	<target name="deploy-localhost" depends="copy-data" description="Copy the data files to the kalypso server" >
+		<copy todir="${kalypso.server.data}\\data" overwrite="true">
+			<fileset dir="${dist.data}" includes="*/**" excludes="**/CVS/**" />
+		</copy>
+	</target>
+
+</project>

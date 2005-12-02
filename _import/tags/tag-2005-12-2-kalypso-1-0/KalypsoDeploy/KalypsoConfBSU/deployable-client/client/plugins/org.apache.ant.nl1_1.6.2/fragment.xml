@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<fragment
+    name="Apache Ant NL Support"
+    id="org.apache.ant.nl1"
+    version="1.6.2"
+    plugin-id="org.apache.ant"
+    plugin-version="1.6.2"
+>
+</fragment>

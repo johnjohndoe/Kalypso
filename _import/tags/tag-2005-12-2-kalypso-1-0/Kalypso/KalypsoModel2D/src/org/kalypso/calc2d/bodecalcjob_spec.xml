@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
+	<!-- Dateien relativ zum Projektverzeichnis (.../input/base/) -->
+	<input id="MODELL_XSD" description="Schema der Modelldaten"/>
+	<input id="CONTROL_XSD" description="Schema der Steuerdaten"/>
+	
+	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+	<input id="MODELL_GML" description="Modelldaten"/>
+	<input id="CONTROL_GML" description="Steuerdaten"/>
+
+	<output id="ERGEBNISSE" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
+</modelspec>

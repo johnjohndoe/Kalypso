@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:wb="http://elbe.wb.tu-harburg.de/2dModel" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://elbe.wb.tu-harburg.de/2dModel" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/geometry.xsd"/-->
+	<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/-->
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- ==============================================================
+						global element declarations
+		============================================================== -->
+	<xs:element name="boundaryConditions" type="wb:boundaryConditionsType"/>
+	<xs:complexType name="boundaryConditionsType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="generalCollectionMember" type="wb:generalCollectionAssociationType"/>
+					<xs:element name="genCollectionMember" type="wb:genCollectionAssociationType"/>
+					<xs:element name="geomCollectionMember" type="wb:geomCollectionAssociationType"/>
+					<xs:element name="iterationCollectionMember" type="wb:iterationCollectionAssociationType"/>
+					<xs:element name="viscosityCollectionMember" type="wb:viscosityCollectionAssociationType"/>
+					<xs:element name="lineCollectionMember" type="wb:lineCollectionAssociationType"/>
+					<xs:element name="dischargeCollectionMember" type="wb:dischargeCollectionAssociationType"/>
+					<xs:element name="dynamicBC_CollectionMember" type="wb:dynamicBC_CollectionAssociationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ==============================================================
+				general parameters for the simulation (FirstParamGroup)
+	============================================================== -->
+	<xs:complexType name="generalCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:generalCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="generalCollection" type="wb:generalCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="generalCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="generalMember" type="wb:generalAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="generalAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:general"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="general" type="wb:generalFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="generalFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="NE" type="xs:integer"/>
+					<xs:element name="NMAT" type="xs:integer"/>
+					<xs:element name="NPX" type="xs:integer"/>
+					<xs:element name="NBX" type="xs:integer"/>
+					<xs:element name="NWID" type="xs:integer"/>
+					<xs:element name="NSID" type="xs:integer"/>
+					<xs:element name="IPRT" type="xs:integer"/>
+					<xs:element name="NCL" type="xs:integer"/>
+					<xs:element name="IWIND" type="xs:integer"/>
+					<xs:element name="IRO" type="xs:integer"/>
+					<xs:element name="IRSLP" type="xs:integer"/>
+					<xs:element name="IQGEN" type="xs:integer"/>
+					<xs:element name="IHGEN" type="xs:integer"/>
+					<xs:element name="ISTGEN" type="xs:integer"/>
+					<xs:element name="NCFLW" type="xs:integer"/>
+					<xs:element name="IDNOPT" type="xs:integer"/>
+					<xs:element name="IBGEN" type="xs:integer"/>
+					<xs:element name="FEM" type="xs:integer" minOccurs="0"/>
+					<xs:element name="AUSSTEU" type="xs:integer" minOccurs="0"/>
+					<xs:element name="MORPH" type="xs:integer" minOccurs="0"/>
+					<xs:element name="ITURB" type="xs:integer" minOccurs="0"/>
+					<xs:element name="P_BOTTOM" type="xs:integer" minOccurs="0"/>
+					<xs:element name="P_PRANDTL" type="xs:integer" minOccurs="0"/>
+					<xs:element name="MINEDDY" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ==============================================================
+				general addtional parameters for the simulation (FirstParamGroup)
+	============================================================== -->
+	<xs:complexType name="genCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:genCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="genCollection" type="wb:genCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="genCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="genMember" type="wb:genAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="genAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:gen"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="gen" type="wb:genFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="genFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="FEM" type="xs:integer" minOccurs="0"/>
+					<xs:element name="AUSSTEU" type="xs:integer" minOccurs="0"/>
+					<xs:element name="MORPH" type="xs:integer" minOccurs="0"/>
+					<xs:element name="ITURB" type="xs:integer" minOccurs="0"/>
+					<xs:element name="P_BOTTOM" type="xs:double" minOccurs="0"/>
+					<xs:element name="P_PRANDTL" type="xs:double" minOccurs="0"/>
+					<xs:element name="MINEDDY" type="xs:double" minOccurs="0"/>
+					<xs:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ==============================================================
+	geom (SecondParamGroup) containing parameters describing the geographical conditions
+	============================================================== -->
+	<xs:complexType name="geomCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:geomCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="geomCollection" type="wb:geomCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="geomCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="geomMember" type="wb:geomAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="geomAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:geom"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="geom" type="wb:geomFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="geomFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="OMEGA" type="xs:float"/>
+					<xs:element name="ELEV" type="xs:float"/>
+					<xs:element name="XSCALE" type="xs:float"/>
+					<xs:element name="ZSCALE" type="xs:float"/>
+					<xs:element name="DSET" type="xs:float"/>
+					<xs:element name="DSETD" type="xs:float"/>
+					<xs:element name="UNOM" type="xs:float"/>
+					<xs:element name="HMIN" type="xs:float"/>
+					<xs:element name="ASCALE" type="xs:float"/>
+					<xs:element name="URFC" type="xs:float"/>
+					<xs:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ==============================================================
+			information about iterations (ThirdParamGroup) 
+	============================================================== -->
+	<xs:complexType name="iterationCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:iterationCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="iterationCollection" type="wb:iterationCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="iterationCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="iterationMember" type="wb:iterationAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="iterationAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:iteration"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="iteration" type="wb:iterationFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="iterationFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="NITI" type="xs:double"/>
+					<xs:element name="NITN" type="xs:double"/>
+					<xs:element name="MBAND" type="xs:double"/>
+					<xs:element name="NSTART" type="xs:double"/>
+					<xs:element name="NCYC" type="xs:double"/>
+					<xs:element name="DELT" type="xs:double"/>
+					<xs:element name="LI" type="xs:double"/>
+					<xs:element name="ITSI" type="xs:double"/>
+					<xs:element name="ISPLPT" type="xs:double"/>
+					<xs:element name="JSPLPT" type="xs:double"/>
+					<xs:element name="IHOE" type="xs:double"/>
+					<xs:element name="IDEN" type="xs:double"/>
+					<xs:element name="ICONVG" type="xs:double"/>
+					<xs:element name="IGRAV" type="xs:double"/>
+					<xs:element name="IPASCHE" type="xs:integer" minOccurs="0"/>
+					<xs:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ==============================================================
+						viscosity (FourthParamGroup)
+	============================================================== -->
+	<xs:complexType name="viscosityCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:viscosityCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="viscosityCollection" type="wb:viscosityCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="viscosityCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="viscosityMember" type="wb:viscosityAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="viscosityAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:viscosity"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="viscosity" type="wb:viscosityFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="viscosityFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="id" type="xs:integer"/>
+					<xs:element name="wv1" type="xs:float"/>
+					<xs:element name="wv2" type="xs:float"/>
+					<xs:element name="wv3" type="xs:float"/>
+					<xs:element name="wv4" type="xs:float"/>
+					<xs:element name="ks" type="xs:float"/>
+					<xs:element name="abst" type="xs:float" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="durchbaum" type="xs:float" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--============================================================== 
+									line (FifthParamGroup)
+		============================================================== -->
+	<xs:complexType name="lineCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:lineCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="lineCollection" type="wb:lineCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="lineCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="lineMember" type="wb:lineAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="lineAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:line"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="line" type="wb:lineFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="lineFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="listLinePos" type="gml:LineStringPropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--============================================================== 
+									discharge (SixthParamGroup)
+		============================================================== -->
+	<xs:complexType name="dischargeCollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:dischargeCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="dischargeCollection" type="wb:dischargeCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="dischargeCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="dischargeMember" type="wb:dischargeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="dischargeAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:discharge"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="discharge" type="wb:dischargeFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="dischargeFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="ParamQF" type="wb:paramQFAssociationType" maxOccurs="unbounded"/>
+					<xs:element name="ParamHF" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="paramQFAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:ParamQFFeature"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ParamQFFeature" type="wb:paramTypeQF" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="paramTypeQF">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="qf" type="xs:double"/>
+					<xs:element name="qdir" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--============================================================== 
+									dynamic boundary conditions (SeventhParamGroup)
+		============================================================== -->
+	<xs:complexType name="dynamicBC_CollectionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:dynamicBC_Collection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="dynamicBC_Collection" type="wb:dynamicBC_CollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="dynamicBC_CollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="dynamicBC_Member" type="wb:dynamicBC_AssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="dynamicBC_AssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:dynamicBC"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="dynamicBC" type="wb:dynamicBC_FeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="dynamicBC_FeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="nbx" type="xs:float"/>
+					<xs:element name="nsid" type="xs:float"/>
+					<xs:element name="delt" type="xs:float"/>
+					<xs:element name="iqgen" type="xs:float"/>
+					<xs:element name="ihgen" type="xs:float"/>
+					<xs:element name="istgen" type="xs:float"/>
+					<xs:element name="ncflw" type="xs:float"/>
+					<xs:element name="idenIwindIbgen" type="xs:float" minOccurs="0"/>
+					<!--xs:element name="firstLineParams" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/-->
+					<xs:element ref="wb:nclType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="nclType" type="wb:dischargeCollectionAssociationType"/>
+	<!--============================================================== 
+									paramType (key-value parameter) 
+		============================================================== -->
+	<!--xs:complexType name="paramType">
+		<xs:sequence>
+			<xs:element name="NAME" type="xs:string"/>
+			<xs:element name="VALUE"/>
+		</xs:sequence>
+	</xs:complexType-->
+	<xs:complexType name="paramType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureAssociationType">
+				<xs:sequence>
+					<xs:element ref="wb:param7Feature"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="param7Feature" type="wb:paramType7" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="paramType7">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="qf" type="xs:double"/>
+					<xs:element name="qdir" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

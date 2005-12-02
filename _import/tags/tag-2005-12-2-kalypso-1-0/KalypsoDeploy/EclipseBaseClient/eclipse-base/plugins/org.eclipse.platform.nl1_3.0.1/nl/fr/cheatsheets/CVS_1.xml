@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - Fusion entre deux branches">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+Cet aide-mémoire lance automatiquement des assistants, exécute des actions et vous guide pour fusionner les modifications entre deux branches CVS ou dans HEAD. Pour obtenir plus d'informations sur l'utilisation des aide-mémoire ou afficher la liste des aide-mémoire disponibles, cliquez sur Aide (?).Pour commencer à utiliser cet aide-mémoire, cliquez sur le bouton "Cliquez ici pour commencer".
+	</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Définition des informations de branche et de version">
+		<description>
+Cette étape permet de déterminer la nom de la branche ou de la version contenant les modifications, ainsi que la version à partir de laquelle la branche a été créée. Il s'agit d'une tâche manuelle. Cliquez sur le bouton "Cliquez ici pour terminer" pour passer à l'étape suivante.
+ 	 
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Chargement de la destination dans l'espace de travail">
+		<description>
+Sélectionnez le projet et choisissez Remplacer par &gt; Une autre branche ou version dans le menu contextuel. Sélectionnez ensuite la branche de remplacement. Lors de cette étape, assurez-vous que la destination est chargée dans votre espace de travail. Il s'agit d'une tâche manuelle. Cliquez sur le bouton "Cliquez ici pour terminer" pour passer à l'étape suivante.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="Fusion des informations">
+		<description>
+Sélectionnez le projet, choisissez Equipe &gt; Fusionner et entrez les informations demandées par l'assistant. Cette étape indique les informations de la fusion.  Il s'agit d'une tâche manuelle. Cliquez sur le bouton "Cliquez ici pour terminer" pour passer à l'étape suivante.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Utilisation de l'éditeur de fusion">
+		<description>
+L'éditeur de fusion permet de fusionner manuellement les modifications. Cette étape charge les modifications requises dans l'espace de travail. Il s'agit d'une tâche manuelle. Cliquez sur le bouton "Cliquez ici pour terminer" pour passer à l'étape suivante.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Validation des modifications">
+		<description>
+Sélectionnez Equipe &gt; Synchroniser avec le référentiel, puis validez toutes les modifications apportées au référentiel. Cette étape permet de finaliser le transfert des modifications de l'espace de travail vers le référentiel CVS. Il s'agit d'une tâche manuelle. Cliquez sur le bouton "Cliquez ici pour terminer" pour passer à l'étape suivante.
+ 	</description>
+	</item>
+
+</cheatsheet>

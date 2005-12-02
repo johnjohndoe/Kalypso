@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   
+	<!-- ********************************** -->
+ 	<!-- TagSelectionDialog 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="replace_tag_selection_dialog_context">
+   		<description>您选择了将所选资源替换为分支或版本标记。此对话框允许选择将用于此操作的标记。所选资源将被替换为具有选择的标记的资源。如果想要的标记不出现在“版本”或“分支”的列表中，请执行“从资源库刷新”或“配置标记”来自动或手工查找在资源库中存在的标记。禁用“递归到子文件夹中”选项将使操作仅限于选择的文件夹及其直接子代和选择的文件。</description>
+   		<topic label="替换工作台中的资源" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="compare_tag_selection_dialog_context">
+   		<description>您选择了将所选资源与分支或版本标记进行比较。此对话框允许选择将用于此操作的标记。所选资源将与具有选择的标记的资源进行比较。如果想要的标记不出现在“版本”或“分支”的列表中，请执行“从资源库刷新”或“配置标记”来自动或手工查找在资源库中存在的标记。</description>
+        <topic label="将资源与资源库版本进行比较" href="tasks/tasks-101.htm" />
+   	</context>
+   	
+   	<context id="tag_remote_with_existing_dialog_context">
+   		<description>您选择了用现有的分支或版本标记来标记所选资源。此对话框允许用户选择将用于此操作的标记。如果在任何所选资源的另一个修订上存在标记，则此标记将移动至选择的修订。如果想要的标记不出现在“版本”或“分支”的列表中，请执行“从资源库刷新”或“配置标记”来自动或手工查找在资源库中存在的标记。禁用“递归到子文件夹中”选项将使操作仅限于选择的文件夹及其直接子代和选择的文件。</description>
+        <topic label="移动版本标记" href="tasks/tasks-105c.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TagAsVersionDialog 				-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="tag_as_version_dialog_context">
+   		<description>输入要用于标记所选资源的版本名称。</description>
+   		<topic label="创建项目版本" href="tasks/tasks-100.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- WizardPages 						-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="sharing_autoconnect_page_context">
+   		<description>本地项目具有与之关联的 CVS 信息，但不是作为 CVS 项目注册的。此页面显示与本地项目关联的 CVS 信息。单击“完成”将把此项目注册为 CVS 项目并能够使用 CVS 菜单命令。如果启用了“在完成时验证连接”，则将尝试连接到服务器。</description>
+		<topic label="使用另一 CVS 工具检出的项目" href="tasks/tasks-117a.htm" />
+   	</context>
+   	
+   	<context id="sharing_select_repository_page_context">
+   		<description>从现有的资源库列表选择想要的资源库，或者指示要创建一个新的资源库位置。</description>
+ 		<topic label="使用 CVS 共享新项目" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_new_repository_page_context">
+   		<description>输入标识您希望与之连接的资源库的信息以及访问此资源库所需的用户和连接信息。</description>
+   		<topic label="新建资源库位置向导" href="reference/ref-40.htm"/>
+		<topic label="CVS 资源库" href="concepts/concepts-27c.htm"/>
+		<topic label="创建 CVS 资源库位置" href="tasks/tasks-92.htm"/>
+	   	<topic label="废弃 CVS 资源库位置" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="sharing_module_page_context">
+   		<description>指定将与其共享本地项目的远程模块。您可以选择将项目名称用作将提供给远程模块的名称、指定定制模块路径或选择现有模块。在前两种情况下，名称是都相对于资源库根目录的，如果远程模块不存在，则会创建它。</description>
+		<topic label="使用 CVS 共享新项目" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_tag_selection_page_context">
+   		<description>正在共享的项目已在远程存在。此页面允许您选择将共享项目的分支。如果想要的分支不是 HEAD 并且不出现在“分支”的列表中，请执行“从资源库刷新”或“配置标记”来自动或手工查找在资源库中存在的标记。</description>
+		<topic label="使用 CVS 共享新项目" href="tasks/tasks-117.htm" />
+   	</context>
+   	
+ 	<context id="sharing_sync_page_context">
+   		<description>检查正共享的资源并决定应共享哪些资源，应忽略哪些资源。单击“完成”将提供提交所有正在更改的选项。</description>
+		<topic label="使用 CVS 共享新项目" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="patch_selection_page_context">
+   		<description>指定您希望保存补丁程序输出的位置。</description>
+ 		<topic label="使用补丁程序" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="patch_options_page_context">
+   		<description>指定用于生成补丁程序的各种选项。</description>
+   		<topic label="使用补丁程序" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_selection_page_context">
+   		<description>选择要应用到选择的文件的方式。“自动”将根据使用“小组”文件类型注册表确定的文件类型，在 CVS 首选项中指定的“二进制文件”和缺省的 ASCII 方式之间进行选择。</description>
+		<topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_summary_page_context">
+   		<description>列出基于向导输入需要更改其方式的文件。那些其方式不需要更改的文件也可以包含在列表中（可选）。与列表中的文件关联的方式可以通过单击文件的方式并从列表中选择来进行修改。</description>
+		<topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_shared_page_context">
+   		<description>选择是否考虑更改已与资源库共享的文件。如果禁用包含共享文件，则只将考虑更改已添加到 CVS 控制的新文件。</description>
+		<topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_changed_page_context">
+   		<description>选择是否考虑更改包含传出更改的文件的方式。</description>
+ 		<topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+   	
+    <context id="keyword_substituton_commit_comment_page_context">
+   		<description>将文件从二进制转换为 ASCII 所产生的任何行终结符更改将由此操作提交。输入注释来描述此提交的内容。</description>
+		<topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+  
+ 	<context id="merge_start_page_context">
+   		<description>从列表中，选择项目的将作为合并操作的起始点（基本点）的版本。如果标记不可用，则尝试从资源库刷新或配置标记。</description>
+		<topic label="从分支合并" href="tasks/tasks-100b.htm" />
+   		<topic label="合并向导" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+ 	<context id="merge_end_page_context">
+   		<description>从列表中选择将充当合并结束点的版本或分支。</description>
+		<topic label="从分支合并" href="tasks/tasks-100b.htm" />
+   		<topic label="合并向导" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+   	<context id="checkout_module_selection_context">
+   		<description>指定一个或多个要检出的远程模块。可以输入模块路径，也可以选择一个或多个要检出的现有模块。在启用用于选择现有模块的选项之前，不会取装现有模块。</description>
+		<topic label="从 CVS 资源库检出项目" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_configuration_context">
+   		<description>指定如何检出选择的模块。对于一个或多个选择的模块，可选择检出为项目或检出为已经存在于现有项目或文件夹中的文件夹。对于远程模块中没有
+.project 文件的单个选择模块，还可以使用“新建项目”向导配置项目。</description>
+		<topic label="从 CVS 资源库检出项目" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_location_selection_context">
+   		<description>指定本地文件系统中的项目位置。对于单个项目，该位置是项目目录的位置。对于多个项目，该位置是各项目的父目录的位置。</description>
+		<topic label="从 CVS 资源库检出项目" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_tag_selection_page_context">
+   		<description>指定要用于要检出的模块的标记。</description>
+   		<topic label="从 CVS 资源库检出项目" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="update_tag_selection_page_context">
+   		<description>指定要用于此更新的标记。</description>
+   		<topic label="替换工作台中的资源" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="checkout_into_resource_selection_page_context">
+   		<description>选择所选模块应创建于的父文件夹。当检出一个模块时，还可指定要创建的文件夹的名称。</description>
+   		<topic label="将文件夹检出到现有项目中" href="tasks/tasks-96b.htm"/> 
+   	</context>
+   	
+   	<context id="restore_from_repository_file_selection_page_context">
+   		<description>浏览已从资源库中删除的文件，并检查要恢复到本地工作空间的每个文件修订。</description>
+		<topic label="从资源库恢复已删除的文件" href="tasks/tasks-105a.htm" />
+   	</context>
+   	
+   	<context id="working_set_folder_selection_page_context">
+        <description>选择想要作为项目添加至工作集的文件夹。</description>
+        <topic label="发现分支和版本标记" href="tasks/tasks-110.htm" />
+    </context>
+    
+   	<!-- ********************************** -->
+ 	<!-- TeamMenuActions 					-->
+ 	<!-- ********************************** -->
+	
+	<context  id="manage_action_context" >
+      <description>这些命令允许您执行版本／配置管理操作。</description>
+	</context>
+  
+	<context id="team_synchronize_action_context">
+   		<description>在“同步”视图中显示所选资源的本地和远程状态之间的任何差别。</description>
+   		<topic label="使用 CVS 共享新项目" href="tasks/tasks-117.htm"/>
+ 		<topic label="与资源库同步" href="tasks/tasks-115.htm"/>
+	 	<topic label="更新" href="tasks/tasks-113.htm"/>
+	 	<topic label="提交" href="tasks/tasks-114.htm"/>
+   	</context>
+   	
+   	<context id="team_synchronize_outgoing_action_context">
+  		<description>在“同步”视图中显示任何具有传出更改的所选资源的本地和远程状态之间的任何差别。</description>
+		<topic label="与资源库同步" href="tasks/tasks-115.htm"/>
+	 	<topic label="提交" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_commit_action_context">
+    		<description>将所选资源中的任何传出更改提交到服务器。</description>
+   		<topic label="提交" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_update_action_context">
+   		<description>用任何远程的更改更新所选资源。</description>
+   		<topic label="更新" href="tasks/tasks-113.htm"/>
+   	</context>
+
+ 	<context id="team_create_patch_action_context">
+   		<description>创建补丁程序，当此补丁程序应用到与本地资源相同的基本时将复制所选的资源。</description>
+   		<topic label="使用补丁程序" href="tasks/tasks-68c.htm"/>
+   	</context>
+
+ 	<context id="team_tag_as_version_action_context">
+   		<description>用用户提供的版本名称标记资源库中的所选资源。</description>
+   		<topic label="创建项目版本" href="tasks/tasks-100.htm"/>
+   		<topic label="设置资源库中项目的版本" href="tasks/tasks-118.htm"/>
+   	</context>
+
+ 	<context id="team_branch_action_context">
+   		<description>使用所选资源创建分支作为基本内容，也可以更新本地资源，使其在新的分支上。</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+ 		<topic label="设置分支" href="tasks/tasks-100a.htm"/>
+   	</context>
+
+ 	<context id="team_merge_action_context">
+   		<description>将一个分支中的更改合并到另一个分支。</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+   	</context>
+
+ 	<context id="team_set_keyword_mode_action_context">
+   		<description>设置所选资源的关键字替换方式。</description>
+   		<topic label="设置文件扩展名的内容类型" href="tasks/tasks-team-1.htm"/>
+   	</context>
+
+ 	<context id="team_disconnect_action_context">
+   		<description>将项目与 CVS 控制断开连接，也可以删除 CVS 文件夹。</description>
+		<topic label="废弃 CVS 资源库位置" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="team_add_action_context">
+   		<description>将所选资源添加至 CVS 控制，以便可以提交和共享。</description>
+   	</context>
+
+ 	<context id="team_ignore_action_context">
+   		<description>忽略所选资源，以便不会为版本控制而考虑它们。</description>
+   	</context>
+
+   	<context id="team_restore_from_repository_action_context">
+   		<description>装入已从资源库中删除的文件的内容以便可以恢复它们。</description>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Other Menu Actions 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="compare_with_tag_action_context">
+   		<description>将所选资源与对应的标记有用户指定版本或分支标记的远程资源进行比较。</description>
+   		<topic label="比较资源" href="tasks/tasks-68.htm"/>
+	 	<topic label="将资源与资源库版本进行比较" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_with_latest_action_context">
+   		<description>将所选资源与对应的具有相同标记或相同分支上的远程资源进行比较。</description>
+   	</context>
+
+   	<context id="compare_with_revision_action_context">
+   		<description>将所选文件与该文件的用户指定的修订进行比较。</description>
+   		<topic label="比较资源" href="tasks/tasks-68.htm"/>
+	 	<topic label="将资源与资源库版本进行比较" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+ 	<context id="replace_with_tag_action_context">
+   		<description>将所选资源替换为对应的标记有用户指定版本或分支标记的远程资源。</description>
+	 	<topic label="替换工作台中的资源" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	 <context id="replace_with_latest_action_context">
+   		<description>将所选资源替换为对应的具有相同标记或在相同分支上的远程资源。</description>
+   	</context>
+    
+   	<context id="replace_with_revision_action_context">
+   		<description>将所选文件替换为该文件的用户指定的修订。</description>
+   		<topic label="导航器视图" href="reference/ref-27.htm"/>
+	 	<topic label="替换工作台中的资源" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	<context id="checkout_into_action_context">
+   		<description>将选择的文件夹检出到现有项目中。</description>
+   		<topic label="将文件夹检出到现有项目中" href="tasks/tasks-96b.htm"/>
+   	</context>
+   	
+   	<context id="checkout_as_action_context">
+   		<description>将选择的文件夹检出到用户配置的项目中。此新项目可以具有一个与缺省名称不同的名称。</description>
+   	</context>
+   	
+   	<context id="checkout_as_project_action_context">
+   		<description>将选择的文件夹检出到与每个远程文件夹的名称相对应的项目中。</description>
+   		<topic label="从 CVS 资源库检出项目" href="tasks/tasks-96.htm"/>
+   	</context>
+
+   	<context id="checkout_module_action_context">
+   		<description>将所选模块检出到本地工作空间。</description>
+   	</context>
+   	   	
+   	<context id="open_remote_file_action_context">
+   		<description>在编辑器中打开所选远程文件的内容。</description>
+   	</context>
+
+ 	<context id="show_in_history_action_context">
+   		<description>在历史记录视图中显示所选本地或远程文件的修订历史记录。</description>
+   		<topic label="查看文件的修订历史记录" href="tasks/tasks-119.htm"/>
+   	</context>
+
+    <context id="confirm_merge_action_context">
+   		<description>已将所选资源标记为“已合并”。这将更改本地资源的基本部分以与冲突的传入更改的相应内容相匹配，以便可以提交本地资源中的更改。仅在手工接受了应该保留的任何传入更改之后才能执行此操作。</description>
+   		<topic label="更新" href="tasks/tasks-113.htm"/>
+   	</context>
+   	
+    <context id="select_new_action_context">
+   		<description>选择新的且尚未被添加至 CVS 控制的所有资源。</description>
+   	</context>
+   	
+ 	<context id="compare_remote_resources_action_context">
+   		<description>互相比较两个选择的远程资源。</description>
+   		<topic label="比较资源" href="tasks/tasks-68.htm"/>
+	 	<topic label="将资源与资源库版本进行比较" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_remote_with_tag_action_context">
+   		<description>将所选资源与同一资源的另一个分支或版本进行比较。</description>
+   	</context>
+   	
+   	<context id="copy_repository_name_action_context">
+   		<description>将所选资源库位置的名称复制到剪贴板。</description>
+   	</context>
+   	
+   	<context id="remove_root_action_context">
+   		<description>从“资源库”视图除去所选资源库位置。</description>
+   	</context>
+   	
+   	<context id="add_to_branch_context">
+   		<description>将选择的项目添加至此视图中的分支列表。此操作只将项目添加至视图中的分支，而并不影响资源库本身。</description>
+   	</context>
+   	
+   	<context id="move_remote_tag_action_context">
+   		<description>使用现有用户指定的标记来标记所选资源（如果需要的话移动此标记）。
+</description>
+   	</context>
+   	
+   	<context id="tag_remote_action_context">
+   		<description>使用用户指定的标记来标记所选资源。</description>
+   	</context>
+
+   	<context id="show_comment_in_history_action_context">
+   		<description>在单独的文本窗格中显示所选条目的完整多行注释。</description>
+   		<topic label="CVS 资源历史记录视图" href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="show_tag_in_history_action_context">
+   		<description>在单独的列表窗格中显示所选条目的完整标记列表。</description>
+   		<topic label="CVS 资源历史记录视图" href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="tag_with_existing_action_context">
+   		<description>使用现有用户指定的标记来标记所选资源（如果需要的话移动此标记）。
+</description>
+   	</context>
+   	
+   	<context id="select_working_set_action_context">
+   		<description>此过滤器从其名称与选择的工作集中的项目不匹配的视图中除去所有根文件夹。</description>
+   	</context>
+   	
+   	<context id="deselect_working_set_action_context">
+   		<description>此操作除去当前安装的工作集过滤器。</description>
+   	</context>
+   	
+    <context id="edit_working_set_action_context">
+   		<description>此操作编辑当前安装的工作集过滤器。</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- TagConfiguration 					-->
+ 	<!-- ********************************** -->
+	
+	<context id="refresh_tags_action_context">
+   		<description>通过与服务器联系来刷新显示在此视图中的分支和版本标记。</description>
+   		<topic label="发现分支和版本标记" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context id="refresh_remote_project_selection_page_context">
+   		<description>通过与服务器联系来刷新选择的文件夹的分支和版本标记。</description>
+   		<topic label="发现分支和版本标记" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context  id="tag_configuration_overview" >
+   		<description>配置显示在工作台中的分支和版本标记。通过在远程 CVS 文件中浏览标记，您可以从每个文件的标记列表中有选择性地选择哪些标记应该被记住，哪些标记不应该被记住。您还可以选择将被自动检查标记的文件。
+</description>
+   		<topic label="发现分支和版本标记" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+    <context  id="tag_configuration_refreshlist" >
+      <description>这列出了在其中被自动检查标记的文件。缺省情况下检查 .project 文件。但在某些情况下，其它文件可能具有更完全的标记历史记录，反而更应该被检查。
+</description>
+      <topic label="发现分支和版本标记" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+   	<context  id="tag_configuration_refreshaction" >
+      <description>这将从已为自动搜索标记而配置的文件中获取分支和版本标记。如果您期望看到的标记没有出现，请尝试更改要通过标记配置对话框检查的文件列表。</description>
+      <topic label="发现分支和版本标记" href="tasks/tasks-110.htm"/>
+   	</context>
+
+ 	<!-- ********************************** -->
+ 	<!-- Watch/Edit							-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="team_edit_action_context" >
+      <description>通知服务器您想要编辑此文件。</description>
+   	</context>
+   	
+   	<context  id="team_unedit_action_context" >
+      <description>通知服务器您不再编辑此文件，并将内容还原为它从中派生的基本修订的内容。</description>
+   	</context>
+   	
+   	<context  id="team_show_editors_action_context" >
+      <description>在“CVS 编辑器”视图中显示所选资源的所有编辑器及该资源的任何子代。</description>
+   	</context>
+   	
+   	<context  id="cvs_editors_view_context" >
+      <description>此视图显示一个或多个文件的所有已注册编辑器。</description>
+   	</context>
+   	
+   	<context  id="editors_dialog_context" >
+      <description>此对话框显示您正在请求编辑的文件的所有已注册编辑器。</description>
+   	</context>
+   	
+   	<context  id="watch_edit_preference_page_context" >
+      <description>此页面支持 CVS 查看／编辑的配置。启用查看／编辑将会导致从服务器检出的所有文件都为只读的。编辑某一文件将会使该文件可写并将编辑通知发送至服务器。</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- Dialogs					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="release_comment_dialog_context">
+       <description>输入注释来描述此提交的内容。</description>
+    </context>
+   	<context id="user_validation_dialog_context">
+      <description>在此对话框中，输入适当的信息以登录至资源库。</description> 
+    </context>
+    <context id="tag_local_as_version_dialog_context">
+      <description>输入要应用到本地存在的修订的版本标记的名称。
+</description>
+    </context>
+    <context id="branch_dialog_context">
+		<description>此对话框让您可以指定想要创建的分支的名称，并可选择让您通过更新要作为新创建分支标记的本地资源的标记来开始在该分支中工作。</description>
+    </context>
+    <context id="add_to_cvsignore_context">
+    	<description>在此对话框中，选择如何将所选资源添加至 .cvsignore 文件。对于每个要忽略的资源，.cvsignore 文件将在包含此对话框中指定的模式的父目录中创建。这将不会影响已经处于版本控制下的资源。
+</description>
+    </context>
+    <context id="add_to_version_control_dialog_context">
+    	<description>选择在提交之前应该将哪些新资源添加至版本控制。此对话框中列示的未首先添加的任何资源不会被提交给服务器。</description>
+    </context>
+    <context id="disconnect_action_context">
+    	<description>此对话框允许您断开项目与 CVS 控制的连接。保留 CVS 元信息使得项目很容易被重新共享或与其它 CVS 工具配合使用。</description>
+    </context>
+    <context id="history_filter_dialog_context">
+        <description>此对话框允许您指定减少在“历史记录视图”中显示的条目数的过滤器。</description>
+    </context>
+    <context id="date_tag_dialog_context">
+        <description>此对话框允许您指定可用来检索在指定时间存在于资源库中的资源的日期标记。</description>
+    </context>
+    <context id="keyboard_interactive_dialog_context">
+        <description>此对话框允许您对 CVS 连接执行与键盘交互作用的认证。</description>
+    </context>
+    
+ 	<!-- ********************************** -->
+ 	<!-- Preference Pages 					-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="prune_empty_directories_pref" >
+      <description>使在更新和同步视图中能够修剪空目录。尽管被修剪掉的目录不显示在工作台中，但在资源库中实际仍然存在着这样的一个空目录。
+</description>
+   	</context>
+   	
+   	<context  id="quietness_level_pref" >
+      <description>为命令设置状态信息 CVS 打印的数量。在“有点安静”方式下，将禁止打印不重要的参考消息。对什么是重要的注意事项取决于每个命令。在“非常安静”方式下，将禁止所有输出，除了对完成命令绝对必要的输出。在“非常安静”方式下，某些 CVS 服务器可能不能获取有关已发生的错误的重要信息。因而您可能想考虑使用“有点安静”方式。
+</description>
+   	</context>
+   	
+  	<context  id="compression_level_pref" >
+      <description>如果服务器支持通信，请设置与该服务器通信的压缩级别。级别 1 是最小压缩（通信速度较慢，但需要的 CPU 较少），级别 9 是最大压缩（通信速度较快，但需要的 CPU 也更多）。</description>
+   	</context>
+
+	<context  id="default_keywordmode_pref" >
+      <description>为 ASCII 文件设置要使用的缺省关键字替换方式。</description>
+      <topic label="设置 CVS 关键字替换方式" href="tasks/tasks-cvs-11.htm"/>
+   	</context>
+   	
+	<context  id="comms_timeout_pref" >
+      <description>设置在与 CVS 服务器连接超时之前要等待的时间量（以秒为单位）。
+</description>
+   	</context>
+   	
+   	<context  id="consider_content_pref" >
+      <description>设置要用于比较和同步 CVS 资源的缺省比较方法。缺省情况下，将使用时间戳记比较 CVS 文件，这是至今为止最快的方法。但是，在某些情况下，更准确的比较可以通过比较文件内容来实现。此设置可以从比较编辑器或同步视图中切换过来。
+</description>
+   	</context>
+   	
+	<context  id="replace_deletion_of_unmanaged_pref" >
+      <description>允许在用资源库中的资源替换时删除未置于 CVS 控制下的资源。
+</description>
+   	</context>
+   	
+    <context  id="save_dirty_editors_pref" >
+      <description>配置在执行 CVS 操作时存在具有未保存更改的打开编辑器时所发生的情况。</description>
+   	</context>
+   	
+   	<context  id="treat_new_files_as_binary_pref" >
+      <description>设置是否将所有新文件都作为二进制文件处理。如果禁用此项，则使用“小组”文件内容类型首选项来确定文件类型。</description>
+      <topic label="设置文件扩展名的内容类型" href="tasks/tasks-team-1.htm"/>
+   	</context>
+   	
+   	<context  id="determine_server_version" >
+      <description>设置是否应该在第一次连接时查询服务器版本以确定兼容性。</description>
+   	</context>
+
+   	<context  id="confirm_move_tag" >
+      <description>设置当用户执行请求移动现有标记的标记操作时是否提示用户确认。</description>
+   	</context>
+   	
+   	<context  id="line_end_pref" >
+      <description>设置是应将文本文件的行结束符转换为平台行结束符还是在从服务器下载这些文件时不进行转换。</description>
+   	</context>
+
+   	<context  id="console_preference_page_context" >
+      <description>此页面支持配置 CVS 控制台。可设置的属性为输出颜色和文本字体。还可将控制台配置为存在输出时自动打开。</description>
+   	</context>
+
+   	<context  id="ext_preference_page_context" >
+      <description>此页面支持配置 EXT 连接参数。</description>
+      <topic label="CVS" href="reference/ref-47.htm"/>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	
+   	<context id="ext_preference_rsh_context">
+		<description>将调用此程序来连接至远程 CVS 服务器。RSH 命令是使用以下调用模式调用的：&lt;CVS_RSH&gt; &lt;Parameters&gt; &lt;CVS_SERVER&gt;</description> 
+	</context>
+	
+	<context id="ext_preference_param_context">
+		<description>缺省参数模式为 {host} -l {user}。可以使用 {host}、{user}、{password} 和 {port} 修改它。</description>
+	</context>
+	
+	<context id="ext_preference_server_context">
+		<description>这是远程 CVS 服务器程序的名称。仅当远程 CVS 服务器名不同于缺省值时，才更改此设置。</description>
+	</context>
+
+   	<context  id="decorators_preference_page_context" >
+      <description>此页面支持配置 CVS 标号和图标修饰。</description>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+      <topic label="启用 CVS 资源修饰" href="tasks/tasks-107b.htm"/>
+   	</context>
+   	
+   	<context  id="password_management_preference_page_context" >
+      <description>此页面允许您查看哪些资源库位置缓存了认证信息并允许您修剪此信息。</description>
+		<topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	   	   	   	
+   	<!-- ********************************** -->
+ 	<!-- Views					            -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="console_view_context" >
+      <description>此视图显示 CVS 操作的输出。
+</description>
+      <topic label="CVS 小组编程" href="concepts/concepts-26.htm"/>
+   	</context>
+   	<context  id="repositories_view_context" >
+      <description>此视图允许浏览已知 CVS 资源库的内容并将模块作为项目检出到本地工作空间。</description>
+		<topic label="CVS 资源库视图" href="reference/ref-32.htm"/>
+		<topic label="刷新 CVS 资源库视图" href="tasks/tasks-93.htm"/>
+   	</context>
+   	<context  id="resource_history_view_context" >
+      <description>此视图显示 CVS 控制下的文件的修订历史记录。</description>
+      <topic label="CVS 资源历史记录视图" href="reference/ref-32a.htm"/>
+      <topic label="查看文件的修订历史记录" href="tasks/tasks-119.htm"/>
+   	</context>
+   	<context  id="catchup_release_viewer_context" >
+      <description>此视图显示传入、传出和冲突的更改。
+</description>
+      <topic label="CVS 同步视图" href="reference/ref-33.htm"/>
+		<topic label="与资源库同步" href="tasks/tasks-115.htm"/>
+   	</context>
+   	<context  id="compare_revision_view_context" >
+      <description>此视图允许将文件的本地副本与资源库中的修订进行比较。修订可用的操作是“获取内容”和“获取修订”。尽管这两者都用远程修订的内容替换本地文件，但“获取修订”将使本地文件“粘滞”。这表示对文件的更改不能提交回资源库。
+</description>
+   	</context>
+    <context  id="annotate_view_context" >
+      <description>此视图显示 CVS 资源库中的文件的用户和修订版注释。</description>
+   	</context>
+   	
+   	
+   	<!-- ********************************** -->
+ 	<!-- Actions					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="get_file_revision_action_context" >
+      <description>将文件的修订装入工作空间。此文件是“粘滞”的，用户将无法将更改提交到资源库。
+</description>
+   	</context>
+ 	<context  id="get_file_contents_action_context" >
+      <description>将文件的内容装入工作空间。本地文件的基本修订将不更改，文件将变成脏的。如果希望恢复到此文件较旧的修订版的内容，则执行此操作。
+</description>
+   	</context>
+   	<context  id="get_annotate_action_context" >
+      <description>对所选资源执行 CVS 注释命令。此命令会显示对每个行都注释了添加程序和修订版的资源。</description>
+   	</context>
+   	<context  id="new_repository_location_action_context" >
+      <description>创建新的 CVS 资源库位置并将它添加至“CVS 资源库”视图。</description>
+      <topic label="创建资源库位置" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="new_dev_eclipse repository_location_action_context" >
+      <description>为 dev.eclipse.org 创建新的 CVS 资源库位置并将它添加至“CVS 资源库”视图。</description>
+      <topic label="创建资源库位置" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="show_remote_folders_action_context" >
+      <description>切换“CVS 资源库”视图以显示文件夹。</description>
+      <topic label="CVS 资源库视图" href="reference/ref-32.htm"/>
+   	</context>
+   	<context  id="show_remote_modules_action_context" >
+      <description>切换“CVS 资源库”视图以显示在 CVSROOT/modules 文件中定义的模块。</description>
+      <topic label="CVS 资源库视图" href="reference/ref-32.htm"/>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Sync Actions					    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="sync_commit_action_context" >
+      <description>将所选传出更改提交到 CVS 资源库。不提交冲突的更改；要提交这些更改，必须使用“覆盖并提交”操作。</description>
+   	</context>
+   	
+   	<context id="sync_forced_commit_action_context">
+      <description>将所选冲突和传入更改提交到 CVS 资源库。不提交非冲突的传出更改；要提交这些更改，必须使用“提交”操作。</description>
+   	</context>
+	
+	<context id="sync_update_action_context">
+      <description>从 CVS 资源库获取所选传入更改。不更新冲突的更改；要更新这些更改，必须使用“覆盖并更新”操作。</description>
+   	</context>
+	
+	<context id="sync_forced_update_action_context">
+      <description>从 CVS 资源库获取所选冲突和传出更改。不更新非冲突的传入更改；要更新这些更改，必须使用“更新”操作。如果某些所选资源是可自动合并的（例如，它们没有基于行的冲突），则可选择执行自动合并或用远程内容替换。</description>
+   	</context>
+	
+	<context id="sync_add_action_context">
+      <description>将所选资源添加至 CVS 控制。</description>
+   	</context>
+	
+	<context id="sync_ignore_action_context">
+      <description>将所选资源添加至适当的 .cvsignore 文件。将不再考虑对这些资源执行资源库操作。</description>
+   	</context>
+	
+	<context id="merge_update_action_context">
+      <description>从 CVS 资源库获取所选传入更改。不更新冲突的更改；要更新这些更改，必须使用“覆盖并更新”操作。</description>
+   	</context>
+	
+	<context id="merge_forced_update_action_context">
+      <description>从 CVS 资源库获取所选冲突更改。不更新非冲突的传入更改；要更新这些更改，必须使用“更新”操作。如果某些所选资源是可自动合并的（例如，它们没有基于行的冲突），则可选择执行自动合并或用远程内容替换。</description>
+   	</context>
+	
+	<context id="merge_update_with_joinaction_context">
+      <description>从 CVS 资源库获取所选冲突更改。不更新非冲突的传入更改；要更新这些更改，必须使用“更新”操作。当执行合并时，检测冲突是否是可自动合并的是非常困难的（例如，它们没有基于行的冲突）。如果相信文件是可自动合并的，则可以使用此操作。您将可选择执行自动合并或用远程内容替换。</description>
+   	</context>
+
+   	<!-- ********************************** -->
+ 	<!-- Properties pages				    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="repository_location_property_page_context" >
+      <description>此页面显示资源库位置的属性并允许修改连接方法、用户名和密码。如果在此页面上更改了属性，则它们是对共享此位置的所有项目进行更改的。</description>
+      <topic label="更改“CVS 资源库位置”的属性" href="tasks/tasks-95.htm"/>
+   	</context>
+   	
+   	<context id="repository_encoding_property_page_context" >
+      <description>此页面允许您设置管理资源库的服务器使用的文件系统编码。正确设置此项将可确保正确翻译文件名和提交消息。此设置对文件内容没有影响。</description>
+   	</context>
+
+   	<context id="project_property_page_context" >
+      <description>此页面显示项目的 CVS 属性。可将项目的 CVS 共享信息更改为另一个兼容资源库位置。</description>
+      <topic label="更改项目的共享" href="tasks/tasks-117b.htm"/>
+   	</context>
+   	
+   	<context id="folder_property_page_context" >
+      <description>此页面显示文件夹的 CVS 属性。</description>
+   	</context>
+   	
+   	<context id="file_property_page_context" >
+      <description>此页面显示文件的 CVS 属性。</description>
+   	</context>
+   		
+</contexts>

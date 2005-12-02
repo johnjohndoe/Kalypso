@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<introContent>
+  <!-- 
+
+-->
+  <page alt-style="css/root_swt.properties" style="css/root.css" id="root" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="links-background">
+      <group id="page-links">
+        <link label="概述" url="http://org.eclipse.ui.intro/showPage?id=overview" id="overview" style-id="left">
+          <img id="overview_img" style-id="content-img" src="css/graphics/icons/etool/overview72.gif" alt="概述"></img>
+          <text>了解 Eclipse 的所有内容</text>
+        </link>
+        <link label="教程" url="http://org.eclipse.ui.intro/showPage?id=tutorials" id="tutorials" style-id="left">
+	      <img id="tutorials_img" style-id="content-img" src="css/graphics/icons/etool/tutorials72.gif" alt="教程"></img>
+          <text>让我们指导您完成 Eclipse 端到端教程</text>
+        </link>
+        <link label="样本" url="http://org.eclipse.ui.intro/showPage?id=samples" id="samples" style-id="right">
+          <img id="samples_img" style-id="content-img" src="css/graphics/icons/etool/samples72.gif" alt="样本"></img>
+          <text>通过代码样本来研究 Eclipse 开发</text>
+        </link>
+        <link label="新增内容" url="http://org.eclipse.ui.intro/showPage?id=news" id="news" style-id="right">
+          <img id="whatsnew_img" style-id="content-img" src="css/graphics/icons/etool/whatsnew72.gif" alt="新增内容"></img>
+          <text>了解此发行版中的新增内容</text>
+        </link>
+      </group>
+    </group>
+    <group id="action-links">
+      <link url="http://org.eclipse.ui.intro/close" label="工作台" id="workbench">
+        <img id="workbench_img" style-id="content-img" src="css/graphics/icons/etool/wb48.gif" alt="转至工作台"></img>
+        <text>转至工作台</text>
+      </link>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page alt-style="css/standby_swt.properties" style="css/standby_root.css" id="standby" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="links-background">
+      <group id="page-links">
+        <link label="概述" url="http://org.eclipse.ui.intro/showPage?id=overview&amp;standby=false" id="overview" style-id="left">
+          <text>了解 Eclipse 的所有内容</text>
+        </link>
+        <link label="教程" url="http://org.eclipse.ui.intro/showPage?id=tutorials&amp;standby=false" id="tutorials" style-id="left">
+          <text>让我们指导您完成 Eclipse 端到端教程</text>
+        </link>
+        <link label="样本" url="http://org.eclipse.ui.intro/showPage?id=samples&amp;standby=false" id="samples" style-id="right">
+          <text>通过代码样本来研究 Eclipse 开发</text>
+        </link>
+        <link label="新增内容" url="http://org.eclipse.ui.intro/showPage?id=news&amp;standby=false" id="news" style-id="right">
+          <text>了解此发行版中的新增内容</text>
+        </link>
+      </group>
+    </group>
+  </page>
+  <!--
+
+-->
+  <page style="css/overview/overview.css" alt-style="css/overview/swt.properties" id="overview" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <group id="navigation-links" filteredFrom="swt">
+      <group id="page-links">
+        <link label="概述" url="http://org.eclipse.ui.intro/showPage?id=overview" id="overview" style-id="left">
+          <text>了解 Eclipse 的所有内容</text>
+        </link>
+        <link label="教程" url="http://org.eclipse.ui.intro/showPage?id=tutorials" id="tutorials" style-id="left">
+          <text>让我们指导您完成 Eclipse 端到端教程</text>
+        </link>
+        <link label="样本" url="http://org.eclipse.ui.intro/showPage?id=samples" id="samples" style-id="right">
+          <text>通过代码样本来研究 Eclipse 开发</text>
+        </link>
+        <link label="新增内容" url="http://org.eclipse.ui.intro/showPage?id=news" id="news" style-id="right">
+          <text>了解此发行版中的新增内容</text>
+        </link>
+      </group>
+      <group id="action-links">
+      	<link url="http://org.eclipse.ui.intro/close" label="工作台" id="workbench">
+        	<text>转至工作台</text>
+      	</link>
+      </group>
+    </group>
+    <!-- -->
+    <group id="page-content">
+      <group id="content-header" label="概述" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">概述</text>
+      <text style-id="page-description" id="page-description">Eclipse 是一种通用工具平台 － 普遍适用的开放式可扩展 IDE。它提供了功能丰富的开发环境，该环境允许开发者高效地创建一些能够无缝集成到 Eclipse 平台中的工具。</text>
+      <group id="overview-links">
+	<anchor id="beginAnchor"/>
+        <link label="工作台基本概念" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/concepts/concepts-2.htm" id="basics">
+          <text>了解 Eclipse 工作台的基本概念</text>
+        </link>
+        <link label="团队支持" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/concepts/concepts-26.htm" id="team">
+          <text>了解如何与其他开发者合作</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="pdeAnchor"/>
+	<anchor id="endAnchor"/>
+      </group>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/tutorials/tutorials.css" alt-style="css/tutorials/swt.properties" id="tutorials" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="教程" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">教程</text>
+      <text style-id="page-description" id="page-description">通过完成一系列端到端教程，了解如何通过使用 Eclipse 来提高效率。</text>
+      <anchor id="beginAnchor"/>
+      <anchor id="jdtAnchor"/>
+      <anchor id="pdeAnchor"/>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/samples/samples.css" alt-style="css/samples/swt.properties" id="samples" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="样本" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">样本</text>
+      <text style-id="page-description" id="page-description">通过安装预先准备好的样本来研究 Eclipse（可能需要连接因特网）。</text>
+      <anchor id="beginAnchor"/>
+      <group label="SWT" id="swt" style-id="samples-group">
+        <text style-id="group-description">使用独立的 SWT 启动程序或者作为集成的工作台视图来运行 SWT 样本。</text>
+        <link label="工作台视图和独立应用程序" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.swt.examples" id="swt-examples" style-id="sample-link">
+          <text>SWT 示例启动程序可启动许多 SWT 示例。其中一些示例可独立于 eclipse 平台运行，其它的则作为工作台中的视图提供。</text>
+        </link>
+        
+        <anchor id="swtGroupAnchor"/>
+      </group>
+      <group label="工作台" id="workbench" style-id="samples-group">
+        <text style-id="group-description">下列样本演示如何紧密集成到 Eclipse 工作台中。</text>
+        <link label="多页面编辑器" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.multipageeditor" id="multi-page-editor" style-id="sample-link">
+          <text>显示如何创建具有多个页面的编辑器。</text>
+        </link>
+        <link label="属性表和大纲" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.propertysheet" id="property-sheet" style-id="sample-link">
+          <text>演示如何使用属性表和“大纲”视图。</text>
+        </link>
+        <link label="自述文件工具" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.readmetool" id="readmetool" style-id="sample-link">
+          <text>显示如何创建您自己的扩展点。</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="workbenchGroupAnchor"/>
+      </group>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/whatsnew/whatsnew.css" alt-style="css/whatsnew/swt.properties" id="news" style-id="page">
+    <title style-id="intro-header">欢迎使用 Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="新增内容" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">新增内容</text>
+      <anchor id="beginAnchor"/>
+      <group id="noteworthy-links" label="新增和值得注意的内容">
+        <link label="Eclipse 平台" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/whatsNew/platform_whatsnew.html" id="platform-noteworthy" style-id="noteworthy-link">
+          <text>了解此发行版中的主要新功能。</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="pdeAnchor"/>
+        <anchor id="generalAnchor"/>
+      </group>
+      <group id="news-links" label="常规">
+        <link label="从前发行版迁移" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.isv/porting/eclipse_3_0_porting_guide.html" id="migration">
+          <text>了解需要执行哪些操作才能在 Eclipse 3.0 中使用旧代码。</text>
+        </link>
+        <link label="新的更新" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.ui.ide&amp;class=org.eclipse.ui.internal.ide.update.InstallWizardAction" id="updates">
+          <text>从 Eclipse.org 中获取最新的更新。</text>
+        </link>
+        <link label="Eclipse 社区" url="http://www.eclipse.org" id="eclipse">
+          <text>加入该社区，阅读 Eclipse.org 上的文章和新闻。</text>
+        </link>
+	<anchor id="linksAnchor"/>
+      </group>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+</introContent>

@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   
+	<!-- ********************************** -->
+ 	<!-- TagSelectionDialog 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="replace_tag_selection_dialog_context">
+   		<description>Si è scelto di sostituire le risorse selezionate con un tag di sezione o versione. Questa finestra di dialogo consente di selezionare il tag da utilizzare per questa operazione. Le risorse selezionate verranno sostituite con quelle contrassegnate dal tag selezionato. Se il tag desiderato non viene visualizzato nell'elenco delle versioni o sezioni, scegliere "Aggiorna da repository" o "Configura tag" per trovare manualmente i tag esistenti nel repository. Disabilitando l'opzione "Cerca nelle sottocartelle" la ricerca verrà
+ristretta alle cartelle selezionate, alle loro cartelle secondarie e ai
+file selezionati</description>
+   		<topic label="Sostituzione di risorse nel workbench" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="compare_tag_selection_dialog_context">
+   		<description>Si è scelto di confrontare le risorse selezionate con un tag di sezione o versione. Questa finestra di dialogo consente di selezionare il tag da utilizzare per questa operazione. Le risorse selezionate verranno confrontate con quelle contrassegnate dal tag selezionato. Se il tag desiderato non viene visualizzato nell'elenco delle versioni o sezioni, scegliere "Aggiorna da repository" o "Configura tag" per trovare manualmente i tag esistenti nel repository.</description>
+        <topic label="Confronto delle risorse con le versioni del repository" href="tasks/tasks-101.htm" />
+   	</context>
+   	
+   	<context id="tag_remote_with_existing_dialog_context">
+   		<description>Si è scelto di codificare le risorse selezionate con un tag di sezione o versione. Questa finestra di dialogo consente di selezionare il tag da utilizzare per questa operazione. Se il tag esiste già su un'altra revisione di una delle risorse selezionate, verrà spostato sulla revisione nella selezione. Se il tag desiderato non viene visualizzato nell'elenco delle versioni o sezioni, scegliere "Aggiorna da repository" o "Configura tag" per trovare manualmente i tag esistenti nel repository. Disabilitando l'opzione "Cerca nelle sottocartelle" la ricerca verrà
+ristretta alle cartelle selezionate, alle loro cartelle secondarie e ai
+file selezionati</description>
+        <topic label="Spostamento di tag di versione" href="tasks/tasks-105c.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TagAsVersionDialog 				-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="tag_as_version_dialog_context">
+   		<description>Immettere il nome di versione da utilizzare per codificare con tag le risorse selezionate.</description>
+   		<topic label="Creazione di una versione di un progetto" href="tasks/tasks-100.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- WizardPages 						-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="sharing_autoconnect_page_context">
+   		<description>Il progetto locale ha informazioni CVS associate, ma non è registrato come progetto CVS. Questa pagina mostra le informazioni CVS associate al progetto locale. Facendo clic su "Fine" questo progetto verrà registrato come progetto CVS e l'utilizzo dei comandi del menu CVS verrà abilitato. Se "Connessione di convalida al termine" è abilitata, verrà tentata una connessione al server.</description>
+		<topic label="Progetti estratti con uno strumento CVS differente" href="tasks/tasks-117a.htm" />
+   	</context>
+   	
+   	<context id="sharing_select_repository_page_context">
+   		<description>Scegliere dall'elenco dei repository esistente il repository oppure indicare che deve essere creato un nuovo percorso del repository.</description>
+ 		<topic label="Condivisione di un nuovo progetto mediante CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_new_repository_page_context">
+   		<description>Immettere le informazioni che identificano il repository al quale si desidera connettersi e le informazioni relative a utente e connessione necessarie per accedere a questo repository.</description>
+   		<topic label="Procedura guidata Nuovo percorso del repository" href="reference/ref-40.htm"/>
+		<topic label="Repository CVS" href="concepts/concepts-27c.htm"/>
+		<topic label="Creazione di un percorso del repository CVS" href="tasks/tasks-92.htm"/>
+	   	<topic label="Eliminazione di un percorso del repository CVS" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="sharing_module_page_context">
+   		<description>Specificare il modulo remoto con cui il progetto locale viene condiviso. È possibile scegliere di utilizzare il nome del progetto come il nome che verrà dato al modulo remoto, specificare un percorso di modulo personalizzato oppure selezionare un modulo esistente. Nei primi due casi, il nome è relativo alla directory principale di repository e, se il modulo remoto non esiste, viene creato.</description>
+		<topic label="Condivisione di un nuovo progetto mediante CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_tag_selection_page_context">
+   		<description>Il progetto da condividere esiste già in remoto. Questa pagina consente di selezionare il ramo con cui condividere il progetto. Se il ramo desiderato non è HEAD e non viene visualizzato nell'elenco dei rami, scegliere "Aggiorna da repository" o "Configura tag" per trovare manualmente o automaticamente i tag esistenti nel repository.</description>
+		<topic label="Condivisione di un nuovo progetto mediante CVS" href="tasks/tasks-117.htm" />
+   	</context>
+   	
+ 	<context id="sharing_sync_page_context">
+   		<description>Esaminare le risorse e decidere quali condividere e quali ignorare. Se si fa clic su "Fine" viene fornita un'opzione per eseguire il commit di tutte le modifiche in uscita.</description>
+		<topic label="Condivisione di un nuovo progetto mediante CVS" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="patch_selection_page_context">
+   		<description>Specificare dove si desidera salvare l'output di patch.</description>
+ 		<topic label="Utilizzo delle patch" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="patch_options_page_context">
+   		<description>Specificare le diverse opzioni utilizzate per generare la patch.</description>
+   		<topic label="Utilizzo delle patch" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_selection_page_context">
+   		<description>Selezionare la modalità da applicare ai file selezionati. La scelta tra le modalità Binaria e ASCII specificate nelle preferenze CVS verrà eseguita automaticamente a seconda del tipo di file stabilito utilizzando il registro del tipo di file del team.</description>
+		<topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_summary_page_context">
+   		<description>I file le cui modalità richiedono una modifica in base all'input della procedura guidata vengono visualizzati in un elenco. Opzionalmente, quelli la cui modalità non richiede modifiche possono essere inclusi nell'elenco. È possibile cambiare la modalità associata a un file presente nell'elenco facendo clic sulla modalità del file e selezionando un file dall'elenco.</description>
+		<topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_shared_page_context">
+   		<description>Scegliere se i file già condivisi con il repository devono essere presi in considerazione per la modifica. Se l'inclusione dei file condivisi è disabilitata, verranno presi in considerazione soltanto nuovi file che già sono stati aggiunti al controllo CVS.</description>
+		<topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_changed_page_context">
+   		<description>Scegliere se i file che contengono cambiamenti in uscita devono essere presi in considerazione per il cambio di modalità.</description>
+ 		<topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+   	
+    <context id="keyword_substituton_commit_comment_page_context">
+   		<description>Questa operazione eseguirà il commit di tutte le modifiche di
+terminatori di riga risultanti dalla conversione dei file da binari a ASCII. Inserire un commento per descrivere i contenuti di
+questo commit.</description>
+		<topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+  
+ 	<context id="merge_start_page_context">
+   		<description>Dall'elenco, selezionare una versione del progetto che costituirà il punto di inizio
+(base) dell'operazione di unione. Se il tag non è disponibile, tentare
+l'aggiornamento dal repository o dai tag di configurazione.</description>
+		<topic label="Unione da una sezione" href="tasks/tasks-100b.htm" />
+   		<topic label="Procedura guidata Unione" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+ 	<context id="merge_end_page_context">
+   		<description>Dall'elenco selezionare una versione o una sezione che
+costituirà il punto finale dell'unione.</description>
+		<topic label="Unione da una sezione" href="tasks/tasks-100b.htm" />
+   		<topic label="Procedura guidata Unione" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+   	<context id="checkout_module_selection_context">
+   		<description>Specificare uno o più moduli remoti da estrarre. È possibile digitare il percorso del modulo oppure scegliere uno o più moduli esistenti da estrarre. I moduli esistenti non vengono recuperati finché l'opzione per selezionare un modulo esistente non viene abilitata.</description>
+		<topic label="Estrazione di un progetto da un repository CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_configuration_context">
+   		<description>Specificare come verranno estratti i moduli selezionati. Per uno o più moduli selezionati, è possibile estrarli come progetti o come cartelle in un progetto o in una cartella già esistente. Per una singola selezione senza file .project nel modulo remoto, sarà possibile configurare il progetto utilizzando la procedura guidata Nuovo progetto.</description>
+		<topic label="Estrazione di un progetto da un repository CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_location_selection_context">
+   		<description>Specificare il percorso del progetto nel filesystem locale. Per un singolo progetto, il percorso è quello della directory di progetto. Per più progetti, il percorso è quello della directory principale per i progetti.</description>
+		<topic label="Estrazione di un progetto da un repository CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_tag_selection_page_context">
+   		<description>Specificare il tag da utilizzare per i moduli da estrarre.</description>
+   		<topic label="Estrazione di un progetto da un repository CVS" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="update_tag_selection_page_context">
+   		<description>Specificare il tag da utilizzare per questo aggiornamento.</description>
+   		<topic label="Sostituzione di risorse nel workbench" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="checkout_into_resource_selection_page_context">
+   		<description>Selezionare la cartella principale nella quale i moduli selezionati devono essere creati. Quando si estrae un singolo modulo, è possibile specificare il nome della cartella da creare.</description>
+   		<topic label="Estrazione di una cartella in un progetto esistente" href="tasks/tasks-96b.htm"/> 
+   	</context>
+   	
+   	<context id="restore_from_repository_file_selection_page_context">
+   		<description>Sfogliare i file che sono stati eliminati dal repository e
+verificare la revisione di ciascun file da ripristinare nello spazio di lavoro
+locale.</description>
+		<topic label="Ripristino dei file eliminati dal repository" href="tasks/tasks-105a.htm" />
+   	</context>
+   	
+   	<context id="working_set_folder_selection_page_context">
+        <description>Selezionare le cartelle da aggiungere all'insieme di
+lavoro come progetti.</description>
+        <topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm" />
+    </context>
+    
+   	<!-- ********************************** -->
+ 	<!-- TeamMenuActions 					-->
+ 	<!-- ********************************** -->
+	
+	<context  id="manage_action_context" >
+      <description>Questi comandi consentono di eseguire operazioni di gestione della versione/configurazione.</description>
+	</context>
+  
+	<context id="team_synchronize_action_context">
+   		<description>Mostra le differenze tra lo stato del sito remoto e locale delle risorse selezionate nella vista Sincronizzazione.</description>
+   		<topic label="Condivisione di un nuovo progetto mediante CVS" href="tasks/tasks-117.htm"/>
+ 		<topic label="Sincronizzazione con il repository" href="tasks/tasks-115.htm"/>
+	 	<topic label="Aggiornamento" href="tasks/tasks-113.htm"/>
+	 	<topic label="Esecuzione del commit" href="tasks/tasks-114.htm"/>
+   	</context>
+   	
+   	<context id="team_synchronize_outgoing_action_context">
+  		<description>Mostra le differenze tra lo stato locale e remoto delle risorse selezionate che hanno modifiche in uscita nella vista Sincronizzazione.</description>
+		<topic label="Sincronizzazione con il repository" href="tasks/tasks-115.htm"/>
+	 	<topic label="Esecuzione del commit" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_commit_action_context">
+    		<description>Esegue il commit su qualsiasi modifica in uscita verso il server
+nelle risorse selezionate.</description>
+   		<topic label="Esecuzione del commit" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_update_action_context">
+   		<description>Aggiorna le risorse selezionate con qualsiasi modifica remota.</description>
+   		<topic label="Aggiornamento" href="tasks/tasks-113.htm"/>
+   	</context>
+
+ 	<context id="team_create_patch_action_context">
+   		<description>Crea una patch che, quando applicata alla stessa base come le risorse locali, duplicherà le risorse selezionate.</description>
+   		<topic label="Utilizzo delle patch" href="tasks/tasks-68c.htm"/>
+   	</context>
+
+ 	<context id="team_tag_as_version_action_context">
+   		<description>Codifica con tag le risorse selezionate nel repository con un nome di versione fornito dall'utente.</description>
+   		<topic label="Creazione di una versione di un progetto" href="tasks/tasks-100.htm"/>
+   		<topic label="Creazione di versioni dei progetti nel repository" href="tasks/tasks-118.htm"/>
+   	</context>
+
+ 	<context id="team_branch_action_context">
+   		<description>Crea una sezione utilizzando le risorse selezionate come base e opzionalmente  aggiorna le risorse locali perché siano sulla nuova sezione.</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+ 		<topic label="Divisione in sezioni" href="tasks/tasks-100a.htm"/>
+   	</context>
+
+ 	<context id="team_merge_action_context">
+   		<description>Unisce le modifiche di una sezione in un'altra.</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+   	</context>
+
+ 	<context id="team_set_keyword_mode_action_context">
+   		<description>Imposta la modalità di sostituzione delle parole chiave delle risorse selezionate.</description>
+   		<topic label="Impostazione del tipo di contenuto di un'estensione file" href="tasks/tasks-team-1.htm"/>
+   	</context>
+
+ 	<context id="team_disconnect_action_context">
+   		<description>Disconnette il progetto dal controllo CVS e opzionalmente elimina le  cartelle CVS.</description>
+		<topic label="Eliminazione di un percorso del repository CVS" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="team_add_action_context">
+   		<description>Aggiunge le risorse selezionate al controllo CVS perché possano essere eseguite e condivise.</description>
+   	</context>
+
+ 	<context id="team_ignore_action_context">
+   		<description>Ignora le risorse selezionate in modo che non siano prese in considerazione per il controllo versione.</description>
+   	</context>
+
+   	<context id="team_restore_from_repository_action_context">
+   		<description>Caricare il contenuto dei file che sono stati eliminati dal
+repository per poterli ripristinare.</description>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Other Menu Actions 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="compare_with_tag_action_context">
+   		<description>Confronta le risorse selezionate con le risorse remote corrispondenti codificate con una versione data o un tag di sezione.</description>
+   		<topic label="Confronto di risorse" href="tasks/tasks-68.htm"/>
+	 	<topic label="Confronto delle risorse con le versioni del repository" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_with_latest_action_context">
+   		<description>Confronta le risorse selezionate con le risorse remote corrispondenti codificate con lo stesso tag sulla stessa sezione.</description>
+   	</context>
+
+   	<context id="compare_with_revision_action_context">
+   		<description>Confronta il file selezionato con una revisione remota del file specificata dall'utente.</description>
+   		<topic label="Confronto di risorse" href="tasks/tasks-68.htm"/>
+	 	<topic label="Confronto delle risorse con le versioni del repository" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+ 	<context id="replace_with_tag_action_context">
+   		<description>Sostituisce le risorse selezionate con le risorse remote corrispondenti codificate con una versione o un tag di sezione specificati dall'utente.</description>
+	 	<topic label="Sostituzione di risorse nel workbench" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	 <context id="replace_with_latest_action_context">
+   		<description>Sostituisce le risorse selezionate con le risorse remote corrispondenti codificate con lo stesso tag sulla stessa sezione.</description>
+   	</context>
+    
+   	<context id="replace_with_revision_action_context">
+   		<description>Sostituisce il file selezionato con una revisione remota del file specificata dall'utente.</description>
+   		<topic label="Vista Selezione" href="reference/ref-27.htm"/>
+	 	<topic label="Sostituzione di risorse nel workbench" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	<context id="checkout_into_action_context">
+   		<description>Estrae la cartella selezionata in un progetto esistente.</description>
+   		<topic label="Estrazione di una cartella in un progetto esistente" href="tasks/tasks-96b.htm"/>
+   	</context>
+   	
+   	<context id="checkout_as_action_context">
+   		<description>Estrae la cartella selezionata nel progetto configurato
+dall'utente. Questo nuovo progetto può avere un nome diverso da quello predefinito</description>
+   	</context>
+   	
+   	<context id="checkout_as_project_action_context">
+   		<description>Estrae le cartelle selezionate nei progetti
+corrispondenti ai nomi di ciascuna cartella remota.</description>
+   		<topic label="Estrazione di un progetto da un repository CVS" href="tasks/tasks-96.htm"/>
+   	</context>
+
+   	<context id="checkout_module_action_context">
+   		<description>Estrae i moduli selezionati all'interno dello spazio di lavoro locale.</description>
+   	</context>
+   	   	
+   	<context id="open_remote_file_action_context">
+   		<description>Apre nell'editor il contenuto del file remoto selezionato.</description>
+   	</context>
+
+ 	<context id="show_in_history_action_context">
+   		<description>Visualizza la cronologia di revisione del file remoto o locale selezionato nella vista Cronologia.</description>
+   		<topic label="Visualizzazione della cronologia di revisione di un file" href="tasks/tasks-119.htm"/>
+   	</context>
+
+    <context id="confirm_merge_action_context">
+   		<description>Contrassegna le risorse selezionate come unite. Questo
+modifica la base della risorsa locale per corrispondere alla modifica in
+entrata in conflitto, in modo che si possa eseguire il commit delle modifiche
+nella risorsa locale. Eseguire questa operazione solo dopo aver accettato
+manualmente le modifiche in entrata da mantenere.</description>
+   		<topic label="Aggiornamento" href="tasks/tasks-113.htm"/>
+   	</context>
+   	
+    <context id="select_new_action_context">
+   		<description>Selezionare tutte le risorse nuove e non ancora aggiunte al
+controllo CVS.</description>
+   	</context>
+   	
+ 	<context id="compare_remote_resources_action_context">
+   		<description>Confronta le due risorse remote selezionate.</description>
+   		<topic label="Confronto di risorse" href="tasks/tasks-68.htm"/>
+	 	<topic label="Confronto delle risorse con le versioni del repository" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_remote_with_tag_action_context">
+   		<description>Confronta la risorsa selezionata con un'altra sezione o versione
+della stessa risorsa.</description>
+   	</context>
+   	
+   	<context id="copy_repository_name_action_context">
+   		<description>Copia negli appunti il nome del percorso del
+repository selezionato.</description>
+   	</context>
+   	
+   	<context id="remove_root_action_context">
+   		<description>Rimuove i percorsi di repository selezionati dalla vista Repository.</description>
+   	</context>
+   	
+   	<context id="add_to_branch_context">
+   		<description>Aggiunge il progetto selezionato all'elenco di sezioni in
+questa vista. Questa operazione aggiunge solo il progetto alla sezione nella
+vista e non influenza direttamente il repository.</description>
+   	</context>
+   	
+   	<context id="move_remote_tag_action_context">
+   		<description>Codifica le risorse selezionate con un tag esistente specificato dall'utente, spostando il tag se necessario.</description>
+   	</context>
+   	
+   	<context id="tag_remote_action_context">
+   		<description>Codifica le risorse selezionate con un tag specificato dall'utente.</description>
+   	</context>
+
+   	<context id="show_comment_in_history_action_context">
+   		<description>Visualizza il commento completo su più righe relativo
+alla voce selezionata in un riquadro di testo separato.</description>
+   		<topic label="Vista Cronologia risorse CVS " href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="show_tag_in_history_action_context">
+   		<description>Visualizza l'elenco completo dei tag relativo alla voce
+selezionata, in un riquadro di elenco separato.</description>
+   		<topic label="Vista Cronologia risorse CVS " href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="tag_with_existing_action_context">
+   		<description>Codifica le risorse selezionate con un tag esistente specificato dall'utente, spostando il tag se necessario.</description>
+   	</context>
+   	
+   	<context id="select_working_set_action_context">
+   		<description>Questo filtro elimina dalla vista tutte le cartelle principali
+il cui nome non corrisponde al progetto nell'insieme di lavoro
+selezionato.</description>
+   	</context>
+   	
+   	<context id="deselect_working_set_action_context">
+   		<description>Questa azione rimuove il filtro dell'insieme di lavoro correntemente installato.</description>
+   	</context>
+   	
+    <context id="edit_working_set_action_context">
+   		<description>Questa azione modifica il filtro dell'insieme di lavoro
+correntemente installato.</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- TagConfiguration 					-->
+ 	<!-- ********************************** -->
+	
+	<context id="refresh_tags_action_context">
+   		<description>Aggiorna i tag di sezione e versione visualizzati in questa
+vista contattando il server</description>
+   		<topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context id="refresh_remote_project_selection_page_context">
+   		<description>Aggiorna i tag di sezione e versione per le
+cartelle contrassegnate contattando il
+server</description>
+   		<topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context  id="tag_configuration_overview" >
+   		<description>Configura i tag di sezione e versione riportati nel workbench. Esplorando file CVS in remoto per i tag è possibile scegliere selettivamente, dall'elenco dei tag di ogni file, i tag da ricordare e quelli da ignorare. 
+È inoltre possibile selezionare i file che verranno esaminati automaticamente
+per i tag.</description>
+   		<topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+    <context  id="tag_configuration_refreshlist" >
+      <description>Elenca i file che vengono automaticamente esaminati per i tag. Per impostazione predefinita, viene esaminato il file .project. Ma in alcuni casi altri file potrebbero avere una cronologia dei tag più completa e dovrebbero essere esaminati.</description>
+      <topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+   	<context  id="tag_configuration_refreshaction" >
+      <description>Verranno estratti i tag di sezione e versione dai file che sono stati configurati per la ricerca automatica dei tag. Se i tag che ci si aspetta di visualizzare non appaiono, provare a cambiare la lista dei file da esaminare attraverso la finestra di dialogo per la configurazione dei tag.</description>
+      <topic label="Individuazione di tag di sezione e di versione" href="tasks/tasks-110.htm"/>
+   	</context>
+
+ 	<!-- ********************************** -->
+ 	<!-- Watch/Edit							-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="team_edit_action_context" >
+      <description>Notificare al server che si desidera modificare questo
+file.</description>
+   	</context>
+   	
+   	<context  id="team_unedit_action_context" >
+      <description>Notificare al server che è terminata la modifica del file e
+riportare il contenuto a quello della revisione di base dalla quale è derivato.</description>
+   	</context>
+   	
+   	<context  id="team_show_editors_action_context" >
+      <description>Mostrare tutti gli editor della risorsa selezionata e tutti
+i relativi elementi secondari nella vista Editor CVS.</description>
+   	</context>
+   	
+   	<context  id="cvs_editors_view_context" >
+      <description>Questa vista mostra tutti gli editor registrati per uno o
+più file.</description>
+   	</context>
+   	
+   	<context  id="editors_dialog_context" >
+      <description>Questa finestra di dialogo mostra tutti gli editor
+registrati del file che si richiede di modificare.</description>
+   	</context>
+   	
+   	<context  id="watch_edit_preference_page_context" >
+      <description>Questa pagina supporta la configurazione di watch/edit CVS. Abilitando
+l'uso di watch/edit tutti i file saranno estratti dal server in sola
+lettura. Se si modifica un file questo diventa utilizzabile in scrittura
+e al server viene inviata una notifica di modifica.</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- Dialogs					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="release_comment_dialog_context">
+       <description>Inserire un commento per descrivere i contenuti di
+questo commit.</description>
+    </context>
+   	<context id="user_validation_dialog_context">
+      <description>In questa finestra di dialogo, immettere le informazioni appropriate per il collegamento al repository.</description> 
+    </context>
+    <context id="tag_local_as_version_dialog_context">
+      <description>Immettere il nome del tag di versione da applicare alle
+revisioni che esistono localmente.</description>
+    </context>
+    <context id="branch_dialog_context">
+		<description>Questa finestra di dialogo consente di specificare il nome
+della sezione che si desidera creare e offre inoltre la possibilità di
+iniziare a lavorare nella sezione aggiornando il tag delle risorse locali
+in modo da diventare il tag della sezione appena creata.</description>
+    </context>
+    <context id="add_to_cvsignore_context">
+    	<description>Scegliere, nella finestra di dialogo, la modalità per aggiungere ai file .cvsignore le risorse selezionate. Per ogni risorsa ignorata verrà generato un file .cvsignore nella sua directory di origine contenente il modello specificato nella finestra di dialogo. Ciò non avrà effetto sulle risorse già sotto il controllo di versione.</description>
+    </context>
+    <context id="add_to_version_control_dialog_context">
+    	<description>Selezionare quali nuove risorse devono essere aggiunte al
+controllo versioni prima del commit. Per le risorse elencate in questa finestra
+di dialogo ma che non sono state precedentemente aggiunte non verrà eseguito il
+commit sul server.</description>
+    </context>
+    <context id="disconnect_action_context">
+    	<description>Questa finestra di dialogo consente di scollegare il
+progetto dal controllo CVS. Mantenendo le meta informazioni CVS, il progetto
+potrà facilmente essere nuovamente condiviso o utilizzato con altri strumenti CVS.</description>
+    </context>
+    <context id="history_filter_dialog_context">
+        <description>Questa finestra di dialogo consente di specificare
+filtri che riducono il numero di voci presentate nella vista Cronologia. </description>
+    </context>
+    <context id="date_tag_dialog_context">
+        <description>Questa finestra di dialogo consente di specificare una data da utilizzare per recuperare le risorse che si trovavano nel repository in quel momento.</description>
+    </context>
+    <context id="keyboard_interactive_dialog_context">
+        <description>Questa finestra di dialogo consente di eseguire un'autenticazione interattiva per una connessione CVS.</description>
+    </context>
+    
+ 	<!-- ********************************** -->
+ 	<!-- Preference Pages 					-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="prune_empty_directories_pref" >
+      <description>Abilita la rimozione delle directory vuote in aggiornamento
+e nella vista Sincronizzazione. Sebbene le directory eliminate non vengano visualizzate nel workbench vi è, comunque, una directory vuota nel repository.</description>
+   	</context>
+   	
+   	<context  id="quietness_level_pref" >
+      <description>Imposta tutte le stampe dei CVS delle informazioni dello stato. Nella modalità "Poco attivo" la stampa di messaggi informativi di poca importanza è soppressa. Ciò che viene considerato importante dipende da ogni singolo comando. Nella modalità "Inattivo" tutti gli output, eccetto quelli assolutamente necessari per completare il comando, verranno soppressi. In modalità "Inattivo", alcuni server CVS potrebbero non comunicare informazioni importanti sugli errori che si sono verificati. Potrebbe essere necessario utilizzare la modalità "Poco attivo".</description>
+   	</context>
+   	
+  	<context  id="compression_level_pref" >
+      <description>Imposta il livello di compressione sulla comunicazione con il server se questo è supportato dal server. Il
+livello 1 è la compressione minima (comunicazione più lenta ma necessità
+di un minor quantitativo di CPU) e il livello 9 la compressione massima
+(comunicazione più veloce ma necessità di un quantitativo maggiore di CPU).</description>
+   	</context>
+
+	<context  id="default_keywordmode_pref" >
+      <description>Imposta la modalità di sostituzione della parola chiave predefinita da usare per i file ASCII.</description>
+      <topic label="Impostazione della modalità di sostituzione della parola chiave CVS" href="tasks/tasks-cvs-11.htm"/>
+   	</context>
+   	
+	<context  id="comms_timeout_pref" >
+      <description>Imposta l'ammontare di tempo in secondi da attendere prima che la connessione al server CVS si interrompa.</description>
+   	</context>
+   	
+   	<context  id="consider_content_pref" >
+      <description>Imposta il metodo di confronto predefinito per confrontare e sincronizzare le risorse CVS. Per impostazione predefinita, la data/ora viene utilizzata per confrontare i file CVS, e questo è di gran lunga il metodo più veloce. Ad ogni modo, in alcuni casi un risultato più accurato può essere ottenuto dal confronto del contenuto dei file. 
+Queste impostazioni possono essere attivate/disattivate da un editor di
+confronto o una vista Sincronizzazione.</description>
+   	</context>
+   	
+	<context  id="replace_deletion_of_unmanaged_pref" >
+      <description>Consente alle risorse che non sono sotto il controllo CVS di essere eliminate quando sostituite con risorse dal repository.</description>
+   	</context>
+   	
+    <context  id="save_dirty_editors_pref" >
+      <description>Configura ciò che avviene quando vi sono editor
+aperti con modifiche non salvate durante l'esecuzione di un'operazione CVS.</description>
+   	</context>
+   	
+   	<context  id="treat_new_files_as_binary_pref" >
+      <description>Imposta la possibilità che tutti i file nuovi
+siano considerati binari. Se disabilitato, per determinare il tipo
+di file vengono utilizzate le preferenze del tipo di contenuto del file
+Team.</description>
+      <topic label="Impostazione del tipo di contenuto di un'estensione file" href="tasks/tasks-team-1.htm"/>
+   	</context>
+   	
+   	<context  id="determine_server_version" >
+      <description>Imposta se la versione del server può essere interrogata
+alla prima connessione per determinare la compatibilità.</description>
+   	</context>
+
+   	<context  id="confirm_move_tag" >
+      <description>Imposta se richiedere all'utente una conferma quando esegue un'operazione sui tag che prevede lo spostamento di un tag esistente.</description>
+   	</context>
+   	
+   	<context  id="line_end_pref" >
+      <description>Imposta se i finali riga per i file di testo devono essere tradotti nel finale riga della piattaforma oppure tralasciati quando i file vengono scaricati dal server.</description>
+   	</context>
+
+   	<context  id="console_preference_page_context" >
+      <description>Questa pagina supporta la configurazione della
+console CVS. È possibile impostare le proprietà per i colori di output e il
+carattere di testo. È
+possibile inoltre configurare la console in modo che si apra automaticamente in presenza di output.</description>
+   	</context>
+
+   	<context  id="ext_preference_page_context" >
+      <description>Questa pagina supporta la configurazione dei parametri
+di connessione EXT.</description>
+      <topic label="CVS" href="reference/ref-47.htm"/>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	
+   	<context id="ext_preference_rsh_context">
+		<description>Questo programma verrà richiamato per stabilire una connessione
+al server CVS remoto. Il comando RSH viene richiamato mediante il seguente
+modello di richiamo: &lt;CVS_RSH&gt; &lt;Parametri&gt; &lt;CVS_SERVER&gt;</description> 
+	</context>
+	
+	<context id="ext_preference_param_context">
+		<description>Il modello del parametro predefinito è
+{host} -l {user}. È
+possibile personalizzarlo utilizzando {host}, {user}, {password} e {port}.</description>
+	</context>
+	
+	<context id="ext_preference_server_context">
+		<description>Questo è il nome del programma relativo al server CVS remoto. Modificare l'impostazione soltanto se il nome del server CVS remoto differisce
+dal nome predefinito</description>
+	</context>
+
+   	<context  id="decorators_preference_page_context" >
+      <description>Questa pagina supporta la configurazione delle
+decorazioni CVS dell'etichetta e delle icone.</description>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+      <topic label="Abilitazione delle decorazioni di risorsa CVS" href="tasks/tasks-107b.htm"/>
+   	</context>
+   	
+   	<context  id="password_management_preference_page_context" >
+      <description>Questa pagina consente di visualizzare i percorsi di repository con le informazioni di autorizzazione memorizzate nella cache e consente di eliminare queste informazioni.</description>
+		<topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	   	   	   	
+   	<!-- ********************************** -->
+ 	<!-- Views					            -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="console_view_context" >
+      <description>La vista mostra l'output delle operazioni CVS.</description>
+      <topic label="Programmazione in team con CVS" href="concepts/concepts-26.htm"/>
+   	</context>
+   	<context  id="repositories_view_context" >
+      <description>Questa vista consente di esplorare il contenuto di
+repository CVS conosciuti e di estrarre i moduli all'interno dello spazio di
+lavoro locale come progetti.</description>
+		<topic label="Vista Repository CVS " href="reference/ref-32.htm"/>
+		<topic label="Aggiornamento della vista Repository CVS" href="tasks/tasks-93.htm"/>
+   	</context>
+   	<context  id="resource_history_view_context" >
+      <description>Questa vista mostra la cronologia di revisione della risorsa sotto il controllo CVS.</description>
+      <topic label="Vista Cronologia risorse CVS " href="reference/ref-32a.htm"/>
+      <topic label="Visualizzazione della cronologia di revisione di un file" href="tasks/tasks-119.htm"/>
+   	</context>
+   	<context  id="catchup_release_viewer_context" >
+      <description>La vista mostra le modifiche in entrata, in uscita e in
+conflitto.</description>
+      <topic label="Vista Sincronizzazione CVS" href="reference/ref-33.htm"/>
+		<topic label="Sincronizzazione con il repository" href="tasks/tasks-115.htm"/>
+   	</context>
+   	<context  id="compare_revision_view_context" >
+      <description>La vista consente il confronto della copia locale di un
+file con le revisioni dal repository. Azioni disponibili per una revisione sono
+"Recupera contenuti" e "Recupera revisione". Sebbene entrambi sostituiscano il
+file locale con i contenuti della revisione remota, "Recupera contenuti"
+renderà il file "permanente". Ciò significa che per le modifiche apportate al file non può essere
+eseguito il commit sul repository.</description>
+   	</context>
+    <context  id="annotate_view_context" >
+      <description>Questa vista mostra le annotazioni relative a utente e revisione per un file nel repository CVS.</description>
+   	</context>
+   	
+   	
+   	<!-- ********************************** -->
+ 	<!-- Actions					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="get_file_revision_action_context" >
+      <description>Carica la revisione del file nello spazio di lavoro. Il file
+sarà "permanente" e l'utente non potrà eseguire il commit delle modifiche sul
+repository.</description>
+   	</context>
+ 	<context  id="get_file_contents_action_context" >
+      <description>Carica i contenuti del file nello spazio di lavoro. La
+revisione di base del file locale non verrà modificata e il file assumerà
+uno stato non finale. Eseguire questa operazione se si desidera riportare il contenuto ad una
+revisione meno aggiornata del file.</description>
+   	</context>
+   	<context  id="get_annotate_action_context" >
+      <description>Eseguire il comando di annotazione CVS sulla risorsa selezionata. Questo comando visualizza la risorsa con il contributor e la revisione annotata per tutte le righe.</description>
+   	</context>
+   	<context  id="new_repository_location_action_context" >
+      <description>Crea una nuovo percorso del repository CVS e lo aggiunge alla
+vista Repository CVS.</description>
+      <topic label="Creazione di un percorso del repository" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="new_dev_eclipse repository_location_action_context" >
+      <description>Crea un nuovo percorso del repository CVS per dev.eclipse.org
+e lo aggiunge alla vista Repository CVS.</description>
+      <topic label="Creazione di un percorso del repository" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="show_remote_folders_action_context" >
+      <description>Attiva/disattiva la vista Repository CVS in modo da
+poter mostrare le cartelle.</description>
+      <topic label="Vista Repository CVS " href="reference/ref-32.htm"/>
+   	</context>
+   	<context  id="show_remote_modules_action_context" >
+      <description>Attiva/disattiva la vista Repository CVS in modo da
+poter mostrare i moduli definiti nel file CVSROOT/moduli.</description>
+      <topic label="Vista Repository CVS " href="reference/ref-32.htm"/>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Sync Actions					    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="sync_commit_action_context" >
+      <description>Esegua il commit delle modifiche in uscita selezionate sul
+repository CVS. Il commit dei cambiamenti in conflitto non viene eseguito; per eseguirlo è necessario utilizzare l'azione "Sovrascrivi" e quindi "Commit".</description>
+   	</context>
+   	
+   	<context id="sync_forced_commit_action_context">
+      <description>Esegue il commit delle modifiche in uscita e in conflitto
+selezionate sul repository CVS. Il commit delle modifiche in uscita non in
+conflitto non viene eseguito; per eseguirlo è necessario utilizzare l'azione "Commit".</description>
+   	</context>
+	
+	<context id="sync_update_action_context">
+      <description>Recupera le modifiche in uscita selezionate dal repository CVS. Le modifiche in conflitto non vengono aggiornate; per aggiornarle è necessario utilizzare l'azione "Sovrascrivi" e quindi "Aggiorna".</description>
+   	</context>
+	
+	<context id="sync_forced_update_action_context">
+      <description>Recupera le modifiche in uscita e in conflitto selezionate dal repository CVS. Le modifiche in uscita non in conflitto non vengono aggiornate; per aggiornarle è necessario utilizzare l'azione "Aggiorna". Se è possibile unire automaticamente alcune delle risorse selezionate (ad esempio, se non presentano conflitti di base), si può scegliere di eseguire l'unione automatica o di sostituirle con i contenuti remoti.</description>
+   	</context>
+	
+	<context id="sync_add_action_context">
+      <description>Aggiunge le risorse selezionate al controllo CVS.</description>
+   	</context>
+	
+	<context id="sync_ignore_action_context">
+      <description>Aggiunge le risorse selezionate al file .cvsignore corretto. Queste risorse non verranno più prese in considerazione per operazioni di repository.</description>
+   	</context>
+	
+	<context id="merge_update_action_context">
+      <description>Recupera le modifiche in uscita selezionate dal repository CVS. Le modifiche in conflitto non vengono aggiornate; per aggiornarle è necessario utilizzare l'azione "Sovrascrivi" e quindi "Aggiorna".</description>
+   	</context>
+	
+	<context id="merge_forced_update_action_context">
+      <description>Recupera le modifiche in conflitto selezionate dal repository CVS. Le modifiche in uscita non in conflitto non vengono aggiornate; per aggiornarle è necessario utilizzare l'azione "Aggiorna". Se è possibile unire automaticamente alcune delle risorse selezionate (ad esempio, se non presentano conflitti di base), si può scegliere di eseguire l'unione automatica o di sostituirle con i contenuti remoti.</description>
+   	</context>
+	
+	<context id="merge_update_with_joinaction_context">
+      <description>Recupera le modifiche in conflitto selezionate dal repository CVS. Le modifiche in uscita non in conflitto non vengono aggiornate; per aggiornarle è necessario utilizzare l'azione "Aggiorna". Quando si esegue una unione, è difficile rilevare se i conflitti possono essere uniti automaticamente (ad esempio, se non presentano conflitti di base). Se si ritiene che sia possibile unire automaticamente i file, è possibile eseguire tale azione. Si potrà quindi scegliere di eseguire l'unione automatica o di sostituire con contenuti remoti.</description>
+   	</context>
+
+   	<!-- ********************************** -->
+ 	<!-- Properties pages				    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="repository_location_property_page_context" >
+      <description>Questa pagina mostra le proprietà di un percorso del
+repository e consente la modifica del metodo di connessione, del nome
+utente e della password. Se le proprietà vengono modificate su questa
+pagina, saranno modificate in tutti i progetti che condividono questo percorso.</description>
+      <topic label="Modifica delle proprietà di un percorso del repository CVS" href="tasks/tasks-95.htm"/>
+   	</context>
+   	
+   	<context id="repository_encoding_property_page_context" >
+      <description>Questa pagina consente di impostare la codifica del filesystem utilizzata dal server che contiene il repository. L'impostazione di questa proprietà garantisce che i nomi file e i messaggi di commit vengano tradotti correttamente. Questa impostazione non ha alcun effetto sui contenuti dei file.</description>
+   	</context>
+
+   	<context id="project_property_page_context" >
+      <description>Questa pagina mostra le proprietà CVS del progetto. È
+possibile assegnare le informazioni di condivisione CVS relative al progetto a
+un altro percorso del repository compatibile.</description>
+      <topic label="Modifica della condivisione di un progetto" href="tasks/tasks-117b.htm"/>
+   	</context>
+   	
+   	<context id="folder_property_page_context" >
+      <description>Questa pagina mostra le proprietà CVS della cartella.</description>
+   	</context>
+   	
+   	<context id="file_property_page_context" >
+      <description>Questa pagina mostra le proprietà CVS del file.</description>
+   	</context>
+   		
+</contexts>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ============================================================================= -->
+<!-- Define the top level topics                                                   -->
+<!-- ============================================================================= -->
+
+<toc label="Guia do Usuário do Workbench">
+	<topic label="Informações Iniciais">
+		<link toc="topics_GettingStarted.xml" />
+	</topic>
+	<topic label="Conceitos">
+		<link toc="topics_Concepts.xml" />
+	</topic>
+	<topic label=" Tarefas">
+		<link toc="topics_Tasks.xml" />
+	</topic>
+	<topic label="Referência">
+		<link toc="topics_Reference.xml" />
+	</topic>
+	<topic label="Dicas e Sugestões" href="tips/platform_tips.html"/>
+	<topic label="O que Há de Novo" href="whatsNew/platform_whatsnew.html"/>
+	<topic label="Jurídico" href="notices.html"/>
+</toc>

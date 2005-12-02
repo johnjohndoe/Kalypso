@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the GettingStarted -->
+<!-- ========================== -->
+<toc label="Introduzione">
+   <topic label="Esercitazione di base" href="gettingStarted/qs-01.htm">
+      <topic label="Il Workbench" href="gettingStarted/qs-02a.htm"/>
+      <topic label="Editor e viste" href="gettingStarted/qs-02b.htm">
+         <topic label="Editor" href="gettingStarted/qs-02d.htm"/>
+         <topic label="Viste" href="gettingStarted/qs-02e.htm"/>
+      </topic>
+          
+      <topic label="Un progetto semplice" href="gettingStarted/qs-07a.htm">
+         <topic label="Utilizzo del menu File" href="gettingStarted/qs-07b.htm"/>
+         <topic label="Utilizzo del menu a comparsa" href="gettingStarted/qs-07c.htm"/>
+         <topic label="Utilizzo del pulsante Nuovo" href="gettingStarted/qs-07d.htm"/>
+      </topic>
+ 
+      <topic label="Chiusura di un editor" href="gettingStarted/qs-10b.htm"/>
+
+      <topic label="Esplorazione delle risorse" href="gettingStarted/qs-12.htm">
+         <topic label="Apertura di risorse nella vista Selezione" href="gettingStarted/qs-12b.htm"/>
+         <topic label="Vai a" href="gettingStarted/qs-12c.htm"/>
+         <topic label="Vai in" href="gettingStarted/qs-12d.htm"/>
+      </topic>
+
+      <topic label="File" href="gettingStarted/qs-13.htm"/>
+
+      <topic label="Esportazione di file" href="gettingStarted/qs-24a.htm">
+         <topic label="Trascinamento o copia e incolla" href="gettingStarted/qs-24b.htm"/>
+         <topic label="Esportazione guidata" href="gettingStarted/qs-24c.htm"/>
+      </topic>
+
+      <topic label="Importazione di file" href="gettingStarted/qs-31a.htm">
+         <topic label="Trascinamento o copia e incolla" href="gettingStarted/qs-31b.htm"/>
+         <topic label="Importazione guidata" href="gettingStarted/qs-31c.htm"/>
+      </topic>
+
+      <topic label="Eliminazione di risorse" href="gettingStarted/qs-32.htm"/>
+
+      <topic label="Utilizzo di altri editor" href="gettingStarted/qs-34a.htm">
+         <topic label="Editor esterni" href="gettingStarted/qs-34b.htm"/>
+         <topic label="Editor incorporati" href="gettingStarted/qs-34c.htm"/>
+         <topic label="Modifica di file all'esterno del workbench" href="gettingStarted/qs-34d.htm"/>
+	 </topic>
+
+      <topic label="Copia, spostamento e ridenominazione" href="gettingStarted/qs-35.htm">
+         <topic label="Copia" href="gettingStarted/qs-35b.htm"/>
+         <topic label="Ridenominazione" href="gettingStarted/qs-35c.htm"/>
+         <topic label="Spostamento" href="gettingStarted/qs-35d.htm"/>
+      </topic>
+
+      <topic label="Ricerca" href="gettingStarted/qs-36.htm">
+         <topic label="Avvio di una ricerca" href="gettingStarted/qs-36a.htm"/>
+         <topic label="Vista Ricerca" href="gettingStarted/qs-36b.htm"/>
+      </topic>
+
+      <topic label="Attività e indicatori" href="gettingStarted/qs-37-2b.htm">
+         <topic label="Attività non associate" href="gettingStarted/qs-37-2d.htm"/>
+         <topic label="Attività associate" href="gettingStarted/qs-37-2d2.htm"/>
+         <topic label="Apertura di file" href="gettingStarted/qs-37-2f.htm"/>
+      </topic>
+
+      <topic label="Segnalibri" href="gettingStarted/qs-37-3b.htm">
+         <topic label="Aggiunta e visualizzazione di segnalibri" href="gettingStarted/qs-37-3c.htm"/>
+         <topic label="Utilizzo dei segnalibri" href="gettingStarted/qs-37-3e.htm"/>
+        <topic label="Rimozione di segnalibri" href="gettingStarted/qs-37-3f.htm"/>
+      </topic>
+
+      <topic label="Riorganizzazione di viste e editor" href="gettingStarted/qs-39.htm">
+         <topic label="Cursori di rilascio" href="gettingStarted/qs-39c.htm"/>
+         <topic label="Riorganizzazione di viste" href="gettingStarted/qs-39d.htm"/>
+         <topic label="Sovrapposizione degli editor" href="gettingStarted/qs-39e.htm"/>
+         <topic label="Riorganizzazione delle viste a schede" href="gettingStarted/qs-39f.htm" />
+         <topic label="Ingrandimento" href="gettingStarted/qs-39g.htm"/>
+      </topic>
+
+      <topic label="Viste ad accesso rapido" href="gettingStarted/qs-40.htm">
+         <topic label="Creazione di viste ad accesso rapido" href="gettingStarted/qs-40a.htm"/>
+         <topic label="Utilizzo delle viste ad accesso rapido" href="gettingStarted/qs-40b.htm"/>
+      </topic>
+
+      <topic label="Prospettive" href="gettingStarted/qs-43.htm">
+         <topic label="Nuove prospettive" href="gettingStarted/qs-43b.htm"/>
+         <topic label="Nuove finestre" href="gettingStarted/qs-43c.htm"/>
+         <topic label="Salvataggio delle prospettive" href="gettingStarted/qs-43e.htm"/>
+         <topic label="Configurazione di prospettive" href="gettingStarted/qs-43f.htm"/>
+      </topic>
+
+      <topic label="Confronto" href="gettingStarted/qs-52.htm">
+         <topic label="Confronto semplice" href="gettingStarted/qs-52c.htm"/>
+         <topic label="Informazioni sul confronto" href="gettingStarted/qs-52d.htm"/>
+         <topic label="Utilizzo del confronto" href="gettingStarted/qs-52e.htm"/>
+      </topic>
+
+      <topic label="Cronologia locale" href="gettingStarted/qs-55.htm"/>
+	  
+	  <topic label="Interfaccia utente versatile" href="gettingStarted/qs-responsiveUI.htm"/>	
+
+      <topic label="Uscita dal workbench" href="gettingStarted/qs-55b.htm"/>
+
+   </topic>
+   
+   <anchor id="gs_afterbasic" />
+
+   <topic label="Esercitazione di team CVS" href="gettingStarted/qs-60_team.htm">
+      <topic label="Impostazione di un repository CVS" href="gettingStarted/qs-60a_setup.htm"/>
+      <topic label="Avvio in modalità non in linea" href="gettingStarted/qs-61c_offline.htm"/>
+
+      <topic label="Condivisione del progetto" href="gettingStarted/qs-61d_repoloca.htm">
+         <topic label="Specifica di un percorso per il repository" href="gettingStarted/qs-61d_repolocb.htm"/>
+         <topic label="Percorsi di repository" href="gettingStarted/qs-61e_whatisloc.htm"/>
+         <topic label="Condivisione di un progetto" href="gettingStarted/qs-61f_syncproject.htm"/>
+      </topic>
+
+      <topic label="Collaborazione con un altro utente" href="gettingStarted/qs-64a_another.htm">
+         <topic label="Estrazione di un progetto" href="gettingStarted/qs-64b_fredadd.htm"/>
+         <topic label="Modifiche apportate da un altro utente" href="gettingStarted/qs-64b_fredmod.htm"/>
+         <topic label="Modifiche dell'utente" href="gettingStarted/qs-64c_catch_mod.htm"/>
+         <topic label="Gestione delle modifiche in conflitto" href="gettingStarted/qs-64c_catch_sync_view.htm"/>
+         <topic label="Sostituzione" href="gettingStarted/qs-70_replace.htm"/>
+         <topic label="Versione del progetto" href="gettingStarted/qs-74_version.htm"/>
+         <topic label="Un breve riepilogo" href="gettingStarted/qs-74_review.htm"/>
+      </topic>
+
+   </topic>
+
+   <anchor id="gs_afterteam" />
+
+   <topic label="Esercitazione Ant e strumenti esterni" href="gettingStarted/qs-80_ant.htm">
+     <topic label="Concetti di base Ant in Eclipse" href="gettingStarted/qs-81_basics.htm">
+       <topic label="Creazione di file di generazione Ant" href="gettingStarted/qs-82_create.htm"/>
+       <topic label="Modifica di file di generazione Ant" href="gettingStarted/qs-83_edit.htm"/>
+       <topic label="Esecuzione di file di generazione Ant" href="gettingStarted/qs-84_run_ant.htm"/>
+       <topic label="Salvataggio e riutilizzo delle opzioni Ant" href="gettingStarted/qs-85_ant_configs.htm"/>
+       <topic label="Utilizzo della vista Ant" href="gettingStarted/qs-85a_ant_view.htm"/>
+     </topic>
+     <topic label="Casi d'uso Ant in Eclipse" href="gettingStarted/qs-86_use_cases.htm">     
+       <topic label="Distribuzione di plugin Eclipse" href="gettingStarted/qs-87_plugin_deploy.htm">
+         <topic label="Creazione di un plugin HelloWorld" href="gettingStarted/qs-88_create_plugin.htm"/>
+         <topic label="Generazione del file build.xml" href="gettingStarted/qs-89_generate_buildxml.htm"/>
+         <topic label="Generazione di un file .jar per il plugin" href="gettingStarted/qs-90_build_jar.htm"/>
+         <topic label="Ulteriori opzioni di distribuzione del plugin" href="gettingStarted/qs-91_build_options.htm"/>
+       </topic>      
+       <topic label="File di generazione Ant come generatori di progetto" href="gettingStarted/qs-92_project_builders.htm">
+         <topic label="Creazione di un file di generazione Ant di generatore di progetto" href="gettingStarted/qs-93_project_builder.htm"/>
+         <topic label="Esecuzione di generatori di progetto" href="gettingStarted/qs-94_run_pj.htm"/>       
+       </topic>      
+     </topic>	
+     <topic label="Strumenti esterni" href="gettingStarted/qs-95_external_tools.htm">
+       <topic label="Generatori di progetto diversi da Ant" href="gettingStarted/qs-96_non_ant_pjs.htm"/>
+       <topic label="Strumenti esterni indipendenti" href="gettingStarted/qs-97_standalone_ets.htm"/>
+     </topic>	
+   </topic>
+   
+   <anchor id="gs_afterant" />
+   
+</toc>

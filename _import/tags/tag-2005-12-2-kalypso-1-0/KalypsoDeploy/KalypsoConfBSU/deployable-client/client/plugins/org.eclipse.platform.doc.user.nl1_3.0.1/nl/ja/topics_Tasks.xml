@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the Tasks -->
+<!-- ========================== -->
+<toc label="タスク">
+
+<topic label="Eclipse の実行" href="tasks/running_eclipse.htm" />
+
+<anchor id="t_afterrunning" />
+
+<topic label="Eclipse のアップグレード" href="tasks/tasks-2.htm" />
+
+<anchor id="t_afterupgrading" />
+
+<topic label="パースペクティブの操作" href="tasks/tasks-1a.htm" >
+  <topic label="パースペクティブ間の切り替え" href="tasks/tasks-28.htm" />
+  <topic label="デフォルト・パースペクティブの指定" href="tasks/tasks-31.htm" />
+  <topic label="パースペクティブを開く" href="tasks/tasks-9f.htm" />
+  <topic label="パースペクティブを開く場所を変更" href="tasks/tasks-24.htm" />
+  <topic label="パースペクティブの構成" href="tasks/tasks-9k.htm" />
+  <topic label="ユーザー定義パースペクティブの保管" href="tasks/tasks-9i.htm" />
+  <topic label="ユーザー定義パースペクティブの削除" href="tasks/tasks-9d.htm" />
+  <topic label="パースペクティブのリセット" href="tasks/tasks-9j.htm" />
+</topic>
+
+<anchor id="t_afterworking_perspectives" />
+
+<topic label="ビューおよびエディターでの作業"  href="tasks/tasks-1b.htm" >
+  <topic label="ビューを開く" href="tasks/tasks-3.htm" />
+  <topic label="ビューの移動と連結" href="tasks/tasks-3e.htm" />
+  <topic label="タブ付きビューの再配置" href="tasks/tasks-3h.htm" />
+  <topic label="高速ビューの作成" href="tasks/tasks-9b.htm" />
+  <topic label="高速ビューの操作" href="tasks/tasks-9c.htm" />
+  <topic label="編集用にファイルを開く" href="tasks/tasks-46.htm" />
+  <topic label="エディターとファイル・タイプを関連付ける" href="tasks/tasks-51.htm" />
+  <topic label="ワークベンチ外のファイルの編集" href="tasks/tasks-52.htm" />
+  <topic label="エディターのタイル表示" href="tasks/tasks-3g.htm" />
+  <topic label="ビューまたはエディターの最大化" href="tasks/tasks-3i.htm" />
+</topic>
+
+<anchor id="t_afterworking_views" />
+
+<topic label="ワークベンチのカスタマイズ" href="tasks/tasks-1.htm" >
+  <topic label="メイン・ツールバーの再配置" href="tasks/ttoolbars.htm" />
+  <topic label="キー・バインディングの変更" href="tasks/tkeybindings.htm" />
+  <topic label="フォントおよび色の変更" href="tasks/tasks-20.htm" />
+  <topic label="タブの配置の変更" href="tasks/tasks-9.htm" />
+  <topic label="シングルクリックおよびダブルクリックの振る舞いの制御" href="tasks/topenmode.htm" />
+</topic>
+
+<anchor id="t_aftercustomizing" />
+
+<topic label="プロジェクト、フォルダー、およびファイルの操作" href="tasks/tasks-1e.htm" >
+  <topic label="プロジェクトの作成" href="tasks/tasks-42.htm" />
+  <topic label="プロジェクトを閉じる" href="tasks/tasks-47.htm" />
+  <topic label="プロジェクトの削除" href="tasks/tasks-42b.htm" />
+  <topic label="フォルダーの作成" href="tasks/tasks-43.htm" />
+  <topic label="ファイルの作成" href="tasks/tasks-44.htm" />
+  <topic label="リンクされたリソースの作成" href="tasks/tasks-45.htm" />
+  <topic label="リソースの移動" href="tasks/tasks-63.htm" />
+  <topic label="リソースのコピー" href="tasks/tasks-63cg.htm" />
+  <topic label="リソースの名前変更" href="tasks/tasks-66.htm" />
+  <topic label="リソースの削除" href="tasks/tasks-67.htm" />
+  <topic label="リソース・プロパティーの表示" href="tasks/tasks-49.htm" />
+</topic>
+
+<anchor id="t_afterworking_projects" />
+
+
+<topic label="リソースのナビゲートと検索" href="tasks/tasks-1c.htm" >
+  <topic label="リソースを素早く見つける" href="tasks/tasks-46ag.htm" />
+  <topic label="ファイルの検索" href="tasks/tasks-84b.htm" />  
+  <topic label="ファイル内のテキストを検索する" href="tasks/tasks-84.htm" />
+  <topic label="「ナビゲーター」ビューでリソースをソートする" href="tasks/tasks-48.htm" />
+  <topic label="「ナビゲーター」ビューでファイルを表示するかまたは非表示にする" href="tasks/tasks-48b.htm" />
+  <topic label="「ナビゲーター」ビューの範囲を縮小する" href="tasks/tasks-46bg.htm" />
+  <topic label="アクティブ・エディターへの「ナビゲーター」ビューのリンク" href="tasks/tasks-18.htm" />
+</topic>
+
+<anchor id="t_afternavigating" />
+
+<topic label="ブックマーク、タスク、および他のマーカー" href="tasks/tasks-1d.htm" >
+  <topic label="ファイル内にブックマークを作成する" href="tasks/tasks-81.htm" />
+  <topic label="ファイル全体に対してブックマークを作成する" href="tasks/tasks-81b.htm" />
+  <topic label="ブックマークの削除" href="tasks/tasks-82.htm" />
+  <topic label="「タスク」ビューに行項目を追加する" href="tasks/tasks-77.htm" />
+  <topic label="タスクをリソースに関連付ける" href="tasks/tasks-77b.htm" />
+  <topic label="タスクの削除" href="tasks/tasks-78.htm" />
+  <topic label="「タスク」ビューのフィルター操作" href="tasks/tasks-79.htm" />
+  <topic label="問題の自動修正" href="tasks/tquickfix.htm" />
+</topic>
+
+<anchor id="t_afterbookmarks" />
+
+<topic label="リソースの比較" href="tasks/tasks-68.htm" >
+  <topic label="ファイル比較の設定" href="tasks/tasks-68b.htm" />
+  <topic label="比較の理解" href="tasks/tasks-68bg.htm" />
+  <topic label="比較エディターの変更内容をマージする" href="tasks/tasks-68dg.htm" />
+</topic>
+
+<anchor id="t_aftercomparing" />
+
+<topic label="ローカル・ヒストリーの操作" href="tasks/tasks-1f.htm" >
+  <topic label="リソースとローカル・ヒストリーの比較" href="tasks/tasks-70.htm" />
+  <topic label="リソースをローカル・ヒストリーで置換する" href="tasks/tasks-87.htm" />
+  <topic label="削除されたリソースをローカル・ヒストリーから復元する" href="tasks/tasks-87b.htm" />
+  <topic label="ローカル・ヒストリーの設定" href="tasks/tasks-88.htm" />
+</topic>
+
+<anchor id="t_afterworking_local" />
+
+<topic label="インポート" href="tasks/tasks-53.htm" >
+  <topic label="既存プロジェクトのインポート" href="tasks/tasks-importproject.htm" />
+  <topic label="ファイル・システムからリソースをインポートする" href="tasks/tasks-55.htm" />
+  <topic label="ZIP ファイルからリソースをインポートする" href="tasks/tasks-55bg.htm" />
+</topic>
+
+<anchor id="t_afterimporting" />
+
+<topic label="エクスポート" href="tasks/tasks-57.htm" >
+  <topic label="リソースをファイル・システムにエクスポートする" href="tasks/tasks-59.htm" />
+  <topic label="リソースを ZIP ファイルにエクスポートする" href="tasks/tasks-59ag.htm" />
+</topic>
+
+<anchor id="t_afterexporting" />
+
+<topic label="リソースのビルド" href="tasks/tasks-73.htm" >
+  <topic label="ビルドを自動的に実行" href="tasks/tasks-16.htm" />
+  <topic label="ビルドを手動で実行する" href="tasks/tasks-75.htm" />
+  <topic label="手動ビルドの前にリソースを自動的に保管" href="tasks/tasks-17.htm" />
+  <topic label="ビルド順序の変更" href="tasks/tasks-14.htm" />
+  <topic label="外部ツールの実行" href="tasks/tasks-exttools-running.htm" />
+  <topic label="Ant ビルド・ファイルの実行" href="tasks/tasks-ant-running.htm">
+    <topic label="Ant クラスパスの変更" href="tasks/tasks-ant-classpath.htm"/>
+    <topic label="Ant の異なったバージョンの使用
+" href="tasks/tasks-ant-version.htm"/>
+    <topic label="新規 Ant タスクおよび型の追加" href="tasks/tasks-ant-addtasksandtypes.htm"/>
+  </topic>
+</topic>
+
+<anchor id="t_afterbuilding" />
+
+<!-- help topics -->
+<topic label="ヘルプ・システムの使用" href="tasks/tasks-1g.htm" >
+  <topic label="コンテキスト・ヘルプにアクセスする" href="tasks/tf1help.htm" />
+  <topic label="オンライン・ヘルプへのアクセスとナビゲート" href="tasks/taccess.htm" />
+  <topic label="オンライン・ヘルプの検索" href="tasks/tsearch.htm" />
+  <topic label="アクセシビリティーのためのヘルプのフォントと色の設定" href="tasks/tfonts.htm" />
+  <topic label="ヘルプ・システムに使用する Web ブラウザーの変更" href="tasks/tchgbrws.htm" />
+</topic>
+
+<anchor id="t_afterusing" />
+
+<!-- team topics -->
+<topic label="CVS によるチーム環境での作業" href="tasks/tasks-1h.htm" >
+  <topic label="CVS リポジトリーでの作業" href="tasks/tasks-1i.htm" >
+    <topic label="CVS リポジトリー・ロケーションの作成" href="tasks/tasks-92.htm" />
+	<topic label="SSH による CVS との接続および構成" href="tasks/tasks-cvs-ssh2.htm" />
+	<topic label="パスワード管理" href="tasks/tasks-cvs-passwords.htm" />
+    <topic label="CVS リポジトリー・ロケーションの廃棄" href="tasks/tasks-94.htm" />
+    <topic label="「CVS リポジトリー」ビューの更新" href="tasks/tasks-93.htm" />
+    <topic label="ブランチ・タグとバージョン・タグの発見" href="tasks/tasks-110.htm" />
+    <topic label="CVS リポジトリー・ロケーションのプロパティーの変更" href="tasks/tasks-95.htm" />
+    <topic label="CVS リポジトリー・ロケーションのエンコードの変更" href="tasks/tasks-95a.htm" />
+    <topic label="ファイル拡張子のコンテンツ・タイプの設定" href="tasks/tasks-team-1.htm" />
+  </topic>
+  <topic label="CVS で共用されるプロジェクトの操作" href="tasks/tasks-1j.htm" >
+      <topic label="CVS リソース装飾の使用可能化" href="tasks/tasks-107b.htm" />
+	  <topic label="CVS を使用する新規プロジェクトの共用" href="tasks/tasks-117.htm" />
+	  <topic label="別の CVS ツールでチェックアウトされたプロジェクト" href="tasks/tasks-117a.htm" />
+	  <topic label="CVS リポジトリーからのプロジェクトのチェックアウト" href="tasks/tasks-96.htm" />
+	  <topic label="CVS リポジトリーからのモジュールのチェックアウト" href="tasks/tasks-96a.htm" />
+	  <topic label="既存プロジェクトへのフォルダーのチェックアウト" href="tasks/tasks-96b.htm" />
+	  <topic label="プロジェクトの CVS からの切断" href="tasks/tasks-cvs-10.htm" />
+	  <topic label="CVS キーワード置換モードの設定" href="tasks/tasks-cvs-11.htm" />
+	  <topic label="「CVS リソース・ヒストリー」ビューのフィルター操作" href="tasks/tasks-cvs-16.htm" />
+	  <topic label="プロジェクトの共用の変更" href="tasks/tasks-117b.htm" />
+  </topic>
+  <topic label="リポジトリーとの同期化" href="tasks/tasks-115.htm" >
+    <topic label="更新" href="tasks/tasks-113.htm" />
+    <topic label="コミット" href="tasks/tasks-114.htm" />
+    <topic label="バージョン管理ライフ・サイクル: リソースの追加および無視" href="tasks/tasks-100d.htm" >
+      <topic label="グローバル・パターンの作成" href="tasks/tasks-100d1.htm" />
+      <topic label="CVS .cvsignore ファイルのオーサリング" href="tasks/tasks-100d2.htm" />
+      <topic label="リソース無視パターンのオーバーライドまたは除去
+" href="tasks/tasks-100d1b.htm" />
+    </topic>
+    <topic label="競合の解決" href="tasks/tasks-113b.htm" />
+    <topic label="ブランチ" href="tasks/tasks-100a.htm" />
+    <topic label="ブランチからマージする" href="tasks/tasks-100b.htm" />
+    <topic label="ファイルの改訂ヒストリーの表示" href="tasks/tasks-119.htm" />
+  </topic>
+  <topic label="バージョン管理" href="tasks/tasks-1k.htm" >
+    <topic label="プロジェクト・バージョンの作成" href="tasks/tasks-100.htm" />    
+    <topic label="リポジトリー内のプロジェクトのバージョン管理" href="tasks/tasks-118.htm" />
+  </topic>
+  <topic label="リソースとリポジトリー・バージョンの比較" href="tasks/tasks-101.htm" />
+  <topic label="パッチの操作" href="tasks/tasks-68c.htm" />
+  <topic label="ワークベンチ内のリソースの置換" href="tasks/tasks-103.htm" />
+  <topic label="誰が何を操作しているかを調べる: 監視/編集" href="tasks/tasks-cvs-watch.htm" />
+  <topic label="「注釈を付ける」コマンドで責任の所在を調べる" href="tasks/tasks-cvs-annotate.htm" />
+  <topic label="クイック Diff: テキスト・エディターでの変更点の表示" href="tasks/tasks-cvs-quickdiff.htm" />
+  <topic label="CVS チーム設定の変更" href="tasks/tasks-105.htm" />
+  <topic label="削除されたファイルをリポジトリーから復元する" href="tasks/tasks-105a.htm" />
+  <topic label="ブランチを前のバージョンに戻す" href="tasks/tasks-105b.htm" />
+  <topic label="バージョン・タグの移動" href="tasks/tasks-105c.htm" />
+  <topic label="Eclipse 外での CVS コマンド行クライアントの実行" href="tasks/task-team-cmdlineclient.htm" />
+</topic>
+
+<anchor id="t_afterworking_team" />
+
+
+<!-- install update topics -->
+<topic label="更新マネージャーでフィーチャーを更新" href="tasks/tasks-36.htm" >
+  <topic label="現行構成のインスペクション" href="tasks/tasks-33.htm" />
+  <topic label="保管構成の復元" href="tasks/tasks-38.htm" />
+  <topic label="更新マネージャーで新規フィーチャーをインストール" href="tasks/tasks-34.htm" />
+  <topic label="フィーチャーの使用可能、使用不可の設定とアンインストール" href="tasks/tasks-35.htm" />
+  <topic label="更新ポリシー" href="tasks/tasks-37.htm" />
+  <topic label="自動更新スケジューラー" href="tasks/tasks-37a.htm" />
+</topic>
+
+<anchor id="t_afterupdating" />
+
+</toc>

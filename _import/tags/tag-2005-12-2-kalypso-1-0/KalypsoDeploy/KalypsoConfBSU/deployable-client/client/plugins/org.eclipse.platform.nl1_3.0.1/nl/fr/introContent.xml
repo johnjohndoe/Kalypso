@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<introContent>
+  <!-- 
+
+-->
+  <page alt-style="css/root_swt.properties" style="css/root.css" id="root" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="links-background">
+      <group id="page-links">
+        <link label="Présentation" url="http://org.eclipse.ui.intro/showPage?id=overview" id="overview" style-id="left">
+          <img id="overview_img" style-id="content-img" src="css/graphics/icons/etool/overview72.gif" alt="Overview"></img>
+          <text>Découvrez toutes les possibilités d'Eclipse</text>
+        </link>
+        <link label="Tutoriels" url="http://org.eclipse.ui.intro/showPage?id=tutorials" id="tutorials" style-id="left">
+	      <img id="tutorials_img" style-id="content-img" src="css/graphics/icons/etool/tutorials72.gif" alt="Tutorials"></img>
+          <text>Laissez-vous guider dans Eclipse à l'aide de tutoriels complets</text>
+        </link>
+        <link label="Exemples" url="http://org.eclipse.ui.intro/showPage?id=samples" id="samples" style-id="right">
+          <img id="samples_img" style-id="content-img" src="css/graphics/icons/etool/samples72.gif" alt="Samples"></img>
+          <text>Découvrez le développement d'Eclipse à l'aide d'exemples de code</text>
+        </link>
+        <link label="Nouveautés" url="http://org.eclipse.ui.intro/showPage?id=news" id="news" style-id="right">
+          <img id="whatsnew_img" style-id="content-img" src="css/graphics/icons/etool/whatsnew72.gif" alt="What&apos;s New"></img>
+          <text>Découvrez les nouveautés de cette édition</text>
+        </link>
+      </group>
+    </group>
+    <group id="action-links">
+      <link url="http://org.eclipse.ui.intro/close" label="Plan de travail" id="workbench">
+        <img id="workbench_img" style-id="content-img" src="css/graphics/icons/etool/wb48.gif" alt="Go to the workbench"></img>
+        <text>Accédez au plan de travail</text>
+      </link>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page alt-style="css/standby_swt.properties" style="css/standby_root.css" id="standby" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="links-background">
+      <group id="page-links">
+        <link label="Présentation" url="http://org.eclipse.ui.intro/showPage?id=overview&amp;standby=false" id="overview" style-id="left">
+          <text>Découvrez toutes les possibilités d'Eclipse</text>
+        </link>
+        <link label="Tutoriels" url="http://org.eclipse.ui.intro/showPage?id=tutorials&amp;standby=false" id="tutorials" style-id="left">
+          <text>Laissez-vous guider dans Eclipse à l'aide de tutoriels complets</text>
+        </link>
+        <link label="Exemples" url="http://org.eclipse.ui.intro/showPage?id=samples&amp;standby=false" id="samples" style-id="right">
+          <text>Découvrez le développement d'Eclipse à l'aide d'exemples de code</text>
+        </link>
+        <link label="Nouveautés" url="http://org.eclipse.ui.intro/showPage?id=news&amp;standby=false" id="news" style-id="right">
+          <text>Découvrez les nouveautés de cette édition</text>
+        </link>
+      </group>
+    </group>
+  </page>
+  <!--
+
+-->
+  <page style="css/overview/overview.css" alt-style="css/overview/swt.properties" id="overview" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <group id="navigation-links" filteredFrom="swt">
+      <group id="page-links">
+        <link label="Présentation" url="http://org.eclipse.ui.intro/showPage?id=overview" id="overview" style-id="left">
+          <text>Découvrez toutes les possibilités d'Eclipse</text>
+        </link>
+        <link label="Tutoriels" url="http://org.eclipse.ui.intro/showPage?id=tutorials" id="tutorials" style-id="left">
+          <text>Laissez-vous guider dans Eclipse à l'aide de tutoriels complets</text>
+        </link>
+        <link label="Exemples" url="http://org.eclipse.ui.intro/showPage?id=samples" id="samples" style-id="right">
+          <text>Découvrez le développement d'Eclipse à l'aide d'exemples de code</text>
+        </link>
+        <link label="Nouveautés" url="http://org.eclipse.ui.intro/showPage?id=news" id="news" style-id="right">
+          <text>Découvrez les nouveautés de cette édition</text>
+        </link>
+      </group>
+      <group id="action-links">
+      	<link url="http://org.eclipse.ui.intro/close" label="Plan de travail" id="workbench">
+        	<text>Accédez au plan de travail</text>
+      	</link>
+      </group>
+    </group>
+    <!-- -->
+    <group id="page-content">
+      <group id="content-header" label="PRESENTATION" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">PRESENTATION</text>
+      <text style-id="page-description" id="page-description">Eclipse constitue un plateforme d'outils universelle, un environnement IDE ouvert et évolutif. Il fournit un environnement de développement doté d'une multitude de fonctions pour créer des outils parfaitement intégrés à la plateforme Eclipse.</text>
+      <group id="overview-links">
+	<anchor id="beginAnchor"/>
+        <link label="Concepts de base du plan de travail" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/concepts/concepts-2.htm" id="basics">
+          <text>Découvrez les concepts de base du plan de travail Eclipse</text>
+        </link>
+        <link label="Support d'équipe" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/concepts/concepts-26.htm" id="team">
+          <text>Découvrez comment collaborer avec d'autres développeurs</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="pdeAnchor"/>
+	<anchor id="endAnchor"/>
+      </group>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/tutorials/tutorials.css" alt-style="css/tutorials/swt.properties" id="tutorials" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="TUTORIELS" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">TUTORIELS</text>
+      <text style-id="page-description" id="page-description">Apprenez à être productif à l'aide d'Eclipse en exécutant des tutoriels pour vous guider</text>
+      <anchor id="beginAnchor"/>
+      <anchor id="jdtAnchor"/>
+      <anchor id="pdeAnchor"/>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/samples/samples.css" alt-style="css/samples/swt.properties" id="samples" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="EXEMPLES" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">EXEMPLES</text>
+      <text style-id="page-description" id="page-description">Découvrez Eclipse en installant des exemples (peut requérir une connexion Internet).</text>
+      <anchor id="beginAnchor"/>
+      <group label="SWT" id="swt" style-id="samples-group">
+        <text style-id="group-description">Exécutez les exemples SWT à l'aide d'un programme de lancement SWT autonome ou en tant que vue de plan de travail intégré.</text>
+        <link label="Vues de plan de travail et applications autonomes" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.swt.examples" id="swt-examples" style-id="sample-link">
+          <text>Le programme de lancement SWT exemple vous permet de lancer un ensemble d'exemples SWT.  Certaines exemples peuvent être exécutés indépendamment de la plateforme Eclipse tandis que d'autres sont disponibles en tant que vues au sein du plan de travail.</text>
+        </link>
+        
+        <anchor id="swtGroupAnchor"/>
+      </group>
+      <group label="Plan de travail" id="workbench" style-id="samples-group">
+        <text style-id="group-description">Les exemples suivants indiquent comment effectuer des intégrations dans le plan de travail Eclipse.</text>
+        <link label="Editeur multipage" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.multipageeditor" id="multi-page-editor" style-id="sample-link">
+          <text>Indique comment créer un éditeur comportant plusieurs pages.</text>
+        </link>
+        <link label="Feuille de propriétés et structure" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.propertysheet" id="property-sheet" style-id="sample-link">
+          <text>Explique comment utiliser la feuille de propriétés et les vues Structure.</text>
+        </link>
+        <link label="Outil Readme" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.pde.ui&amp;class=org.eclipse.pde.ui.internal.samples.ShowSampleAction&amp;id=org.eclipse.sdk.samples.readmetool" id="readmetool" style-id="sample-link">
+          <text>Explique comment créer ses propres points d'extension.</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="workbenchGroupAnchor"/>
+      </group>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+  <!-- 
+
+-->
+  <page style="css/whatsnew/whatsnew.css" alt-style="css/whatsnew/swt.properties" id="news" style-id="page">
+    <title style-id="intro-header">Bienvenue dans Eclipse 3.0</title>
+    <group id="background-image" filteredFrom="swt"/>
+    <group id="curve-image" filteredFrom="swt"/>
+    <include path="overview/navigation-links"/>
+    <group id="page-content">
+      <group id="content-header" label="NOUVEAUTES" filteredFrom="swt"></group>
+      <text style-id="page-title" id="page-title" filteredFrom="html">NOUVEAUTES</text>
+      <anchor id="beginAnchor"/>
+      <group id="noteworthy-links" label="Nouveautés importantes">
+        <link label="Plateforme Eclipse" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.user/whatsNew/platform_whatsnew.html" id="platform-noteworthy" style-id="noteworthy-link">
+          <text>Découvrez les principales nouvelles fonctions de cette version.</text>
+        </link>
+        <anchor id="jdtAnchor"/>
+        <anchor id="pdeAnchor"/>
+        <anchor id="generalAnchor"/>
+      </group>
+      <group id="news-links" label="Général">
+        <link label="Migration à partir de la version précédente" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.platform.doc.isv/porting/eclipse_3_0_porting_guide.html" id="migration">
+          <text>Découvrez ce que vous devez faire pour utiliser votre ancien code dans Eclipse 3.0.</text>
+        </link>
+        <link label="Nouvelles mises à jour" url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.ui.ide&amp;class=org.eclipse.ui.internal.ide.update.InstallWizardAction" id="updates">
+          <text>Recevez les dernières mises à jour d'Eclipse.org</text>
+        </link>
+        <link label="Communauté Eclipse" url="http://www.eclipse.org" id="eclipse">
+          <text>Rejoignez la communauté et consultez les articles et les nouvelles disponibles sur Eclipse.org.</text>
+        </link>
+	<anchor id="linksAnchor"/>
+      </group>
+      <anchor id="endAnchor"/>
+    </group>
+  </page>
+</introContent>

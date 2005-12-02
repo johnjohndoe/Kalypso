@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.control" version="0.1" xmlns:saale="org.kalypso.saale.control" xmlns:gml="http://www.opengis.net/gml" xmlns:saalecommon="org.kalypso.saale.common" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<element name="SaaleControl" type="saale:_saaleControlType"/>
+	<complexType name="_saaleControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="_saaleControlType">
+		<complexContent>
+			<extension base="saale:_saaleControlBaseType">
+				<sequence>
+					<element ref="saale:ScenarioAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Szenario der Modellrechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="saale:ControlAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steuerparameter</label>
+								<tooltip>Steuerparameter der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="saale:MetadataAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Metadaten</label>
+								<tooltip>Metadaten der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ScenarioAssociation" type="saale:ScenarioAssociationType"/>
+	<complexType name="ScenarioAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="saale:Scenario"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Scenario" type="saale:ScenarioType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ScenarioType">
+		<complexContent>
+			<extension base="saalecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Id</label>
+								<tooltip>Id des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Name des Szenario in welchem dieModellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Beschreibung</label>
+								<tooltip>Beschreibung des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ControlAssociation" type="saale:ControlAssociationType"/>
+	<complexType name="ControlAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="saale:Control"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Control" type="saale:ControlType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ControlType">
+		<complexContent>
+			<extension base="saalecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startforecast" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Vorhersage</label>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="MetadataAssociation" type="saale:MetadataAssociationType"/>
+	<complexType name="MetadataAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="saale:Metadata"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Metadata" type="saale:MetadataType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MetadataType">
+		<complexContent>
+			<extension base="saalecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="editor" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ersteller</label>
+								<tooltip>Name des Erstellers</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="description" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="comment" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kommentar</label>
+								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="calctime" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellungszeitpunkt</label>
+								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

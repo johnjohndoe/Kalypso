@@ -1,0 +1,42 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Daten/HWABLAUF.vor"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR" type="java.lang.String" format=""><column>0</column></featureproperty>
+			<featureproperty name="Bodenfrost" type="java.lang.Integer" format=""><column>1</column></featureproperty>
+			<featureproperty name="Feuchte" type="java.lang.Integer" format=""><column>2</column></featureproperty>
+			<featureproperty name="Schnee" type="java.lang.Integer" format=""><column>3</column></featureproperty>
+			<featureproperty name="Steuerung" type="java.lang.String" format=""><column>4</column></featureproperty>
+			<featureproperty name="Variante" type="java.lang.String" format=""><column>5</column></featureproperty>
+			<featureproperty name="STATUS" type="java.lang.String" format=""><column>6</column></featureproperty>
+			<featureproperty name="Reserve2" type="java.lang.String" format=""><column>7</column></featureproperty>
+			<featureproperty name="Reserve3" type="java.lang.String" format=""><column>8</column></featureproperty>
+			<featureproperty name="Reserve4" type="java.lang.String" format=""><column>9</column></featureproperty>
+			<featureproperty name="Reserve5" type="java.lang.String" format=""><column>10</column></featureproperty>
+			<featureproperty name="Reserve6" type="java.lang.String" format=""><column>11</column></featureproperty>
+			<featureproperty name="Reserve7" type="java.lang.String" format=""><column>12</column></featureproperty>
+			<featureproperty name="Reserve8" type="java.lang.String" format=""><column>13</column></featureproperty>
+			<featureproperty name="Reserve9" type="java.lang.String" format=""><column>14</column></featureproperty>
+			<featureproperty name="Reserve10" type="java.lang.String" format=""><column>15</column></featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="../modell.gml"/>
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="Pegel-${fromID}" handleExisting="change">
+			<map from="Bodenfrost" to="Bodenfrost"/>
+			<map from="Feuchte" to="Feuchte"/>
+			<map from="Schnee" to="SchneeTyp"/>
+			<map from="Steuerung" to="Steuerung"/>
+			<map from="Variante" to="Variante"/>
+			<map from="STATUS" to="STATUS"/>
+			<map from="Reserve2" to="Reserve2"/>
+			<map from="Reserve3" to="Reserve3"/>
+			<map from="Reserve4" to="Reserve4"/>
+			<map from="Reserve5" to="Reserve5"/>
+			<map from="Reserve6" to="Reserve6"/>
+			<map from="Reserve7" to="Reserve7"/>
+			<map from="Reserve8" to="Reserve8"/>
+			<map from="Reserve9" to="Reserve9"/>
+			<map from="Reserve10" to="Reserve10"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

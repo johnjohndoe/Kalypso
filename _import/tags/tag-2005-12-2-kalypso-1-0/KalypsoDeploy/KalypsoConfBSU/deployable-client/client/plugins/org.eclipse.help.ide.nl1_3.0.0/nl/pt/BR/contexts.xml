@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- Search Menu: Help... -->   
+   <context  id="helpSearchMenu" >
+      <description>Essa ação abrirá o diálogo Procurar, que permite a procura de
+documentações.</description>
+	  <topic label="Procurando ajuda online" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+
+<!-- Help page on Search Dialog-->
+   <context  id="searchPage" >
+      <description>Digite um termo ou termos de procura no campo de expressão de procura e, em seguida, clique em <b>Procurar</b>. Isso abrirá a exibição de Procura que contém todos os resultados da procura.
+
+É possível utilizar os qualificadores OR e NOT entre os termos. Além disso, se forem colocadas aspas duplas em uma frase, a procura retornará somente os resultados que contêm a frase especificada.
+
+Clique em <b>Escolher</b> para ver o diálogo de seleção do conjunto de trabalho,
+permitindo a especificação de filtragem adicional.</description>
+       <topic label="Procurando ajuda online" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+<!-- Search result view with help hits -->
+   <context  id="searchResultView" >
+      <description>Esta visualização lista os resultados de procuras recentes.  Estão sendo exibidos no momento os resultados e a última procura de documentação.  Dê um clique duplo em um dos documentos para abri-lo.</description>
+      <topic label="Procura de Ajuda" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm"/>
+      <topic label="Visualização de Procura" href="reference/ref-26.htm"/>
+      <topic label="Procura em Arquivos" href="reference/ref-45.htm"/>
+   </context>
+
+</contexts>

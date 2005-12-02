@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- Search Menu: Help... -->   
+   <context  id="helpSearchMenu" >
+      <description>這個動作會開啟「搜尋」對話框，讓您進行文件搜尋。</description>
+	  <topic label="搜尋線上說明" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+
+<!-- Help page on Search Dialog-->
+   <context  id="searchPage" >
+      <description>請在「搜尋表示式」欄位中輸入搜尋詞彙，並按一下<b>搜尋</b>。這時會開啟「搜尋」視圖，其中包含所有搜尋的結果。
+您可以在詞彙之間使用 OR 和 NOT 限定元。同時，如果在查詢加上雙引號，搜尋就只會傳回內含有指定詞彙的結果。
+請按一下<b>選擇</b>，查看工作集選擇對話框，以指定其他的過濾器。</description>
+       <topic label="搜尋線上說明" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+<!-- Search result view with help hits -->
+   <context  id="searchResultView" >
+      <description>這個視圖會列出最近搜尋的結果。目前所顯示是上次搜尋文件的結果。請按兩下其中一份文件來開啟它。</description>
+      <topic label="說明搜尋" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm"/>
+      <topic label="搜尋視圖" href="reference/ref-26.htm"/>
+      <topic label="檔案搜尋" href="reference/ref-45.htm"/>
+   </context>
+
+</contexts>

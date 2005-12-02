@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+  <context id="file_selection_dialog_context">
+    <description>Este diálogo permite seleccionar un archivo del área de trabajo.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>Este diálogo le permite conmutar la visualización de
+este tipo en un diálogo que aparece como resultado de una determinada
+acción. </description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="preference_page_context">
+    <description>En esta página puede configurar las preferencias de Herramientas externas.</description>
+   	<topic label="Preferencias - Herramientas externas" href="reference/ref-exttoolsprefs.htm"/>    
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builder_property_page_context">
+    <description>En esta página puede configurar los constructores de herramientas externas que se ejecutan cuando se construye este proyecto.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builders_tab_context">
+    <description>Esta pestaña permite configurar cuándo se ejecutará este constructor de proyectos.</description>
+    <topic label="Soporte de Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="program_main_tab_context">
+    <description>Esta pestaña permite configurar la ubicación de los programas y otros atributos de esta configuración de lanzamiento.</description>
+    <topic label="Herramientas externas" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

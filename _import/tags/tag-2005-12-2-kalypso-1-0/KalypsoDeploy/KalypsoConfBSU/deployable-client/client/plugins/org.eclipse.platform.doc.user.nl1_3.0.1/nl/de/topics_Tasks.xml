@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the Tasks -->
+<!-- ========================== -->
+<toc label="Tasks">
+
+<topic label="Eclipse ausführen" href="tasks/running_eclipse.htm" />
+
+<anchor id="t_afterrunning" />
+
+<topic label="Eclipse-Upgrade ausführen" href="tasks/tasks-2.htm" />
+
+<anchor id="t_afterupgrading" />
+
+<topic label="Mit Perspektiven arbeiten" href="tasks/tasks-1a.htm" >
+  <topic label="Perspektiven wechseln" href="tasks/tasks-28.htm" />
+  <topic label="Standardperspektive festlegen" href="tasks/tasks-31.htm" />
+  <topic label="Perspektiven öffnen" href="tasks/tasks-9f.htm" />
+  <topic label="Öffnungsposition für Perspektiven ändern" href="tasks/tasks-24.htm" />
+  <topic label="Perspektiven konfigurieren" href="tasks/tasks-9k.htm" />
+  <topic label="Benutzerdefinierte Perspektive speichern" href="tasks/tasks-9i.htm" />
+  <topic label="Benutzerdefinierte Perspektive löschen" href="tasks/tasks-9d.htm" />
+  <topic label="Perspektiven zurücksetzen" href="tasks/tasks-9j.htm" />
+</topic>
+
+<anchor id="t_afterworking_perspectives" />
+
+<topic label="Mit Sichten und Editoren arbeiten"  href="tasks/tasks-1b.htm" >
+  <topic label="Sichten öffnen" href="tasks/tasks-3.htm" />
+  <topic label="Sichten versetzen und andocken" href="tasks/tasks-3e.htm" />
+  <topic label="Sichten mit Registerkarten neu anordnen" href="tasks/tasks-3h.htm" />
+  <topic label="Schnellsichten erstellen" href="tasks/tasks-9b.htm" />
+  <topic label="Mit Schnellsichten arbeiten" href="tasks/tasks-9c.htm" />
+  <topic label="Dateien zum Bearbeiten öffnen" href="tasks/tasks-46.htm" />
+  <topic label="Editoren und Dateitypen" href="tasks/tasks-51.htm" />
+  <topic label="Dateien außerhalb der Workbench bearbeiten" href="tasks/tasks-52.htm" />
+  <topic label="Editoren nebeneinander anordnen" href="tasks/tasks-3g.htm" />
+  <topic label="Sicht oder Editor auf maximale Größe bringen" href="tasks/tasks-3i.htm" />
+</topic>
+
+<anchor id="t_afterworking_views" />
+
+<topic label="Workbench anpassen" href="tasks/tasks-1.htm" >
+  <topic label="Hauptsymbolleiste anders anordnen" href="tasks/ttoolbars.htm" />
+  <topic label="Tastenbelegungen ändern" href="tasks/tkeybindings.htm" />
+  <topic label="Schriftarten und Farben ändern" href="tasks/tasks-20.htm" />
+  <topic label="Anordnung der Registerkarten ändern" href="tasks/tasks-9.htm" />
+  <topic label="Einzel- und Doppelklickverhalten steuern" href="tasks/topenmode.htm" />
+</topic>
+
+<anchor id="t_aftercustomizing" />
+
+<topic label="Mit Projekten, Ordnern und Dateien arbeiten" href="tasks/tasks-1e.htm" >
+  <topic label="Projekt erstellen" href="tasks/tasks-42.htm" />
+  <topic label="Projekte schließen" href="tasks/tasks-47.htm" />
+  <topic label="Projekte löschen" href="tasks/tasks-42b.htm" />
+  <topic label="Ordner erstellen" href="tasks/tasks-43.htm" />
+  <topic label="Datei erstellen" href="tasks/tasks-44.htm" />
+  <topic label="Verlinkte Ressourcen erstellen" href="tasks/tasks-45.htm" />
+  <topic label="Ressourcen versetzen" href="tasks/tasks-63.htm" />
+  <topic label="Ressourcen kopieren" href="tasks/tasks-63cg.htm" />
+  <topic label="Ressourcen umbenennen" href="tasks/tasks-66.htm" />
+  <topic label="Ressourcen löschen" href="tasks/tasks-67.htm" />
+  <topic label="Eigenschaften von Ressourcen anzeigen" href="tasks/tasks-49.htm" />
+</topic>
+
+<anchor id="t_afterworking_projects" />
+
+
+<topic label="In Ressourcen navigieren und diese suchen" href="tasks/tasks-1c.htm" >
+  <topic label="Ressource schnell suchen" href="tasks/tasks-46ag.htm" />
+  <topic label="Dateien suchen" href="tasks/tasks-84b.htm" />  
+  <topic label="Nach Text in einer Datei suchen" href="tasks/tasks-84.htm" />
+  <topic label="Ressourcen in der Sicht 'Navigator' sortieren" href="tasks/tasks-48.htm" />
+  <topic label="Dateien in der Sicht 'Navigator' ein-/ausblenden" href="tasks/tasks-48b.htm" />
+  <topic label="Umfang der Sicht 'Navigator' eingrenzen" href="tasks/tasks-46bg.htm" />
+  <topic label="Sicht 'Navigator' mit aktivem Editor verknüpfen" href="tasks/tasks-18.htm" />
+</topic>
+
+<anchor id="t_afternavigating" />
+
+<topic label="Lesezeichen, Tasks und andere Markierungen" href="tasks/tasks-1d.htm" >
+  <topic label="Lesezeichen in einer Datei erstellen" href="tasks/tasks-81.htm" />
+  <topic label="Lesezeichen für eine gesamte Datei erstellen" href="tasks/tasks-81b.htm" />
+  <topic label="Lesezeichen löschen" href="tasks/tasks-82.htm" />
+  <topic label="Zeilenelemente in der Sicht 'Tasks' hinzufügen" href="tasks/tasks-77.htm" />
+  <topic label="Task zu einer Ressource zuordnen" href="tasks/tasks-77b.htm" />
+  <topic label="Tasks löschen" href="tasks/tasks-78.htm" />
+  <topic label="Sicht 'Tasks' filtern" href="tasks/tasks-79.htm" />
+  <topic label="Probleme automatisch beheben" href="tasks/tquickfix.htm" />
+</topic>
+
+<anchor id="t_afterbookmarks" />
+
+<topic label="Ressourcen vergleichen" href="tasks/tasks-68.htm" >
+  <topic label="Benutzervorgaben zum Vergleichen von Dateien festlegen" href="tasks/tasks-68b.htm" />
+  <topic label="Wissenswertes über Vergleiche" href="tasks/tasks-68bg.htm" />
+  <topic label="Änderungen im Vergleichseditor mischen" href="tasks/tasks-68dg.htm" />
+</topic>
+
+<anchor id="t_aftercomparing" />
+
+<topic label="Mit dem lokalen Protokoll arbeiten" href="tasks/tasks-1f.htm" >
+  <topic label="Ressourcen im lokalen Protokoll vergleichen" href="tasks/tasks-70.htm" />
+  <topic label="Ressource durch das lokale Protokoll ersetzen" href="tasks/tasks-87.htm" />
+  <topic label="Ressourcen aus dem lokalen Protokoll wiederherstellen" href="tasks/tasks-87b.htm" />
+  <topic label="Benutzervorgaben für lokale Protokolle festlegen" href="tasks/tasks-88.htm" />
+</topic>
+
+<anchor id="t_afterworking_local" />
+
+<topic label="Importieren" href="tasks/tasks-53.htm" >
+  <topic label="Vorhandene Projekte importieren" href="tasks/tasks-importproject.htm" />
+  <topic label="Ressourcen aus dem Dateisystem importieren" href="tasks/tasks-55.htm" />
+  <topic label="Ressourcen aus einer ZIP-Datei importieren" href="tasks/tasks-55bg.htm" />
+</topic>
+
+<anchor id="t_afterimporting" />
+
+<topic label="Exportieren" href="tasks/tasks-57.htm" >
+  <topic label="Ressourcen in das Dateisystem exportieren" href="tasks/tasks-59.htm" />
+  <topic label="Ressourcen in eine ZIP-Datei exportieren" href="tasks/tasks-59ag.htm" />
+</topic>
+
+<anchor id="t_afterexporting" />
+
+<topic label="Ressourcen erstellen" href="tasks/tasks-73.htm" >
+  <topic label="Erstellungen automatisch ausführen" href="tasks/tasks-16.htm" />
+  <topic label="Erstellungen manuell ausführen" href="tasks/tasks-75.htm" />
+  <topic label="Ressourcen vor einer manuellen Erstellung automatisch speichern" href="tasks/tasks-17.htm" />
+  <topic label="Erstellungsreihenfolge ändern" href="tasks/tasks-14.htm" />
+  <topic label="Externe Tools ausführen" href="tasks/tasks-exttools-running.htm" />
+  <topic label="Ant-Erstellungsdateien ausführen" href="tasks/tasks-ant-running.htm">
+    <topic label="Ant-Klassenpfad anpassen" href="tasks/tasks-ant-classpath.htm"/>
+    <topic label="Andere Ant-Version verwenden" href="tasks/tasks-ant-version.htm"/>
+    <topic label="Neue Ant-Tasks und -Typen hinzufügen" href="tasks/tasks-ant-addtasksandtypes.htm"/>
+  </topic>
+</topic>
+
+<anchor id="t_afterbuilding" />
+
+<!-- help topics -->
+<topic label="Hilfefunktion verwenden" href="tasks/tasks-1g.htm" >
+  <topic label="Auf kontextbezogene Hilfe zugreifen" href="tasks/tf1help.htm" />
+  <topic label="Auf die Onlinehilfefunktion zugreifen und darin navigieren" href="tasks/taccess.htm" />
+  <topic label="In der Onlinehilfefunktion suchen" href="tasks/tsearch.htm" />
+  <topic label="Hilfetextschriftarten und -farben für Eingabehilfen festlegen" href="tasks/tfonts.htm" />
+  <topic label="Von der Hilfefunktion verwendeten Webbrowser ändern" href="tasks/tchgbrws.htm" />
+</topic>
+
+<anchor id="t_afterusing" />
+
+<!-- team topics -->
+<topic label="In der Teamumgebung mit CVS arbeiten" href="tasks/tasks-1h.htm" >
+  <topic label="Mit einem CVS-Repository arbeiten" href="tasks/tasks-1i.htm" >
+    <topic label="CVS-Repository-Position erstellen" href="tasks/tasks-92.htm" />
+	<topic label="CVS mit SSH verbinden und konfigurieren" href="tasks/tasks-cvs-ssh2.htm" />
+	<topic label="Kennwortverwaltung" href="tasks/tasks-cvs-passwords.htm" />
+    <topic label="CVS-Repository-Position löschen" href="tasks/tasks-94.htm" />
+    <topic label="Sicht 'CVS-Repositories' aktualisieren" href="tasks/tasks-93.htm" />
+    <topic label="Verzweigungs- und Versionstags aufspüren" href="tasks/tasks-110.htm" />
+    <topic label="Eigenschaften einer CVS-Repositoryposition ändern" href="tasks/tasks-95.htm" />
+    <topic label="Codierung einer CVS-Repository-Position ändern" href="tasks/tasks-95a.htm" />
+    <topic label="Inhaltstyp einer Dateierweiterung festlegen" href="tasks/tasks-team-1.htm" />
+  </topic>
+  <topic label="Mit Projekten arbeiten, die mit CVS gemeinsam verwendet werden" href="tasks/tasks-1j.htm" >
+      <topic label="CVS-Ressourcendekorationen aktivieren" href="tasks/tasks-107b.htm" />
+	  <topic label="Neues Projekt mit CVS gemeinsam verwenden" href="tasks/tasks-117.htm" />
+	  <topic label="Mit anderem CVS-Tool ausgechecktes Projekt" href="tasks/tasks-117a.htm" />
+	  <topic label="Projekt aus CVS-Repository auschecken" href="tasks/tasks-96.htm" />
+	  <topic label="Modul aus einem CVS-Repository auschecken" href="tasks/tasks-96a.htm" />
+	  <topic label="Ordner in vorhandenes Projekt auschecken" href="tasks/tasks-96b.htm" />
+	  <topic label="Verbindung eines Projekts zu CVS trennen" href="tasks/tasks-cvs-10.htm" />
+	  <topic label="CVS-Schlüsselwortersetzungsmodus einstellen" href="tasks/tasks-cvs-11.htm" />
+	  <topic label="Filtern in der Sicht 'CVS-Ressourcenprotokoll'" href="tasks/tasks-cvs-16.htm" />
+	  <topic label="Gemeinsame Verwendung eines Projekts ändern" href="tasks/tasks-117b.htm" />
+  </topic>
+  <topic label="Mit Repository synchronisieren" href="tasks/tasks-115.htm" >
+    <topic label="Aktualisieren" href="tasks/tasks-113.htm" />
+    <topic label="Festschreiben" href="tasks/tasks-114.htm" />
+    <topic label="Lebenszyklus der Versionssteuerung: Ressourcen hinzufügen und ignorieren" href="tasks/tasks-100d.htm" >
+      <topic label="Globales Muster erstellen" href="tasks/tasks-100d1.htm" />
+      <topic label="CVS-Datei .cvsignore durch Autorensystem strukturieren" href="tasks/tasks-100d2.htm" />
+      <topic label="Muster zum Ignorieren von Ressourcen überschreiben oder entfernen" href="tasks/tasks-100d1b.htm" />
+    </topic>
+    <topic label="Konflikte lösen" href="tasks/tasks-113b.htm" />
+    <topic label="Verzweigen" href="tasks/tasks-100a.htm" />
+    <topic label="Aus einer Verzweigung mischen" href="tasks/tasks-100b.htm" />
+    <topic label="Überarbeitungsprotokoll einer Datei anzeigen" href="tasks/tasks-119.htm" />
+  </topic>
+  <topic label="Versionieren" href="tasks/tasks-1k.htm" >
+    <topic label="Version eines Projekts erstellen" href="tasks/tasks-100.htm" />    
+    <topic label="Projekte im Repository versionieren" href="tasks/tasks-118.htm" />
+  </topic>
+  <topic label="Ressourcen mit den Repository-Versionen vergleichen" href="tasks/tasks-101.htm" />
+  <topic label="Mit Patches arbeiten" href="tasks/tasks-68c.htm" />
+  <topic label="Ressourcen in der Workbench ersetzen" href="tasks/tasks-103.htm" />
+  <topic label="Mit 'Überwachen/Bearbeiten' ermitteln, welcher Benutzer mit welcher Datei arbeitet" href="tasks/tasks-cvs-watch.htm" />
+  <topic label="Mit 'Anmerkung' herausfinden, wer verantwortlich ist " href="tasks/tasks-cvs-annotate.htm" />
+  <topic label="Schnelldifferenz: Änderungen in einem Texteditor anzeigen" href="tasks/tasks-cvs-quickdiff.htm" />
+  <topic label="CVS-Teameinstellungen ändern" href="tasks/tasks-105.htm" />
+  <topic label="Gelöschte Dateien aus dem Repository wiederherstellen" href="tasks/tasks-105a.htm" />
+  <topic label="Verzweigung auf vorherige Version zurücksetzen" href="tasks/tasks-105b.htm" />
+  <topic label="Versionstags versetzen" href="tasks/tasks-105c.htm" />
+  <topic label="CVS-Befehlszeilenclient außerhalb von Eclipse ausführen" href="tasks/task-team-cmdlineclient.htm" />
+</topic>
+
+<anchor id="t_afterworking_team" />
+
+
+<!-- install update topics -->
+<topic label="Features mit Update-Manager aktualisieren" href="tasks/tasks-36.htm" >
+  <topic label="Aktuelle Konfiguration prüfen" href="tasks/tasks-33.htm" />
+  <topic label="Gespeicherte Konfiguration wiederherstellen" href="tasks/tasks-38.htm" />
+  <topic label="Neue Features mit Update-Manager installieren" href="tasks/tasks-34.htm" />
+  <topic label="Feature aktivieren, inaktivieren oder deinstallieren" href="tasks/tasks-35.htm" />
+  <topic label="Aktualisierungsrichtlinie" href="tasks/tasks-37.htm" />
+  <topic label="Scheduler für automatische Aktualisierung" href="tasks/tasks-37a.htm" />
+</topic>
+
+<anchor id="t_afterupdating" />
+
+</toc>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ============================================================================= -->
+<!-- Define the top level topics                                                   -->
+<!-- ============================================================================= -->
+
+<toc label="工作台使用手冊">
+	<topic label="入門">
+		<link toc="topics_GettingStarted.xml" />
+	</topic>
+	<topic label="概念">
+		<link toc="topics_Concepts.xml" />
+	</topic>
+	<topic label="作業">
+		<link toc="topics_Tasks.xml" />
+	</topic>
+	<topic label="參照">
+		<link toc="topics_Reference.xml" />
+	</topic>
+	<topic label="要訣和技巧" href="tips/platform_tips.html"/>
+	<topic label="新功能" href="whatsNew/platform_whatsnew.html"/>
+	<topic label="法律注意事項" href="notices.html"/>
+</toc>

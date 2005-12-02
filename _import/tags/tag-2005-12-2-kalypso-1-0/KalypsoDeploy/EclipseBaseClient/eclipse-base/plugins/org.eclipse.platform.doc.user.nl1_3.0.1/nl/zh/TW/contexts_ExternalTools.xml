@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+  <context id="file_selection_dialog_context">
+    <description>這個對話框可讓您在工作區中選取一個檔案。</description>
+    <topic label="Ant 支援" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>這個對話框可讓您切換顯示特定動作所產生的這個類型的對話框</description>
+    <topic label="Ant 支援" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="preference_page_context">
+    <description>在這個頁面中，您可以配置「外部工具」喜好設定。</description>
+   	<topic label="喜好設定 - 外部工具" href="reference/ref-exttoolsprefs.htm"/>    
+    <topic label="Ant 支援" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builder_property_page_context">
+    <description>在這個頁面中，您可以配置「外部工具」建置器（在建置此專案時執行）。</description>
+    <topic label="Ant 支援" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builders_tab_context">
+    <description>這個標籤可讓您配置要執行這個專案建置器的時間。</description>
+    <topic label="Ant 支援" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="program_main_tab_context">
+    <description>這個標籤可讓您配置程式位置以及這個啟動配置的其他屬性。</description>
+    <topic label="外部工具" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

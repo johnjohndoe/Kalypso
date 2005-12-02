@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.wiskiadapter"
+   name="KalypsoWiskiAdapter Plug-in"
+   version="0.0.1"
+   provider-name="kalypso.org">
+
+   <runtime>
+      <library name="KalypsoWiskiAdapter.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kiwwebdp-externalclient.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.repository"/>
+      <import plugin="org.kalypso.commons"/>
+   </requires>
+   <extension
+         id="org.kalypso.repository.factories"
+         name="Wiski Repository Factories"
+         point="org.kalypso.repository.factories">
+      <repository
+            conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#kmustermann#geheim#de"
+            name="Wiski Data Provider"
+            factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            objectClass="org.kalypso.wiskiadapter.WiskiRepository"
+            id="repositoryItem">
+         <action
+               label="Wiski List Dump"
+               class="org.kalypso.wiskiadapter.WiskiDump"
+               style="push"
+               id="wiskiListDump"/>
+      </objectContribution>
+   </extension>
+
+</plugin>

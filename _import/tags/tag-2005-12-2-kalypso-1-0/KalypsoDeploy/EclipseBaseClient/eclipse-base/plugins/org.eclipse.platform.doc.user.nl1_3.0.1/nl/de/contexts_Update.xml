@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+   
+   <!-- Context IDs added in the  code, ID is class name, where context ID is set -->
+   
+   <context  id="ConfigurationView" >
+      <description>Dieser Dialog kann verwendet werden, um mit installierten Features zu arbeiten. Standardmäßig zeigt er nur die Features an, die gegenwärtig aktiviert sind. Schalten Sie den Filter "Inaktivierte Features anzeigen" in der Symbolleiste des Dialogs ein, um auch die inaktivierten Features anzuzeigen.</description>
+      <topic label="Konfiguration prüfen" href="tasks/tasks-33.htm"/>
+      <topic label="Feature aktivieren, inaktivieren oder deinstallieren" href="tasks/tasks-35.htm"/>
+   </context>
+     
+   <context  id="ReviewPage" >
+      <description>Die Ergebnisse der Featuresuche werden auf dieser Seite angezeigt. Wählen Sie die Features aus, die Sie installieren möchten.</description>
+   </context>
+   
+   
+   <context  id="CofigurationView_showUnconfFeaturesAction" >
+      <description>Inaktivierte Features anzeigen.</description>
+   </context>
+   
+   <context  id="CofigurationView_revertAction" >
+      <description>Konfiguration entsprechend dem ausgewählten Protokoll wiederherstellen.</description>
+   </context>
+   
+   <context  id="CofigurationView_showStatusAction" >
+      <description>Aktuellen Konfigurationsstatus für das ausgewählte Feature anzeigen.</description>
+   </context>
+   
+   <context  id="CofigurationView_preserveAction" >
+      <description>Diese Aktion speichert die ausgewählte Konfiguration im Ordner <b>Gespeicherte Konfigurationen</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_removePreservedAction" >
+      <description>Diese Aktion löscht die ausgewählte Konfiguration aus dem Ordner <b>Gespeicherte Konfigurationen</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_unlinkAction" >
+      <description>Verknüpfung der ausgewählten Site mit der Konfiguration aufheben.</description>
+   </context>
+   
+   <context  id="CofigurationView_propertiesAction" >
+      <description>Eigenschaften für die Auswahl anzeigen.</description>
+   </context>
+   
+   <context  id="UpdatesView_newAction" >
+      <description>Neues Lesezeichen für Site erstellen.</description>
+   </context>
+   
+   <context  id="UpdatesView_newFolderAction" >
+      <description>Neuen Ordner in der Sicht 'Feature-Updates' erstellen. Ordner können zum Organisieren von Lesezeichen für Sites und  Suchabfragen verwendet werden.</description>
+   </context>
+   
+   <context  id="UpdatesView_newSearchAction" >
+      <description>Neue Suchabfrage erstellen.</description>
+   </context>
+   
+   <context  id="UpdatesView_newLocalAction" >
+      <description>Site-Lesezeichen für die ausgewählte lokale Site erstellen.</description>
+   </context>
+   
+   <context  id="UpdatesView_deleteAction" >
+      <description>Ausgewähltes Element löschen.</description>
+   </context>
+   
+   <context  id="UpdatesView_refreshAction" >
+      <description>Ausgewähltes Element aktualisieren.</description>
+   </context>
+   
+   <context  id="UpdatesView_fileFilterAction" >
+      <description>Wählen Sie diese Option auswählen, um einzelne Dateien im <b>Arbeitsplatz</b> anzuzeigen. Wählen Sie die Option ab, um nur lokale Sites und Verzeichnisse anzuzeigen.</description>
+   </context>
+   
+   <context  id="UpdatesView_filterEnvironmentAction" >
+      <description>Auswählen, um nur Features anzuzeigen, die der aktuellen Umgebung entsprechen. Abwählen, um alle verfügbaren Features anzuzeigen (Features, die nicht der aktuellen Umgebung entsprechen, können nicht installiert werden.)</description>
+   </context>
+   
+   <context  id="UpdatesView_showCategoriesAction" >
+      <description>Auswählen, um Features nach Site-Kategorien geordnet anzuzeigen. Abwählen, um alle Features als Liste darzustellen.</description>
+   </context>
+   
+   <context  id="UpdatesView_linkExtensionAction" >
+      <description>Ausgewählte Site in die Konfiguration verknüpfen.</description>
+   </context>
+   
+   <context  id="DetailsView_homeAction" >
+      <description>Anzeigen der Startseite des Update-Managers.</description>
+   </context>
+   
+   <context  id="DetailsView_backAction" >
+      <description>Zurück zur vorigen Detailseite.</description>
+   </context>
+   
+   <context  id="DetailsView_forwardAction" >
+      <description>Vorwärts zur nächsten Detailseite.</description>
+   </context>
+   
+   <context  id="MainPreferencePage" >
+      <description>Update-Manager-Einstellungen festlegen - <b>Anzahl von Protokollen</b> zur Verwaltung vor dem Löschen; Bereich von <b>neuen Updates</b> für das ausschließliche Suchen nach Service-Updates oder kompatiblen kleineren Release-Updates; <b>Updaterichtlinie</b> auf alternative Update-Sites; <b>Proxy</b> Einstellungen</description>
+      <topic label="Steuerung für Aktualisierungsrichtlinie"  href="tasks/tasks-37.htm"/>
+   </context>
+
+      
+   <context  id="LicensePage2" >
+      <description>Sie müssen die angezeigte(n) Lizenzvereinbarung(en) lesen und diese akzeptieren oder ablehnen.</description>
+   </context>
+   
+   <context  id="ModeSelectionPage" >
+      <description>Wählen Sie aus, ob Sie nach verfügbaren Updates für installierte Features oder nach allen Features, die auf ausgewählten Update-Sites gefunden werden, suchen möchten. </description>   
+      <topic label="Features mit Update-Manager installieren" href="tasks/tasks-34.htm"/>
+      <topic label="Features mit Update-Manager aktualisieren" href="tasks/tasks-36.htm"/>   
+   </context>
+   
+   <context  id="SitePage" >
+      <description>Lesezeichen einer Update-Site hinzufügen, entfernen oder bearbeiten.
+Wählen Sie die Site(s) für die Suche nach Features und Patches aus.
+
+<b>Ferne Site</b>: die URL einer Website, die Features enthält
+<b>Lokale Site</b>: eine Site, die sich auf der aktuellen Maschine befindet
+<b>Archiv-Site</b>: eine lokale Site, gepackt als ZIP- oder JAR-Datei
+
+Sie können die Suche nach Features, die nicht der Umgebung entsprechen (Betriebssystem, Ländereinstellung, usw.) ein- und ausschalten. </description>
+   </context>
+   
+   <context  id="NewUpdatesWizardPage" >
+      <description>Wählen Sie eines oder mehrere der verfügbaren Updates zur Installation aus.</description>
+   </context>
+   
+   <context  id="MultiTargetPage2" >
+      <description>Für jedes zu installierende Feature wählen Sie eine Installationsadresse aus der angezeigten Auswahl aus oder fügen eine neue hinzu. Aufgrund der Co-Adresseneinschränkung kann es sein, dass Sie für einige Features keine neue Adresse angeben können.</description>
+   </context>
+   
+   <context id="OptionalFeaturesPage">
+   	  <description>Wählen Sie aus, welche optionalen Features, die in dem Hauptfeature enthalten sind, installiert werden sollen.</description>
+   </context>
+   
+   <context id="MultiOptionalFeaturesPage2">
+   	  <description>Wählen Sie aus, welche optionalen Features, die in den Hauptfeatures enthalten sind, installiert werden sollen.</description>
+   </context>
+   
+   <context  id="JarVerificationPage" >
+      <description>Sie müssen das Zertifikat der JAR-Datei akzeptieren oder zurückweisen</description>
+   </context>
+   
+   <context  id="UserValidationDialog" >
+      <description>Benutzerinformation eingeben.</description>
+   </context>
+   
+   <context id="MultiReviewPage2">
+      <description>Wählen Sie die Features aus, die Sie installieren möchten. Wenn Fehler auftreten, betätigen Sie <b>Fehlerdetails</b> und versuchen, sie zu beheben, indem Sie die entsprechenden Features wählen oder abwählen.</description>
+     <topic label="Features mit Update-Manager installieren" href="tasks/tasks-34.htm"/>
+   </context>
+
+   
+   <context  id="InstallableSiteForm" >
+      <description>Zeigt Details über eine lokale Site an, die Teil der Konfiguration ist.</description>          
+   </context>
+   
+   
+   <context  id="SiteForm" >
+      <description>Zeigt Konfigurationsdetails der aktuellen Installation an.</description> 
+      <topic label="Konfiguration prüfen" href="tasks/tasks-33.htm"/>
+      <topic label="Feature aktivieren, inaktivieren oder deinstallieren" href="tasks/tasks-35.htm"/>       
+   </context>
+   
+   <context  id="UnknownObjectForm" >
+      <description>Zeigt an, ob in dem aktiven Feature ein unbekanntes Objekt oder gar kein Objekt ausgewählt wurde.</description>
+   </context>
+   
+   
+   <context id ="SiteBookmarkPropertyPage">
+      <description>Ändert die Eigenschaften eines Lesezeichenobjekts.</description>
+   </context>
+   
+   <context id ="NamedObjectPropertyPage">
+      <description>Ändert den Namen des ausgewählten Objekts.</description>
+   </context>
+   
+   <context id ="ConfigurationPropertyPage">
+      <description>Ändert den Namen der ausgewählten Konfiguration.</description>
+   </context>
+   
+</contexts>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.help.ide"
+   name="%help_ide_plugin_name"
+   version="3.0.0"
+   provider-name="%providerName"
+   class="org.eclipse.help.ui.internal.ide.HelpIdePlugin">
+
+   <runtime>
+      <library name="helpide.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.help.ui"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.help.base"/>
+      <import plugin="org.eclipse.help.ui"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+
+<!-- Context Help contribution -->
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts_search.xml"
+            plugin="org.eclipse.search">
+      </contexts>
+   </extension>
+<!-- Search Page and Result Page-->
+   <extension
+         point="org.eclipse.search.searchPages">
+      <page
+            searchViewHelpContextId="org.eclipse.help.ide.searchResultView"
+            label="%help_search_page"
+            icon="icons/e_search_menu.gif"
+            class="org.eclipse.help.ui.internal.search.HelpSearchPage"
+            id="org.eclipse.help.ide.searchPage">
+      </page>
+   </extension>
+   <extension
+         id="helpSearchPage"
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.eclipse.help.ui.internal.search.ResultPage"
+            searchResultClass="org.eclipse.help.ui.internal.search.HelpSearchResult"
+            id="org.eclipse.help.ide.resultPage">
+      </viewPage>
+   </extension>
+<!-- Help Working Set Page -->
+   <extension
+         point="org.eclipse.ui.workingSets">
+      <workingSet
+            name="%HelpWorkingSet"
+            pageClass="org.eclipse.help.ui.internal.workingset.HelpWorkingSetPage"
+            icon="icons/workingset.gif"
+            id="org.eclipse.help.ui.HelpWorkingSetPage">
+      </workingSet>
+   </extension>
+
+</plugin>

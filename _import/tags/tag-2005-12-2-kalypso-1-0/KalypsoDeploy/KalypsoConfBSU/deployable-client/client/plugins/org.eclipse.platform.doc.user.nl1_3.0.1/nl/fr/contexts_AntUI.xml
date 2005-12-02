@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+  <context id="remove_all_action_context">
+    <description>Cette option permet de supprimer tous les fichiers de compilation de la vue Ant. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="search_for_buildfiles_action_context">
+    <description>Cette option recherche des fichiers de compilation et les ajoute à la vue Ant.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="edit_launch_configuration_action_context">
+    <description>Cette option ouvre une boîte de dialogue afin d'éditer le configuration de lancement associée avec le fichier de compilation sélectionné.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="run_target_action_context">
+    <description>Cette option exécute la cible sélectionnée ou la cible par défaut du fichier de compilation sélectionné.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="remove_project_action_context">
+    <description>Cette option supprime le fichier de compilation sélectionné de la vue Ant.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="refresh_buildfile_action_context">
+ 	<description>Cette option permet d'actualiser le fichier de compilation sélectionné dans le vue Ant. Si aucun d'entre eux n'est sélectionné dans la vue Ant, tous les fichier de compilation seront actualisés.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="add_buildfile_action_context">
+    <description>Cette option vous invite à sélectionner un fichier de compilation de l'espace de travail pour l'ajouter à la vue.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="add_task_dialog_context">
+    <description>Cette boîte de dialogue permet de définir une tâche Ant pour les compilations Ant. Vous devez définir le nom, l'emplacement et le fichier de classe. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_task_dialog_context">
+    <description>Cette boîte de dialogue permet de modifier une tâche Ant définie pour les compilations Ant. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="add_type_dialog_context">
+    <description>Cette boîte de dialogue permet de définir un type Ant pour les compilations Ant. Vous devez définir le nom, l'emplacement et le fichier de classe. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_type_dialog_context">
+    <description>Cette boîte de dialogue permet de modifier un type Ant définie pour les compilations Ant. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="add_property_dialog_context">
+    <description>Cette boîte de dialogue permet de définir une propriété Ant utilisée pour la compilation Ant. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="edit_property_dialog_context">
+    <description>Cette boîte de dialogue permet de modifier une propriété Ant. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="search_for_buildfiles_dialog_context">
+    <description>Cette boîte de dialogue permet de rechercher des fichiers de compilation dans l'espace de travail.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="status_dialog_context">
+    <description>Cette boîte de dialogue est dotée d'une barre d'état avec des boutons OK/Annuler pour afficher un état. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>Cette boîte de dialogue permet d'afficher ou de masquer la boîte de dialogue générée par une action spécifique. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="target_order_dialog_context">
+    <description>Cette boîte de dialogue permet de spécifier l'ordre dans lequel les cibles Ant sélectionnées seront exécutées. Cet ordre n'écrase pas les dépendances spécifiées dans votre fichier de compilation.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_preference_page_context">
+    <description>Sur cette page, vous pouvez configurer les préférences Ant.</description>
+   	<topic label="Préférences - Ant" href="reference/ref-antprefs.htm"/>    
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_runtime_preference_page_context">
+    <description>Sur cette page, vous pouvez configurer l'environnement d'exécution d'Ant.</description>
+    <topic label="Préférences - Exécution d'Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_editor_preference_page_context">
+    <description>Sur cette page, vous pouvez configurer les préférences de l'éditeur Ant.</description>
+    <topic label="Préférences - Editeur Ant" href="reference/ref-anteditorprefs.htm"/>
+    <topic label="Editeur Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_types_page_context">
+    <description>Sur cette page, vous pouvez ajouter ou éditer des types Ant standards, spécifié dans un fichier de classe Java, qui seront utilisé lors de l'exécution d'Ant.</description>
+    <topic label="Préférences - Exécution d'Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_classpath_page_context">
+    <description>Sur cette page, vous pouvez configurer la chemin d'accès de l'exécution Ant.</description>
+    <topic label="Préférences - Exécution d'Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_properties_page_context">
+    <description>Sur cette page, vous pouvez configurer les propriétés disponibles pour Ant.</description>
+    <topic label="Préférences - Exécution d'Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_tasks_page_context">
+    <description>Sur cette page, vous pouvez ajouter ou éditer des tâches Ant standards, spécifiées dans un fichier de classe Java, qui seront utilisé lors de l'exécution d'Ant.</description>
+    <topic label="Préférences - Exécution d'Ant" href="reference/ref-antruntimeprefs.htm"/>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_view_context">
+    <description>Cette vue vous permet de voir tous vos fichier de compilation Ant au même endroit et d'exécuter rapidement une cible or la cible par défaut d'un fichier de compilation.</description>
+    <topic label="Vue Ant" href="reference/ref-antview.htm"/>
+    <topic label="Editeur Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+  <context id="ant_editor_context">
+    <description>L'éditeur Ant vous fournit un support d'édition de texte spécifique aux fichiers de compilation Ant.</description>
+    <topic label="Editeur Ant" href="reference/ref-anteditor.htm"/> 
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_main_tab_context">
+    <description>Cet onglet vous permet de configurer l'emplacement des fichiers de compilation ainsi que d'autres attributs de cette configuration de lancement.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_targets_tab_context">
+    <description>Cet onglet vous permet de configurer quelle cibles seront exécuter par cette configuration de lancement.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_properties_tab_context">
+    <description>Cet onglet vous permet de configurer les propriétés passées à Ant lorsque cette configuration de lancement sera exécutée.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="ant_classpath_tab_context">
+    <description>Cet onglet vous permet de configurer les chemins d'accès d'exécution qui seront utilisés lorsque cette configuration de lancement sera exécutée.</description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+  
+   <context id="ant_jre_tab_context">
+    <description>Cet onglet permet de configurer l'environnement JRE utilisé pour la compilation Ant. Par défaut, Ant s'exécute dans la même machine virtuelle Java (JVM) qu'Eclipse. Si vous définissez un autre environnement JRE, la compilation Ant s'exécute dans une machine virtuelle Java distincte. </description>
+    <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Outils externes" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

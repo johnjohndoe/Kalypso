@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the Concepts -->
+<!-- ========================== -->
+<toc label="Concepts">
+<!-- <topic label="What's new in this release" /> -->
+<topic label="Plan de travail" href="concepts/concepts-2.htm" >
+
+<!--  <topic label="Workspace" /> -->
+
+  <topic label="Ressources" href="concepts/concepts-12.htm" />
+  <topic label="Hiérarchie des ressources" href="concepts/concepts-17.htm" />
+  <topic label="Ressources liées" href="concepts/concepts-13.htm" />
+  <topic label="Variables de chemin d'accès" href="concepts/cpathvars.htm" />
+  <topic label="Jeux de documents" href="concepts/cworkset.htm"/>
+<!--  <topic label="Projects and project natures" /> -->
+  <topic label="Compilations" href="concepts/concepts-22.htm" />
+  <topic label="Historique local" href="concepts/concepts-17a.htm" />
+<!--  <topic label="Class path and build class path" /> -->
+</topic>
+<anchor id="c_afterworkbench" />
+<topic label="Perspectives" href="concepts/concepts-4.htm" >
+<!--  <topic label="Resource perspective" /> -->
+</topic>
+<anchor id="c_afterperspectives" />
+<topic label="Editeurs" href="concepts/concepts-6.htm" >
+  <topic label="Editeurs externes" href="concepts/concepts-6a.htm" />
+</topic>
+<anchor id="c_aftereditors" />
+<topic label="Vues" href="concepts/concepts-5.htm" >
+  <topic label="Vues rapides" href="concepts/concepts-21.htm" />
+  <topic label="Vue Navigateur" href="concepts/cnav.htm" />
+  <topic label="Vue Tâches" href="concepts/ctskview.htm" />
+  <topic label="Vue Structure" href="concepts/coutline.htm" />
+  <topic label="Vue Propriétés" href="concepts/cpropview.htm" />
+  <topic label="Vue Recherche" href="concepts/csearchview.htm" />
+</topic>
+<anchor id="c_afterviews" />
+<topic label="Barres d'outils" href="concepts/concepts-18.htm" />
+<anchor id="c_aftertoolbars" />
+<topic label="Marqueurs" href="concepts/concepts-11.htm" />
+<anchor id="c_aftermarkers" />
+<topic label="Signets" href="concepts/cbookmrk.htm" />
+<anchor id="c_afterbookmarks" />
+<topic label="Décorations d'intitulés" href="concepts/cdecorations.htm" />
+<anchor id="c_afterdecorations" />
+<topic label="Système d'aide" href="concepts/chelpsys.htm" />
+<anchor id="c_afterhelp" />
+<topic label="Outils externes" href="concepts/concepts-exttools.htm" >
+  <topic label="Support Ant" href="concepts/concepts-antsupport.htm"/>
+</topic>
+<anchor id="c_afterexternaltools" />
+<topic label="Programmation en équipe avec CVS" href="concepts/concepts-26.htm" >
+  <topic label="Versions" href="concepts/concepts-27.htm" />
+  <topic label="Branches" href="concepts/concepts-27b.htm" />
+  <topic label="Référentiels CVS" href="concepts/concepts-27c.htm" />
+  <topic label="Comparaisons tridirectionnelles" href="concepts/concepts-29.htm" />
+  <topic label="Synchronisation avec le référentiel CVS" href="concepts/concepts-30.htm" />
+  <topic label="Contrôle/Edition" href="concepts/concepts-cvs-watch.htm" />
+</topic>
+<anchor id="c_afterteam" />
+
+<topic label="Fonctions d'accessibilité dans Eclipse" href="concepts/accessibility/accessmain.htm">
+    <topic label="Navigation dans l'interface utilisateur à l'aide des raccourcis clavier"  href="concepts/accessibility/navigation.htm"/>
+    <topic label="Polices et couleurs dans Eclipse"  href="concepts/accessibility/fontsandcolors.htm"/>
+</topic>
+<anchor id="c_afteraccessibility" />
+
+<topic label="Dispositifs" href="concepts/concepts-25.htm" >
+</topic>
+<anchor id="c_afterfeatures" />
+
+</toc>

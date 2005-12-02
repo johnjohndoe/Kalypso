@@ -1,0 +1,32 @@
+ZUERST: automatic build ausstellen
+
+KALYPSO_JRE (damit die builder in einer separaten jre laufens)
+===========
+In 'Preferences / Java / Installed JREs ' eine neue JRE einrichten 
+mit Namen 'KALYPSO_JRE'. Es muss eine jre 1.4.2 sein, am besten
+die jdk 1.4.2.06 (Tip: eine JDK beinhaltet immer eine JRE, Vorteil von
+JDK: Debug-Möglichkeit). 
+
+Projekte löschen
+================
+KalypsoUtil
+
+Neue Projekte aus cvs holen
+=============
+(Kalypso-unabhängig)
+JavaApiContributions (einzige Abhängigkeit zu Eclipse: die Pluginklasse)
+EclipseRCPContributions
+
+(Kalypso-Framework)
+KalypsoCommons
+
+
+=> Achtung! Falls Ihr das JavaApiContributions schon habt, noch mal checken,
+mit welchem CVS Ihr verknüpft seid (es soll nicht JavaApiContribution5_0 sein)
+
+TODO:
+=====
+Die Readme-Dateien aktualisieren...
+KalypsoConf... und KalypsoFeature... anpassen;
+Deploy abpassen und testen
+build.properties von allen Projekten checken

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.help.ui"
+   name="%help_system_plugin_name"
+   version="3.0.0"
+   provider-name="%providerName"
+   class="org.eclipse.help.ui.internal.HelpUIPlugin">
+
+   <runtime>
+      <library name="helpui.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.help.ui"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.help.base"/>
+      <import plugin="org.eclipse.help.appserver"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+
+<!-- Default Help UI  -->
+   <extension
+         point="org.eclipse.ui.helpSupport">
+      <config
+            class="org.eclipse.help.ui.internal.DefaultHelpUI">
+      </config>
+   </extension>
+<!-- Preference pages -->
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%help_preferences_page_name"
+            class="org.eclipse.help.ui.internal.browser.BrowsersPreferencePage"
+            id="org.eclipse.help.ui.browsersPreferencePage">
+      </page>
+      <page
+            name="%appserver_preferences_page_name"
+            category="org.eclipse.help.ui.browsersPreferencePage"
+            class="org.eclipse.help.ui.internal.AppserverPreferencePage"
+            id="org.eclipse.help.ui.appserverPreferencePage">
+      </page>
+   </extension>
+<!-- Context Help contribution -->
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+<!-- Web Browsers -->
+   <extension
+         point="org.eclipse.help.base.browser">
+      <browser
+            factoryclass="org.eclipse.help.ui.internal.browser.embedded.EmbeddedBrowserFactory"
+            name="%embedded_browser"
+            id="org.eclipse.help.ui.embeddedbrowser">
+      </browser>
+   </extension>
+   <extension
+         point="org.eclipse.help.base.browser">
+      <browser
+            factoryclass="org.eclipse.help.ui.internal.browser.SystemBrowserFactory"
+            name="%system_browser"
+            id="org.eclipse.help.ui.systembrowser">
+      </browser>
+   </extension>
+
+</plugin>

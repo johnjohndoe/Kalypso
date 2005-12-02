@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<fragment
+    name="Eclipse Platform NL Support"
+    id="org.eclipse.platform.nl1"
+    version="3.0.1"
+    plugin-id="org.eclipse.platform"
+    plugin-version="3.0.1"
+>
+<runtime>
+    <library name="nl1.jar"/>
+    <library name="$nl$/"/>
+</runtime>
+</fragment>

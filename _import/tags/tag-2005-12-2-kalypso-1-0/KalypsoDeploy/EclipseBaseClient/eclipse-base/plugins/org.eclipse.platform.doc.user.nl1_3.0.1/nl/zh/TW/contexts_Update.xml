@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+   
+   <!-- Context IDs added in the  code, ID is class name, where context ID is set -->
+   
+   <context  id="ConfigurationView" >
+      <description>這個對話框可用來搭配已安裝特性使用。
+依預設，它只會顯示目前已啟用的特性。
+請在對話框工具列中開啟「顯示停用的特性」過濾，以便同時查看停用的特性。
+</description>
+      <topic label="視察配置" href="tasks/tasks-33.htm"/>
+      <topic label="啟用、停用、解除安裝特性" href="tasks/tasks-35.htm"/>
+   </context>
+     
+   <context  id="ReviewPage" >
+      <description>這個頁面顯示特性搜尋的結果。
+請選取您要安裝的特性。
+</description>
+   </context>
+   
+   
+   <context  id="CofigurationView_showUnconfFeaturesAction" >
+      <description>顯示已停用的特性。</description>
+   </context>
+   
+   <context  id="CofigurationView_revertAction" >
+      <description>還原您的配置架構至符合的選取歷程。</description>
+   </context>
+   
+   <context  id="CofigurationView_showStatusAction" >
+      <description>顯示選取特性的現行配置架構狀態。</description>
+   </context>
+   
+   <context  id="CofigurationView_preserveAction" >
+      <description>將選取的配置儲存在<b>已儲存的配置</b>資料夾中。</description>
+   </context>
+   
+   <context  id="CofigurationView_removePreservedAction" >
+      <description>從<b>已儲存的配置</b>資料夾刪除選取的配置。</description>
+   </context>
+   
+   <context  id="CofigurationView_unlinkAction" >
+      <description>從配置架構解除選取網站鏈結。</description>
+   </context>
+   
+   <context  id="CofigurationView_propertiesAction" >
+      <description>顯示選項內容。</description>
+   </context>
+   
+   <context  id="UpdatesView_newAction" >
+      <description>建立新網站書籤。</description>
+   </context>
+   
+   <context  id="UpdatesView_newFolderAction" >
+      <description>在特性更新視圖建立新的資料夾。資料夾可用來組織網站書籤和搜尋查尋。</description>
+   </context>
+   
+   <context  id="UpdatesView_newSearchAction" >
+      <description>建立新搜尋查詢。</description>
+   </context>
+   
+   <context  id="UpdatesView_newLocalAction" >
+      <description>建立選取的本端網站的網站書籤。</description>
+   </context>
+   
+   <context  id="UpdatesView_deleteAction" >
+      <description>刪除選取項目。</description>
+   </context>
+   
+   <context  id="UpdatesView_refreshAction" >
+      <description>重新整理選取項目。</description>
+   </context>
+   
+   <context  id="UpdatesView_fileFilterAction" >
+      <description>選取在<b>我的電腦</b>中顯示個別檔案。取消選取只顯示本端網站和目錄。</description>
+   </context>
+   
+   <context  id="UpdatesView_filterEnvironmentAction" >
+      <description>選取只顯示符合現行環境的特性。取消選取顯示全部可用的特性（與現行環境不符合的特性無法安裝）。</description>
+   </context>
+   
+   <context  id="UpdatesView_showCategoriesAction" >
+      <description>選取看見組織特性至網站種類。取消選取看見全部特性清單。</description>
+   </context>
+   
+   <context  id="UpdatesView_linkExtensionAction" >
+      <description>鏈結選取的網站至配置架構。</description>
+   </context>
+   
+   <context  id="DetailsView_homeAction" >
+      <description>顯示更新管理程式歡迎使用頁面。</description>
+   </context>
+   
+   <context  id="DetailsView_backAction" >
+      <description>回到前一個詳細資料頁面。</description>
+   </context>
+   
+   <context  id="DetailsView_forwardAction" >
+      <description>到下一個詳細資料頁面。</description>
+   </context>
+   
+   <context  id="MainPreferencePage" >
+      <description>設定「更新管理程式」喜好設定 - 在刪除之前要維護的<b>歷程數目</b>；<b>新更新項目</b>搜尋範圍只包含服務更新或相容的次要版本更新；替代更新網站的<b>更新原則</b>；<b>Proxy</b> 設定</description>
+      <topic label="更新原則控制"  href="tasks/tasks-37.htm"/>
+   </context>
+
+      
+   <context  id="LicensePage2" >
+      <description>您必須檢視目前的授權合約，接受或拒絕。</description>
+   </context>
+   
+   <context  id="ModeSelectionPage" >
+      <description>請選擇您要搜尋已安裝的特性之可用更新項目，或要搜尋在所選更新網站中找到的任何特性</description>   
+      <topic label="利用更新管理程式安裝特性" href="tasks/tasks-34.htm"/>
+      <topic label="使用更新管理程式更新特性" href="tasks/tasks-36.htm"/>   
+   </context>
+   
+   <context  id="SitePage" >
+      <description>新增、移除或編輯更新網站書籤。
+請選取要搜尋特性和修補程式的網站。
+<b>遠端網站</b>：包含特性之網站的 URL
+<b>本端網站</b>：在現行機器中的網站
+<b>保存檔大小</b>：套裝成 ZIP 或 JAR 檔的本端網站
+
+您可以開啟或關閉不符合環境（OS、語言環境等）之特性的搜尋作業。
+</description>
+   </context>
+   
+   <context  id="NewUpdatesWizardPage" >
+      <description>選取一或多個可用更新來安裝。</description>
+   </context>
+   
+   <context  id="MultiTargetPage2" >
+      <description>請針對要安裝的每個特性，從提供的選項中選取一個安裝位置，或加入一個新的安裝位置。
+由於相互位置的限制，您可能無法定義某些特性的新位置。
+</description>
+   </context>
+   
+   <context id="OptionalFeaturesPage">
+   	  <description>選擇要安裝主要特性中所包含的哪些選用特性。</description>
+   </context>
+   
+   <context id="MultiOptionalFeaturesPage2">
+   	  <description>選擇要安裝主要特性中所包含的哪些選用特性。</description>
+   </context>
+   
+   <context  id="JarVerificationPage" >
+      <description>您必須接受或拒絕 JAR 檔的憑證</description>
+   </context>
+   
+   <context  id="UserValidationDialog" >
+      <description>請輸入使用者資訊。</description>
+   </context>
+   
+   <context id="MultiReviewPage2">
+      <description>請選取您要安裝的特性。
+如果發生錯誤，請按<b>錯誤詳細資料</b>，再選取或取消選取適當的特性來嘗試修正它們。
+</description>
+     <topic label="利用更新管理程式安裝特性" href="tasks/tasks-34.htm"/>
+   </context>
+
+   
+   <context  id="InstallableSiteForm" >
+      <description>顯示有關為配置架構之一部分的本端網站之詳細資料。 </description>          
+   </context>
+   
+   
+   <context  id="SiteForm" >
+      <description>顯示現行安裝配置詳細資料。</description> 
+      <topic label="視察配置" href="tasks/tasks-33.htm"/>
+      <topic label="啟用、停用、解除安裝特性" href="tasks/tasks-35.htm"/>       
+   </context>
+   
+   <context  id="UnknownObjectForm" >
+      <description>在作用中的組件中選取不明的物件或沒有選取任何物件時顯示。</description>
+   </context>
+   
+   
+   <context id ="SiteBookmarkPropertyPage">
+      <description>變更書籤物件的內容。</description>
+   </context>
+   
+   <context id ="NamedObjectPropertyPage">
+      <description>變更已選取物件的名稱。</description>
+   </context>
+   
+   <context id ="ConfigurationPropertyPage">
+      <description>變更已選取配置的名稱。</description>
+   </context>
+   
+</contexts>

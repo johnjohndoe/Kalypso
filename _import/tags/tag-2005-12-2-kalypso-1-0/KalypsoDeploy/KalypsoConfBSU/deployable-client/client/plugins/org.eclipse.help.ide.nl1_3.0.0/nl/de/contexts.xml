@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- Search Menu: Help... -->   
+   <context  id="helpSearchMenu" >
+      <description>Diese Aktion öffnet den Dialog 'Suchen', der das Durchsuchen der Dokumentation ermöglicht.</description>
+	  <topic label="In der Onlinehilfefunktion suchen" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+
+<!-- Help page on Search Dialog-->
+   <context  id="searchPage" >
+      <description>Geben Sie im Feld für den Suchausdruck einen oder mehrere Suchbegriffe ein, und klicken Sie anschließend auf <b>Suchen</b>. Dadurch wird die Sicht 'Suchen' mit allen Suchergebnissen geöffnet.
+
+Sie können die Qualifikationsmerkmale OR (ODER) und NOT (NICHT) zwischen den einzelnen Suchbegriffen verwenden. Bei der Verwendung von doppelten Anführungszeichen für einen Suchbegriff werden nur diejenigen Ergebnisse zurückgegeben, die mit dem angegebenen Suchausdruck genau übereinstimmen.
+
+Klicken Sie auf <b>Auswählen</b>, um den Dialog für die Arbeitssetauswahl aufzurufen, in dem Sie zusätzliche Filterkriterien angeben können.</description>
+       <topic label="In der Onlinehilfefunktion suchen" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+<!-- Search result view with help hits -->
+   <context  id="searchResultView" >
+      <description>Diese Sicht zeigt eine Liste mit den Ergebnissen der letzten Suchläufe an. Gegenwärtig angezeigt werden die Ergebnisse der letzten Dokumentationssuche. Doppelklicken Sie auf eines der Dokumente, um es zu öffnen. </description>
+      <topic label="Hilfe durchsuchen" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm"/>
+      <topic label="Sicht 'Suchen'" href="reference/ref-26.htm"/>
+      <topic label="Dateisuche" href="reference/ref-45.htm"/>
+   </context>
+
+</contexts>

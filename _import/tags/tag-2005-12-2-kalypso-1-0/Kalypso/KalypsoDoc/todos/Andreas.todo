@@ -1,0 +1,100 @@
+persoenliche Notitz Datei von Andreas.
+mit mehr oder weniger oder ganz wichtigen TODOS
+
+Montag 24.1.05
+ DWD-Deploy
+ BUG: speichern der veränderten zeitreihen wizard
+ Wizard-konfiguration Ergebnisablage
+ BUG: Metadaten double statt integer
+
+Lizenzen: zum großen Teil OK
+readme...updaten
+ Doc:
+ - Optimierungsverfahren beschreiben, OK
+ - NA-Modell beschreiben, OK
+ - NA-Modell Zeitreihenmanagement beschreiben
+ - DWD-Raster-VorhersageKonzept beschreiben
+ - GML-Doku
+ - alles in Gliederung einfuegen.
+
+
+ NA-Modell:
+* Ombrometer Filter (momentan einfacher interpolationsfilter)
+
+* temperatur zeitreihen 
+   - aus DWD-Raster einlesen
+   - gebietstemperaturmodell erstellen
+   - Temperatur-Aggregationsfilter implementieren
+   - verknuepfen im Modell updaten
+   - wizzard anpassen, 
+     - kontrolle der ombrometer - temperatur
+     - kontrolle der teilgebiets-temperaturen
+   - implementierung fuer das namodell
+     - zeitreihendateien schreiben... usw
+   
+* korrekturwerte in nacontrol ueberpruefen
+
+ Handling fuer anfangswerte berechnen und benutzen
+  - Konzept !!
+  - Implementierung
+ 
+ naControl aufrauemen 
+  - zeitraum entfernen
+  - verbose results einfuegen, komplette ascci-dateien nur optional zum client kopieren
+  - multi-feature-editor verwenden und direkt auf modell.gml arbeiten
+ 
+ Hydrotope als shape zum modell hinzufuegen
+
+NA-Optimiertung:
+ - in sce.conf die bewertungsfunktionen den jeweiligen parametern zuordnen.
+ - nur die parameter optimieren, die "null" sind.
+ - skalierung von faktor auf additiv umstellen
+
+GUI:
+* BUG: Selekt fuer zufluesse fluessiger
+* BUG: selekt auf teilgebiete (wird warscheinlich bbox aus template übernommen, anstatt aktuelle)
+* dokument annotations aus schema als tabellenueberschriften benutzen
+  standard CRS als property in kalypso-preferences uebernehmen
+
+ 
+ Editor fuer Verknuepfungen zur zeitreihenDB
+ tabellen besser editieren
+ elemente hinzufuegen
+ elemente in tabelle importieren (z.B. aus shapefile)
+ multi-feature-editor 
+ gml-tree-editor implementieren (Friedemann)
+ 
+ editor fuer association-topologie-visualisierung 
+ association-topologien visualisieren (z.B. mit virtuellen properties)
+ GTT: showcolumn, parameter zwischen (true|fase|user-true|user-false) unterscheiden,
+      "user-*" heisst: user darf umschalten.
+  
+GML:
+ topologien unterstuetzen (config)
+ schema-registry einfuehren
+ user-sld in schema-registry verwalten
+ 
+allgemein:
+ WFS als Datenquelle
+
+ WMS (auch SLD-WMS) als Layerquelle
+     - refresh-eigenschaften in kalypso-preferences ablegen (z.B. als delay[s])
+       delay von 0s bedeutet manual
+
+ client-server datenaustausch ueber WEBDAV und nicht ueber windows-mount implementieren
+       
+Was ist Schema-Registry:
+ lokale Kopie von schema-instanzen (schemalocation soll nur als Hinweis interpretiert werden)
+ featuretypes als verzeichnisbaum ablegen (nach namespace)
+ featuretype-bezogene daten im jeweiligen ast speichern
+ (z.B. *sld, *gmt, *gtt).
+ Es gibt eine default-schemaregistry(readOnly) und eine user-schemaregistry (user einstellungen)
+ 
+Projektmanagement:
+* Lizenzen verteilen
+  backupdeegree auf relevanten Teil schrumpfen und umbenennen
+  als Opensourceprojekt veroeffentlichen
+  
+Testen testen testen
+ ein projekt KalypsoQM anlegen mit gro?er junit-test-suite ??
+
