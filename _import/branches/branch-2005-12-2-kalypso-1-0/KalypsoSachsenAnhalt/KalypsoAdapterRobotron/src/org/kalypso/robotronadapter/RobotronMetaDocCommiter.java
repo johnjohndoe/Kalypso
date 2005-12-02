@@ -112,6 +112,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private static final String TAG_STATION = "station_id";
   private static final String TAG_SIMULATION = "simulation";
   private static final String TAG_SCHLUESSEL = "schluessel";
+  private static final String TAG_TYP = "typ";
   private static final String TAG_KLASSE = "klasse";
 
   private static final String TAG_FILES = "files";
@@ -236,7 +237,22 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
     bf.append( LT + TAG_SCHLUESSEL + GT + identifier + CLT + TAG_SCHLUESSEL + GT );
 
-    bf.append( LT + TAG_KLASSE + GT + category + CLT + TAG_KLASSE + GT );
+    String klasse = "";
+    String typ = "";
+    if( category != null )
+    {
+      final String[] splits = category.split(";", 2);
+      if( splits.length == 2 )
+      {
+          typ = splits[0];
+          klasse = splits[1];
+      }
+      else if( splits.length == 1 )
+          klasse = splits[0];
+    }
+    
+    bf.append( LT + TAG_TYP + GT + typ + CLT + TAG_TYP + GT );
+    bf.append( LT + TAG_KLASSE + GT + klasse + CLT + TAG_KLASSE + GT );
 
     bf.append( LT + TAG_DESCRIPTION + GT + valueOfProperty( mdProps.getProperty( TAG_DESCRIPTION ) ) + CLT
         + TAG_DESCRIPTION + GT );
