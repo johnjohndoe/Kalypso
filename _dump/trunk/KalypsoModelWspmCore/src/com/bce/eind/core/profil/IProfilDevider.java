@@ -1,7 +1,5 @@
 package com.bce.eind.core.profil;
 
-
-
 public interface IProfilDevider
 {
   public static enum DEVIDER_TYP
@@ -13,12 +11,17 @@ public interface IProfilDevider
   {
     BOESCHUNG, RAUHEIT, BEIWERT
   };
-  public Object getValueFor( final Object key);
+
+  public Object getValueFor( final Object key );
+
+  public void setValueFor( final Object key, final Object value );
 
   public IProfilPoint getPoint( );
 
+  /**
+   * @return the old position
+   */
+  public IProfilPoint setPoint( final IProfilPoint point );
+
   public DEVIDER_TYP getTyp( );
-  
-
-
 }

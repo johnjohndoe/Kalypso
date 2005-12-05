@@ -45,7 +45,7 @@ public class ProfilPoint implements IProfilPoint
       {
         return null;
       }
-      
+
     }
     return point;
   }
@@ -58,11 +58,11 @@ public class ProfilPoint implements IProfilPoint
     return Collections.unmodifiableSet( m_pointProperties.keySet() );
   }
 
-  public final double getValueFor( final POINT_PROPERTY pointProperty )
-      throws ProfilDataException
+  public final double getValueFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
-      throw new ProfilDataException( "Profileigenschaft existiert nicht: " + pointProperty.toString() );
+      throw new ProfilDataException( "Profileigenschaft existiert nicht: "
+          + pointProperty.toString() );
 
     return m_pointProperties.get( pointProperty ).doubleValue();
   }
@@ -82,21 +82,19 @@ public class ProfilPoint implements IProfilPoint
   }
 
   public final boolean setValueFor( final POINT_PROPERTY pointProperty, final double value )
-        {
+  {
     if( !(m_pointProperties.containsKey( pointProperty )) )
       return false;
     m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
 
- /* public final boolean isPosition( final double breite, final double hoehe )
-      throws ProfilDataException
-  {
-    final int breitePrecision = POINT_PROPERTY.BREITE.getPrecision();
-    final int hoehePrecision = POINT_PROPERTY.HOEHE.getPrecision();
-
-    final double deltaB = Math.abs( this.getValueFor( POINT_PROPERTY.BREITE ) - breite );
-    final double deltaH = Math.abs( this.getValueFor( POINT_PROPERTY.HOEHE ) - hoehe );
-    return ((deltaB < Math.exp( -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision )));
-  }*/
+  /*
+   * public final boolean isPosition( final double breite, final double hoehe ) throws
+   * ProfilDataException { final int breitePrecision = POINT_PROPERTY.BREITE.getPrecision(); final
+   * int hoehePrecision = POINT_PROPERTY.HOEHE.getPrecision(); final double deltaB = Math.abs(
+   * this.getValueFor( POINT_PROPERTY.BREITE ) - breite ); final double deltaH = Math.abs(
+   * this.getValueFor( POINT_PROPERTY.HOEHE ) - hoehe ); return ((deltaB < Math.exp(
+   * -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision ))); }
+   */
 }

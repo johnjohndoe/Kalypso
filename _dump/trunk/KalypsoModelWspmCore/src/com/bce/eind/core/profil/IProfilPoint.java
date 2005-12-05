@@ -13,17 +13,10 @@ import java.util.HashMap;
  */
 public interface IProfilPoint
 {
-  /**
-   * @param pointProperty
-   * @return
-   * @throws ProfilDataException
-   */
   public double getValueFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
-  /**
-   * @param pointProperty
-   * @return
-   */
+  public boolean setValueFor( final POINT_PROPERTY pointProperty, final double value );
+  
   public boolean hasProperty( final POINT_PROPERTY pointProperty );
 
   public IProfilPoint clonePoint( );
@@ -73,10 +66,6 @@ public interface IProfilPoint
       m_parameters.put( PARAMETER.INTERPOLATION, interpolation );
       m_parameters.put( PARAMETER.PRECISION, precision );
     }
-
-    /*
-     * public Object setParameter( Object key, Object value ) { return m_parameters.put( key, value ); }
-     */
 
     public Object getParameter( Object key )
     {

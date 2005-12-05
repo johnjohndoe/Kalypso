@@ -22,6 +22,9 @@ public interface IProfilBuilding
 
   public Object getValueFor( final BUILDING_PROPERTY buildingValue ) throws ProfilDataException;
 
+  public Object setValue( final BUILDING_PROPERTY property, final Object value )
+      throws ProfilDataException;
+
   public boolean hasProperty( final BUILDING_PROPERTY profilBuildingProperty );
 
   public static enum BUILDING_PROPERTY

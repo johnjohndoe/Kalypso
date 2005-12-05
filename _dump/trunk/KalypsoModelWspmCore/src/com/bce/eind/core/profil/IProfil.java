@@ -2,12 +2,8 @@ package com.bce.eind.core.profil;
 
 import java.util.LinkedList;
 
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.AbstractChange;
 
 /**
  * @author kimwerner
@@ -18,18 +14,17 @@ public interface IProfil
   {
     ks, kst
   };
+
   public static enum WEHR_TYP
   {
-    rundkronig,breitkronig,scharfkantig,Beiwert
+    rundkronig, breitkronig, scharfkantig, Beiwert
   };
+
   public static enum PROFIL_PROPERTY
   {
-    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION,RAUHEIT_TYP, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL, BLOCKRAUHEIT
+    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, RAUHEIT_TYP, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL, BLOCKRAUHEIT
   }
-  public void addProfilListener( final IProfilListener pl );
 
-  public void removeProfilListener( final IProfilListener pl );
-  
   /**
    * @param point
    * @param devider
@@ -64,14 +59,14 @@ public interface IProfil
    * @return
    */
   public IProfilPoint findPoint( final double breite, final double delta );
-  
+
   /**
    * @param index
    * @param breite
    * @param delta
    * @return
    */
-  public IProfilPoint findPoint(final int index,  final double breite, final double delta );
+  public IProfilPoint findPoint( final int index, final double breite, final double delta );
 
   /**
    * @return das aktuelle bauwerk oder Typ Building_typ NONE
@@ -102,7 +97,8 @@ public interface IProfil
   public LinkedList<IProfilPoint> getPoints( );
 
   /**
-   * @param key Schlüsselwert einer Hashmap see IProfil.PROPERTY
+   * @param key
+   *          Schlüsselwert einer Hashmap see IProfil.PROPERTY
    * @return Wert zu key oder null
    */
   public Object getProperty( Object key );
@@ -110,7 +106,7 @@ public interface IProfil
   /**
    * @param pointProperty
    * @return double[] with values of pointproperty sorted by breite
-   * @throws ProfilDataException 
+   * @throws ProfilDataException
    */
   public double[] getValuesFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
@@ -129,6 +125,7 @@ public interface IProfil
 
   /**
    * Fügt einen bestehenden Punkt ein. return true wenn die Liste geändert wurde, sonst false.
+   * 
    * @param thePointBefore
    * @param point
    * @return
@@ -145,7 +142,7 @@ public interface IProfil
 
   /**
    * @return das entfernte Bauwerk
-   * @throws ProfilDataException 
+   * @throws ProfilDataException
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException;
 
@@ -156,8 +153,9 @@ public interface IProfil
   public IProfilDevider removeDevider( final IProfilDevider devider );
 
   /**
-   * @param point to remove
-    */
+   * @param point
+   *          to remove
+   */
   public boolean removePoint( final IProfilPoint point );
 
   /**
@@ -167,51 +165,29 @@ public interface IProfil
   public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty );
 
   /**
-   * @param key eine HashMap see IProfil.PROPERTY
+   * @param key
+   *          eine HashMap see IProfil.PROPERTY
    * @return den zugehörigen wert
    */
   public Object removeProperty( final Object key );
 
   /**
-   * ändert den Bauwerkstyp @see IProfil.BUILDING_TYP
-   * setzen der Eigenschaften @see IProfilBuilding.setValue
+   * ändert den Bauwerkstyp
+   * 
+   * @see IProfil.BUILDING_TYP setzen der Eigenschaften
+   * @see IProfilBuilding.setValue
    * @param buildingTyp
    * @throws ProfilDataException
    */
-  public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException;
+  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException;
 
   /**
    * @param key
    * @param value
-   * @throws ProfilDataException 
+   * @throws ProfilDataException
    * @see PROFIL_PROPERTY
    */
   public void setProperty( final Object key, final Object value ) throws ProfilDataException;
 
-  public void setValueFor(IProfilPoint point,POINT_PROPERTY property, double value) throws ProfilDataException;
- 
-  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property,Object value) throws ProfilDataException;
-  
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value) throws ProfilDataException;
-  public boolean isSpecialPoint(final IProfilPoint point);
-  
-  public void setValues( final AbstractChange[] changes ) throws ProfilDataException;
-  
-  /**
-   * @param pointList
-   * @param pointProperty
-   * @param value
-   * @throws ProfilDataException
-    */
-//  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-//      double value ) throws ProfilDataException;
-//  /**
-//   * @param pointProperty
-//   * @param value
-//   * @throws ProfilDataException
-//   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-//   *   double value )
-//   */
-//  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
-//  throws ProfilDataException;
+  public boolean isSpecialPoint( final IProfilPoint point );
 }

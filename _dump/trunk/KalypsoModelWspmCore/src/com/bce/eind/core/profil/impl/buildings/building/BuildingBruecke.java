@@ -27,18 +27,16 @@ public class BuildingBruecke extends AbstractProfilBuilding
    */
   public void addProfilProperties( PlainProfil profil ) throws ProfilDataException
   {
-    super.addProfilProperties(profil);
+    super.addProfilProperties( profil );
     final LinkedList<IProfilPoint> points = profil.getPoints();
-   
- 
-    for( IProfilPoint pt : points )
+
+    for( final IProfilPoint pt : points )
     {
       final double h = pt.getValueFor( POINT_PROPERTY.HOEHE );
-      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEBRUECKE, h );
-      profil.setValueFor( pt, POINT_PROPERTY.UNTERKANTEBRUECKE, h );
+      pt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, h );
+      pt.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, h );
     }
 
   }
 
-  
 }

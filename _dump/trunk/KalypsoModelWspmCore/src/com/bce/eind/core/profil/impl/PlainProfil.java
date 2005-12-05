@@ -6,22 +6,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.AbstractChange;
-import com.bce.eind.core.profil.changes.PointEdit;
-import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
@@ -32,7 +27,7 @@ import com.bce.eind.core.profil.util.ProfilUtil;
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class PlainProfil implements  IProfilConstants
+public class PlainProfil implements IProfilConstants, IProfil
 {
   private IProfilBuilding m_building;
 
@@ -297,10 +292,8 @@ public class PlainProfil implements  IProfilConstants
   {
     final IProfilBuilding oldBuilding = m_building;
     if( m_building instanceof AbstractProfilBuilding )
-    {
       ((AbstractProfilBuilding)m_building).removeProfilProperties( this );
 
-    }
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
     return oldBuilding;
@@ -352,14 +345,12 @@ public class PlainProfil implements  IProfilConstants
   /**
    * @see com.bce.eind.core.profil.IProfil#setBuilding(com.bce.eind.core.profil.IProfil.BUILDING_TYP)
    */
-  public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException
+  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
   {
     removeBuilding();
-    m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
+    m_building = building;
     if( m_building instanceof AbstractProfilBuilding )
-    {
       ((AbstractProfilBuilding)m_building).addProfilProperties( this );
-    }
   }
 
   /**
@@ -372,79 +363,16 @@ public class PlainProfil implements  IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfil#setValues(com.bce.eind.core.profil.changes.PointEdit[])
-   */
-  public void setValues( final AbstractChange[] changes ) throws ProfilDataException
-  {
-   
-    for( final AbstractChange change : changes )
-    {
-      // final IProfilPoint point = change.getPoint();
-      // if( !m_points.contains( point ) )
-      // throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
-      change.doChange(null);
-      // ((ProfilPoint)point).setValueFor( change.getProperty(), change.getNewValue() );
-    }
-  }
-
-  /**
-   * @see com.bce.eind.core.profil.IProfil#setValuesFor(java.util.List,
-   *      com.bce.eind.core.profil.POINT_PROPERTY, double)
-   */
-  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-      double value ) throws ProfilDataException
-  {
-    final PointEdit[] changes = new PointEdit[pointList.size()];
-    int i = 0;
-    for( final IProfilPoint point : pointList )
-    {
-      changes[i++] = new PointEdit( point, pointProperty, value ) ;
-    }
-    setValues( changes );
-  }
-
-//  /**
-//   * @see com.bce.eind.core.profil.IProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
-//   *      double)
-//   */
-//  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
-//      throws ProfilDataException
-//  {
-//    final List<IProfilPoint> allPoints = getPoints();
-//    setValuesFor( allPoints, pointProperty, value );
-//  }
-
-  public void setValueFor( final IProfilPoint point, final POINT_PROPERTY pointProperty,
-      final double value ) throws ProfilDataException
-  {
-    setValues( new PointEdit[]
-    { new PointEdit( point, pointProperty, value ) } );
-  }
-
-  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property, Object value )
-  {
-    ((ProfilDevider)devider).setValueFor( property, value );
-
-  }
-
-  public void setValueFor( final IProfilBuilding building, final BUILDING_PROPERTY property,
-      final Object value ) throws ProfilDataException
-  {
-    ((AbstractBuilding)building).setValue( property, value );
-
-  }
-
- 
-  /**
    * @see com.bce.eind.core.profil.IProfil#isSpecialPoint(com.bce.eind.core.profil.IProfilPoint)
    */
   public boolean isSpecialPoint( IProfilPoint point )
   {
-       final IProfilDevider[] deviders = getDevider(DEVIDER_TYP.values());
-       for (IProfilDevider devider :deviders)
-       {
-         if (devider.getPoint() == point) return true;
-       }
-       return false;
+    final IProfilDevider[] deviders = getDevider( DEVIDER_TYP.values() );
+    for( IProfilDevider devider : deviders )
+    {
+      if( devider.getPoint() == point )
+        return true;
+    }
+    return false;
   }
 }

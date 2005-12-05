@@ -4,6 +4,7 @@
 package com.bce.eind.core.profil.util;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
@@ -23,11 +24,10 @@ public class ProfilUtil
     if( (startPoint == null) | (endPoint == null) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = startPoint.clonePoint();
-    for( final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt
-        .hasNext(); )
+    for( final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
     {
       final POINT_PROPERTY ppp = ppIt.next();
-       if( (Boolean)ppp.getParameter(PARAMETER.INTERPOLATION))
+      if( (Boolean)ppp.getParameter( PARAMETER.INTERPOLATION ) )
       {
         try
         {
@@ -60,13 +60,41 @@ public class ProfilUtil
       }
 
       return profil.findPoint( breite, delta );
-      
+
     }
     catch( ProfilDataException e )
     {
-      //sollte nie passieren da Breite als Eigenschaft immer existiert
+      // sollte nie passieren da Breite als Eigenschaft immer existiert
     }
     return null;
   }
- 
+
+  public static IProfilPoint getPointBefore( final IProfil profil, IProfilPoint point )
+      throws ProfilDataException
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( point == points.getFirst() )
+      return null;
+
+    final int i = points.indexOf( point );
+    if( i == -1 )
+      throw new ProfilDataException( "Punkt nicht im Profil: " + point );
+
+    return points.get( i - 1 );
+  }
+
+  public static IProfilPoint getPointAfter( final IProfil profil, final IProfilPoint point )
+      throws ProfilDataException
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( point == points.getLast() )
+      return null;
+
+    final int i = points.indexOf( point );
+    if( i == -1 )
+      throw new ProfilDataException( "Punkt nicht im Profil: " + point );
+
+    return points.get( i + 1 );
+  }
+
 }

@@ -15,13 +15,11 @@ public class ProfilDevider implements IProfilDevider
 
   private final HashMap<Object, Object> m_properties = new HashMap<Object, Object>();
 
-  public ProfilDevider(final DEVIDER_TYP typ,final IProfilPoint point )
+  public ProfilDevider( final DEVIDER_TYP typ, final IProfilPoint point )
   {
     m_Typ = typ;
     m_point = point;
   }
-
- 
 
   public Object getValueFor( final Object key )
   {
@@ -30,7 +28,7 @@ public class ProfilDevider implements IProfilDevider
 
   public IProfilPoint setPoint( IProfilPoint point )
   {
-    IProfilPoint oldPkt = m_point;
+    final IProfilPoint oldPkt = m_point;
     m_point = point;
     return oldPkt;
   }
@@ -38,7 +36,6 @@ public class ProfilDevider implements IProfilDevider
   public void setValueFor( final Object key, final Object value )
   {
     m_properties.put( key, value );
-
   }
 
   public IProfilPoint getPoint( )

@@ -18,14 +18,14 @@ public class BuildingWehr extends AbstractProfilBuilding
   {
     super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART ), new POINT_PROPERTY[]
     { POINT_PROPERTY.OBERKANTEWEHR } );
-   
+
     try
     {
-      setValue(BUILDING_PROPERTY.WEHRART,IProfil.WEHR_TYP.Beiwert);
+      setValue( BUILDING_PROPERTY.WEHRART, IProfil.WEHR_TYP.Beiwert );
     }
     catch( ProfilDataException e )
     {
-      //do nothing
+      // do nothing
     }
   }
 
@@ -38,7 +38,7 @@ public class BuildingWehr extends AbstractProfilBuilding
     {
 
       final double h = pt.getValueFor( POINT_PROPERTY.HOEHE );
-      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEWEHR, h );
+      pt.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, h );
 
     }
     final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
@@ -48,8 +48,8 @@ public class BuildingWehr extends AbstractProfilBuilding
       profil.moveDevider( leftDev, devider[0].getPoint() );
     if( (devider != null) && (devider.length > 1) )
       profil.moveDevider( rightDev, devider[1].getPoint() );
-    profil.setValueFor(leftDev,IProfilDevider.DEVIDER_PROPERTY.BEIWERT,0.0);
-    profil.setValueFor(rightDev,IProfilDevider.DEVIDER_PROPERTY.BEIWERT,0.0);
+    leftDev.setValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT, 0.0 );
+    rightDev.setValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT, 0.0 );
   }
 
   @Override

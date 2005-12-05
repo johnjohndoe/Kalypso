@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import junit.framework.TestCase;
 
 import com.bce.eind.core.profil.IProfil;
+import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfil.PROFIL_PROPERTY;
 import com.bce.eind.core.profil.IProfil.RAUHEIT_TYP;
@@ -15,7 +17,7 @@ import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.Profil;
+import com.bce.eind.core.profil.impl.PlainProfil;
 
 /**
  * @author kimwerner
@@ -32,7 +34,7 @@ public class ProfilDataTest extends TestCase
 
   public IProfil CreateTestProfil( ) throws Exception
   {
-    final IProfil p = new Profil();
+    final IProfil p = new PlainProfil();
     final IProfilPoint p1 = p.addPoint( 100.0001, -100.0001 );
     final IProfilPoint p4 = p.addPoint( 200.0002, -200.0002 );
     final IProfilPoint p2 = p.insertPoint( p1 );
@@ -62,7 +64,7 @@ public class ProfilDataTest extends TestCase
 
     p.addPointProperty( POINT_PROPERTY.RAUHEIT );
     p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
-    p.setValueFor( p2, POINT_PROPERTY.RAUHEIT, 1.2345 );
+    p2.setValueFor( POINT_PROPERTY.RAUHEIT, 1.2345 );
 
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( POINT_PROPERTY.RAUHEIT ) );
     assertEquals( "RauheitTyp:", RAUHEIT_TYP.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
@@ -75,11 +77,11 @@ public class ProfilDataTest extends TestCase
     final IProfilDevider[] deviderTF = p.getDevider( DEVIDER_TYP.TRENNFLAECHE );
     final IProfilDevider rightTF = deviderTF[1];
     final IProfilDevider leftTF = deviderTF[0];
-    p.setValueFor(rightTF, DEVIDER_PROPERTY.BOESCHUNG, false );
+    rightTF.setValueFor(DEVIDER_PROPERTY.BOESCHUNG, false );
     assertEquals( "Trennfläche rechts Typ:", false, rightTF
         .getValueFor( DEVIDER_PROPERTY.BOESCHUNG ) );
 
-    p.setValueFor(leftTF, DEVIDER_PROPERTY.BOESCHUNG,true );
+    leftTF.setValueFor(DEVIDER_PROPERTY.BOESCHUNG,true );
     assertEquals( "Trennfläche rechts Typ:", DEVIDER_PROPERTY.BOESCHUNG, leftTF
         .getValueFor( DEVIDER_PROPERTY.BOESCHUNG) );
 
@@ -108,13 +110,14 @@ public class ProfilDataTest extends TestCase
 
   public void setGetBuilding( final IProfil p ) throws Exception
   {
-    p.setBuilding( BUILDING_TYP.BRUECKE );
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
+    p.setBuilding( building );
     assertEquals( "neues Gebäude:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getPoints().getFirst();
-    p.setValueFor( firstPkt, POINT_PROPERTY.OBERKANTEBRUECKE, 1000.65432 );
-    p.setValueFor( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
-    p.setValueFor(p.getBuilding(), BUILDING_PROPERTY.PFEILERFORM, 0.5 );
-    p.setValueFor(p.getBuilding(),BUILDING_PROPERTY.RAUHEIT, 5.5 );
+    firstPkt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, 1000.65432 );
+    firstPkt.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
+    p.getBuilding().setValue( BUILDING_PROPERTY.PFEILERFORM, 0.5 );
+    p.getBuilding().setValue(BUILDING_PROPERTY.RAUHEIT, 5.5 );
     assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValueFor(
         BUILDING_PROPERTY.PFEILERFORM ) );
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
