@@ -11,7 +11,7 @@ public interface IProfilBuilding
 {
   public static enum BUILDING_TYP
   {
-    BRUECKE, EI, KREIS, MAUL, NONE, TRAPEZ, WEHR;
+    BRUECKE, EI, KREIS, MAUL, TRAPEZ, WEHR;
   }
 
   public BUILDING_TYP getTyp( );

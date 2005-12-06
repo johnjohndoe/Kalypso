@@ -123,7 +123,7 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
         .getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE ) );
     p.removeBuilding();
-    assertEquals( "kein Gebäude:", BUILDING_TYP.NONE, p.getBuilding().getTyp() );
+    assertEquals( "kein Gebäude:", null, p.getBuilding() );
 
     try
     {

@@ -4,7 +4,6 @@
 package com.bce.eind.core.profil;
 
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
-import com.bce.eind.core.profil.impl.buildings.BuildingNone;
 import com.bce.eind.core.profil.impl.buildings.building.BuildingBruecke;
 import com.bce.eind.core.profil.impl.buildings.building.BuildingWehr;
 import com.bce.eind.core.profil.impl.buildings.durchlass.BuildingEi;
@@ -22,8 +21,7 @@ public class ProfilBuildingFactory
   {
     switch( buildingTyp )
     {
-      case NONE:
-        return new BuildingNone();
+      
       case EI:
         return new BuildingEi();
       case KREIS:
@@ -37,7 +35,7 @@ public class ProfilBuildingFactory
               case WEHR:
         return new BuildingWehr();
       default:
-        return new BuildingNone();
+        return null;
     }
 
   }

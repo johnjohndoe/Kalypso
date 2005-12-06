@@ -12,9 +12,7 @@ import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
@@ -43,7 +41,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     m_points = new ProfilPoints();
     m_points.addProperty( POINT_PROPERTY.BREITE );
     m_points.addProperty( POINT_PROPERTY.HOEHE );
-    m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
+    m_building = null;
 
   }
 
@@ -290,11 +288,10 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException
   {
+
     final IProfilBuilding oldBuilding = m_building;
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding)m_building).removeProfilProperties( this );
-
-    m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
     return oldBuilding;
   }
@@ -347,7 +344,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
   {
-    removeBuilding();
+    if (m_building !=null)removeBuilding();
     m_building = building;
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding)m_building).addProfilProperties( this );
@@ -359,7 +356,6 @@ public class PlainProfil implements IProfilConstants, IProfil
   public void setProperty( Object key, Object value )
   {
     m_profilMetaData.put( key, value );
-
   }
 
   /**
