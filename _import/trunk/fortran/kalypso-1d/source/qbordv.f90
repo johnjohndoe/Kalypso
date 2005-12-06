@@ -1,4 +1,4 @@
-!     Last change:  WP    5 Sep 2005    3:47 pm
+!     Last change:  WP    6 Dec 2005    6:09 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -447,6 +447,9 @@ IF (bordvoll.eq.'u') then
     !************************************************
     !**    Ergaenzung vom 27.10.92 J. Csocsan
     !************************************************
+
+    !write (*,*) 'Anzahl Profile = ', nprof
+
     DO j = 1, nprof
 
       IF (prof_it (j) .eq.0) then
@@ -934,7 +937,7 @@ do i = 1, nprof
   open (UNIT=unit_km_out, FILE=datei_km_out, STATUS='REPLACE', IOSTAT=ierr)
   if (ierr /= 0) then
     write (*,9001) datei_km_out
-    9001 format (/1X, 'Probelm beim Oeffnen der KM-OUT Datei', A)
+    9001 format (/1X, 'Problem beim Oeffnen der KM-OUT Datei', A)
     CYCLE
   end if
 

@@ -1,4 +1,4 @@
-!     Last change:  WP   24 Nov 2005    6:00 pm
+!     Last change:  WP    6 Dec 2005    5:18 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -441,9 +441,9 @@ ENDIF
 ! Setzen und Uebergabe der Pfad-Parameter, die zur Dateioeffnung
 ! von WSPvaria.ein in "LESDATIN" benoetigt werden.
 
-! Der bereits in der if-schleife eingelesene Dateipfad 'nprof' wird
+! Der bereits in der if-schleife eingelesene Dateipfad 'nproj' wird
 ! uebernommen und der neuen Variable proj_les zugewiesen.
-! In nprof ist enthalten: c:\Projekt\Projektname\prof
+! In nproj ist enthalten: c:\Projekt\Projektname\prof
 proj_les = nproj
 i_les = LEN_TRIM (proj_les)
 

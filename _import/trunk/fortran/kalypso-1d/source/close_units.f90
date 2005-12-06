@@ -1,4 +1,4 @@
-!     Last change:  WP   19 Jul 2005    2:26 pm
+!     Last change:  WP    6 Dec 2005    5:05 pm
 !--------------------------------------------------------------------------
 ! This code, close_units.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -72,7 +72,7 @@ do lunit = 10, 200
 
 end do
 
-write (UNIT=0, FMT=9000)
+!write (UNIT=0, FMT=9000)
 write (UNIT=*, FMT=9000)
 9000 format (/1X, 'Alle offenen Dateien wurden geschlossen!')
 
