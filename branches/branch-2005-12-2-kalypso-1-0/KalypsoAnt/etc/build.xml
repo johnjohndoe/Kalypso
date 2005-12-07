@@ -1,0 +1,27 @@
+<project default="deploy" name="KalypsoAnt">
+  <!-- 'deployt' die AntTask ins KalypsoUI Projekt 
+  
+  		Es wird davon ausgegangen, dass KalypsoUI kompiliert ist.
+  -->
+
+  <property name="build.dir" value="${workspace}/KalypsoAnt/build" />
+  <property name="dist.dir" value="${build.dir}/deploy" />
+  <property name="deploy.dir" value="${workspace}/KalypsoUI/lib" />
+  <property name="jar.name" value="kalypsoAnt.jar" />
+
+  <target name="init">
+    <mkdir dir="${dist.dir}" />
+  </target>
+
+  <target name="clean">
+  	<delete dir="${dist.dir}"></delete>
+  </target>
+  
+  <target name="jar" depends="init">
+    <jar destfile="${dist.dir}/${jar.name}" basedir="${build.dir}/bin"/>
+  </target>
+
+  <target name="deploy" depends="jar">
+    <copy todir="${deploy.dir}" file="${dist.dir}/${jar.name}" />
+  </target>
+</project>

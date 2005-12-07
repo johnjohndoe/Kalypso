@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="conf.repository.kalypso.org" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified" 
+	xmlns="conf.repository.kalypso.org" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="repconf">
+		<xs:annotation>
+			<xs:documentation>Kalypso Repository configuration 
+				file</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="repository" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="name" type="xs:string" 
+							use="required">
+							<xs:annotation>
+								<xs:documentation>The name of the repository. 
+									The name will be displayed in the user 
+									interface.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="factory" type="xs:string" 
+							use="required">
+							<xs:annotation>
+								<xs:documentation>The classname of the factory 
+									responsible for creating the repository. 
+									This must be a subclass of 
+									IRepositoryFactory.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="conf" type="xs:string" 
+							use="optional">
+							<xs:annotation>
+								<xs:documentation>The configuration string
+									to be used when initializing the repository
+									instance.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="readOnly" type="xs:boolean" 
+							use="optional" default="false">
+							<xs:annotation>
+								<xs:documentation>This property defines if
+									the repository is read only, meaning
+									no data can be written back, just read
+									allowed.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
