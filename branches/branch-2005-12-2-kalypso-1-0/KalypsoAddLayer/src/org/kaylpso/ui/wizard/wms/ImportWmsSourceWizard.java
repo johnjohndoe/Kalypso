@@ -1,26 +1,3 @@
-package org.kaylpso.ui.wizard.wms;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import org.apache.commons.io.IOUtils;
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.Style;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.KalypsoWMSTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
-import org.kaylpso.ui.KalypsoServiceConstants;
-import org.kaylpso.ui.action.AddThemeCommand;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -61,10 +38,31 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kaylpso.ui.wizard.wms;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.apache.commons.io.IOUtils;
+import org.deegree.services.wms.capabilities.Layer;
+import org.deegree.services.wms.capabilities.Style;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kaylpso.ui.KalypsoServiceConstants;
+import org.kaylpso.ui.action.AddThemeCommand;
+
 /**
- * 
  * @author Kuepferle
- *  
  */
 public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
