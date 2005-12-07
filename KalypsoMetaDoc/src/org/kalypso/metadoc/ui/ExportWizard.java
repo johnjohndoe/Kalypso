@@ -80,7 +80,8 @@ public final class ExportWizard extends Wizard
   private final WorkspaceModifyOperation m_operation;
   private final IExportTarget m_target;
 
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage ) throws CoreException
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell,
+      final ImageDescriptor defaultImage ) throws CoreException
   {
     m_target = target;
     m_shell = shell;
@@ -88,7 +89,7 @@ public final class ExportWizard extends Wizard
     setNeedsProgressMonitor( true );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
-    
+
     // one settings-entry per target and factory
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
 
@@ -112,8 +113,8 @@ public final class ExportWizard extends Wizard
       protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
           InterruptedException
       {
-        final List stati = new ArrayList( );
-          
+        final List stati = new ArrayList();
+
         try
         {
           final IExportableObject[] objects = factory.createExportableObjects( configuration );
@@ -133,6 +134,8 @@ public final class ExportWizard extends Wizard
             catch( final Exception e )
             {
               status = StatusUtilities.statusFromThrowable( e );
+              
+              KalypsoMetaDocPlugin.getDefault().getLog().log( status );
             }
 
             stati.add( status );
@@ -140,13 +143,15 @@ public final class ExportWizard extends Wizard
         }
         catch( final CoreException e )
         {
-          stati.add( e.getStatus() ); 
+          KalypsoMetaDocPlugin.getDefault().getLog().log( e.getStatus() );
+          
+          stati.add( e.getStatus() );
         }
         finally
         {
           monitor.done();
         }
-        
+
         final IStatus status;
         if( stati.size() == 0 )
           status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.",
