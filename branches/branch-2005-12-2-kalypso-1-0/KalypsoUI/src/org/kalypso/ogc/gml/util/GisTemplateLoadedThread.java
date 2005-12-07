@@ -98,9 +98,11 @@ public class GisTemplateLoadedThread extends Thread
       return false;
     
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
+    
     for( int i = 0; i < themes.length; i++ )
     {
       final IKalypsoTheme theme = themes[i];
+      
       if( theme instanceof IPooledObject )
       {
         if( !( (IPooledObject)theme ).isLoaded() )

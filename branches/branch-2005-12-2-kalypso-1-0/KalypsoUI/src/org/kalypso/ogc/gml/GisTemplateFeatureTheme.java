@@ -309,7 +309,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager );
           m_theme.addModellListener( this );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
-          m_loaded = true;
           fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
           for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
           {
@@ -325,6 +324,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             final GisTemplateUserStyle kus = new GisTemplateUserStyle( style, "default" );
             addStyle( kus );
           }
+          m_loaded = true;
         }
       }
     }
@@ -445,6 +445,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public boolean isLoaded()
   {
+    for( final Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+    {
+      final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+      if( !style.isLoaded() )
+        return false;
+    }
     return m_loaded;
   }
 
