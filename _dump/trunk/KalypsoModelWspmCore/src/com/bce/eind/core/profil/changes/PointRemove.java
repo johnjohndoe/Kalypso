@@ -12,7 +12,7 @@ import com.bce.eind.core.profil.util.ProfilUtil;
 /**
  * @author kimwerner
  */
-public class DeletePointChange implements IProfilChange
+public class PointRemove implements IProfilChange
 {
   private final IProfil m_profil;
 
@@ -20,7 +20,7 @@ public class DeletePointChange implements IProfilChange
 
   private IProfilPoint m_pointBefore;
 
-  public DeletePointChange( final IProfil profil, final IProfilPoint point )
+  public PointRemove( final IProfil profil, final IProfilPoint point )
   {
     m_profil = profil;
     m_point = point;
@@ -37,7 +37,7 @@ public class DeletePointChange implements IProfilChange
     
     m_profil.removePoint( m_point );
 
-    return new PointInsertChange( m_profil, m_pointBefore, m_point );
+    return new PointAdd( m_profil, m_pointBefore, m_point );
   }
 
 }

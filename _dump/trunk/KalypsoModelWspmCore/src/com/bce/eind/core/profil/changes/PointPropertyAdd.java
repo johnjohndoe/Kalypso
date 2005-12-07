@@ -1,11 +1,14 @@
 package com.bce.eind.core.profil.changes;
 
+import java.util.LinkedList;
+
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
+import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
-public final class AddPointProperty implements IProfilChange
+public final class PointPropertyAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
@@ -13,13 +16,13 @@ public final class AddPointProperty implements IProfilChange
 
   private  final double[] m_values;
 
-  public AddPointProperty(final IProfil profil, final POINT_PROPERTY property, final double[] values )
+  public PointPropertyAdd(final IProfil profil, final POINT_PROPERTY property, final double[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
-  public AddPointProperty( final IProfil profil,final POINT_PROPERTY property, final double defaultValue )
+  public PointPropertyAdd( final IProfil profil,final POINT_PROPERTY property, final double defaultValue )
   {
     m_profil = profil;
     m_property = property;
@@ -34,9 +37,14 @@ public final class AddPointProperty implements IProfilChange
   {
     hint.setPointPropertiesChanged();
     
-    final double[] oldValue = m_profil.getValuesFor(m_property);
-    m_profil.removePointProperty(m_property);
+    m_profil.addPointProperty(m_property );
+    LinkedList<IProfilPoint> points = m_profil.getPoints();
+    for( int i = 0; i < m_values.length; i++ )
+    {
+      points.get(i).setValueFor(m_property,m_values[i]);
+      
+    }
 
-    return new AddPointProperty( m_profil, m_property, oldValue );
+    return new PointPropertyRemove( m_profil, m_property);
   }
 }

@@ -201,6 +201,11 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_points.unmodifiable();
   }
 
+  public ProfilPoints getProfilPoints( )
+  {
+    return m_points;
+  }
+
   public Object getProperty( Object key )
   {
     return m_profilMetaData.get( key );
@@ -315,17 +320,26 @@ public class PlainProfil implements IProfilConstants, IProfil
   /**
    * @see com.bce.eind.core.profil.IProfil#removePointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
    */
-  public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty )
+  public boolean removePointProperty( final POINT_PROPERTY pointProperty )
   {
+    //TODO KIM Dependencies einfügen
     if( pointProperty == null )
-      return null;
-    final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
+      return false;
+   // final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
 
-    for( POINT_PROPERTY pp : depending )
-    {
-      m_points.removeProperty( pp );
-    }
-    return depending;
+//    for( POINT_PROPERTY pp : depending )
+  //  {
+      m_points.removeProperty( pointProperty );
+    //}
+    return true;
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfil#getDependenciesFor(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
+   */
+  public POINT_PROPERTY[] getDependenciesFor( POINT_PROPERTY property )
+  {
+   return m_points.getDependenciesFor( property );
   }
 
   /**
@@ -344,7 +358,8 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
   {
-    if (m_building !=null)removeBuilding();
+    if( m_building != null )
+      removeBuilding();
     m_building = building;
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding)m_building).addProfilProperties( this );

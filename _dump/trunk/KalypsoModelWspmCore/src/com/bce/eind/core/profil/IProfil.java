@@ -31,7 +31,7 @@ public interface IProfil
    * @return IProfilDevider
    */
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider );
-
+public POINT_PROPERTY[] getDependenciesFor(final POINT_PROPERTY property);
   /**
    * gibt Null zurück wenn das profil nicht geändert wurde
    */
@@ -162,7 +162,7 @@ public interface IProfil
    * @param pointProperty
    * @return alle übriggebliebenen Eigenschaften
    */
-  public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty );
+  public boolean removePointProperty( final POINT_PROPERTY pointProperty );
 
   /**
    * @param key

@@ -11,7 +11,7 @@ import com.bce.eind.core.profil.ProfilDataException;
 /**
  * @author kimwerner
  */
-public class PointInsertChange implements IProfilChange
+public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
@@ -19,7 +19,7 @@ public class PointInsertChange implements IProfilChange
 
   private final IProfilPoint m_point;
 
-  public PointInsertChange( final IProfil profil, final IProfilPoint pointBefore,
+  public PointAdd( final IProfil profil, final IProfilPoint pointBefore,
       final IProfilPoint point )
   {
     m_profil = profil;
@@ -36,7 +36,7 @@ public class PointInsertChange implements IProfilChange
     
     m_profil.insertPoint( m_pointBefore, m_point );
     
-    return new DeletePointChange( m_profil, m_point );
+    return new PointRemove( m_profil, m_point );
   }
 
 }
