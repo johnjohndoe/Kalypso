@@ -189,6 +189,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     {
       // nothing to do
       e.printStackTrace();
+      // TODO: this may leave this object uninitialized, leading to NullPointerExceptions later
+      // better: set a invalid flag somewhere or test allways for null
     }
   }
 
