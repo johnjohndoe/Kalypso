@@ -184,7 +184,8 @@ public class ShapeSerializer
     }
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
+  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs )
+      throws GmlSerializeException
   {
     try
     {
@@ -206,7 +207,6 @@ public class ShapeSerializer
       }
 
       // TODO transform it!
-
       sf.close();
 
       return new GMLWorkspace_Impl( new FeatureType[]
