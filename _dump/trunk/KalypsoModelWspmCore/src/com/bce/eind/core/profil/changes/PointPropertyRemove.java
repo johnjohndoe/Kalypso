@@ -11,27 +11,19 @@ public final class PointPropertyRemove implements IProfilChange
 
   private final POINT_PROPERTY m_property;
 
-
-  public PointPropertyRemove(final IProfil profil, final POINT_PROPERTY property )
+  public PointPropertyRemove( final IProfil profil, final POINT_PROPERTY property )
   {
     m_profil = profil;
     m_property = property;
 
   }
-  
-  
+
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
     hint.setPointPropertiesChanged();
-//  TODO KIM Dependencies hier entfernen und in di OP verlagerneinfügen
-    final double[] oldValue = m_profil.getValuesFor(m_property);
-    final POINT_PROPERTY[] pps = m_profil.getDependenciesFor( m_property);
-    for(POINT_PROPERTY pp : pps)
-      
-    {
-     m_profil.removeProperty(pp);
-    }
-   // .removePointProperty(m_property);
+
+    final double[] oldValue = m_profil.getValuesFor( m_property );
+    m_profil.removePointProperty( m_property );
 
     return new PointPropertyAdd( m_profil, m_property, oldValue );
   }

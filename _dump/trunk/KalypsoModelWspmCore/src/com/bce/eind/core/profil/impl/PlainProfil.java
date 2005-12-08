@@ -322,16 +322,12 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public boolean removePointProperty( final POINT_PROPERTY pointProperty )
   {
-    //TODO KIM Dependencies einfügen
+
     if( pointProperty == null )
       return false;
-   // final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
+ 
+    return  m_points.removeProperty( pointProperty );
 
-//    for( POINT_PROPERTY pp : depending )
-  //  {
-      m_points.removeProperty( pointProperty );
-    //}
-    return true;
   }
 
   /* (non-Javadoc)

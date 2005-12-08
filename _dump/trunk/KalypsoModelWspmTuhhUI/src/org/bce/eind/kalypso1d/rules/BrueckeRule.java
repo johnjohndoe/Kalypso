@@ -17,8 +17,8 @@ import com.bce.eind.core.profil.validator.AbstractValidatorRule;
 import com.bce.eind.core.profil.validator.IValidatorMarkerCollector;
 
 /**
- * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen
- * Oberkante darf nicht unter Unterkante
+ * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf
+ * nicht unter Unterkante
  * 
  * @author belger
  */
@@ -27,48 +27,45 @@ public class BrueckeRule extends AbstractValidatorRule
   public void validate( final IProfil profil,
       final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null )
+    if( (profil == null) || (profil.getBuilding() == null) )
       return;
-if (profil.getBuilding().getTyp() != IProfilBuilding.BUILDING_TYP.BRUECKE )
-  return;
+
+    if( profil.getBuilding().getTyp() != IProfilBuilding.BUILDING_TYP.BRUECKE )
+      return;
     try
     {
       final List<IProfilPoint> points = profil.getPoints();
-       for( final IProfilPoint point : points )
+      for( final IProfilPoint point : points )
       {
-        
-          final double h = point.getValueFor( POINT_PROPERTY.HOEHE  );
-          final double b = point.getValueFor( POINT_PROPERTY.BREITE   );
-          final double ok = point.getValueFor( POINT_PROPERTY.OBERKANTEBRUECKE  );
-          final double uk = point.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
 
-          if( ok < h )
-          {
-            collector.createProfilMarker( true,
-                "Oberkante Brücke [" + String.format( IProfilConstants.FMT_STATION, b ) +"]unter Geländehöhe"
-                    , "",
-                profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString() );
-          }
-          if( uk < h )
-          {
-            collector.createProfilMarker( true,
-                "Unterkante Brücke [" + String.format( IProfilConstants.FMT_STATION, b ) +"]unter Geländehöhe"
-                    , "",
-                profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString() );
-          }
-          if( ok < uk )
-          {
-            collector.createProfilMarker( true,
-                "Oberkante Brücke [" + String.format( IProfilConstants.FMT_STATION, b ) +"]unter Unterkante Brücke"
-                    , "",
-                profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString() );
-          }
+        final double h = point.getValueFor( POINT_PROPERTY.HOEHE );
+        final double b = point.getValueFor( POINT_PROPERTY.BREITE );
+        final double ok = point.getValueFor( POINT_PROPERTY.OBERKANTEBRUECKE );
+        final double uk = point.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
+
+        if( ok < h )
+        {
+          collector.createProfilMarker( true, "Oberkante Brücke ["
+              + String.format( IProfilConstants.FMT_STATION, b )
+              + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
+              POINT_PROPERTY.BREITE.toString() );
         }
+        if( uk < h )
+        {
+          collector.createProfilMarker( true, "Unterkante Brücke ["
+              + String.format( IProfilConstants.FMT_STATION, b )
+              + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
+              POINT_PROPERTY.BREITE.toString() );
+        }
+        if( ok < uk )
+        {
+          collector.createProfilMarker( true, "Oberkante Brücke ["
+              + String.format( IProfilConstants.FMT_STATION, b )
+              + "]unter Unterkante Brücke", "", profil.getPoints().indexOf(
+              point ), POINT_PROPERTY.BREITE.toString() );
+        }
+      }
 
-      
     }
     catch( ProfilDataException e )
     {
