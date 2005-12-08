@@ -56,5 +56,7 @@ public class SpreeUrlCatalog extends AbstractUrlCatalog
   {
     catalog.put( "org.kalypso.spree.modell", myClass.getResource( "schemata/modell.xsd" ) );
     catalog.put( "org.kalypso.spree.control", myClass.getResource( "schemata/control.xsd" ) );
+    catalog.put( "org.kalypso.spree.ombrometer", myClass.getResource( "schemata/ombrometer.xsd" ) );
+    catalog.put( "org.kalypso.spree.common", myClass.getResource( "schemata/common.xsd" ) );
   }
 }
