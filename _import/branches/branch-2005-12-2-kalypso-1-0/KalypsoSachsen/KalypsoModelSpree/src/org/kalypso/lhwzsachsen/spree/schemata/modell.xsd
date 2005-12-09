@@ -111,6 +111,15 @@
 							</documentation>
 						</annotation>
 				    </element>
+					<element name="gewichtung" type="spree:GewichtungsAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung Ombrometer</label>
+								<tooltip>Zuordnung der Omrbometerstationen zu diesem Einzugsgebiet</tooltip>
+								<description>Gewichtungsfaktoren zur Zuordnung von Omrbrometern zu diesem Einzugsgebiet</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -230,6 +239,46 @@
 	<complexType name="_ZuflussType">
 		<complexContent>
 			<extension base="spree:_VorgabeType"/>
+		</complexContent>
+	</complexType>
+	
+	
+	<!-- Relation TG nach RelationsFeature -->
+	<complexType name="GewichtungsAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="spree:GewichtungsElement"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- RelationsFeature -->
+	<element name="GewichtungsElement" type="spree:GewichtungsType" substitutionGroup="gml:_Feature"/>
+	<complexType name="GewichtungsType">
+		<complexContent>
+			<extension base="spree:EmptyFeatureBaseType">
+				<sequence>
+					<element name="faktor" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung</label>
+								<tooltip>Gewichtungsfaktor</tooltip>
+								<description>Gewichtungsfaktor mit welchem der Zugeordnete Omrometer zu diesem Einzugsgebiet veranschlagt wird.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ombrometerMember" type="ombrometer:OmbrometerAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlagsstation</label>
+								<tooltip>Niederschlagsstation</tooltip>
+								<description>Niederschlagsstation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
 		</complexContent>
 	</complexType>
 </schema>

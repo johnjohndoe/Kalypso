@@ -104,10 +104,8 @@ public class KalypsoTest
         .registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
     registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
         .getMultiPolygonClass() ) );
-    // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
 
     // register inlines
-
     final String[] wvqAxis = new String[]
     {
         TimeserieConstants.TYPE_NORMNULL,
