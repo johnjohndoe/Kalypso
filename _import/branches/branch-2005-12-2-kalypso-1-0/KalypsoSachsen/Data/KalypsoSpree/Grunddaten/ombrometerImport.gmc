@@ -11,7 +11,7 @@
 			</featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="NR" toPath="OmbrometerCollectionAssociation/OmbrometerMember" toID="NR" fid="Ombrometer-${fromID}" handleExisting="change">
+		<addFeaturesMapping fromPath="featureMember" fromID="name" toPath="OmbrometerCollectionAssociation/OmbrometerMember" toID="name" fid="Ombrometer-${fromID}" handleExisting="change">
 			<map from="name" to="name"/>
 			<map from="NR" to="NR"/>
 			<map from="Ort" to="location"/>

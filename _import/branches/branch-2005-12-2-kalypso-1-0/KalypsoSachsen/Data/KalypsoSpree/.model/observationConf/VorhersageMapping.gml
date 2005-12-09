@@ -191,6 +191,46 @@
     </MappingObservation>
   </mappingMember>
   <mappingMember>
+    <MappingObservation fid="EZ_6">
+      <gml:name>Holtendorf</gml:name>
+      <point>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4704614.0,5672857.0</gml:coordinates>
+            </gml:Point>
+      </point>
+      <inObservationLink/>
+      <outObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583280.P1_MW" ns1:type="simple" linktype="zml"/>
+      </outObservationLink>
+      <out1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583280.P2_MW" ns1:type="simple" linktype="zml"/>
+      </out1ObservationLink>
+      <out2ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583280.P3_MW" ns1:type="simple" linktype="zml"/>
+      </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583280.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583280.P2_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583280.P3_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
+      <local1>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND.zml"/>
+      </local1>
+      <local2>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_unten.zml"/>
+      </local2>
+      <local3>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_oben.zml"/>
+      </local3>
+    </MappingObservation>
+  </mappingMember>
+  
+  
+  <mappingMember>
     <MappingObservation fid="FM_1">
       <gml:name>Lieske</gml:name>
       <point>

@@ -44,11 +44,11 @@
               <ogc:PropertyName>name</ogc:PropertyName>
             </Label>
             <Font>
-              <CssParameter name="font-family">sansserif</CssParameter>
-              <CssParameter name="font-color">#000000</CssParameter>
-              <CssParameter name="font-size">12.0</CssParameter>
-              <CssParameter name="font-style">normal</CssParameter>
-              <CssParameter name="font-weight">normal</CssParameter>
+            	<CssParameter name="font-family"/>
+				<CssParameter name="font-color">#000000</CssParameter>
+				<CssParameter name="font-size">11.0</CssParameter>
+				<CssParameter name="font-style">normal</CssParameter>
+				<CssParameter name="font-weight">normal</CssParameter>
             </Font>
             <LabelPlacement>
               <PointPlacement>
@@ -65,8 +65,8 @@
             </LabelPlacement>
             <Halo>
               <Fill>
-                <CssParameter name="fill-opacity">0.3</CssParameter>
-                <CssParameter name="fill">#808080</CssParameter>
+                <CssParameter name="fill-opacity">1.0</CssParameter>
+                <CssParameter name="fill">#ffffcc</CssParameter>
               </Fill>
               <Stroke>
                 <CssParameter name="stroke">#000000</CssParameter>

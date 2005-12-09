@@ -4,10 +4,16 @@
 
 	<!-- Phase 1: KONTROLLE DER ZEITREIHEN -->
 
+	<!-- Kontrolle Ombrometer -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt"/>
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+
 	<!-- Kontrolle Niederschlag -->
-	
-	org.kalypso.simulation.ui.wizards.calculation.modelpages
-	
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
        	<arg name="maximizeMap" value="true"/>
@@ -19,6 +25,10 @@
         <arg name="zmlTableShow" value="all"/>
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
+        
+        <arg name="buttonText" value="Ombrometer-Messung übernehmen"/>
+		<arg name="buttonTooltip" value="Ombrometer mittels Gebietsniederschlagsmodell übernehmen"/>
+		<arg name="buttonLaunch" value="gebietsniederschlag"/>
     </page>
 
 	<!-- Kontrolle Talsperrenabgaben -->

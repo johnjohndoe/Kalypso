@@ -2,6 +2,17 @@
 
 	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
 
+    <!-- Scenario Test -->
+    <property name="szenario_TestDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_test.txt" />
+    <property name="szenario_TestDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_test.txt" />
+
+	<!-- Scenario Echt -->
+    <property name="szenario_EchtDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt" />
+    <property name="szenario_EchtDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_normal.txt" />
+
+	<!-- Vordefinierte Filter -->
+	<property name="filterN" value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
@@ -45,6 +56,7 @@
 		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
 		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
 			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
+			<property name="ombrometerLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
 			<property name="pegelMessungLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
 			<property name="niederschlagMessungLink" valueThen="in2ObservationLink" valueElse="inObservationLink"/>
 			<property name="niederschlagVorhersageLink" valueThen="in3ObservationLink" valueElse="in1ObservationLink"/>
@@ -55,7 +67,14 @@
 			<property name="vorhersageLinkNormal" valueThen="out5ObservationLink" valueElse="out2ObservationLink"/>
 			<property name="vorhersageLinkOben" valueThen="out4ObservationLink" valueElse="out1ObservationLink"/>
 			<property name="vorhersageLinkUnten" valueThen="out3ObservationLink" valueElse="outObservationLink"/>
+
+			<!-- DWD Daten -->
+            <property name="dwdRasterRemoteURLs"
+					  valueThen="${szenario_TestDwdUrl1},${szenario_TestDwdUrl2}"
+                      valueElse="${szenario_EchtDwdUrl1},${szenario_EchtDwdUrl2}" />
 		</kalypso.multiequals>
+    	
+        <property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
     </target>
 	
 	<!-- 
@@ -76,18 +95,24 @@
 		</copy>
 		
 		<!-- TODO: überall mit requests arbeiten -->
+		<!-- Omrbometer -->
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="${ombrometerLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;intervallFilter amount=&quot;180&quot; calendarField=&quot;MINUTE&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
 		<!-- Pegel -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterN}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
 		<!-- Niederschlag -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/NiederschlagMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<!--kalypso.copyObservation gml="${project.url}/.model/observationConf/NiederschlagMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="${niederschlagMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<source property="${niederschlagVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation>
+		</kalypso.copyObservation-->
 
 		<!-- Talsperren -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
@@ -100,6 +125,26 @@
 			<source property="${vorgabeLink}" from="${startsim}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
+		
+
+        <!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
+        <!-- Scenario TEST -->
+        <property name="szenario_TestDwdUrl1"
+                  value="http://lfug-kv-01:8080/webdav/dwd/lm_test.txt" />
+        <property name="szenario_TestDwdUrl2"
+                  value="http://lfug-kv-02:8080/webdav/dwd/lm_test.txt" />
+        <!-- Scenario Echt -->
+        <property name="szenario_EchtDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt" />
+        <property name="szenario_EchtDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_normal.txt" />
+
+        <echo message="aktualisiere DWD-Raster im Rechenfall" />
+        <Kalypso.fetchFromURL context="${calc.url}"
+                              src="${dwdRasterRemoteURLs}"
+                              listseparator=","
+                              dest="${calc.dir}/dwd/lm_aktuell.txt" />
+		
+		<!-- Gebietsniederschlag neu berechnen -->
+		<antcall target="gebietsniederschlag"/>
 	</target>
 
 	<!-- 
@@ -135,7 +180,6 @@
 		<echo message="" />
 
     	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
-    	<!-- TODO: Filter für Umhüllende konfigurieren -->
     	<echo message="Ablage der Rechenergebnisse"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
     	<echo message="Ablage der oberen Umhüllenden"/>
@@ -143,4 +187,39 @@
     	<echo message="Ablage der unteren Umhüllenden"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
     </target>
+	
+	<!-- ================================= 
+          target: gebietsniederschlag              
+         ================================= -->
+	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
+		<antcall target="updateForecastN"/>
+		
+		<kalypso.gmlWeight 
+			modelurl="${calc.url}/calcCase.gml" 
+			featurepathtarget="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" 
+			propzmltarget="Niederschlag_rechnung" 
+			proprelationweightmember="gewichtung" 
+			propweight="faktor" 
+			proprelationsourcefeature="ombrometerMember" 
+			propzmlsource="precipitation" 
+			targetcontext="${calc.url}" 
+			from="${startsim}" 
+			forecastfrom="${startforecast}" 
+			to="${stopsim}" />
+	</target>
+	
+    <target name="updateForecastN" depends="calculationProperties">
+        <echo message="aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
+        <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConf.xml"
+                         obsrasterurl="${dwdRasterLocalURL}"
+                         targetcontext="${calc.dir}"
+                         description="raster zu zml"
+                         from="${startsim}"
+                         forecastfrom="${startforecast}"
+                         to="${stopsim}"
+                         zmlfilter="${filterN}">
+            <metadata name="Szenario" value="${scenarioId}" />
+        </kalypso.dwdTask>
+    </target>
+	
 </project>
