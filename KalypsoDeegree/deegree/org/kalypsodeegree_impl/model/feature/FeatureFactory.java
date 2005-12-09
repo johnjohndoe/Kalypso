@@ -436,7 +436,9 @@ public class FeatureFactory
   public static GMLWorkspace createGMLWorkspace( GMLSchema schema, Feature rootFeature, URL context )
   {
     FeatureType[] featureTypes = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
-    return new GMLWorkspace_Impl( featureTypes, rootFeature, context, schema.getUrl().toExternalForm(), schema
+    final URL url = schema.getUrl();
+    final String href = url == null ? null : url.toExternalForm();
+    return new GMLWorkspace_Impl( featureTypes, rootFeature, context, href, schema
         .getTargetNS(), schema.getNamespaceMap() );
   }
 
