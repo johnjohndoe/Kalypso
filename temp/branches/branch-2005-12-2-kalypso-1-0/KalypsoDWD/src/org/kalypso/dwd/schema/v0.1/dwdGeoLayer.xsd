@@ -22,9 +22,7 @@
 		</complexContent>
 	</complexType>
     
-    
-    
-  	<element name="DWDCell" type="dwd:_DWDCellType"/>
+  	<element name="DWDCell" type="dwd:_DWDCellType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_DWDCellType">
 		<complexContent>
             <extension base="gml:AbstractFeatureType">
