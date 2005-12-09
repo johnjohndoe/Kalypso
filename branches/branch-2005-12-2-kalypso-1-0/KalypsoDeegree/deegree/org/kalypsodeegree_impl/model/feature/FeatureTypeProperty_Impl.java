@@ -93,7 +93,7 @@ public class FeatureTypeProperty_Impl extends AbstractFeatureType implements Fea
     super( name, namespace, annotationMap );
   
     if( type == null )
-      throw new NullPointerException( "'type' is null" );
+      throw new NullPointerException( "'type' is null for name: " + name );
     
     m_type = type;
     m_nullable = nullable;

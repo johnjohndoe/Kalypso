@@ -118,6 +118,8 @@ public class FeatureTypeBuilder
 
   public void setTypeName( final SchemaAttribute typeAttribute ) throws Exception
   {
+    try
+    {
     final String typeName = typeAttribute.getValue();
     final String valueNS = typeAttribute.getValueNS();
 
@@ -181,6 +183,12 @@ public class FeatureTypeBuilder
     }
     else
       throw new Exception( "content of element not found in Schema " + typeAttribute.toString() );
+    }
+    finally
+    {
+      if( m_typeName == null )
+        throw new Exception( "Could not determine typeName of: " + typeAttribute.toString() );
+    }
   }
 
   public String getName()
