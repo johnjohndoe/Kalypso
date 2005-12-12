@@ -47,6 +47,7 @@ import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Helper methods for Feature-selection.
@@ -113,4 +114,18 @@ public class FeatureSelectionHelper
 
     return features[0];
   };
+
+  public static Feature[] getAllFeaturesWithGeometry( IFeatureSelection selection )
+  {
+    Feature[] features = getFeatures( selection );
+    ArrayList result = new ArrayList();
+    for( int i = 0; i < features.length; i++ )
+    {
+      Feature feature = features[i];
+      GM_Object[] geometryProperties = feature.getGeometryProperties();
+      if( geometryProperties.length > 0 )
+        result.add( feature );
+    }
+    return (Feature[])result.toArray( new Feature[result.size()] );
+  }
 }
