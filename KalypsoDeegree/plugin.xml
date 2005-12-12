@@ -52,5 +52,16 @@
       <import plugin="org.kalypso.commons"/>
       <import plugin="org.kalypso.contribs.java"/>
    </requires>
+   <extension
+         id="org.kalypso.deegree.catalog"
+         name="UrlCatalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
+            id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping"
+            id="org.kalypso.deegree.catalog.urlCatalogUpdateOpservatsionMapping"/>
+   </extension>
 
 </plugin>
