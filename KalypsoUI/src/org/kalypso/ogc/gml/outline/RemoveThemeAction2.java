@@ -40,56 +40,45 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.commons.list.IListManipulator;
-import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoPictureTheme;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
 
 /**
  * @author belger
  */
-public abstract class AbstractOutlineAction extends FullAction implements ISelectionChangedListener
+public class RemoveThemeAction2 implements PluginMapOutlineAction
 {
-  private final GisMapOutlineViewer m_outlineViewer;
-
-  private IListManipulator m_listManipulator;
-
-  public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer selectionProvider, final IListManipulator listManip )
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  public void run( IAction action )
   {
-    super( text, image, tooltipText );
+    if( action instanceof PluginMapOutlineActionDelegate )
+    {
+      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
 
-    m_outlineViewer = selectionProvider;
-    m_listManipulator = listManip;
-
-    m_outlineViewer.addSelectionChangedListener( this );
-
-    refresh();
-  }
-
-  public void dispose()
-  {
-    m_outlineViewer.removeSelectionChangedListener( this );
+      outlineaction.getListManipulator().removeElement(
+          ( (IStructuredSelection)outlineaction.getOutlineviewer().getSelection() ).getFirstElement() );
+    }
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( final SelectionChangedEvent event )
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    refresh();
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection s = (IStructuredSelection)selection;
+      action
+          .setEnabled( !s.isEmpty()
+              && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme )
+                  || ( s.getFirstElement() instanceof KalypsoWMSTheme ) || ( s.getFirstElement() instanceof KalypsoPictureTheme ) ) );
+    }
   }
-
-  protected IListManipulator getListManipulator()
-  {
-    return m_listManipulator;
-  }
-
-  public GisMapOutlineViewer getOutlineviewer()
-  {
-    return m_outlineViewer;
-  }
-
-  protected abstract void refresh();
 }
