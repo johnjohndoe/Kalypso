@@ -48,6 +48,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -115,7 +116,10 @@ public class AddFeatureCommand implements ICommand
     {
       FeatureTypeProperty ftp = properties[i];
       Object property = m_props.get( ftp );
-      if( property != null )
+      /**Skip all FeatureAssociationProperties, there is a special method to handel these props*/
+      if( ftp instanceof FeatureAssociationTypeProperty )
+        continue;
+      if( property != null  )
         newFeature.setProperty( ftp.getName(), property );
     }
   }

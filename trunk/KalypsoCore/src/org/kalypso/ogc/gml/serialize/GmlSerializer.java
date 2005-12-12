@@ -285,8 +285,8 @@ public final class GmlSerializer
         Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage );
       }
 
-      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: "
-          + schemaURI + errorMessage );
+      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: " + schemaURI
+          + errorMessage );
     }
 
     return schema;
@@ -304,6 +304,6 @@ public final class GmlSerializer
       //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
       schema = loadSchemaForGmlDoc( gml );
 
-    return createGMLWorkspace( gml, schema, schemaURL, null );
+    return createGMLWorkspace( gml, schema, schema.getUrl(), null );
   }
 }
