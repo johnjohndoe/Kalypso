@@ -91,7 +91,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
-        actualWidget.leftClicked( e.getPoint() );
+      {
+        if( e.getClickCount() == 1 )
+          actualWidget.leftClicked( e.getPoint() );
+        else if( e.getClickCount() == 2 )
+          actualWidget.doubleClickedLeft( e.getPoint() );
+      }
         break;
 
       case MouseEvent.BUTTON2:
@@ -99,7 +104,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener
         break;
 
       case MouseEvent.BUTTON3:
-        actualWidget.rightClicked( e.getPoint() );
+      {
+        if( e.getClickCount() == 1 )
+          actualWidget.rightClicked( e.getPoint() );
+        else if( e.getClickCount() == 2 )
+          actualWidget.doubleClickedRight( e.getPoint() );
+      }
         break;
 
       default:

@@ -71,6 +71,10 @@ public interface IWidget
   public void middlePressed( Point p );
 
   public void middleReleased( Point p );
+  
+  public void doubleClickedLeft( Point p );
+  
+  public void doubleClickedRight( Point p );
 
   // MouseMotions
   public void moved( Point p );
