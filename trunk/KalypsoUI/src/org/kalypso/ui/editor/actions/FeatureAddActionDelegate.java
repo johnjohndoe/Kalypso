@@ -85,7 +85,7 @@ public class FeatureAddActionDelegate implements IActionDelegate
 
       int pos = 0; // TODO get pos from somewhere
       final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
-          parentFeature, ftp.getName(), pos, m_selection.getSelectionManager() );
+          parentFeature, ftp.getName(), pos, null, m_selection.getSelectionManager() );
       try
       {
         workspace.postCommand( command );
