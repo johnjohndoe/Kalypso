@@ -46,7 +46,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -246,6 +248,7 @@ public class MapModell implements IMapModell
         }
       }
     }
+
     return result;
   }
 
@@ -279,4 +282,20 @@ public class MapModell implements IMapModell
   {
     return m_project;
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
+   */
+  public IKalypsoFeatureTheme getScrabLayer()
+  {
+    IKalypsoTheme[] allThemes = getAllThemes();
+    for( int i = 0; i < allThemes.length; i++ )
+    {
+      IKalypsoTheme theme = allThemes[i];
+      if( theme instanceof ScrabLayerFeatureTheme )
+        return (IKalypsoFeatureTheme)theme;
+    }
+    return null;
+  }
+
 }
