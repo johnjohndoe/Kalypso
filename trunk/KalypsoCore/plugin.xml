@@ -83,5 +83,13 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="E"/>
    </extension>
+   <extension
+         id="org.kalypso.core.urlcatalog.extentsion"
+         name="Url Catalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.core.KalypsoCoreUrlCatalog"
+            id="org.kalypso.core.urlcatalog"/>
+   </extension>
 
 </plugin>

@@ -48,6 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -175,5 +176,41 @@ public class JMSelector
       }
     }
     return result;
+  }
+
+  public GM_Position selectNearestHandel( GM_Object geom, GM_Position pos, double snapRadius )
+  {
+    GM_Position[] positions = null;
+    try
+    {
+      if( geom instanceof GM_Surface )
+      {
+        GM_Surface surface = (GM_Surface)geom;
+        positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
+      }
+      else if( geom instanceof GM_Curve )
+      {
+        GM_Curve curve = (GM_Curve)geom;
+        positions = curve.getAsLineString().getPositions();
+      }
+      else if( geom instanceof GM_Point )
+      {
+        GM_Point point = (GM_Point)geom;
+        positions = new GM_Position[]
+        { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      //do nothing else
+    }
+    for( int i = 0; i < positions.length; i++ )
+    {
+      GM_Position position = positions[i];
+      if( position.getDistance( pos ) <= snapRadius )
+        return position;
+    }
+    return null;
   }
 }

@@ -138,6 +138,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
 
+  /** type name */
+  
+  public static final String TYPE_NAME = "wms";
+
   private int m_lastWidth;
 
   private int m_lastHeight;
