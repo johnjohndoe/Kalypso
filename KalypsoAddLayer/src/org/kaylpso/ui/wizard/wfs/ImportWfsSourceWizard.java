@@ -157,7 +157,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void addPages()
   {
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
-        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ, m_outlineviewer.getMapModell() );
     addPage( m_importWFSPage );
 
   }

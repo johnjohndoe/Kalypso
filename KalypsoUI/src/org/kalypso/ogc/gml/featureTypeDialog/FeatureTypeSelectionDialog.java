@@ -37,6 +37,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -62,29 +63,33 @@ public class FeatureTypeSelectionDialog extends Dialog
 
   private String[] m_selectedFeatureTypeName;
 
-  public FeatureTypeSelectionDialog( Shell parentShell, FeatureType[] featureTypes )
+  private final int m_multiSelection;
+
+  public FeatureTypeSelectionDialog( Shell parentShell, FeatureType[] featureTypes, int multiSelection )
   {
     super( parentShell );
     m_ft = featureTypes;
     m_lang = KalypsoGisPlugin.getDefault().getLang();
-
+    m_multiSelection = multiSelection;
   }
 
   protected Control createDialogArea( final Composite parent )
   {
     final Composite main = (Composite)super.createDialogArea( parent );
+    GridLayout mainLayout = new GridLayout( 1, true );
+    GridData gd1 = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
+    main.setLayout( mainLayout );
+    main.setLayoutData( gd1 );
+    
     final Label lable = new Label( main, SWT.NULL );
 
-    lable.setText( "Wählen sie die zu impotierenden Datentypen aus:" );
-    final List list = new List( main, SWT.BORDER | SWT.MULTI );
+    lable.setText( "Wählen sie den gewünschten Datentypen aus:" );
+    final List list = new List( main, SWT.BORDER | m_multiSelection );
     for( int i = 0; i < m_ft.length; i++ )
     {
       FeatureType ft = m_ft[i];
-      if( !ft.getName().startsWith( "_" ) )
-      {
-        Annotation annotation = ft.getAnnotation( m_lang );
-        list.add( annotation.getLabel() );
-      }
+      Annotation annotation = ft.getAnnotation( m_lang );
+      list.add( annotation.getLabel() );
     }
     final GridData data = new GridData();
     data.widthHint = 250;

@@ -1,8 +1,7 @@
 /*
  * Created on 11.12.2004
  * 
- * TODO To change the template for this generated file go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
  */
 package org.kalypso.interpolation.mesh;
 
@@ -27,8 +26,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author kuepfer
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
+ * Templates
  */
 public class Element
 {
@@ -51,49 +50,40 @@ public class Element
   //name space of gml-schema
   private final static String ns = "org.kalypso.risk";
 
-  private FeatureType featureType = FeatureFactory.createFeatureType(
-      "MeshElement", ns, new FeatureTypeProperty[]
-      {
-          FeatureFactory.createFeatureTypeProperty( "GEOM", ns,
-              GM_Surface.class.getName(), false, null ),
-          FeatureFactory.createFeatureTypeProperty( "vertList", ns,
-              String.class.getName(), false, null ) }, min, max, null, null );
+  private FeatureType featureType = FeatureFactory.createFeatureType( "MeshElement", ns, new FeatureTypeProperty[]
+  {
+      FeatureFactory.createFeatureTypeProperty( "GEOM", ns, GM_Surface.class.getName(), false, null ),
+      FeatureFactory.createFeatureTypeProperty( "vertList", ns, String.class.getName(), false, null ) }, min, max,
+      null, null );
 
   private Feature feature = null;
 
-  public Element( String eleNo, String verticies, GM_Position[] positions,
-      CS_CoordinateSystem crs ) throws GM_Exception
+  public Element( String eleNo, String verticies, GM_Position[] positions, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
     if( crs == null )
     {
       //default coordinate system is Gauß-Krüger
 
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance()
-          .getOGCCSByName( "EPSG:31467" );
+      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
-    GM_Surface surface = GeometryFactory.createGM_Surface( positions, null,
-        null, crs );
-    Feature f = FeatureFactory.createFeature( eleNo, this.featureType );
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM",
-        surface );
+    GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
+    Feature f = FeatureFactory.createFeature( eleNo, this.featureType, false );
+    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", surface );
     f.addProperty( geoProperty );
-    FeatureProperty property = FeatureFactory.createFeatureProperty(
-        "vertList", verticies );
+    FeatureProperty property = FeatureFactory.createFeatureProperty( "vertList", verticies );
     f.addProperty( property );
     this.feature = f;
 
   }//constructor}
 
-  public Element( String eleNo, GM_Object geom, CS_CoordinateSystem crs )
-      throws GM_Exception
+  public Element( String eleNo, GM_Object geom, CS_CoordinateSystem crs ) throws GM_Exception
   {
     if( crs == null )
-      throw new GM_Exception(
-          "No coordinate system defined! Element can not be created" );
-    Feature f = FeatureFactory.createFeature( eleNo, this.featureType );
-    FeatureProperty geomProperty = FeatureFactory.createFeatureProperty(
-        "GEOM", geom );
+      throw new GM_Exception( "No coordinate system defined! Element can not be created" );
+    Feature f = FeatureFactory.createFeature( eleNo, this.featureType, false );
+    FeatureProperty geomProperty = FeatureFactory.createFeatureProperty( "GEOM", geom );
     f.addProperty( geomProperty );
     this.feature = f;
   }
@@ -120,8 +110,7 @@ public class Element
 
   public boolean isPointVertex( String pointID )
   {
-    StringTokenizer st = new StringTokenizer( (String)feature
-        .getProperty( "vertList" ) );
+    StringTokenizer st = new StringTokenizer( (String)feature.getProperty( "vertList" ) );
     while( st.hasMoreTokens() )
     {
       if( st.nextToken().equals( pointID ) )
@@ -133,8 +122,7 @@ public class Element
   public Vector getVertList()
   {
     Vector vect = new Vector();
-    StringTokenizer st = new StringTokenizer( (String)feature
-        .getProperty( "vertList" ) );
+    StringTokenizer st = new StringTokenizer( (String)feature.getProperty( "vertList" ) );
     while( st.hasMoreTokens() )
     {
       vect.add( st.nextToken() );
@@ -164,22 +152,19 @@ public class Element
     //make split such that diagonal will have least
     // slope
 
-    if( ( ( positions[0].getY() - positions[1].getY() ) / ( positions[0].getX() - positions[1]
-        .getX() ) ) < ( ( positions[1].getY() - positions[3].getY() ) / ( positions[1]
-        .getX() - positions[3].getX() ) ) )
+    if( ( ( positions[0].getY() - positions[1].getY() ) / ( positions[0].getX() - positions[1].getX() ) ) < ( ( positions[1]
+        .getY() - positions[3].getY() ) / ( positions[1].getX() - positions[3].getX() ) ) )
     {
 
-      Element e1 = new Element( eID1, (String)vList.elementAt( 0 ) + " "
-          + (String)vList.elementAt( 1 ) + " " + (String)vList.elementAt( 2 )
-          + " " + (String)vList.elementAt( 0 ), new GM_Position[]
+      Element e1 = new Element( eID1, (String)vList.elementAt( 0 ) + " " + (String)vList.elementAt( 1 ) + " "
+          + (String)vList.elementAt( 2 ) + " " + (String)vList.elementAt( 0 ), new GM_Position[]
       {
           positions[0],
           positions[1],
           positions[2],
           positions[0] }, null );
-      Element e2 = new Element( eID2, (String)vList.elementAt( 1 ) + " "
-          + (String)vList.elementAt( 2 ) + " " + (String)vList.elementAt( 3 )
-          + " " + (String)vList.elementAt( 1 ), new GM_Position[]
+      Element e2 = new Element( eID2, (String)vList.elementAt( 1 ) + " " + (String)vList.elementAt( 2 ) + " "
+          + (String)vList.elementAt( 3 ) + " " + (String)vList.elementAt( 1 ), new GM_Position[]
       {
           positions[1],
           positions[2],
@@ -191,17 +176,15 @@ public class Element
     }
     else
     {
-      Element e1 = new Element( eID1, (String)vList.elementAt( 0 ) + " "
-          + (String)vList.elementAt( 1 ) + " " + (String)vList.elementAt( 3 )
-          + " " + (String)vList.elementAt( 0 ), new GM_Position[]
+      Element e1 = new Element( eID1, (String)vList.elementAt( 0 ) + " " + (String)vList.elementAt( 1 ) + " "
+          + (String)vList.elementAt( 3 ) + " " + (String)vList.elementAt( 0 ), new GM_Position[]
       {
           positions[0],
           positions[1],
           positions[3],
           positions[0] }, null );
-      Element e2 = new Element( eID2, (String)vList.elementAt( 1 ) + " "
-          + (String)vList.elementAt( 2 ) + " " + (String)vList.elementAt( 3 )
-          + " " + (String)vList.elementAt( 1 ), new GM_Position[]
+      Element e2 = new Element( eID2, (String)vList.elementAt( 1 ) + " " + (String)vList.elementAt( 2 ) + " "
+          + (String)vList.elementAt( 3 ) + " " + (String)vList.elementAt( 1 ), new GM_Position[]
       {
           positions[1],
           positions[2],
@@ -242,8 +225,7 @@ public class Element
       double crossProduct = ( positions[j].getX() - positions[i].getX() )
           * ( positions[k].getY() - positions[j].getY() );
       crossProduct = crossProduct
-          - ( ( positions[j].getY() - positions[i].getY() ) * ( positions[k]
-              .getX() - positions[j].getX() ) );
+          - ( ( positions[j].getY() - positions[i].getY() ) * ( positions[k].getX() - positions[j].getX() ) );
 
       //change the value of nCount
       if( ( crossProduct > 0 ) && ( nCount == 0 ) )//if positive first time
@@ -306,17 +288,16 @@ public class Element
   }//setWeightsFEM
 
   /**
-   * <B>public double interpolatePointFEM(Point p, BufferedWriter logWriter)
-   * throws IOException </B>
+   * <B>public double interpolatePointFEM(Point p, BufferedWriter logWriter) throws IOException </B>
    * <P>
    * Returns interpolated value of a given point using FEM method
    * 
-   * @param p Point point to interpolate
+   * @param p
+   *          Point point to interpolate
    * @see Point
    * @return double interpolated value
    */
-  public double interpolatePointFEM( GM_Position p, double[] points )
-      throws Exception
+  public double interpolatePointFEM( GM_Position p, double[] points ) throws Exception
   {
     //logWriter.newLine();
     //logWriter.write("Interpolation Method used: " + "Finite Element Method");
@@ -331,8 +312,8 @@ public class Element
     {
       //FEM-weights with phi
       phi[i] = ( 1 / ( 2 * ( area ) ) )
-          * ( ( (double[])factors[0] )[i] + ( (double[])factors[1] )[i]
-              * p.getX() + ( (double[])factors[2] )[i] * p.getY() );
+          * ( ( (double[])factors[0] )[i] + ( (double[])factors[1] )[i] * p.getX() + ( (double[])factors[2] )[i]
+              * p.getY() );
     }
     //addup values from each vertex to calculate new interpolated value
     for( int i = 0; i < v.length - 1; i++ )
@@ -345,18 +326,15 @@ public class Element
 
   public boolean isPointOnEdge( Point p ) throws GM_Exception
   {
-    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 )
-        .getExteriorRing();
+    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
       GM_Position vertex1 = array[i];
       GM_Position vertex2 = array[i + 1];
       double slope = 0.0;
-      slope = ( ( vertex1.getX() - vertex2.getX() ) / ( vertex1.getY() - vertex2
-          .getY() ) );
+      slope = ( ( vertex1.getX() - vertex2.getX() ) / ( vertex1.getY() - vertex2.getY() ) );
 
-      if( slope == Double.NEGATIVE_INFINITY
-          || slope == Double.POSITIVE_INFINITY )
+      if( slope == Double.NEGATIVE_INFINITY || slope == Double.POSITIVE_INFINITY )
         slope = 0;
 
       double b = vertex1.getY() - slope * vertex1.getX();
@@ -370,18 +348,15 @@ public class Element
 
   public boolean isPointOnEdge( GM_Position p ) throws GM_Exception
   {
-    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 )
-        .getExteriorRing();
+    GM_Position[] array = getGeometry().getSurfacePatchAt( 0 ).getExteriorRing();
     for( int i = 0; i < array.length - 1; i++ )
     {
       GM_Position vertex1 = array[i];
       GM_Position vertex2 = array[i + 1];
       double slope = 0.0;
-      slope = ( ( vertex1.getX() - vertex2.getX() ) / ( vertex1.getY() - vertex2
-          .getY() ) );
+      slope = ( ( vertex1.getX() - vertex2.getX() ) / ( vertex1.getY() - vertex2.getY() ) );
 
-      if( slope == Double.NEGATIVE_INFINITY
-          || slope == Double.POSITIVE_INFINITY )
+      if( slope == Double.NEGATIVE_INFINITY || slope == Double.POSITIVE_INFINITY )
         slope = 0;
 
       double b = vertex1.getY() - slope * vertex1.getX();
@@ -396,7 +371,6 @@ public class Element
   public String toString()
   {
 
-    return "ID: " + feature.getId() + " vertecies: "
-        + feature.getDefaultGeometryProperty().toString();
+    return "ID: " + feature.getId() + " vertecies: " + feature.getDefaultGeometryProperty().toString();
   }
 }//class Element

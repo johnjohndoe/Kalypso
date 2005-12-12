@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -118,7 +119,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Group m_layerGroup;
 
-//  private Composite m_buttonComposite;
+  //  private Composite m_buttonComposite;
 
   private Label m_labelUser;
 
@@ -259,17 +260,21 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Label m_authLabel;
 
-  public ImportWfsWizardPage( String pageName )
+  private final IMapModell m_mapModel;
+
+  public ImportWfsWizardPage( String pageName, IMapModell model )
   {
     super( pageName );
+    m_mapModel = model;
     setTitle( "Web Feature Service einbinden" );
     setMessage( "Web Feature Service Daten einbinden." );
     setPageComplete( false );
   }
 
-  public ImportWfsWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportWfsWizardPage( String pageName, String title, ImageDescriptor titleImage, IMapModell model )
   {
     super( pageName, title, titleImage );
+    m_mapModel = model;
     setPageComplete( false );
   }
 
@@ -628,7 +633,7 @@ public class ImportWfsWizardPage extends WizardPage
             m_featureTypes.put( l, featureType );
           else if( l.indexOf( ":" ) >= 0 )
           {
-            final String hackName=l.replaceAll("^.+:","");
+            final String hackName = l.replaceAll( "^.+:", "" );
             m_featureTypes.put( l, featureTypeSchema.getFeatureType( hackName ) );
           }
         }
@@ -678,7 +683,7 @@ public class ImportWfsWizardPage extends WizardPage
     }
     throw new OperationNotSupportedException( "Guess of feature path failed!" );
   }
-  
+
   public void removeListeners()
   {
     m_addLayer.removeSelectionListener( m_addButtonSelectionListener );
@@ -761,7 +766,7 @@ public class ImportWfsWizardPage extends WizardPage
     // the add filter button is only enabled if the selection size == 1
     FeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
     Filter filter = (Filter)m_filter.get( ft );
-    final FilterDialog dialog = new FilterDialog( getShell(), ft, filter );
+    final FilterDialog dialog = new FilterDialog( getShell(), ft, filter, m_mapModel );
     int open = dialog.open();
     if( open == Window.OK )
     {

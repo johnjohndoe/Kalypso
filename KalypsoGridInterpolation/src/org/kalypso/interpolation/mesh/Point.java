@@ -1,8 +1,7 @@
 /*
  * Created on 13.12.2004
  * 
- * TODO To change the template for this generated file go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
  */
 package org.kalypso.interpolation.mesh;
 
@@ -22,8 +21,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author kuepfer
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
+ * Templates
  */
 public class Point
 {
@@ -43,26 +42,21 @@ public class Point
   //name space of gml-schema
   private final static String ns = "org.kalypso.risk";
 
-  private FeatureType featureType = FeatureFactory.createFeatureType(
-      "FEMNode", ns, new FeatureTypeProperty[]
-      {
-          FeatureFactory.createFeatureTypeProperty( "GEOM", ns, GeometryUtilities.getPointClass()
-              .getName(), false, null ),
-          FeatureFactory.createFeatureTypeProperty( "value", ns,
-              Double.class.getName(), false, null ) }, min, max, null, null );
+  private FeatureType featureType = FeatureFactory.createFeatureType( "FEMNode", ns, new FeatureTypeProperty[]
+  {
+      FeatureFactory.createFeatureTypeProperty( "GEOM", ns, GeometryUtilities.getPointClass().getName(), false, null ),
+      FeatureFactory.createFeatureTypeProperty( "value", ns, Double.class.getName(), false, null ) }, min, max, null,
+      null );
 
   private Feature feature = null;
 
-  public Point( String pointID, Double val, double x, double y,
-      CS_CoordinateSystem crs )
+  public Point( String pointID, Double val, double x, double y, CS_CoordinateSystem crs )
   {
     GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature( pointID, this.featureType );
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM",
-        point );
+    Feature f = FeatureFactory.createFeature( pointID, this.featureType, false );
+    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", point );
     f.addProperty( geoProperty );
-    FeatureProperty property = FeatureFactory.createFeatureProperty(
-        "value", val );
+    FeatureProperty property = FeatureFactory.createFeatureProperty( "value", val );
     f.addProperty( property );
     this.feature = f;
 
@@ -72,14 +66,12 @@ public class Point
   {
     if( crs == null )
     {
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance()
-          .getOGCCSByName( "EPSG:31467" );
+      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
     GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature( pointID, this.featureType );
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM",
-        point );
+    Feature f = FeatureFactory.createFeature( pointID, this.featureType, false );
+    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", point );
     f.addProperty( geoProperty );
     this.feature = f;
 
@@ -90,24 +82,20 @@ public class Point
     if( crs == null )
     {
       //default coordinate system is Gauß-Krüger
-      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance()
-          .getOGCCSByName( "EPSG:31467" );
+      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       crs = cs;
     }
-    GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(),
-        crs );
-    Feature f = FeatureFactory.createFeature( pointID, this.featureType );
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM",
-        point );
+    GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), crs );
+    Feature f = FeatureFactory.createFeature( pointID, this.featureType, false );
+    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", point );
     f.addProperty( geoProperty );
     this.feature = f;
   }//constructor}
 
   public Point( String id, GM_Object geom )
   {
-    Feature f = FeatureFactory.createFeature( id, this.featureType );
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM",
-        geom );
+    Feature f = FeatureFactory.createFeature( id, this.featureType, false );
+    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", geom );
     f.addProperty( geoProperty );
     this.feature = f;
   }
@@ -133,14 +121,12 @@ public class Point
     Double value = (Double)feature.getProperty( "value" );
     if( value != null && replace == true )
     {
-      FeatureProperty property = FeatureFactory.createFeatureProperty(
-          "value", v );
+      FeatureProperty property = FeatureFactory.createFeatureProperty( "value", v );
       feature.setProperty( property );
     }
     else if( value == null )
     {
-      FeatureProperty property = FeatureFactory.createFeatureProperty(
-          "value", v );
+      FeatureProperty property = FeatureFactory.createFeatureProperty( "value", v );
       feature.addProperty( property );
     }
   }
@@ -151,71 +137,70 @@ public class Point
   }//getPos()
 
   /**
-   * <B>public double distance(Point p2, BufferedWriter logWriter) throws
-   * IOException </B>
+   * <B>public double distance(Point p2, BufferedWriter logWriter) throws IOException </B>
    * <P>
    * Returns the distance with respect to given point
    * 
-   * @param p2 Point
+   * @param p2
+   *          Point
    * @see Point
-   * @param logWriter BufferedWriter
+   * @param logWriter
+   *          BufferedWriter
    * @return double
    * @throws IOException
    */
-//  public double distance( Point p2, BufferedWriter logWriter )
-//      throws IOException
-//  {
-//    double dx = this.distanceDx( p2 );
-//    double dy = this.distanceDy( p2 );
-//    double d = Math.pow( Math.pow( dx, 2 ) + Math.pow( dy, 2 ), 0.5 );
-//
-//    //logWriter.write(" [ sqrroot{ " +
-//    //		"sqr(" + this.getX() + "-" + p2.getX() + ") + "
-//    //		+ "sqr(" + this.getY() + "-" + p2.getY() + ") } ]" );
-//
-//    return d;
-//  }//distance
-
+  //  public double distance( Point p2, BufferedWriter logWriter )
+  //      throws IOException
+  //  {
+  //    double dx = this.distanceDx( p2 );
+  //    double dy = this.distanceDy( p2 );
+  //    double d = Math.pow( Math.pow( dx, 2 ) + Math.pow( dy, 2 ), 0.5 );
+  //
+  //    //logWriter.write(" [ sqrroot{ " +
+  //    // "sqr(" + this.getX() + "-" + p2.getX() + ") + "
+  //    // + "sqr(" + this.getY() + "-" + p2.getY() + ") } ]" );
+  //
+  //    return d;
+  //  }//distance
   /**
    * <B>public double distanceDx(Point p2) </B>
    * <P>
    * Returns the distance of x value with given point
    * 
-   * @param p2 Point
+   * @param p2
+   *          Point
    * @return double
    */
-//  public double distanceDx( Point p2 )
-//  {
-//    double dx = this.getPosition().getX() - p2.getPosition().getX();
-//    return dx;
-//  }//distanceDx
-//
-//  public double distanceDx( GM_Position p2 )
-//  {
-//    double dx = this.getPosition().getX() - p2.getX();
-//    return dx;
-//  }//distanceDx
-
+  //  public double distanceDx( Point p2 )
+  //  {
+  //    double dx = this.getPosition().getX() - p2.getPosition().getX();
+  //    return dx;
+  //  }//distanceDx
+  //
+  //  public double distanceDx( GM_Position p2 )
+  //  {
+  //    double dx = this.getPosition().getX() - p2.getX();
+  //    return dx;
+  //  }//distanceDx
   /**
    * <B>public double distanceDy(Point p2) </B>
    * <P>
    * Returns the distance of y value with given point
    */
-//  public double distanceDy( Point p2 )
-//  {
-//    double dy = this.getPosition().getY() - p2.getPosition().getY();
-//    return dy;
-//  }//distanceDy
-//
-//  public double distanceDy( GM_Position p2 )
-//  {
-//    double dx = this.getPosition().getY() - p2.getY();
-//    return dx;
-//  }//distanceDx
+  //  public double distanceDy( Point p2 )
+  //  {
+  //    double dy = this.getPosition().getY() - p2.getPosition().getY();
+  //    return dy;
+  //  }//distanceDy
+  //
+  //  public double distanceDy( GM_Position p2 )
+  //  {
+  //    double dx = this.getPosition().getY() - p2.getY();
+  //    return dx;
+  //  }//distanceDx
   public void setAttribute( Double v )
   {
-    FeatureProperty property = FeatureFactory
-        .createFeatureProperty( "value", v );
+    FeatureProperty property = FeatureFactory.createFeatureProperty( "value", v );
     feature.setProperty( property );
   }
 }
