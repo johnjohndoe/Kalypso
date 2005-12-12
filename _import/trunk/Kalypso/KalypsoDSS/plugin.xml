@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.dss"
+   name="kalypso.org.dss"
+   version="0.0.1"
+   provider-name="University of Technology Hamburg-Harburg"
+   class="org.kalypso.dss.KalypsoDSSPlugin">
+
+   <runtime>
+      <library name="KalypsoDSS.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.core" export="false"/>
+      <import plugin="org.kalypso.ui" export="false"/>
+   </requires>
+   <extension
+         id="org.kalypso.dss.popupmenu"
+         name="popupmenu"
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            objectClass="org.kalypsodeegree.model.feature.Feature"
+            id="org.kalypso.objectclass.feature">
+         <action
+               label="NeueS Maßnahme..."
+               tooltip="Hinzugfügen einer Maßnahme"
+               class="org.kalypso.dss.actiondelegates.AddGeometrieToMeasureActionDelegate"
+               style="push"
+               id="org.kalypso.objectclass.dss.measure.create"/>
+      </objectContribution>
+   </extension>
+   <extension
+         id="org.kalypso.dss.extension.catalog"
+         name="UrlCatalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.dss.DSSUrlCatalog"
+            id="org.kalypso.dss.urlcatalog"/>
+   </extension>
+
+</plugin>
