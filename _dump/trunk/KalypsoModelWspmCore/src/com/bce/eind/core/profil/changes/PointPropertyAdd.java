@@ -14,37 +14,58 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final POINT_PROPERTY m_property;
 
-  private  final double[] m_values;
+  private final double[] m_values;
 
-  public PointPropertyAdd(final IProfil profil, final POINT_PROPERTY property, final double[] values )
+  public PointPropertyAdd( final IProfil profil, final POINT_PROPERTY property,
+      final double[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
-  public PointPropertyAdd( final IProfil profil,final POINT_PROPERTY property, final double defaultValue )
+
+  public PointPropertyAdd( final IProfil profil, final POINT_PROPERTY property,
+      final double defaultValue )
   {
     m_profil = profil;
     m_property = property;
     m_values = new double[profil.getPoints().size()];
     for( int i = 0; i < m_values.length; i++ )
     {
-      m_values[i]=defaultValue;
-    } 
+      m_values[i] = defaultValue;
+    }
   }
-  
+
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
     hint.setPointPropertiesChanged();
     
-    m_profil.addPointProperty(m_property );
-    LinkedList<IProfilPoint> points = m_profil.getPoints();
-    for( int i = 0; i < m_values.length; i++ )
+    m_profil.getProfilPoints().addProperty( m_property );
+    final LinkedList<IProfilPoint> points = m_profil.getPoints();
+    int i = 0;
+    for( IProfilPoint point : points )
     {
-      points.get(i).setValueFor(m_property,m_values[i]);
-      
-    }
+      point.setValueFor( m_property, m_values[i++] );
 
-    return new PointPropertyRemove( m_profil, m_property);
+    }
+    return new PointPropertyRemove( m_profil, m_property );
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilChange#getChangedPoint()
+   */
+  public IProfilPoint getChangedPoint( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilChange#getChangedProperty()
+   */
+  public POINT_PROPERTY getChangedProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

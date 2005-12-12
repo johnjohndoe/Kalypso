@@ -3,10 +3,6 @@
  */
 package com.bce.eind.core.profil.changes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.bce.eind.core.profil.IProfilDevider;
 
 /**
  * @author belger
@@ -22,9 +18,13 @@ public class ProfilChangeHint
   private boolean m_pointPropertiesChanged = false;
 
   private boolean m_pointsChanged = false;
-
-  private List<IProfilDevider> m_movedDeviders = new ArrayList<IProfilDevider>();
-
+  
+  private boolean m_deviderDataChanged = false;
+  
+  private boolean m_deviderMoved = false;
+  
+  
+ 
   public void setBuildingChanged( )
   {
     m_buildingChanged = true;
@@ -88,14 +88,26 @@ public class ProfilChangeHint
     return m_pointsChanged;
   }
 
-  /** Gibt alle devider zurük, die verschoeben wurden. */
-  public void addMovedDeviders( final IProfilDevider devider )
+   public void setDeviderMove()
   {
-    m_movedDeviders.add( devider );
+    m_deviderMoved = true;
   }
-
-  public IProfilDevider[] getMovedDeviders( )
+  /** 
+   * true if one or more devider moved 
+   * */
+  public boolean isDeviderMoved()
   {
-    return m_movedDeviders.toArray( new IProfilDevider[m_movedDeviders.size()] );
+    return m_deviderMoved;
+  }
+  public void setDeviderDataChanged()
+  {
+    m_deviderDataChanged = true;
+  }
+  /** 
+   * true if one or more devider changed properties
+   * */
+  public boolean isDeviderDataChanged()
+  {
+    return m_deviderDataChanged;
   }
 }

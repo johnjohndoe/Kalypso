@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.bce.java.lang.UnmodifiableLinkedList;
 
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -14,7 +15,7 @@ import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 /**
  * @author kimwerner
  */
-public class ProfilPoints extends LinkedList<IProfilPoint>
+public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoints
 {
   private final HashMap<POINT_PROPERTY, POINT_PROPERTY[]> m_dependencies = new HashMap<POINT_PROPERTY, POINT_PROPERTY[]>();
 
@@ -26,6 +27,11 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public ProfilPoints( )
   {
     super();
+    setDependencies();
+  }
+
+  private void setDependencies( )
+  {
     final POINT_PROPERTY[] bewuchs = new POINT_PROPERTY[] { POINT_PROPERTY.BEWUCHS_AX, POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_DP };
     final POINT_PROPERTY[] geoCoord = new POINT_PROPERTY[] { POINT_PROPERTY.HOCHWERT , POINT_PROPERTY.RECHTSWERT } ;
     m_dependencies.put( POINT_PROPERTY.RECHTSWERT, geoCoord);
@@ -37,6 +43,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 
   /*
    * return a valid ProfilPoint if operation succeeds, othwerwise null
+   */
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#addPoint(double, double)
    */
   public final IProfilPoint addPoint( final double breite, final double hoehe )
 
@@ -57,6 +66,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#addPoint(com.bce.eind.core.profil.IProfilPoint)
+   */
   public final IProfilPoint addPoint( final IProfilPoint thePointBefore )
   {
     final ProfilPoint point = new ProfilPoint();
@@ -72,6 +84,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return point;
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#addProperty(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
+   */
   public final void addProperty( final POINT_PROPERTY pointProperty )
   {
     if( propertyExists( pointProperty ) )
@@ -85,17 +100,26 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#getDependenciesFor(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
+   */
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY pointProperty )
   {
     final POINT_PROPERTY[] dep = m_dependencies.get( pointProperty );
     return (dep == null) ? new POINT_PROPERTY[] {pointProperty} : dep;
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#getExistingProperties()
+   */
   public final LinkedList<POINT_PROPERTY> getExistingProperties( )
   {
     return m_pointProperties;
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#getVisibleProperties()
+   */
   public final LinkedList<POINT_PROPERTY> getVisibleProperties( )
   {
     LinkedList<POINT_PROPERTY> visibleProperties = new LinkedList<POINT_PROPERTY>();
@@ -108,6 +132,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return visibleProperties;
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#insertPoint(com.bce.eind.core.profil.IProfilPoint, com.bce.eind.core.profil.IProfilPoint)
+   */
   public final boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException
   {
@@ -135,16 +162,25 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
    * ProfilDataException e ) { e.printStackTrace(); } } return null; }
    */
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#propertyExists(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
+   */
   public final boolean propertyExists( final POINT_PROPERTY pointProperty )
   {
     return m_pointProperties.contains( pointProperty );
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#removePoint(com.bce.eind.core.profil.IProfilPoint)
+   */
   public final boolean removePoint( final IProfilPoint point )
   {
     return this.remove( point );
   }
 
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.impl.points.IProfilPoints#removeProperty(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
+   */
   public final boolean removeProperty( final POINT_PROPERTY pointProperty )
   {
     if( !(Boolean)pointProperty.getParameter( PARAMETER.OPTIONAL ) )

@@ -4,6 +4,7 @@ import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.util.ProfilUtil;
 
 public class PointInsert implements IProfilChange
@@ -30,6 +31,24 @@ public class PointInsert implements IProfilChange
     m_profil.insertPoint( m_thePointBefore, newPoint );
     
     return new PointRemove( m_profil, newPoint );
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilChange#getChangedPoint()
+   */
+  public IProfilPoint getChangedPoint( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilChange#getChangedProperty()
+   */
+  public POINT_PROPERTY getChangedProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

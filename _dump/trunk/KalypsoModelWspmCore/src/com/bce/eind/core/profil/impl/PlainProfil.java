@@ -12,6 +12,7 @@ import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -201,7 +202,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_points.unmodifiable();
   }
 
-  public ProfilPoints getProfilPoints( )
+  public IProfilPoints getProfilPoints( )
   {
     return m_points;
   }
@@ -382,4 +383,6 @@ public class PlainProfil implements IProfilConstants, IProfil
     }
     return false;
   }
+
+  
 }
