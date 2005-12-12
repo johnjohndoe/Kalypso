@@ -325,4 +325,22 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
   // 
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
+   */
+  public void doubleClickedLeft( Point p )
+  {
+  // not implemented by default
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
+   */
+  public void doubleClickedRight( Point p )
+  {
+  // not implemented by default
+
+  }
 }

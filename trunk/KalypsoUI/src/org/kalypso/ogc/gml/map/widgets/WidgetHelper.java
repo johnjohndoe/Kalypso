@@ -79,8 +79,8 @@ public class WidgetHelper
       return ( new ZoomInByRectWidget( "zoom in", "" ) );
     if( MapPanel.WIDGET_PAN.equals( widgetID ) )
       return ( new PanToWidget( "pan to", "" ) );
-    if( MapPanel.WIDGET_CREATE_FEATURE.equals( widgetID ) )
-      return ( new CreateGeometryFeatureWidget( "create feature", "" ) );
+    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
+      return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
     if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
       return ( new SelectWidget( "select", "" ) );
     if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
