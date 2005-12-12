@@ -76,6 +76,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
+import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
@@ -109,8 +110,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -591,30 +590,23 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       IOUtils.closeQuietly( is );
 
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
-      final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
-      final IUrlCatalog calcCatalog = new CalcServiceCatalog();
 
-      // TODO wohin sonst
-      final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
-      // TODO @Andreas wieso war dieser Katalog nicht mehr hier wird der Serverseitig hinzugefügt?
-      // der Client sollte diese auf jedenfall zur Verfügung haben deshalb habe ich den wieder eingefügt. (CK) 20.7.2005
-      final IUrlCatalog deegreeCatalog = new DeegreeUrlCatalog();
-      final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
+      try
       {
-          // test
-          //          naCatalog,
-          //          twoDCatalog,
+        final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
+        JavaApiContributionsExtension.registerCatalog( url, serverUrlCatalog );
+        final IUrlCatalog theCatalog = new MultiUrlCatalog( JavaApiContributionsExtension.getRegistredCatalogs() );
+        final IPath stateLocation = getStateLocation();
+        final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
+        cacheDir.mkdir();
 
-          updateObs,
-          serverUrlCatalog,
-          calcCatalog,
-          deegreeCatalog } );
-
-      final IPath stateLocation = getStateLocation();
-      final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
-      cacheDir.mkdir();
-
-      GMLSchemaCatalog.init( theCatalog, cacheDir );
+        GMLSchemaCatalog.init( theCatalog, cacheDir );
+      }
+      catch( Exception e )
+      {
+        // TODO ja was tun ????
+        e.printStackTrace();
+      }
     }
   }
 
@@ -772,13 +764,23 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String[] taAxis = new String[]
       {
           TimeserieConstants.TYPE_HOURS,
-          TimeserieConstants.TYPE_NORM, };
+          TimeserieConstants.TYPE_NORM };
+      final String[] wtKcLaiAxis = new String[]
+      {
+          TimeserieConstants.TYPE_DATE,
+          TimeserieConstants.TYPE_LAI,
+          TimeserieConstants.TYPE_WT,
+          TimeserieConstants.TYPE_KC };
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
+          "KCWTLAI" );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
+      registry.registerTypeHandler( wtKcLaiInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
