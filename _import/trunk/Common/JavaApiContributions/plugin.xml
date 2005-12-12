@@ -20,5 +20,6 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
    </requires>
+   <extension-point id="urlCatalog" name="urlCatalog" schema="schema/urlCatalog.exsd"/>
 
 </plugin>
