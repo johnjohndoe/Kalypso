@@ -441,6 +441,42 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
+         <action
+               toolbarPath="karte/edit"
+               label="Polygon zeichnen"
+               tooltip="Neues Polygon in einer Karte auf das Skizzier-Thema zeichen "
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate"
+               icon="icons/feature/geom_polygon.gif"
+               style="push"
+               state="false"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.CreatePolygon"/>
+         <action
+               toolbarPath="karte/edit"
+               label="Polylinie zeichnen"
+               tooltip="Neue Polylinie in einer Karte auf das Skizzier-Thema zeichen "
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate"
+               icon="icons/feature/geom_line.gif"
+               style="push"
+               state="false"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.CreatePolyline"/>
+         <action
+               toolbarPath="karte/edit"
+               label="Punkt zeichnen"
+               tooltip="Neuer Punkt in einer Karte auf das Skizzier-Thema zeichen "
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate"
+               icon="icons/feature/geom_point.gif"
+               style="push"
+               state="false"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.CreatePoint"/>
+         <action
+               label="Neues Feature erzeugen"
+               icon="icons/feature/gis_feature_neu.gif"
+               class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
+               style="push"
+               id="org.kalypso.ui.editor.mapeditor.action.newfeature"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
@@ -510,7 +546,7 @@
                label="%Extension.popupMenus.feature.delete.label"
                tooltip="%Extension.popupMenus.feature.delete.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate"
-               icon="icons/gistable/rem_row.gif"
+               icon="icons/feature/gis_feature_delete.gif"
                style="push"
                id="org.kalypso.objectclass.feature.action.remove">
          </action>
@@ -519,7 +555,7 @@
                label="%Extension.popupMenus.feature.new.label"
                tooltip="%Extension.popupMenus.feature.new.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
-               icon="icons/gistable/add_row.gif"
+               icon="icons/feature/gis_feature_neu.gif"
                style="push"
                id="org.kalypso.objectclass.feature.action.remove">
          </action>
@@ -654,7 +690,7 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
        </objectContribution>
-       <objectContribution
+		<objectContribution
              adaptable="false"
              objectClass="org.eclipse.core.resources.IFile"
              id="org.kalypso.objectclass.zmlFile">
@@ -665,6 +701,40 @@
                 class="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"
                 menubarPath="extensions"
                 id="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"/>
+       </objectContribution>
+       <objectContribution
+             adaptable="false"
+             objectClass="org.kalypso.ogc.gml.outline.ThemeStyleTreeObject"
+             id="org.kalypso.objectclass.style.save">
+          <action
+                label="Style speichern"
+                tooltip="Style speichern"
+                icon="icons/map/save_edit.gif"
+                class="org.kalypso.ogc.gml.outline.SaveStyleAction2"
+                menubarPath="org.kalypso.objectclass.style.menu/styleops"
+                id="org.kalypso.objectclass.style.savestyle"/>
+          <menu
+                label="Style"
+                id="org.kalypso.objectclass.style.menu">
+             <separator name="styleops"/>
+          </menu>
+       </objectContribution>
+       <objectContribution
+             adaptable="false"
+             objectClass="org.kalypso.ogc.gml.outline.RuleTreeObject"
+             id="org.kalypso.objectclass.style.remove">
+          <action
+                label="Style enfernen"
+                tooltip="Style entfernen"
+                icon="icons/full/elcl16/remove.gif"
+                class="org.kalypso.ogc.gml.outline.RemoveRuleAction2"
+                menubarPath="org.kalypso.objectclass.style.menu/styleops"
+                id="org.kalypso.objectclass.removerule"/>
+                <menu
+                label="Style"
+                id="org.kalypso.objectclass.style.menu">
+             <separator name="styleops"/>
+          </menu>
        </objectContribution>
    </extension>
    <extension
@@ -783,5 +853,56 @@
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
             interfacename="IObservationService"/>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            extensions="zml"
+            class="org.eclipse.compare.internal.TextMergeViewerCreator"
+            id="org.eclipse.compare.TextMergeViewerCreator">
+      </viewer>
+   </extension>
+   <extension
+         id="org.kalypso.ui.catalog"
+         name="UrlCatalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.ui.CalcServiceCatalog"
+            id="org.kalypso.ui.extension.catalog.calccase"/>
+   </extension>
+   <extension
+         id="org.kalypso.ui.mapview.action"
+         name="mapviewoutline"
+         point="org.kalypso.ui.mapviewaction">
+      <MapviewAction
+            title="Thema aktivieren"
+            enabled="false"
+            tooltip="Thema aktivieren"
+            icon="icons/full/elcl16/newpack_wiz.gif"
+            class="org.kalypso.ogc.gml.outline.ActivateThemeAction2"/>
+      <MapviewAction
+            title="Thema nach unten verschieben"
+            enabled="false"
+            tooltip="Thema eins nach unten verschieben"
+            icon="icons/full/elcl16/next_nav.gif"
+            class="org.kalypso.ogc.gml.outline.MoveThemeDownAction2"/>
+      <MapviewAction
+            title="Thema nach oben verschieben"
+            enabled="false"
+            tooltip="Thema eins nach oben verschieben"
+            icon="icons/full/elcl16/prev_nav.gif"
+            class="org.kalypso.ogc.gml.outline.MoveThemeUpAction2"/>
+      <MapviewAction
+            title="Thema Löschen"
+            enabled="false"
+            tooltip="Thema löschen"
+            icon="icons/full/elcl16/remove.gif"
+            class="org.kalypso.ogc.gml.outline.RemoveThemeAction2"/>
+      <MapviewAction
+            title="Style ändern"
+            enabled="false"
+            tooltip="Style ändern"
+            icon="icons/util/update.gif"
+            class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction2"/>
    </extension>
  </plugin>
