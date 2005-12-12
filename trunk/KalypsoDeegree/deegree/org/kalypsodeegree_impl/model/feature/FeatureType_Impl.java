@@ -62,6 +62,7 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +111,7 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     for( int i = 0; i < properties.length; i++ )
     {
       // set default geoemtry
-      if( m_defaultGeometryPropPos < 0 && GeometryUtilities.isGeometry(properties[i]) )
+      if( m_defaultGeometryPropPos < 0 && GeometryUtilities.isGeometry( properties[i] ) )
         m_defaultGeometryPropPos = i;
 
       // this supports qualified and unqualified position questions
@@ -147,9 +148,11 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
 
   public String toString()
   {
-    String ret = null;
+    String ret = "";
     // ret = "parents = " + parents + "\n";
     // ret += "children = " + children + "\n";
+
+    ret += "ns = " + getNamespace() + "\n";
     ret += "name = " + getName() + "\n";
     ret += "properties = ";
     for( int i = 0; i < m_properties.length; i++ )
@@ -303,9 +306,25 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     for( int i = 0; i < m_properties.length; i++ )
     {
       FeatureTypeProperty property = m_properties[i];
-      if( GeometryUtilities.isGeometry(property) )
+      if( GeometryUtilities.isGeometry( property ) )
         return true;
     }
     return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureType#getAllGeomteryProperties()
+   */
+  public FeatureTypeProperty[] getAllGeomteryProperties()
+  {
+    ArrayList geoms = new ArrayList();
+    for( int i = 0; i < m_properties.length; i++ )
+    {
+      FeatureTypeProperty ftp = m_properties[i];
+      if( GeometryUtilities.isGeometry( ftp ) )
+        geoms.add( ftp );
+
+    }
+    return (FeatureTypeProperty[])geoms.toArray( new FeatureTypeProperty[geoms.size()] );
   }
 }

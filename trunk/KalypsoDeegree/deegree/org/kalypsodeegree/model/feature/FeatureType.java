@@ -133,6 +133,8 @@ public interface FeatureType
   int getDefaultGeometryPropertyPosition();
 
   public FeatureTypeProperty getDefaultGeometryProperty();
+  
+  public FeatureTypeProperty[] getAllGeomteryProperties();
 
   public String getSubstitutionGroup();
 

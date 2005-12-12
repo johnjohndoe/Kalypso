@@ -49,4 +49,6 @@ package org.kalypso.ogc.gml.filterdialog.dialog;
 public interface IErrorMessageReciever
 {
   public void setErrorMessage( String message );
+  
+  public IErrorMessageReciever getErrorMessageReciever();
 }

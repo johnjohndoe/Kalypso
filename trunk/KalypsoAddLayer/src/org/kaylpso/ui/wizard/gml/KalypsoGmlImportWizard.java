@@ -3,6 +3,7 @@ package org.kaylpso.ui.wizard.gml;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
@@ -112,7 +113,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
           }
           else
           {
-            FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( getShell(), associationFeatureTypes );
+            FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( getShell(), associationFeatureTypes, SWT.NONE );
             int open = dialog.open();
             if( open == Window.OK )
             {

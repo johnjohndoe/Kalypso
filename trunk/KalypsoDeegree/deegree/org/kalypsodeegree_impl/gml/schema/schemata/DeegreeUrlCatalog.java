@@ -62,5 +62,6 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
     catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd"));
+    catalog.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/BPlan-Operationen_2.xsd" ) );
   }
 }

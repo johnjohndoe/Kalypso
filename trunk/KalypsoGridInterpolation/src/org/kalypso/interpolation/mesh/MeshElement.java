@@ -85,7 +85,7 @@ public class MeshElement
       final CS_CoordinateSystem crs ) throws GM_Exception
   {
     GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
-    Feature f = FeatureFactory.createFeature( id, m_featureType );
+    Feature f = FeatureFactory.createFeature( id, m_featureType, false );
     FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( "GEOM", surface );
     f.addProperty( geoProperty );
     m_feature = f;

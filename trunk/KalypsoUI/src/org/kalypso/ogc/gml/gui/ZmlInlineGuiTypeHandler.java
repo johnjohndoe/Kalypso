@@ -66,7 +66,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
   {
-    return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler.getAxisTypes() );
+    return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
   }
 
   /**

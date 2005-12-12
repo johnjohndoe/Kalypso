@@ -44,6 +44,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -58,7 +59,6 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
-import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 
 /**
  * @author kuepferle

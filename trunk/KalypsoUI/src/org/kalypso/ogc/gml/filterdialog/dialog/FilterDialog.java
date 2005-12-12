@@ -70,8 +70,11 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -106,9 +109,12 @@ public class FilterDialog extends TitleAreaDialog implements ModellEventListener
 
   private FilterCompositeFactory m_filterCompositeFactory = null;
 
-  public FilterDialog( Shell parent, FeatureType featureType, Filter root )
+  private final IMapModell m_mapModel;
+
+  public FilterDialog( Shell parent, FeatureType featureType, Filter root, IMapModell model )
   {
     super( parent );
+    m_mapModel = model;
     m_featureType = featureType;
     m_root = new FilterRootElement();
     if( root != null )
@@ -380,5 +386,23 @@ public class FilterDialog extends TitleAreaDialog implements ModellEventListener
   {
     super.setErrorMessage( message );
 
+  }
+
+  public ScrabLayerFeatureTheme getScrabLayer()
+  {
+    return (ScrabLayerFeatureTheme)m_mapModel.getScrabLayer();
+  }
+
+  public IKalypsoFeatureTheme getActiveTheme()
+  {
+    return (IKalypsoFeatureTheme)m_mapModel.getActiveTheme();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#getErrorMessageReciever()
+   */
+  public IErrorMessageReciever getErrorMessageReciever()
+  {
+    return this;
   }
 }

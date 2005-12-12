@@ -78,7 +78,7 @@ public class GisTemplateMapModell implements IMapModell
   private final IFeatureSelectionManager m_selectionManager;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs,
-     final IProject project, final IFeatureSelectionManager selectionManager )
+      final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
@@ -87,6 +87,10 @@ public class GisTemplateMapModell implements IMapModell
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
+    // layer 2 is scrablayer
+    final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager );
+    //    m_modell.addModellListener( m_scrabLayer );
+    addTheme( scrabLayer );
 
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
@@ -124,7 +128,10 @@ public class GisTemplateMapModell implements IMapModell
   public void dispose()
   {
     if( m_modell != null )
+    {
       m_modell.dispose();
+      //      m_scrabLayer.removeModellListener( m_modell );
+    }
   }
 
   private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
@@ -200,16 +207,16 @@ public class GisTemplateMapModell implements IMapModell
         ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
-      if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) )
+      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme ) )
         layersType.setActive( layer );
     }
 
     try
     {
       // is this code still used?
-//      GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
+      //      GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
       /* GM_Envelope env = */
-//      gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      //      gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
       //System.out.println( env );
     }
     catch( Exception e )
@@ -365,4 +372,13 @@ public class GisTemplateMapModell implements IMapModell
   {
     return m_modell.getProject();
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
+   */
+  public IKalypsoFeatureTheme getScrabLayer()
+  {
+    return m_modell.getScrabLayer();
+  }
+
 }

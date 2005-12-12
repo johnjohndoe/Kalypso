@@ -32,7 +32,6 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
@@ -43,7 +42,6 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
  */
 public class CreateOGCLogicalANDOpsActionDelegate extends AbstractCreateOperationActionDelegate
 {
-  private IStructuredSelection m_selection;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

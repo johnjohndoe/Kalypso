@@ -205,7 +205,7 @@ public class GisTemplateHelper
     layer.setVisible( visible );
     layer.setId( id );
     layer.setHref( wmsTheme.getSource() );
-    layer.setLinktype( "wms" );
+    layer.setLinktype( KalypsoWMSTheme.TYPE_NAME );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
   }
@@ -218,7 +218,7 @@ public class GisTemplateHelper
    */
   public static Gismapview emptyGisView() throws JAXBException
   {
-    final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 0, 0 );
+    final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 100, 100 );
     final ObjectFactory maptemplateFactory = new ObjectFactory();
 
     final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();

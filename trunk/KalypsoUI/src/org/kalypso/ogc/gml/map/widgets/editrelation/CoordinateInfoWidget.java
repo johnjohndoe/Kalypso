@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
