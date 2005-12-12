@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:sl="http://www.tuhh.de/kalypsoScrabLayer" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.tuhh.de/kalypsoScrabLayer" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+	<element name="ScrabLayer" type="sl:ScrabLayerType"/>
+	<complexType name="ScrabLayerType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="scrabLayerMember" type="sl:ScrabLayerAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ________ScrabLayerGeomFeature__________________ -->
+	<complexType name="ScrabLayerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="sl:ScrabLayerGeomFeature" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>		
+	<element name="ScrabLayerGeomFeature" type="sl:ScrabLayerFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ScrabLayerFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="geomPolygon" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Polygon-Geometrie</label>
+								<tooltip>Polygon-Fläche</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Polygon-Geometry</label>
+								<tooltip>Polygon area</tooltip>
+								<description>Geometry of the object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="geomLineString" type="gml:LineStringPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Linien-Geometrie</label>
+								<tooltip>Linie</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Line-Geometry</label>
+								<tooltip>LineString</tooltip>
+								<description>Geometry of the object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="geomPoint" type="gml:PointPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Punkt-Geometrie</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Point-Geometry</label>
+								<tooltip>Geometric position</tooltip>
+								<description>Geometry of the object</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
