@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.command;
 
 import java.util.List;
 
-import org.deegree_impl.clients.wcasclient.control.DeleteFromShoppingCardListener;
-import org.eclipse.core.internal.resources.Workspace;
 import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;

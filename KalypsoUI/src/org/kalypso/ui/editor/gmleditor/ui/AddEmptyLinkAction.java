@@ -32,6 +32,7 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
@@ -78,7 +79,7 @@ public class AddEmptyLinkAction extends Action
     FeatureType ft = null;
     if( featureTypes.length > 1 )
     {
-      dialog = new FeatureTypeSelectionDialog( shell, featureTypes );
+      dialog = new FeatureTypeSelectionDialog( shell, featureTypes, SWT.MULTI );
       int open = dialog.open();
       if( open == Window.OK )
       {
@@ -90,7 +91,7 @@ public class AddEmptyLinkAction extends Action
     }
     else
       ft = featureTypes[0];
-    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp.getName(), 0, m_selectionManager );
+    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp.getName(), 0, null, m_selectionManager );
     try
     {
       m_workspace.postCommand( command );
