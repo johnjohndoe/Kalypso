@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -105,52 +106,55 @@ public class ExportThemeAction implements PluginMapOutlineAction
   /**
    * @see org.kalypso.ogc.gml.outline.PluginMapOutlineAction#run(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void run( GisMapOutlineViewer outlineviewer )
+  public void run( IAction action )
   {
-    final IKalypsoTheme activeTheme = outlineviewer.getMapModell().getActiveTheme();
-    if( activeTheme instanceof GisTemplateFeatureTheme )
+    if( action instanceof PluginMapOutlineActionDelegate )
     {
-      FeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
-      if( featureType.getName().equals( "RectifiedGridCoverage" ) )
+      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
+      GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
+      final IKalypsoTheme activeTheme = viewer.getMapModell().getActiveTheme();
+      if( activeTheme instanceof GisTemplateFeatureTheme )
       {
-        //System.out.println( "CreateImage" );
-        String targetFileName = chooseFile( outlineviewer.getControl().getShell(), m_targetFile, new String[]
+        FeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
+        if( featureType.getName().equals( "RectifiedGridCoverage" ) )
         {
-            "*.jpg",
-            ".JPG",
-            ".JPEG",
-            ".jpeg" } );
-        if( targetFileName != null )
-        {
-          if( targetFileName.indexOf( "." ) == -1 )
-            m_targetFile = new File( targetFileName + ".jpg" );
-          else
-            m_targetFile = new File( targetFileName );
-        }
-        if( m_targetFile != null )
-        {
-          Job createImageJob = new Job( "Create Image" )
+          //System.out.println( "CreateImage" );
+          String targetFileName = chooseFile( viewer.getControl().getShell(), m_targetFile, new String[]
           {
-
-            protected IStatus run( IProgressMonitor monitor )
+              "*.jpg",
+              ".JPG",
+              ".JPEG",
+              ".jpeg" } );
+          if( targetFileName != null )
+          {
+            if( targetFileName.indexOf( "." ) == -1 )
+              m_targetFile = new File( targetFileName + ".jpg" );
+            else
+              m_targetFile = new File( targetFileName );
+          }
+          if( m_targetFile != null )
+          {
+            Job createImageJob = new Job( "Create Image" )
             {
-              return createImage( (GisTemplateFeatureTheme)activeTheme, monitor );
-            }
-          };
-          createImageJob.setUser( true );
-          createImageJob.schedule();
+
+              protected IStatus run( IProgressMonitor monitor )
+              {
+                return createImage( (GisTemplateFeatureTheme)activeTheme, monitor );
+              }
+            };
+            createImageJob.setUser( true );
+            createImageJob.schedule();
+          }
+        }
+        else
+        {
+          MessageDialog.openConfirm( viewer.getControl().getShell(), "Information", "Export-Function not implemented" );
         }
       }
       else
       {
-        MessageDialog.openConfirm( outlineviewer.getControl().getShell(), "Information",
-            "Export-Function not implemented" );
+        MessageDialog.openConfirm( viewer.getControl().getShell(), "Information", "Export-Function not implemented" );
       }
-    }
-    else
-    {
-      MessageDialog.openConfirm( outlineviewer.getControl().getShell(), "Information",
-          "Export-Function not implemented" );
     }
   }
 
@@ -403,9 +407,13 @@ public class ExportThemeAction implements PluginMapOutlineAction
     return surrogateRaster;
   }
 
-  public void selectionChanged( PluginMapOutlineActionDelegate action, ISelection selection )
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( IAction action, ISelection selection )
   {
-  // TODO Auto-generated method stub
+  // nothing
 
   }
 
