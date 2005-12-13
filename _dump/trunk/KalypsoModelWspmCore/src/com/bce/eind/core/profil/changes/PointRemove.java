@@ -7,7 +7,6 @@ import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.util.ProfilUtil;
 
 /**
@@ -41,22 +40,5 @@ public class PointRemove implements IProfilChange
     return new PointAdd( m_profil, m_pointBefore, m_point );
   }
 
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedPoint()
-   */
-  public IProfilPoint getChangedPoint( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedProperty()
-   */
-  public POINT_PROPERTY getChangedProperty( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+  
 }

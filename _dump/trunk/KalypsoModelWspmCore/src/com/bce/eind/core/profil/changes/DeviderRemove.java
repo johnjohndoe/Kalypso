@@ -1,21 +1,25 @@
 package com.bce.eind.core.profil.changes;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
-public class DeviderMove implements IProfilChange
+public class DeviderRemove implements IProfilChange
 {
+  private final IProfil m_profil;
+
   private final IProfilDevider m_devider;
 
-  private final IProfilPoint m_newPosition;
 
-  public DeviderMove( IProfilDevider devider, final IProfilPoint newPosition )
+  public DeviderRemove(final IProfil profil, final IProfilDevider devider)
+      
   {
     m_devider = devider;
-    m_newPosition = newPosition;
+    m_profil = profil;
   }
 
   /**
@@ -25,12 +29,11 @@ public class DeviderMove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
     hint.setDeviderMove();
-
-    final IProfilPoint oldPosition = m_devider.setPoint( m_newPosition );
-
-    return new DeviderMove( m_devider, oldPosition );
+    final IProfilPoint point = m_devider.getPoint();
+    final DEVIDER_TYP typ = m_devider.getTyp();
+    m_profil.removeDevider(m_devider);
+    return new DeviderAdd(m_profil, typ,point);
   }
 
-  
-
- }
+ 
+}

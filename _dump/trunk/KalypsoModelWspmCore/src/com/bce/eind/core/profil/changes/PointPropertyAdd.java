@@ -51,21 +51,5 @@ public final class PointPropertyAdd implements IProfilChange
     return new PointPropertyRemove( m_profil, m_property );
   }
 
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedPoint()
-   */
-  public IProfilPoint getChangedPoint( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /* (non-Javadoc)
-   * @see com.bce.eind.core.profil.IProfilChange#getChangedProperty()
-   */
-  public POINT_PROPERTY getChangedProperty( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  
 }
