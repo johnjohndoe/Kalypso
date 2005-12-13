@@ -68,5 +68,6 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.2/hydrotop.xsd" ) );
     catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "v0.5/parameter.xsd" ) );
     catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "v0.2/ombrometer.xsd" ) );
+    catalog.put( "http://www.tuhh.de/NA/swaletrenchsystem", myClass.getResource( "v0.5/muldenRigole.xsd" ) );
   }
 }
