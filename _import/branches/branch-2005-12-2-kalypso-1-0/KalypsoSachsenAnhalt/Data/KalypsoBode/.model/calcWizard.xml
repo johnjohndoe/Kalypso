@@ -773,7 +773,7 @@
 		Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<arg name="resultProperty" value="Zufluss_gerechnet"/>
 		<!-- für alle Speicher V-Diag, D-V / W / Z / A-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
