@@ -569,6 +569,7 @@
                id="org.kalypso.objectclass.feature.action.remove"/>
          <action
                label="%Extension.popupMenus.feature.edit"
+               icon="icons/feature/gis_feature_edit.gif"
                class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
                id="org.kalypso.objectclass.feature.editfeature"/>
       </objectContribution>
