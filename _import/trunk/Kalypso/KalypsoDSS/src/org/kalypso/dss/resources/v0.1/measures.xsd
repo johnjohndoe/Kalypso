@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Christoph Küpferle (TU Hamburg-Harburg) -->
-<schema xmlns:dss="http://www.tuhh.de/kalypsoDSS" xmlns:par="http://www.tuhh.de/parameter" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xplan="http://www.xplanung.de/bplangml" targetNamespace="http://www.tuhh.de/kalypsoDSS" elementFormDefault="qualified" version="0.4">
+<schema xmlns:dss="http://www.tuhh.de/kalypsoDSS" xmlns:par="http://www.tuhh.de/parameter" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:sts="http://www.tuhh.de/NA/swaletrenchsystem" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xplan="http://www.xplanung.de/bplangml" targetNamespace="http://www.tuhh.de/kalypsoDSS" elementFormDefault="qualified" version="0.4">
 	<import namespace="http://www.xplanung.de/bplangml" schemaLocation="BPlan-Minimal_measures.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd"/>
 	<import namespace="http://www.tuhh.de/parameter" schemaLocation="parameter.xsd"/>
+	<import namespace="http://www.tuhh.de/NA/swaletrenchsystem" schemaLocation="muldenRigole.xsd"/>
 	<!--
 	IMPORTANT!! ALL GEOMETRY PROPERTIES HAVE THE ELEMENT NAME POSITION
 	-->
@@ -176,30 +177,20 @@
 		</complexContent>
 	</complexType>
 	<!--_____________________________________________Mulden-Rigolen-Maßnahme____________________________________ -->
-	<element name="SwaleTrechSystemMeasure" type="dss:SwaleTrechSystemMeasureType" substitutionGroup="dss:_Measure"/>
-	<complexType name="SwaleTrechSystemMeasureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="position" type="gml:PolygonPropertyType" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Muldengeometrie</label>
-								<tooltip>Aussenlinie des Mulden-Rigolen-Systems</tooltip>
-								<description>Flaeche des Mulden-Rigolen-Systems</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="swaleTrenchMeasure" type="string" minOccurs="0"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<element name="SwaleTrechSystemMeasure" type="sts:SwaleTrenchSysType" substitutionGroup="dss:_Measure">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Mulen-Rigole</label>
+				<tooltip>Mulden-Rigolen-Element</tooltip>
+				<description>Mulden-Rigolen-Element</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>TODO</label>
+				<tooltip>TODO</tooltip>
+				<description>TODO</description>
+			</documentation>
+		</annotation>
+	</element>
 	<!--___________________________________________Nutzungsänderungen aus dem Bebauungsplan_____________________________ -->
 	<!--
 	<element name="BaugebietFlaechenTeilMeasure" type="dss:BaugebietFlaechenTeilMeasureType" substitutionGroup="dss:_Measure">
