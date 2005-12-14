@@ -3,9 +3,7 @@ package com.bce.eind.core.profil.changes;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
-import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class DeviderRemove implements IProfilChange
@@ -28,11 +26,10 @@ public class DeviderRemove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setDeviderMove();
-    final IProfilPoint point = m_devider.getPoint();
-    final DEVIDER_TYP typ = m_devider.getTyp();
+    hint.setDeviderMoved();
+    
     m_profil.removeDevider(m_devider);
-    return new DeviderAdd(m_profil, typ,point);
+    return new DeviderAdd(m_profil, m_devider);
   }
 
  

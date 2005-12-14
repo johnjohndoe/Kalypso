@@ -6,7 +6,7 @@ import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
-public final class PointEdit implements IProfilChange
+public final class PointPropertyEdit implements IProfilChange
 {
   private final IProfilPoint m_point;
 
@@ -14,7 +14,7 @@ public final class PointEdit implements IProfilChange
 
   private final Double m_newValue;
 
-  public PointEdit( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
+  public PointPropertyEdit( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
   {
     m_point = p;
     m_property = property;
@@ -32,7 +32,7 @@ public final class PointEdit implements IProfilChange
     final Double oldValue = m_point.getValueFor( m_property );
     m_point.setValueFor( m_property, m_newValue );
 
-    return new PointEdit( m_point, m_property, oldValue );
+    return new PointPropertyEdit( m_point, m_property, oldValue );
   }
 
  

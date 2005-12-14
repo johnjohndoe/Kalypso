@@ -53,7 +53,7 @@ public class PlainProfil implements IProfilConstants, IProfil
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider )
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
-    m_devider.add( pd );
+    addDevider( pd );
 
     return pd;
   }
@@ -382,6 +382,14 @@ public class PlainProfil implements IProfilConstants, IProfil
         return true;
     }
     return false;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfil#addDevider(com.bce.eind.core.profil.IProfilDevider)
+   */
+  public void addDevider( IProfilDevider devider )
+  {
+    m_devider.add( devider );
   }
 
   

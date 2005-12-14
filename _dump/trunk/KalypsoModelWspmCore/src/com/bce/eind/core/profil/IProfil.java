@@ -31,7 +31,9 @@ public interface IProfil
    * @return IProfilDevider
    */
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider );
-public POINT_PROPERTY[] getDependenciesFor(final POINT_PROPERTY property);
+  public void addDevider( IProfilDevider devider );
+  public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY property );
+
   /**
    * gibt Null zurück wenn das profil nicht geändert wurde
    */
@@ -95,7 +97,9 @@ public POINT_PROPERTY[] getDependenciesFor(final POINT_PROPERTY property);
    * @return
    */
   public LinkedList<IProfilPoint> getPoints( );
+
   public IProfilPoints getProfilPoints( );
+
   /**
    * @param key
    *          Schlüsselwert einer Hashmap see IProfil.PROPERTY

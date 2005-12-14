@@ -24,7 +24,7 @@ public class DeviderMove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setDeviderMove();
+    hint.setDeviderMoved();
 
     final IProfilPoint oldPosition = m_devider.setPoint( m_newPosition );
 

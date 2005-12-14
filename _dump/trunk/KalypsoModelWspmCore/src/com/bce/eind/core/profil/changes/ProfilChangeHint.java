@@ -23,7 +23,7 @@ public class ProfilChangeHint
   
   private boolean m_deviderMoved = false;
   
-  
+  private boolean m_ProfilPropertyChanged = false;
  
   public void setBuildingChanged( )
   {
@@ -88,7 +88,7 @@ public class ProfilChangeHint
     return m_pointsChanged;
   }
 
-   public void setDeviderMove()
+   public void setDeviderMoved()
   {
     m_deviderMoved = true;
   }
@@ -109,5 +109,19 @@ public class ProfilChangeHint
   public boolean isDeviderDataChanged()
   {
     return m_deviderDataChanged;
+  }
+
+  /**
+   * true if profilPropertyChanged.
+   */
+  public boolean isProfilPropertyChanged( )
+  {
+    return m_ProfilPropertyChanged;
+  }
+
+  
+  public void setProfilPropertyChanged( boolean profilPropertyChanged )
+  {
+    m_ProfilPropertyChanged = profilPropertyChanged;
   }
 }
