@@ -55,7 +55,7 @@ public class CreateLineStringWidgetDelegate extends AbstractGisMapEditorActionDe
 
   public CreateLineStringWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE + "." + GEOM_TYPE ) );
+    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING) );
   }
 
   /**

@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * FeatureRemoveActionDelegate
+ * FeatureAddActionDelegate
  * <p>
  * 
  * created by

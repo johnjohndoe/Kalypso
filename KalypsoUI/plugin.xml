@@ -443,11 +443,21 @@
          </action>
          <action
                toolbarPath="karte/edit"
+               label="Geometrie zeichnen"
+               tooltip="Neue Geometry in einer Karte auf das Skizzier-Thema zeichen "
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate"
+               icon="icons/feature/geom_multipoint.gif"
+               style="radio"
+               state="false"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.CreateGeometry"/>
+         <action
+               toolbarPath="karte/edit"
                label="Polygon zeichnen"
                tooltip="Neues Polygon in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate"
                icon="icons/feature/geom_polygon.gif"
-               style="push"
+               style="radio"
                state="false"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePolygon"/>
@@ -457,7 +467,7 @@
                tooltip="Neue Polylinie in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate"
                icon="icons/feature/geom_line.gif"
-               style="push"
+               style="radio"
                state="false"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePolyline"/>
@@ -467,7 +477,7 @@
                tooltip="Neuer Punkt in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate"
                icon="icons/feature/geom_point.gif"
-               style="push"
+               style="radio"
                state="false"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePoint"/>
@@ -557,7 +567,7 @@
                class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
                icon="icons/feature/gis_feature_neu.gif"
                style="push"
-               id="org.kalypso.objectclass.feature.action.remove">
+               id="org.kalypso.objectclass.feature.action.new">
          </action>
          <action
                enablesFor="1"
@@ -566,7 +576,7 @@
                icon="icons/gistable/applyValues2.gif"
                class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate"
                style="push"
-               id="org.kalypso.objectclass.feature.action.remove"/>
+               id="org.kalypso.objectclass.feature.action.setValues"/>
          <action
                label="%Extension.popupMenus.feature.edit"
                icon="icons/feature/gis_feature_edit.gif"

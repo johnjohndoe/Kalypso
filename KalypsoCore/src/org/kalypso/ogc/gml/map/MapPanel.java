@@ -128,7 +128,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
 
-  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  //  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY";
+
+  public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT";
+
+  public final static String WIDGET_CREATE_FEATURE_WITH_LINESTRING = "CREATE_FEATURE_WITH_LINESTRING";
+
+  public final static String WIDGET_CREATE_FEATURE_WITH_POLYGON = "CREATE_FEATURE_WITH_POLYGON";
 
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 

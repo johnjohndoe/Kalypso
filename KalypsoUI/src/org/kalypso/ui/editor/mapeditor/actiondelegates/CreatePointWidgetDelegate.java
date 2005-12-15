@@ -60,7 +60,7 @@ public class CreatePointWidgetDelegate extends AbstractGisMapEditorActionDelegat
 
   public CreatePointWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE + "." + GEOM_TYPE ) );
+    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) );
   }
 
   public void selectionChanged( IAction action, ISelection selection )
