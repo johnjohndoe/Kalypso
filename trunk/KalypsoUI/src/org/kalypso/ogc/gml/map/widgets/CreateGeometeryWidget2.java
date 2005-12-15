@@ -29,30 +29,26 @@
  */
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -61,39 +57,54 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
- * 
- * TODO: insert type comment here
- * 
- * @author kuepfer
+ *  
  */
 public class CreateGeometeryWidget2 extends AbstractWidget
 {
-  private final ArrayList m_points = new ArrayList();
+  // points in pixel coordinates
+  private final List m_points = new ArrayList();
 
+  // this is the point currently under the mouse
   private Point m_currentPoint = null;
 
-  //  private Polygon m_poly;
+  private Class m_apreferedGeometryClass = null;
 
-  private Map m_propMap = new TreeMap();
+  private FeatureType m_featureType = null;
 
-  private String m_geomType = null;
+  private Feature m_parentFeature = null;
 
-  private static final String GEOM_PROPERTY_NAME = "GEOM";
+  private FeatureTypeProperty m_linkFTP = null;
+
+  private boolean m_valid = true;
+
+  private CommandableWorkspace m_workspace;
+
+  private FeatureTypeProperty m_geometryProperty = null;
+
+  private CS_CoordinateSystem m_coordinatesSystem = null;
+
+  private GeoTransform m_projection = null;
+
+  private double MIN_DRAG_DISTANCE_PIXEL = 20;
+
+  private GM_Object m_validGeometryValue;
 
   /**
    *  
    */
-
-  public CreateGeometeryWidget2( String name, String toolTip, String geometryTyp )
+  public CreateGeometeryWidget2( String name, String toolTip, Class geometryClass )
   {
     super( name, toolTip );
-    m_geomType = geometryTyp;
+    m_apreferedGeometryClass = geometryClass;
+    update( getMapPanel() );
   }
 
   /**
@@ -106,31 +117,29 @@ public class CreateGeometeryWidget2 extends AbstractWidget
   }
 
   /**
-   * @return
    * @throws GM_Exception
+   * @throws NotEnoughPointsExeption
    */
-  private Map getPropertyNameGeomMap() throws GM_Exception
+  private GM_Object createGeometry( final List pixelArray ) throws GM_Exception, NotEnoughPointsExeption
   {
-    MapPanel mapPanel = getMapPanel();
-    final GeoTransform gt = mapPanel.getProjection();
-    final CS_CoordinateSystem cs = mapPanel.getMapModell().getCoordinatesSystem();
-    final ArrayList positions = getPosArray();
-    Map map = new TreeMap();
-    if( m_geomType.equals( CreatePolygonWidgetDelegate.GEOM_TYPE ) )
-    {
-      map.put( ScrabLayerFeatureTheme.POLYGON_GEOM_PROP_NAME, getPolygon() );
-    }
-    if( m_geomType.equals( CreateLineStringWidgetDelegate.GEOM_TYPE ) )
-    {
-      map.put( ScrabLayerFeatureTheme.LINESTRING_GEOM_PROP_NAME, getLineString() );
-    }
-    if( m_geomType.equals( CreatePointWidgetDelegate.GEOM_TYPE ) )
-    {
-      GM_Position pos = (GM_Position)m_points.get( 0 );
-      GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), cs );
-      map.put( ScrabLayerFeatureTheme.POINT_GEOM_PROP_NAME, point );
-    }
-    return map;
+
+    if( m_geometryProperty.getType().equals( GeometryUtilities.getPolygonClass().getName() ) && pixelArray.size() < 3 )
+      throw new NotEnoughPointsExeption();
+    if( m_geometryProperty.getType().equals( GeometryUtilities.getLineStringClass().getName() )
+        && pixelArray.size() < 2 )
+      throw new NotEnoughPointsExeption();
+
+    final List posArray = getPositionArray( pixelArray );
+    GM_Object result = null;
+    if( m_geometryProperty.getType().equals( GeometryUtilities.getPolygonClass().getName() ) )
+      result = getPolygon( posArray );
+    else if( m_geometryProperty.getType().equals( GeometryUtilities.getLineStringClass().getName() ) )
+      result = getLineString( posArray );
+    else if( m_geometryProperty.getType().equals( GeometryUtilities.getPointClass().getName() ) )
+      result = getPoint( posArray );
+    // TODO support the multis ...
+    // test it
+    return result;
   }
 
   /**
@@ -138,10 +147,50 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    */
   public void leftClicked( Point p )
   {
-    if( m_geomType.equals( CreatePointWidgetDelegate.GEOM_TYPE ) )
-      perform();
-    else
+    if( !isValid() )
+      return;
+    // first test if vaild...
+    final List testList = new ArrayList();
+    for( Iterator iter = m_points.iterator(); iter.hasNext(); )
+      testList.add( iter.next() );
+    testList.add( p );
+
+    try
+    {
+      final GM_Object gm_geometry;
+      gm_geometry = createGeometry( testList );
+      final Geometry geometry = JTSAdapter.export( gm_geometry );
+      if( geometry.isValid() && geometry.isSimple() )
+      {
+        m_validGeometryValue = gm_geometry;
+        m_points.add( p );
+        if( m_geometryProperty.getType().equals( GeometryUtilities.getPointClass().getName() ) )
+          perform();
+      }
+      else
+        m_validGeometryValue = null;
+    }
+    catch( NotEnoughPointsExeption e )
+    {
       m_points.add( p );
+      m_validGeometryValue = null;
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      m_validGeometryValue = null;
+    }
+    m_currentPoint = p;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
+  public void dragged( Point p )
+  {
+
+    if( m_points.isEmpty() || ( (Point)m_points.get( m_points.size() - 1 ) ).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
+      leftClicked( p );
   }
 
   /**
@@ -158,101 +207,77 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    */
   public void paint( Graphics g )
   {
+    if( !isValid() )
+      return;
     if( !m_points.isEmpty() && m_currentPoint != null )
     {
-      if( m_geomType.equals( CreatePolygonWidgetDelegate.GEOM_TYPE ) )
+      final int[] arrayX = getXArrayPixel();
+      final int[] arrayY = getYArrayPixel();
+      if( m_geometryProperty.getType().equals( GeometryUtilities.getPolygonClass().getName() ) )
       {
-        //        GM_Surface polygon = null;
-        //        try
-        //        {
-        //          m_points.add( m_currentPoint );
-        //          polygon = getPolygon();
-        //          m_points.remove( m_currentPoint );
-        //
-        //          Feature feature = getFeature( polygon );
-        //          Symbolizer symbolizer = getUserStyle( polygon );
-        //
-        //          DisplayElement element = DisplayElementFactory.buildDisplayElement( feature, symbolizer, null );
-        //          element.paint( g, getMapPanel().getProjection() );
-        //        }
-        //        catch( GM_Exception e )
-        //        {
-        //          e.printStackTrace();
-        //        }
-        //        catch( IncompatibleGeometryTypeException e )
-        //        {
-        //          e.printStackTrace();
-        //        }
-        final Polygon polygon = new Polygon( getXArrayPixel(), getYArrayPixel(), m_points.size() );
-        polygon.addPoint( (int)m_currentPoint.getX(), (int)m_currentPoint.getY() );
-        g.drawPolygon( polygon );
-        drawHandles( g, polygon );
-
+        // paint polygon
+        g.drawPolygon( arrayX, arrayY, arrayX.length );
+        drawHandles( g, arrayX, arrayY );
       }
-      if( m_geomType.equals( CreateLineStringWidgetDelegate.GEOM_TYPE ) )
+      else if( m_geometryProperty.getType().equals( GeometryUtilities.getLineStringClass().getName() ) )
       {
-        m_points.add( m_currentPoint );
-        g.drawPolyline( getXArrayPixel(), getYArrayPixel(), m_points.size() );
-        m_points.remove( m_currentPoint );
+        // paint linestring
+        g.drawPolyline( arrayX, arrayY, arrayX.length );
+        drawHandles( g, arrayX, arrayY );
       }
-      if( m_geomType.equals( CreatePointWidgetDelegate.GEOM_TYPE ) )
+      else if( m_geometryProperty.getType().equals( GeometryUtilities.getPointClass().getName() ) )
       {
-        for( Iterator iter = m_points.iterator(); iter.hasNext(); )
-        {
-          Point p = (Point)iter.next();
-          g.drawOval( (int)p.getX(), (int)p.getY(), 1, 1 );
-        }
+        drawHandles( g, arrayX, arrayY );
       }
-
     }
   }
 
   /**
+   * 
    * @param g
-   * @param polygon
+   *          graphics
+   * @param x
+   *          array x
+   * @param y
+   *          array y
    */
-  private void drawHandles( Graphics g, Polygon polygon )
+  private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    int[] x = polygon.xpoints;
-    int[] y = polygon.ypoints;
-    int n = polygon.npoints;
     int sizeOuter = 6;
     for( int i = 0; i < y.length; i++ )
-    {
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
-    }
-
   }
 
   /**
-   * @return
+   * 
+   * @return all the y poaints as array including the current point
    */
   private int[] getYArrayPixel()
   {
-    ArrayList yArray = new ArrayList();
+    List yArray = new ArrayList();
     for( int i = 0; i < m_points.size(); i++ )
     {
       Point p = (Point)m_points.get( i );
       yArray.add( new Integer( (int)p.getY() ) );
-
     }
-    //    yArray.add( new Integer( (int)m_currentPoint.getY() ) );
+    if( m_currentPoint != null )
+      yArray.add( new Integer( m_currentPoint.y ) );
     return ArrayUtils.toPrimitive( (Integer[])yArray.toArray( new Integer[m_points.size()] ) );
   }
 
   /**
-   * @return
+   * @return all the x points as array including the current point
    */
   private int[] getXArrayPixel()
   {
-    ArrayList xArray = new ArrayList();
+    final List xArray = new ArrayList();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      Point p = (Point)m_points.get( i );
+      final Point p = (Point)m_points.get( i );
       xArray.add( new Integer( (int)p.getX() ) );
-
     }
-    //    xArray.add( new Integer( (int)m_currentPoint.getX() ) );
+    if( m_currentPoint != null )
+      xArray.add( new Integer( m_currentPoint.x ) );
     return ArrayUtils.toPrimitive( (Integer[])xArray.toArray( new Integer[m_points.size()] ) );
   }
 
@@ -261,87 +286,64 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    */
   public void perform()
   {
-    MapPanel mapPanel = getMapPanel();
-    final GeoTransform gt = mapPanel.getProjection();
-    final CS_CoordinateSystem cs = mapPanel.getMapModell().getCoordinatesSystem();
-    final ArrayList positions = new ArrayList();
+    if( !isValid() )
+      return;
     try
     {
-      IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-      ScrabLayerFeatureTheme scrabLayer = (ScrabLayerFeatureTheme)mapPanel.getMapModell().getScrabLayer();
-      CommandableWorkspace workspace = scrabLayer.getWorkspace();
-      ICommand command = new AddFeatureCommand( workspace, scrabLayer.getFeatureType(), workspace.getRootFeature(),
-          ScrabLayerFeatureTheme.FEATURE_MEMBER, 0, getPropertyNameGeomMap(), KalypsoCorePlugin.getDefault()
-              .getSelectionManager() );
-      workspace.postCommand( command );
+      //      final GM_Object geometry = createGeometry( m_points );
+      if( m_validGeometryValue == null ) // nothing to perform
+        return;
+      final Map valueMap = new HashMap();
+      valueMap.put( m_geometryProperty, m_validGeometryValue );
+      final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_linkFTP.getName(),
+          0, valueMap, KalypsoCorePlugin.getDefault().getSelectionManager() );
+      m_workspace.postCommand( command );
     }
     catch( Exception e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     clear();
   }
 
-  private ArrayList getPosArray()
+  private List getPositionArray( final List listPoints )
   {
-    ArrayList positions = new ArrayList();
-    MapPanel mapPanel = getMapPanel();
-    final GeoTransform gt = mapPanel.getProjection();
-    final CS_CoordinateSystem cs = mapPanel.getMapModell().getCoordinatesSystem();
-    for( int i = 0; i < m_points.size(); i++ )
+    final List positions = new ArrayList();
+    for( int i = 0; i < listPoints.size(); i++ )
     {
-      final Point p = (Point)m_points.get( i );
+      final Point p = (Point)listPoints.get( i );
       int x = (int)p.getX();
       int y = (int)p.getY();
-      GM_Position pos = GeometryFactory.createGM_Position( gt.getSourceX( x ), gt.getSourceY( y ) );
+      final GM_Position pos = GeometryFactory.createGM_Position( m_projection.getSourceX( x ), m_projection
+          .getSourceY( y ) );
       positions.add( pos );
     }
     return positions;
   }
 
-  private GM_Surface getPolygon() throws GM_Exception
+  private GM_Surface getPolygon( final List posArray ) throws GM_Exception
   {
-    ArrayList posArray = getPosArray();
+
+    // close the ring
     posArray.add( posArray.get( 0 ) );
-    return GeometryFactory.createGM_Surface( (GM_Position[])posArray.toArray( new GM_Position[posArray.size()] ), null,
-        null, getMapPanel().getMapModell().getCoordinatesSystem() );
+    final GM_Position[] positions = (GM_Position[])posArray.toArray( new GM_Position[posArray.size()] );
+    return GeometryFactory.createGM_Surface( positions, null, null, m_coordinatesSystem );
   }
 
-  private GM_Curve getLineString() throws GM_Exception
+  private GM_Curve getLineString( final List posArray ) throws GM_Exception
   {
-    ArrayList posArray = getPosArray();
     return GeometryFactory.createGM_Curve( (GM_Position[])posArray.toArray( new GM_Position[posArray.size()] ),
-        getMapPanel().getMapModell().getCoordinatesSystem() );
+        m_coordinatesSystem );
   }
 
-  private Symbolizer getUserStyle( GM_Object geom )
+  /**
+   * @return a point
+   */
+  private GM_Point getPoint( final List posArray )
   {
-    Symbolizer symbolizers = null;
-    if( geom instanceof GM_Point )
-      symbolizers = StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, StyleFactory
-          .createMark( "square" ), .7d, 5, 0 ), GEOM_PROPERTY_NAME );
-    if( geom instanceof GM_Curve )
-      symbolizers = StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), GEOM_PROPERTY_NAME );
-    if( geom instanceof GM_Surface )
-      symbolizers = StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(
-          Color.GRAY, 0.5d ), GEOM_PROPERTY_NAME );
-    //    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( "default", symbolizers );
-    //    return (UserStyle)StyleFactory.createStyle( "default", "default", "empty Abstract", featureTypeStyle );
-    return symbolizers;
-  }
-
-  private Feature getFeature( GM_Object geom )
-  {
-    FeatureTypeProperty property = FeatureFactory.createFeatureTypeProperty( GEOM_PROPERTY_NAME, geom.getClass()
-        .getName(), false );
-    FeatureType featureType = FeatureFactory.createFeatureType( "DisplayFeatureType", "www.defaultnamespace.de",
-        new FeatureTypeProperty[]
-        { property }, new int[]
-        { 1 }, new int[]
-        { 1 }, null, null );
-    FeatureProperty featureProperty = FeatureFactory.createFeatureProperty( GEOM_PROPERTY_NAME, geom );
-    return FeatureFactory.createFeature( "geom0", featureType, new FeatureProperty[]
-    { featureProperty } );
+    final GM_Position pos = (GM_Position)posArray.get( 0 );
+    return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), m_coordinatesSystem );
   }
 
   /**
@@ -349,11 +351,14 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    */
   public void doubleClickedLeft( Point p )
   {
+    if( !isValid() )
+      return;
     if( !m_points.isEmpty() )
     {
-      if( m_geomType.equals( CreatePolygonWidgetDelegate.GEOM_TYPE ) && m_points.size() >= 3 )
+      if( m_geometryProperty.getType().equals( GeometryUtilities.getPolygonClass().getName() ) && m_points.size() >= 3 )
         perform();
-      if( m_geomType.equals( CreateLineStringWidgetDelegate.GEOM_TYPE ) && m_points.size() >= 2 )
+      if( m_geometryProperty.getType().equals( GeometryUtilities.getLineStringClass().getName() )
+          && m_points.size() >= 2 )
         perform();
     }
 
@@ -364,7 +369,64 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    */
   public void doubleClickedRight( Point p )
   {
-  // TODO Auto-generated method stub
-
+  // nothing
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+    update( mapPanel );
+  }
+
+  private boolean isValid()
+  {
+    return m_valid;
+  }
+
+  private void update( MapPanel mapPanel )
+  {
+    try
+    {
+      final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
+      if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
+      {
+        m_coordinatesSystem = mapPanel.getMapModell().getCoordinatesSystem();
+        m_projection = mapPanel.getProjection();
+        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme)activeTheme;
+        m_workspace = fTheme.getWorkspace();
+        m_featureType = fTheme.getFeatureType();
+        // TODO ask for substitutions
+        final FeatureList featureList = fTheme.getFeatureList();
+        m_parentFeature = featureList.getParentFeature();
+        m_linkFTP = featureList.getParentFeatureTypeProperty();
+        // find geometryproperty
+        final FeatureTypeProperty[] allGeomteryProperties = m_featureType.getAllGeomteryProperties();
+        final List validGeometryFTPList = new ArrayList();
+        for( int i = 0; i < allGeomteryProperties.length; i++ )
+        {
+          final FeatureTypeProperty property = allGeomteryProperties[i];
+          if( m_apreferedGeometryClass == null || property.getType().equals( m_apreferedGeometryClass.getName() ) )
+            validGeometryFTPList.add( property );
+        }
+        if( !validGeometryFTPList.isEmpty() ) // TODO ask if .size()> 1
+          m_geometryProperty = (FeatureTypeProperty)validGeometryFTPList.get( 0 );
+        else
+          m_geometryProperty = null;
+        m_valid = m_geometryProperty != null;
+      }
+      else
+        m_valid = false;
+    }
+    catch( Exception e )
+    {
+      m_valid = false;
+    }
+  }
+
+  private class NotEnoughPointsExeption extends Exception
+  {}
 }

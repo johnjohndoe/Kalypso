@@ -178,9 +178,9 @@ public class AddFeatureCommand implements ICommand
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    if( m_selectionManager != null )
-      m_selectionManager.changeSelection( new Feature[0], new EasyFeatureWrapper[]
-      { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
+//    if( m_selectionManager != null )
+//      m_selectionManager.changeSelection( new Feature[0], new EasyFeatureWrapper[]
+//      { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
 
   }
 }

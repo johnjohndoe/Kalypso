@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -79,8 +80,19 @@ public class WidgetHelper
       return ( new ZoomInByRectWidget( "zoom in", "" ) );
     if( MapPanel.WIDGET_PAN.equals( widgetID ) )
       return ( new PanToWidget( "pan to", "" ) );
-    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
-      return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
+
+    //    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
+    //      return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
+    // the geometry feature creators:
+    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ) );
+    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ) );
+    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ) );
+    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
+      return ( new CreateGeometeryWidget2( "create Geometry", "", null ) );
+    //
     if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
       return ( new SelectWidget( "select", "" ) );
     if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )

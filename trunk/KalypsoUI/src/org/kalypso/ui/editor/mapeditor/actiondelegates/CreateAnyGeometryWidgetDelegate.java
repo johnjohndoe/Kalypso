@@ -45,9 +45,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
- * @author kuepfer
+ * @author doemming
  */
-public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class CreateAnyGeometryWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
 
   public static final String GEOM_TYPE = GeometryUtilities.getPolygonClass().getName().replaceAll( ".+\\.", "" );
@@ -55,9 +55,9 @@ public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDeleg
   /**
    *  
    */
-  public CreatePolygonWidgetDelegate()
+  public CreateAnyGeometryWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON) );
+    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) );
   }
 
   public void selectionChanged( IAction action, ISelection selection )
@@ -65,8 +65,7 @@ public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDeleg
     action.setEnabled( false );
     if( selection instanceof KalypsoFeatureThemeSelection )
     {
-      KalypsoFeatureThemeSelection s = (KalypsoFeatureThemeSelection)selection;
-      IEditorPart editor = getEditor();
+      final IEditorPart editor = getEditor();
       if( editor instanceof GisMapEditor )
       {
         IMapModell mapModell = ( (GisMapEditor)editor ).getMapPanel().getMapModell();
@@ -75,15 +74,9 @@ public class CreatePolygonWidgetDelegate extends AbstractGisMapEditorActionDeleg
         {
           FeatureType featureType = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
           FeatureTypeProperty[] geomProps = featureType.getAllGeomteryProperties();
-          for( int i = 0; i < geomProps.length; i++ )
-          {
-            FeatureTypeProperty property = geomProps[i];
-            if( GeometryUtilities.isPolygonGeometry( property ) )
-              action.setEnabled( true );
-          }
+          action.setEnabled( geomProps.length>0 );
         }
       }
     }
   }
-  
 }

@@ -221,7 +221,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         for( int i = 0; i < parents.length; i++ )
         {
           Feature parent = parents[i];
-          if( m_featureList.contains( parent ) )
+          if( m_featureList.getParentFeature()== parent  )
           {
             switch( fscme.getChangeType() )
             {
