@@ -29,54 +29,21 @@
  */
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
+ *   delegate to create features drawing any geometries on map
  * 
  * @author doemming
  */
-public class CreateAnyGeometryWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class CreateAnyGeometryWidgetDelegate extends AbstractCreateGeometryWidgetDelegate
 {
 
-  public static final String GEOM_TYPE = GeometryUtilities.getPolygonClass().getName().replaceAll( ".+\\.", "" );
-
   /**
-   *  
+   * delegate to create features drawing polygons on map
    */
   public CreateAnyGeometryWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) );
-  }
-
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-    action.setEnabled( false );
-    if( selection instanceof KalypsoFeatureThemeSelection )
-    {
-      final IEditorPart editor = getEditor();
-      if( editor instanceof GisMapEditor )
-      {
-        IMapModell mapModell = ( (GisMapEditor)editor ).getMapPanel().getMapModell();
-        IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
-        {
-          FeatureType featureType = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
-          FeatureTypeProperty[] geomProps = featureType.getAllGeomteryProperties();
-          action.setEnabled( geomProps.length>0 );
-        }
-      }
-    }
+    super( GM_Object.class );
   }
 }

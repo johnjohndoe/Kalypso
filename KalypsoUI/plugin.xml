@@ -442,7 +442,7 @@
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
          <action
-               toolbarPath="karte/edit"
+               toolbarPath="karte/tools"
                label="Geometrie zeichnen"
                tooltip="Neue Geometry in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate"
@@ -452,7 +452,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreateGeometry"/>
          <action
-               toolbarPath="karte/edit"
+               toolbarPath="karte/tools"
                label="Polygon zeichnen"
                tooltip="Neues Polygon in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate"
@@ -462,7 +462,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePolygon"/>
          <action
-               toolbarPath="karte/edit"
+               toolbarPath="karte/tools"
                label="Polylinie zeichnen"
                tooltip="Neue Polylinie in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate"
@@ -472,7 +472,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePolyline"/>
          <action
-               toolbarPath="karte/edit"
+               toolbarPath="karte/tools"
                label="Punkt zeichnen"
                tooltip="Neuer Punkt in einer Karte auf das Skizzier-Thema zeichen "
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate"
