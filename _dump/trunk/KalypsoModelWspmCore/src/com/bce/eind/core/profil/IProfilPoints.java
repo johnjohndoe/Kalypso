@@ -4,12 +4,10 @@ import java.util.LinkedList;
 
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
-
 public interface IProfilPoints
 {
-
-  /*
-   * return a valid ProfilPoint if operation succeeds, othwerwise null
+  /**
+   * @return a valid ProfilPoint if operation succeeds, othwerwise null
    */
   abstract IProfilPoint addPoint( final double breite, final double hoehe );
 

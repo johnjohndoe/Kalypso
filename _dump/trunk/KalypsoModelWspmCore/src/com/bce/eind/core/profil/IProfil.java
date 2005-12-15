@@ -31,7 +31,9 @@ public interface IProfil
    * @return IProfilDevider
    */
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider );
+
   public void addDevider( IProfilDevider devider );
+
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY property );
 
   /**
@@ -193,5 +195,14 @@ public interface IProfil
    */
   public void setProperty( final Object key, final Object value ) throws ProfilDataException;
 
-  public boolean isSpecialPoint( final IProfilPoint point );
+  public void setActivePoint( final IProfilPoint point );
+
+  /**
+   * @return Returns the activePoint.
+   */
+  public IProfilPoint getActivePoint( );
+
+  public POINT_PROPERTY getActiveProperty( );
+
+  public void setActiveProperty( POINT_PROPERTY activeProperty );
 }

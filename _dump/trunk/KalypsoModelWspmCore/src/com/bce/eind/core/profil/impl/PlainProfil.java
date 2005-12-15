@@ -36,6 +36,14 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private final HashMap<Object, Object> m_profilMetaData;
 
+  /**
+   * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im
+   * Diagramm der zuletzt angeklickte.
+   */
+  private IProfilPoint m_activePoint;
+
+  private POINT_PROPERTY m_activeProperty;
+
   public PlainProfil( )
   {
     m_profilMetaData = new HashMap<Object, Object>();
@@ -326,17 +334,19 @@ public class PlainProfil implements IProfilConstants, IProfil
 
     if( pointProperty == null )
       return false;
- 
-    return  m_points.removeProperty( pointProperty );
+
+    return m_points.removeProperty( pointProperty );
 
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.bce.eind.core.profil.IProfil#getDependenciesFor(com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public POINT_PROPERTY[] getDependenciesFor( POINT_PROPERTY property )
   {
-   return m_points.getDependenciesFor( property );
+    return m_points.getDependenciesFor( property );
   }
 
   /**
@@ -371,20 +381,6 @@ public class PlainProfil implements IProfilConstants, IProfil
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfil#isSpecialPoint(com.bce.eind.core.profil.IProfilPoint)
-   */
-  public boolean isSpecialPoint( IProfilPoint point )
-  {
-    final IProfilDevider[] deviders = getDevider( DEVIDER_TYP.values() );
-    for( IProfilDevider devider : deviders )
-    {
-      if( devider.getPoint() == point )
-        return true;
-    }
-    return false;
-  }
-
-  /**
    * @see com.bce.eind.core.profil.IProfil#addDevider(com.bce.eind.core.profil.IProfilDevider)
    */
   public void addDevider( IProfilDevider devider )
@@ -392,5 +388,26 @@ public class PlainProfil implements IProfilConstants, IProfil
     m_devider.add( devider );
   }
 
-  
+  public POINT_PROPERTY getActiveProperty( )
+  {
+    return m_activeProperty;
+  }
+
+  public void setActiveProperty( POINT_PROPERTY activeProperty )
+  {
+    m_activeProperty = activeProperty;
+  }
+
+  public void setActivePoint( final IProfilPoint point )
+  {
+    m_activePoint = point;
+  }
+
+  /**
+   * @return Returns the activePoint.
+   */
+  public IProfilPoint getActivePoint( )
+  {
+    return m_activePoint;
+  }
 }

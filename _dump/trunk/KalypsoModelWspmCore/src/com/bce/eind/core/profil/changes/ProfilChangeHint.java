@@ -3,7 +3,6 @@
  */
 package com.bce.eind.core.profil.changes;
 
-
 /**
  * @author belger
  */
@@ -18,13 +17,15 @@ public class ProfilChangeHint
   private boolean m_pointPropertiesChanged = false;
 
   private boolean m_pointsChanged = false;
-  
+
   private boolean m_deviderDataChanged = false;
-  
+
   private boolean m_deviderMoved = false;
-  
+
   private boolean m_ProfilPropertyChanged = false;
- 
+
+  private boolean m_activePointChanged = false;
+
   public void setBuildingChanged( )
   {
     m_buildingChanged = true;
@@ -88,25 +89,28 @@ public class ProfilChangeHint
     return m_pointsChanged;
   }
 
-   public void setDeviderMoved()
+  public void setDeviderMoved( )
   {
     m_deviderMoved = true;
   }
-  /** 
-   * true if one or more devider moved 
-   * */
-  public boolean isDeviderMoved()
+
+  /**
+   * true if one or more devider moved
+   */
+  public boolean isDeviderMoved( )
   {
     return m_deviderMoved;
   }
-  public void setDeviderDataChanged()
+
+  public void setDeviderDataChanged( )
   {
     m_deviderDataChanged = true;
   }
-  /** 
+
+  /**
    * true if one or more devider changed properties
-   * */
-  public boolean isDeviderDataChanged()
+   */
+  public boolean isDeviderDataChanged( )
   {
     return m_deviderDataChanged;
   }
@@ -119,9 +123,20 @@ public class ProfilChangeHint
     return m_ProfilPropertyChanged;
   }
 
-  
   public void setProfilPropertyChanged( boolean profilPropertyChanged )
   {
     m_ProfilPropertyChanged = profilPropertyChanged;
+  }
+
+  public void setActivePointChanged( )
+  {
+    m_activePointChanged = true;
+  }
+
+  /** true, if the active point or the active property of the profil changes. 
+   * @return */
+  public boolean isActivePointChanged( )
+  {
+    return m_activePointChanged;
   }
 }
