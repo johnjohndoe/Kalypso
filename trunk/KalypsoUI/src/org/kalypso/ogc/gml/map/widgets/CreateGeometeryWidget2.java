@@ -149,6 +149,9 @@ public class CreateGeometeryWidget2 extends AbstractWidget
   {
     if( !isValid() )
       return;
+
+    if( !m_points.isEmpty() && ( (Point)m_points.get( m_points.size() - 1 ) ).equals( p ) )
+      return;
     // first test if vaild...
     final List testList = new ArrayList();
     for( Iterator iter = m_points.iterator(); iter.hasNext(); )

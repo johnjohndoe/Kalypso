@@ -29,64 +29,18 @@
  */
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * delegate to create features drawing points on map
  * 
- * TODO: insert type comment here
- * 
- * @author kuepfer
+ * @author doemming
  */
-public class CreatePointWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class CreatePointWidgetDelegate extends AbstractCreateGeometryWidgetDelegate
 {
-
-  /**
-   *  
-   */
-
-  public static final String GEOM_TYPE = GeometryUtilities.getPointClass().getName().replaceAll( ".+\\.", "" );
 
   public CreatePointWidgetDelegate()
   {
-    super( WidgetHelper.getWidget( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) );
+    super( GeometryUtilities.getPointClass() );
   }
-
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-    action.setEnabled( false );
-    if( selection instanceof KalypsoFeatureThemeSelection )
-    {
-      KalypsoFeatureThemeSelection s = (KalypsoFeatureThemeSelection)selection;
-      IEditorPart editor = getEditor();
-      if( editor instanceof GisMapEditor )
-      {
-        IMapModell mapModell = ( (GisMapEditor)editor ).getMapPanel().getMapModell();
-        IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
-        {
-          FeatureType featureType = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
-          FeatureTypeProperty[] geomProps = featureType.getAllGeomteryProperties();
-          for( int i = 0; i < geomProps.length; i++ )
-          {
-            FeatureTypeProperty property = geomProps[i];
-            if( GeometryUtilities.isPointGeometry( property ) )
-              action.setEnabled( true );
-          }
-        }
-      }
-    }
-  }
-
 }
