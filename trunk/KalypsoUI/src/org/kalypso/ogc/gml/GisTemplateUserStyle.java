@@ -67,6 +67,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
   private final PoolableObjectType m_styleKey;
 
+  
   //  private UserStyle m_userStyle = dummyStyle;
 
   private boolean m_loaded = false;
@@ -159,5 +160,10 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     styleType.setStyle( m_styleName );
     styleType.setType( "simple" );
     stylesList.add( styleType );
+  }
+
+  public PoolableObjectType getPoolKey()
+  {
+    return m_styleKey;
   }
 }

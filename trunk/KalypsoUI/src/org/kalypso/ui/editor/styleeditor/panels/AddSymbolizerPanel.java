@@ -262,6 +262,7 @@ public class AddSymbolizerPanel
     }
     else if( symbolizerString.equals( "Text" ) )
     {
+      
       TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
