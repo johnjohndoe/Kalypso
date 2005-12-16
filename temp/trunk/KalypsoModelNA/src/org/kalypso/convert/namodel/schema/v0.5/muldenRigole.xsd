@@ -83,6 +83,20 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="roughnessPipe" type="double">
+					<annotation>
+							<documentation xml:lang="de">
+								<label>Dränrohrrauigkeit</label>
+								<tooltip>Rauigkeit des Dränrohres im Mulden-Rigolen-System</tooltip>
+								<description>Rauigkeit des Dränrohres</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>TODO</label>
+								<tooltip>TODO</tooltip>
+								<description>TODO</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="widthTrench" type="double">
 						<annotation>
 							<documentation xml:lang="de">

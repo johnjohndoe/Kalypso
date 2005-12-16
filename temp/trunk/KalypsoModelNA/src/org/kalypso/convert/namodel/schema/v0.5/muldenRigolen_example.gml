@@ -14,6 +14,7 @@
       		<drainPipeSlope>0.0351</drainPipeSlope>
       		<kfPipe>8740000.0</kfPipe>
       		<diameterPipe>200.0</diameterPipe>
+      		<roughnessPipe>120.0</roughnessPipe>
       		<widthTrench>2.5</widthTrench>
       		<nutzung>ALB_231</nutzung>
 	  		<boden>2Hn8mSf6</boden>
@@ -33,6 +34,7 @@
       		<drainPipeSlope>0.0351</drainPipeSlope>
       		<kfPipe>8740000.0</kfPipe>
       		<diameterPipe>200.0</diameterPipe>
+      		<roughnessPipe>50.0</roughnessPipe>
       		<widthTrench>2.5</widthTrench>
       		<nutzung>ALB_111</nutzung>
 	  		<boden>5Hn5mSf6</boden>
