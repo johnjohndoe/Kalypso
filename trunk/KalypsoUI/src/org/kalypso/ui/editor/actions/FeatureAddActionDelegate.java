@@ -37,12 +37,14 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -57,10 +59,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureAddActionDelegate implements IActionDelegate
+public class FeatureAddActionDelegate implements IEditorActionDelegate
 {
 
   private IFeatureSelection m_selection = null;
+  private GisMapEditor m_editor;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -159,6 +162,14 @@ public class FeatureAddActionDelegate implements IActionDelegate
     }
 
     return true;
+  }
+
+  /**
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  {
+    m_editor = (GisMapEditor)targetEditor;   
   }
 
 }

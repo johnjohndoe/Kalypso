@@ -99,6 +99,8 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
     if( editor != null && editor instanceof GisMapEditor )
     {
       final IMapModell mapModell = ( (GisMapEditor)editor ).getMapPanel().getMapModell();
+      if( mapModell == null )
+        return false;
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme == null )
         return false;
