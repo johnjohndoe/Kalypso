@@ -21,7 +21,7 @@ public class ProfilBuildingFactory
   {
     switch( buildingTyp )
     {
-      
+
       case EI:
         return new BuildingEi();
       case KREIS:
@@ -32,7 +32,7 @@ public class ProfilBuildingFactory
         return new BuildingMaul();
       case BRUECKE:
         return new BuildingBruecke();
-              case WEHR:
+      case WEHR:
         return new BuildingWehr();
       default:
         return null;

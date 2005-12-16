@@ -1,6 +1,7 @@
 package com.bce.eind.core.profil.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,10 +40,14 @@ public class PlainProfil implements IProfilConstants, IProfil
   /**
    * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im
    * Diagramm der zuletzt angeklickte.
+   * Die sichtbaren Trenner werden auch hier verwaltet
    */
   private IProfilPoint m_activePoint;
 
   private POINT_PROPERTY m_activeProperty;
+  
+  private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
+
 
   public PlainProfil( )
   {
@@ -51,7 +56,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     m_points.addProperty( POINT_PROPERTY.BREITE );
     m_points.addProperty( POINT_PROPERTY.HOEHE );
     m_building = null;
-
+    m_visibleDevider.addAll( Arrays.asList( IProfilDevider.DEVIDER_TYP.values() ) );
   }
 
   /**
@@ -65,7 +70,26 @@ public class PlainProfil implements IProfilConstants, IProfil
 
     return pd;
   }
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
+  {
+    if( visible )
+    {
+      if( !m_visibleDevider.contains( deviderTyp ) )
+      {
+        m_visibleDevider.add( deviderTyp );
+      }
 
+    }
+    else
+      m_visibleDevider.remove( deviderTyp );
+  }
+
+  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp )
+  {
+
+    return m_visibleDevider.contains( deviderTyp );
+
+  }
   /**
    * @see com.bce.eind.core.profil.ProfilPoints#addPoint(double,double)
    */

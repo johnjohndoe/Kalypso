@@ -14,20 +14,17 @@ public class DeviderAdd implements IProfilChange
   private final IProfil m_profil;
 
   private final IProfilDevider m_devider;
-  
-  public DeviderAdd(final IProfil profil,final IProfilDevider devider)
-  
+
+  public DeviderAdd( final IProfil profil, final IProfilDevider devider )
   {
     m_profil = profil;
     m_devider = devider;
   }
 
-
-  public DeviderAdd(final IProfil profil, final DEVIDER_TYP typ,final IProfilPoint position)
-      
+  public DeviderAdd( final IProfil profil, final DEVIDER_TYP typ, final IProfilPoint position )
   {
     m_profil = profil;
-    m_devider = ProfilDeviderFactory.createDevider(typ,position);
+    m_devider = ProfilDeviderFactory.createDevider( typ, position );
   }
 
   /**
@@ -37,10 +34,9 @@ public class DeviderAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
     hint.setDeviderMoved();
-    
-    m_profil.addDevider(m_devider); 
-    return new DeviderRemove(m_profil, m_devider);
+
+    m_profil.addDevider( m_devider );
+    return new DeviderRemove( m_profil, m_devider );
   }
 
- 
 }

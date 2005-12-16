@@ -205,4 +205,8 @@ public interface IProfil
   public POINT_PROPERTY getActiveProperty( );
 
   public void setActiveProperty( POINT_PROPERTY activeProperty );
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible );
+  
+
+  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp );
 }
