@@ -10,6 +10,8 @@
 	<input id="Template" description="Steuerdaten"/>
 	<input id="SceConf" description="Modelldaten" optional="true"/>
 
+	<!-- fuer flows -->
+    <input id="Measure" description="Massnahmen" optional="true"/>
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>

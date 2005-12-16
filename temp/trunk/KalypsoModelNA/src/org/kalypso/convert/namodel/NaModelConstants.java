@@ -64,7 +64,7 @@ public interface NaModelConstants
   public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
 
   public static final String NS_NAMETA = "org.kalypso.na.control";
-  
+
   public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";
 
   public static final String NS_NACONTROL = "org.kalypso.namodell.control";
@@ -75,6 +75,12 @@ public interface NaModelConstants
 
   public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
 
+  // flows
+  public final static String IN_MEASURE_ID = "Measure";
+
+  // flows
+  public static final String NS_MEASURE = "http://www.tuhh.de/kalypsoDSS";
+
   public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
 
   public static final String LOG_OUTRES_ID = "LOG_OUTRES";
@@ -82,8 +88,8 @@ public interface NaModelConstants
   public static final String LOG_OUTERR_ID = "LOG_OUTERR";
 
   public static final String OUT_ZML = "OUT_ZML";
-  
-  public static final String OUT_OPTIMIZEFILE= "OUT_OPTIMIZEFILE";
+
+  public static final String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE";
 
   public static final String OUTPUT_DIR_NAME = "results";
 

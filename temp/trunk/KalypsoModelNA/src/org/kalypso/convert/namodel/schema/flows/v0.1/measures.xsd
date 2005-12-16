@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.tuhh.de/kalypsoDSS" version="0.1" xmlns:dss="http://www.tuhh.de/kalypsoDSS" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+
+	<element name="DSSMeasures" type="dss:DSSMeasuresType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DSSMeasuresType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="measuresMember" type="dss:MeasuresAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="MeasuresAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="dss:Measure"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Measure" type="gml:AbstractFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="MeasureSealing" type="dss:MeasureSealingType" substitutionGroup="dss:Measure"/>
+	<complexType name="MeasureSealingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaOfInterest" type="gml:PolygonPropertyType"/>
+					<element name="grz" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

@@ -54,9 +54,10 @@ public class OptimizeCalcDataProvider implements ICalcDataProvider
 
   private final HashMap m_map = new HashMap();
 
-  /*
+  /**
+   * @author doemming
    * 
-   * @author huebsch
+   * TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
    */
   public OptimizeCalcDataProvider( ICalcDataProvider calcDataProvider )
   {

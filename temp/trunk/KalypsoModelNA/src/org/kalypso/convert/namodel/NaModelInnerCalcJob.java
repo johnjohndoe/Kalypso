@@ -48,7 +48,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -71,7 +70,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -173,7 +171,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       throws CalcJobServiceException
   {
     final Logger logger = Logger.getAnonymousLogger();
-    File infoFile = new File( tmpdir, "infolog.txt" );
+    final File infoFile = new File( tmpdir, "infolog.txt" );
     FileWriter writer = null;
     try
     {
@@ -1543,82 +1541,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       IOUtils.closeQuietly( logWriter );
       IOUtils.closeQuietly( errorWriter );
-    }
-  }
-
-  private void startCalculationOld( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
-  {
-    InputStreamReader inStream = null;
-    InputStreamReader errStream = null;
-    PrintWriter outwriter = null;
-    PrintWriter errwriter = null;
-
-    try
-    {
-      final File exeFile = new File( basedir, m_kalypsoKernelPath );
-      final File exeDir = exeFile.getParentFile();
-      final String commandString = exeFile.getAbsolutePath();
-
-      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
-
-      outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-      errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-
-      inStream = new InputStreamReader( process.getInputStream() );
-      errStream = new InputStreamReader( process.getErrorStream() );
-      while( true )
-      {
-        CopyUtils.copy( inStream, outwriter );
-        CopyUtils.copy( errStream, errwriter );
-
-        try
-        {
-          process.exitValue();
-          return;
-        }
-        catch( IllegalThreadStateException e )
-        {
-          // noch nicht fertig
-        }
-
-        if( monitor.isCanceled() )
-        {
-          process.destroy();
-          return;
-        }
-        Thread.sleep( 100 );
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
-    }
-    finally
-    {
-      try
-      {
-        if( outwriter != null )
-          outwriter.close();
-
-        if( errwriter != null )
-          errwriter.close();
-
-        if( inStream != null )
-          inStream.close();
-
-        if( errStream != null )
-          errStream.close();
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
     }
   }
 
