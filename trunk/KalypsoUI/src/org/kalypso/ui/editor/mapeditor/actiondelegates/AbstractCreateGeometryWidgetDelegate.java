@@ -40,6 +40,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -88,7 +89,7 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
       return MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING;
     if( geometryClass == GeometryUtilities.getPolygonClass() )
       return MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON;
-    //    if( geometryClass == null || geometryClass == GM_Object.class )
+    //        if( geometryClass == null || geometryClass == GM_Object.class )
     // default:
     return MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY;
   }
@@ -116,7 +117,8 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
         for( int i = 0; i < geomProps.length; i++ )
         {
           final FeatureTypeProperty property = geomProps[i];
-          if( m_geometryClass == null || property.getType().equals( m_geometryClass.getName() ) )
+          if( m_geometryClass == null || m_geometryClass == GM_Object.class
+              || property.getType().equals( m_geometryClass.getName() ) )
             return true;
         }
       }
