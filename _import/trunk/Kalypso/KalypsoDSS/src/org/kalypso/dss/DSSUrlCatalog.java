@@ -47,10 +47,10 @@ public class DSSUrlCatalog extends AbstractUrlCatalog
    */
   protected void fillCatalog( Class myClass, Map catalog )
   {
-  // these are defines in UrlCatalogNA now.
-  //    catalog.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/v0.1/BPlan-Minimal_measures.xsd"
-  // ) );
-  //    catalog.put( "http://www.tuhh.de/kalypsoDSS", getClass().getResource( "resources/v0.1/measures.xsd" ) );
+    //   these are defines in UrlCatalogNA now.
+    catalog.put( "http://www.xplanung.de/bplangml", getClass()
+        .getResource( "resources/v0.1/BPlan-Minimal_measures.xsd" ) );
+    //    catalog.put( "http://www.tuhh.de/kalypsoDSS", getClass().getResource( "resources/v0.1/measures.xsd" ) );
   }
 
 }
