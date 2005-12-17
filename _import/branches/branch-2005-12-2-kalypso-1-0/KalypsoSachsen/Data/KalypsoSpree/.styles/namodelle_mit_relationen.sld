@@ -74,7 +74,7 @@
               <ogc:PropertyName>link_gewichtung</ogc:PropertyName>
             </Geometry>
             <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
+              <CssParameter name="stroke">#0000FF</CssParameter>
               <CssParameter name="stroke-width">1.0</CssParameter>
               <CssParameter name="stroke-linejoin">mitre</CssParameter>
               <CssParameter name="stroke-opacity">1.0</CssParameter>

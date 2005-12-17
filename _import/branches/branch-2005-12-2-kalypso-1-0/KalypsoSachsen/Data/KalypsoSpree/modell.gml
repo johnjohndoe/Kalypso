@@ -41,9 +41,21 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewSchirgiswalde">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewSchirgiswaldeSohland">
+              <faktor>0.68</faktor>
               <ombrometerMember xlink:href="#Ombrometer-Sohland"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewSchirgiswaldeKubschuetz">
+              <faktor>0.01</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Kubschütz,_Kr._Bautzen"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewSchirgiswaldeEibau">
+              <faktor>0.31</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Eibau-Walddorf"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -87,9 +99,15 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewBautzen">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewBautzenKubschuetz">
+              <faktor>0.35</faktor>
               <ombrometerMember xlink:href="#Ombrometer-Kubschütz,_Kr._Bautzen"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewBautzenSohland">
+              <faktor>0.65</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Sohland"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -133,9 +151,27 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewGroeditz">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewGroeditzKubschütz">
+              <faktor>0.08</faktor>
               <ombrometerMember xlink:href="#Ombrometer-Kubschütz,_Kr._Bautzen"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewGroeditzTSQuitzdorf">
+              <faktor>0.11</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-TS_Quitzdorf"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewGroeditzReichenbach">
+              <faktor>0.44</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Reichenbach_OL"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewGroeditzEibau">
+              <faktor>0.37</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Eibau-Walddorf"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -179,9 +215,21 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewJaenkendorf">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewJaenkendorfTSQuitzdorf">
+              <faktor>0.18</faktor>
               <ombrometerMember xlink:href="#Ombrometer-TS_Quitzdorf"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewJaenkendorfReichanbach">
+              <faktor>0.77</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Reichenbach_OL"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewJaenkendorfGoerlitz">
+              <faktor>0.05</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Görlitz"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -225,9 +273,21 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewSaerichen">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewSaerichenTSQuitzdorf">
+              <faktor>0.07</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-TS_Quitzdorf"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewSaerichenReichenbach">
+              <faktor>0.09</faktor>
               <ombrometerMember xlink:href="#Ombrometer-Reichenbach_OL"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewSaerichenGoerlitz">
+              <faktor>0.83</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Görlitz"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -271,9 +331,15 @@
             </gml:Polygon>
           </GEOM_EZG>
           <gewichtung>
-            <GewichtungsElement fid="GewHoltendorf">
-              <faktor>1.0</faktor>
+            <GewichtungsElement fid="GewHoltendorfGoerlitz">
+              <faktor>0.37</faktor>
               <ombrometerMember xlink:href="#Ombrometer-Görlitz"/>
+            </GewichtungsElement>
+          </gewichtung>
+          <gewichtung>
+            <GewichtungsElement fid="GewHoltendorfReichenbach">
+              <faktor>0.63</faktor>
+              <ombrometerMember xlink:href="#Ombrometer-Reichenbach_OL"/>
             </GewichtungsElement>
           </gewichtung>
         </Einzugsgebiet>
@@ -549,7 +615,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Sohland">
           <ombrometer:name>Sohland</ombrometer:name>
-          <ombrometer:NR>sO484 462080</ombrometer:NR>
+          <ombrometer:NR>462080</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5459333.725269554,5657226.828756005</gml:coordinates>
@@ -563,7 +629,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Kubschütz,_Kr._Bautzen">
           <ombrometer:name>Kubschütz, Kr. Bautzen</ombrometer:name>
-          <ombrometer:NR>sO384 462480</ombrometer:NR>
+          <ombrometer:NR>462480</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5465018.20343926,5668309.493696579</gml:coordinates>
@@ -577,7 +643,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Boxberg">
           <ombrometer:name>Boxberg</ombrometer:name>
-          <ombrometer:NR>sO182 462180</ombrometer:NR>
+          <ombrometer:NR>462180</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5470078.650735768,5696088.600233802</gml:coordinates>
@@ -605,7 +671,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Reichenbach_OL">
           <ombrometer:name>Reichenbach OL</ombrometer:name>
-          <ombrometer:NR>?</ombrometer:NR>
+          <ombrometer:NR>462370</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5485848.633524037,5668204.70942616</gml:coordinates>
@@ -619,7 +685,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Bad_Muskau">
           <ombrometer:name>Bad Muskau</ombrometer:name>
-          <ombrometer:NR>sO025</ombrometer:NR>
+          <ombrometer:NR/>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5479192.57483818,5712730.389765234</gml:coordinates>
@@ -661,7 +727,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-KA_Bischofwerda">
           <ombrometer:name>KA Bischofwerda</ombrometer:name>
-          <ombrometer:NR>?</ombrometer:NR>
+          <ombrometer:NR>414340</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5441879.742050317,5665239.385766858</gml:coordinates>
@@ -689,7 +755,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Ostritz">
           <ombrometer:name>Ostritz</ombrometer:name>
-          <ombrometer:NR>sO499</ombrometer:NR>
+          <ombrometer:NR>112000</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5495088.826529932,5653732.176846724</gml:coordinates>
@@ -703,7 +769,7 @@
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Görlitz">
           <ombrometer:name>Görlitz</ombrometer:name>
-          <ombrometer:NR>10499</ombrometer:NR>
+          <ombrometer:NR>114050</ombrometer:NR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5496502.998775654,5670045.979366419</gml:coordinates>

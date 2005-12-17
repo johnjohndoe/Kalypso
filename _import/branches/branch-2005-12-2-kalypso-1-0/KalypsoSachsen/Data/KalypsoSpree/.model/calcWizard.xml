@@ -202,7 +202,6 @@
     </page>
 
 	<!-- Phase 3: Ergebnisdarstellung und Ablage -->
-
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
@@ -258,61 +257,6 @@
 				<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
 			</arg>
 		</arg>
-
-<!--
-		<arg name="exporter2">
-			<arg name="id" value="simpleTemplateExporter"/>
-			<arg name="width" value="1024"/>
-			<arg name="height" value="768"/>
-			<arg name="imageFormat" value="png"/>
-			<arg name="templateDiag">
-				<arg name="label" value="Abflußdiagramm, Gebiet obere Spree"/>
-				<arg name="href" value="project:/.templates/calcCase/berichtDiagObereSpree.odt"/>
-				<arg name="documentName" value="obereSpree"/>
-			</arg>
-		</arg>
--->		
-
-<!--
-		<arg name="exporter3">
-			<arg name="id" value="sumUpTableExporter" />
-	
-			<arg name="documentName" value="übersicht.csv" />
-			<arg name="separator" value=";"/>
-			<arg name="charset" value="cp1252"/>
-			<arg name="delta" value="0.0001"/>
-			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-	
-			<arg name="obs3">
-			 	<arg name="label" value="Gröditz" />
-			 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_GROEDI.zml" />
-			</arg>
-			<arg name="obs2">
-			 	<arg name="label" value="Boxberg" />
-			 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_BOXBRG.zml" />
-			</arg>
-			<arg name="obs1">
-			 	<arg name="label" value="Bautzen" />
-			 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" />
-			</arg>
-	
-			<arg name="column1">
-				<arg name="position" value="1"/>
-				<arg name="label" value="Pegel"/>
-				<arg name="content" value="arg:label" />
-			</arg>
-			
-			<arg name="column2">
-				<arg name="position" value="2"/>
-				<arg name="label" value="Gewässer"/>
-				<arg name="content" value="metadata:Gewässer" />
-			</arg>
-	
-			<arg name="axisType" value="W"/>
-			<arg name="timeUnit" value="HOUR" />
-			<arg name="timeStep" value="6" />
-		</arg>
--->		
       </page>
 	
 </calcwizard>
