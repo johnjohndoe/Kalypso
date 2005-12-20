@@ -42,7 +42,9 @@ package org.kalypso.contribs.java.net;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A url-catalog made up from several url-catalogs.
@@ -78,5 +80,19 @@ public class MultiUrlCatalog implements IUrlCatalog
   public Map getCatalog()
   {
     return m_catalog;
+  }
+
+  public String toString()
+  {
+    final StringBuffer result = new StringBuffer();
+    final Set set = m_catalog.keySet();
+    final Iterator iterator = set.iterator();
+    while( iterator.hasNext() )
+    {
+      final Object key = iterator.next();
+      final Object value = m_catalog.get( key );
+      result.append( "\n").append(key.toString() ).append( "\t " ).append( value.toString() ).append( "\n" );
+    }
+    return result.toString();
   }
 }
