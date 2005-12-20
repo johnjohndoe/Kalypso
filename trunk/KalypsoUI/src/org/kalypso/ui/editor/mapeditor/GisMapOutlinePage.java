@@ -188,8 +188,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     // TODO: das nimmt nicht die outline view sondern irgendeine aktive
     // besser wäre wie im kommentar oben, aber die outline-view ist noch gar nicht da
     // was tun?
-    final IWorkbenchPart activePart = page.getActivePart();
-    activePart.getSite().registerContextMenu( menuMgr, m_modellView );
+    if( page != null )
+    {
+      final IWorkbenchPart activePart = page.getActivePart();
+      activePart.getSite().registerContextMenu( menuMgr, m_modellView );
+    }
     m_modellView.getControl().setMenu( menu );
   }
 
