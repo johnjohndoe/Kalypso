@@ -767,7 +767,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @param parentFeature
    * @param ftp
    * @param pos
-   * @return
    */
   public boolean isBrokenLink( final Feature parentFeature, final FeatureTypeProperty ftp, final int pos )
   {

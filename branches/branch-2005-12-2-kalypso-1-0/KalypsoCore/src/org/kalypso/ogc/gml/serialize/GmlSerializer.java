@@ -240,7 +240,7 @@ public final class GmlSerializer
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
-    final GMLSchema schema = loadSchemaForGmlDoc( gml );
+    final GMLSchema schema = loadSchemaForGmlDoc( context, gml );
 
     return createGMLWorkspace( gml, schema, context, urlResolver );
   }
@@ -258,35 +258,41 @@ public final class GmlSerializer
 
   /**
    * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per Namespace, dann per schemaLocation.
+   * 
+   * @param context
+   *          context to resolve relative urls, or <code>null</code> if context unknown
    */
-  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc ) throws GmlSerializeException
+  private static GMLSchema loadSchemaForGmlDoc( final URL context, final GMLDocument gmldoc )
+      throws GmlSerializeException
   {
     final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
     final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
     if( schema == null )
     {
-      String errorMessage = ". Noch über die SchemaLocation: ";
+      StringBuffer errorMessage = new StringBuffer( ". Noch über die SchemaLocation: " );
 
       try
       {
-        final URL schemaLocation = gmldoc.getSchemaLocation();
+        final URL schemaLocation = gmldoc.getSchemaLocation( context );
         final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
 
         if( schema2 != null )
           return schema2;
 
-        errorMessage += schemaLocation;
+        errorMessage.append( schemaLocation );
       }
       catch( final MalformedURLException e )
       {
-        errorMessage += e.getLocalizedMessage()
-            + ". Häufige Ursache ist ein fehlendes Schema im Cache (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)";
+        errorMessage
+            .append( e.getLocalizedMessage() )
+            .append(
+                ". Häufige Ursache ist ein fehlendes Schema im Cache (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)" );
 
-        Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage );
+        Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage.toString() );
       }
 
-      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: "
-          + schemaURI + errorMessage );
+      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: " + schemaURI
+          + errorMessage );
     }
 
     return schema;
@@ -302,7 +308,7 @@ public final class GmlSerializer
       schema = new GMLSchema( schemaURL );
     else
       //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
-      schema = loadSchemaForGmlDoc( gml );
+      schema = loadSchemaForGmlDoc( null, gml );
 
     return createGMLWorkspace( gml, schema, schemaURL, null );
   }

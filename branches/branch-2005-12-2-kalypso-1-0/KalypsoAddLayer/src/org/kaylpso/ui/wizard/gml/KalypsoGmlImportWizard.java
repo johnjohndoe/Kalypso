@@ -1,22 +1,14 @@
 package org.kaylpso.ui.wizard.gml;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -87,62 +79,69 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     try
     {
-      IMapModell mapModell = m_outlineviewer.getMapModell();
-      String featureName = null;
-      Feature[] features = m_page.getFeatures();
-      for( int i = 0; i < features.length; i++ )
+      final IMapModell mapModell = m_outlineviewer.getMapModell();
+      final ICommand[] commands = m_page.getCommands( (GisTemplateMapModell)mapModell );
+
+      for( int i = 0; i < commands.length; i++ )
       {
-        Feature feature = features[i];
-        FeaturePath featureId = m_page.getWorkspace().getFeaturepathForFeature( feature );
-        String featurePath = null;
-        if( FeatureHelper.isCollection( feature ) )
-        {
-          FeatureTypeProperty ftp = feature.getFeatureType().getProperties()[0];
-          FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
-          FeatureType[] associationFeatureTypes = fatp.getAssociationFeatureTypes();
-          String typeName = fatp.getName();
-          if( associationFeatureTypes.length == 1 )
-          {
-            featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName;
-            featureName = associationFeatureTypes[0].getName();
-            AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-                featurePath, m_page.getSource() );
-            m_outlineviewer.postCommand( command, null );
-
-          }
-          else
-          {
-            FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( getShell(), associationFeatureTypes );
-            int open = dialog.open();
-            if( open == Window.OK )
-            {
-              FeatureType[] selectedFeatureTypes = dialog.getSelectedFeatureTypes();
-
-              for( int j = 0; j < selectedFeatureTypes.length; j++ )
-              {
-                FeatureType ftype = selectedFeatureTypes[j];
-                featureName = ftype.getName();
-                featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName
-                    + FeaturePath.TYPENAME_TAG_OPEN + featureName + FeaturePath.TYPENAME_TAG_CLOSE;
-                AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-                    featurePath, m_page.getSource() );
-                m_outlineviewer.postCommand( command, null );
-              }
-            }
-            else
-              return false;
-          }
-        }
-        else
-        {
-          featureName = feature.getFeatureType().getName();
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId
-              .toString(), m_page.getSource() );
-          m_outlineviewer.postCommand( command, null );
-
-        }
+        final ICommand command = commands[i];
+        m_outlineviewer.postCommand( command, null );
       }
-
+      //      final IMapModell mapModell = m_outlineviewer.getMapModell();
+      //      String featureName = null;
+      //      final Feature[] features = m_page.getFeatures();
+      //      for( int i = 0; i < features.length; i++ )
+      //      {
+      //        final Feature feature = features[i];
+      //        final FeaturePath featureId = m_page.getWorkspace().getFeaturepathForFeature( feature );
+      //        String featurePath = null;
+      //        if( FeatureHelper.isCollection( feature ) )
+      //        {
+      //          FeatureTypeProperty ftp = feature.getFeatureType().getProperties()[0];
+      //          FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
+      //          FeatureType[] associationFeatureTypes = fatp.getAssociationFeatureTypes();
+      //          String typeName = fatp.getName();
+      //          if( associationFeatureTypes.length == 1 )
+      //          {
+      //            featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName;
+      //            featureName = associationFeatureTypes[0].getName();
+      //            AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
+      //                featurePath, m_page.getSource() );
+      //            m_outlineviewer.postCommand( command, null );
+      //          }
+      //          else
+      //          {
+      //            FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( getShell(), associationFeatureTypes );
+      //            int open = dialog.open();
+      //            if( open == Window.OK )
+      //            {
+      //              FeatureType[] selectedFeatureTypes = dialog.getSelectedFeatureTypes();
+      //
+      //              for( int j = 0; j < selectedFeatureTypes.length; j++ )
+      //              {
+      //                FeatureType ftype = selectedFeatureTypes[j];
+      //                featureName = ftype.getName();
+      //                featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName
+      //                    + FeaturePath.TYPENAME_TAG_OPEN + featureName + FeaturePath.TYPENAME_TAG_CLOSE;
+      //                AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
+      //                    featurePath, m_page.getSource() );
+      //                m_outlineviewer.postCommand( command, null );
+      //              }
+      //            }
+      //            else
+      //              return false;
+      //          }
+      //        }
+      //        else
+      //        {
+      //          featureName = feature.getFeatureType().getName();
+      //          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId
+      //              .toString(), m_page.getSource() );
+      //          m_outlineviewer.postCommand( command, null );
+      //
+      //        }
+      //      }
+      //
     }
     catch( Exception e )
     {

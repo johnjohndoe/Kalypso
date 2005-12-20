@@ -5,6 +5,7 @@ import java.net.URL;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -88,7 +89,8 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   {
     if( element == null )
       return "null";
-    final String lang = "de";
+    final String lang = KalypsoGisPlugin.getDefault().getLang();
+    //    final String lang = "de";
     if( element instanceof GMLWorkspace )
     {
       final URL context = ( (GMLWorkspace)element ).getContext();
