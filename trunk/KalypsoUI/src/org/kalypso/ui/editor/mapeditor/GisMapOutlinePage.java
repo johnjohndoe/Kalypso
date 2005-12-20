@@ -108,16 +108,17 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void createControl( final Composite parent )
   {
-    if( !parent.isDisposed() )
+    if( parent.isDisposed() )
     {
-      m_modellView.createControl( parent );
-
-      m_modellView.addDoubleClickListener( this );
-
-      m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( m_modellView, this );
-
-      onModellChange( null );
+      System.out.println( "parent is disposed" );
     }
+    m_modellView.createControl( parent );
+
+    m_modellView.addDoubleClickListener( this );
+
+    m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( m_modellView, this );
+
+    onModellChange( null );
   }
 
   /**
@@ -128,7 +129,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     if( m_modellView != null )
     {
       m_modellView.removeDoubleClickListener( this );
-
       m_modellView.dispose();
     }
 
