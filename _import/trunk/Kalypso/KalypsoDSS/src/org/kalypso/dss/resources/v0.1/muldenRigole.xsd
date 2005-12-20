@@ -32,7 +32,7 @@
 							<documentation xml:lang="de">
 								<label>System Geometrie</label>
 								<tooltip>Geometrie des Mulden-Rigolen-Systems</tooltip>
-								<description>FlÃ¤che der Mulden-Rigole</description>
+								<description>Fläche der Mulden-Rigole</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -45,8 +45,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gefälle</label>
-								<tooltip>mittleres Gefälle des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>mittleres Gefälle Dränage</description>
+								<tooltip>mittleres GefÃ¤lle des DrÃ¤nrohres im Mulden-Rigolen-System</tooltip>
+								<description>mittleres GefÃ¤lle DrÃ¤nage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -58,9 +58,9 @@
 					<element name="kfPipe" type="double">
 					<annotation>
 							<documentation xml:lang="de">
-								<label>kf-Dränrohr</label>
-								<tooltip>Druchlässigkeit des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>Druchlässigkeit Dränage</description>
+								<label>kf-DrÃ¤nrohr</label>
+								<tooltip>DruchlÃ¤ssigkeit des DrÃ¤nrohres im Mulden-Rigolen-System</tooltip>
+								<description>DruchlÃ¤ssigkeit DrÃ¤nage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -72,9 +72,9 @@
 					<element name="diameterPipe" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Durchmesser-Dränrohr</label>
-								<tooltip>Durchmesser des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>Lichter Durchmesser der Dränage</description>
+								<label>Durchmesser-DrÃ¤nrohr</label>
+								<tooltip>Durchmesser des DrÃ¤nrohres im Mulden-Rigolen-System</tooltip>
+								<description>Lichter Durchmesser der DrÃ¤nage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -101,8 +101,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Nutzung</label>
-								<tooltip>Nutzungstyp, Verknüpfung zur Parameterdatei</tooltip>
-								<description>Nutzungstyp Verknüpfung zur Parameterdatei</description>
+								<tooltip>Nutzungstyp, VerknÃ¼pfung zur Parameterdatei</tooltip>
+								<description>Nutzungstyp VerknÃ¼pfung zur Parameterdatei</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -115,8 +115,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenprofil</label>
-								<tooltip>Bodenprofiltyp, Verknüpfung zur Parameterdatei</tooltip>
-								<description>Bodenprofiltyp, Verknüpfung zur Parameterdatei</description>
+								<tooltip>Bodenprofiltyp, VerknÃ¼pfung zur Parameterdatei</tooltip>
+								<description>Bodenprofiltyp, VerknÃ¼pfung zur Parameterdatei</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
