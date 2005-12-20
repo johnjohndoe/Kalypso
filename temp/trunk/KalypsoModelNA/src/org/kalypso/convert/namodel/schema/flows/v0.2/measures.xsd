@@ -31,119 +31,99 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="areaOfInterest" type="gml:PolygonPropertyType"/>
-					<element name="grz" type="double"/>
+					<element name="areaOfInterest" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Fläche</label>
+								<tooltip>Fläche der Festsetzung</tooltip>
+								<description>Fläche der Festsetzung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="grz" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GRZ</label>
+								<tooltip>Grundflächenzahl</tooltip>
+								<description>Grundflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxZahlWohnungen" type="integer" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>maxZahlWohnungen</label>
+								<tooltip>maximale Anzahl der zugelassenen Wohneinheiten</tooltip>
+								<description>maximale Anzahl der zugelassenen Wohneinheiten</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="GFZmin" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFZ min</label>
+								<tooltip>minimale Geschossflächenzahl</tooltip>
+								<description>minimale Geschossflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFZmax" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFZ max</label>
+								<tooltip>maximale Geschossflächenzahl</tooltip>
+								<description>maximale Geschossflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFmin" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFmin</label>
+								<tooltip>GFmin</tooltip>
+								<description>GFmin</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFmax" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFmax</label>
+								<tooltip>GFmax</tooltip>
+								<description>GFmax</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="BMZ" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>BMZ</label>
+								<tooltip>BMZ</tooltip>
+								<description>BMZ</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="BM" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>BM</label>
+								<tooltip>BM</tooltip>
+								<description>BM</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GR" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GR</label>
+								<tooltip>GR</tooltip>
+								<description>GR</description>
+							</documentation>
+						</annotation>
+					</element>					
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<element name="SwaleTrench" type="mr:SwaleTrenchSysType" substitutionGroup="dss:Measure"/>
-<!--
-	<complexType name="SwaleTrenchSysType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="position" type="gml:PolygonPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>System Geometrie</label>
-								<tooltip>Geometrie des Mulden-Rigolen-Systems</tooltip>
-								<description>Fläche der Mulden-Rigole</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="drainPipeSlope" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Gefälle</label>
-								<tooltip>mittleres Gefaelle des Draenrohres im Mulden-Rigolen-System</tooltip>
-								<description>mittleres GefÃ¤lle Draenage</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="kfPipe" type="double">
-					<annotation>
-							<documentation xml:lang="de">
-								<label>kf-Draenrohr</label>
-								<tooltip>Druchlaessigkeit des Draenrohres im Mulden-Rigolen-System</tooltip>
-								<description>Druchlaessigkeit Draenage</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="diameterPipe" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Durchmesser-Draenrohr</label>
-								<tooltip>Durchmesser des Draenrohres im Mulden-Rigolen-System</tooltip>
-								<description>Lichter Durchmesser der Draenage</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="widthTrench" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Systembereite</label>
-								<tooltip>Breite der Mulde und Rigole</tooltip>
-								<description>Breite des Mulden-Rigolen-Systems</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="nutzung" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Nutzung</label>
-								<tooltip>Nutzungstyp, Verknuepfung zur Parameterdatei</tooltip>
-								<description>Nutzungstyp Verknuepfung zur Parameterdatei</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="boden" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Bodenprofil</label>
-								<tooltip>Bodenprofiltyp, Verknaepfung zur Parameterdatei</tooltip>
-								<description>Bodenprofiltyp, Verknuepfung zur Parameterdatei</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
--->
 </schema>
