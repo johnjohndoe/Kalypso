@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -311,6 +312,7 @@ public class ImportWmsWizardPage extends WizardPage
 
     //inizialize catalog
     // TODO use property file
+    // TODO: better: store/retrieve list of url in dialog setting
     java.util.List catalog = ( (ImportWmsSourceWizard)getWizard() ).getCatalog();
     if( catalog == null )
       catalog = new ArrayList();
@@ -411,6 +413,8 @@ public class ImportWmsWizardPage extends WizardPage
       final URL urlGetCapabilities = new URL( service.toString() + "?SERVICE=WMS&REQUEST=GetCapabilities" );
 
       // TODO set timeout somewhere
+      // maybe inside the createHttpClient Method of the Plugin-Class
+      // get the timeout from global preferences
       int timeOut = 20000;
       final InputStream inputStream = getFromURL( urlGetCapabilities, timeOut );
       final Reader reader = new InputStreamReader( inputStream );
@@ -578,9 +582,10 @@ public class ImportWmsWizardPage extends WizardPage
 
       try
       {
-        final HttpClient client = new HttpClient();
-        client.setTimeout( m_timeout );
+        final HttpClient client = KalypsoGisPlugin.getDefault().createConfiguredHttpClient( m_timeout );
         final HttpMethod method = new GetMethod( m_url.toString() );
+        // do not forget the next line!
+        method.setDoAuthentication( true );
         final Thread thread = new Thread()
         {
           /**
@@ -601,7 +606,8 @@ public class ImportWmsWizardPage extends WizardPage
             catch( IOException e )
             {
               m_errorMessage = e.getLocalizedMessage();
-              //              e.printStackTrace();
+              e.printStackTrace();
+              System.out.println( method.getResponseBodyAsString() );
             }
           }
         };
