@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:sts="http://www.tuhh.de/NA/swaletrenchsystem" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:par="http://www.tuhh.de/parameter" xmlns="http://www.w3.org/2001/XMLSchema"
- targetNamespace="http://www.tuhh.de/NA/swaletrenchsystem" elementFormDefault="qualified" version="0.1">
+<schema targetNamespace="http://www.tuhh.de/kalypsoDSS" version="0.2" xmlns:dss="http://www.tuhh.de/kalypsoDSS" 
+	xmlns:mr="http://www.tuhh.de/NA/swaletrenchsystem" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<import namespace="http://www.tuhh.de/parameter" schemaLocation="parameter.xsd"/>
-	<element name="SwaleTrenchSys" type="sts:SwaleTrenchType"/>
-	<complexType name="SwaleTrenchType">
+	<import namespace="http://www.tuhh.de/NA/swaletrenchsystem" schemaLocation="muldenRigole.xsd"/>
+
+	<element name="DSSMeasures" type="dss:DSSMeasuresType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DSSMeasuresType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="swaleTrenchMember" type="sts:SwaleTrenchAssociationFeatureType" minOccurs="0" maxOccurs="unbounded"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="SwaleTrenchAssociationFeatureType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="sts:SwaleTrench"/>
+					<element name="measuresMember" type="dss:MeasuresAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="SwaleTrench" type="sts:SwaleTrenchSysType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MeasuresAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="dss:Measure"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Measure" type="gml:AbstractFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="MeasureSealing" type="dss:MeasureSealingType" substitutionGroup="dss:Measure"/>
+	<complexType name="MeasureSealingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaOfInterest" type="gml:PolygonPropertyType"/>
+					<element name="grz" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="SwaleTrench" type="mr:SwaleTrenchSysType" substitutionGroup="dss:Measure"/>
+<!--
 	<complexType name="SwaleTrenchSysType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -32,7 +48,7 @@
 							<documentation xml:lang="de">
 								<label>System Geometrie</label>
 								<tooltip>Geometrie des Mulden-Rigolen-Systems</tooltip>
-								<description>FlÃ¤che der Mulden-Rigole</description>
+								<description>Fläche der Mulden-Rigole</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -45,8 +61,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gefälle</label>
-								<tooltip>mittleres Gefälle des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>mittleres Gefälle Dränage</description>
+								<tooltip>mittleres Gefaelle des Draenrohres im Mulden-Rigolen-System</tooltip>
+								<description>mittleres GefÃ¤lle Draenage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -58,9 +74,9 @@
 					<element name="kfPipe" type="double">
 					<annotation>
 							<documentation xml:lang="de">
-								<label>kf-Dränrohr</label>
-								<tooltip>Druchlässigkeit des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>Druchlässigkeit Dränage</description>
+								<label>kf-Draenrohr</label>
+								<tooltip>Druchlaessigkeit des Draenrohres im Mulden-Rigolen-System</tooltip>
+								<description>Druchlaessigkeit Draenage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -72,23 +88,9 @@
 					<element name="diameterPipe" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Durchmesser-Dränrohr</label>
-								<tooltip>Durchmesser des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>Lichter Durchmesser der Dränage</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TODO</label>
-								<tooltip>TODO</tooltip>
-								<description>TODO</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="roughnessPipe" type="double">
-					<annotation>
-							<documentation xml:lang="de">
-								<label>Dränrohrrauigkeit</label>
-								<tooltip>Rauigkeit des Dränrohres im Mulden-Rigolen-System</tooltip>
-								<description>Rauigkeit des Dränrohres</description>
+								<label>Durchmesser-Draenrohr</label>
+								<tooltip>Durchmesser des Draenrohres im Mulden-Rigolen-System</tooltip>
+								<description>Lichter Durchmesser der Draenage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -115,8 +117,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Nutzung</label>
-								<tooltip>Nutzungstyp, Verknüpfung zur Parameterdatei</tooltip>
-								<description>Nutzungstyp Verknüpfung zur Parameterdatei</description>
+								<tooltip>Nutzungstyp, Verknuepfung zur Parameterdatei</tooltip>
+								<description>Nutzungstyp Verknuepfung zur Parameterdatei</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -129,8 +131,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenprofil</label>
-								<tooltip>Bodenprofiltyp, Verknüpfung zur Parameterdatei</tooltip>
-								<description>Bodenprofiltyp, Verknüpfung zur Parameterdatei</description>
+								<tooltip>Bodenprofiltyp, Verknaepfung zur Parameterdatei</tooltip>
+								<description>Bodenprofiltyp, Verknuepfung zur Parameterdatei</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -143,4 +145,5 @@
 			</extension>
 		</complexContent>
 	</complexType>
+-->
 </schema>

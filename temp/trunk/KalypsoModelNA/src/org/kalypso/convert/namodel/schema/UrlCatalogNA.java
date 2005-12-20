@@ -71,6 +71,6 @@ public class UrlCatalogNA extends AbstractUrlCatalog
 
     // flows
     catalog.put( "http://www.tuhh.de/NA/swaletrenchsystem", myClass.getResource( "v0.5/muldenRigole.xsd" ) );
-    catalog.put( NaModelConstants.NS_MEASURE, myClass.getResource( "flows/v0.1/measures.xsd" ) );
+    catalog.put( NaModelConstants.NS_MEASURE, myClass.getResource( "flows/v0.2/measures.xsd" ) );
   }
 }
