@@ -139,7 +139,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
 
   /** type name */
-  
+
   public static final String TYPE_NAME = "wms";
 
   private int m_lastWidth;
@@ -193,6 +193,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     {
       // nothing to do
       e.printStackTrace();
+      // TODO: this may leave this object uninitialized, leading to NullPointerExceptions later
+      // better: set a invalid flag somewhere or test allways for null
     }
   }
 

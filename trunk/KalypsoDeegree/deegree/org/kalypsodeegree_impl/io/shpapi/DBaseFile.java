@@ -67,6 +67,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -502,30 +503,25 @@ public class DBaseFile
         startIndex = pos;
         pos = 0;
       }
-      StringBuffer sb = new StringBuffer( column.size );
-      //      System.out.println(column.size);
-      int i = 0;
-      while( i < column.size )
-      {
-        int kk = (int)pos + column.position + i;
-        /*
-         * if ( dataArray[kk] == -127 ) { sb.append( '?' ); } else if ( dataArray[kk] == -108 ) { sb.append( '?' ); }
-         * else if ( dataArray[kk] == -124 ) { sb.append( '?' ); } else
-         */if( dataArray[kk] != 32 )
-        {
-          sb.append( (char)dataArray[kk] );
-        }
-        i++;
-      }
 
-      // if it's the pseudo column _DELETED, return
-      // the first character in it
-      //            if (col_name.equals("_DELETED")) {
-      //                return result.substring(0, 1);
-      //            }
-      return sb.toString();
+      
+      
+      // Changed by Belger
+      // The Old version did not respect Charset Conversion
+      // REMARK:
+      // the old version also filtered every whitespace 'char(32)'
+      // but i think what to be done is just to trim() the returned string 
+      final byte[] bytes = new byte[column.size];
+      for( int i = 0; i < bytes.length; i++ )
+      {
+        final int kk = (int)pos + column.position + i;
+        bytes[i] = dataArray[kk];
+      }
+      
+      final String charsetname = CharsetUtilities.getDefaultCharset();
+      return new String( bytes, charsetname ).trim();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return e.toString();

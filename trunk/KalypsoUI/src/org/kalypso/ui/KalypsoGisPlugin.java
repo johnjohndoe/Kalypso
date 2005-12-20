@@ -63,6 +63,9 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -813,6 +816,46 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
             getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
       }
     } );
+  }
+
+  /**
+   * Creates a configured http client. The configuration includes setting of proxy settings.
+   * <p>
+   * IMPORTANT: to use proxy-authentication, you must use the setDoAuthetication Mehtod of the HttpMehthod you are going
+   * to use.
+   * </p>
+   * <p>
+   * Example: <code>
+   *    final HttpMethod method = new GetMethod( m_url.toString() );
+   *    method.setDoAuthentication( true );
+   * </code>
+   * </p>
+   */
+  public HttpClient createConfiguredHttpClient( final int timeout )
+  {
+    final HttpClient client = new HttpClient();
+    client.getState().setAuthenticationPreemptive( true );
+
+    KalypsoGisPlugin.getDefault();
+
+    if( Boolean.getBoolean( "proxySet" ) )
+    {
+      final String proxyHost = System.getProperty( "proxyHost" );
+      final String proxyPort = System.getProperty( "proxyPort" );
+      final String proxyUser = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER );
+      
+      // todo: this always gets the empty string, but proxy connection is working anyways
+      // what to do?
+      final String proxyPwd = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS );
+
+      final Credentials defaultcreds = new UsernamePasswordCredentials( proxyUser, proxyPwd );
+
+      client.getState().setProxyCredentials( null, proxyHost, defaultcreds );
+      client.getHostConfiguration().setProxy( proxyHost, Integer.parseInt( proxyPort ) );
+    }
+
+    client.setTimeout( timeout );
+    return client;
   }
 
   /**

@@ -102,7 +102,7 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     action.setEnabled( false );
     m_selection = null;
     final String text = action.getText();
-    String newText = text.replaceAll( " \\(.*\\)", "" );
+    String newText = text == null ? "" : text.replaceAll( " \\(.*\\)", "" );
     final String lang = KalypsoGisPlugin.getDefault().getLang();
     if( selection instanceof IFeatureSelection
         && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection)selection ) > 0 )

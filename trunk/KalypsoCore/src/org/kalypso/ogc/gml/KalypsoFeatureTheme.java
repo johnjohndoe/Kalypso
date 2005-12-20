@@ -280,9 +280,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( env == null )
       env = getBoundingBox();
     final Set result = new HashSet();
-    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
-      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      final StyleDisplayMap map = (StyleDisplayMap)iter.next();
       map.queryVisibleFeatures( env, result );
     }
     final FeatureList list = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList
