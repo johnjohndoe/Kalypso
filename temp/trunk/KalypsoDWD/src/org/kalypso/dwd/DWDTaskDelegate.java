@@ -165,6 +165,7 @@ public class DWDTaskDelegate
 
         final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList,
             axis, tupleModel );
+
         final IObservation forecastObservation;
         // generate href from filter and intervall
         final String href = ZmlURL.insertRequest( filter, new ObservationRequest( startForecast, stopSim ) );
@@ -206,6 +207,7 @@ public class DWDTaskDelegate
           baseObservation = new SimpleObservation( axis );
 
         fc.initFilter( srcObs, baseObservation, targetContext.toURL() );
+        TimeserieUtils.setForecast( fc, startForecast, stopSim );
 
         // ----------------
         // add all the metadata from task-parameters
