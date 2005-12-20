@@ -30,8 +30,6 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,7 +49,6 @@ import org.deegree.services.wfs.capabilities.GetFeature;
 import org.deegree.services.wfs.capabilities.Request;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,7 +77,7 @@ public class WFSUtilities
       final String maxFeatureAsString )
   {
     final StringBuffer sb = new StringBuffer();
-//    final int maxFeatures = 5000;
+    //    final int maxFeatures = 5000;
 
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );// iso-8859-1
     sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" );
@@ -125,12 +122,11 @@ public class WFSUtilities
 
     try
     {
-      URL[] getOnlineResources = null;
+      //      URL[] getOnlineResources = null;
       URL[] postOnlineResources = null;
 
       //      URL m_schemaURL = new URL( baseURL + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
       //          + featureTypeToLoad );
-      //TODO put capabilites into a file cache (similar to GMLSchemaCache ) -> performance
       //       get wfs capabiliets to check which protocol types are supported by the service
       final WFSCapabilities wfsCaps = WFSUtilities.getCapabilites( baseURL );
 
@@ -144,7 +140,7 @@ public class WFSUtilities
         final Protocol protocol = dcpt.getProtocol();
         if( protocol instanceof HTTP )
         {
-          getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
+          //          getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
           postOnlineResources = ( (HTTP)protocol ).getPostOnlineResources();
           //          if( getOnlineResources.length > 0 )
           //            getProtocol = true;
@@ -170,11 +166,11 @@ public class WFSUtilities
         inputStream = new BufferedInputStream( con.getInputStream() );
 
         // Hack for testing
-//                final File tmpFile = new File( "C:\\TMP\\test.txt" );
-//                final OutputStream outStream = new FileOutputStream( tmpFile );
-//                StreamUtilities.streamCopy( inputStream, outStream );
-//                IOUtils.closeQuietly( inputStream );
-//                IOUtils.closeQuietly( outStream );
+        //                final File tmpFile = new File( "C:\\TMP\\test.txt" );
+        //                final OutputStream outStream = new FileOutputStream( tmpFile );
+        //                StreamUtilities.streamCopy( inputStream, outStream );
+        //                IOUtils.closeQuietly( inputStream );
+        //                IOUtils.closeQuietly( outStream );
 
         final URL schemaURL = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
         final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURL );
