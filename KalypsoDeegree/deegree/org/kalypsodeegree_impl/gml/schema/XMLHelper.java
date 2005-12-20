@@ -149,7 +149,13 @@ public class XMLHelper
 
   public static String getAttributeValue( Node node, String attributeName )
   {
-    return getAttributeNode( node, attributeName ).getNodeValue();
+    final Node attributeNode = getAttributeNode( node, attributeName );
+    if( attributeNode == null )
+    {
+      System.out.println( "attributenode not found for name: " + attributeName );
+      System.out.println( XMLHelper.toString( attributeNode ) );
+    }
+    return attributeNode.getNodeValue();
   }
 
   public static NodeList getXPath( String xPathQuery, Node domNode )

@@ -207,7 +207,8 @@ public class GisTemplateMapModell implements IMapModell
         ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
-      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme ) )
+      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme )
+          && !( kalypsoTheme instanceof ScrabLayerFeatureTheme ) )
         layersType.setActive( layer );
     }
 

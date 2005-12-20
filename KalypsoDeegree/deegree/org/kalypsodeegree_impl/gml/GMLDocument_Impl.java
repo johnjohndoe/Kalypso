@@ -164,30 +164,27 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * returns the location of the schema the document based on
+   * 
+   * @see org.kalypsodeegree.gml.GMLDocument#getSchemaLocation(java.net.URL)
    */
-  public URL getSchemaLocation() throws MalformedURLException
+  public URL getSchemaLocation( final URL context ) throws MalformedURLException
   {
-    Debug.debugMethodBegin( this, "getSchemaLocation" );
-    try
-    {
-      final String schemaLocation = m_document.getDocumentElement().getAttributeNS(
-          "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
-      if( schemaLocation == null )
-        return null;
+    final String schemaLocation = m_document.getDocumentElement().getAttributeNS(
+        "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
+    if( schemaLocation == null || schemaLocation.length()<1)
+      return null;
 
-      final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
-      if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
-      {
-        final String path = schemaLocation.substring( namespaceURI.length() );
-        return new URL( path );
-      }
-      return new URL( schemaLocation );
-    }
-    finally
+    final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
+    if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
     {
-      Debug.debugMethodEnd();
+      final String path = schemaLocation.substring( namespaceURI.length() );
+      if( context != null )
+        return new URL( context, path );
+      return new URL( path );
     }
+    if( context != null )
+      return new URL( context, schemaLocation );
+    return new URL( schemaLocation );
   }
 
   /**
@@ -725,8 +722,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
 
       // marshalling
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName(
-          ftp.getType() );
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton
+          .getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
       // TODO give context not null
       typeHandler.marshall( customObject, element, null );
       GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );

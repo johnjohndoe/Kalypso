@@ -643,13 +643,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   private void changeSelection( final List features, final IKalypsoFeatureTheme theme,
       final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
-    // nothing was choosen by the user, dont do anything
-    // TODO: maybe clear selection?
+    // nothing was choosen by the user, clear selection
     if( features.isEmpty() )
     {
-      // TODO: this should to the widget-manager?
-      repaint();
-      return;
+      selectionManager2.clear();
+      // TODO: this should do the widget-manager?
     }
 
     // remove all selected features from this theme
@@ -678,7 +676,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       break;
 
     case MODE_SELECT: // selectert genau das, was ausgewählt wurde
-      toRemove = featureList.toFeatures();
+      //      toRemove = featureList.toFeatures();
+      final EasyFeatureWrapper[] allFeatures = selectionManager2.getAllFeatures();
+      toRemove = new Feature[allFeatures.length];
+      for( int i = 0; i < allFeatures.length; i++ )
+        toRemove[i] = allFeatures[i].getFeature();
       toAdd = selectedWrapped;
       break;
 

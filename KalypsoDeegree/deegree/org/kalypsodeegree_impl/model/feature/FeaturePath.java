@@ -11,14 +11,14 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 /**
  * Der FeaturePath denotiert ein Feature, eine FeatureList oder einen FeatureType innerhalb eines GMLWorkspace.
  * 
- * Notation: <!CDATA[[ property ::= Der Name einer FeatureAssociationProperty typename ::= Ein beliebiger Typname,
- * sollte nur für abgeleitete Typen benutzt werden emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen
- * Typ
+ * Notation: <br>
+ * property ::= Der Name einer FeatureAssociationProperty <br>
+ * typename ::= Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden <br>
+ * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ
  * 
- * segment ::= #fid#<id> | <property> | <property> [<typename>]
+ * segment ::= #fid# <id>| <property>| <property>[ <typename>]
  * 
- * featurePath ::= <emptypath> | <segment>/<segment>                 
- * ]]>
+ * featurePath ::= <emptypath>| <segment>/ <segment>]]>
  * 
  * @author belger
  */
@@ -26,9 +26,10 @@ public class FeaturePath
 {
   /** Separates two segments in the feature-path */
   public final static char SEGMENT_SEPARATOR = '/';
-  
-  public final static char TYPENAME_TAG_OPEN = '['; 
-  public final static char TYPENAME_TAG_CLOSE = ']'; 
+
+  public final static char TYPENAME_TAG_OPEN = '[';
+
+  public final static char TYPENAME_TAG_CLOSE = ']';
 
   /** Something between two '/' */
   private final Segment[] m_segments;
@@ -48,8 +49,12 @@ public class FeaturePath
 
   public FeaturePath( final Feature feature )
   {
-    m_segments = new Segment[]
-    { new Segment( feature ) };
+    final String id = feature.getId();
+    if( id == null || id.length() < 1 )
+      m_segments = new Segment[0];
+    else
+      m_segments = new Segment[]
+      { new Segment( feature ) };
   }
 
   public FeaturePath( final FeaturePath parent, final String segment )
@@ -193,13 +198,13 @@ public class FeaturePath
     public Object getValue( final GMLWorkspace workspace, final Feature feature )
     {
       final String name = getName();
-      
+
       if( isID() )
         return workspace.getFeature( name );
 
       if( name.equals( "gewichtung" ) )
         System.out.println(); // TODO debug?
-      
+
       final Object value = feature.getProperty( name );
       if( value == null )
         System.out.println(); // TODO debug?

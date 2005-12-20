@@ -87,8 +87,9 @@ public interface GMLDocument extends Document
 
   /**
    * returns the location of the schema the document based on
+   * @param context context or <code>null</code> for unknown context
    */
-  public URL getSchemaLocation() throws MalformedURLException;
+  public URL getSchemaLocation(final URL context) throws MalformedURLException;
 
   /**
    * returns the location of the schema the document based on as string
@@ -165,6 +166,12 @@ public interface GMLDocument extends Document
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.13  2005/12/20 15:04:33  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.12.2.1  2005/12/20 12:04:47  doemming
+ * *** empty log message ***
+ *
  * Revision 1.12  2005/06/20 14:07:44  belger
  * Formatierung
  * Revision 1.11 2005/03/08 11:01:10 doemming *** empty log message ***

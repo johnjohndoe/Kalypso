@@ -108,13 +108,16 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void createControl( final Composite parent )
   {
-    m_modellView.createControl( parent );
+    if( !parent.isDisposed() )
+    {
+      m_modellView.createControl( parent );
 
-    m_modellView.addDoubleClickListener( this );
+      m_modellView.addDoubleClickListener( this );
 
-    m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( m_modellView, this );
+      m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( m_modellView, this );
 
-    onModellChange( null );
+      onModellChange( null );
+    }
   }
 
   /**
@@ -161,7 +164,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     }
 
     actionBars.updateActionBars();
-    
+
     final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" );
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
@@ -173,21 +176,20 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
       }
     } );
-    
+
     final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );
-    
+
     final IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-//    final IViewPart outlineView = page.findView( IPageLayout.ID_OUTLINE );
-//    if( outlineView != null )
-//        outlineView.getSite().registerContextMenu(
-//            menuMgr, m_modellView );
-    
+    //    final IViewPart outlineView = page.findView( IPageLayout.ID_OUTLINE );
+    //    if( outlineView != null )
+    //        outlineView.getSite().registerContextMenu(
+    //            menuMgr, m_modellView );
+
     // TODO: das nimmt nicht die outline view sondern irgendeine aktive
     // besser wäre wie im kommentar oben, aber die outline-view ist noch gar nicht da
     // was tun?
     final IWorkbenchPart activePart = page.getActivePart();
-    activePart.getSite().registerContextMenu(
-        menuMgr, m_modellView );
+    activePart.getSite().registerContextMenu( menuMgr, m_modellView );
     m_modellView.getControl().setMenu( menu );
   }
 
