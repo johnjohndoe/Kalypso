@@ -3,6 +3,7 @@ package com.bce.eind.core.profil;
 import java.util.LinkedList;
 
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_OPERATION;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
@@ -123,6 +124,13 @@ public interface IProfil
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
 
   /**
+   * Fügt eine Punktliste ein. ist thePointBefore null wird der letzte Punkt der Liste auf den
+   * ersten des profils gelegt sonst wird der erste punkt der Liste auf thePointBefore gelegt
+   * @throws ProfilDataException 
+   */
+  public void insertPoints( final IProfilPoint thePointBefore, final LinkedList<IProfilPoint> points ) throws ProfilDataException;
+
+  /**
    * Fügt einen neuen Punkt ein. Wie {@link #insertPoint(IProfilPoint)}, nur Breite und Höhe sind
    * bereits vorgegeben
    */
@@ -151,6 +159,9 @@ public interface IProfil
    * @throws ProfilDataException
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException;
+
+  public void editPoints( final LinkedList<IProfilPoint> points, final POINT_OPERATION operation,
+      final POINT_PROPERTY property, final double value ) throws ProfilDataException;
 
   /**
    * @param devider
@@ -205,8 +216,9 @@ public interface IProfil
   public POINT_PROPERTY getActiveProperty( );
 
   public void setActiveProperty( POINT_PROPERTY activeProperty );
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible );
-  
+
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp,
+      final boolean visible );
 
   public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp );
 }

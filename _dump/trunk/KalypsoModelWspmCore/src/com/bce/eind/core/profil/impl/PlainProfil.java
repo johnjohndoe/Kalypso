@@ -16,6 +16,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_OPERATION;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
@@ -39,15 +40,13 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   /**
    * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im
-   * Diagramm der zuletzt angeklickte.
-   * Die sichtbaren Trenner werden auch hier verwaltet
+   * Diagramm der zuletzt angeklickte. Die sichtbaren Trenner werden auch hier verwaltet
    */
   private IProfilPoint m_activePoint;
 
   private POINT_PROPERTY m_activeProperty;
-  
-  private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
+  private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
   public PlainProfil( )
   {
@@ -70,7 +69,9 @@ public class PlainProfil implements IProfilConstants, IProfil
 
     return pd;
   }
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
+
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp,
+      final boolean visible )
   {
     if( visible )
     {
@@ -90,6 +91,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_visibleDevider.contains( deviderTyp );
 
   }
+
   /**
    * @see com.bce.eind.core.profil.ProfilPoints#addPoint(double,double)
    */
@@ -433,5 +435,55 @@ public class PlainProfil implements IProfilConstants, IProfil
   public IProfilPoint getActivePoint( )
   {
     return m_activePoint;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfil#editPoints(java.util.LinkedList,
+   *      com.bce.eind.core.profil.IProfilPoint.POINT_OPERATION, double)
+   */
+  public void editPoints( LinkedList<IProfilPoint> points, POINT_OPERATION operation,
+      POINT_PROPERTY property, double value ) throws ProfilDataException
+  {
+    for( IProfilPoint point : points )
+    {
+      final double oldValue = point.getValueFor( property );
+      switch( operation )
+      {
+        case ADD:
+          point.setValueFor( property, oldValue + value );
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.bce.eind.core.profil.IProfil#insertPoints(com.bce.eind.core.profil.IProfilPoint,
+   *      java.util.LinkedList)
+   */
+  public void insertPoints( IProfilPoint thePointBefore, LinkedList<IProfilPoint> points )
+      throws ProfilDataException
+  {
+    double deltaX;
+    double deltaY;
+    if( thePointBefore == null )
+    {
+      final double breite = getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE );
+      final double hoehe = getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE );
+      deltaX = points.getLast().getValueFor( POINT_PROPERTY.BREITE ) - breite;
+      deltaY = points.getLast().getValueFor( POINT_PROPERTY.HOEHE ) - hoehe;
+
+    }
+    else
+    {
+      final double breite = thePointBefore.getValueFor( POINT_PROPERTY.BREITE );
+      final double hoehe = thePointBefore.getValueFor( POINT_PROPERTY.HOEHE );
+      deltaX = points.getFirst().getValueFor( POINT_PROPERTY.BREITE ) - breite;
+      deltaY = points.getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - hoehe;
+    }
+    editPoints( points, POINT_OPERATION.ADD, POINT_PROPERTY.BREITE, deltaX );
+    editPoints( points, POINT_OPERATION.ADD, POINT_PROPERTY.HOEHE, deltaY );
+    m_points.addAll( (thePointBefore == null) ? 0 : m_points.indexOf( thePointBefore ), points );
+
   }
 }
