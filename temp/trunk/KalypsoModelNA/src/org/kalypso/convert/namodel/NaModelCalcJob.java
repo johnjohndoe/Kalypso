@@ -198,8 +198,16 @@ public class NaModelCalcJob implements ICalcJob
 
           final GM_Object hydroGEOM = (GM_Object)hydroFE.getProperty( HYDRO_PROP_GEOM );
           final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
-          final Geometry intersection = jtsMeasureGEOM.intersection( jtsHydroGEOM );
-          if( intersection.isEmpty() )
+          Geometry intersection = null;
+          try
+          {
+            intersection = jtsMeasureGEOM.intersection( jtsHydroGEOM );
+          }
+          catch( Exception e )
+          {
+            // nothing
+          }
+          if( intersection == null || intersection.isEmpty() )
             continue;
           final double areaIntersection = intersection.getArea();
           final double areaHydro = jtsHydroGEOM.getArea();
