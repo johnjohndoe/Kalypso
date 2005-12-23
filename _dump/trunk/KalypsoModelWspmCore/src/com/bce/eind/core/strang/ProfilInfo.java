@@ -1,7 +1,7 @@
 package com.bce.eind.core.strang;
 
 /**
- * @author gernot
+ * @author Belger
  */
 public class ProfilInfo
 {
@@ -9,16 +9,16 @@ public class ProfilInfo
 
   private final String m_filename;
 
-  private final double m_station;
+  private final String m_station;
 
-  public ProfilInfo( final double station, final String filename )
+  public ProfilInfo( final String station, final String filename )
   {
     m_station = station;
-    m_name = String.format( "%.4f", station );
+    m_name = station;
     m_filename = filename;
   }
 
-  public double getStation( )
+  public String getStation( )
   {
     return m_station;
   }

@@ -4,7 +4,7 @@ package com.bce.eind.core.result;
  * Ein Ergebnisdatensatz einer 1D Berechnungen Eine Zuordnung Station(String) ->
  * Ergebniswert(double)
  */
-public interface IResultSet extends Iterable<Double>
+public interface IResultSet extends Iterable<String>
 {
   enum TYPE
   {
@@ -39,9 +39,9 @@ public interface IResultSet extends Iterable<Double>
   public String getName( );
 
   /** Returns the previoulsy asgined value or null, if no value was asigned. */
-  public Double putValue( final double station, final TYPE type, final double value );
+  public Double putValue( final String station, final TYPE type, final double value );
 
-  public Double getValue( final double station, final TYPE type );
+  public Double getValue( final String station, final TYPE type );
 
-  public IStationResult getValues( final double station );
+  public IStationResult getValues( final String station );
 }
