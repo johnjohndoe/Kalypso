@@ -3,7 +3,7 @@
 <plugin
    id="com.bce.eind.core"
    name="Profil Core Plugin"
-   version="0.0.1"
+   version="1.0.0"
    provider-name="bce.com"
    class="com.bce.eind.core.ProfilCorePlugin">
    <runtime>
