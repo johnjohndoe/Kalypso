@@ -23,9 +23,7 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.put( pointProperty, new Double( 0 ) );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.bce.eind.core.profilinterface.IProfilPoint#clonePoint()
    */
   public IProfilPoint clonePoint( )
@@ -88,13 +86,4 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
-
-  /*
-   * public final boolean isPosition( final double breite, final double hoehe ) throws
-   * ProfilDataException { final int breitePrecision = POINT_PROPERTY.BREITE.getPrecision(); final
-   * int hoehePrecision = POINT_PROPERTY.HOEHE.getPrecision(); final double deltaB = Math.abs(
-   * this.getValueFor( POINT_PROPERTY.BREITE ) - breite ); final double deltaH = Math.abs(
-   * this.getValueFor( POINT_PROPERTY.HOEHE ) - hoehe ); return ((deltaB < Math.exp(
-   * -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision ))); }
-   */
 }
