@@ -5,10 +5,13 @@ package com.bce.eind.core.profil.util;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.bce.eind.core.profil.IProfil;
+import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
@@ -18,6 +21,15 @@ import com.bce.eind.core.profil.impl.points.ProfilPoint;
  */
 public class ProfilUtil
 {
+  public static final List<IProfilPoint> getInnerPoints(final IProfil profil,final DEVIDER_TYP deviderTyp)
+  {
+    final IProfilDevider[] deviders = profil.getDevider(deviderTyp);
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final int leftPos = (deviders.length > 1)? points.indexOf(deviders[0].getPoint()):0;
+    final int rightPos = (deviders.length > 1)? points.indexOf(deviders[deviders.length -1].getPoint())+1:0;
+    return (leftPos < rightPos)?points.subList(leftPos,rightPos):null;
+
+  }
   public static final IProfilPoint splitSegment( IProfilPoint startPoint, IProfilPoint endPoint )
       throws ProfilDataException
   {
