@@ -1,4 +1,4 @@
-!     Last change:  WP   23 Nov 2005   12:02 pm
+!     Last change:  WP    8 Dec 2005    3:22 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -121,7 +121,7 @@ implicit none
 save
 
 CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.14'
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 16.11.2005'
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 08.12.2005'
 
 end module VERSION
 

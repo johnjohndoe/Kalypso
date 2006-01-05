@@ -549,7 +549,7 @@ Kalypso 1.0.13  September 2005
                                                     Wolf Plöger, 05.09.2005
 
 
-Kalypso 1.0.14   November 2005
+Kalypso 1.0.14   Dezember 2005
 ------------------------------
 Es wird eine Datei angelegt, in der die einzelnen berechneten Lambdawerte über die
 Querschnitte ausgegeben werden.
@@ -572,4 +572,4 @@ Querschnitte ausgegeben werden.
 5.)  Verbesserung der Fehlerausgabe in INTDAT, wenn keine Grundrauheit angegeben
      wurde (z.B. fehlerhafte Verschneidung im WSPWIN Mapper).
 
-                                                    Wolf Plöger, 16.11.2005
+                                                    Wolf Plöger, 08.12.2005

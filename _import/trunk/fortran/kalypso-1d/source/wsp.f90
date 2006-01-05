@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Dec 2005    5:18 pm
+!     Last change:  WP    8 Dec 2005    3:29 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1668,8 +1668,6 @@ IF (lein.eq.3) close (jw8)
 WRITE ( *, 1099) VERSIONNR
 1099 FORMAT (//1X, 'Es wurde mit ', A29, ' erfolgreich gerechnet.',//     &
              & 1X, 'PROGRAMMENDE!')
-
-call stop_programm(0)
 
 END PROGRAM WSP
                                                                         

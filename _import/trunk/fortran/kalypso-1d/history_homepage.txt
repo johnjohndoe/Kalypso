@@ -185,7 +185,7 @@ Kalypso 1.0.13  08.11.2005
 
                                                     Wolf Plöger, 08.11.2005
 
-Kalypso 1.0.14     11.11.2005
+Kalypso 1.0.14     08.12.2005
 -----------------------------
 1.)  Es wird eine neue Datei (lambda_i.txt in /DATH/) angelegt, in der die 
      einzelnen berechneten Lambdawerte der Rauhigkeitsabschnitte im Flussschlauch
@@ -194,4 +194,7 @@ Kalypso 1.0.14     11.11.2005
      Fließgeschwindigkeit des Abschnittes (Vorland links, rechts, Flussschlauch)
      ausgegeben.
 
-                                                    Wolf Plöger, 11.11.2005
+5.)  Verbesserung der Fehlerausgabe, wenn keine Grundrauheit angegeben
+     wurde (z.B. fehlerhafte Verschneidung im WSPWIN Mapper).
+
+                                                    Wolf Plöger, 08.12.2005
