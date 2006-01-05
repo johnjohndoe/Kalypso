@@ -30,4 +30,5 @@ public interface IProfilPoints
 
   abstract boolean removeProperty( final POINT_PROPERTY pointProperty );
 
+  abstract LinkedList<IProfilPoint> getPoints( );
 }

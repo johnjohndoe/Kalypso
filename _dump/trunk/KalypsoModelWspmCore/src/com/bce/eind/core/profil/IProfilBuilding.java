@@ -32,7 +32,7 @@ public interface IProfilBuilding
     BREITE( "größte Breite/Durchmesser", null ), HOEHE( "Gesamthöhe [m]", null ), SOHLGEFAELLE(
         "Sohlgefälle [1/1000]", null ), BEZUGSPUNKT_X( "Bezugspunkt Breite [m]", null ), BEZUGSPUNKT_Y(
         "Bezugspunkt Höhe [NN+m]", null ), STEIGUNG( "Verhältnis der Dreieckseiten [1/100]", null ), RAUHEIT(
-        "Rauheit", "Rauheitsbeiwert im Durchlass" ), PFEILERFORM( "Pfeilerformbeiwert", null ), UNTERWASSER(
+        "Rauheit", "Rauheitsbeiwert im Durchlass" ), FORMBEIWERT( "Formbeiwert", null ), UNTERWASSER(
         "Unterwasser [NN+m]", "Höhe der Gewässersohle im Unterwasser" ), WEHRART( "Wehrart",
         "Form der Wehrkrone" );
 

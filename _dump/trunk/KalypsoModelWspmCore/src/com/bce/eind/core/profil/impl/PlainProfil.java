@@ -16,7 +16,6 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
-import com.bce.eind.core.profil.IProfilPoint.POINT_OPERATION;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
@@ -233,7 +232,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public LinkedList<IProfilPoint> getPoints( )
   {
-    return m_points.unmodifiable();
+    return m_points.getPoints();
   }
 
   public IProfilPoints getProfilPoints( )
@@ -437,53 +436,6 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_activePoint;
   }
 
-  /**
-   * @see com.bce.eind.core.profil.IProfil#editPoints(java.util.LinkedList,
-   *      com.bce.eind.core.profil.IProfilPoint.POINT_OPERATION, double)
-   */
-  public void editPoints( LinkedList<IProfilPoint> points, POINT_OPERATION operation,
-      POINT_PROPERTY property, double value ) throws ProfilDataException
-  {
-    for( IProfilPoint point : points )
-    {
-      final double oldValue = point.getValueFor( property );
-      switch( operation )
-      {
-        case ADD:
-          point.setValueFor( property, oldValue + value );
-      }
-    }
-  }
+ 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.bce.eind.core.profil.IProfil#insertPoints(com.bce.eind.core.profil.IProfilPoint,
-   *      java.util.LinkedList)
-   */
-  public void insertPoints( IProfilPoint thePointBefore, LinkedList<IProfilPoint> points )
-      throws ProfilDataException
-  {
-    double deltaX;
-    double deltaY;
-    if( thePointBefore == null )
-    {
-      final double breite = getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE );
-      final double hoehe = getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE );
-      deltaX = points.getLast().getValueFor( POINT_PROPERTY.BREITE ) - breite;
-      deltaY = points.getLast().getValueFor( POINT_PROPERTY.HOEHE ) - hoehe;
-
-    }
-    else
-    {
-      final double breite = thePointBefore.getValueFor( POINT_PROPERTY.BREITE );
-      final double hoehe = thePointBefore.getValueFor( POINT_PROPERTY.HOEHE );
-      deltaX = points.getFirst().getValueFor( POINT_PROPERTY.BREITE ) - breite;
-      deltaY = points.getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - hoehe;
-    }
-    editPoints( points, POINT_OPERATION.ADD, POINT_PROPERTY.BREITE, deltaX );
-    editPoints( points, POINT_OPERATION.ADD, POINT_PROPERTY.HOEHE, deltaY );
-    m_points.addAll( (thePointBefore == null) ? 0 : m_points.indexOf( thePointBefore ), points );
-
-  }
 }

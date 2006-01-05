@@ -147,6 +147,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
         throw new ProfilDataException( "ungültiger Punkt" );
       }
     }
+   
     final int pktIndex = indexOf( thePointBefore ) + 1;
     if( pktIndex < size() )
       add( pktIndex, point );
@@ -201,8 +202,10 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
   //  m_dependencies.put( pointProperty, dependencies );
  // }
 
-  public LinkedList<IProfilPoint> unmodifiable( )
+  public LinkedList<IProfilPoint> getPoints( )
   {
     return m_unmodifiable;
   }
+
+  
 }

@@ -116,10 +116,10 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint firstPkt = p.getPoints().getFirst();
     firstPkt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, 1000.65432 );
     firstPkt.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
-    p.getBuilding().setValue( BUILDING_PROPERTY.PFEILERFORM, 0.5 );
+    p.getBuilding().setValue( BUILDING_PROPERTY.FORMBEIWERT, 0.5 );
     p.getBuilding().setValue(BUILDING_PROPERTY.RAUHEIT, 5.5 );
     assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValueFor(
-        BUILDING_PROPERTY.PFEILERFORM ) );
+        BUILDING_PROPERTY.FORMBEIWERT ) );
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
         .getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE ) );
     p.removeBuilding();

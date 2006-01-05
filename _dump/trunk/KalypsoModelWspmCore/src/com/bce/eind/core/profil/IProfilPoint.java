@@ -27,10 +27,7 @@ public interface IProfilPoint
   {
     LABEL, OPTIONAL, VISIBLE, PRECISION, INTERPOLATION
   };
-  public static enum POINT_OPERATION
-  {
-    ADD
-  };
+ 
   public static enum POINT_PROPERTY
   {
     BEWUCHS_AX( "AX", true, true, false, 4 ),
