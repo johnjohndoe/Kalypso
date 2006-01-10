@@ -200,7 +200,7 @@ public class FeatureFactory
    *             <code>Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )</code>
    *             instead
    */
-  public static Feature createFeature( String id, FeatureType featureType )
+  public static Feature createFeature( final String id, final FeatureType featureType )
   {
     return new Feature_Impl( featureType, id );
   }
