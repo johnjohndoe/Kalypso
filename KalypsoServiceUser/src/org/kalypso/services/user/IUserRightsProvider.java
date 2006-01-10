@@ -64,22 +64,13 @@ public interface IUserRightsProvider
 
   /**
    * Delivers the list of rights the given user has.
-   * 
-   * @param username
-   * @return list of rights
-   * @throws UserRightsException
    */
-  public String[] getRights( final String username ) throws UserRightsException;
+  public String[] getRights( final String username, final String currentScenarioId ) throws UserRightsException;
 
   /**
    * Delivers the list of rights the user has after having beeing authenticated in the rigths provider.
    * <p>
    * This operation is optional and might not be implemented by some providers
-   * 
-   * @param username
-   * @param password
-   * @return list of rights
-   * @throws UserRightsException
    */
-  public String[] getRights( final String username, final String password ) throws UserRightsException;
+  public String[] getRights( final String username, final String password, final String currentScenarioId ) throws UserRightsException;
 }

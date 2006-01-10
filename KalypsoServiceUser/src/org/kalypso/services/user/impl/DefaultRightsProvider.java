@@ -56,18 +56,18 @@ public class DefaultRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
    */
-  public String[] getRights( final String username )
+  public String[] getRights( final String username, final String scenarioId )
   {
     return m_rights.getProperty( username, "" ).split( "," );
   }
 
   /**
-   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String, java.lang.String)
    */
-  public String[] getRights( String username, String password )
+  public String[] getRights( final String username, final String password, final String scenarioId )
   {
-    return getRights( username );
+    return getRights( username, scenarioId );
   }
 }

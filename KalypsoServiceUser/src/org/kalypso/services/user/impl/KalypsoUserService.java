@@ -190,16 +190,16 @@ public class KalypsoUserService implements IUserService
   }
 
   /**
-   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String)
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String)
    */
-  public String[] getRights( final String username ) throws RemoteException
+  public String[] getRights( final String username, final String currentScenarioId ) throws RemoteException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username );
+      return m_rightsProvider.getRights( username, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
@@ -218,16 +218,16 @@ public class KalypsoUserService implements IUserService
   }
 
   /**
-   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String)
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String, java.lang.String)
    */
-  public String[] getRights( String username, String password ) throws RemoteException
+  public String[] getRights( final String username, final String password, final String currentScenarioId ) throws RemoteException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username, password );
+      return m_rightsProvider.getRights( username, password, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
