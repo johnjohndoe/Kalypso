@@ -44,9 +44,9 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
    */
-  public String[] getRights( final String username ) throws UserRightsException
+  public String[] getRights( final String username, final String scenarioId ) throws UserRightsException
   {
     if( m_psicompact == null )
       return null;
@@ -62,7 +62,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
         if( userClasses[i] != null )
           rights.add( PSICompactFactory.toKalypsoRight( userClasses[i].trim() ) );
       }
-      
+
       // CONVENTION: always add the Vorhersage right
       rights.add( PSICompactFactory.toKalypsoRight( "" ) );
 
@@ -77,9 +77,10 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String, java.lang.String)
    */
-  public String[] getRights( String username, String password ) throws UserRightsException
+  public String[] getRights( final String username, final String password, final String scenarioId )
+      throws UserRightsException
   {
     // in Sachsen hat diese Methode keinen Sinn. PSICompact soll nur mit dem
     // am System angemeldete Benutzer gefragt werden.

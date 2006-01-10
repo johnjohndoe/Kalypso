@@ -63,6 +63,9 @@ public class RobotronRightsProvider implements IUserRightsProvider
   /** Example "geheim" */
   private String m_crendentials;
 
+  /** the id of the simulation scenario */
+  private String m_simulationScenarioId;
+
   /**
    * The properties should contain following information:
    * <p>
@@ -75,11 +78,13 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * 
    * @see IUserRightsProvider#init(java.util.Properties)
    */
-  public void init( Properties props ) throws UserRightsException
+  public void init( final Properties props ) throws UserRightsException
   {
     m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
     m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
+
+    m_simulationScenarioId = props.getProperty( "SIMULATION_SCENARIO_ID", "" );
 
     LOG.info( "RobotronRightsProvider initialised" );
   }
@@ -102,22 +107,23 @@ public class RobotronRightsProvider implements IUserRightsProvider
   // empty
   }
 
-  public String[] getRights( String username ) throws UserRightsException
+  public String[] getRights( final String username, final String scenarioId ) throws UserRightsException
   {
     // this method doesn't make sense for the Sachsen-Anhalt project
     throw new UserRightsException( "Method not implemented" );
   }
 
-  public String[] getRights( final String username, final String password ) throws UserRightsException
+  public String[] getRights( final String username, final String password, final String scenarioId )
+      throws UserRightsException
   {
     DirContext dirCtxt = null;
-    
+
     try
     {
       dirCtxt = getDirContext();
-      
+
       final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[]
-      { "gidNumber", "userPassword" } );
+      { "gidNumber", "userPassword", "simulation" } );
 
       final byte[] pw1 = (byte[])userAtts.get( "userPassword" ).get();
       final byte[] pw2 = password.getBytes();
@@ -128,10 +134,20 @@ public class RobotronRightsProvider implements IUserRightsProvider
       }
 
       final String groupName = (String)userAtts.get( "gidNumber" ).get();
-      LOG.info( "User " + username + " found in group: " + groupName );
+      final String simulationFlag = (String)userAtts.get( "simulation" ).get();
 
+      LOG.info( "User " + username + " found in group: " + groupName + ". Simulationflag is: " + simulationFlag );
+
+      // prüfen ob der Benutzer sich nur im Simulationsmodus anmelden darf
+      if( "1".equalsIgnoreCase( simulationFlag ) && !m_simulationScenarioId.equalsIgnoreCase( scenarioId ) )
+      {
+        LOG.info( "User " + username + " is only allowed to connect in simulation-mode." );
+        return UserRights.NO_RIGHTS;
+      }
+
+      // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
-
+      boolean modellierung = false;
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
       while( rightsEnum.hasMore() )
       {
@@ -140,8 +156,12 @@ public class RobotronRightsProvider implements IUserRightsProvider
         // in Kalypso Sachsen-Anhalt the "Modellierung"-Right specifies whether
         // a user is allowed to use Kalypso or not
         if( "Modellierung".equalsIgnoreCase( right ) )
-          return UserRights.FULL_RIGHTS;
+          modellierung = true;
       }
+
+      // Benutzer ist ein Modellierer, darf in Kalypso also alles machen
+      if( modellierung )
+        return UserRights.FULL_RIGHTS;
 
       // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
       return new String[]

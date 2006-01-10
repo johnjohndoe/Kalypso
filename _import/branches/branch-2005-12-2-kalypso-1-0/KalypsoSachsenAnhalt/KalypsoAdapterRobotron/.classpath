@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/axis/axis.jar"/>
+	<classpathentry exported="true" sourcepath="J:/hyd5309/Gruppe07/Development/Java/apache-axis/axis-src-1_2_1.zip" kind="lib" path="lib/axis/axis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/axis-ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/commons-discovery-0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/commons-logging-1.0.4.jar"/>
