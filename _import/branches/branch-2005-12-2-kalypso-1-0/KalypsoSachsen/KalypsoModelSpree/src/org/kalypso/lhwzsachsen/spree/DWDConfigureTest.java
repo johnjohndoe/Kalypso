@@ -131,71 +131,91 @@ public class DWDConfigureTest extends TestCase
     System.out.println( "Start reading raster..." );
     final DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmbaseURL, "EPSG:31469" );
     System.out.println( "Raster read" );
-    geoRaster.saveAsGML( new File( "C:\\TMP\\raster.gml" ) );
+
+    //    final File file = File.createTempFile( "raster", ".gml" );
+    //    System.out.println( "Writing raster to file: " + file.getAbsolutePath() );
+    //    geoRaster.saveAsGML( file );
 
     // raster gml generated
     // start part two and generate mapping configuration
     // N
-    generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, new FileWriter( fileDwdZmlN ) );
+    FileWriter fileWriter = null;
+    try
+    {
+      fileWriter = new FileWriter( fileDwdZmlN );
+      generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, fileWriter );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( fileWriter );
+    }
   }
 
   private void generateDwdZmlConf( final DWDRasterGeoLayer geoRaster, final int dwdKey, final int defaultStatusValue,
       final Writer writer ) throws Exception
   {
-    try
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass()
+        .getResource( "resources/dwd/modell.gml" ) );
+
+    final FeatureType featureType = workspace.getFeatureType( "Einzugsgebiet" );
+    final Feature[] features = workspace.getFeatures( featureType );
+
+    final ObjectFactory dwdFac = new ObjectFactory();
+    final DwdzmlConf conf = dwdFac.createDwdzmlConf();
+    conf.setDefaultStatusValue( defaultStatusValue );
+    conf.setDwdKey( dwdKey );
+    conf.setNumberOfCells( geoRaster.getNumberOfCells() );
+    final List targetList = conf.getTarget();
+    for( int i = 0; i < features.length; i++ )
     {
-      final ObjectFactory dwdFac = new ObjectFactory();
-      final DwdzmlConf conf = dwdFac.createDwdzmlConf();
-      conf.setDefaultStatusValue( defaultStatusValue );
-      conf.setDwdKey( dwdKey );
-      conf.setNumberOfCells( geoRaster.getNumberOfCells() );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass().getResource(
-          "resources/dwd/modell.gml" ) );
+      final Feature feature = features[i];
 
-      final FeatureType featureType = workspace.getFeatureType( "Einzugsgebiet" );
-      final Feature[] features = workspace.getFeatures( featureType );
-      final List targetList = conf.getTarget();
-      for( int i = 0; i < features.length; i++ )
+      final TargetType target = dwdFac.createDwdzmlConfTypeTargetType();
+
+      final TimeseriesLinkType targetZmlLink = (TimeseriesLinkType)feature.getProperty( "Niederschlag_rechnung" );
+      target.setTargetZR( targetZmlLink.getHref() );
+
+      final List mapList = target.getMap();
+      final GM_Surface surface = (GM_Surface)feature.getProperty( "GEOM_EZG" );
+      final double modellArea = GeometryUtilities.calcArea( surface );
+      final RasterPart[] positions = geoRaster.getPositions( surface );
+      System.out.println( "Feature: " + feature.getId() + " : " + positions.length );
+      System.out.println( "A(modell)=" + modellArea );
+
+      // calc full cell area
+      double fullCellArea = 0;
+      for( int j = 0; j < positions.length; j++ )
+        fullCellArea += positions[j].getPortion();
+
+      // set mapping
+      if( positions.length == 0 )
+        throw new Exception( "für Gebiet " + feature.getId() + " wurden keine Rasterzellen zugeordnet !" );
+
+      for( int j = 0; j < positions.length; j++ )
       {
-        final Feature feature = features[i];
+        final RasterPart rasterPart = positions[j];
 
-        final TargetType target = dwdFac.createDwdzmlConfTypeTargetType();
+        // percentage of intersection
+        final double percentage = rasterPart.getPortion() / fullCellArea;
 
-        final TimeseriesLinkType targetZmlLink = (TimeseriesLinkType)feature.getProperty( "Niederschlag_rechnung" );
-        target.setTargetZR( targetZmlLink.getHref() );
-
-        final List mapList = target.getMap();
-        final GM_Surface surface = (GM_Surface)feature.getProperty( "GEOM_EZG" );
-        final double modellArea = GeometryUtilities.calcArea( surface );
-        final RasterPart[] positions = geoRaster.getPositions( surface );
-        System.out.println( "Feature: " + feature.getId() + " : " + positions.length );
-        System.out.println( "A(modell)=" + modellArea );
-        // calc full cell area
-        double fullCellArea = 0;
-        for( int j = 0; j < positions.length; j++ )
-          fullCellArea += positions[j].getPortion();
-        // set mapping
-        if( positions.length == 0 )
-          throw new Exception( "für Gebiet " + feature.getId() + " wurden keine Rasterzellen zugeordnet !" );
-        for( int j = 0; j < positions.length; j++ )
+        // round percentage to 2 digits
+        final int percent = Math.round( (float)( percentage * 100 ) );
+        if( percent > 0 )
         {
           final MapType map = dwdFac.createDwdzmlConfTypeTargetTypeMapType();
-          map.setCellPos( positions[j].getPosition() );
-          map.setFactor( positions[j].getPortion() / fullCellArea );
+          map.setCellPos( rasterPart.getPosition() );
+          map.setFactor( (double)percent / 100 );
           mapList.add( map );
         }
-        targetList.add( target );
-        System.out.println( "A(cell)=  " + fullCellArea + " deltaA=" + ( modellArea - fullCellArea ) + " faktor="
-            + modellArea / fullCellArea );
       }
 
-      final Marshaller marshaller = dwdFac.createMarshaller();
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( conf, writer );
+      targetList.add( target );
+      System.out.println( "A(cell)=  " + fullCellArea + " deltaA=" + ( modellArea - fullCellArea ) + " faktor="
+          + modellArea / fullCellArea );
     }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+
+    final Marshaller marshaller = dwdFac.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.marshal( conf, writer );
   }
 }

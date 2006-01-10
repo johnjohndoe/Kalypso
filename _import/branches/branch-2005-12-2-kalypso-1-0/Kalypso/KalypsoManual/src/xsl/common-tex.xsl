@@ -57,7 +57,7 @@
 	<xsl:variable name="latex.figure.position">[hbt]</xsl:variable>
 
 	<xsl:variable name="latex.book.preamblestart">
-		\documentclass[a4paper, twoside, 12pt, draft]{book}
+		\documentclass[a4paper, oneside, 12pt]{book}
 		\usepackage[latin1]{inputenc}
 	</xsl:variable>
 
