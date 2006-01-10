@@ -201,7 +201,7 @@ public class DWDRasterHelper
       final double factor = DWDRasterHelper.getFactorForDwdKey( DWDRaster.KEY_100000_LAT );
       while( ( line = reader.readLine() ) != null )
       {
-        Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
+        final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() )
         {
           if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
@@ -212,28 +212,22 @@ public class DWDRasterHelper
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
           raster = new DWDRaster( date, key );
           continue;
-
         }
+        
         final String[] values = ( line.trim() ).split( " +", 13 );
 
         if( raster != null )
         {
           for( int i = 0; i < values.length; i++ )
-          {
             raster.addValue( Double.parseDouble( values[i] ) * factor );
-          }
-
         }
       }
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
         yRaster = raster;
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LON )
         xRaster = raster;
+      
       return new DWDRasterGeoLayer( targetEpsg, xRaster, yRaster );
-    }
-    catch( Exception e )
-    {
-      throw e;
     }
     finally
     {

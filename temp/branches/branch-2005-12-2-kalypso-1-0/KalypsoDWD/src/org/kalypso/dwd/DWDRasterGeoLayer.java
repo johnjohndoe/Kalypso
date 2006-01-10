@@ -72,7 +72,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class DWDRasterGeoLayer
 {
-
   private final DWDRaster m_xRaster;
 
   private final DWDRaster m_yRaster;
@@ -100,7 +99,7 @@ public class DWDRasterGeoLayer
   {
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     m_srcCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
-    CS_CoordinateSystem targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
+    final CS_CoordinateSystem targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( epsgTarget ) );
     m_xRaster = xRaster;
     m_yRaster = yRaster;
@@ -130,33 +129,37 @@ public class DWDRasterGeoLayer
     }
   }
 
-  private void init( CS_CoordinateSystem targetCS ) throws Exception
+  private void init( final CS_CoordinateSystem targetCS ) throws Exception
   {
     final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer" );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final FeatureType layerFT = schema.getFeatureType( "DWDLayer" );
-    final Feature rootFE = FeatureFactory.createFeature( "main", layerFT );
+    final Feature rootFE = FeatureFactory.createFeature( "main", layerFT, false );
     m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null );
 
     // create all feature with point geom property
     for( int pos = 0, size = m_xRaster.size(); pos < size; pos++ )
     {
-      Feature feature = createFeature( pos );
+      final Feature feature = createFeature( pos );
       m_workspace.addFeatureAsComposition( rootFE, PROP_CELLMEMBER, 0, feature );
     }
+    
     m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
+    
     // resort it before using the query
     m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
+    
     // now update the surface geometry
     m_workspace
         .accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+    
     // resort again before using the query
     m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  private Feature createFeature( int pos ) throws Exception
+  private Feature createFeature( final int pos ) throws Exception
   {
-    final Feature feature = FeatureFactory.createFeature( Integer.toString( pos ), m_positionFeature );
+    final Feature feature = FeatureFactory.createFeature( Integer.toString( pos ), m_positionFeature, false );
     GM_Object point = createGeometryPoint( pos );
     feature.setProperty( FeatureFactory.createFeatureProperty( GEO_PROP_POINT, point ) );
     feature.setProperty( FeatureFactory.createFeatureProperty( POS_PROP, new Integer( pos ) ) );
@@ -220,21 +223,19 @@ public class DWDRasterGeoLayer
     }
   }
 
-  public RasterPart[] getPositions( GM_Surface geometry )
+  public RasterPart[] getPositions( final GM_Surface geometry )
   {
     final List result = new ArrayList();
     final FeatureList fList = (FeatureList)m_workspace.getRootFeature().getProperty( "cellMember" );
     final List list = fList.query( geometry.getEnvelope(), null );
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
+    for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Feature rasterFE = (Feature)iter.next();
       final GM_Surface rasterGeom = (GM_Surface)rasterFE.getProperty( GEO_PROP_SURFACE );
       if( geometry.intersects( rasterGeom ) )
       {
         final GM_Object intersection = geometry.intersection( rasterGeom );
-        //        double fullArea = GeometryUtilities.calcArea( rasterGeom );
-        double partArea = GeometryUtilities.calcArea( intersection );
-        //        double portion = partArea / fullArea;
+        final double partArea = GeometryUtilities.calcArea( intersection );
         final Integer pos = (Integer)rasterFE.getProperty( POS_PROP );
         result.add( new RasterPart( pos.intValue(), partArea ) );
       }
