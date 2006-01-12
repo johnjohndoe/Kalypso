@@ -63,6 +63,10 @@ public class TrennerRule extends AbstractValidatorRule
             + String.format( IProfilConstants.FMT_STATION,  xright )
             + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf(toValidate[1].getPoint()), "" );
       }
+      if( toValidate[0].getPoint() == toValidate[1].getPoint() )
+      {
+        collector.createProfilMarker( true, toValidate[1].getTyp().toString() + " liegen übereinander", "", profil.getPoints().indexOf(toValidate[1].getPoint()), "" );
+      }
     }
     catch( ProfilDataException e )
     {

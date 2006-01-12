@@ -40,5 +40,10 @@
               description="Brücke"
               id="pasche.bruecke"
               type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.WehrRule"
+              description="Wehr"
+              id="pasche.wehr"
+              type="Pasche"/>
    </extension>
 </plugin>
