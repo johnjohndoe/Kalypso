@@ -30,35 +30,35 @@ public interface IProfilPoint
  
   public static enum POINT_PROPERTY
   {
-    BEWUCHS_AX( "AX", true, true, false, 4 ),
+    BEWUCHS_AX( "AX", true, true, false, 0.0001 ),
 
-    BEWUCHS_AY( "AY", true, true, false, 4 ),
+    BEWUCHS_AY( "AY", true, true, false, 0.0001 ),
 
-    BEWUCHS_DP( "DP", true, true, false, 4 ),
+    BEWUCHS_DP( "DP", true, true, false, 0.0001 ),
 
-    BREITE( "Breite", false, true, true, 4 ),
+    BREITE( "Breite", false, true, true, 0.0001 ),
 
-    HOCHWERT( "Hochwert", true, true, true, 4 ),
+    HOCHWERT( "Hochwert", true, true, true, 0.0001 ),
 
-    UNTERKANTEBRUECKE( "Brückenunterkante", true, true, false, 4 ),
+    UNTERKANTEBRUECKE( "Brückenunterkante", true, true, false, 0.0001  ),
 
-    OBERKANTEBRUECKE( "Brückenoberkante", true, true, false, 4 ),
+    OBERKANTEBRUECKE( "Brückenoberkante", true, true, false, 0.0001  ),
 
-    OBERKANTEWEHR( "Wehr", true, true, false, 4 ),
+    OBERKANTEWEHR( "Wehr", true, true, false, 0.0001  ),
 
-    HOEHE( "Geländehöhe", false, true, true, 4 ),
+    HOEHE( "Geländehöhe", false, true, true, 0.0001  ),
 
-    RAUHEIT( "Rauheit", false, true, false, 4 ),
+    RAUHEIT( "Rauheit", false, true, false, 0.0001  ),
 
-    RECHTSWERT( "Rechtswert", true, true, true, 4 ),
+    RECHTSWERT( "Rechtswert", true, true, true, 0.0001  ),
 
-    FLIESSZONE( "Trennflächen", false, false, false, 4 ),
+    FLIESSZONE( "Trennflächen", false, false, false, 0.0001  ),
 
-    DURCHSTROEMTE( "Durchströmte Bereiche", false, false, false, 4 ),
+    DURCHSTROEMTE( "Durchströmte Bereiche", false, false, false, 0.0001  ),
 
-    BORDVOLL( "Bordvollpunkte", true, false, false, 4 );
+    BORDVOLL( "Bordvollpunkte", true, false, false, 0.0001  );
     private POINT_PROPERTY( final String label, final boolean optional, final boolean visible,
-        final boolean interpolation, final int precision )
+        final boolean interpolation, final double precision )
     {
       m_parameters.put( PARAMETER.VISIBLE, visible );
       m_parameters.put( PARAMETER.OPTIONAL, optional );

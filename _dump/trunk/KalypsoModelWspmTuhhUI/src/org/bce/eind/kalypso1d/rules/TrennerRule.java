@@ -33,13 +33,13 @@ public class TrennerRule extends AbstractValidatorRule
     final IProfilDevider bv[] = profil.getDevider( DEVIDER_TYP.BORDVOLL );
 
     if( tf != null )
-      validate( db, tf, profil, collector );
+      validatePosition( db, tf, profil, collector );
     if( bv != null )
-      validate( db, bv, profil, collector );
+      validatePosition( db, bv, profil, collector );
 
   }
 
-  private void validate( IProfilDevider[] db, IProfilDevider[] toValidate,
+  private void validatePosition( IProfilDevider[] db, IProfilDevider[] toValidate,
       final IProfil profil, final IValidatorMarkerCollector collector )
       throws CoreException
   {
@@ -65,7 +65,7 @@ public class TrennerRule extends AbstractValidatorRule
       }
       if( toValidate[0].getPoint() == toValidate[1].getPoint() )
       {
-        collector.createProfilMarker( true, toValidate[1].getTyp().toString() + " liegen übereinander", "", profil.getPoints().indexOf(toValidate[1].getPoint()), "" );
+        collector.createProfilMarker( true,"doppelte "+ toValidate[1].getTyp().toString() , "", profil.getPoints().indexOf(toValidate[1].getPoint()), "" );
       }
     }
     catch( ProfilDataException e )

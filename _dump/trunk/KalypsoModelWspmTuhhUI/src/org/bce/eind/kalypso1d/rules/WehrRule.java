@@ -1,6 +1,5 @@
 package org.bce.eind.kalypso1d.rules;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -11,7 +10,6 @@ import com.bce.eind.core.ProfilCorePlugin;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
-import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;

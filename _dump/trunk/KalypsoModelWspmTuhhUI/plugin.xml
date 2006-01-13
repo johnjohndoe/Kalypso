@@ -45,5 +45,10 @@
               description="Wehr"
               id="pasche.wehr"
               type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.DoppelterPunktRule"
+              description="DoppelterPunkt"
+              id="pasche.doppelterpunkt"
+              type="Pasche"/>
    </extension>
 </plugin>

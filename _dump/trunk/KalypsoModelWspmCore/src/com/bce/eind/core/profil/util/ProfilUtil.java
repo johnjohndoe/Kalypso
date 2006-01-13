@@ -30,6 +30,37 @@ public class ProfilUtil
     return (leftPos < rightPos)?points.subList(leftPos,rightPos):null;
 
   }
+  /**
+   * return true if all selected properties are equal
+   * 
+   */
+  public static final boolean comparePoints(final POINT_PROPERTY property,final IProfilPoint point1,final IProfilPoint point2)
+  {
+    try
+    {
+      return Math.abs(point1.getValueFor(property)-point2.getValueFor(property))<= (Double)property.getParameter(PARAMETER.PRECISION );
+      
+    }
+    catch( ProfilDataException e )
+    {
+      return false;
+    }
+  }
+  /**
+   * return true if getValueFor(property) is equal
+   * 
+   */
+  public static final boolean comparePoints(final POINT_PROPERTY[] properties,final IProfilPoint point1,final IProfilPoint point2)
+  {
+    for (POINT_PROPERTY property : properties)
+    {
+      if (!comparePoints(property,point1,point2))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
   public static final IProfilPoint splitSegment( IProfilPoint startPoint, IProfilPoint endPoint )
       throws ProfilDataException
   {
