@@ -284,7 +284,13 @@ public class FortranFormatHelper
       }
 
       value = value.trim();
-      return ( result.replace( max - value.length(), max, value ) ).toString();
+      // TODO hier ist ein Problem bezüglich Vorkommastellen, da diese Classe beim Umstieg auf 1.5 eh
+      // wegfällt habe ich nur die variable start eingefügt und um -1 verkleinert da der dezimalpunkt im 
+      // String auch als Charakter gezählt wird aber in der Formatangabe (z.B. f10.3) nicht!
+      int start = max - value.length();
+      if( start < 0 )
+        start = 0;
+      return ( result.replace( start, max, value ) ).toString();
     }
     throw new UnsupportedOperationException();
 
