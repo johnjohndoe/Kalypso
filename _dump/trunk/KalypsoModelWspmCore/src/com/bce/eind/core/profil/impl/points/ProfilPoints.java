@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.bce.java.lang.UnmodifiableLinkedList;
+import org.kalypso.contribs.java.lang.UnmodifiableLinkedList;
 
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPoints;

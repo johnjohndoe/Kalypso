@@ -17,7 +17,7 @@
    <requires>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.bce.java.contributions"/>
+      <import plugin="org.kalypso.contribs.java" export="true"/>
    </requires>
    
    <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
