@@ -1,4 +1,4 @@
-!     Last change:  WP    8 Dec 2005    3:22 pm
+!     Last change:  WP   17 Jan 2006   11:30 am
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -49,8 +49,8 @@ INTEGER, parameter :: ipro = 16        ! Max. Anzahl von Bloecken in Profildatei
 INTEGER, parameter :: itmax = 99       ! Max. Anzahl von Iterationen in versch. Subroutinen
 INTEGER, parameter :: maxw = 50        ! Max. Anzahl von Wehrfeldern
 INTEGER, parameter :: mpts = 1000       ! ?? WP wahrscheinlich = maxkla
-INTEGER, parameter :: max2 = 10        ! ?? WP wird nur in wenigen SUBs verwendet
-INTEGER, parameter :: min2 =100        ! ?? WP wird nur in wenigen SUBs verwendet
+INTEGER, parameter :: max2 = 20        ! ?? WP wird nur in wenigen SUBs verwendet
+INTEGER, parameter :: min2 =500        ! ?? WP wird nur in wenigen SUBs verwendet
 
 INTEGER, parameter :: idim = 1000       ! ?? WP wird nur in wenigen SUBs verwendet, wahrscheinlich = maxkla
 INTEGER, parameter :: idim4 = 20       ! ?? WP wird nur in wenigen SUBs verwendet

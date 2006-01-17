@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    2:15 pm
+!     Last change:  WP   17 Jan 2006   11:35 am
 !--------------------------------------------------------------------------
 ! This code, AlWSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -571,7 +571,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
         iw = 1 
     7   CONTINUE 
         mal2 = mal2 + 1 
-        IF (mal2.gt.100) then 
+        IF (mal2 .gt. min2) then 
 !      write(0,'(a11,4i7)') 'k,im,j,m(k)',k,im,j,m(k)                   
           WRITE (0, '(a)') 'mal2 ist zu gross' 
           WRITE ( * , '(a)') 'mal2 ist zu gross' 
