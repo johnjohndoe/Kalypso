@@ -573,3 +573,13 @@ Querschnitte ausgegeben werden.
      wurde (z.B. fehlerhafte Verschneidung im WSPWIN Mapper).
 
                                                     Wolf Plöger, 08.12.2005
+
+
+
+Kalypso 1.0.15   Januar 2006
+----------------------------
+Bei einer sehr komplexen Brücke ist ein Problem aufgetreten. Durch die Anhebung der 
+Dimensions-Variablen MIN2=500 und MAX2=20 in globale_definitionen.f90 konnte das 
+Problem behoben werden.
+
+                                                    Wolf Plöger, 17.01.2006

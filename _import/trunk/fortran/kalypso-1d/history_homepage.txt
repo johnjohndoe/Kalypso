@@ -198,3 +198,9 @@ Kalypso 1.0.14     08.12.2005
      wurde (z.B. fehlerhafte Verschneidung im WSPWIN Mapper).
 
                                                     Wolf Plöger, 08.12.2005
+
+Kalypso 1.0.15   Januar 2006
+----------------------------
+1.)  Bugfix bei der Berechnung von extrem komplexen Brücken.
+ 
+                                                    Wolf Plöger, 17.01.2006
