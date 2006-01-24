@@ -41,6 +41,8 @@
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,7 +69,7 @@ public class StringModifier implements IFeatureModifier
 {
   private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
 
-  private final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
+  private final NumberFormat NUMBER_FORMAT;
 
   private final FeatureTypeProperty m_ftp;
 
@@ -77,14 +79,38 @@ public class StringModifier implements IFeatureModifier
 
   public StringModifier( final FeatureTypeProperty ftp )
   {
+    NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
-
+    //    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    //    d.setDecimalFormatSymbols( dfs );
     // wen need both registered type handler types
     final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     m_guiTypeHandler = (IGuiTypeHandler)guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
-    
+
     final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
+    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp
+        .getType() );
+  }
+
+  public NumberFormat getNumberFormat( FeatureTypeProperty ftp )
+  {
+    // HACK
+    final String namespace = ftp.getNamespace();
+    final String name = ftp.getName();
+    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
+//    ##0.000E0
+    final NumberFormat normalFormat = NumberFormat.getInstance();
+    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
+    {
+      if( "flaech".equals( name ) )
+        return expFormat;
+    }
+    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
+    {
+      if( "m_perkm".equals( name ) )
+        return expFormat;
+    }
+    return normalFormat;
   }
 
   /**
@@ -107,7 +133,7 @@ public class StringModifier implements IFeatureModifier
 
     return toText( data );
   }
-  
+
   private String toText( final Object data )
   {
     if( m_guiTypeHandler != null )
@@ -167,7 +193,7 @@ public class StringModifier implements IFeatureModifier
       return new Float( NumberUtils.parseDouble( text ) );
     else if( typeName.equals( "java.lang.Long" ) )
       return new Long( NUMBER_FORMAT.parse( text ).longValue() );
-    
+
     return null;
   }
 
@@ -227,7 +253,7 @@ public class StringModifier implements IFeatureModifier
 
     return null;
   }
-  
+
   /**
    * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.
    * 
