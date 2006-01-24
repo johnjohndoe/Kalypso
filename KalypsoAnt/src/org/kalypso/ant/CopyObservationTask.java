@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ant;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
@@ -73,8 +74,13 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 public class CopyObservationTask extends AbstractFeatureVisitorTask
 {
   /**
+   * Zielverzeichnis für generierte Zeitreihen. Überschreibt targetobservation.
+   */
+  private File m_targetObservationDir;
+  /**
    * Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird.
    */
+   
   private String m_targetobservation;
 
   /**
@@ -129,7 +135,12 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     final CopyObservationFeatureVisitor.Source[] srcs = (CopyObservationFeatureVisitor.Source[])m_sources
         .toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
-    
+    if( m_targetObservationDir != null )
+    {      
+    return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs,
+        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
+      
+    }
     return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
         m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
   }
@@ -303,5 +314,13 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
         "Fehler beim Kopieren der Zeitreihen", status );
+  }
+  public File getTargetObservationDir()
+  {
+    return m_targetObservationDir;
+  }
+  public void setTargetObservationDir( File targetObservationDir )
+  {
+    m_targetObservationDir = targetObservationDir;
   }
 }
