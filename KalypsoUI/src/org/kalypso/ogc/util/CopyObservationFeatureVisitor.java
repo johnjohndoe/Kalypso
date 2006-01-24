@@ -50,8 +50,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -65,6 +69,7 @@ import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -98,9 +103,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    * <p>
    * tokenName-featurePropertyName;tokenName-featurePropertyName;...
    * <p>
-   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als Request-Name zu setzen)
+   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als
+   * Request-Name zu setzen)
    */
   private final String m_tokens;
+
+  private final File m_targetobservationDir;
 
   /**
    * @param context
@@ -122,6 +130,36 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_context = context;
     m_urlResolver = urlResolver;
     m_targetobservation = targetobservation;
+    m_targetobservationDir = null;
+    m_sources = sources;
+    m_metadata = metadata;
+    m_forecastFrom = forecastFrom;
+    m_forecastTo = forecastTo;
+    m_logWriter = logWriter;
+    m_tokens = tokens;
+  }
+
+  /**
+   * @param context
+   *          context to resolve relative url
+   * @param urlResolver
+   *          resolver for urls
+   * @param forecastFrom
+   * @param forecastTo
+   * @param logWriter
+   * @param sources
+   * @param metadata
+   *          All entries will be added to the target observation
+   * @param targetobservationDir
+   */
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
+      final File targetobservationDir, final Source[] sources, final Properties metadata, final Date forecastFrom,
+      final Date forecastTo, final PrintWriter logWriter, final String tokens )
+  {
+    m_context = context;
+    m_urlResolver = urlResolver;
+    m_targetobservationDir = targetobservationDir;
+    m_targetobservation = null;
     m_sources = sources;
     m_metadata = metadata;
     m_forecastFrom = forecastFrom;
@@ -139,7 +177,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       final IObservation[] sourceObses = getObservations( f );
 
-      final TimeseriesLink targetlink = (TimeseriesLink)f.getProperty( m_targetobservation );
+      final TimeseriesLink targetlink = getTargetLink( f );
+
       if( targetlink == null )
       {
         m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
@@ -180,7 +219,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
 
-      final File file = targetfile.getLocation().toFile();
+      final IPath location = targetfile.getLocation();
+      final File file = location.toFile();
       FileOutputStream stream = null;
       try
       {
@@ -204,6 +244,60 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  /**
+   * 
+   * @param f
+   */
+  private TimeseriesLink getTargetLink( Feature f )
+  {
+    if( m_targetobservationDir != null )
+    {
+      final ObjectFactory factory = new ObjectFactory();
+      String name = (String)f.getProperty( "name" );
+      if( name == null || name.length() < 1 )
+        name = f.getId();
+      if( name == null || name.length() < 1 )
+        name = "generated";
+      final File file = getValidFile( name, 0 );
+      final TimeseriesLink link;
+      try
+      {
+        link = factory.createTimeseriesLink();
+        final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
+        final File contextFile = contextIFile.getLocation().toFile();
+        final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
+        link.setHref( relativePathTo );
+        return link;
+      }
+      catch( JAXBException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+    }
+    return (TimeseriesLink)f.getProperty( m_targetobservation );
+  }
+
+  /**
+   * 
+   * @param name
+   * @param index
+   */
+  private File getValidFile( final String name, int index )
+  {
+    String newName = name;
+    if( index > 0 )
+      newName = newName + "_" + Integer.toString( index );
+    final String newName2 = FileUtilities.validateName( newName, "_" );
+    final File file = new File( m_targetobservationDir, newName2 + ".zml" );
+    if( file.exists() )
+    {
+      index++;
+      return getValidFile( name, index );
+    }
+    return file;
   }
 
   private IObservation[] getObservations( final Feature f ) throws SensorException
@@ -250,12 +344,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
     // filter variable might also contain request spec
     String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
-    
+
     // token replacement
     if( m_tokens != null && m_tokens.length() > 0 )
     {
       final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
-      
+
       sourceref = ObsViewUtils.replaceTokens( sourceref, properties );
     }
 
