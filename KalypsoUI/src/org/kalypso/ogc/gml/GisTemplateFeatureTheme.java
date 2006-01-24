@@ -122,6 +122,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   private final IFeatureSelectionManager m_selectionManager;
 
   private List m_gisTemplateUserStyles = new ArrayList();
+  
+  /* A viewer/editor may not be able to render geometries, hence no default style has to be generated*/
+  private boolean m_canHaveStyle = false;
 
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context,
       final IFeatureSelectionManager selectionManager )
@@ -137,12 +140,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     m_layerKey = new PoolableObjectType( type, source, context );
     m_featurePath = featurePath;
-
     if( layerType instanceof Layer )
     {
       final Layer mapLayerType = (Layer)layerType;
       setType( type.toUpperCase() );
       setName( mapLayerType.getName() );
+    // to remember that the layer type has a styledLayer element
+      m_canHaveStyle = true;
 
       final List stylesList = mapLayerType.getStyle();
       for( int i = 0; i < stylesList.size(); i++ )
@@ -315,7 +319,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
             addStyle( style );
           }
-          if( m_gisTemplateUserStyles.isEmpty() )
+          //check if there is a userStyle and geometries can be visualized 
+          if( m_gisTemplateUserStyles.isEmpty() && m_canHaveStyle )
           {
             final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
             final UserStyle style = defaultStyleFactory.createUserStyle( getFeatureType(),
