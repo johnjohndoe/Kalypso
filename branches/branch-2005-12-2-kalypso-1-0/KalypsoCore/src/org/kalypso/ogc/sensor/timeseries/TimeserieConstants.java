@@ -88,6 +88,15 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** AREA [m^2] */
   public static final String TYPE_AREA = "A";
 
+  /** Die Wurzeltiefe in einem Nutzungszyklus [dm] */
+  public static final String TYPE_WT = "WT";
+
+  /** Der Korrekturwert der Verdunstung gegenüber der pot. Verdunstung in einem Nutzungszyklus [-] */
+  public static final String TYPE_KC = "KC";
+
+  /** Der Speicherinhalt des Interzeptionsspeichers in einem Nutzungszyklus [mm] */
+  public static final String TYPE_LAI = "LAI";
+
   public static final String[] TYPES_ALL;
 
   /**
@@ -107,8 +116,10 @@ public abstract class TimeserieConstants implements ObservationConstants
         TYPE_NORM,
         TYPE_AREA,
         TYPE_HOURS,
-        TYPE_NORMNULL
-    };
+        TYPE_NORMNULL,
+        TYPE_KC,
+        TYPE_WT,
+        TYPE_LAI };
     Arrays.sort( types );
     TYPES_ALL = types;
   }

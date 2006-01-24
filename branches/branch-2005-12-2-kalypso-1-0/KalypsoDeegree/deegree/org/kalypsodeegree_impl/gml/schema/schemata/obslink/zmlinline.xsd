@@ -12,4 +12,8 @@
     <simpleType name="ZmlInlineTAType">
 		<restriction base="string"/>
 	</simpleType>
+	<!-- idealisierte Kc Wt Lai Jahresgangvegetation z.B. Korrekturfaktor Verdunst/pot.Versdunst-Wurzeltiefe-Interzeptionspeicherinhalt-idealisiert -->
+    <simpleType name="ZmlInlineIdealKcWtLaiType">
+		<restriction base="string"/>
+	</simpleType>
 </schema>

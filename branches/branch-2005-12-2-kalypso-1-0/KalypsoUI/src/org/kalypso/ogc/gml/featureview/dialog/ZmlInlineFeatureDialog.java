@@ -34,9 +34,11 @@ import java.util.Collection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
 
 /**
  * @author kuepfer
@@ -49,13 +51,14 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
 
   private FeatureChange m_change = null;
 
-  private final String[] m_axisTypes;
+  private static ITypeHandler m_typeHandler;
 
-  public ZmlInlineFeatureDialog( final Feature feature, final FeatureTypeProperty ftp, final String[] axisTypes )
+  public ZmlInlineFeatureDialog( Feature feature, FeatureTypeProperty ftp, ITypeHandler handler )
   {
+
     m_feature = feature;
     m_ftp = ftp;
-    m_axisTypes = axisTypes;
+    m_typeHandler = handler;
   }
 
   /**
@@ -63,9 +66,29 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public int open( Shell shell )
   {
-    final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, true, true,
-        ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE
-            | ObservationViewerDialog.BUTTON_EXEL_IMPORT | ObservationViewerDialog.BUTTON_EXEL_EXPORT, m_axisTypes );
+    ZmlInlineTypeHandler inlineTypeHandler = null;
+    ObservationViewerDialog dialog = null;
+    // Dies ist ein hack!
+    // TODO Definition eines Extension points für den ObservationViewerDialog damit für jeden TypeHandler
+    // der Dialog configuriert werden kann, oder ist dies hier anders gedacht ?? CK
+    // Extension Point müsste z.B. im eine Methode wie newObservation(Shell parent) im Interface haben
+    // die eine IObservation zurück gibt
+    if( m_typeHandler instanceof ZmlInlineTypeHandler )
+    {
+      inlineTypeHandler = (ZmlInlineTypeHandler)m_typeHandler;
+      String typeName = inlineTypeHandler.getTypeName();
+      if( !typeName.endsWith( "ZmlInlineIdealKcWtLaiType" ) )
+        dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW
+            | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
+            | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
+      else
+      {
+        dialog = new ObservationViewerDialog( shell, false, true, true,
+            ObservationViewerDialog.BUTTON_NEW_IDEAL_LANDUSE | ObservationViewerDialog.BUTTON_REMOVE
+                | ObservationViewerDialog.BUTTON_EXEL_IMPORT | ObservationViewerDialog.BUTTON_EXEL_EXPORT,
+            inlineTypeHandler.getAxisTypes() );
+      }
+    }
 
     final Object o = m_feature.getProperty( m_ftp.getName() );
     dialog.setInput( o );

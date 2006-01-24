@@ -31,6 +31,8 @@ package org.kalypso.ogc.sensor.view;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -85,6 +87,8 @@ public class ObservationViewerDialog extends ResizableDialog
 
   public final static int BUTTON_REMOVE = 2;
 
+  public final static int BUTTON_NEW_IDEAL_LANDUSE = 32;
+
   public static final int BUTTON_EXEL_IMPORT = 4;
 
   public static final int BUTTON_EXEL_EXPORT = 8;
@@ -103,12 +107,6 @@ public class ObservationViewerDialog extends ResizableDialog
     m_withChart = withChart;
     m_buttonControls = buttonControls;
     m_axisTypes = axisTypes;
-  }
-
-  public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable,
-      boolean withChart, final int buttonControls )
-  {
-    this( parent, withHeaderForm, withMetaDataAndTable, withChart, buttonControls, null );
   }
 
   public ObservationViewerDialog( final Shell parent )
@@ -219,6 +217,42 @@ public class ObservationViewerDialog extends ResizableDialog
       };
       result.add( new ButtonControl( newListener, "neu", "Neue Zeitreihe anlegen", SWT.PUSH ) );
     }
+    if( ( m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE ) == BUTTON_NEW_IDEAL_LANDUSE )
+    {
+      final SelectionListener newListener = new SelectionListener()
+      {
+        public void widgetSelected( SelectionEvent e )
+        {
+
+          final String name = "Idealisierter Jahres Vegetationszyklus";
+          final Calendar startDate = Calendar.getInstance();
+          startDate.set( 2000, 11, 15 );
+          final Calendar idealMonth = Calendar.getInstance();
+          idealMonth.setTimeInMillis( 30 * 24 * 60 * 60 * 1000 );
+          final Object intervall = new Date( idealMonth.getTimeInMillis() );
+          final Object min = new Date( startDate.getTimeInMillis() );
+          final int months = 12;
+
+          final Object[][] values = new Object[months][axis.length];
+          final Iterator iterator = new ValueIterator( min, intervall, months );
+          for( int row = 0; row < months; row++ )
+          {
+            values[row][0] = iterator.next();
+            for( int ax = 1; ax < axis.length; ax++ )
+              values[row][ax] = new Double( 0 );
+          }
+          final ITuppleModel model = new SimpleTuppleModel( axis, values );
+          setInput( new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model ) );
+
+        }
+
+        public void widgetDefaultSelected( SelectionEvent e )
+        {
+        // TODO Auto-generated method stub
+        }
+      };
+      result.add( new ButtonControl( newListener, "neu", "Neue Vegetationsperiode anlegen", SWT.PUSH ) );
+    }
     if( ( m_buttonControls & BUTTON_EXEL_IMPORT ) == BUTTON_EXEL_IMPORT )
     {
       final SelectionListener exelImportListener = new SelectionListener()
@@ -240,8 +274,8 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher", "Aus Zwischenspeicher importieren",
-          SWT.PUSH ) );
+      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher",
+          "Aus Zwischenspeicher importieren", SWT.PUSH ) );
     }
     if( ( m_buttonControls & BUTTON_EXEL_EXPORT ) == BUTTON_EXEL_EXPORT )
     {
@@ -273,8 +307,8 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher", "In Zwischenspeicher exportieren",
-          SWT.PUSH ) );
+      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher",
+          "In Zwischenspeicher exportieren", SWT.PUSH ) );
     }
     return (ButtonControl[])result.toArray( new ButtonControl[result.size()] );
   }

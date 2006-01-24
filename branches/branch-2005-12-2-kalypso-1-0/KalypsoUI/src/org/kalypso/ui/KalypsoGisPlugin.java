@@ -775,13 +775,23 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String[] taAxis = new String[]
       {
           TimeserieConstants.TYPE_HOURS,
-          TimeserieConstants.TYPE_NORM, };
+          TimeserieConstants.TYPE_NORM };
+          final String[] wtKcLaiAxis = new String[]
+      {
+          TimeserieConstants.TYPE_DATE,
+          TimeserieConstants.TYPE_LAI,
+          TimeserieConstants.TYPE_WT,
+          TimeserieConstants.TYPE_KC };
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
+          "KCWTLAI" );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
+            registry.registerTypeHandler( wtKcLaiInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
+            guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
