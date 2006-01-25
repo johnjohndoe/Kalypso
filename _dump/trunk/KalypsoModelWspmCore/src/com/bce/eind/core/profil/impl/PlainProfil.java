@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
@@ -20,7 +19,6 @@ import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
-import com.bce.eind.core.profil.impl.points.ProfilPoint;
 import com.bce.eind.core.profil.impl.points.ProfilPoints;
 import com.bce.eind.core.profil.util.ProfilUtil;
 
@@ -283,7 +281,7 @@ public class PlainProfil implements IProfilConstants, IProfil
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
       final double hoehe )
   {
-    final ProfilPoint point = (ProfilPoint)m_points.addPoint( thePointBefore );
+    final IProfilPoint point = m_points.addPoint( thePointBefore );
     point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
     point.setValueFor( POINT_PROPERTY.BREITE, breite );
 
