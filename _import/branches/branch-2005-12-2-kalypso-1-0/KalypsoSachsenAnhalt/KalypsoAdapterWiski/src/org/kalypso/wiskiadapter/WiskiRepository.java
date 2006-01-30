@@ -23,6 +23,8 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 /**
  * WiskiRepository over the Wiski Data Provider (WDP).
  * 
+ * 20060120 - schlienger - userData must now be set from the return-value of the call to getUserAuthorisation
+ * 
  * @author schlienger
  */
 public class WiskiRepository extends AbstractRepository
@@ -30,8 +32,7 @@ public class WiskiRepository extends AbstractRepository
   private final static Logger LOG = Logger.getLogger( WiskiRepository.class.getName() );
 
   private KiWWDataProviderRMIf m_wiski = null;
-
-  private final HashMap m_userData;
+  private HashMap m_userData = null;
 
   private final String m_url;
 
@@ -60,17 +61,10 @@ public class WiskiRepository extends AbstractRepository
     m_domain = validator.getDomain();
     m_logonName = validator.getLogonName();
     m_password = validator.getPassword();
-    final String language = validator.getLanguage();
-
-    m_userData = new HashMap();
-    m_userData.put( "domain", m_domain );
-    m_userData.put( "logonName", m_logonName );
-    m_userData.put( "password", m_password );
-    m_userData.put( "language", language );
 
     try
     {
-      m_wiski = wiskiInit();
+      wiskiInit();
     }
     catch( final RepositoryException ignored )
     {
@@ -83,8 +77,11 @@ public class WiskiRepository extends AbstractRepository
    * 
    * @throws RepositoryException
    */
-  private final KiWWDataProviderRMIf wiskiInit() throws RepositoryException
+  private final void wiskiInit() throws RepositoryException
   {
+    m_userData = null;
+    m_wiski = null;
+
     try
     {
       //create a server object
@@ -98,14 +95,14 @@ public class WiskiRepository extends AbstractRepository
       final HashMap optParam = new HashMap();
       optParam.put( KiWWDataProviderInterface.OPT_GETUSERAUTHORISATION_MAXINACTIVE, Integer.toString( 28800 ) );
 
-      final HashMap auth = myServerObject.getUserAuthorisation( m_domain, m_logonName, m_password, "myhost.kisters.de",
+      m_userData = myServerObject.getUserAuthorisation( m_domain, m_logonName, m_password, "myhost.kisters.de",
           optParam );
-      LOG.info( "Wiski login=" + auth );
+      LOG.info( "Wiski login=" + m_userData );
 
-      if( auth == null || !"1".equals( auth.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
+      if( m_userData == null || !"1".equals( m_userData.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
         throw new RepositoryException( "Login not allowed" );
 
-      return myServerObject;
+      m_wiski = myServerObject;
     }
     catch( final Exception e )
     {
@@ -129,7 +126,7 @@ public class WiskiRepository extends AbstractRepository
   {
     if( m_wiski == null )
       return;
-    
+
     try
     {
       LOG.info( "Logging out from WISKI-WDP" );
@@ -255,6 +252,11 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
+      // force test before calling execute()
+      // if null, will jump in catch() block where init is done again
+      if( m_wiski == null )
+        throw new IllegalStateException( "Wiski wurde nicht initialisiert" );
+
       call.execute( m_wiski, m_userData );
     }
     catch( final Exception e )
@@ -263,7 +265,7 @@ public class WiskiRepository extends AbstractRepository
       // out. So we try here to reconnect and to perform the call again.
       wiskiLogout();
 
-      m_wiski = wiskiInit();
+      wiskiInit(); // sets m_wiski and m_userData
 
       call.execute( m_wiski, m_userData );
     }
