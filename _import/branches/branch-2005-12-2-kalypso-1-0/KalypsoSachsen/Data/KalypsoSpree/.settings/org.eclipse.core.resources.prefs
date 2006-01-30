@@ -1,4 +1,4 @@
-#Mon Dec 12 12:22:51 CET 2005
+#Fri Jan 27 16:50:18 CET 2006
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -252,6 +252,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h58/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h11/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/Gesamtansicht.gmt=UTF-8
 encoding//Rechenf\u00E4lle/test/steuerparameter.gft=UTF-8
+encoding//Rechenvarianten/OmbroTest/gnm.log=Cp1252
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//.prognose/Sonntag/grafik/QV_GROEDI_oben-1.dat=UTF-8
@@ -370,8 +371,8 @@ encoding//Rechenvarianten/20040104_test2/Zeitreihen/W_GROEDI.zml=UTF-8
 encoding//Rechenvarianten/20040104_test1/Zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Sonntag/grafik/PA_GROEDI-1.dat=UTF-8
-encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h12/Zeitreihen/PA_GROEDI.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenvarianten/april/Zeitreihen/W_SPWITZ.zml=UTF-8

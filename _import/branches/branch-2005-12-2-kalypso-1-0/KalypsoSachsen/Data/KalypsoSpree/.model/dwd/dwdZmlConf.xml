@@ -54,19 +54,47 @@
         <targetZR>Zeitreihen/PA_BAUTZWB.zml</targetZR>
         <map>
             <cellPos>2754</cellPos>
-            <factor>0.13</factor>
+            <factor>0.05</factor>
         </map>
         <map>
             <cellPos>2696</cellPos>
-            <factor>0.32</factor>
+            <factor>0.12</factor>
+        </map>
+        <map>
+            <cellPos>2638</cellPos>
+            <factor>0.09</factor>
+        </map>
+        <map>
+            <cellPos>2580</cellPos>
+            <factor>0.01</factor>
         </map>
         <map>
             <cellPos>2698</cellPos>
-            <factor>0.13</factor>
+            <factor>0.06</factor>
         </map>
         <map>
             <cellPos>2697</cellPos>
-            <factor>0.42</factor>
+            <factor>0.16</factor>
+        </map>
+        <map>
+            <cellPos>2641</cellPos>
+            <factor>0.02</factor>
+        </map>
+        <map>
+            <cellPos>2640</cellPos>
+            <factor>0.12</factor>
+        </map>
+        <map>
+            <cellPos>2639</cellPos>
+            <factor>0.18</factor>
+        </map>
+        <map>
+            <cellPos>2582</cellPos>
+            <factor>0.09</factor>
+        </map>
+        <map>
+            <cellPos>2581</cellPos>
+            <factor>0.12</factor>
         </map>
     </target>
     <target>
@@ -151,27 +179,35 @@
         <targetZR>Zeitreihen/PA_SAERI.zml</targetZR>
         <map>
             <cellPos>2875</cellPos>
-            <factor>0.16</factor>
+            <factor>0.1</factor>
         </map>
         <map>
             <cellPos>2818</cellPos>
-            <factor>0.08</factor>
+            <factor>0.05</factor>
         </map>
         <map>
             <cellPos>2817</cellPos>
-            <factor>0.43</factor>
-        </map>
-        <map>
-            <cellPos>2816</cellPos>
-            <factor>0.01</factor>
+            <factor>0.26</factor>
         </map>
         <map>
             <cellPos>2760</cellPos>
-            <factor>0.09</factor>
+            <factor>0.06</factor>
         </map>
         <map>
             <cellPos>2759</cellPos>
-            <factor>0.21</factor>
+            <factor>0.35</factor>
+        </map>
+        <map>
+            <cellPos>2758</cellPos>
+            <factor>0.02</factor>
+        </map>
+        <map>
+            <cellPos>2701</cellPos>
+            <factor>0.14</factor>
+        </map>
+        <map>
+            <cellPos>2700</cellPos>
+            <factor>0.02</factor>
         </map>
     </target>
     <target>
