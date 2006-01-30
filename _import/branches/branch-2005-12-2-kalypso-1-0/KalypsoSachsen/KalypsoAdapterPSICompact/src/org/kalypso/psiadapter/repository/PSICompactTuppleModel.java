@@ -20,6 +20,10 @@ import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
 /**
+ * Ein spezielles TupleModel nur für PSI.
+ * <p>
+ * 20060124 schlienger Datenüberschreibungsproblem: jetzt werden auch negativen Werte zurückgeschrieben
+ * 
  * @author schlienger
  */
 public class PSICompactTuppleModel extends AbstractTuppleModel
@@ -85,10 +89,23 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final ArchiveData[] data = constructData( model, dateAxis, valueAxis, vc );
 
     return new PSICompactTuppleModel( data, new IAxis[]
-    {
-        dateAxis,
-        valueAxis,
-        statusAxis } );
+    { dateAxis, valueAxis, statusAxis } );
+  }
+
+  /**
+   * Generiert mehr Daten mit dem angegebenen Wert amountOfBefore/calendarField vor und amountOfAfter/calendarField nach
+   * dem Originalzeitraum.
+   *
+   * @param amountOfBefore Anzahl an Zeit vor dem Originalzeitraum
+   * @param amoutOfAfter Anzahl an Zeit nach dem Originalzeitraum
+   * @param calendarField Zeiteinheit worauf amountOf* sich beziehen
+   *  
+   */
+  public static PSICompactTuppleModel copyModelWithOverwrite( final ITuppleModel values, final IValueConverter vc,
+      final int amountOfBefore, final int amoutOfAfter, final int calendarField )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -104,7 +121,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final ArchiveData[] data = new ArchiveData[model.getCount()];
 
     final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
-    
+
     for( int i = 0; i < data.length; i++ )
     {
       Date date = (Date)model.getElement( i, dateAxis );
@@ -114,10 +131,10 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
       // convert the value if necessary
       if( vc != null )
         value = vc.reverse( value );
-      
+
       // use calendar to fit timezone
       cal.setTime( date );
-      
+
       data[i] = new ArchiveData( cal.getTime(), status, value );
     }
 
@@ -193,14 +210,14 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-    case 0:
-      return m_data[index].getTimestamp();
-    case 1:
-      return getValue( index );
-    case 2:
-      return getKalypsoStatus( index );
-    default:
-      throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
+      case 0:
+        return m_data[index].getTimestamp();
+      case 1:
+        return getValue( index );
+      case 2:
+        return getKalypsoStatus( index );
+      default:
+        throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
     }
   }
 
@@ -211,14 +228,14 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-    case 0: // TODO: darf das Datum überhaupt geändert werden???
-      m_data[index].setTimestamp( (Date)element );
-    case 1:
-      setValue( index, (Double)element );
-    case 2:
-      m_kalypsoStati[index] = (Integer)element;
-    default:
-      throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
+      case 0: // TODO: darf das Datum überhaupt geändert werden???
+        m_data[index].setTimestamp( (Date)element );
+      case 1:
+        setValue( index, (Double)element );
+      case 2:
+        m_kalypsoStati[index] = (Integer)element;
+      default:
+        throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
     }
   }
 }

@@ -1,5 +1,6 @@
 package org.kalypso.psiadapter.repository;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
@@ -23,9 +24,14 @@ import org.kalypso.psiadapter.PSICompactFactory;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
+import de.psi.go.lhwz.PSICompact.ArchiveData;
 
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
+ * 
+ * <ol>
+ * <li>20060124 schlienger Datenüberschreibungsproblem: jetzt werden auch negativen Werte zurückgeschrieben
+ * </ol>
  * 
  * @author schlienger
  */
@@ -123,7 +129,7 @@ public class PSICompactObservationItem implements IObservation
       metadata.put( TimeserieConstants.MD_GKR, gkr );
       metadata.put( TimeserieConstants.MD_COORDSYS, TimeserieUtils.getCoordinateSystemNameForGkr( gkr ) );
       metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD.getHeight() ) );
-      
+
       metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
       metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD.getLevel() ) );
       metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD.getMapNo() ) );
@@ -296,14 +302,18 @@ public class PSICompactObservationItem implements IObservation
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
-    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, m_vc );
+    // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
+    // überschrieben werden --> sonst Internet Darstellung kann misst sein
+    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModelWithOverwrite( values, m_vc, -48, 48,
+        Calendar.HOUR_OF_DAY );
 
     if( model.getCount() > 0 )
     {
       try
       {
+        final ArchiveData[] data = model.getData();
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
-            model.getData()[0].getTimestamp(), model.getData() );
+            data[0].getTimestamp(), data );
 
         // this observation has changed
         m_evtPrv.fireChangedEvent( null );
