@@ -85,10 +85,6 @@ public class FileCopyVisitor implements FileVisitor
    */
   public boolean visit( final File file ) throws IOException
   {
-    // SOUT
-    long begin = System.currentTimeMillis();
-    System.out.println( "visiting: " + file.getAbsolutePath() );
-    
     final String relativePathTo = FileUtilities.getRelativePathTo( m_fromDir, file );
     if( relativePathTo != null )
     {
@@ -99,12 +95,7 @@ public class FileCopyVisitor implements FileVisitor
       {
         final File excludeFile = new File( file, m_excludeDirWithFile );
         if( excludeFile.exists() )
-        {
-          // SOUT
-          System.out.println( "Dauer: " + (System.currentTimeMillis() - begin) );
-
           return false;
-        }
       }
 
       if( file.isDirectory() )
@@ -116,48 +107,23 @@ public class FileCopyVisitor implements FileVisitor
         // einfach abbrechen
         if( targetFile.exists() )
         {
-          // SOUT
-          System.out.println( "file exists" );
-          
           // falls neuer überschreiben oder nicht?
           final long targetLastModified = targetFile.lastModified();
           final long lastModified = file.lastModified();
           if( !m_overwriteIfNewer && targetLastModified > lastModified )
-          {
-            // SOUT
-            System.out.println( "Dauer: " + (System.currentTimeMillis() - begin) );
-
             return false;
-          }
 
-          // SOUT
-          System.out.println( "also checking length..." );
-          
           // falls die Dateien wirklich gleich sind, nichts tun
           if( targetLastModified == lastModified /*&& targetFile.length() == file.length()*/ )
-          {
-            // SOUT
-            System.out.println( "Dauer: " + (System.currentTimeMillis() - begin) );
-            
             return false;
-          }
         }
 
-        // SOUT
-        System.out.println( "copying..." );
-        
         // sonst kopieren
         FileUtils.copyFile( file, targetFile );
-
-        // SOUT
-        System.out.println( "Dauer: " + (System.currentTimeMillis() - begin) );
 
         return false;
       }
     }
-
-    // SOUT
-    System.out.println( "Dauer: " + (System.currentTimeMillis() - begin) );
 
     return true;
   }
