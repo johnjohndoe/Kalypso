@@ -152,9 +152,9 @@ public class ImportRasterSourceWizardPage extends WizardPage
     browseButton1.setLayoutData( new GridData( GridData.END ) );
     browseButton1.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
-
         KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
         { "gml" } );
         dialog.open();
@@ -196,9 +196,9 @@ public class ImportRasterSourceWizardPage extends WizardPage
     browseButton2.setLayoutData( new GridData( GridData.END ) );
     browseButton2.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
-
         KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
         { "sld" } );
         dialog.open();
@@ -217,7 +217,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
             StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
             reader.close();
             Layer[] layers = styledLayerDescriptor.getLayers();
-            Vector styleNameVector = new Vector();
+            Vector<String> styleNameVector = new Vector<String>();
             for( int i = 0; i < layers.length; i++ )
             {
               Layer layer = layers[i];
@@ -230,7 +230,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
             String[] styleNames = new String[styleNameVector.size()];
             for( int k = 0; k < styleNameVector.size(); k++ )
             {
-              styleNames[k] = (String)styleNameVector.get( k );
+              styleNames[k] = styleNameVector.get( k );
             }
             styleNameCombo.setItems( styleNames );
             styleNameCombo.select( 0 );
@@ -263,6 +263,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     styleNameCombo.setLayoutData( data5 );
     styleNameCombo.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         styleName = styleNameCombo.getText();
@@ -276,6 +277,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     checkDefaultStyleButton.setSelection( checkDefaultStyle );
     checkDefaultStyleButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         checkDefaultStyle = checkDefaultStyleButton.getSelection();

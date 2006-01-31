@@ -57,9 +57,9 @@ import org.kalypso.ogc.gml.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kaylpso.ui.KalypsoServiceConstants;
 import org.kaylpso.ui.action.AddThemeCommand;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * @author Kuepferle
@@ -70,11 +70,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  private ArrayList m_catalog;
+  private ArrayList<String> m_catalog;
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     IMapModell mapModell = m_outlineviewer.getMapModell();
@@ -160,7 +161,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     catch( IOException e )
     {
       e.printStackTrace();
-      m_catalog = new ArrayList();
+      m_catalog = new ArrayList<String>();
     }
     finally
     {
@@ -168,6 +169,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     }
   }
 
+  @Override
   public void addPages()
   {
     m_page = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
@@ -183,14 +185,14 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_outlineviewer = outlineviewer;
   }
 
-  public ArrayList getCatalog()
+  public ArrayList<String> getCatalog()
   {
     return m_catalog;
   }
 
   public void readCatalog( InputStream is ) throws IOException
   {
-    ArrayList catalog = new ArrayList();
+    ArrayList<String> catalog = new ArrayList<String>();
     BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
     String line = br.readLine();
     while( line != null )
@@ -206,6 +208,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
    */
+  @Override
   public boolean needsProgressMonitor()
   {
     return true;

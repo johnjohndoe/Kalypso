@@ -64,6 +64,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     button.setText( "Browse..." );
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleBrowse();

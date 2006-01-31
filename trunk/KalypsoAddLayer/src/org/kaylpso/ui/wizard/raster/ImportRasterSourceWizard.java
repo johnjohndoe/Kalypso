@@ -15,10 +15,10 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kaylpso.ui.action.AddThemeCommand;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -77,9 +77,9 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     super();
   }
 
+  @Override
   public void addPages()
   {
-
     m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel", "Add raster theme",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     if( m_project != null )
@@ -91,6 +91,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
 

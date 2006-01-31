@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.ui.addlayer"
-   name="KaylpsoAddLayer"
-   version="0.0.1"
-   provider-name="kalypso.org"
-   class="org.kaylpso.ui.KalypsoAddLayerPlugin">
+<plugin>
 
-   <runtime>
-      <library name="KaylpsoAddLayerPlugin.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.ui" export="true"/>
-      <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.kalypso.contribs.java"/>
-      <import plugin="org.kalypso.contribs.eclipseplatform"/>
-   </requires>
+     <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
    <extension
          id="mapviewaction"
          name="mapviewaction"
@@ -37,7 +17,7 @@
    <extension
          id="dataimport"
          name="dataimport"
-         point="org.kalypso.ui.dataimportwizard">
+         point="org.kalypso.ui.addlayer.addLayerWizard">
       <wizard
             icon="icon/file_shp.GIF"
             class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"

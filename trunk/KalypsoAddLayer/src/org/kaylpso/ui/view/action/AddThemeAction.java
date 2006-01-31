@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
-import org.kalypso.ui.internal.dialogs.KalypsoImportWizard;
 
 //import org.kalypso.ui.action.wizard.ImportWmsSourceWizard;
 
@@ -64,7 +63,8 @@ public class AddThemeAction implements PluginMapOutlineAction
     {
       GisMapOutlineViewer viewer = ( (PluginMapOutlineActionDelegate)action ).getOutlineviewer();
       Shell shell = viewer.getControl().getShell();
-      KalypsoImportWizard wizard2 = new KalypsoImportWizard( viewer );
+      KalypsoAddLayerWizard wizard2 = new KalypsoAddLayerWizard( viewer );
+      wizard2.setForcePreviousAndNextButtons(true);
 
       final WizardDialog dialog = new WizardDialog( shell, wizard2 );
       dialog.open();

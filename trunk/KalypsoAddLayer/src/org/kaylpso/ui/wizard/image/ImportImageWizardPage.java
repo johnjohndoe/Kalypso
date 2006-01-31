@@ -476,6 +476,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     return m_relativeSourcePath;
   }
 
+  @Override
   public void dispose()
   {
     super.dispose();

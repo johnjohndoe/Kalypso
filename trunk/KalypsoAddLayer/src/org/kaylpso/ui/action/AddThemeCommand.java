@@ -1,15 +1,3 @@
-package org.kaylpso.ui.action;
-
-import java.util.List;
-
-import javax.xml.bind.JAXBException;
-
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.template.gismapview.ObjectFactory;
-import org.kalypso.template.types.StyledLayerType.StyleType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -50,18 +38,29 @@ import org.kalypso.template.types.StyledLayerType.StyleType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kaylpso.ui.action;
+
+import java.util.List;
+
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.template.types.ObjectFactory;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Style;
+
 
 public class AddThemeCommand implements ICommand
 {
 
-  private final org.kalypso.template.gismapview.GismapviewType.LayersType.Layer m_layer;
+  private final StyledLayerType m_layer;
 
   private final GisTemplateMapModell m_mapModell;
 
   private IKalypsoTheme m_theme;
 
   public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type,
-      final String featurePath, final String source ) throws JAXBException
+      final String featurePath, final String source )
   {
     this( model, name, type, featurePath, source, null, null, null, null );
   }
@@ -94,12 +93,14 @@ public class AddThemeCommand implements ICommand
    */
   public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type,
       final String featurePath, final String source, final String stylelinktype, final String style,
-      final String styleLocation, final String styleType ) throws JAXBException
+      final String styleLocation, final String styleType )
   {
     m_mapModell = model;
     int id = m_mapModell.getThemeSize() + 1;
-    ObjectFactory o = new ObjectFactory();
-    m_layer = o.createGismapviewTypeLayersTypeLayer();
+
+    final ObjectFactory factory = new ObjectFactory();
+    
+    m_layer = factory.createStyledLayerType();
     m_layer.setHref( source );
     m_layer.setFeaturePath( featurePath );
     m_layer.setName( name );
@@ -108,10 +109,9 @@ public class AddThemeCommand implements ICommand
     m_layer.setVisible( true );
     if( stylelinktype != null && style != null && styleLocation != null && styleType != null )
     {
-      List styleList = m_layer.getStyle();
+      final List<Style> styleList = m_layer.getStyle();
       //Style Type
-      org.kalypso.template.types.ObjectFactory otype = new org.kalypso.template.types.ObjectFactory();
-      StyleType layertype = otype.createStyledLayerTypeStyleType();
+      final StyledLayerType.Style layertype = factory.createStyledLayerTypeStyle();
       layertype.setLinktype( stylelinktype );
       layertype.setStyle( style );
       layertype.setHref( styleLocation );
