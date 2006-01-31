@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.grid.interpolation"
-   name="KalypsoGridInterpolation"
-   version="1.0.0"
-   provider-name="kalypso.org"
-   class="org.kalypso.interpolation.KalypsoInterpolationPlugin">
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.kalypso.core"/>
-      <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.ui"/>
-   </requires>
-
+<plugin>
+   
 </plugin>
