@@ -35,6 +35,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
@@ -50,9 +51,10 @@ import org.kalypso.dwd.DWDTask;
 import org.kalypso.dwd.RasterPart;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType.MapType;
+import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
+import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
 import org.kalypso.dwd.schema.UrlCatalogDWD;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -82,6 +84,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class WeisseElster_DWDConfigureTest extends TestCase
 {
+  private static final ObjectFactory dwdOF = new ObjectFactory();
+  private static final JAXBContext dwdJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public void testDWDRaster() throws Exception
   {
@@ -165,8 +169,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
   {
     try
     {
-      final ObjectFactory dwdFac = new ObjectFactory();
-      final DwdzmlConf conf = dwdFac.createDwdzmlConf();
+      final DwdzmlConf conf = dwdOF.createDwdzmlConf();
       conf.setDefaultStatusValue( defaultStatusValue );
       conf.setDwdKey( dwdKey );
       conf.setNumberOfCells( geoRaster.getNumberOfCells() );
@@ -174,13 +177,13 @@ public class WeisseElster_DWDConfigureTest extends TestCase
           "resources/modell_epsg31469.gml" ) );
       final FeatureType featureType = workspace.getFeatureType( "Catchment" );
       final Feature[] features = workspace.getFeatures( featureType );
-      final List targetList = conf.getTarget();
+      final List<Target> targetList = conf.getTarget();
       for( int i = 0; i < features.length; i++ )
       {
         final Feature feature = features[i];
-        final TargetType target = dwdFac.createDwdzmlConfTypeTargetType();
+        final Target target = dwdOF.createDwdzmlConfTarget();
         target.setTargetZR( targetZmlPrefix + feature.getId() + ".zml" );
-        final List mapList = target.getMap();
+        final List<Map> mapList = target.getMap();
         GM_Surface surface = (GM_Surface)feature.getProperty( "Ort" );
         double modellArea = GeometryUtilities.calcArea( surface );
         RasterPart[] positions = geoRaster.getPositions( surface );
@@ -195,7 +198,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
           throw new Exception( "für Gebiet " + feature.getId() + " wurden keine Rasterzellen zugeordnet !" );
         for( int j = 0; j < positions.length; j++ )
         {
-          final MapType map = dwdFac.createDwdzmlConfTypeTargetTypeMapType();
+          final Map map = dwdOF.createDwdzmlConfTargetMap();
           map.setCellPos( positions[j].getPosition() );
           map.setFactor( positions[j].getPortion() / fullCellArea );
           mapList.add( map );
@@ -204,7 +207,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
         System.out.println( "A(cell)=  " + fullCellArea + " deltaA=" + ( modellArea - fullCellArea ) + " faktor="
             + modellArea / fullCellArea );
       }
-      final Marshaller marshaller = dwdFac.createMarshaller();
+      final Marshaller marshaller = dwdJC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( conf, writer );
     }

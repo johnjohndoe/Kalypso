@@ -36,8 +36,6 @@ package org.kalypso.test.kriging;
 
 import java.io.File;
 
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
 import org.kalypso.ant.KrigingTask;
@@ -46,8 +44,8 @@ import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
@@ -62,7 +60,7 @@ import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMa
  */
 public class KrigingTaskTest extends TestCase
 {
-  public void testExecute() throws TypeRegistryException, JAXBException
+  public void testExecute() throws TypeRegistryException
   {
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );

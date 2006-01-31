@@ -3,8 +3,6 @@ package org.kalypso.simulation.na.test;
 import java.io.File;
 import java.net.URL;
 
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
@@ -22,8 +20,8 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
@@ -71,7 +69,7 @@ import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 public class NACalcJobKollauTest extends TestCase
 {
 
-  public void testKollau() throws TypeRegistryException, JAXBException, CalcJobServiceException
+  public void testKollau() throws TypeRegistryException, CalcJobServiceException
   {
 
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]

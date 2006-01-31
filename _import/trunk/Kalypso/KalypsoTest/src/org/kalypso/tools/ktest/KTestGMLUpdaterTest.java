@@ -37,16 +37,18 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.CloneUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
@@ -63,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class KTestGMLUpdaterTest extends TestCase
 {
-  private ObjectFactory m_linkFac;
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private final Pattern p = Pattern.compile( "(.*)(HN)(\\..+\\..+\\.{3})([0-9]+)(.*)" );
 
@@ -76,26 +78,19 @@ public class KTestGMLUpdaterTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception
+  @Override
+  protected void setUp( ) throws Exception
   {
-    try
-    {
-      KalypsoTest.init();
-      m_linkFac = new ObjectFactory();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+    KalypsoTest.init();
   }
 
-  public void testUpdateGML() throws Exception
+  public void testUpdateGML( ) throws Exception
   {
     // hier gegebenenfalls methoden auskomentieren
     weisseElster();
   }
 
-  private void weisseElster() throws Exception
+  private void weisseElster( ) throws Exception
   {
     final String resourceBase = "resources/weisseElster/";
     final File outDir = new File( "C:\\TMP\\update_k_test" );
@@ -105,130 +100,64 @@ public class KTestGMLUpdaterTest extends TestCase
     updatePegelMapping( new File( outDir, fileName ) );
     // ombrometer
     fileName = "ombrometer.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-        "NRepository", "NRepository1", "ombrometerMember" );
+    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "NRepository", "NRepository1", "ombrometerMember" );
     // zufluss Messung
     fileName = "ZuflussMessungMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-        "inObservationLink", "in1ObservationLink", "mappingMember" );
+    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
     // zufluss Vorhersage
     fileName = "ZuflussVorhersageMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-        "inObservationLink", "in1ObservationLink", "mappingMember" );
+    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
     // T Messung
     fileName = "ObsTMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-        "inObservationLink", "in1ObservationLink", "mappingMember" );
-    //    fileName = "PegelMessungMapping.gml";
-    //    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-    //        "inObservationLink", "in1ObservationLink", "mappingMember" );
+    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
+    // fileName = "PegelMessungMapping.gml";
+    // updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
+    // "inObservationLink", "in1ObservationLink", "mappingMember" );
 
   }
 
   /**
    * @param outFile
    * @throws Exception
-   *  
    */
   private void updatePegelMapping( File outFile ) throws Exception
   {
-    //    <!--
-    //    name PegelName
-    //    point ORT
+    // <!--
+    // name PegelName
+    // point ORT
     //
-    //    local1: Rechenfall/Pegel_gemessen.zml
-    //    local2: Rechenfall/Pegel_berechnet.zml
-    //    local3: Rechenfall/Pegel_berechnet_spurM.zml
-    //    local4: Rechenfall/Pegel_berechnet_spurU.zml
-    //    local5: Rechenfall/Pegel_berechnet_spurO.zml
+    // local1: Rechenfall/Pegel_gemessen.zml
+    // local2: Rechenfall/Pegel_berechnet.zml
+    // local3: Rechenfall/Pegel_berechnet_spurM.zml
+    // local4: Rechenfall/Pegel_berechnet_spurU.zml
+    // local5: Rechenfall/Pegel_berechnet_spurO.zml
     //
-    //    remote1: PSI-Pegel-Messung (ECHT)
-    //    remote2: PSI-Pegel-SpurM (ECHT)
-    //    remote3: PSI-Pegel-SpurU (ECHT)
-    //    remote4: PSI-Pegel-SpurO (ECHT)
+    // remote1: PSI-Pegel-Messung (ECHT)
+    // remote2: PSI-Pegel-SpurM (ECHT)
+    // remote3: PSI-Pegel-SpurU (ECHT)
+    // remote4: PSI-Pegel-SpurO (ECHT)
     //
-    //    remote6: PSI-Pegel-Messung (TEST)
-    //    remote7: PSI-Pegel-SpurM (TEST)
-    //    remote8: PSI-Pegel-SpurU (TEST)
-    //    remote9: PSI-Pegel-SpurO (TEST)
+    // remote6: PSI-Pegel-Messung (TEST)
+    // remote7: PSI-Pegel-SpurM (TEST)
+    // remote8: PSI-Pegel-SpurU (TEST)
+    // remote9: PSI-Pegel-SpurO (TEST)
     //
-    //     -->
+    // -->
     final URL modelURL = getClass().getResource( "resources/weisseElster/modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelURL );
     final GMLWorkspace mappingWorkspace = createEmptyMappingWorkspace();
     final FeatureType mappingFT = mappingWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapColFE = mappingWorkspace.getRootFeature();
     final Feature[] nodeFeatures = workspace.getFeatures( workspace.getFeatureType( "Node" ) );
-    final String[][] pegelData =
-    {
-        new String[]
-        {
-            "Bad Elster",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576391" },
-        new String[]
-        {
-            "Adorf",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576400" },
-        new String[]
-        {
-            "Oelsnitz",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576410" },
-        new String[]
-        {
-            "Strassberg",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576421" },
-        new String[]
-        {
-            "Elsterberg",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576440" },
-        new String[]
-        {
-            "Rodewisch",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...577211" },
-        new String[]
-        {
-            "Mylau",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...577220" },
-        new String[]
-        {
-            "Greiz",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576470" },
-        new String[]
-        {
-            "Weida",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...577320" },
-        new String[]
-        {
-            "Gera-Langenberg",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576520" },
-        new String[]
-        {
-            "Zeitz",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576610" },
-        new String[]
-        {
-            "Kleindalzig",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576631" },
-        new String[]
-        {
-            "Albrechtshain",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...578090" },
-        new String[]
-        {
-            "Leipzig-Thekla",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...578110" },
-        new String[]
-        {
-            "Oberthau",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...576900" },
-        new String[]
-        {
-            "Neukirchen",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...577501" },
-        new String[]
-        {
-            "Goessnitz",
-            "kalypso-ocs:psicompact://HN.5_WE.02PG...577510" } };
+    final String[][] pegelData = { new String[] { "Bad Elster", "kalypso-ocs:psicompact://HN.5_WE.02PG...576391" }, new String[] { "Adorf", "kalypso-ocs:psicompact://HN.5_WE.02PG...576400" },
+        new String[] { "Oelsnitz", "kalypso-ocs:psicompact://HN.5_WE.02PG...576410" }, new String[] { "Strassberg", "kalypso-ocs:psicompact://HN.5_WE.02PG...576421" },
+        new String[] { "Elsterberg", "kalypso-ocs:psicompact://HN.5_WE.02PG...576440" }, new String[] { "Rodewisch", "kalypso-ocs:psicompact://HN.5_WE.02PG...577211" },
+        new String[] { "Mylau", "kalypso-ocs:psicompact://HN.5_WE.02PG...577220" }, new String[] { "Greiz", "kalypso-ocs:psicompact://HN.5_WE.02PG...576470" },
+        new String[] { "Weida", "kalypso-ocs:psicompact://HN.5_WE.02PG...577320" }, new String[] { "Gera-Langenberg", "kalypso-ocs:psicompact://HN.5_WE.02PG...576520" },
+        new String[] { "Zeitz", "kalypso-ocs:psicompact://HN.5_WE.02PG...576610" }, new String[] { "Kleindalzig", "kalypso-ocs:psicompact://HN.5_WE.02PG...576631" },
+        new String[] { "Albrechtshain", "kalypso-ocs:psicompact://HN.5_WE.02PG...578090" }, new String[] { "Leipzig-Thekla", "kalypso-ocs:psicompact://HN.5_WE.02PG...578110" },
+        new String[] { "Oberthau", "kalypso-ocs:psicompact://HN.5_WE.02PG...576900" }, new String[] { "Neukirchen", "kalypso-ocs:psicompact://HN.5_WE.02PG...577501" },
+        new String[] { "Goessnitz", "kalypso-ocs:psicompact://HN.5_WE.02PG...577510" } };
     for( int i = 0; i < pegelData.length; i++ )
     {
       final String pegelName = pegelData[i][0];
@@ -239,11 +168,11 @@ public class KTestGMLUpdaterTest extends TestCase
         final Feature nodeFE = nodeFeatures[j];
         if( pegelName.equals( FeatureHelper.getAsString( nodeFE, "name" ) ) )
         {
-          final GM_Point point = (GM_Point)nodeFE.getProperty( "Ort" );
-          final TimeseriesLink gemessen = (TimeseriesLink)nodeFE.getProperty( "pegelZR" );
-          final TimeseriesLink berechnet = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
+          final GM_Point point = (GM_Point) nodeFE.getProperty( "Ort" );
+          final TimeseriesLinkType gemessen = (TimeseriesLinkType) nodeFE.getProperty( "pegelZR" );
+          final TimeseriesLinkType berechnet = (TimeseriesLinkType) nodeFE.getProperty( "qberechnetZR" );
 
-          final TimeseriesLink psiEcht = (TimeseriesLink)CloneUtilities.clone( berechnet, m_linkFac );
+          final TimeseriesLinkType psiEcht = (TimeseriesLinkType) CloneUtilities.clone( berechnet, JC );
           psiEcht.setHref( psiIDEcht );
           final Feature mapFeature = mappingWorkspace.createFeature( mappingFT );
           mapFeature.setProperty( "name", pegelName );
@@ -259,9 +188,8 @@ public class KTestGMLUpdaterTest extends TestCase
           mapFeature.setProperty( "remote3", createTSLinkForTrackRemote( psiEcht, TRACK_MIN ) );
           mapFeature.setProperty( "remote4", createTSLinkForTrackRemote( psiEcht, TRACK_MAX ) );
 
-          mapFeature.setProperty( "remote6",  createTSLinkForKTest( psiEcht ) );
-          mapFeature
-              .setProperty( "remote7", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIDDLE ) );
+          mapFeature.setProperty( "remote6", createTSLinkForKTest( psiEcht ) );
+          mapFeature.setProperty( "remote7", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIDDLE ) );
           mapFeature.setProperty( "remote8", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIN ) );
           mapFeature.setProperty( "remote9", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MAX ) );
           mappingWorkspace.addFeatureAsComposition( mapColFE, "mappingMember", 0, mapFeature );
@@ -289,37 +217,36 @@ public class KTestGMLUpdaterTest extends TestCase
    * @return new href
    * @throws JAXBException
    */
-  private TimeseriesLink createTSLinkForTrackLocal( final TimeseriesLink linkLocal, final int track )
-      throws JAXBException
+  private TimeseriesLinkType createTSLinkForTrackLocal( final TimeseriesLinkType linkLocal, final int track ) throws JAXBException
   {
     // letzen teil weg
     final String prefix;
     switch( track )
     {
-    case TRACK_MIDDLE:
-      prefix = "SpurM_";
-      break;
-    case TRACK_MIN:
-      prefix = "SpurU_";
-      break;
-    case TRACK_MAX:
-      prefix = "SpurO_";
-      break;
-    default:
-      throw new UnsupportedOperationException( "unsupported track" );
+      case TRACK_MIDDLE:
+        prefix = "SpurM_";
+        break;
+      case TRACK_MIN:
+        prefix = "SpurU_";
+        break;
+      case TRACK_MAX:
+        prefix = "SpurO_";
+        break;
+      default:
+        throw new UnsupportedOperationException( "unsupported track" );
     }
     final String href = linkLocal.getHref();
     int split = href.lastIndexOf( "/" );
     String part1 = href.substring( 0, split );
-    String part3 = href.substring( split +1);
+    String part3 = href.substring( split + 1 );
     final String newHref = part1 + "/Ablage/" + prefix + part3;
-    //      href.replaceAll( "/.+?", href ) + "/Ablage/" + prefix + href.replaceAll( ".+/", "" );
-    final TimeseriesLink newLink = (TimeseriesLink)CloneUtilities.clone( linkLocal, m_linkFac );
+    // href.replaceAll( "/.+?", href ) + "/Ablage/" + prefix + href.replaceAll( ".+/", "" );
+    final TimeseriesLinkType newLink = (TimeseriesLinkType) CloneUtilities.clone( linkLocal, JC );
     newLink.setHref( newHref );
     return newLink;
   }
 
-  private GMLWorkspace createEmptyMappingWorkspace() throws Exception
+  private GMLWorkspace createEmptyMappingWorkspace( ) throws Exception
   {
     return GmlSerializer.createGMLWorkspace( getClass().getResource( "resources/EmptyMapping.gml" ) );
   }
@@ -330,20 +257,18 @@ public class KTestGMLUpdaterTest extends TestCase
    * @param featurePath
    * @throws Exception
    * @throws Exception
-   *  
    */
-  private void updateFeatureForKTest( final URL input, final File output, final String realProp,
-      final String kTestProp, final String featurePath ) throws Exception
+  private void updateFeatureForKTest( final URL input, final File output, final String realProp, final String kTestProp, final String featurePath ) throws Exception
   {
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( input );
     final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
     if( featureFromPath instanceof Feature )
-      updateFeature( (Feature)featureFromPath, realProp, kTestProp );
+      updateFeature( (Feature) featureFromPath, realProp, kTestProp );
     else if( featureFromPath instanceof FeatureList )
     {
-      Iterator iterator = ( (FeatureList)featureFromPath ).iterator();
+      Iterator iterator = ((FeatureList) featureFromPath).iterator();
       while( iterator.hasNext() )
-        updateFeature( (Feature)iterator.next(), realProp, kTestProp );
+        updateFeature( (Feature) iterator.next(), realProp, kTestProp );
     }
     output.getParentFile().mkdirs();
     Writer writer = null;
@@ -370,31 +295,30 @@ public class KTestGMLUpdaterTest extends TestCase
    * @param realProp
    * @throws JAXBException
    */
-  private void updateFeature( final Feature feature, final String realProp, final String testProp )
-      throws JAXBException
+  private void updateFeature( final Feature feature, final String realProp, final String testProp ) throws JAXBException
   {
     final Object real = feature.getProperty( realProp );
-    if( real == null || !( real instanceof TimeseriesLink ) )
+    if( real == null || !(real instanceof TimeseriesLinkType) )
       return;
-    final TimeseriesLink newLink = createTSLinkForKTest( (TimeseriesLink)real );
+    final TimeseriesLinkType newLink = createTSLinkForKTest( (TimeseriesLinkType) real );
     final FeatureProperty newProp = FeatureFactory.createFeatureProperty( testProp, newLink );
     feature.setProperty( newProp );
   }
 
-  private TimeseriesLink createTSLinkForKTest( final TimeseriesLink linkEcht ) throws JAXBException
+  private TimeseriesLinkType createTSLinkForKTest( final TimeseriesLinkType linkEcht ) throws JAXBException
   {
     final String href = linkEcht.getHref();
     final String newHref = ceateIDForKTest( href );
-    final TimeseriesLink linkKTEST = (TimeseriesLink)CloneUtilities.clone( linkEcht, m_linkFac );
+    final TimeseriesLinkType linkKTEST = (TimeseriesLinkType) CloneUtilities.clone( linkEcht, JC );
     linkKTEST.setHref( newHref );
     return linkKTEST;
   }
 
-  private TimeseriesLink createTSLinkForTrackRemote( final TimeseriesLink link, int track ) throws JAXBException
+  private TimeseriesLinkType createTSLinkForTrackRemote( final TimeseriesLinkType link, int track ) throws JAXBException
   {
     final String href = link.getHref();
     final String newHref = ceateIDForTrackRemote( href, track );
-    final TimeseriesLink newLink = (TimeseriesLink)CloneUtilities.clone( link, m_linkFac );
+    final TimeseriesLinkType newLink = (TimeseriesLinkType) CloneUtilities.clone( link, JC );
     newLink.setHref( newHref );
     return newLink;
   }
@@ -413,12 +337,12 @@ public class KTestGMLUpdaterTest extends TestCase
   {
     switch( track )
     {
-    case TRACK_MIDDLE:
-      return href + ".P3_MW";
-    case TRACK_MIN:
-      return href + ".P1_MW";
-    case TRACK_MAX:
-      return href + ".P2_MW";
+      case TRACK_MIDDLE:
+        return href + ".P3_MW";
+      case TRACK_MIN:
+        return href + ".P1_MW";
+      case TRACK_MAX:
+        return href + ".P2_MW";
     }
     return null;
   }
@@ -440,7 +364,7 @@ public class KTestGMLUpdaterTest extends TestCase
     if( matcher.matches() )
     {
       String part1 = matcher.group( 1 );
-      //      String part2_HN = matcher.group( 2 );
+      // String part2_HN = matcher.group( 2 );
       String part3 = matcher.group( 3 );
       String part4_ID = matcher.group( 4 );
       String part5 = matcher.group( 5 );

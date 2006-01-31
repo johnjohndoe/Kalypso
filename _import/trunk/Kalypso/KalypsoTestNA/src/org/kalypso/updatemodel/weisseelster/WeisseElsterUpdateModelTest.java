@@ -51,7 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -71,6 +71,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
+  @Override
   protected void setUp() throws Exception
   {
     KalypsoTest.init();
@@ -87,7 +88,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      final TimeseriesLink link = m_zmlLinkFac.createTimeseriesLink();
+      final TimeseriesLinkType link = m_zmlLinkFac.createTimeseriesLinkType();
       link.setHref( "Temperatur/Temperatur_" + feature.getId() + ".zml" );
       final FeatureProperty property = FeatureFactory.createFeatureProperty( "temperaturZR", link );
       feature.setProperty( property );
@@ -112,7 +113,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
     {
       final Feature modelFeature = features[i];
       // srcProp
-      final TimeseriesLink srcLink = m_zmlLinkFac.createTimeseriesLink();
+      final TimeseriesLinkType srcLink = m_zmlLinkFac.createTimeseriesLinkType();
       srcLink.setHref( "Ombrometer/T_virtuell.zml" );
       final FeatureProperty srcProperty = FeatureFactory.createFeatureProperty( "inObservationLink", srcLink );
       // targetProp

@@ -32,8 +32,6 @@ package org.kalypso;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.bind.JAXBException;
-
 import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
@@ -70,7 +68,7 @@ public class KalypsoTest
 {
   private static boolean init = false;
 
-  public static void init() throws IOException, TypeRegistryException, JAXBException
+  public static void init() throws IOException, TypeRegistryException
   {
     if( init )
       return;

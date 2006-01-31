@@ -55,6 +55,7 @@ public class Num2nameTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
+  @Override
   protected void setUp() throws Exception
   {
     KalypsoTest.init();
