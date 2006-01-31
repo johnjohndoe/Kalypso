@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.common.Level;
 import com.bce.datacenter.db.timeseries.Channel;
@@ -55,7 +54,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent() throws RepositoryException
+  public IRepositoryItem getParent()
   {
     return m_parent;
   }
@@ -63,7 +62,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren()
   {
     return m_level.getChildCount() > 0 || m_level.getObjects().size() > 0;
   }
@@ -71,11 +70,11 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren()
   {
     if( m_children == null )
     {
-      final ArrayList list = new ArrayList();
+      final ArrayList<IRepositoryItem> list = new ArrayList<IRepositoryItem>();
       final Enumeration cs = m_level.children();
       while( cs.hasMoreElements() )
         list.add( new DataCenterLevelItem( m_rep, this, (Level)cs.nextElement() ) );
@@ -84,7 +83,7 @@ public class DataCenterLevelItem implements IRepositoryItem
       while( it.hasNext() )
         list.add( new DataCenterChannelItem( m_rep, this, (Channel)it.next() ) );
 
-      m_children = (IRepositoryItem[])list.toArray( new IRepositoryItem[list.size()] );
+      m_children = list.toArray( new IRepositoryItem[list.size()] );
     }
 
     return m_children;
@@ -106,6 +105,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
