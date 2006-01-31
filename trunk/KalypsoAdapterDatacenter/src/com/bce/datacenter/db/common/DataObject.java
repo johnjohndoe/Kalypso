@@ -48,6 +48,7 @@ public abstract class DataObject extends Persistent
     return DataObjectFactory.getOwner( m_con, m_ownerRef );
   }
 
+  @Override
   public String toString( )
   {
     return m_name;

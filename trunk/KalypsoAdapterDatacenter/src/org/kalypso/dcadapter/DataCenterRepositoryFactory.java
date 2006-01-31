@@ -102,6 +102,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     /**
      * @see org.eclipse.jface.dialogs.Dialog#close()
      */
+    @Override
     public boolean close()
     {
       final IDialogSettings section = DataCenterPlugin.getDefault().getDialogSettings().getSection( "connection" );
@@ -114,6 +115,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     /**
      * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createDialogArea( Composite parent )
     {
       final Composite panel = new Composite( parent, SWT.FILL );

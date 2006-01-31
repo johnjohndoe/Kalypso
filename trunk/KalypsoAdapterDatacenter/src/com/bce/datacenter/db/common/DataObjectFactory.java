@@ -25,7 +25,7 @@ public class DataObjectFactory
    */
   public static List loadChannels( final Connection con, final int ownerRef )
   {
-    final Vector v = new Vector();
+    final Vector<Channel> v = new Vector<Channel>();
 
     try
     {

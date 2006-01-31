@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.timeseries.Channel;
 import com.bce.datacenter.db.timeseries.Timeserie;
@@ -45,6 +44,7 @@ public class DataCenterChannelItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString( )
   {
     return getName();
@@ -61,7 +61,7 @@ public class DataCenterChannelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -69,7 +69,7 @@ public class DataCenterChannelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren( )
   {
     return m_channel.getTimeseries().size() > 0;
   }
@@ -77,7 +77,7 @@ public class DataCenterChannelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren( )
   {
     if( m_children == null )
     {

@@ -2,7 +2,6 @@ package org.kalypso.dcadapter;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.IngresDatabase;
 import com.bce.datacenter.db.common.Level;
@@ -29,6 +28,7 @@ public class DataCenterRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_database.getUrl();
@@ -37,7 +37,7 @@ public class DataCenterRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id )
   {
     // TODO implement this
     return null;
@@ -46,7 +46,7 @@ public class DataCenterRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public void reload( )
   {
     m_root = null;
   }
@@ -71,7 +71,7 @@ public class DataCenterRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren( )
   {
     return getRootItem().hasChildren();
   }
@@ -79,7 +79,7 @@ public class DataCenterRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren( )
   {
     return getRootItem().getChildren();
   }

@@ -16,6 +16,7 @@ public class AbstractTest extends TestCase
   /**
    * @see com.bce.datacenter.AbstractTest#setUp()
    */
+  @Override
   protected void setUp( ) throws Exception
   {
     ingres = new IngresDatabase( "jdbc:edbc://pc072:I57/BCE_PC072::mertesdorf/INGRES", "ingres", "ingres" );
@@ -26,6 +27,7 @@ public class AbstractTest extends TestCase
   /**
    * @see junit.framework.TestCase#tearDown()
    */
+  @Override
   protected void tearDown( ) throws Exception
   {
     ingres.getConnection().close();
