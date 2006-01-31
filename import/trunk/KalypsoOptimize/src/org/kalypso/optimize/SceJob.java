@@ -51,6 +51,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -137,8 +138,15 @@ public class SceJob
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    final ObjectFactory fac = new ObjectFactory();
-    final Marshaller marshaller = fac.createMarshaller();
+    
+//    final Marshaller marshaller = fac.createMarshaller();
+    // TODO: @Andreas: die nächsten beiden Zeilen ersetzen die vorhergehende
+    // teste mal, obs immer noch klappt. In Zukunft sollten die Marshaller und Unmarshaller immer so erzeugt
+    //  werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der Umstellung auf jwsdp-2.0)
+    final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+    final Marshaller marshaller = context.createMarshaller();
+    //marshaller.setProperty( "jaxb.encoding", "UTF-8" );
+
     final Document xmlDOM = docuBuilder.newDocument();
     marshaller.marshal( m_autoCalibration, xmlDOM );
 
