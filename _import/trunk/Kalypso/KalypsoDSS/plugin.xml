@@ -1,25 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.dss"
-   name="kalypso.org.dss"
-   version="0.0.1"
-   provider-name="University of Technology Hamburg-Harburg"
-   class="org.kalypso.dss.KalypsoDSSPlugin">
+<plugin>
 
-   <runtime>
-      <library name="KalypsoDSS.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.core" export="false"/>
-      <import plugin="org.kalypso.ui" export="false"/>
-   </requires>
-   <extension
+     <extension
          id="org.kalypso.dss.popupmenu"
          name="popupmenu"
          point="org.eclipse.ui.popupMenus">

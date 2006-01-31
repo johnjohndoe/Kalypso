@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: kalypso.org.dss
+Bundle-SymbolicName: org.kalypso.dss; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: KalypsoDSS.jar
+Bundle-Activator: org.kalypso.dss.KalypsoDSSPlugin
+Bundle-Vendor: University of Technology Hamburg-Harburg
+Bundle-Localization: plugin
+Export-Package: org.kalypso.dss,
+ org.kalypso.dss.actiondelegates,
+ org.kalypso.dss.resources,
+ org.kalypso.dss.wizards
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.core,
+ org.kalypso.ui
+Eclipse-AutoStart: true
