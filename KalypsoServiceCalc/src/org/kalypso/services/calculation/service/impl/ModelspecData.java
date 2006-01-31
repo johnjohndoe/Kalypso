@@ -51,7 +51,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.model.xml.DataType;
-import org.kalypso.model.xml.ModelspecType;
+import org.kalypso.model.xml.Modelspec;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
@@ -61,7 +61,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public class ModelspecData
 {
-  private final ModelspecType m_modelspec;
+  private final Modelspec m_modelspec;
 
   private final Map m_inputHash;
 
@@ -71,7 +71,7 @@ public class ModelspecData
   {
     try
     {
-      m_modelspec = (ModelspecType)unmarshaller.unmarshal( modelspecUrl );
+      m_modelspec = (Modelspec)unmarshaller.unmarshal( modelspecUrl );
 
       m_inputHash = createHash( m_modelspec.getInput() );
       m_outputHash = createHash( m_modelspec.getOutput() );

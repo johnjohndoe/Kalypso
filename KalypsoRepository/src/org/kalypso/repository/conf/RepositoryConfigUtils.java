@@ -45,9 +45,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.repository.RepositoryException;
 
 /**
@@ -57,9 +59,11 @@ import org.kalypso.repository.RepositoryException;
  */
 public class RepositoryConfigUtils
 {
-  private RepositoryConfigUtils()
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
+  private RepositoryConfigUtils( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
@@ -72,22 +76,20 @@ public class RepositoryConfigUtils
   {
     try
     {
-      final ObjectFactory factory = new ObjectFactory();
-      final Unmarshaller unmarshaller = factory.createUnmarshaller();
+      final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      final RepconfType repconf = (RepconfType)unmarshaller.unmarshal( ins );
+      final Repconf repconf = (Repconf) unmarshaller.unmarshal( ins );
       ins.close();
 
       final List list = repconf.getRepository();
 
-      final List fConfs = new Vector( list.size() );
+      final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
 
       for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final RepconfType.RepositoryType elt = (RepconfType.RepositoryType)it.next();
+        final Repconf.Repository elt = (Repconf.Repository) it.next();
 
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt
-            .getConf(), elt.isReadOnly() );
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
         fConfs.add( item );
       }
 

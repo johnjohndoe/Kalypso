@@ -45,7 +45,6 @@ import java.rmi.Remote;
 import javax.activation.DataHandler;
 
 import org.kalypso.services.IKalypsoService;
-import org.kalypso.services.calculation.job.ICalcJob;
 
 /**
  * <p>

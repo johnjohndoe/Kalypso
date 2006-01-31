@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ObservationImport
+Bundle-SymbolicName: org.kalypso.ui.observationimport; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: KalypsoNA_UI.jar
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.ui.wizard.sensor
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.kalypso.ui,
+ org.kalypso.jwsdp,
+ org.eclipse.ui
+Eclipse-AutoStart: true

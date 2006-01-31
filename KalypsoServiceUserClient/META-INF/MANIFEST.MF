@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoClientUser Plug-in
+Bundle-SymbolicName: org.kalypso.services.user.client; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: KalypsoClientUser.jar,
+ lib/kalypsoservice_user.jar,
+ lib/KalypsoServiceCore.jar
+Bundle-Activator: org.kalypso.services.user.client.KalypsoServiceUserClientPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.services,
+ org.kalypso.services.common,
+ org.kalypso.services.proxy,
+ org.kalypso.services.user,
+ org.kalypso.services.user.client,
+ org.kalypso.services.user.impl
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.kalypso.jwsdp,
+ org.kalypso.contribs.java,
+ org.kalypso.auth,
+ org.kalypso.services.core.client
+Eclipse-AutoStart: true
