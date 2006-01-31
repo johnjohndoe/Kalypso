@@ -31,7 +31,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * Constructor with group and map. The repository to which this item belongs is delivered by the group.
    */
-  public TsInfoItem( final GroupItem item, final Map map )
+  public TsInfoItem( final GroupItem item, final Map<Object, Object> map )
   {
     m_group = item;
     m_map = new Properties();
@@ -44,7 +44,7 @@ public class TsInfoItem implements IRepositoryItem
    * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
    * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
    */
-  public TsInfoItem( final WiskiRepository rep, final Map map )
+  public TsInfoItem( final WiskiRepository rep, final Map<Object, Object> map )
   {
     m_group = null;
 
@@ -65,6 +65,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
@@ -87,7 +88,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent() throws RepositoryException
+  public IRepositoryItem getParent()
   {
     return m_group;
   }
@@ -95,7 +96,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren()
   {
     return false;
   }
@@ -103,7 +104,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren()
   {
     return IRepositoryItem.EMPTY_ARRAY;
   }

@@ -51,7 +51,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount() throws SensorException
+  public int getCount()
   {
     return m_data.size();
   }

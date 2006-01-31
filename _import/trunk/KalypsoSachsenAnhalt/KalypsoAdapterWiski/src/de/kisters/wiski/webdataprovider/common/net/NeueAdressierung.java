@@ -15,7 +15,7 @@ public class NeueAdressierung
   {
     HashMap Groups = null;
     LinkedList resultSet = null;
-    HashMap resultMap = new HashMap();
+    HashMap<String, Object> resultMap = new HashMap<String, Object>();
     String ids[] = kalypsoAdress.split( "\\." );
     resultMap.put( "TS-ID", new Long( 0 ) );
     resultMap.put( "TS-NAME", "UNDEF" );

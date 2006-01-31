@@ -108,6 +108,7 @@ public class WiskiTimeserie implements IObservation
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
@@ -326,7 +327,7 @@ public class WiskiTimeserie implements IObservation
     final ITuppleModel filteredValues = intfil.getValues( null );
     for( int ix = 0; ix < filteredValues.getCount(); ix++ )
     {
-      final HashMap row = new HashMap();
+      final HashMap<String, Object> row = new HashMap<String, Object>();
 
       final Date date = (Date)filteredValues.getElement( ix, dateAxis );
       final Number value = (Number)filteredValues.getElement( ix, valueAxis );

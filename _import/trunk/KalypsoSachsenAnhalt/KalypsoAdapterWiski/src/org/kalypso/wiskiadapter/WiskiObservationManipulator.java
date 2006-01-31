@@ -32,7 +32,6 @@ package org.kalypso.wiskiadapter;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -110,7 +109,7 @@ public class WiskiObservationManipulator implements IObservationManipulator
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( IConfigurationElement config, String propertyName, Object data ) throws CoreException
+  public void setInitializationData( IConfigurationElement config, String propertyName, Object data )
   {
     // empty
   }

@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.repository.IRepositoryItem;
 
@@ -75,7 +76,7 @@ public class WiskiDump implements IActionDelegate
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( "Wiski-Dump", IProgressMonitor.UNKNOWN );
 
@@ -120,7 +121,7 @@ public class WiskiDump implements IActionDelegate
 
     try
     {
-      Workbench.getInstance().getProgressService().busyCursorWhile( runnable );
+      PlatformUI.getWorkbench().getProgressService().busyCursorWhile( runnable );
 
       MessageDialog.openInformation( Display.getDefault().getActiveShell(), "Wiski-Dump", counter
           + " Items wurden gelistet. Siehe Stdout." );
@@ -165,6 +166,7 @@ public class WiskiDump implements IActionDelegate
       m_count++;
     }
 
+    @Override
     public String toString()
     {
       return String.valueOf( m_count );

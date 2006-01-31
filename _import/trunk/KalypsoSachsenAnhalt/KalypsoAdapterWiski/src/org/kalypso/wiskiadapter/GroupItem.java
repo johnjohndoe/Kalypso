@@ -46,6 +46,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
@@ -62,7 +63,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent() throws RepositoryException
+  public IRepositoryItem getParent()
   {
     return m_parent;
   }
@@ -70,7 +71,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren()
   {
     return true;
   }
@@ -78,6 +79,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
+  @SuppressWarnings("unchecked")
   public IRepositoryItem[] getChildren() throws RepositoryException
   {
     if( m_children == null )
@@ -89,9 +91,9 @@ public class GroupItem implements IRepositoryItem
         m_children = new TsInfoItem[call.getResultList().size()];
 
         int i = 0;
-        for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
+        for( final Iterator<HashMap<Object, Object>> it = call.getResultList().iterator(); it.hasNext(); )
         {
-          final HashMap map = (HashMap)it.next();
+          final HashMap<Object, Object> map = it.next();
 
           m_children[i++] = new TsInfoItem( this, map );
         }

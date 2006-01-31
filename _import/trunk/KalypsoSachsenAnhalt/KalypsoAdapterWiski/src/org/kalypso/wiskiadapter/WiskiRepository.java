@@ -31,7 +31,7 @@ public class WiskiRepository extends AbstractRepository
 
   private KiWWDataProviderRMIf m_wiski = null;
 
-  private final HashMap m_userData;
+  private final HashMap<String, String> m_userData;
 
   private final String m_url;
 
@@ -41,7 +41,7 @@ public class WiskiRepository extends AbstractRepository
 
   private final String m_password;
 
-  private Map m_children = null;
+  private Map<String, IRepositoryItem> m_children = null;
 
   /**
    * @param conf
@@ -62,7 +62,7 @@ public class WiskiRepository extends AbstractRepository
     m_password = validator.getPassword();
     final String language = validator.getLanguage();
 
-    m_userData = new HashMap();
+    m_userData = new HashMap<String, String>();
     m_userData.put( "domain", m_domain );
     m_userData.put( "logonName", m_logonName );
     m_userData.put( "password", m_password );
@@ -116,6 +116,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
+  @Override
   public void dispose()
   {
     super.dispose();
@@ -171,7 +172,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload() throws RepositoryException
+  public void reload()
   {
     WiskiUtils.forcePropertiesReload();
   }
@@ -187,7 +188,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren()
   {
     return true;
   }
@@ -197,15 +198,15 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren() throws RepositoryException
   {
-    final Map map = getChildrenMap();
+    final Map<String, IRepositoryItem> map = getChildrenMap();
 
-    return (IRepositoryItem[])map.values().toArray( new IRepositoryItem[map.size()] );
+    return map.values().toArray( new IRepositoryItem[map.size()] );
   }
 
   /**
    * Only used internally, lazy loading
    */
-  private Map getChildrenMap() throws RepositoryException
+  private Map<String, IRepositoryItem> getChildrenMap() throws RepositoryException
   {
     if( m_children == null )
     {
@@ -230,7 +231,7 @@ public class WiskiRepository extends AbstractRepository
 
       final List list = call.getResultList();
 
-      m_children = new LinkedHashMap( list.size() );
+      m_children = new LinkedHashMap<String, IRepositoryItem>( list.size() );
       for( final Iterator it = list.iterator(); it.hasNext(); )
       {
         final Map map = (Map)it.next();

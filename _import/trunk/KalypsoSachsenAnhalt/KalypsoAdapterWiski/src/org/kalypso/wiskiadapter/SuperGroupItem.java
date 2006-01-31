@@ -39,6 +39,7 @@ public class SuperGroupItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
@@ -55,7 +56,7 @@ public class SuperGroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent() throws RepositoryException
+  public IRepositoryItem getParent()
   {
     return m_rep;
   }
@@ -63,7 +64,7 @@ public class SuperGroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren()
   {
     return true;
   }

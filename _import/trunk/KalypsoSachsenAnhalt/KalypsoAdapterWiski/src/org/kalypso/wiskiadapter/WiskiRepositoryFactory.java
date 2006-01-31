@@ -5,7 +5,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 /**
@@ -18,7 +17,7 @@ public class WiskiRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository() throws RepositoryException
+  public boolean configureRepository()
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
@@ -36,7 +35,7 @@ public class WiskiRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository()
   {
     return new WiskiRepository( "Wiski", getClass().getName(), getConfiguration(), false );
   }
