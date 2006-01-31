@@ -72,10 +72,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import net.opengis.sld.ObjectFactory;
 
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -1624,12 +1626,13 @@ public class SLDFactory
   {
     try
     {
-      ObjectFactory fac = new ObjectFactory();
-      Unmarshaller unmarshaller = fac.createUnmarshaller();
+      final ObjectFactory fac = new ObjectFactory();
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+      final Unmarshaller unmarshaller = jc.createUnmarshaller();
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = (net.opengis.sld.RasterSymbolizer)unmarshaller
           .unmarshal( element );
       //Geometry geometry = createGeometry(rasterSymbolizerElement.getGeometry());
-      TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
+      final TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
       return new RasterSymbolizer_Impl( colorMap );
     }
     catch( Exception e )
@@ -1644,7 +1647,7 @@ public class SLDFactory
    * geometryType.getPropertyName().getContent(); return new Geometry_Impl((String)propertyNames.get(0),null); }
    */
 
-  private static TreeMap createColorMap( net.opengis.sld.ColorMapType colorMapType )
+  private static TreeMap createColorMap( net.opengis.sld.ColorMap colorMapType )
   {
     TreeMap colorMap = new TreeMap();
     List colorMapEntries = colorMapType.getColorMapEntry();
