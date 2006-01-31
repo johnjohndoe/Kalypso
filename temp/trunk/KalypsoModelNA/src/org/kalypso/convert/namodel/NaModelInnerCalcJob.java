@@ -109,8 +109,8 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.Observation;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -145,7 +145,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
 
-  final HashMap m_resultMap = new HashMap();
+  final HashMap<String, String> m_resultMap = new HashMap<String, String>();
 
   public NaModelInnerCalcJob()
   {
@@ -294,7 +294,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     final Feature rootFeature = naControlWorkspace.getRootFeature();
     //    final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    final TimeseriesLink resultLink = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
+    final TimeseriesLinkType resultLink = (TimeseriesLinkType)rootFeature.getProperty( "qberechnetZR" );
     double accuracyPrediction = 5d;
     try
     {
@@ -437,7 +437,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     try
     {
-      final TimeseriesLink trackLink = (TimeseriesLink)feature.getProperty( tsLinkPropName );
+      final TimeseriesLinkType trackLink = (TimeseriesLinkType)feature.getProperty( tsLinkPropName );
       final String href = trackLink.getHref();
       final File resultFile = new File( resultDir, href );
       resultFile.getParentFile().mkdirs();
@@ -1206,7 +1206,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
         // if pegel exists, copy metadata (inclusive wq-function)
 
-        final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( metadataTSLink );
+        final TimeseriesLinkType pegelLink = (TimeseriesLinkType)feature.getProperty( metadataTSLink );
         if( pegelLink != null )
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
@@ -1251,7 +1251,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         String resultPathRelative;
         try
         {
-          TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( targetTSLink );
+          TimeseriesLinkType resultLink = (TimeseriesLinkType)feature.getProperty( targetTSLink );
           if( resultLink == null )
           {
             logger.info( "kein ergebnislink gesetzt für FID=#" + feature.getId() + " ." );
@@ -1299,7 +1299,7 @@ public class NaModelInnerCalcJob implements ICalcJob
           resultObservation.getMetadataList().put( ObservationConstants.MD_SCENARIO, scenarioID );
 
         // write result
-        final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
+        final Observation observationType = ZmlFactory.createXML( resultObservation, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 

@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -88,7 +88,7 @@ public class CatchmentManager extends AbstractManager
 
   public static final String STD_VERD_FILENAME = "std.ver";
 
-  private static final HashMap m_fileMap = new HashMap();
+  private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
 
   public CatchmentManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
@@ -106,9 +106,10 @@ public class CatchmentManager extends AbstractManager
    * 
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     // FileReader(
     // file
@@ -116,12 +117,12 @@ public class CatchmentManager extends AbstractManager
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
       result.add( fe );
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
-    HashMap propCollector = new HashMap();
+    final HashMap<String, FeatureProperty> propCollector = new HashMap<String, FeatureProperty>();
     String line;
     // 0-8
     for( int i = 0; i <= 8; i++ )
@@ -132,9 +133,9 @@ public class CatchmentManager extends AbstractManager
       System.out.println( i + ": " + line );
       createProperties( propCollector, line, i );
     }
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "anzlayy" );
+    FeatureProperty prop = propCollector.get( "anzlayy" );
     int anzlayy = Integer.parseInt( (String)prop.getValue() );
-    List list = new ArrayList();
+    List<Feature> list = new ArrayList<Feature>();
     FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list );
     propCollector.put( bodenkorrekturProperty.getName(), bodenkorrekturProperty );
     // 9
@@ -161,10 +162,10 @@ public class CatchmentManager extends AbstractManager
     System.out.println( "12: " + line );
     createProperties( propCollector, line, 12 );
 
-    prop = (FeatureProperty)propCollector.get( "igwzu" );
+    prop = propCollector.get( "igwzu" );
     // 13-14
     int igwzu = Integer.parseInt( (String)prop.getValue() );
-    List gwList = new ArrayList();
+    List<Feature> gwList = new ArrayList<Feature>();
     FeatureProperty property = FeatureFactory.createFeatureProperty( "grundwasserabflussMember", gwList );
     propCollector.put( "grundwasserabflussMember", property );
     if( igwzu > 0 )
@@ -199,13 +200,13 @@ public class CatchmentManager extends AbstractManager
     createProperties( propCollector, line, 15 );
 
     // generate id:
-    prop = (FeatureProperty)propCollector.get( "inum" );
+    prop = propCollector.get( "inum" );
     int asciiID = Integer.parseInt( (String)prop.getValue() );
 
     final Feature feature = getFeature( asciiID, m_featureType );
 
     // handle timeseries: convert to zmllink
-    FeatureProperty ts = (FeatureProperty)propCollector.get( "kurzzeit" );
+    FeatureProperty ts = propCollector.get( "kurzzeit" );
     String tsFileString = (String)ts.getValue();
     String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml";
     File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString );
@@ -438,12 +439,10 @@ public class CatchmentManager extends AbstractManager
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
-
+  @Override
   public String mapID( int id, FeatureType ft )
   {
     return ft.getName() + id;
@@ -451,7 +450,7 @@ public class CatchmentManager extends AbstractManager
 
   public static String getEingabeDateiString( Feature feature, NAConfiguration conf, String propName, String axisType )
   {
-    final TimeseriesLink link = (TimeseriesLink)feature.getProperty( propName );
+    final TimeseriesLinkType link = (TimeseriesLinkType)feature.getProperty( propName );
     final String key = propName + link.getHref();
     if( !m_fileMap.containsKey( key ) )
     {
@@ -459,7 +458,7 @@ public class CatchmentManager extends AbstractManager
       final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType;
       m_fileMap.put( key, name );
     }
-    return (String)m_fileMap.get( key );
+    return m_fileMap.get( key );
   }
 
   public static String getNiederschlagEingabeDateiString( Feature feature, NAConfiguration conf )

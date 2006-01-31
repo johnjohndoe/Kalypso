@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeMap;
-
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -58,7 +58,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -78,13 +77,13 @@ import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.optimizer.Parameter;
-import org.kalypso.optimizer.PegelType;
+import org.kalypso.optimizer.Pegel;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
@@ -101,9 +100,9 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private TreeMap m_measuredTS;
 
-  private final TimeseriesLink m_linkMeasuredTS;
+  private final TimeseriesLinkType m_linkMeasuredTS;
 
-  private final TimeseriesLink m_linkCalcedTS;
+  private final TimeseriesLinkType m_linkCalcedTS;
 
   private final AutoCalibration m_autoCalibration;
 
@@ -141,8 +140,8 @@ public class NAOptimizingJob implements IOptimizingJob
     //    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     //        .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    m_linkCalcedTS = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
+    m_linkMeasuredTS = (TimeseriesLinkType)rootFeature.getProperty( "pegelZR" );
+    m_linkCalcedTS = (TimeseriesLinkType)rootFeature.getProperty( "qberechnetZR" );
 
     //    final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
@@ -154,12 +153,19 @@ public class NAOptimizingJob implements IOptimizingJob
     final Date measuredEndDate = (Date)metaFE.getProperty( "startforecast" );
 
     final ObjectFactory fac = new ObjectFactory();
-    final Unmarshaller unmarshaller = fac.createUnmarshaller();
+    
+//    final Unmarshaller unmarshaller = fac.createUnmarshaller();
+    // TODO: @Andreas: die nächsten beiden Zeilen ersetzen die vorhergehende
+    // teste mal, obs immer noch klappt. In Zukunft sollten die Marshaller und Unmarshaller immer so erzeugt
+    //  werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der Umstellung auf jwsdp-2.0)
+    final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+    final Unmarshaller unmarshaller = context.createUnmarshaller();
+    
     m_autoCalibration = (AutoCalibration)unmarshaller.unmarshal( dataProvider
         .getURLForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
 
     // correct in intervall autocalibration
-    final PegelType pegel = m_autoCalibration.getPegel();
+    final Pegel pegel = m_autoCalibration.getPegel();
 
     final Calendar calendarStart = Calendar.getInstance();
     calendarStart.setTime( measuredStartDate );

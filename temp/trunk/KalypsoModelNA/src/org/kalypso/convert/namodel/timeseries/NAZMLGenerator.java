@@ -60,28 +60,29 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
  * @author doemming
- *  
  */
 public class NAZMLGenerator
 {
-  private static boolean DEBUG = false;
+  private static final ObjectFactory OF = new ObjectFactory();
 
-  // debug = true skips converting ascii timeseries to zml timeseries while
-  // importing ascii
+  /**
+   * debug = true skips converting ascii timeseries to zml timeseries while importing ascii
+   */
+  private static boolean DEBUG = false;
 
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
-  public NAZMLGenerator()
+  public NAZMLGenerator( )
   {
-  // do not instanciate
+    // do not instanciate
   }
 
   /**
@@ -94,8 +95,7 @@ public class NAZMLGenerator
    * @param targetRelativePath
    *          relative path from basedir to store target zml file
    */
-  public static TimeseriesLink copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type,
-      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
+  public static TimeseriesLinkType copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type, File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
   {
 
     File targetZmlFile = new File( targetBaseDir, targetRelativePath );
@@ -123,12 +123,9 @@ public class NAZMLGenerator
    * @param location
    *          location of zml data
    */
-  public static TimeseriesLink generateobsLink( String location ) throws Exception
+  public static TimeseriesLinkType generateobsLink( String location ) throws Exception
   {
-
-    final ObjectFactory factory = new ObjectFactory();
-
-    final TimeseriesLink link = factory.createTimeseriesLink();
+    final TimeseriesLinkType link = OF.createTimeseriesLinkType();
     link.setLinktype( "zml" );
     link.setType( "simple" );
     link.setHref( location );
@@ -147,7 +144,7 @@ public class NAZMLGenerator
     tmpWriter.close();
 
     IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL(), "ID" );
-    ObservationType type = ZmlFactory.createXML( observation, null );
+    final Observation type = ZmlFactory.createXML( observation, null );
     Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     Writer writer = new FileWriter( targetZmlFile );
@@ -156,31 +153,29 @@ public class NAZMLGenerator
 
   }
 
-  private static void generateTmpZml( StringBuffer buffer, String axis1Type, String axis2Type, URL sourceURL )
-      throws Exception
+  private static void generateTmpZml( StringBuffer buffer, String axis1Type, String axis2Type, URL sourceURL ) throws Exception
   {
     final String location = sourceURL.toExternalForm();
 
     buffer.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" );
     buffer.append( "    <observation xmlns=\"zml.kalypso.org\" " );
-    buffer
-        .append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" );
+    buffer.append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" );
     buffer.append( "  <name>Eine Test-Observation</name>" );
     buffer.append( "      <!-- die Metadaten list ist erweiterbar -->" );
     buffer.append( "      <metadataList>" );
-    //    buffer.append( " <metadata name=\"Pegelnullpunkt\" value=\"10\"/>" );
-    //    buffer.append( " <metadata name=\"Rechtswert\" value=\"445566\"/>" );
-    //    buffer.append( " <metadata name=\"Hochwert\" value=\"887766\"/>" );
-    //    buffer.append( " <metadata name=\"Alarmstufe 1\" value=\"4.3\"/>" );
-    //    buffer.append( " <metadata name=\"Alarmstufe 2\" value=\"5.6\"/>" );
+    // buffer.append( " <metadata name=\"Pegelnullpunkt\" value=\"10\"/>" );
+    // buffer.append( " <metadata name=\"Rechtswert\" value=\"445566\"/>" );
+    // buffer.append( " <metadata name=\"Hochwert\" value=\"887766\"/>" );
+    // buffer.append( " <metadata name=\"Alarmstufe 1\" value=\"4.3\"/>" );
+    // buffer.append( " <metadata name=\"Alarmstufe 2\" value=\"5.6\"/>" );
     buffer.append( "      </metadataList>" );
 
-    //axis1
+    // axis1
     buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis1Type ) + "\" "
-    //        +"key=\"true\""
+    // +"key=\"true\""
         + " type=\"" + axis1Type + "\" unit=\"" + TimeserieUtils.getUnit( axis1Type ) + "\"" );
 
-    //    buffer.append( " datatype=\"TYPE=xs:date#FORMAT=dd MM yyyy HH mm ss\"");
+    // buffer.append( " datatype=\"TYPE=xs:date#FORMAT=dd MM yyyy HH mm ss\"");
 
     buffer.append( " >" );
     buffer.append( "<valueLink separator=\",\" column=\"1\" line=\"4\" " );
@@ -188,7 +183,7 @@ public class NAZMLGenerator
     buffer.append( "</axis>" );
     // axis2
     buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis2Type ) + "\" "
-    //        +"key=\"true\""
+    // +"key=\"true\""
         + " type=\"" + axis2Type + "\" unit=\"" + TimeserieUtils.getUnit( axis2Type ) + "\"" );
 
     buffer.append( "<valueLink separator=\",\" column=\"2\" line=\"4\" " );
@@ -202,8 +197,7 @@ public class NAZMLGenerator
     createGRAPFile( writer, axisValueType, observation );
   }
 
-  public static void createExt2File( final FileWriter writer, final IObservation observation, final Date start,
-      final Date end, final String axisType, final String defaultValue ) throws IOException, SensorException
+  public static void createExt2File( final FileWriter writer, final IObservation observation, final Date start, final Date end, final String axisType, final String defaultValue ) throws IOException, SensorException
   {
     final Ext2Writer extWriter = new Ext2Writer( start, end );
     extWriter.write( observation, axisType, writer, defaultValue );
@@ -224,14 +218,14 @@ public class NAZMLGenerator
     final ITuppleModel values = observation.getValues( null );
     for( int i = 0; i < values.getCount(); i++ )
     {
-      final Date date = (Date)values.getElement( i, dateAxis );
-      final Double value = (Double)values.getElement( i, valueAxis );
+      final Date date = (Date) values.getElement( i, dateAxis );
+      final Double value = (Double) values.getElement( i, valueAxis );
 
       if( i == 0 )
       {
         writer.write( "\n" );
         writer.write( "    " + dateFormat.format( date ) + "000  0\n" );
-        //    writer.write( " 95090100000 0\n" );
+        // writer.write( " 95090100000 0\n" );
         writer.write( "grap\n" );
 
       }

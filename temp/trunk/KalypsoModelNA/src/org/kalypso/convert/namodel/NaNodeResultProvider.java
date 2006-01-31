@@ -48,22 +48,20 @@ import java.util.List;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /*
- * class NaNodeResultProvider
- * 
- * created by @author doemming (01.05.2005)
+ * class NaNodeResultProvider created by @author doemming (01.05.2005)
  */
 public class NaNodeResultProvider
 {
   private final URL m_context;
 
-  private final List removedResults = new ArrayList();
+  private final List<Feature> removedResults = new ArrayList<Feature>();
 
   private final boolean m_useResults;
 
@@ -72,7 +70,7 @@ public class NaNodeResultProvider
     m_context = modellWorkspace.getContext();
     final Feature controlFE = controlWorkspace.getRootFeature();
     m_useResults = FeatureHelper.booleanIsTrue( controlFE, "useResults", true );
-    final String resultNodeID = (String)controlFE.getProperty( "rootNode" );
+    final String resultNodeID = (String) controlFE.getProperty( "rootNode" );
     // exclude some node from providing results
     if( resultNodeID != null )
     {
@@ -93,7 +91,7 @@ public class NaNodeResultProvider
 
   private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "qberechnetZR" );
     if( link == null )
       return null;
     // optionen loeschen
@@ -104,7 +102,7 @@ public class NaNodeResultProvider
 
   public URL getMeasuredURL( final Feature nodeFE ) throws MalformedURLException
   {
-    final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "pegelZR" );
+    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( "pegelZR" );
     if( link == null )
       return null;
     // optionen loeschen
@@ -131,7 +129,7 @@ public class NaNodeResultProvider
     return true;
   }
 
-  private void removeResult( Feature nodeFE )
+  private void removeResult( final Feature nodeFE )
   {
     if( !removedResults.contains( nodeFE ) )
       removedResults.add( nodeFE );

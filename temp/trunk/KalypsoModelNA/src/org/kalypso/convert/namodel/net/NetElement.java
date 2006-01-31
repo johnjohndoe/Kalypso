@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -73,26 +73,24 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * channel written in capital letter in the middle.
  * 
  * <pre>
- *                    Node----->-----Node
- *                      |              |
- *                      V              V
- *                      |              |
- *   Catchment--->---CHANNEL        Channel (downstream)
- *       |              |           
- *       |              V           
- *       V              |           
- *       |             Node
- *       |              |
- *    Catchment         V
- *       |              |
- *       V           Channel (downstream)
- *       |
- *    Channel (downstream)
- * 
- * 
+ *                      Node-----&gt;-----Node
+ *                        |              |
+ *                        V              V
+ *                        |              |
+ *     Catchment---&gt;---CHANNEL        Channel (downstream)
+ *         |              |           
+ *         |              V           
+ *         V              |           
+ *         |             Node
+ *         |              |
+ *      Catchment         V
+ *         |              |
+ *         V           Channel (downstream)
+ *         |
+ *      Channel (downstream)
+ *   
+ *   
  * </pre>
- * 
- *  
  */
 public class NetElement
 {
@@ -104,9 +102,9 @@ public class NetElement
 
   private final NetFileManager m_manager;
 
-  private final List m_upStreamDepends = new ArrayList();
+  private final List<NetElement> m_upStreamDepends = new ArrayList<NetElement>();
 
-  private final List m_downStreamDepends = new ArrayList();
+  private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
 
   private final Feature m_channelFE;
 
@@ -116,10 +114,9 @@ public class NetElement
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
 
-  //  private static String[] m_netAsciiFormat;
+  // private static String[] m_netAsciiFormat;
 
   private final GMLWorkspace m_workspace;
-
 
   private final NAConfiguration m_conf;
 
@@ -131,17 +128,17 @@ public class NetElement
     m_conf = conf;
   }
 
-  public Feature getChannel()
+  public Feature getChannel( )
   {
     return m_channelFE;
   }
 
-  public Feature getDownStreamNode()
+  public Feature getDownStreamNode( )
   {
     return m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
   }
 
-  public boolean isCalculated()
+  public boolean isCalculated( )
   {
     return m_calculated;
   }
@@ -149,7 +146,7 @@ public class NetElement
   /**
    *  
    */
-  public void berechne( AsciiBuffer asciiBuffer, List nodeList ) throws IOException, Exception
+  public void berechne( AsciiBuffer asciiBuffer, List<Feature> nodeList ) throws IOException, Exception
   {
     if( isCalculated() )
       return;
@@ -162,31 +159,27 @@ public class NetElement
 
   }
 
-  public void berechneOberlauf( AsciiBuffer asciiBuffer, List nodeList ) throws Exception
+  public void berechneOberlauf( AsciiBuffer asciiBuffer, List<Feature> nodeList ) throws Exception
   {
     for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
     {
       // berechne oberlauf
-      NetElement element = (NetElement)iter.next();
+      NetElement element = (NetElement) iter.next();
       element.berechne( asciiBuffer, nodeList );
     }
   }
 
-  public void generateTimeSeries() throws IOException, Exception
+  public void generateTimeSeries( ) throws IOException, Exception
   {
-    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(),
-        "entwaesserungsStrangMember" );
+    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(), "entwaesserungsStrangMember" );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
       final NAConfiguration conf = m_manager.m_conf;
       final Feature feature = catchmentFeatures[i];
 
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( conf.getAsciiBaseDir(),
-          "klima.dat" ), conf );
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_manager.m_conf
-          .getAsciiBaseDir(), "klima.dat" ), conf );
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_manager.m_conf
-          .getAsciiBaseDir(), "klima.dat" ), conf );
+      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( conf.getAsciiBaseDir(), "klima.dat" ), conf );
+      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat" ), conf );
+      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat" ), conf );
       final File parent = targetFileN.getParentFile();
       if( !parent.exists() )
         parent.mkdirs();
@@ -194,7 +187,7 @@ public class NetElement
       // N
       if( !targetFileN.exists() )
       {
-        final TimeseriesLink linkN = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
+        final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( "niederschlagZR" );
         final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
         final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" );
         final FileWriter writer = new FileWriter( targetFileN );
@@ -204,30 +197,28 @@ public class NetElement
       // T
       if( !targetFileT.exists() )
       {
-        final TimeseriesLink linkT = (TimeseriesLink)feature.getProperty( "temperaturZR" );
+        final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( "temperaturZR" );
         if( linkT != null )
         {
           final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
           final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
           final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" );
           final FileWriter writer = new FileWriter( targetFileT );
-          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
-              TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
+          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
           IOUtils.closeQuietly( writer );
         }
       }
       // V
       if( !targetFileV.exists() )
       {
-        final TimeseriesLink linkV = (TimeseriesLink)feature.getProperty( "verdunstungZR" );
+        final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( "verdunstungZR" );
         if( linkV != null )
         {
           final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
           final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
           final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" );
           final FileWriter writer = new FileWriter( targetFileV );
-          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
-              TimeserieConstants.TYPE_EVAPORATION, "0.5" );
+          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" );
           IOUtils.closeQuietly( writer );
         }
       }
@@ -240,17 +231,17 @@ public class NetElement
       m_downStreamDepends.add( downStreamElement );
   }
 
-  public Feature getChannelsBelowDownStreamNode()
+  public Feature getChannelsBelowDownStreamNode( )
   {
     return m_workspace.resolveLink( getDownStreamNode(), "downStreamChannelMember" );
   }
 
-  public List getDownStreamNetElements()
+  public List getDownStreamNetElements( )
   {
     return m_downStreamDepends;
   }
 
-  public List getUpStreamNetElements()
+  public List getUpStreamNetElements( )
   {
     return m_upStreamDepends;
   }
@@ -270,26 +261,25 @@ public class NetElement
       System.out.println( "knotU=null" );
     asciiBuffer.getNetBuffer().append( "   " + virtualChannelId );
     asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotu ), "i8" ) );
-    //    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotu, m_netAsciiFormat[11] ) );
+    // asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotu, m_netAsciiFormat[11] ) );
     asciiBuffer.getNetBuffer().append( ENDKNOTEN );
     asciiBuffer.getNetBuffer().append( " 0\n" );
 
     asciiBuffer.getChannelBuffer().append( virtualChannelId + "\n" );
     asciiBuffer.getChannelBuffer().append( ChannelManager.VIRTUALCHANNEL + "\n" );
-    //    m_virtual = true;
+    // m_virtual = true;
   }
 
   /**
    * writes part 1 of netfile
-   *  
    */
-  public void write( AsciiBuffer asciiBuffer, List nodeList )
+  public void write( AsciiBuffer asciiBuffer, List<Feature> nodeList )
   {
     final IDManager idManager = m_conf.getIdManager();
     asciiBuffer.addFeatureToWrite( getChannel() );
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
-    //  append channel:
+    // append channel:
     asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( m_channelFE ), "i8" ) );
 
     Feature[] features = m_workspace.getFeatures( m_manager.m_conf.getNodeFT() );
@@ -304,7 +294,7 @@ public class NetElement
     }
     m_calculated = true;
     // collect related catchments
-    final List catchmentList = new ArrayList();
+    final List<Feature> catchmentList = new ArrayList<Feature>();
     final Feature[] Cfeatures = m_workspace.getFeatures( m_manager.m_conf.getCatchemtFT() );
     for( int i = 0; i < Cfeatures.length; i++ )
     {
@@ -324,7 +314,7 @@ public class NetElement
     asciiBuffer.getNetBuffer().append( " " + catchmentList.size() + "\n" );
     for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
     {
-      Feature catchmentFE = (Feature)iter.next();
+      Feature catchmentFE = (Feature) iter.next();
       asciiBuffer.addFeatureToWrite( catchmentFE );
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i8" ) );
       asciiBuffer.getNetBuffer().append( "\n" );
@@ -340,12 +330,13 @@ public class NetElement
     visitor.visit( this );
   }
 
-  public GMLWorkspace getWorkspace()
+  public GMLWorkspace getWorkspace( )
   {
     return m_workspace;
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
     final Feature channel = getChannel();
     return "FID:" + channel.getId() + " AsciiID: " + m_conf.getIdManager().getAsciiID( channel );

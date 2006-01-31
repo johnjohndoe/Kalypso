@@ -61,13 +61,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public abstract class AbstractManager
 {
-  private final static HashMap m_map = new HashMap(); // intID,StringID
+  private final static HashMap<IntID, String> m_map = new HashMap<IntID, String>();
 
-  private static final HashMap m_allFeatures = new HashMap(); // (stringID,feature)
+  private static final HashMap<String, Feature> m_allFeatures = new HashMap<String, Feature>();
 
   private String[] m_asciiFormat;
 
-  public String[] getAsciiFormats()
+  public String[] getAsciiFormats( )
   {
     return m_asciiFormat;
   }
@@ -87,7 +87,7 @@ public abstract class AbstractManager
       Feature feature = FeatureFactory.createFeature( fId, ft, false );
       m_allFeatures.put( fId, feature );
     }
-    return (Feature)m_allFeatures.get( fId );
+    return m_allFeatures.get( fId );
   }
 
   /**
@@ -103,8 +103,8 @@ public abstract class AbstractManager
     IntID intID = new IntID( asciiID, ft );
     if( !m_map.containsKey( intID ) )
       createFeature( intID );
-    String stringID = (String)m_map.get( intID );
-    return (Feature)m_allFeatures.get( stringID );
+    String stringID = m_map.get( intID );
+    return m_allFeatures.get( stringID );
   }
 
   public Feature getExistingFeature( int id, FeatureType[] ft )
@@ -121,8 +121,8 @@ public abstract class AbstractManager
   public Feature getExistingFeature( int id, FeatureType ft )
   {
     IntID intID = new IntID( id, ft );
-    String stringID = (String)m_map.get( intID );
-    return (Feature)m_allFeatures.get( stringID );
+    String stringID = m_map.get( intID );
+    return m_allFeatures.get( stringID );
 
   }
 
@@ -138,7 +138,7 @@ public abstract class AbstractManager
   private void createFeature( IntID intID )
   {
     createMapping( intID );
-    String stringID = (String)m_map.get( intID );
+    String stringID = m_map.get( intID );
     Feature feature = null;
     try
     {
@@ -158,35 +158,35 @@ public abstract class AbstractManager
   private void createMapping( IntID intID )
   {
     String stringID = mapID( intID.getID(), intID.getFeatureType() );
-    m_map.put( stringID, intID );
+    // m_map.put( stringID, intID );
     m_map.put( intID, stringID );
   }
 
   private void readParseDefinition( URL formatURL ) throws IOException
   {
-    List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( formatURL.openStream() ) );
+    final List<String> result = new ArrayList<String>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( formatURL.openStream() ) );
 
     String line;
-    while( ( line = reader.readLine() ) != null )
+    while( (line = reader.readLine()) != null )
       result.add( line );
-    m_asciiFormat = (String[])result.toArray( new String[result.size()] );
+    m_asciiFormat = result.toArray( new String[result.size()] );
   }
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public void createProperties( HashMap propCollector, String line, int formatLine ) throws Exception
+  public void createProperties( HashMap<String, FeatureProperty> propCollector, String line, int formatLine ) throws Exception
   {
     createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  protected void createProperties( HashMap propCollector, String line, String formatLine ) throws Exception
+  protected void createProperties( HashMap<String, FeatureProperty> propCollector, String line, String formatLine ) throws Exception
   {
     final HashMap propertyMap = FortranFormatHelper.scanf( formatLine, line );
     final Iterator it = propertyMap.keySet().iterator();
     while( it.hasNext() )
     {
-      final String key = (String)it.next();
+      final String key = (String) it.next();
       propCollector.put( key, FeatureFactory.createFeatureProperty( key, propertyMap.get( key ) ) );
     }
   }
@@ -203,7 +203,7 @@ public abstract class AbstractManager
     Iterator it = collection.iterator();
     while( it.hasNext() )
     {
-      FeatureProperty feProp = (FeatureProperty)it.next();
+      FeatureProperty feProp = (FeatureProperty) it.next();
       if( ft.getProperty( feProp.getName() ) != null )
         feature.setProperty( feProp );
       else
@@ -223,22 +223,23 @@ public abstract class AbstractManager
       m_ft = ft;
     }
 
-    public int getID()
+    public int getID( )
     {
       return m_intID;
     }
 
-    public FeatureType getFeatureType()
+    public FeatureType getFeatureType( )
     {
       return m_ft;
     }
 
+    @Override
     public boolean equals( Object object )
     {
-      if( !( object instanceof IntID ) )
+      if( !(object instanceof IntID) )
         return false;
-      IntID other = (IntID)object;
-      if( !( other.getID() == getID() ) )
+      IntID other = (IntID) object;
+      if( !(other.getID() == getID()) )
         return false;
       if( !other.getFeatureType().getNamespace().equals( getFeatureType().getNamespace() ) )
         return false;
@@ -247,14 +248,13 @@ public abstract class AbstractManager
       return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode()
+    @Override
+    public int hashCode( )
     {
-      return ( Integer.toString( m_intID ) + m_ft.getName() + m_ft.getNamespace() ).hashCode();
+      return (Integer.toString( m_intID ) + m_ft.getName() + m_ft.getNamespace()).hashCode();
     }
 
   }
