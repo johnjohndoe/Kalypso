@@ -26,7 +26,7 @@ public class PSICompactItem implements IRepositoryItem
 
   private final String m_identifier;
 
-  private final List m_children;
+  private final List<PSICompactItem> m_children;
 
   protected final ObjectInfo m_objectInfo;
 
@@ -41,7 +41,7 @@ public class PSICompactItem implements IRepositoryItem
     m_objectInfo = info;
     m_valueType = valueType;
 
-    m_children = new Vector();
+    m_children = new Vector<PSICompactItem>();
   }
 
   /**
@@ -55,6 +55,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return getName();
@@ -89,7 +90,7 @@ public class PSICompactItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren()
   {
-    return (IRepositoryItem[])m_children.toArray( new IRepositoryItem[m_children.size()] );
+    return m_children.toArray( new IRepositoryItem[m_children.size()] );
   }
 
   public Object getAdapter( final Class anotherClass )

@@ -7,9 +7,8 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
 
 /**
  * @author schlienger
- *  
  */
-public class ArchiveDataDateComparator implements Comparator
+public class ArchiveDataDateComparator implements Comparator<Object>
 {
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)

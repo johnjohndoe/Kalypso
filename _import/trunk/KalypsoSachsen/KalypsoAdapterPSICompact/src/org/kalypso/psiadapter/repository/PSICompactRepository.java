@@ -33,7 +33,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
    */
-  private final void buildStructure( final PSICompactItem rootItem, final Map nodes, int valueType ) throws ECommException
+  private final void buildStructure( final PSICompactItem rootItem, final Map<String, PSICompactItem> nodes, int valueType ) throws ECommException
   {
     final PSICompact psi = PSICompactFactory.getConnection();
 
@@ -62,7 +62,7 @@ public class PSICompactRepository extends AbstractRepository
           continue;
 
         if( nodes.containsKey( nodeID ) )
-          parent = (PSICompactItem)nodes.get( nodeID );
+          parent = nodes.get( nodeID );
         else
         {
           final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
@@ -129,7 +129,7 @@ public class PSICompactRepository extends AbstractRepository
     try
     {
       final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
-      final TreeMap nodes = new TreeMap();
+      final Map<String, PSICompactItem> nodes = new TreeMap<String, PSICompactItem>();
       
 //      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
 //      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );

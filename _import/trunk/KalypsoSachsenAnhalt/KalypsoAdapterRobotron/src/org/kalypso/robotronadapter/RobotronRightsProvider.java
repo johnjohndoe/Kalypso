@@ -75,7 +75,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * 
    * @see IUserRightsProvider#init(java.util.Properties)
    */
-  public void init( Properties props ) throws UserRightsException
+  public void init( Properties props )
   {
     m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
@@ -86,7 +86,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
   private DirContext getDirContext() throws NamingException
   {
-    final Hashtable env = new Hashtable();
+    final Hashtable<String, Object> env = new Hashtable<String, Object>();
 
     // set the parameters for the intial context
     env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory" );
@@ -108,7 +108,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
     throw new UserRightsException( "Method not implemented" );
   }
 
-  public String[] getRights( final String username, final String password ) throws UserRightsException
+  public String[] getRights( final String username, final String password )
   {
     DirContext dirCtxt = null;
     

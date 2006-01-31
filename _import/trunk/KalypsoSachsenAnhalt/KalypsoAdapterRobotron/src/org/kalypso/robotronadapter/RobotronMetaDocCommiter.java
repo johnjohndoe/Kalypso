@@ -125,7 +125,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
-  public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException
+  public void prepareMetainf( final Properties serviceProps, final Map<Object, Object> metadata )
   {
     metadata.put( TAG_AUTOR, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_AUTOR, "Autor" ) );
     metadata.put( TAG_DESCRIPTION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_DESCRIPTION, "" ) );
@@ -140,7 +140,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
    *      java.lang.String, java.lang.String, org.apache.commons.configuration.Configuration)
    */
-  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
+  public void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File doc,
       final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
     //String endpoint = "http://localhost:8080/eXForms/KalypsoConnectorWS.jws";

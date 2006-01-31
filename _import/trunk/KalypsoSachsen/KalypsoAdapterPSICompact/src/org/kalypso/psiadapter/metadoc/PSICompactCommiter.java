@@ -34,7 +34,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
-  public void prepareMetainf( final Properties serviceProps, final Map metadata )
+  public void prepareMetainf( final Properties serviceProps, final Map<Object, Object> metadata )
   {
     final Properties props = new Properties();
     props.putAll( metadata );
@@ -48,7 +48,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
    *      java.lang.String, java.lang.String, org.apache.commons.configuration.Configuration)
    */
-  public void commitDocument( final Properties serviceProps, final Map metadata, final File docFile,
+  public void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File docFile,
       final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
     final String docFilePath = docFile.getAbsolutePath();
