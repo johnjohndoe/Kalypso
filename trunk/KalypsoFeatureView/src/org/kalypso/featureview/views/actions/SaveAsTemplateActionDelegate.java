@@ -44,6 +44,7 @@ package org.kalypso.featureview.views.actions;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Validator;
@@ -69,9 +70,11 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.template.featureview.FeaturetemplateType;
+import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
+import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -82,7 +85,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 {
+  protected static final ObjectFactory templateOF = new ObjectFactory();
+
+  protected static final JAXBContext templateJC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private static final String STR_ALS_VORLAGE_SPEICHERN = "Als Vorlage speichern";
+
   private IViewPart m_view;
 
   /**
@@ -98,7 +106,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
    */
   public void run( final IAction action )
   {
-    final FeatureView view = (FeatureView)m_view;
+    final FeatureView view = (FeatureView) m_view;
     final Shell shell = view.getSite().getShell();
 
     final GMLWorkspace gmlWorkspace = view.getCurrentworkspace();
@@ -106,8 +114,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     if( gmlWorkspace == null || feature == null )
     {
-      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN,
-          "Die aktuelle Ansicht enthält kein Feature und kann deshalb nicht als Vorlage gespeichert werden." );
+      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, "Die aktuelle Ansicht enthält kein Feature und kann deshalb nicht als Vorlage gespeichert werden." );
       return;
     }
 
@@ -135,31 +142,31 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     final Job job = new Job( "Vorlage wird gespeichert" )
     {
+      @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        // feature-template intern construieren
-        final ObjectFactory templateFactory = new ObjectFactory();
         try
         {
-          final LayerType layer = templateFactory.createFeaturetemplateTypeLayerType();
+          final Layer layer = templateOF.createFeaturetemplateLayer();
           layer.setFeaturePath( gmlWorkspace.getFeaturepathForFeature( feature ).toString() );
           layer.setHref( gmlWorkspace.getContext().toExternalForm() );
           layer.setLinktype( "gml" );
           layer.setId( "layer_1" );
 
-          final FeaturetemplateType template = templateFactory.createFeaturetemplate();
+          final Featuretemplate template = templateOF.createFeaturetemplate();
           template.setLayer( layer );
 
-          final List viewList = template.getView();
+          final List<FeatureviewType> viewList = template.getView();
 
           viewList.add( view.getCurrentViewTemplates() );
 
-          final Marshaller marshaller = templateFactory.createMarshaller();
+          final Marshaller marshaller = templateJC.createMarshaller();
           marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-          final Validator validator = templateFactory.createValidator();
+          final Validator validator = templateJC.createValidator();
           validator.validate( template );
           final SetContentHelper helper = new SetContentHelper()
           {
+            @Override
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
               marshaller.marshal( template, writer );
@@ -193,6 +200,6 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-  // nichts tun
+    // nichts tun
   }
 }
