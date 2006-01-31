@@ -1,16 +1,3 @@
-package org.kaylpso.ui.wizard.gml;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -51,6 +38,18 @@ import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kaylpso.ui.wizard.gml;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ui.ImageProvider;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
+
 /**
  * 
  * @author Kuepferle
@@ -62,9 +61,9 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
 
   private GmlFileImportPage m_page;
 
+  @Override
   public void addPages()
   {
-
     m_page = new GmlFileImportPage( "GML:importPage", "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte",
         ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
@@ -76,6 +75,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     try

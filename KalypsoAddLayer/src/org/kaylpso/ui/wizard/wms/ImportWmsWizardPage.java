@@ -105,7 +105,7 @@ public class ImportWmsWizardPage extends WizardPage
   private Composite m_layerSelection;
 
   /** capabilites cache in this wizard */
-  private HashMap m_capabilites = new HashMap(); // (URL,Capabilities)
+  private HashMap<URL, WMSCapabilities> m_capabilites = new HashMap<URL, WMSCapabilities>();
 
   private static final String MSG_BASEURL_ERROR = "Die gewählte URL ist ungültig ";
 
@@ -187,8 +187,8 @@ public class ImportWmsWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final IStructuredSelection selection = (IStructuredSelection)m_capabilitiesTree.getSelection();
-        final List input = (List)m_selectedLayers.getInput();
-        List selectableLayer = new ArrayList();
+        final List<Layer> input = (List<Layer>)m_selectedLayers.getInput();
+        List<Layer> selectableLayer = new ArrayList<Layer>();
         for( Iterator iter = selection.iterator(); iter.hasNext(); )
         {
           final Layer layer = (Layer)iter.next();
@@ -200,11 +200,11 @@ public class ImportWmsWizardPage extends WizardPage
         setPageComplete( !input.isEmpty() );
       }
 
-      private List getSelectableLayer( final List resultCollector, final Layer layer )
+      private List<Layer> getSelectableLayer( final List<Layer> resultCollector, final Layer layer )
       {
-        List resultList;
+        List<Layer> resultList;
         if( resultCollector == null )
-          resultList = new ArrayList();
+          resultList = new ArrayList<Layer>();
         else
           resultList = resultCollector;
         final Layer[] subLayers = layer.getLayer();
@@ -270,7 +270,7 @@ public class ImportWmsWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final IStructuredSelection selection2 = (IStructuredSelection)m_selectedLayers.getSelection();
-        final List input = (List)m_selectedLayers.getInput();
+        final List<Layer> input = (List<Layer>)m_selectedLayers.getInput();
         input.removeAll( selection2.toList() );
         m_selectedLayers.setInput( input );
         m_multiLayerButton.setEnabled( input.size() > 1 );
@@ -313,11 +313,11 @@ public class ImportWmsWizardPage extends WizardPage
     //inizialize catalog
     // TODO use property file
     // TODO: better: store/retrieve list of url in dialog setting
-    java.util.List catalog = ( (ImportWmsSourceWizard)getWizard() ).getCatalog();
+    List<String> catalog = ( (ImportWmsSourceWizard)getWizard() ).getCatalog();
     if( catalog == null )
-      catalog = new ArrayList();
+      catalog = new ArrayList<String>();
     // fill base-url-combo
-    final String[] baseURLItems = (String[])catalog.toArray( new String[catalog.size()] );
+    final String[] baseURLItems = catalog.toArray( new String[catalog.size()] );
     m_urlCombo = new Combo( fieldGroup, SWT.BORDER );
     m_urlCombo.setItems( baseURLItems );
     m_urlCombo.setVisibleItemCount( 15 );
@@ -423,7 +423,7 @@ public class ImportWmsWizardPage extends WizardPage
       //store url and capabilites in a map so it is only loaded once
       m_capabilites.put( service, capabilities );
     }
-    return (WMSCapabilities)m_capabilites.get( service );
+    return m_capabilites.get( service );
   }
 
   private URL validateURLField( final String url )
@@ -506,14 +506,14 @@ public class ImportWmsWizardPage extends WizardPage
    */
   public Layer[] getLayersList()
   {
-    final List result = new ArrayList();
-    final List list = (List)m_selectedLayers.getInput();
+    final List<Layer> result = new ArrayList<Layer>();
+    final List<Layer> list = (List<Layer>)m_selectedLayers.getInput();
     for( Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Layer layer = (Layer)iter.next();
       result.add( layer );
     }
-    return (Layer[])result.toArray( new Layer[result.size()] );
+    return result.toArray( new Layer[result.size()] );
   }
 
   /**
@@ -591,6 +591,7 @@ public class ImportWmsWizardPage extends WizardPage
           /**
            * @see java.lang.Thread#run()
            */
+          @Override
           public void run()
           {
             try

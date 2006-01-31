@@ -392,7 +392,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
             StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
             reader.close();
             Layer[] layers = styledLayerDescriptor.getLayers();
-            Vector styleNameVector = new Vector();
+            Vector<String> styleNameVector = new Vector<String>();
             for( int i = 0; i < layers.length; i++ )
             {
               Layer layer = layers[i];
@@ -405,7 +405,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
             String[] styleNames = new String[styleNameVector.size()];
             for( int k = 0; k < styleNameVector.size(); k++ )
             {
-              styleNames[k] = (String)styleNameVector.get( k );
+              styleNames[k] = styleNameVector.get( k );
             }
             styleNameCombo.setItems( styleNames );
             styleNameCombo.select( 0 );

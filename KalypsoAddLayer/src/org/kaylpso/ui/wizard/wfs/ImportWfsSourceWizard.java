@@ -15,13 +15,13 @@ import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 import org.kaylpso.ui.KalypsoServiceConstants;
 import org.kaylpso.ui.action.AddThemeCommand;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -75,11 +75,12 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  private ArrayList m_catalog;
+  private ArrayList<String> m_catalog;
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     IMapModell mapModell = m_outlineviewer.getMapModell();
@@ -146,7 +147,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     catch( IOException e )
     {
       e.printStackTrace();
-      m_catalog = new ArrayList();
+      m_catalog = new ArrayList<String>();
     }
     finally
     {
@@ -154,6 +155,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     }
   }
 
+  @Override
   public void addPages()
   {
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
@@ -162,9 +164,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   }
 
+  @Override
   public boolean performCancel()
   {
-
     this.dispose();
     return true;
   }
@@ -178,14 +180,14 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_outlineviewer = outlineviewer;
   }
 
-  public ArrayList getCatalog()
+  public ArrayList<String> getCatalog()
   {
     return m_catalog;
   }
 
   public void readCatalog( InputStream is ) throws IOException
   {
-    ArrayList catalog = new ArrayList();
+    ArrayList<String> catalog = new ArrayList<String>();
     BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
     String line = br.readLine();
     do

@@ -31,8 +31,6 @@ package org.kaylpso.ui.wizard.image;
 
 import java.net.MalformedURLException;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -40,8 +38,8 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kaylpso.ui.action.AddThemeCommand;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * ImportImageSourceWizard
@@ -61,6 +59,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     IMapModell mapModell = m_outlineviewer.getMapModell();
@@ -73,13 +72,6 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
             + m_page.getCSName() );
         m_outlineviewer.postCommand( command, null );
       }
-      catch( JAXBException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        return false;
-      }
-      // TODO Auto-generated method stub
       catch( MalformedURLException e )
       {
         // TODO Auto-generated catch block
@@ -110,6 +102,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
 
   }
 
+  @Override
   public void addPages()
   {
 
@@ -122,11 +115,4 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
     addPage( m_page );
 
   }
-
-  // @Christoph: wurde nicht benutzt und gibts auch schon in IProjekt.
-  //  private String getRelativeProjectPath( IPath path )
-  //  {
-  //    return "project:/" + path.removeFirstSegments( 1 ).toString();
-  //  }
-
 }

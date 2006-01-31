@@ -2,8 +2,6 @@ package org.kaylpso.ui.wizard.shape;
 
 import java.rmi.RemoteException;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -12,8 +10,8 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kaylpso.ui.action.AddThemeCommand;
+import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -57,9 +55,7 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * 
  * @author Kuepferle
- *  
  */
 public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
@@ -67,7 +63,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  public ImportShapeSourceWizard()
+  public ImportShapeSourceWizard( )
   {
     super();
   }
@@ -75,25 +71,20 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
-  public boolean performFinish()
+  @Override
+  public boolean performFinish( )
   {
-
     try
     {
-      //Add Layer to mapModell
+      // Add Layer to mapModell
       IMapModell mapModell = m_outlineviewer.getMapModell();
       String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
-      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName, "shape",
-          "featureMember", fileName );
+      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, themeName, "shape", "featureMember", fileName );
       m_outlineviewer.postCommand( command, null );
     }
 
     catch( RemoteException e )
-    {
-      e.printStackTrace();
-    }
-    catch( JAXBException e )
     {
       e.printStackTrace();
     }
@@ -107,14 +98,13 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-  //do nothing
+    // do nothing
   }
 
-  public void addPages()
+  @Override
+  public void addPages( )
   {
-
-    m_page = new ImportShapeFileImportPage( "shapefileimport", "ESRI(tm) ein Projekt importieren",
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_page = new ImportShapeFileImportPage( "shapefileimport", "ESRI(tm) ein Projekt importieren", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     if( m_outlineviewer != null )
     {
       m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
@@ -124,7 +114,6 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   }
 
   /**
-   * 
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
   public void setOutlineViewer( GisMapOutlineViewer outlineviewer )

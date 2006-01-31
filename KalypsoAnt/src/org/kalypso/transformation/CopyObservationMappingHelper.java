@@ -38,7 +38,7 @@ import java.util.Properties;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -102,14 +102,14 @@ public class CopyObservationMappingHelper
     final FeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
     final Feature mapFE = workspace.createFeature( mapFT );
     // in
-    final TimeseriesLink inLink = obsLinkFac.createTimeseriesLink();
+    final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     inLink.setHref( inHref );
     final FeatureProperty inProp = FeatureFactory.createFeatureProperty(
         CopyObservationMappingHelper.RESULT_TS_IN_PROP, inLink );
     mapFE.setProperty( inProp );
 
     // out
-    final TimeseriesLink outLink = obsLinkFac.createTimeseriesLink();
+    final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
     final FeatureProperty outProp = FeatureFactory.createFeatureProperty( RESULT_TS_OUT_PROP, outLink );
     mapFE.setProperty( outProp );
