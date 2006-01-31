@@ -65,7 +65,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 
 /**
  * Wizard for exporting a Repository ZML as a file in the local filesystem
@@ -143,7 +143,7 @@ public class ExportAsFileWizard extends Wizard
     FileOutputStream outs = null;
     try
     {
-      final ObservationType ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
+      final Observation ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
 
       outs = new FileOutputStream( new File( filePath ) );
       ZmlFactory.getMarshaller().marshal( ot, outs );

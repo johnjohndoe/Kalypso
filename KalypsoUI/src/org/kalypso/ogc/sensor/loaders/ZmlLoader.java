@@ -55,7 +55,7 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
@@ -121,11 +121,12 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( "Datei konnte nicht gefunden werden: " + url );
 
-      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data, null );
+      final Observation xmlObs = ZmlFactory.createXML( (IObservation)data, null );
 
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper()
       {
+        @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           final Marshaller marshaller = ZmlFactory.getMarshaller();

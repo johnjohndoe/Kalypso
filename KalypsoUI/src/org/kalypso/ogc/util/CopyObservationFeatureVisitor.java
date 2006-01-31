@@ -64,8 +64,8 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.Observation;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -139,7 +139,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       final IObservation[] sourceObses = getObservations( f );
 
-      final TimeseriesLink targetlink = (TimeseriesLink)f.getProperty( m_targetobservation );
+      final TimeseriesLinkType targetlink = (TimeseriesLinkType)f.getProperty( m_targetobservation );
       if( targetlink == null )
       {
         m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
@@ -187,7 +187,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         if( !file.getParentFile().exists() )
           file.getParentFile().mkdirs();
         stream = new FileOutputStream( file );
-        final ObservationType type = ZmlFactory.createXML( resultObs, null );
+        final Observation type = ZmlFactory.createXML( resultObs, null );
         ZmlFactory.getMarshaller().marshal( type, stream );
       }
       finally
@@ -238,7 +238,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     if( sourceProperty == null )
       return null;
 
-    final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType)feature.getProperty( sourceProperty );
     if( sourcelink == null )
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am

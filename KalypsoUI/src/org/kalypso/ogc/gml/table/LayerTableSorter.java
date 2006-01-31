@@ -106,18 +106,18 @@ public class LayerTableSorter extends ViewerSorter
       return sign;
     if( o2 == null )
       return -sign;
-    if( o1 instanceof String )
-      return sign * ( (String)o1 ).compareTo( o2 );
-    else if( o1 instanceof Integer )
-      return sign * ( (Integer)o1 ).compareTo( o2 );
-    else if( o1 instanceof Double )
-      return sign * ( (Double)o1 ).compareTo( o2 );
-    else if( o1 instanceof Long )
-      return sign * ( (Long)o1 ).compareTo( o2 );
-    else if( o1 instanceof Float )
-      return sign * ( (Float)o1 ).compareTo( o2 );
-    else if( o1 instanceof Date )
-      return sign * ( (Date)o1 ).compareTo( o2 );
+    if( o1 instanceof String && o2 instanceof String)
+      return sign * ( (String)o1 ).compareTo( (String) o2 );
+    else if( o1 instanceof Integer && o2 instanceof Integer)
+      return sign * ( (Integer)o1 ).compareTo( (Integer) o2 );
+    else if( o1 instanceof Double && o2 instanceof Double )
+      return sign * ( (Double)o1 ).compareTo( (Double) o2 );
+    else if( o1 instanceof Long && o2 instanceof Long )
+      return sign * ( (Long)o1 ).compareTo( (Long) o2 );
+    else if( o1 instanceof Float && o1 instanceof Float )
+      return sign * ( (Float)o1 ).compareTo( (Float) o2 );
+    else if( o1 instanceof Date && o2 instanceof Date )
+      return sign * ( (Date)o1 ).compareTo( (Date) o2 );
 
     return 0;
   }

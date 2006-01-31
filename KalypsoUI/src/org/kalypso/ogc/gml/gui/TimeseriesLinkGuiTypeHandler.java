@@ -53,13 +53,13 @@ import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.TextType;
+import org.kalypso.template.featureview.Text;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -115,33 +115,33 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    */
   public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException
   {
-    final CompositeType composite = factory.createComposite();
+    final CompositeType composite = factory.createCompositeType();
 
     final GridLayout layout = factory.createGridLayout();
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 0 );
-    composite.setLayout( layout );
+    composite.setLayout( factory.createLayout( layout ) );
     composite.setStyle( "SWT.NONE" );
 
     // Text
-    final TextType text = factory.createText();
+    final Text text = factory.createText();
     text.setStyle( "SWT.NONE" );
     text.setProperty( propertyName );
 
-    final GridDataType textData = factory.createGridData();
+    final GridData textData = factory.createGridData();
     textData.setHorizontalAlignment( "GridData.BEGINNING" );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
-    text.setLayoutData( textData );
+    text.setLayoutData( factory.createLayoutData( textData ) );
 
     // Knopf
-    final ButtonType button = factory.createButton();
-    final GridDataType buttonData = factory.createGridData();
+    final Button button = factory.createButton();
+    final GridData buttonData = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( buttonData );
+    button.setLayoutData(factory.createLayoutData( buttonData ) );
 
     final List children = composite.getControl();
     children.add( text );

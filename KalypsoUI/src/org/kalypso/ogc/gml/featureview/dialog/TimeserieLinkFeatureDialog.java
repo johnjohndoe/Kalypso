@@ -31,14 +31,11 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -72,7 +69,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
-    final TimeseriesLinkType tslink = (TimeseriesLinkType)m_feature.getProperty( m_ftp.getName() );
+    final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp.getName() );
     dialog.setContext( m_workspace.getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() );
 
@@ -80,22 +77,15 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     FeatureChange fChange = null;
     if( open == Window.OK )
     {
-      final String href = (String)dialog.getInput();
+      final String href = (String) dialog.getInput();
       if( href == null )
         fChange = new FeatureChange( m_feature, m_ftp.getName(), null );
       else if( href != null && href.length() > 0 )
       {
         final ObjectFactory linkFactory = new ObjectFactory();
-        try
-        {
-          final TimeseriesLink link = linkFactory.createTimeseriesLink();
-          link.setHref( href );
-          fChange = new FeatureChange( m_feature, m_ftp.getName(), link );
-        }
-        catch( JAXBException e )
-        {
-          e.printStackTrace();
-        }
+        final TimeseriesLinkType link = linkFactory.createTimeseriesLinkType();
+        link.setHref( href );
+        fChange = new FeatureChange( m_feature, m_ftp.getName(), link );
       }
     }
     m_change = fChange;
@@ -114,7 +104,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel()
+  public String getLabel( )
   {
     return "...";
   }

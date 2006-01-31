@@ -77,6 +77,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ui.ImageProvider;
@@ -182,6 +183,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             .getMaxScaleDenominator() );
   }
 
+  @Override
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
@@ -189,6 +191,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     shell.setSize( 500, 450 );
   }
 
+  @Override
   protected void okPressed()
   {
     Object[] children = ( (FilterDialogTreeNode)mRoot.getChildren()[0] ).getChildren();
@@ -239,6 +242,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
   }
 
+  @Override
   protected void cancelPressed()
   {
     returnFilter = historyRule.getFilter();
@@ -260,6 +264,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     listenerList.add( FilterDialogListener.class, pl );
   }
 
+  @Override
   protected Control createDialogArea( Composite parent )
   {
     returnFilter = null;
@@ -313,7 +318,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     inputLabel.setLayoutData( inputLabelData );
 
     //  **** FIFTH ROW - TREE
-    final TableTree tree = new TableTree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
+    final Tree tree = new Tree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
         | SWT.BORDER );
     GridData tableTreeData = new GridData();
     tableTreeData.widthHint = 224;
@@ -687,7 +692,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
       if( child.getSubType() == FilterDialogTreeNode.LOCICAL_NOT )
       {
-        ArrayList arguments = new ArrayList();
+        ArrayList<Operation> arguments = new ArrayList<Operation>();
         Object[] innerElement =
         { ( (FilterDialogTreeNode)child.getChildren()[0] ) };
         Filter filter = generateFilter( innerElement );
@@ -700,7 +705,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_AND )
       {
-        ArrayList arguments = new ArrayList();
+        ArrayList<Operation> arguments = new ArrayList<Operation>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           Object[] innerElement =
@@ -716,7 +721,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_OR )
       {
-        ArrayList arguments = new ArrayList();
+        ArrayList<Operation> arguments = new ArrayList<Operation>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           Object[] innerElement =
@@ -1059,17 +1064,16 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   private void drawSpatialOpsTypeGroup( AbstractData data, final int subType )
   {
     String propertyName = null;
-    Object literal = null;
 
     if( data instanceof BinarySpatialData )
     {
       propertyName = ( (BinarySpatialData)data ).getGeometryPropertyName();
-      literal = ( (BinarySpatialData)data ).getGeomType();
+      ( (BinarySpatialData)data ).getGeomType();
     }
     else if( data instanceof BBoxSpatialData )
     {
       propertyName = ( (BBoxSpatialData)data ).getGeometryPropertyName();
-      literal = ( (BBoxSpatialData)data ).getGeomType();
+      ( (BBoxSpatialData)data ).getGeomType();
     }
     if( innerConfigureComposite != null )
       innerConfigureComposite.dispose();
@@ -1093,7 +1097,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    ArrayList labelStringItems = new ArrayList();
+    ArrayList<String> labelStringItems = new ArrayList<String>();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -1103,7 +1107,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = (String)labelStringItems.get( j );
+      items[j] = labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
     Button geomMapButton = new Button( configureGroup, SWT.RADIO );
@@ -1120,11 +1124,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           Button radio = (Button)o;
           m_drawGeomSelection = radio.getSelection();
           if( m_drawGeomSelection )
-          {
             MessageDialog.openInformation( getShell(), "Dummy Dialog", "Draw a Geometry in the Map" );
-          }
         }
-
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
@@ -1159,10 +1160,10 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             if( open == Window.OK )
             {
               IPath result = (IPath)dialog.getResult()[0];
-              if( result.getFileExtension().equals( "shp" ) )
-                ;
-              if( result.getFileExtension().equals( "gml" ) )
-                ;
+//              if( result.getFileExtension().equals( "shp" ) )
+//                ;
+//              if( result.getFileExtension().equals( "gml" ) )
+//                ;
               System.out.println( "test geometry aus file " + result );
             }
           }
@@ -1336,14 +1337,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    ArrayList labelStringItems = new ArrayList();
+    ArrayList<String> labelStringItems = new ArrayList<String>();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( !GeometryUtilities.isGeometry( ftp[i] ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = (String)labelStringItems.get( j );
+      items[j] = labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
 
@@ -1429,7 +1430,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    ArrayList labelStringItems = new ArrayList();
+    ArrayList<String> labelStringItems = new ArrayList<String>();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -1462,7 +1463,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = (String)labelStringItems.get( j );
+      items[j] = labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
 
@@ -1563,14 +1564,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    ArrayList labelStringItems = new ArrayList();
+    ArrayList<String> labelStringItems = new ArrayList<String>();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( !GeometryUtilities.isGeometry( ftp[i] ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = (String)labelStringItems.get( j );
+      items[j] = labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
 
@@ -1665,7 +1666,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    ArrayList labelStringItems = new ArrayList();
+    ArrayList<String> labelStringItems = new ArrayList<String>();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -1688,7 +1689,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = (String)labelStringItems.get( j );
+      items[j] = labelStringItems.get( j );
     propertyNameCombo.setItems( items );
     propertyNameCombo.setText( "..." );
     Label literalLabel = new Label( configureGroup, SWT.NULL );
@@ -2098,6 +2099,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       super( text );
     }
 
+    @Override
     public void run()
     {
       getErrorLabel().setText( "" );

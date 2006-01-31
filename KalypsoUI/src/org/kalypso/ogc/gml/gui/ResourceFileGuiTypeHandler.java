@@ -40,9 +40,9 @@ import org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -61,13 +61,13 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
 
   public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory ) throws JAXBException
   {
-    final ButtonType button = factory.createButton();
-    final GridDataType griddata = factory.createGridData();
+    final Button button = factory.createButton();
+    final GridData griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( griddata );
+    button.setLayoutData( factory.createGridData( griddata ) );
 
     return button;
   }

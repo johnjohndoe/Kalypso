@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.featureview;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -123,7 +123,7 @@ public class FeatureviewDialog extends Dialog
     final FeatureComposite featureComposite = m_featureComposite;
     final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
     {
-      protected Control createContents( final Composite scrollParent, int style )
+      protected Control createContents( final Composite scrollParent, final int style )
       {
         return (Composite)featureComposite.createControl( scrollParent, style );
       }

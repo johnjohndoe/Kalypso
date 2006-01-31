@@ -44,8 +44,6 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,11 +51,11 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.ObjectFactory;
-import org.kalypso.template.gismapview.GismapviewType.LayersType;
-import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
+import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
+import org.kalypso.template.types.LayerType;
+import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -92,14 +90,14 @@ public class GisTemplateMapModell implements IMapModell
     //    m_modell.addModellListener( m_scrabLayer );
     addTheme( scrabLayer );
 
-    final LayersType layerListType = gisview.getLayers();
-    final List layerList = layerListType.getLayer();
+    final Layers layerListType = gisview.getLayers();
+    final List<StyledLayerType> layerList = layerListType.getLayer();
 
-    final Layer activeLayer = (Layer)layerListType.getActive();
+    final LayerType activeLayer = (LayerType)layerListType.getActive();
 
     for( int i = 0; i < layerList.size(); i++ )
     {
-      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
+      final StyledLayerType layerType = layerList.get( i );
 
       final IKalypsoTheme theme = loadTheme( layerType, context );
       if( theme != null )
@@ -114,7 +112,7 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme( org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
+  public IKalypsoTheme addTheme( final StyledLayerType layer )
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -134,7 +132,7 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
+  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context )
   {
     if( "wms".equals( layerType.getLinktype() ) )
     {
@@ -155,13 +153,14 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName ) throws JAXBException
+  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName )
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
+    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory(); 
     //
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
-    final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
+    final Layers layersType = maptemplateFactory.createGismapviewLayers();
     if( bbox != null )
     {
       final ExtentType extentType = extentFac.createExtentType();
@@ -174,7 +173,7 @@ public class GisTemplateMapModell implements IMapModell
       gismapview.setExtent( extentType );
     }
 
-    final List layerList = layersType.getLayer();
+    final List<StyledLayerType> layerList = layersType.getLayer();
 
     gismapview.setLayers( layersType );
 
@@ -183,7 +182,7 @@ public class GisTemplateMapModell implements IMapModell
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
-      final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
+      final StyledLayerType layer = templateFactory.createStyledLayerType();
       if( layer == null ) // e.g. legend
         continue;
 

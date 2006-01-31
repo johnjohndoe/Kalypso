@@ -1,54 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.ui"
-   name="KalypsoUI"
-   version="1.0.0"
-   provider-name="kalypso.org"
-   class="org.kalypso.ui.KalypsoGisPlugin">
+<plugin>
 
-   <runtime>
-      <library name="KalypsoUi.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypsoservice_observation.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/kalypsoservice_calculation.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/KalypsoServiceCore.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/swtcalendar.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jcommon-0.9.6.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jfreechart-0.9.21.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.resources" export="true"/>
-      <import plugin="org.eclipse.ui.ide" export="true"/>
-      <import plugin="org.eclipse.ui.views" export="true"/>
-      <import plugin="org.eclipse.compare" export="true"/>
-      <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.eclipse.ui.workbench" export="true"/>    
-      <import plugin="org.eclipse.debug.ui" export="true"/>
-      <import plugin="org.kalypso.core" export="true"/>
-      <import plugin="org.kalypso.jwsdp" export="true"/>
-      <import plugin="org.kalypso.contribs.eclipseplatform"/>
-      <import plugin="org.kalypso.auth"/>
-      <import plugin="org.kalypso.metadoc"/>
-      <import plugin="org.kalypso.services.core.client"/>
-   </requires>
-   <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
-   <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
+     <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="calculationService" name="calculationService" schema="schema/org.kalypso.services.calculation.exsd"/>
 
    <extension

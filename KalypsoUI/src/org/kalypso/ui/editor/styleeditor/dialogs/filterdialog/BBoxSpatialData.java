@@ -32,18 +32,15 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class BBoxSpatialData extends AbstractSpatialData
 {
-
   /**
    * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
    */
-  public boolean verify() throws FilterDialogException
+  @Override
+  public boolean verify()
   {
     Object type = getGeomType();
     if( type instanceof GM_Envelope )

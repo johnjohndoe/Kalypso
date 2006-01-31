@@ -43,6 +43,7 @@ package org.kalypso.ui.editorLauncher;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -56,6 +57,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.LayerTypeUtilities;
@@ -97,6 +99,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   public IEditorInput createInput( final IFile file ) throws CoreException
   {
     final org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
+    final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
     try
     {
       final ObjectFactory typesFac = new ObjectFactory();
@@ -106,7 +109,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final Gistreeview gistreeview = gisViewFact.createGistreeview();
       gistreeview.setInput( type );
 
-      final Marshaller marshaller = gisViewFact.createMarshaller();
+      final Marshaller marshaller = jc.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();

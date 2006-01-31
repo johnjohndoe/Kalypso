@@ -69,7 +69,7 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.proxy.DataBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
 /**
@@ -239,7 +239,7 @@ public class ServiceRepositoryObservation implements IObservation
     try
     {
       // save zml
-      final ObservationType obst = ZmlFactory.createXML( obs, null );
+      final Observation obst = ZmlFactory.createXML( obs, null );
 
       final File tmpFile = File.createTempFile( "towards-server", "zml" );
       tmpFile.deleteOnExit();

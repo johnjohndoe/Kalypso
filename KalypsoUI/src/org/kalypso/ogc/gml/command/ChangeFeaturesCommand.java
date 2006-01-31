@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
@@ -117,7 +118,7 @@ public class ChangeFeaturesCommand implements ICommand
 
   private void applyChanges( final FeatureChange[] changes )
   {
-    final List changedFeaturesList = new ArrayList();
+    final List<Feature> changedFeaturesList = new ArrayList<Feature>();
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];

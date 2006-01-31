@@ -28,7 +28,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
+import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
 import org.kalypso.contribs.java.util.Arrays;

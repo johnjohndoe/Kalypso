@@ -87,7 +87,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gistableview.GistableviewType.LayerType;
+import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
@@ -325,7 +325,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       m_outlinePage.setMapModell( m_mapModell );
   }
 
-  public void showProperties( final LayerType layer )
+  public void showProperties( final Layer layer )
   {
     // TODO
     MessageDialog

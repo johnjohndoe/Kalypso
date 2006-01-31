@@ -29,8 +29,6 @@
  */
 package org.kalypso.ogc.gml.gui;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -39,9 +37,9 @@ import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -73,16 +71,16 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory ) throws JAXBException
+  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory )
   {
 
-    final ButtonType button = factory.createButton();
-    final GridDataType griddata = factory.createGridData();
+    final Button button = factory.createButton();
+    final GridData griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( griddata );
+    button.setLayoutData( factory.createLayoutData( griddata ) );
 
     return button;
   }
