@@ -37,7 +37,7 @@ public class TsInfoItem implements IRepositoryItem
     m_map = new Properties();
     m_map.putAll( map );
 
-    m_rep = (WiskiRepository)m_group.getRepository();
+    m_rep = (WiskiRepository) m_group.getRepository();
   }
 
   /**
@@ -57,7 +57,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_map.getProperty( "tsinfo_name" );
   }
@@ -66,7 +66,7 @@ public class TsInfoItem implements IRepositoryItem
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return getName();
   }
@@ -78,17 +78,17 @@ public class TsInfoItem implements IRepositoryItem
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
-    //return m_rep.getIdentifier() + getName();
-    
+    // return m_rep.getIdentifier() + getName();
+
     return m_rep.getIdentifier() + getWiskiSuperGroupName() + "." + getWiskiGroupName() + "." + getWiskiStationNo();
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return m_group;
   }
@@ -96,7 +96,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return false;
   }
@@ -104,7 +104,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     return IRepositoryItem.EMPTY_ARRAY;
   }
@@ -112,7 +112,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     return m_rep;
   }
@@ -133,12 +133,12 @@ public class TsInfoItem implements IRepositoryItem
     return null;
   }
 
-  String getWiskiUnit()
+  String getWiskiUnit( )
   {
     return m_map.getProperty( "tsinfo_unitname", "<?>" );
   }
 
-  String getWiskiType()
+  String getWiskiType( )
   {
     return m_map.getProperty( "parametertype_name", "<?>" );
   }
@@ -146,28 +146,28 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the internal id which is used within wiski. This id should not be used "outside of the program code"
    */
-  Long getWiskiId()
+  Long getWiskiId( )
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id", "-1" ) );
   }
-  
+
   /**
    * @return the internal id of the parameter
    */
-  Long getWiskiParameterId()
+  Long getWiskiParameterId( )
   {
     return Long.valueOf( m_map.getProperty( "stationparameter_id", "-1" ) );
   }
 
-  String getWiskiIdAsString()
+  String getWiskiIdAsString( )
   {
     return m_map.getProperty( "tsinfo_id", "<?>" );
   }
 
-  String getWiskiDescription()
+  String getWiskiDescription( )
   {
     final String noValue = "<kein Eintrag:";
-    
+
     final StringBuffer bf = new StringBuffer();
     bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
     bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
@@ -180,7 +180,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return wiski internal station id
    */
-  String getWiskiStationId()
+  String getWiskiStationId( )
   {
     return m_map.getProperty( "station_id", "<?>" );
   }
@@ -190,7 +190,7 @@ public class TsInfoItem implements IRepositoryItem
    * <p>
    * This represents the third part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
    */
-  String getWiskiStationNo()
+  String getWiskiStationNo( )
   {
     return m_map.getProperty( "station_no", "<?>" );
   }
@@ -200,12 +200,12 @@ public class TsInfoItem implements IRepositoryItem
    * <p>
    * This represents the second part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
    */
-  String getWiskiGroupName()
+  String getWiskiGroupName( )
   {
     return m_group.getName();
   }
-  
-  String getWiskiStationName()
+
+  String getWiskiStationName( )
   {
     return m_map.getProperty( "station_name", "<?>" );
   }
@@ -215,22 +215,12 @@ public class TsInfoItem implements IRepositoryItem
    * <p>
    * This represents the first part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
    */
-  String getWiskiSuperGroupName()
+  String getWiskiSuperGroupName( )
   {
-    try
-    {
-      return m_group.getParent().getName();
-    }
-    catch( final RepositoryException e )
-    {
-      // can occur in extreme situations, so just print stack trace
-      e.printStackTrace();
-
-      return "<FEHLER IN SCHNITTSTELLE>";
-    }
+    return m_group.getParent().getName();
   }
 
-  int getWiskiDistUnitAsCalendarField()
+  int getWiskiDistUnitAsCalendarField( )
   {
     final String strWiskiUnit = m_map.getProperty( "tsinfo_distunit" );
     if( strWiskiUnit == null )
@@ -252,12 +242,11 @@ public class TsInfoItem implements IRepositoryItem
     }
   }
 
-  int getWiskiDistValue()
+  int getWiskiDistValue( )
   {
     final String strWiskiValue = m_map.getProperty( "tsinfo_distcount" );
     if( strWiskiValue == null )
-      throw new IllegalStateException(
-          "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
+      throw new IllegalStateException( "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
 
     return Integer.valueOf( strWiskiValue ).intValue();
   }
@@ -267,16 +256,16 @@ public class TsInfoItem implements IRepositoryItem
    */
   TsInfoItem findSibling( final String parameterName ) throws RepositoryException
   {
-    final SuperGroupItem supergroup = (SuperGroupItem)m_group.getParent();
+    final SuperGroupItem supergroup = (SuperGroupItem) m_group.getParent();
     final GroupItem group = supergroup.findGroup( parameterName );
-    
+
     return group.findTsInfo( "station_no", getWiskiStationNo() );
   }
-  
+
   /**
    * @return true if the container is designed for forecasts
    */
-  boolean isForecast()
+  boolean isForecast( )
   {
     return getWiskiSuperGroupName().indexOf( WiskiUtils.getProperty( "FORECAST_SUPERGROUP" ) ) != -1;
   }
