@@ -78,7 +78,7 @@ public class ValueFilterCreator implements IFilterCreator
 
     final ValueFilterType ft = (ValueFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
 
     final ValueFilter filter = new ValueFilter();
 

@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.zml.request.RequestType;
+import org.kalypso.zml.request.Request;
 
 /**
  * Provides utility methods for manipulating the URLs designed to be used as Zml-Identifiers between kalypso client and
@@ -235,7 +235,7 @@ public final class ZmlURL
   {
     try
     {
-      RequestType requestType = RequestFactory.parseRequest( href );
+      Request requestType = RequestFactory.parseRequest( href );
       if( requestType == null )
         requestType = RequestFactory.OF.createRequest();
       // the original request parameters have higher priority

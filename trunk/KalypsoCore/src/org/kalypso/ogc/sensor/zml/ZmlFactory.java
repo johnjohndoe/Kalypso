@@ -59,6 +59,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -71,6 +72,7 @@ import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -99,10 +101,11 @@ import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
-import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.AxisType.ValueArrayType;
-import org.kalypso.zml.AxisType.ValueLinkType;
-import org.kalypso.zml.request.RequestType;
+import org.kalypso.zml.Observation;
+import org.kalypso.zml.AxisType.ValueArray;
+import org.kalypso.zml.AxisType.ValueLink;
+import org.kalypso.zml.request.Request;
+import org.kalypso.zml.request.Request;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
 
@@ -122,6 +125,7 @@ import org.xml.sax.InputSource;
 public class ZmlFactory
 {
   private final static ObjectFactory OF = new ObjectFactory();
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -402,7 +406,7 @@ public class ZmlFactory
       return baseObs;
 
     // check if a request based proxy can be created
-    final RequestType requestType = RequestFactory.parseRequest( href );
+    final Request requestType = RequestFactory.parseRequest( href );
     if( requestType != null )
       return new RequestObservationProxy( ObservationRequest.createWith( requestType ), baseObs );
 
@@ -429,12 +433,12 @@ public class ZmlFactory
   private static IZmlValues createValues( final URL context, final AxisType axisType, final IParser parser,
       final String data ) throws ParserException, MalformedURLException, IOException
   {
-    final ValueArrayType va = axisType.getValueArray();
+    final ValueArray va = axisType.getValueArray();
     if( va != null )
       return new ZmlArrayValues( va, parser );
 
     // loader for linked values, here we specify where base location is
-    final ValueLinkType vl = axisType.getValueLink();
+    final ValueLink vl = axisType.getValueLink();
     if( vl != null )
       return new ZmlLinkValues( vl, parser, context, data );
 
@@ -444,7 +448,7 @@ public class ZmlFactory
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static ObservationType createXML( final IObservation obs, final IRequest args ) throws FactoryException
+  public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     return createXML( obs, args, null );
   }
@@ -455,7 +459,7 @@ public class ZmlFactory
    * @param timezone
    *          the timezone into which dates should be converted before serialized
    */
-  public static ObservationType createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
+  public static Observation createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
       throws FactoryException
   {
     try
@@ -463,7 +467,7 @@ public class ZmlFactory
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
 
-      final ObservationType obsType = OF.createObservation();
+      final Observation obsType = OF.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
@@ -516,7 +520,7 @@ public class ZmlFactory
           axisType.setType( axes[i].getType() );
           axisType.setKey( axes[i].isKey() );
 
-          final ValueArrayType valueArrayType = OF.createAxisTypeValueArrayType();
+          final ValueArray valueArrayType = OF.createAxisTypeValueArray();
 
           valueArrayType.setSeparator( ";" );
           valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
@@ -607,7 +611,7 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller() throws JAXBException
   {
-    final Marshaller marshaller = OF.createMarshaller();
+    final Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     return marshaller;
@@ -615,7 +619,7 @@ public class ZmlFactory
 
   private static Unmarshaller getUnmarshaller() throws JAXBException
   {
-    final Unmarshaller unmarshaller = OF.createUnmarshaller();
+    final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
     return unmarshaller;
   }
@@ -641,7 +645,7 @@ public class ZmlFactory
     OutputStream outs = null;
     try
     {
-      final ObservationType xml = createXML( obs, null );
+      final Observation xml = createXML( obs, null );
 
       outs = new FileOutputStream( file );
 

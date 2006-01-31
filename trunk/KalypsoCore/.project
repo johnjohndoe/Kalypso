@@ -10,7 +10,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Core XML-binding.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/XML-binding.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

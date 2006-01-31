@@ -11,7 +11,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvTargetType;
-import org.kalypso.gml.util.CsvTargetType.ColumnType;
+import org.kalypso.gml.util.CsvTargetType.Column;
 import org.kalypso.ogc.gml.convert.target.ITargetHandler;
 import org.kalypso.ogc.gml.serialize.CsvWriterVisitor;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -54,7 +54,7 @@ public class CsvTargetHandler implements ITargetHandler
       final Map properties = new LinkedHashMap();
       for( final Iterator colIt = columnList.iterator(); colIt.hasNext(); )
       {
-        final CsvTargetType.ColumnType column = (ColumnType)colIt.next();
+        final Column column = (Column)colIt.next();
         final String property = column.getValue();
         final String def = column.getDefault();
         final String label = column.getLabel() == null ? property : column.getLabel();

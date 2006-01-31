@@ -66,7 +66,7 @@ public class InterpolationFilterCreator implements IFilterCreator
 
     final InterpolationFilterType ft = (InterpolationFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
 
     final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
         .getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus(), ft.isFillLastWithValid() );

@@ -48,8 +48,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -59,8 +57,8 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
@@ -76,10 +74,6 @@ public class JMSchemaTest extends TestCase
       MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
     }
     catch( TypeRegistryException e )
-    {
-      e.printStackTrace();
-    }
-    catch( JAXBException e )
     {
       e.printStackTrace();
     }
@@ -279,10 +273,10 @@ public class JMSchemaTest extends TestCase
   private String toString( final EnumerationFeatureTypeProperty eftp )
   {
     String result = "  Enumeration [";
-    Object[] enum = eftp.getEnumeration();
+    Object[] enumer = eftp.getEnumeration();
 
-    for( int i = 0; i < enum.length; i++ )
-      result = result + " " + enum[i].toString();
+    for( int i = 0; i < enumer.length; i++ )
+      result = result + " " + enumer[i].toString();
 
     return result + "]";
   }
