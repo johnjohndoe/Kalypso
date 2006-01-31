@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Validator;
@@ -65,10 +66,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType;
+import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType.MapType;
+import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -85,6 +86,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 {
+  private final static ObjectFactory OF = new ObjectFactory();
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private static final class MetGebGewichtung
   {
     private final double m_weight;
@@ -108,19 +112,16 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     }
   }
 
-  /** gebietId -> List&lt;MetGebGewichtung&gt; */
-  private final Map m_metGebHash = new HashMap();
+  private final Map<String, List<MetGebGewichtung>> m_metGebHash = new HashMap<String, List<MetGebGewichtung>>();
 
-  /** gebietId -> TargetType */
-  private Map m_dwdTargetMap = new HashMap();
+  private Map<String, Target> m_dwdTargetMap = new HashMap<String, Target>();
 
   private String m_link;
 
   private URL m_dwd2zmlUrl;
 
-  private final ObjectFactory m_dwdFactory = new ObjectFactory();
 
-  private DwdzmlConfType m_dwdConf;
+  private DwdzmlConf m_dwdConf;
 
   private String m_dwd2ZmlTargetLink;
 
@@ -150,7 +151,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
     try
     {
-      m_dwdConf = m_dwdFactory.createDwdzmlConf();
+      m_dwdConf = OF.createDwdzmlConf();
       // TODO: check these values
       m_dwdConf.setDefaultStatusValue( 1 );
       m_dwdConf.setDwdKey( 424 );
@@ -163,7 +164,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       for( int i = 0, max = csv.getLines(); i < max; i++ )
       {
         // Gebietsniederschlagsgewichtung sammeln
-        final List weights = new ArrayList( 4 );
+        final List<MetGebGewichtung> weights = new ArrayList<MetGebGewichtung>( 4 );
         weights.add( new MetGebGewichtung( csv, i, 4 ) );
         weights.add( new MetGebGewichtung( csv, i, 6 ) );
         weights.add( new MetGebGewichtung( csv, i, 8 ) );
@@ -174,8 +175,8 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
         m_metGebHash.put( id, weights );
 
         // DWD Rasterzellen sammeln
-        final TargetType target = m_dwdFactory.createDwdzmlConfTypeTargetType();
-        final List mapList = target.getMap();
+        final Target target = OF.createDwdzmlConfTarget();
+        final List<Target.Map> mapList = target.getMap();
         createMapType( mapList, csv.getItem( i, 17 ) );
         createMapType( mapList, csv.getItem( i, 18 ) );
         createMapType( mapList, csv.getItem( i, 19 ) );
@@ -188,20 +189,15 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "URL konnte nicht erzeugt werden.\nPath = "
           + metGebPath + "\ncontext = " + context, e ) );
     }
-    catch( final JAXBException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Fehler beim Initialisieren der dwd2zml Binding-Klassen." ) );
-    }
   }
 
-  private void createMapType( final List mapList, final String cellPostStr ) throws JAXBException
+  private void createMapType( final List<Target.Map> mapList, final String cellPostStr )
   {
     final int cellPos = Integer.parseInt( cellPostStr );
     if( cellPos == 0 )
       return;
 
-    final MapType mapType = m_dwdFactory.createDwdzmlConfTypeTargetTypeMapType();
+    final Target.Map mapType = OF.createDwdzmlConfTargetMap();
     // immer Faktor 1.0 im Saale-Modell
     mapType.setFactor( 1 );
     mapType.setCellPos( cellPos );
@@ -230,10 +226,10 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       System.out.println( "Kein DWD-Target-Link (" + m_dwd2ZmlTargetLink + ") für Feature mit ID: " + f.getId() );
 
     // target types are already created, just set the target link and add it into the dwdConf
-    final TargetType target = (TargetType)m_dwdTargetMap.get( pnr );
+    final Target target = m_dwdTargetMap.get( pnr );
     target.setTargetZR( targetLink.getHref() );
 
-    final List targetList = m_dwdConf.getTarget();
+    final List<Target> targetList = m_dwdConf.getTarget();
     targetList.add( target );
   }
 
@@ -244,7 +240,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     final FeatureType elementType = ftp.getAssociationFeatureType();
 
     // put values into gml
-    final List metGebList = (List)m_metGebHash.get( pnr );
+    final List metGebList = m_metGebHash.get( pnr );
     if( metGebList == null )
     {
       System.out.println( "Keine Faktoren für PNR: " + pnr );
@@ -313,10 +309,10 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     OutputStreamWriter writer = null;
     try
     {
-      final Validator validator = m_dwdFactory.createValidator();
+      final Validator validator = JC.createValidator();
       validator.validate( m_dwdConf );
 
-      final Marshaller marshaller = m_dwdFactory.createMarshaller();
+      final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       writer = UrlResolverSingleton.getDefault().createWriter( m_dwd2zmlUrl );

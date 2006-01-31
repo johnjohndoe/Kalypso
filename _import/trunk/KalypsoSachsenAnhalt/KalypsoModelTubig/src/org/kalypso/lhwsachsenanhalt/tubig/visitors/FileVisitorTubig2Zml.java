@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -131,7 +131,7 @@ public class FileVisitorTubig2Zml implements FileVisitor
     IObservation obsZml;
     final FileOutputStream fleOutStream;
     final File fleZml;
-    final ObservationType observationType;
+    final Observation observationType;
 
     OutputStreamWriter outStreamWrtr;
     ZmlInfo info;

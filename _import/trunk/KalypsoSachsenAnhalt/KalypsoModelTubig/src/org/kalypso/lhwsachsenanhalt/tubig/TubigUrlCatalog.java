@@ -29,6 +29,7 @@
  */
 package org.kalypso.lhwsachsenanhalt.tubig;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -38,7 +39,8 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public final class TubigUrlCatalog extends AbstractUrlCatalog
 {
-  protected final void fillCatalog( final Class myClass, final Map catalog )
+  @Override
+  protected final void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
     catalog.put( "org.kalypso.tubig.modell", myClass.getResource( "schemata/tubigmodell.xsd" ) );
     catalog.put( "org.kalypso.tubig.pegel", myClass.getResource( "schemata/pegel.xsd" ) );

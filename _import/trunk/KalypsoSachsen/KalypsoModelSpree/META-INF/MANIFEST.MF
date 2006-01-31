@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelSpree
+Bundle-SymbolicName: org.kalypso.model.spree; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: kalypsoModelSpree.jar
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.commons,
+ org.kalypso.core,
+ org.kalypso.jwsdp,
+ org.kalypso.services.calculation.local
+Eclipse-AutoStart: true

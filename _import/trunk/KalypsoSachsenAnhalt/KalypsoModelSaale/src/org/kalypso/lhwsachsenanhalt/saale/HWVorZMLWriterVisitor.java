@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -88,7 +88,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
    * Maps &lt;linkProperty&gt;#&lt;obsID&gt; to &lt;metadata&gt;
    * </p>
    */
-  private Map m_metadataMap = new HashMap();
+  private Map<String, MetadataList> m_metadataMap = new HashMap<String, MetadataList>();
 
   public HWVorZMLWriterVisitor( final String linkProperty, final String dataAxis, final IUrlResolver resolver,
       final URL context, final Date currentTime )
@@ -106,7 +106,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final TimeseriesLink link = (TimeseriesLink)f.getProperty( m_linkProperty );
+    final TimeseriesLinkType link = (TimeseriesLinkType)f.getProperty( m_linkProperty );
     if( link == null )
     {
       m_logger.warning( "Link '" + m_linkProperty + "' nicht gesetzt in Feature: " + f.getId() );
