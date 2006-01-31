@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.Model2D"
-   name="KalypsoModel2DCalcJob"
-   version="1.0.0">
-   <runtime>
-      <library name="kalypso2DCalcJob.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.services.calculation.local"/>
-   </requires>
-   <extension
+<plugin>
+     <extension
          id="Kalypso2dCalcJob"
          name="Kalypso2dCalcJob"
          point="org.kalypso.services.calculation.local.calcJob">
