@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoDWD
+Bundle-SymbolicName: org.kalypso.dwd; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: lib/servlet-api.jar
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: javax.servlet,
+ javax.servlet.http,
+ javax.servlet.resources,
+ org.kalypso.dwd,
+ org.kalypso.dwd.dwdzml,
+ org.kalypso.dwd.schema,
+ org.kalypso.dwd.servlet.dwdfilecopy
+Require-Bundle: org.kalypso.deegree;visibility:=reexport,
+ org.kalypso.commons;visibility:=reexport,
+ org.kalypso.jwsdp;visibility:=reexport,
+ org.kalypso.core,
+ org.eclipse.ant.core
+Eclipse-AutoStart: true

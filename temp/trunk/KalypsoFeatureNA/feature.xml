@@ -9,9 +9,7 @@
       ws="win32"
       nl="de,en,sh_YU,sh"
       arch="x86"
-      image="kalypso32.gif"
-      primary="true">
-
+      image="kalypso32.gif">
    <install-handler/>
 
    <description>
@@ -19,11 +17,11 @@
    </description>
 
    <copyright url="copyright.html">
-      
+      Copyright 2004 - 2006 kalypso.org
    </copyright>
 
    <license url="licence.html">
-      
+      LGPL
    </license>
 
    <requires>
@@ -180,12 +178,14 @@
 
    <plugin
          id="org.kalypso.services.core"
+         unpack="false"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
 
    <plugin
          id="org.kalypso.services.user"
+         unpack="false"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -216,6 +216,7 @@
 
    <plugin
          id="org.kalypso.services.metadoc"
+         unpack="false"
          download-size="0"
          install-size="0"
          version="1.0.0"/>

@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
@@ -46,8 +47,9 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType;
-import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType.MapType;
+import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
+import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -63,20 +65,19 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 
 /**
  * @see org.kalypso.dwd.DWDTask
- * 
  * @author doemming
  */
 public class DWDTaskDelegate
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private Properties m_metadata = null;
 
-  public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl,
-      final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter,
-      final Properties metadata ) throws Exception
+  public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl, final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter, final Properties metadata ) throws Exception
   {
     m_metadata = metadata;
     logger.log( "DWD-task: generates ZML files from DWD-forecast" );
@@ -85,9 +86,8 @@ public class DWDTaskDelegate
     logger.log( " context for targets (zml-files): " + targetContext );
     logger.log( " unmarshall dwd2zml configuration ..." );
 
-    final ObjectFactory dwd2ZmlFac = new ObjectFactory();
-    final Unmarshaller unmarshaller = dwd2ZmlFac.createUnmarshaller();
-    final DwdzmlConf conf = (DwdzmlConf)unmarshaller.unmarshal( dwd2zmlConfUrl );
+    final Unmarshaller unmarshaller = JC.createUnmarshaller();
+    final DwdzmlConf conf = (DwdzmlConf) unmarshaller.unmarshal( dwd2zmlConfUrl );
     final String axisType = DWDRasterHelper.getAxisTypeForDWDKey( conf.getDwdKey() );
     logger.log( " type of ZML to generate" + axisType );
 
@@ -115,7 +115,7 @@ public class DWDTaskDelegate
     // iterate zml to generate
     for( Iterator iter = targetList.iterator(); iter.hasNext(); )
     {
-      final TargetType targetZML = (TargetType)iter.next();
+      final Target targetZML = (Target) iter.next();
       final String targetZMLref = targetZML.getTargetZR();
       final File resultFile = new File( targetContext, targetZMLref );
 
@@ -135,7 +135,7 @@ public class DWDTaskDelegate
         double value = 0;
         for( Iterator iterator = map.iterator(); iterator.hasNext(); )
         {
-          final MapType mapping = (MapType)iterator.next();
+          final Map mapping = (Map) iterator.next();
           final int cellPos = mapping.getCellPos();
           final double factor = mapping.getFactor();
           value += factor * obsRaster.getValueFor( date, cellPos );
@@ -150,21 +150,15 @@ public class DWDTaskDelegate
       {
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
         final String title = TimeserieUtils.getName( axisType );
-        final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils
-            .getDataClass( axisType ), false, true );
+        final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils.getDataClass( axisType ), false, true );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
-        final IAxis[] axis = new IAxis[]
-        {
-            dateAxis,
-            valueAxis,
-            statusAxis };
+        final IAxis[] axis = new IAxis[] { dateAxis, valueAxis, statusAxis };
 
         final ITuppleModel tupleModel = new SimpleTuppleModel( axis, tupleData );
 
         final MetadataList metadataList = new MetadataList();
 
-        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList,
-            axis, tupleModel );
+        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList, axis, tupleModel );
 
         final IObservation forecastObservation;
         // generate href from filter and intervall
@@ -190,13 +184,9 @@ public class DWDTaskDelegate
         final ForecastFilter fc = new ForecastFilter();
         final IObservation[] srcObs;
         if( targetObservation != null )
-          srcObs = new IObservation[]
-          {
-              targetObservation,
-              forecastObservation };
+          srcObs = new IObservation[] { targetObservation, forecastObservation };
         else
-          srcObs = new IObservation[]
-          { forecastObservation };
+          srcObs = new IObservation[] { forecastObservation };
 
         // important: the forecast-filter is based on the target-obs (if existing)
         // in order to keep its metadata & co
@@ -213,7 +203,7 @@ public class DWDTaskDelegate
         // add all the metadata from task-parameters
         fc.getMetadataList().putAll( m_metadata );
         //
-        final ObservationType observationType = ZmlFactory.createXML( fc, null );
+        final Observation observationType = ZmlFactory.createXML( fc, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
