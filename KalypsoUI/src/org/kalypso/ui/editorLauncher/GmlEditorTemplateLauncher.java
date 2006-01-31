@@ -53,6 +53,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
@@ -116,7 +117,9 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file
+//      final String name = "<unbekannt>.gmv";
+      final String name = FileUtilities.nameWithoutExtension( file.getName() ) + ".gmv";
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( name, string, file
           .getFullPath() ) );
 
       return input;

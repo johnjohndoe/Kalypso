@@ -386,8 +386,14 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   protected void setDocumentTitle( final IStorageEditorInput input )
   {
     setPartName( input.getName() );
-    if( input instanceof IFileEditorInput )
-      setContentDescription( ( (IFileEditorInput)input ).getFile().getFullPath().toOSString() );
+    try
+    {
+      setContentDescription( input.getStorage().getFullPath().toOSString() );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
 }
