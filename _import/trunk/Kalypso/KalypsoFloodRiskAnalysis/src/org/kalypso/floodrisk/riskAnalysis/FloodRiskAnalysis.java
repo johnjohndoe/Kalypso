@@ -98,11 +98,11 @@ public class FloodRiskAnalysis
           if( riskClassTable.containsKey( landuseKey ) )
           {
             Hashtable intervals = (Hashtable)riskClassTable.get( landuseKey );
-            Enumeration enum = intervals.keys();
-            while( enum.hasMoreElements() )
+            final Enumeration keys = intervals.keys();
+            while( keys.hasMoreElements() )
             {
-              Integer key = (Integer)enum.nextElement();
-              Interval interval = (Interval)intervals.get( key );
+              final Integer key = (Integer)keys.nextElement();
+              final Interval interval = (Interval)intervals.get( key );
               if( interval.contains( annualDamage ) )
               {
                 riskClass = key;

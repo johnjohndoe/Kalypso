@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.floodrisk.process.ProcessExtension;
-import org.kalypso.model.xml.ModeldataType;
+import org.kalypso.model.xml.Modeldata;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -69,7 +69,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ProcessJob extends Job
 {
-  private ModeldataType m_modelData;
+  private Modeldata m_modelData;
 
   private IProject m_project;
 
@@ -87,7 +87,7 @@ public class ProcessJob extends Job
    *          information of process
    * @param lock
    */
-  public ProcessJob( final ModeldataType modelData, final IProject project, final ProcessExtension extension,
+  public ProcessJob( final Modeldata modelData, final IProject project, final ProcessExtension extension,
       final ILock lock )
   {
     super( "Berechne: " + modelData.getTypeID() );
@@ -102,6 +102,7 @@ public class ProcessJob extends Job
    * 
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public IStatus run( IProgressMonitor monitor )
   {
 

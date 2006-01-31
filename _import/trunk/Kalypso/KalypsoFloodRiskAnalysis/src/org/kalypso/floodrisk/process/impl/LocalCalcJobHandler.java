@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.xml.ModeldataType;
+import org.kalypso.model.xml.Modeldata;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.proxy.CalcJobClientBean;
 import org.kalypso.services.proxy.CalcJobInfoBean;
@@ -61,6 +61,8 @@ import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
+ * TODO: refactor this with the real local caluclation service
+ * 
  * LocalCalcJobHandler
  * <p>
  * Handler for local calculation jobs
@@ -73,7 +75,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class LocalCalcJobHandler
 {
-  private ModeldataType m_modelData;
+  private Modeldata m_modelData;
 
   private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
       .getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
@@ -89,7 +91,7 @@ public class LocalCalcJobHandler
    * @param calcService
    *          LocalCalculationService
    */
-  public LocalCalcJobHandler( final ModeldataType modelData, final ICalculationService calcService )
+  public LocalCalcJobHandler( final Modeldata modelData, final ICalculationService calcService )
   {
     m_modelData = modelData;
     m_calcService = calcService;
@@ -242,7 +244,7 @@ public class LocalCalcJobHandler
     CalcJobClientBean[] input = new CalcJobClientBean[inputList.size()];
     for( int i = 0; i < inputList.size(); i++ )
     {
-      ModeldataType.InputType inputItem = (ModeldataType.InputType)inputList.get( i );
+      final Modeldata.Input inputItem = (Modeldata.Input)inputList.get( i );
 
       String inputPath = inputItem.getPath();
       if( !inputItem.isRelativeToCalcCase() )
@@ -270,7 +272,7 @@ public class LocalCalcJobHandler
     CalcJobClientBean[] output = new CalcJobClientBean[outputList.size()];
     for( int i = 0; i < outputList.size(); i++ )
     {
-      ModeldataType.OutputType outputItem = (ModeldataType.OutputType)outputList.get( i );
+      Modeldata.Output outputItem = (Modeldata.Output)outputList.get( i );
 
       String outputPath = outputItem.getPath();
       String resultPath = outputPath;

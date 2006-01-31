@@ -52,10 +52,12 @@ import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -68,19 +70,18 @@ import org.kalypso.services.calculation.service.impl.ICalcJobFactory;
 import org.kalypso.services.calculation.service.impl.ModelspecData;
 
 /**
- * LocalCalculationService
+ * TODO: refactor this with the real local calculation service LocalCalculationService
  * <p>
  * 
- * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService
- * 
- * created by
- * 
+ * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService created by
  * @author Nadja Peiler (19.05.2005)
  */
 public class LocalCalculationService implements ICalculationService
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   /** Vector of {@link LocalCalcJobThread}s */
-  private final Vector m_threads = new Vector();
+  private final Vector<LocalCalcJobThread> m_threads = new Vector<LocalCalcJobThread>();
 
   private Timer m_timer;
 
@@ -94,7 +95,7 @@ public class LocalCalculationService implements ICalculationService
 
   private final Unmarshaller m_unmarshaller;
 
-  private final Map m_modelspecMap = new HashMap();
+  private final Map<String, ModelspecData> m_modelspecMap = new HashMap<String, ModelspecData>();
 
   /**
    * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService#QueuedCalcJobService(org.kalypso.services.calculation.service.impl.ICalcJobFactory,
@@ -112,7 +113,7 @@ public class LocalCalculationService implements ICalculationService
 
     try
     {
-      m_unmarshaller = new ObjectFactory().createUnmarshaller();
+      m_unmarshaller = JC.createUnmarshaller();
     }
     catch( final JAXBException e )
     {
@@ -123,25 +124,23 @@ public class LocalCalculationService implements ICalculationService
   /**
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion() throws RemoteException
+  public int getServiceVersion( )
   {
     return 0;
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.service.ICalculationService#getJobTypes()
    */
-  public synchronized final String[] getJobTypes()
+  public synchronized final String[] getJobTypes( )
   {
     return m_calcJobFactory.getSupportedTypes();
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.service.ICalculationService#getJobs()
    */
-  public synchronized CalcJobInfoBean[] getJobs() throws CalcJobServiceException
+  public synchronized CalcJobInfoBean[] getJobs( )
   {
     synchronized( m_threads )
     {
@@ -150,7 +149,7 @@ public class LocalCalculationService implements ICalculationService
 
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
       {
-        final LocalCalcJobThread cjt = (LocalCalcJobThread)jIt.next();
+        final LocalCalcJobThread cjt = (LocalCalcJobThread) jIt.next();
         jobBeans[count] = cjt.getJobBean();
       }
 
@@ -168,11 +167,9 @@ public class LocalCalculationService implements ICalculationService
   }
 
   /**
-   * 
    * @param jobID
    * @return LocalCalcJobThread for the given jobID
    * @throws CalcJobServiceException
-   *  
    */
   private LocalCalcJobThread findJobThread( final String jobID ) throws CalcJobServiceException
   {
@@ -180,7 +177,7 @@ public class LocalCalculationService implements ICalculationService
     {
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final LocalCalcJobThread cjt = (LocalCalcJobThread)jIt.next();
+        final LocalCalcJobThread cjt = (LocalCalcJobThread) jIt.next();
 
         if( cjt.getJobBean().getId().equals( jobID ) )
           return cjt;
@@ -195,8 +192,7 @@ public class LocalCalculationService implements ICalculationService
    *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
-      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
+  public CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     LocalCalcJobThread cjt = null;
     synchronized( m_threads )
@@ -232,14 +228,15 @@ public class LocalCalculationService implements ICalculationService
     return cjt == null ? null : cjt.getJobBean();
   }
 
-  private void startScheduling()
+  private void startScheduling( )
   {
     if( m_timer == null )
     {
       m_timer = new Timer();
       final TimerTask timerTask = new TimerTask()
       {
-        public void run()
+        @Override
+        public void run( )
         {
           scheduleJobs();
         }
@@ -248,7 +245,7 @@ public class LocalCalculationService implements ICalculationService
     }
   }
 
-  public void scheduleJobs()
+  public void scheduleJobs( )
   {
     synchronized( m_threads )
     {
@@ -257,7 +254,7 @@ public class LocalCalculationService implements ICalculationService
       int waitingCount = 0;
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final LocalCalcJobThread cjt = (LocalCalcJobThread)jIt.next();
+        final LocalCalcJobThread cjt = (LocalCalcJobThread) jIt.next();
         if( cjt.isAlive() )
           runningCount++;
 
@@ -281,7 +278,7 @@ public class LocalCalculationService implements ICalculationService
       // start one waiting job, if maximum is not reached
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final LocalCalcJobThread cjt = (LocalCalcJobThread)jIt.next();
+        final LocalCalcJobThread cjt = (LocalCalcJobThread) jIt.next();
 
         final CalcJobInfoBean jobBean = cjt.getJobBean();
         if( jobBean.getState() == ICalcServiceConstants.WAITING )
@@ -293,7 +290,7 @@ public class LocalCalculationService implements ICalculationService
     }
   }
 
-  private void stopScheduling()
+  private void stopScheduling( )
   {
     if( m_timer != null )
     {
@@ -336,13 +333,14 @@ public class LocalCalculationService implements ICalculationService
    * 
    * @see java.lang.Object#finalize()
    */
-  protected void finalize() throws Throwable
+  @Override
+  protected void finalize( ) throws Throwable
   {
     synchronized( m_threads )
     {
       for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
       {
-        final LocalCalcJobThread cjt = (LocalCalcJobThread)iter.next();
+        final LocalCalcJobThread cjt = (LocalCalcJobThread) iter.next();
         final CalcJobInfoBean jobBean = cjt.getJobBean();
         disposeJob( jobBean.getId() );
       }
@@ -356,7 +354,7 @@ public class LocalCalculationService implements ICalculationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
    */
-  public DataHandler transferCurrentResults( String jobID ) throws CalcJobServiceException
+  public DataHandler transferCurrentResults( String jobID )
   {
     // not implemented
     return null;
@@ -372,15 +370,13 @@ public class LocalCalculationService implements ICalculationService
   }
 
   /**
-   * 
    * @param typeID
    * @return ModelspecData for given typeID
    * @throws CalcJobServiceException
-   *  
    */
   private ModelspecData getModelspec( final String typeID ) throws CalcJobServiceException
   {
-    ModelspecData data = (ModelspecData)m_modelspecMap.get( typeID );
+    ModelspecData data = m_modelspecMap.get( typeID );
     if( data != null )
       return data;
 
@@ -413,7 +409,7 @@ public class LocalCalculationService implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
    */
-  public DataHandler getSchema( final String namespace ) throws CalcJobServiceException
+  public DataHandler getSchema( final String namespace )
   {
     final URL url = m_catalog.getURL( namespace );
     if( url == null )
@@ -447,13 +443,13 @@ public class LocalCalculationService implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
    */
-  public String[] getSupportedSchemata() throws CalcJobServiceException
+  public String[] getSupportedSchemata( )
   {
     final Map catalog = m_catalog.getCatalog();
     final String[] namespaces = new String[catalog.size()];
     int count = 0;
     for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
-      namespaces[count++] = (String)mapIt.next();
+      namespaces[count++] = (String) mapIt.next();
 
     return namespaces;
   }
