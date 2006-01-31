@@ -42,7 +42,6 @@ package org.kalypso.services.calculation.service.impl;
 
 import java.net.URL;
 import java.net.URLConnection;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -53,10 +52,11 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -74,10 +74,12 @@ import org.kalypso.services.calculation.service.ICalculationService;
  */
 public class QueuedCalcJobService implements ICalculationService
 {
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   private static final Logger LOGGER = Logger.getLogger( QueuedCalcJobService.class.getName() );
 
   /** Vector of {@link CalcJobThread}s */
-  private final Vector m_threads = new Vector();
+  private final Vector<CalcJobThread> m_threads = new Vector<CalcJobThread>();
 
   private final ICalcJobFactory m_calcJobFactory;
 
@@ -89,44 +91,32 @@ public class QueuedCalcJobService implements ICalculationService
   /** So oft (in ms) wird die queue nach wartenden Jobs durchsucht */
   private final long m_schedulingPeriod;
 
-  private final Unmarshaller m_unmarshaller;
-
-  private final Map m_modelspecMap = new HashMap();
+  private final Map<String, ModelspecData> m_modelspecMap = new HashMap<String, ModelspecData>();
 
   private final IUrlCatalog m_catalog;
 
-  public QueuedCalcJobService( final ICalcJobFactory factory, final IUrlCatalog catalog, final int maxThreads,
-      final long schedulingPeriod ) throws RemoteException
+  public QueuedCalcJobService( final ICalcJobFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod )
   {
     m_calcJobFactory = factory;
     m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
-
-    try
-    {
-      m_unmarshaller = new ObjectFactory().createUnmarshaller();
-    }
-    catch( final JAXBException e )
-    {
-      throw new RemoteException( "Unmarshaller für Modellspezifikation konnte nicht erzeugt werden.", e );
-    }
   }
 
   /**
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion()
+  public int getServiceVersion( )
   {
     return 0;
   }
 
-  public synchronized final String[] getJobTypes()
+  public synchronized final String[] getJobTypes( )
   {
     return m_calcJobFactory.getSupportedTypes();
   }
 
-  public synchronized CalcJobInfoBean[] getJobs()
+  public synchronized CalcJobInfoBean[] getJobs( )
   {
     synchronized( m_threads )
     {
@@ -135,7 +125,7 @@ public class QueuedCalcJobService implements ICalculationService
 
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
       {
-        final CalcJobThread cjt = (CalcJobThread)jIt.next();
+        final CalcJobThread cjt = (CalcJobThread) jIt.next();
         jobBeans[count] = cjt.getJobBean();
       }
 
@@ -152,7 +142,7 @@ public class QueuedCalcJobService implements ICalculationService
     return findJobThread( jobID ).getJobBean();
   }
 
-  private void startScheduling()
+  private void startScheduling( )
   {
     if( m_timer == null )
     {
@@ -161,7 +151,8 @@ public class QueuedCalcJobService implements ICalculationService
       m_timer = new Timer();
       final TimerTask timerTask = new TimerTask()
       {
-        public void run()
+        @Override
+        public void run( )
         {
           scheduleJobs();
         }
@@ -170,7 +161,7 @@ public class QueuedCalcJobService implements ICalculationService
     }
   }
 
-  private void stopScheduling()
+  private void stopScheduling( )
   {
     if( m_timer != null )
     {
@@ -215,7 +206,7 @@ public class QueuedCalcJobService implements ICalculationService
     {
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final CalcJobThread cjt = (CalcJobThread)jIt.next();
+        final CalcJobThread cjt = (CalcJobThread) jIt.next();
 
         if( cjt.getJobBean().getId().equals( jobID ) )
           return cjt;
@@ -230,8 +221,7 @@ public class QueuedCalcJobService implements ICalculationService
    *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
-      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
+  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     CalcJobThread cjt = null;
     synchronized( m_threads )
@@ -268,7 +258,7 @@ public class QueuedCalcJobService implements ICalculationService
     return cjt == null ? null : cjt.getJobBean();
   }
 
-  public void scheduleJobs()
+  public void scheduleJobs( )
   {
     synchronized( m_threads )
     {
@@ -277,7 +267,7 @@ public class QueuedCalcJobService implements ICalculationService
       int waitingCount = 0;
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final CalcJobThread cjt = (CalcJobThread)jIt.next();
+        final CalcJobThread cjt = (CalcJobThread) jIt.next();
         if( cjt.isAlive() )
           runningCount++;
 
@@ -305,7 +295,7 @@ public class QueuedCalcJobService implements ICalculationService
       // start one waiting job, if maximum is not reached
       for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); )
       {
-        final CalcJobThread cjt = (CalcJobThread)jIt.next();
+        final CalcJobThread cjt = (CalcJobThread) jIt.next();
 
         final CalcJobInfoBean jobBean = cjt.getJobBean();
         if( jobBean.getState() == ICalcServiceConstants.WAITING )
@@ -324,13 +314,14 @@ public class QueuedCalcJobService implements ICalculationService
    * 
    * @see java.lang.Object#finalize()
    */
-  protected void finalize() throws Throwable
+  @Override
+  protected void finalize( ) throws Throwable
   {
     synchronized( m_threads )
     {
       for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
       {
-        final CalcJobThread cjt = (CalcJobThread)iter.next();
+        final CalcJobThread cjt = (CalcJobThread) iter.next();
         final CalcJobInfoBean jobBean = cjt.getJobBean();
         disposeJob( jobBean.getId() );
       }
@@ -361,13 +352,23 @@ public class QueuedCalcJobService implements ICalculationService
 
   private ModelspecData getModelspec( final String typeID ) throws CalcJobServiceException
   {
-    ModelspecData data = (ModelspecData)m_modelspecMap.get( typeID );
+    ModelspecData data = m_modelspecMap.get( typeID );
     if( data != null )
       return data;
 
     final ICalcJob job = m_calcJobFactory.createJob( typeID );
     final URL modelspecURL = job.getSpezifikation();
-    data = new ModelspecData( modelspecURL, m_unmarshaller );
+
+    try
+    {
+      data = new ModelspecData( modelspecURL, JC.createUnmarshaller() );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Unable to initialize jaxb unmarshaller", e );
+    }
+
     m_modelspecMap.put( typeID, data );
 
     return data;
@@ -428,13 +429,13 @@ public class QueuedCalcJobService implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
    */
-  public String[] getSupportedSchemata()
+  public String[] getSupportedSchemata( )
   {
     final Map catalog = m_catalog.getCatalog();
     final String[] namespaces = new String[catalog.size()];
     int count = 0;
     for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
-      namespaces[count++] = (String)mapIt.next();
+      namespaces[count++] = (String) mapIt.next();
 
     return namespaces;
   }

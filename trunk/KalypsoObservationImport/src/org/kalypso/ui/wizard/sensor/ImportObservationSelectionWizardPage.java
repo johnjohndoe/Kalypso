@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import org.eclipse.compare.internal.ListContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -77,7 +77,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.dialogs.ListContentProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
@@ -237,7 +236,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     m_formatCombo = new ComboViewer( group, SWT.NONE );
     m_formatCombo.add( m_adapter );
-    ListContentProvider provider = new ListContentProvider();
+    final ListContentProvider provider = new ListContentProvider();
     m_formatCombo.setContentProvider( provider );
     m_formatCombo.setLabelProvider( new ILabelProvider()
     {

@@ -88,8 +88,8 @@ import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
-import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.request.RequestType;
+import org.kalypso.zml.Observation;
+import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
 
 /**
@@ -167,6 +167,7 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
+  @Override
   protected void finalize() throws Throwable
   {
     clearCache();
@@ -301,7 +302,7 @@ public class KalypsoObservationService implements IObservationService
 
     // request part specified?
     IRequest request = null;
-    RequestType requestType = null;
+    Request requestType = null;
     try
     {
       requestType = RequestFactory.parseRequest( hereHref );
@@ -355,7 +356,7 @@ public class KalypsoObservationService implements IObservationService
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, request, m_timezone );
+      final Observation obsType = ZmlFactory.createXML( obs, request, m_timezone );
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters

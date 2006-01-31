@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.product"
-   name="KalypsoProduct Plug-in"
-   version="1.0.0"
-   provider-name="kalypso.org"
-   class="org.kalypso.product.KalypsoProductPlugin">
+<plugin>
 
-   <runtime>
-      <library name="KalypsoProduct.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.ui"/>
-      <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.kalypso.simulation.ui"/>
-      <import plugin="org.kalypso.auth"/>
-   </requires>
-
-   <extension
+     <extension
          id="product"
          name="Kalypso Enterprise"
          point="org.eclipse.core.runtime.products">
