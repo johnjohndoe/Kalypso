@@ -72,8 +72,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -248,13 +247,13 @@ public class ObservationResolver extends AbstractTransformation
       catch( final Exception e )
       {
         // migth occur when obs not defined on the server
-        write( "Zeitreihe möglicherweise unbekannt: " + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref(), e
+        write( "Zeitreihe möglicherweise unbekannt: " + ( (TimeseriesLinkType)feature.getProperty( prop ) ).getHref(), e
             .getLocalizedMessage(), msgWriter, logWriter );
         e.printStackTrace();
         continue;
       }
 
-      final TimeseriesLink targetlink = (TimeseriesLink)feature.getProperty( targetName );
+      final TimeseriesLinkType targetlink = (TimeseriesLinkType)feature.getProperty( targetName );
       if( obs1 == null || targetlink == null )
         continue;
 
@@ -297,9 +296,10 @@ public class ObservationResolver extends AbstractTransformation
 
         final SetContentHelper thread = new SetContentHelper()
         {
+          @Override
           protected void write( final OutputStreamWriter w ) throws Throwable
           {
-            final ObservationType type = ZmlFactory.createXML( obs, null );
+            final Observation type = ZmlFactory.createXML( obs, null );
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };
@@ -353,7 +353,7 @@ public class ObservationResolver extends AbstractTransformation
   {
     if( sourceProperty == null )
       return null;
-    final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType)feature.getProperty( sourceProperty );
     if( sourcelink == null ) // keine Zeitreihe verlink, z.B. kein Pegel am
       // Knoten in KalypsoNA
       return null;

@@ -66,11 +66,13 @@ import org.w3c.dom.Document;
  * 
  * @author belger
  */
+@Deprecated
 public class XslTransformation extends AbstractTransformation
 {
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
@@ -101,6 +103,7 @@ public class XslTransformation extends AbstractTransformation
       final PipedOutputStream pos = new PipedOutputStream( pis );
       final CatchThread thread = new CatchThread()
       {
+        @Override
         protected void runIntern() throws Throwable
         {
           transformer.transform( new DOMSource( xmlDOM ), new StreamResult( pos ) );

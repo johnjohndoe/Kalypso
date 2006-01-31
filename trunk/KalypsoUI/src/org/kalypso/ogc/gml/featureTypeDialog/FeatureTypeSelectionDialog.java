@@ -73,6 +73,7 @@ public class FeatureTypeSelectionDialog extends Dialog
     m_multiSelection = multiSelection;
   }
 
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite main = (Composite)super.createDialogArea( parent );
@@ -123,14 +124,13 @@ public class FeatureTypeSelectionDialog extends Dialog
 
   public FeatureType[] getSelectedFeatureTypes()
   {
-    ArrayList res = new ArrayList();
-    for( int i = 0; i < m_ft.length; i++ )
+    final ArrayList<FeatureType> res = new ArrayList<FeatureType>();
+    for( final FeatureType ft : m_ft )
     {
-      FeatureType ft = m_ft[i];
-      int index = ArrayUtils.indexOf( m_selectedFeatureTypeName, ft.getAnnotation( m_lang ).getLabel() );
+      final int index = ArrayUtils.indexOf( m_selectedFeatureTypeName, ft.getAnnotation( m_lang ).getLabel() );
       if( index > -1 )
         res.add( ft );
     }
-    return (FeatureType[])res.toArray( new FeatureType[res.size()] );
+    return res.toArray( new FeatureType[res.size()] );
   }
 }

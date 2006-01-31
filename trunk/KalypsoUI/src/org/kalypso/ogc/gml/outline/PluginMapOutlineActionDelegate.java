@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.commons.list.IListManipulator;
@@ -52,12 +51,11 @@ import org.kalypso.commons.list.IListManipulator;
  */
 public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
 {
-
   private final PluginMapOutlineAction m_innerAction;
 
   public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText,
       final GisMapOutlineViewer selectionProvider, PluginMapOutlineAction outlineAction,
-      final IListManipulator listManip ) throws CoreException
+      final IListManipulator listManip )
   {
     super( text, image, tooltipText, selectionProvider, listManip );
     m_innerAction = outlineAction;
@@ -66,6 +64,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
+  @Override
   public void run()
   {
     //    m_innerAction.run( getOutlineviewer(), getListManipulator() );
@@ -75,6 +74,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
   /**
    * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( SelectionChangedEvent event )
   {
     m_innerAction.selectionChanged( this, event.getSelection() );
@@ -83,6 +83,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
   /**
    * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#refresh()
    */
+  @Override
   protected void refresh()
   {
   //

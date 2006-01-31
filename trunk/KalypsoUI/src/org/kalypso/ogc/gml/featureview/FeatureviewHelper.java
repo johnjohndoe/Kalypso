@@ -41,28 +41,27 @@
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.List;
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
-
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.template.featureview.ButtonType;
-import org.kalypso.template.featureview.CheckboxType;
+import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.template.featureview.GridDataType;
-import org.kalypso.template.featureview.GridLayoutType;
+import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.Group;
-import org.kalypso.template.featureview.LabelType;
+import org.kalypso.template.featureview.Label;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
-import org.kalypso.template.featureview.TableType;
-import org.kalypso.template.featureview.TextType;
+import org.kalypso.template.featureview.Table;
+import org.kalypso.template.featureview.Text;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
@@ -75,34 +74,22 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class FeatureviewHelper
 {
   public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
+  public static final ObjectFactory FACTORY = new ObjectFactory();
+  public static final JAXBContext JC = JaxbUtilities.createQuiet(ObjectFactory.class);
 
   private FeatureviewHelper()
   {
   // wird nicht instantiiert
   }
 
-  public static final ObjectFactory FACTORY = new ObjectFactory();
-
-  public static Unmarshaller UNMARSHALLER;
-
-  static
-  {
-    try
-    {
-      UNMARSHALLER = FACTORY.createUnmarshaller();
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
-  }
 
   private static void addDefaultFeatureControlTypeForProperty( final List controlList, final FeatureType featureType,
       final FeatureTypeProperty ftp ) throws JAXBException
   {
     ControlType type = null;
     boolean addLabel = true;
-    final GridDataType griddata = FACTORY.createGridData();
+    final GridData griddata = FACTORY.createGridData();
+    final JAXBElement<GridData> jaxbgriddata = FACTORY.createGridData( griddata );
 
     final String typename = ftp.getType();
     final String name = ftp.getName();
@@ -111,7 +98,7 @@ public class FeatureviewHelper
     else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date"
         .indexOf( typename ) != -1 )
     {
-      final TextType editor = FACTORY.createText();
+      final Text editor = FACTORY.createText();
       editor.setStyle( "SWT.NONE" );
       editor.setEditable( true );
       editor.setProperty( name );
@@ -120,13 +107,13 @@ public class FeatureviewHelper
       griddata.setHorizontalSpan( 1 );
       griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
 
-      editor.setLayoutData( griddata );
+      editor.setLayoutData( jaxbgriddata );
 
       type = editor;
     }
     else if( "java.lang.Boolean".equals( typename ) )
     {
-      final CheckboxType checkbox = FACTORY.createCheckbox();
+      final Checkbox checkbox = FACTORY.createCheckbox();
       checkbox.setStyle( "SWT.NONE" );
       checkbox.setEditable( true );
       checkbox.setProperty( name );
@@ -134,7 +121,7 @@ public class FeatureviewHelper
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setHorizontalSpan( 1 );
       griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
-      checkbox.setLayoutData( griddata );
+      checkbox.setLayoutData( jaxbgriddata );
 
       type = checkbox;
     }
@@ -149,13 +136,13 @@ public class FeatureviewHelper
 
       griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
 
-      type.setLayoutData( griddata );
+      type.setLayoutData( jaxbgriddata );
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
       if( featureType.getMaxOccurs( name ) != 1 )
       {
-        final TableType table = FACTORY.createTable();
+        final Table table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
         table.setProperty( name );
 
@@ -166,7 +153,7 @@ public class FeatureviewHelper
         griddata.setHorizontalSpan( 3 );
         griddata.setHeightHint( 200 );
 
-        table.setLayoutData( griddata );
+        table.setLayoutData( jaxbgriddata );
 
         type = table;
         addLabel = false;
@@ -183,11 +170,11 @@ public class FeatureviewHelper
           griddata.setGrabExcessVerticalSpace( true );
           griddata.setHorizontalSpan( 2 );
 
-          compo.setLayoutData( griddata );
+          compo.setLayoutData( jaxbgriddata );
 
           final Group group = FACTORY.createGroup();
 
-          final GridDataType groupdata = FACTORY.createGridData();
+          final GridData groupdata = FACTORY.createGridData();
           groupdata.setGrabExcessHorizontalSpace( true );
           groupdata.setGrabExcessVerticalSpace( true );
           groupdata.setHorizontalAlignment( "GridData.FILL" );
@@ -202,16 +189,16 @@ public class FeatureviewHelper
           final String text = annotation == null ? name : annotation.getLabel();
           final String tooltip = annotation == null ? null : annotation.getTooltip();
 
-          group.setLayoutData( groupdata );
+          group.setLayoutData( FACTORY.createGridData( groupdata ) );
           group.setText( text );
           group.setTooltip( tooltip );
           group.setStyle( "SWT.NONE" );
 
-          final GridLayoutType gridLayout = FACTORY.createGridLayout();
+          final GridLayout gridLayout = FACTORY.createGridLayout();
           gridLayout.setNumColumns( 2 );
-          group.setLayout( gridLayout );
+          group.setLayout( FACTORY.createGridLayout(gridLayout ));
 
-          group.getControl().add( compo );
+          group.getControl().add( FACTORY.createControl( compo ));
 
           type = group;
           addLabel = false;
@@ -220,12 +207,12 @@ public class FeatureviewHelper
 
     if( type == null )
     {
-      final ButtonType button = FACTORY.createButton();
+      final Button button = FACTORY.createButton();
       button.setStyle( "SWT.PUSH" );
       button.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-      button.setLayoutData( griddata );
+      button.setLayoutData( jaxbgriddata );
       griddata.setHorizontalSpan( 2 );
 
       type = button;
@@ -245,42 +232,42 @@ public class FeatureviewHelper
     {
       cellCount++;
 
-      final LabelType label = FACTORY.createLabel();
+      final Label label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
       label.setText( text );
       label.setTooltip( tooltip );
       label.setVisible( true );
 
-      final GridDataType labelGridData = FACTORY.createGridData();
+      final GridData labelGridData = FACTORY.createGridData();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-      label.setLayoutData( labelGridData );
+      label.setLayoutData( FACTORY.createGridData( labelGridData ) );
 
       controlList.add( label );
     }
 
     if( type != null )
     {
-      final LayoutDataType layoutData = type.getLayoutData();
-      if( layoutData instanceof GridDataType )
-        cellCount += ( (GridDataType)layoutData ).getHorizontalSpan();
+      final LayoutDataType layoutData = type.getLayoutData().getValue();
+      if( layoutData instanceof GridData )
+        cellCount += ( (GridData)layoutData ).getHorizontalSpan();
 
       controlList.add( type );
     }
 
     for( int i = cellCount; i < 3; i++ )
     {
-      final LabelType label = FACTORY.createLabel();
+      final Label label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
       //      label.setText( "" );
       label.setVisible( false );
 
-      final GridDataType labelGridData = FACTORY.createGridData();
+      final GridData labelGridData = FACTORY.createGridData();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-      label.setLayoutData( labelGridData );
+      label.setLayoutData( FACTORY.createLayoutData( labelGridData ) );
 
       controlList.add( label );
     }
@@ -301,15 +288,15 @@ public class FeatureviewHelper
       featureview.setTypename( type.getName() );
       featureview.setStyle( "SWT.NONE" );
 
-      final GridLayoutType gridLayout = FACTORY.createGridLayout();
+      final GridLayout gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 3 );
-      featureview.setLayout( gridLayout );
-      final GridDataType griddata = FACTORY.createGridData();
+      featureview.setLayout( FACTORY.createGridLayout ( gridLayout ) );
+      final GridData griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setGrabExcessVerticalSpace( true );
       griddata.setHorizontalAlignment( "GridData.FILL" );
       griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( griddata );
+      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
 
       final List controlList = featureview.getControl();
 
@@ -321,7 +308,7 @@ public class FeatureviewHelper
         addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
       }
 
-      final Validator validator = FACTORY.createValidator();
+      final Validator validator = JC.createValidator();
       validator.validate( featureview );
 
       return featureview;
@@ -340,30 +327,30 @@ public class FeatureviewHelper
    * @param type
    * @return featureview
    */
-  public static Featureview createFeatureviewFromFeatureTypeProperty( final FeatureType type,
+  public static FeatureviewType createFeatureviewFromFeatureTypeProperty( final FeatureType type,
       final FeatureTypeProperty ftp )
   {
     try
     {
-      final Featureview featureview = FACTORY.createFeatureview();
+      final FeatureviewType featureview = FACTORY.createFeatureviewType();
       featureview.setTypename( type.getName() );
       featureview.setStyle( "SWT.NONE" );
 
-      final GridLayoutType gridLayout = FACTORY.createGridLayout();
+      final GridLayout gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 2 );
-      featureview.setLayout( gridLayout );
-      final GridDataType griddata = FACTORY.createGridData();
+      featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
+      final GridData griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setGrabExcessVerticalSpace( true );
       griddata.setHorizontalAlignment( "GridData.FILL" );
       griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( griddata );
+      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
 
       final List controlList = featureview.getControl();
 
       addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
 
-      final Validator validator = FACTORY.createValidator();
+      final Validator validator = JC.createValidator();
       validator.validate( featureview );
 
       return featureview;

@@ -94,12 +94,12 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -143,7 +143,7 @@ public class GrafikLauncher
   public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor )
       throws SensorException
   {
-    final ObsdiagviewType odt;
+    final Obsdiagview odt;
     try
     {
       odt = DiagViewUtils.loadDiagramTemplateXML( odtFile.getContents() );
@@ -174,7 +174,7 @@ public class GrafikLauncher
       if( !status.isOK() )
         return status;
 
-      final ObsdiagviewType odt = DiagViewUtils.buildDiagramTemplateXML( diag );
+      final Obsdiagview odt = DiagViewUtils.buildDiagramTemplateXML( diag );
       return startGrafikODT( zmlFile.getName(), odt, dest, monitor );
     }
     catch( final Exception e )
@@ -195,7 +195,7 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static IStatus startGrafikODT( final String fileName, final ObsdiagviewType odt, final IFolder dest,
+  public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
     List sync = new Vector();
@@ -359,7 +359,7 @@ public class GrafikLauncher
    * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
    * explicitely specified in the xml.
    */
-  private static IStatus odt2tpl( final ObsdiagviewType odt, final IFolder dest, final Writer writer,
+  private static IStatus odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer,
       final IProgressMonitor monitor, final List sync ) throws CoreException, IOException
   {
     final UrlResolver urlRes = new UrlResolver();

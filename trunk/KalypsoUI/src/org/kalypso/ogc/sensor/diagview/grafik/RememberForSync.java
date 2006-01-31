@@ -24,7 +24,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
 /**
@@ -156,7 +156,7 @@ final class RememberForSync
       }
 
       obs.setValues( values );
-      final ObservationType xml = ZmlFactory.createXML( obs, null );
+      final Observation xml = ZmlFactory.createXML( obs, null );
 
       SetContentHelper helper = new SetContentHelper()
       {

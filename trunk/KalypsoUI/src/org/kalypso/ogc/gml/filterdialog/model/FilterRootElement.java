@@ -36,7 +36,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
@@ -66,7 +65,7 @@ public class FilterRootElement implements Filter
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( Feature feature )
   {
     return false;
   }

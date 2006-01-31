@@ -66,7 +66,7 @@ import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
@@ -148,9 +148,10 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
 
     final SetContentHelper helper = new SetContentHelper()
     {
+      @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
-        final ObsdiagviewType type = DiagViewUtils.buildDiagramTemplateXML( template );
+        final Obsdiagview type = DiagViewUtils.buildDiagramTemplateXML( template );
 
         DiagViewUtils.saveDiagramTemplateXML( type, writer );
       }

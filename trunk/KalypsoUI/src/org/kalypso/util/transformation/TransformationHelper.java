@@ -91,7 +91,7 @@ public class TransformationHelper
       final List arguments = trans.getArgument();
       for( Iterator argIter = arguments.iterator(); argIter.hasNext(); )
       {
-        final TransformationType.ArgumentType argument = (TransformationType.ArgumentType)argIter.next();
+        final TransformationType.Argument argument = (TransformationType.Argument)argIter.next();
         props.setProperty( argument.getName(), argument.getValue() );
       }
 
