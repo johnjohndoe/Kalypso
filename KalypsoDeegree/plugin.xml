@@ -1,58 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.deegree"
-   name="org.kalypso.deegree"
-   version="1.0.0"
-   provider-name="kalypso.org">
+<plugin>
 
-   <runtime>
-      <library name="kalypsodeegree.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/acme/acme.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jai/jai_codec.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jts/jts.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jai/jai_core.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jai/mlibwrapper_jai.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/java3d/j3dutils.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/java3d/vecmath.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/braju/hb15.jar">
-         <export name="*"/>
-      </library>
-	  <library name="lib/deegree/deegree2004-02-13.jar">
-         <export name="*"/>
-      </library>
-   <library name="lib/deegreeBinding.jar">
-      <export name="*"/>
-   </library>
-   <library name="lib/xalan-j/xalan.jar">
-      <export name="*"/>
-   </library>
-   <library name="lib/shiftone/shiftone-cache.jar">
-      <export name="*"/>
-   </library>
-   </runtime>
-   <requires>
-      <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.commons"/>
-      <import plugin="org.kalypso.contribs.java"/>
-   </requires>
-   <extension
+     <extension
          id="org.kalypso.deegree.catalog"
          name="UrlCatalog"
          point="org.kalypso.contribs.java.urlCatalog">
