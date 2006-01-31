@@ -5,11 +5,9 @@ import java.util.LinkedHashMap;
 /**
  * Arguments is a simple extension of Properties with a nesting-capability.
  * 
- * TODO: should extend from LinkedHashMap in order to preserve the ordering of the arguments
- * 
  * @author schlienger
  */
-public class Arguments extends LinkedHashMap
+public class Arguments extends LinkedHashMap<String, Object>
 {
   public String getProperty( final String key )
   {
