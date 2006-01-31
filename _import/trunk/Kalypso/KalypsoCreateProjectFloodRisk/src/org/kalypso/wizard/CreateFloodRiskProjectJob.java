@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -80,6 +81,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.floodrisk.tools.Number;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -88,16 +90,15 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.GismapviewType.LayersType;
-import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
+import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
-import org.kalypso.template.types.StyledLayerType.StyleType;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -134,15 +135,15 @@ import org.w3c.dom.Document;
  */
 public class CreateFloodRiskProjectJob extends Job
 {
+  private static final org.kalypso.template.gismapview.ObjectFactory mapTemplateOF  = new org.kalypso.template.gismapview.ObjectFactory();
+  private static final org.kalypso.template.types.ObjectFactory typeOF = new org.kalypso.template.types.ObjectFactory();
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.template.gismapview.ObjectFactory.class, org.kalypso.template.types.ObjectFactory.class );
+  
   private final String m_resourceBase = "resources/projecttemplate.zip";
 
-  private List layerList;
+  private List<StyledLayerType> m_layerList;
 
-  private org.kalypso.template.gismapview.ObjectFactory mapTemplateOF;
-
-  private org.kalypso.template.types.ObjectFactory typeOF;
-
-  private GMLWorkspace landuseShapeWS;
+  private GMLWorkspace m_landuseShapeWS;
 
   private IPath m_workspacePath;
 
@@ -195,6 +196,7 @@ public class CreateFloodRiskProjectJob extends Job
    * 
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected IStatus run( IProgressMonitor monitor )
   {
     return createProject( monitor );
@@ -242,17 +244,15 @@ public class CreateFloodRiskProjectJob extends Job
       String path = m_workspacePath.append( m_projectHandel.getFullPath() + "/Waterlevel/Waterlevel.gmt" ).toFile()
           .toString();
 
-      typeOF = new org.kalypso.template.types.ObjectFactory();
-      mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
-      Gismapview gismapview = mapTemplateOF.createGismapview();
-      LayersType layers = mapTemplateOF.createGismapviewTypeLayersType();
+      final Gismapview gismapview = mapTemplateOF.createGismapview();
+      final Layers layers = mapTemplateOF.createGismapviewLayers();
       ExtentType extent = typeOF.createExtentType();
-      layerList = layers.getLayer();
+      m_layerList = layers.getLayer();
 
       //copy landuseData as shape
       copyLanduseShape();
-      Layer landuseLayer = createLanduseLayer( m_landuseDataFile );
-      layerList.add( landuseLayer );
+      final StyledLayerType landuseLayer = createLanduseLayer( m_landuseDataFile );
+      m_layerList.add( landuseLayer );
       layers.setActive( landuseLayer );
 
       IKalypsoTheme dummyLanduseTheme = createDummyLanduseTheme();
@@ -297,7 +297,7 @@ public class CreateFloodRiskProjectJob extends Job
       gismapview.setExtent( extent );
       gismapview.setLayers( layers );
 
-      Marshaller marshaller = mapTemplateOF.createMarshaller();
+      final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       FileWriter fw = new FileWriter( path );
       marshaller.marshal( gismapview, fw );
@@ -399,8 +399,8 @@ public class CreateFloodRiskProjectJob extends Job
   {
     String shapeBase = ( m_workspacePath.append( m_projectHandel.getFullPath().append(
         "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) ) ).toString();
-    landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
-    return new KalypsoFeatureTheme( new CommandableWorkspace( landuseShapeWS ), "featureMember", "Landnutzung", new FeatureSelectionManager2() );
+    m_landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
+    return new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", "Landnutzung", new FeatureSelectionManager2() );
   }
 
   /**
@@ -433,14 +433,14 @@ public class CreateFloodRiskProjectJob extends Job
     FeatureTypeProperty ftp_feature = rootFeatureType.getProperty( featureTypePropertyName );
 
     // create features: Feature
-    Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+    Feature shapeRootFeature = m_landuseShapeWS.getRootFeature();
     List featureList = (List)shapeRootFeature.getProperty( shapeFeatureTypePropertyName );
     String propertyName = m_landusePropertyName;
-    HashSet landuseTypeSet = new HashSet();
+    final HashSet<String> landuseTypeSet = new HashSet<String>();
     for( int i = 0; i < featureList.size(); i++ )
     {
-      Feature feat = (Feature)featureList.get( i );
-      String propertyValue = (String)feat.getProperty( propertyName );
+      final Feature feat = (Feature)featureList.get( i );
+      final String propertyValue = (String)feat.getProperty( propertyName );
       if( !landuseTypeSet.contains( propertyValue ) )
       {
         landuseTypeSet.add( propertyValue );
@@ -536,7 +536,7 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private Vector createWaterlevelGrids( IProgressMonitor monitor ) throws Exception
   {
-    Vector targetFiles = new Vector();
+    final Vector<File> targetFiles = new Vector<File>();
     int workedPart = 50 / m_waterlevelGrids.size();
     for( int i = 0; i < m_waterlevelGrids.size(); i++ )
     {
@@ -545,7 +545,7 @@ public class CreateFloodRiskProjectJob extends Job
       String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
       File waterlevelDir = ( m_workspacePath.append( m_projectHandel.getFullPath().append( "/Waterlevel" ) ) ).toFile();
       waterlevelDir.mkdir();
-      File targetFile = ( m_workspacePath.append( m_projectHandel.getFullPath().append(
+      final File targetFile = ( m_workspacePath.append( m_projectHandel.getFullPath().append(
           "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) ) ).toFile();
       GridUtils.writeRasterData( targetFile, grid );
       targetFiles.add( targetFile );
@@ -554,7 +554,7 @@ public class CreateFloodRiskProjectJob extends Job
       Color lightBlue = new Color( 150, 150, 255 );
       int numOfCategories = 5;
       createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
-      layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
+      m_layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
       grid = null;
       monitor.worked( workedPart );
       if( monitor.isCanceled() )
@@ -581,7 +581,7 @@ public class CreateFloodRiskProjectJob extends Job
   private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color,
       int numOfCategories ) throws Exception
   {
-    TreeMap colorMap = new TreeMap();
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     double min = grid.getRangeSet().getMinValue();
@@ -607,7 +607,7 @@ public class CreateFloodRiskProjectJob extends Job
     featureTypeStyle.addRule( rule );
     FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[]
     { featureTypeStyle };
-    Style[] styles = new Style[]
+    org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[]
     { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
     { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
@@ -652,7 +652,7 @@ public class CreateFloodRiskProjectJob extends Job
     int identifier = 0;
     for( int i = 0; i < targetFiles.size(); i++ )
     {
-      Feature waterlevelFeature = FeatureFactory.createFeature( waterlevelFeatureName + identifier,
+      final Feature waterlevelFeature = FeatureFactory.createFeature( waterlevelFeatureName + identifier,
           waterlevelFeatureType );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ( (File)targetFiles.get( i ) ).toURL() );
       waterlevelFeature.setProperty( FeatureFactory.createFeatureProperty( featureProperty, waterlevelFile ) );
@@ -678,11 +678,10 @@ public class CreateFloodRiskProjectJob extends Job
    * @throws Exception
    *  
    */
-  private org.kalypso.template.gismapview.GismapviewType.LayersType.Layer createLanduseLayer( File sourceFile )
+  private StyledLayerType createLanduseLayer( final File sourceFile )
       throws Exception
   {
-    org.kalypso.template.gismapview.GismapviewType.LayersType.Layer newLayer = mapTemplateOF
-        .createGismapviewTypeLayersTypeLayer();
+    final StyledLayerType newLayer = typeOF.createStyledLayerType();
 
     //set attributes for the layer
     newLayer.setName( "Landnutzung" );
@@ -695,8 +694,8 @@ public class CreateFloodRiskProjectJob extends Job
     newLayer.setActuate( "onRequest" );
     newLayer.setId( "ID_1" );
 
-    List styleList = newLayer.getStyle();
-    StyleType style = typeOF.createStyledLayerTypeStyleType();
+    final List<Style> styleList = newLayer.getStyle();
+    final Style style = typeOF.createStyledLayerTypeStyle();
 
     //set attributes for the style
     style.setLinktype( "sld" );
@@ -721,12 +720,11 @@ public class CreateFloodRiskProjectJob extends Job
    * @throws Exception
    *  
    */
-  private org.kalypso.template.gismapview.GismapviewType.LayersType.Layer createWaterlevelLayer( File sourceFile,
+  private StyledLayerType createWaterlevelLayer( File sourceFile,
       String styleName ) throws Exception
   {
 
-    org.kalypso.template.gismapview.GismapviewType.LayersType.Layer newLayer = mapTemplateOF
-        .createGismapviewTypeLayersTypeLayer();
+    final StyledLayerType newLayer = typeOF.createStyledLayerType();
 
     //set attributes for the layer
     newLayer.setName( styleName );
@@ -739,8 +737,8 @@ public class CreateFloodRiskProjectJob extends Job
     newLayer.setId( "ID_" + id );
     id = id + 1;
 
-    List styleList = newLayer.getStyle();
-    StyleType style = typeOF.createStyledLayerTypeStyleType();
+    final List<Style> styleList = newLayer.getStyle();
+    final Style style = typeOF.createStyledLayerTypeStyle();
 
     //set attributes for the style
     style.setLinktype( "sld" );
