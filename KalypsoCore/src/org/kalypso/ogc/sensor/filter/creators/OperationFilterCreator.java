@@ -58,7 +58,7 @@ public class OperationFilterCreator implements IFilterCreator
     OperationFilterType filter = (OperationFilterType)aft;
     OperationFilter operationFilter = new OperationFilter( filter );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter.getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter.getFilter().getValue(), baseObs, context );
     operationFilter.initFilter( filteredObs, filteredObs, context );
     return operationFilter;
   }

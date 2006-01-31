@@ -76,11 +76,16 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="gmltarget" type="TargetType" substitutionGroup="target">
+	<xs:element name="gmltarget" type="GmlTargetType" substitutionGroup="target">
 		<xs:annotation>
 			<xs:documentation>Schreibt die Daten in eine GMl Datei.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:complexType name="GmlTargetType">
+		<xs:complexContent>
+			<xs:extension base="TargetType"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:element name="source" type="SourceType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -18,6 +19,7 @@ import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.commons.serializer.ISerializer;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 
@@ -28,7 +30,8 @@ import org.xml.sax.InputSource;
  */
 public class WQTableFactory implements ISerializer
 {
-  private static ObjectFactory m_objectFactory = new ObjectFactory();
+  private final static ObjectFactory OF = new ObjectFactory();
+  private final static JAXBContext JC = JaxbUtilities.createQuiet(ObjectFactory.class);
 
   private WQTableFactory()
   {
@@ -47,7 +50,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final Unmarshaller unm = m_objectFactory.createUnmarshaller();
+      final Unmarshaller unm = JC.createUnmarshaller();
       final RatingTableList xmlTableList = (RatingTableList)unm.unmarshal( ins );
 
       return xmlTableList;
@@ -112,14 +115,14 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final RatingTableList xmlTables = m_objectFactory.createTables();
+      final RatingTableList xmlTables = OF.createRatingTableList(  );
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
       final WQTable[] tables = wqset.getTables();
       for( int i = 0; i < tables.length; i++ )
       {
-        final RatingTable xmlTable = m_objectFactory.createRatingTable();
+        final RatingTable xmlTable = OF.createRatingTable();
         final Calendar cal = Calendar.getInstance();
         cal.setTime( tables[i].getValidity() );
         xmlTable.setValidity( cal );
@@ -135,7 +138,7 @@ public class WQTableFactory implements ISerializer
         xmlTables.getTable().add( xmlTable );
       }
 
-      final Marshaller marshaller = m_objectFactory.createMarshaller();
+      final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter writer = new StringWriter();

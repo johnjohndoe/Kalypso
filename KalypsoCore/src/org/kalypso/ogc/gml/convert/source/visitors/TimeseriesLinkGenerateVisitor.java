@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.convert.source.visitors;
 
 import java.util.Properties;
 
-import javax.xml.bind.JAXBException;
-
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -95,17 +93,10 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
   {
     final String href = applyPatterns( f );
     
-    try
-    {
-      final TimeseriesLinkType link = m_linkFactory.createTimeseriesLink();
-      link.setHref( href );
+    final TimeseriesLinkType link = m_linkFactory.createTimeseriesLinkType();
+    link.setHref( href );
 
-      f.setProperty( FeatureFactory.createFeatureProperty( m_propertyName, link ) );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
+    f.setProperty( FeatureFactory.createFeatureProperty( m_propertyName, link ) );
 
     return true;
   }

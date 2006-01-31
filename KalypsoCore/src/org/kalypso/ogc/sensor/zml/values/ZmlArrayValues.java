@@ -43,10 +43,9 @@ package org.kalypso.ogc.sensor.zml.values;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
-import org.kalypso.zml.AxisType.ValueArrayType;
+import org.kalypso.zml.AxisType.ValueArray;
 
 /**
  * @author schlienger
@@ -55,12 +54,10 @@ public class ZmlArrayValues implements IZmlValues
 {
   private final List m_values;
 
-  public ZmlArrayValues( final ValueArrayType va, final IParser parser ) throws ParserException
+  public ZmlArrayValues( final ValueArray va, final IParser parser ) throws ParserException
   {
     final StringTokenizer stok = new StringTokenizer( va.getValue(), va.getSeparator() );
-
     m_values = new Vector( stok.countTokens() );
-
     while( stok.hasMoreElements() )
     {
       final String token = stok.nextToken();
@@ -88,7 +85,7 @@ public class ZmlArrayValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
-  public int getCount()
+  public int getCount( )
   {
     return m_values.size();
   }

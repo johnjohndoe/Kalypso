@@ -40,11 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.deegree;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
@@ -53,11 +55,12 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
  */
 public class ObservationLinkHandlerTest extends TestCase
 {
-  public void testMarshal() throws JAXBException
+  public void testMarshal( ) throws JAXBException
   {
     final ObjectFactory factory = new ObjectFactory();
+    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-    final Marshaller m_marshaller = factory.createMarshaller();
+    final Marshaller m_marshaller = jc.createMarshaller();
     m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     final TimeseriesLinkType link = factory.createTimeseriesLinkType();

@@ -58,7 +58,7 @@ public class IntervallFilterCreator implements IFilterCreator
     IntervallFilterType filter = (IntervallFilterType)aft;
     IntervallFilter intervallFilter = new IntervallFilter( filter );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter.getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter.getFilter().getValue(), baseObs, context );
     intervallFilter.initFilter( filteredObs, filteredObs, context );
     return intervallFilter;
   }

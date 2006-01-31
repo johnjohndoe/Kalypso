@@ -37,12 +37,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
-
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
-
-import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
+import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -247,7 +245,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     return bbox;
   }
 
-  public void fillLayerType( Layer layer, String id, boolean visible )
+  public void fillLayerType( final StyledLayerType layer, String id, boolean visible )
   {
     layer.setName( m_themeName );
     layer.setFeaturePath( "" );

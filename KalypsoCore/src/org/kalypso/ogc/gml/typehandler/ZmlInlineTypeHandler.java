@@ -32,10 +32,8 @@ package org.kalypso.ogc.gml.typehandler;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -43,7 +41,7 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.Observation;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
@@ -77,10 +75,9 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
     final StringWriter sw = new StringWriter();
-
     try
     {
-      final ObservationType xml = ZmlFactory.createXML( (IObservation)object, null, null );
+      final Observation xml = ZmlFactory.createXML( (IObservation) object, null, null );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
       XMLUtilities.setTextNode( node.getOwnerDocument(), node, sw.toString() );
@@ -94,15 +91,13 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     {
       IOUtils.closeQuietly( sw );
     }
-
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
-  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
-      throws TypeRegistryException
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
     if( zmlStr == null || zmlStr.length() < 1 )
@@ -122,14 +117,13 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     {
       IOUtils.closeQuietly( reader );
     }
-
     return obs;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return "ZmlInline";
   }
@@ -137,7 +131,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public String getClassName()
+  public String getClassName( )
   {
     return m_className;
   }
@@ -145,7 +139,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public String getTypeName( )
   {
     return m_typeName;
   }
@@ -153,7 +147,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @return axistypes as String[]
    */
-  public String[] getAxisTypes()
+  public String[] getAxisTypes( )
   {
     return m_axisTypes;
   }
@@ -167,7 +161,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     IObservation clone = null;
     try
     {
-      final ObservationType xml = ZmlFactory.createXML( (IObservation)objectToClone, null, null );
+      final Observation xml = ZmlFactory.createXML( (IObservation) objectToClone, null, null );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
       final StringReader reader = new StringReader( sw.toString().trim() );
@@ -195,5 +189,4 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   {
     throw new UnsupportedOperationException();
   }
-
 }

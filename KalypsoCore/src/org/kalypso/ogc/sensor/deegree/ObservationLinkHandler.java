@@ -41,16 +41,15 @@
 package org.kalypso.ogc.sensor.deegree;
 
 import java.net.URL;
-import java.text.ParseException;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
@@ -68,25 +67,16 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
 
   public static final String NAMESPACE = "obslink.zml.kalypso.org";
 
-  public static final String TYPE_NAME = NAMESPACE + ":"
-      + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
+  public static final String TYPE_NAME = NAMESPACE + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
 
-  private final ObjectFactory m_factory = new ObjectFactory();
+  private final static ObjectFactory m_factory = new ObjectFactory();
 
-  private final Marshaller m_marshaller = m_factory.createMarshaller();
-
-  private final Unmarshaller m_unmarshaller = m_factory.createUnmarshaller();
-
-  public ObservationLinkHandler() throws JAXBException
-  {
-    // nur da, um die exception zu werfen
-    m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-  }
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName()
+  public String getClassName( )
   {
     return CLASS_NAME;
   }
@@ -94,14 +84,14 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public String getTypeName( )
   {
     return TYPE_NAME;
   }
 
-  private String getElementName()
+  private String getElementName( )
   {
-    return ClassUtilities.getOnlyClassName( TimeseriesLink.class );
+    return ClassUtilities.getOnlyClassName( TimeseriesLinkType.class );
   }
 
   /**
@@ -112,7 +102,9 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   {
     try
     {
-      m_marshaller.marshal( object, node );
+      final Marshaller marshaller = JC.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      marshaller.marshal( object, node );
     }
     catch( JAXBException e )
     {
@@ -128,8 +120,8 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   {
     try
     {
-      final Element element = (Element)node;
-      final NodeList childNodes = ( element ).getElementsByTagNameNS( NAMESPACE, getElementName() );
+      final Element element = (Element) node;
+      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, getElementName() );
 
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
@@ -137,7 +129,9 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
 
         // child namespace may be null
         if( NAMESPACE.equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
-          return m_unmarshaller.unmarshal( child );
+        {
+          return JC.createUnmarshaller().unmarshal( child );
+        }
       }
 
       return null;
@@ -151,7 +145,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return "Zeitreihen Verknüpfung";
   }
@@ -161,48 +155,30 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
    */
   public Object cloneObject( Object objectToClone )
   {
-    TimeseriesLinkType link = (TimeseriesLinkType)objectToClone;
-    TimeseriesLinkType clone = null;
-    try
-    {
-      // create a Link and not a LinkType, if not we cannot serialize it later
-      clone = m_factory.createTimeseriesLink();
-      clone.setActuate( link.getActuate() );
-      clone.setArcrole( link.getArcrole() );
-      clone.setHref( link.getHref() );
-      clone.setLinktype( link.getLinktype() );
-      clone.setRole( link.getRole() );
-      clone.setShow( link.getShow() );
-      clone.setTimeaxis( link.getTimeaxis() );
-      clone.setTitle( link.getTitle() );
-      clone.setType( link.getType() );
-      clone.setValueaxis( link.getValueaxis() );
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-    }
+    final TimeseriesLinkType link = (TimeseriesLinkType) objectToClone;
+    final TimeseriesLinkType clone = m_factory.createTimeseriesLinkType();
+    clone.setActuate( link.getActuate() );
+    clone.setArcrole( link.getArcrole() );
+    clone.setHref( link.getHref() );
+    clone.setLinktype( link.getLinktype() );
+    clone.setRole( link.getRole() );
+    clone.setShow( link.getShow() );
+    clone.setTimeaxis( link.getTimeaxis() );
+    clone.setTitle( link.getTitle() );
+    clone.setType( link.getType() );
+    clone.setValueaxis( link.getValueaxis() );
     return clone;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( final String text ) throws ParseException
+  public Object parseType( final String text )
   {
     final org.kalypso.zml.obslink.ObjectFactory factory = new org.kalypso.zml.obslink.ObjectFactory();
-    try
-    {
-      final TimeseriesLink link = factory.createTimeseriesLink();
-      link.setHref( text );
-      return link;
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      
-      throw new ParseException( e.getLocalizedMessage(), 1 );
-    }
+    final TimeseriesLinkType link = factory.createTimeseriesLinkType();
+    link.setHref( text );
+    return link;
   }
 
 }

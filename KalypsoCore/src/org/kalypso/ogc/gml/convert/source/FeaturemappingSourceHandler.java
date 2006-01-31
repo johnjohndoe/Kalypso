@@ -76,7 +76,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       final List mapList = mapping.getMap();
       for( final Iterator mapIt = mapList.iterator(); mapIt.hasNext(); )
       {
-        final MappingType.MapType map = (MappingType.MapType)mapIt.next();
+        final MappingType.Map map = (MappingType.Map)mapIt.next();
         properties.setProperty( map.getFrom(), map.getTo() );
       }
 
@@ -94,7 +94,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     if( mapping instanceof AddFeaturesMappingType )
     {
       final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
-      final String handleExisting = addType.getHandleExisting();
+      final String handleExisting = addType.getHandleExisting().value();
       final String fID = addType.getFid();
       return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID );
     }

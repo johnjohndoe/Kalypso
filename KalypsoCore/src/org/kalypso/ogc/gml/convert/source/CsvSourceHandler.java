@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvSourceType;
@@ -39,45 +38,33 @@ public class CsvSourceHandler implements ISourceHandler
    * @throws GmlConvertException
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     final String href = m_type.getHref();
-
     final CsvFeatureReader reader = new CsvFeatureReader();
-
     final List propList = m_type.getFeatureproperty();
     for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
     {
-      final CsvSourceType.FeaturepropertyType element = (CsvSourceType.FeaturepropertyType)propIt.next();
-
-      final List columnList = element.getColumn();
+      final CsvSourceType.Featureproperty element = (CsvSourceType.Featureproperty) propIt.next();
+      final List<Integer> columnList = element.getColumn();
       final int[] columns = new int[columnList.size()];
       for( int i = 0; i < columnList.size(); i++ )
       {
-        final CsvSourceType.FeaturepropertyType.Column col = (CsvSourceType.FeaturepropertyType.Column)columnList
-            .get( i );
-        columns[i] = col.getValue();
+        final Integer col = columnList.get( i );
+        columns[i] = col.intValue();
       }
-
-      final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element
-          .getType(), false, null );
-      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element
-          .isIgnoreFormatExceptions() );
+      final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element.getType(), false, null );
+      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
       reader.addInfo( ftp, info );
     }
-
     InputStream stream = null;
     try
     {
       final URL url = m_resolver.resolveURL( m_context, href );
-
       final URLConnection connection = url.openConnection();
       stream = connection.getInputStream();
-
       final String encoding = connection.getContentEncoding();
-      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream,
-          encoding );
-
+      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
       return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
     }
     catch( final Exception e )
@@ -89,5 +76,4 @@ public class CsvSourceHandler implements ISourceHandler
       IOUtils.closeQuietly( stream );
     }
   }
-
 }

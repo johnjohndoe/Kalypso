@@ -1,30 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.kalypso.core"
-   name="KalypsoCore Plug-in"
-   version="1.0.0"
-   provider-name="kalypso.org"
-   class="org.kalypso.core.KalypsoCorePlugin">
+<plugin>
 
-   <runtime>
-      <library name="lib/coreBinding.jar">
-         <export name="*"/>
-      </library>
-      <library name="kalypsocore.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.kalypso.contribs.eclipseplatform" export="true"/>
-      <import plugin="org.kalypso.deegree" export="true"/>
-      <import plugin="org.kalypso.repository" export="true"/>
-      <import plugin="org.kalypso.jwsdp"/>
-   </requires>
-
-   <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
+     <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
    <extension-point id="featureVisitor" name="featureVisitor" schema="schema/featureVisitor.exsd"/>
    <extension-point id="obsManipulator" name="Observation Manipulator Extension Point" schema="schema/observationManipulator.exsd"/>
 

@@ -32,11 +32,11 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -69,15 +69,15 @@ public class CloneUtilities
    * @return cloned object
    * @throws JAXBException
    */
-  public static Object clone( Object value, ObjectFactory factory ) throws JAXBException
+  public static Object clone( final Object value, final JAXBContext jc ) throws JAXBException
   {
     // marshall it
-    final Marshaller marshaller = factory.createMarshaller();
+    final Marshaller marshaller = jc.createMarshaller();
     final StringWriter tmpBuffer = new StringWriter();
     marshaller.marshal( value, tmpBuffer );
 
     // unmarshall it
-    final Unmarshaller unmarshaller = factory.createUnmarshaller();
+    final Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader( tmpBuffer.toString() );
     final InputSource source = new InputSource(reader);
     return unmarshaller.unmarshal( source );
