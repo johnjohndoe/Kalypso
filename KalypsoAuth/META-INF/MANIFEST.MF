@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoAuth Plug-in
+Bundle-SymbolicName: org.kalypso.auth; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: KalypsoAuth.jar
+Bundle-Activator: org.kalypso.auth.KalypsoAuthPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.auth,
+ org.kalypso.auth.login,
+ org.kalypso.auth.scenario,
+ org.kalypso.auth.ui,
+ org.kalypso.auth.user
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.commons
+Eclipse-AutoStart: true
