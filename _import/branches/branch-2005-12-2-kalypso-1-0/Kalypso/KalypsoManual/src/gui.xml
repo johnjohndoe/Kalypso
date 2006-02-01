@@ -375,16 +375,16 @@
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
 
-          <mediaobject vendor="sachsen-anhalt">
-            <imageobject>
-              <imagedata align="center" fileref="img/gui/gis_karte2.png"
-                         format="PNG" scale="45" vendor="sachsen-anhalt" />
-            </imageobject>
-          </mediaobject>
-          <mediaobject vendor="hh_ingenieurbueros">
+        <mediaobject vendor="sachsen-anhalt">
           <imageobject>
-            <imagedata align="center"
-                       fileref="img/gui/navi_karte.png"
+            <imagedata align="center" fileref="img/gui/gis_karte2.png"
+                       format="PNG" scale="45" vendor="sachsen-anhalt" />
+          </imageobject>
+        </mediaobject>
+
+        <mediaobject vendor="hh_ingenieurbueros">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/navi_karte.png"
                        format="PNG" scale="45" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
@@ -427,13 +427,15 @@
           <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/style_editor.png"
-                         format="PNG" scale="45"  vendor="sachsen-anhalt" />
+                         format="PNG" scale="45" vendor="sachsen-anhalt" />
             </imageobject>
           </mediaobject>
-           <mediaobject vendor="hh_ingenieurbueros">
+
+          <mediaobject vendor="hh_ingenieurbueros">
             <imageobject>
-              <imagedata align="center" fileref="img/gui/style_editor_tuhh.png"
-                         format="PNG" scale="45"  vendor="hh_ingenieurbueros"/>
+              <imagedata align="center"
+                         fileref="img/gui/style_editor_tuhh.png" format="PNG"
+                         scale="45" vendor="hh_ingenieurbueros" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -633,14 +635,13 @@
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/tabelle2.png"
-                       scale="45" vendor="sachsen-anhalt"  />
+                       scale="45" vendor="sachsen-anhalt" />
           </imageobject>
         </mediaobject>
-        
+
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
-            <imagedata align="center"
-                       fileref="img/gui/navi_tabelle.png"
+            <imagedata align="center" fileref="img/gui/navi_tabelle.png"
                        scale="45" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>

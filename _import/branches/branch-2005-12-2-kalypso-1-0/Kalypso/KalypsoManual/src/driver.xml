@@ -29,8 +29,8 @@
 	&file_modelle;    
 	
 	<chapter vendor="sachsen;sachsen-anhalt" id="vorhersage_wizards">
-		<title>Vorhersage-Assistenten</title>
-		<indexterm><primary>Vorhersage-Assistenten</primary> </indexterm>
+		<title>Vorhersage-Assistent</title>
+		<indexterm><primary>Vorhersage-Assistent</primary> </indexterm>
 		
 		&file_wizards_allg;
 		&file_wizard_Ilse;

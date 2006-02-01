@@ -87,6 +87,11 @@
       </listitem>
 
       <listitem>
+        <para>Hinzugefügte Werte werden nicht nicht übernommen. D.h.
+        Änderungen am Datum werden nicht übernommen.</para>
+      </listitem>
+
+      <listitem>
         <para>Änderungen in der Gestaltung des Diagramms (Farben, Achsen,
         Hinzuladen von Zeitreihen) werden nicht in KALYPSO übernommen. D.h.
         die Änderungen werden nicht in der Vorlage (*.tpl) gespeichert. Beim
@@ -131,6 +136,10 @@
 
     <informaltable align="left">
       <tgroup align="left" cols="2">
+        <colspec align="left" colwidth="1*" />
+
+        <colspec align="left" colwidth="3*" />
+
         <tbody>
           <row>
             <entry><emphasis role="bold">Menüpunkt</emphasis></entry>
@@ -139,15 +148,15 @@
           </row>
 
           <row>
-            <entry>Daten laden:</entry>
+            <entry>Daten laden</entry>
 
             <entry>Einladen einer neuen Datenreihe</entry>
           </row>
 
           <row>
-            <entry>Nochmals laden:</entry>
+            <entry>Nochmals laden</entry>
 
-            <entry>Die letzte Datenreihe wird nochmals eingeladen. </entry>
+            <entry>Die letzte Datenreihe wird nochmals eingeladen.</entry>
           </row>
 
           <row>
@@ -161,7 +170,7 @@
           </row>
 
           <row>
-            <entry>Vorlage laden:</entry>
+            <entry>Vorlage laden</entry>
 
             <entry>Eine vorher als Vorlage gesicherte Einstellung wird
             geladen. Es kann gewählt werden, ob die bisher geladenen
@@ -170,7 +179,7 @@
           </row>
 
           <row>
-            <entry>Vorlage sichern:</entry>
+            <entry>Vorlage sichern</entry>
 
             <entry>Alle aktuellen Einstellungen werden unter einem Namen als
             Vorlage-Datei (Template) gesichert und können wieder aufgerufen
@@ -181,7 +190,7 @@
           </row>
 
           <row>
-            <entry>Grafik exportieren:</entry>
+            <entry>Grafik exportieren</entry>
 
             <entry>Für eine weitere Verwendung als Bitmap kann die aktuelle
             Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:
@@ -191,7 +200,7 @@
           </row>
 
           <row>
-            <entry>Drucken:</entry>
+            <entry>Drucken</entry>
 
             <entry>Die Diagrammdarstellung wird auf den Drucker ausgegeben.
             Der Windows-Standarddialog ermöglicht eine Einstellung des
@@ -199,13 +208,13 @@
           </row>
 
           <row>
-            <entry>Seitenansicht:</entry>
+            <entry>Seitenansicht</entry>
 
             <entry>Vorschau der Druckausgabe.</entry>
           </row>
 
           <row>
-            <entry>Druckereinrichtung:</entry>
+            <entry>Druckereinrichtung</entry>
 
             <entry>Einstellung der Druckereigenschaften (Seitenformat u.a.m.)
             ohne anschließendes Drucken.</entry>
@@ -329,15 +338,20 @@
       <para>Der zu korrigierende Bereich wird durch einen Cursorstrich, der
       über die Maus oder die Cursortasten bewegt werden kann, eingestellt.
       Durch einen Doppelklick mit der linken Maustaste oder die
-      &lt;Enter&gt;-Taste wird die linke Begrenzung festgelegt. Ein zweiter
-      Doppelklick markiert die rechte Begrenzung. Anschließend erscheint je
-      nach gewähltem Werkzeug ein entsprechendes Eingabemenü.</para>
+      <guilabel>&lt;Enter&gt;</guilabel>-Taste wird die linke Begrenzung
+      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.
+      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes
+      Eingabemenü.</para>
 
       <informaltable>
         <tgroup cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" colwidth="3*" />
+
           <tbody>
             <row>
-              <entry>Werte löschen:</entry>
+              <entry>Werte löschen</entry>
 
               <entry>Die innerhalb des gewählten Abschnitt befindlichen
               Messwerte werden entfernt. Die Darstellung wird über diesen
@@ -345,7 +359,7 @@
             </row>
 
             <row>
-              <entry>Werte übernehmen:</entry>
+              <entry>Werte übernehmen</entry>
 
               <entry>Für den gewählten Abschnitt werden alle Messwerte
               gelöscht und anschließend die im gleichen Zeitraum befindlichen
@@ -359,7 +373,7 @@
             </row>
 
             <row>
-              <entry>Werte hinzufügen:</entry>
+              <entry>Werte hinzufügen</entry>
 
               <entry>Entsprechend der Mausposition wird in x- und y-Richtung
               ein neuer Messwert ermittelt und zur Übernahme angeboten. Der
@@ -367,7 +381,7 @@
             </row>
 
             <row>
-              <entry>Stützstellenkorrektur (y-Achse):</entry>
+              <entry>Stützstellenkorrektur (y-Achse)</entry>
 
               <entry>Nach Wahl des Anfangs- und Endzeitpunktes können für
               beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.
@@ -380,7 +394,7 @@
             </row>
 
             <row>
-              <entry>Stützstellenkorrektur (Zeit-Achse):</entry>
+              <entry>Stützstellenkorrektur (Zeit-Achse)</entry>
 
               <entry>Nach Wahl des Anfangs- und Endzeitpunktes können für
               beide Zeitpunkte in der Zeitachse verändert werden. Damit können
@@ -395,33 +409,33 @@
             </row>
 
             <row>
-              <entry>Multiplikation mit einem Wert:</entry>
+              <entry>Multiplikation mit einem Wert</entry>
 
               <entry>Die Werte der aktuellen Kurve werden mit einem Zahlenwert
               multipliziert.</entry>
             </row>
 
             <row>
-              <entry>Addieren von Datenreihen:</entry>
+              <entry>Addieren von Datenreihen</entry>
 
               <entry>Zwei Datenreihen werden addiert.</entry>
             </row>
 
             <row>
-              <entry>Subtrahieren von Datenreihen:</entry>
+              <entry>Subtrahieren von Datenreihen</entry>
 
               <entry>Zwei Datenreihen werden subtrahiert.</entry>
             </row>
 
             <row>
-              <entry>Spiegeln von Kurvenabschnitten:</entry>
+              <entry>Spiegeln von Kurvenabschnitten</entry>
 
               <entry>Ein Kurvenabschnitt wird in y-Richtung gespiegelt.
               Bezugspunkt ist der y- Wert am Abschnittsanfang.</entry>
             </row>
 
             <row>
-              <entry>Verschieben von Datenreihen:</entry>
+              <entry>Verschieben von Datenreihen</entry>
 
               <entry>Die Werte werden um einen bestimmten Betrag auf der
               Zeitachse verschoben. Die Verschiebung wird durch den Cursor als
@@ -429,7 +443,7 @@
             </row>
 
             <row>
-              <entry>Abflussbeiwert:</entry>
+              <entry>Abflussbeiwert</entry>
 
               <entry>Bestimmung des Abflussbeiwertes. Nähere Erläuterungen
               sind im Abschnitt zum Abflussbeiwert (siehe <xref
@@ -437,7 +451,7 @@
             </row>
 
             <row>
-              <entry>geänderte Datenreihe sichern:</entry>
+              <entry>geänderte Datenreihe sichern</entry>
 
               <entry>Die aktuell bearbeitete Datenreihe wird gesichert. Die
               Originaldaten werden dabei überschrieben. Als Datenformat wird
@@ -445,7 +459,7 @@
             </row>
 
             <row>
-              <entry>letzte Änderung rückgängig:</entry>
+              <entry>letzte Änderung rückgängig</entry>
 
               <entry>Der letzte Bearbeitungsschritt wird aufgehoben. Die
               vorherige Version der Datenreihe ist immer als graue Punktlinie
@@ -489,17 +503,21 @@
       <para>T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne
       Datenreihen</para>
 
-      <para>Alle Spalten sind durch Tabulatoren getrennt. Dezimalpunkte werden
-      durch Komma dargestellt. Allerdings kann das Dezimalpunktzeichen über
-      das Menü <guimenu>Extras-Optionen</guimenu> auch beliebig gewählt
-      werden.</para>
+      <para>Alle Spalten sind durch Tabulatoren getrennt. Das
+      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü
+      <menuchoice>
+          <guimenu>Extras</guimenu>
+
+          <guimenuitem>Optionen</guimenuitem>
+        </menuchoice> eingestellt werden.</para>
     </section>
 
     <section>
       <title>Kopieren</title>
 
-      <para>Die Gangliniengrafik wird als "Foto" in die Zwischenablage kopiert
-      und kann nun in externe Programme (z.B. Office-Komponenten) als Bild
+      <para>Die Gangliniengrafik wird als
+      <emphasis><quote>Foto</quote></emphasis> in die Zwischenablage kopiert
+      und kann nun in externe Programme (z.B. Office-Programme) als Bild
       eingefügt werden.</para>
     </section>
 
@@ -510,9 +528,14 @@
       eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt
       zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
       Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen
-      aller Datenreihen unter <guimenu>Anzeige -&gt; aktuelle Kurven -&gt;
-      Entferne Nr.:</guimenu> (vgl. <xref
-      linkend="grafik_menu_aktuelle-kurven" />) gleichzusetzen.</para>
+      aller Datenreihen unter <menuchoice>
+          <guimenu>Anzeige</guimenu>
+
+          <guisubmenu>aktuelle Kurven</guisubmenu>
+
+          <guimenuitem>Entferne Nr.:</guimenuitem>
+        </menuchoice> gleichzusetzen (siehe <xref
+      linkend="grafik_menu_aktuelle-kurven" />).</para>
     </section>
   </section>
 
@@ -548,13 +571,14 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/ganglinien_bild7.png" />
+            <imagedata fileref="img/ganglinien_bild7.png" scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
 
-      <para>Über die Schalter 1..10 können die Linienfarben und Linienarten
-      bzw. Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
+      <para>Über die Schalter <guilabel>1</guilabel> bis
+      <guilabel>10</guilabel> können die Linienfarben und Linienarten bzw.
+      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
       eingestellten Linienarten bleiben auch nach Verlassen des
       Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im
       Verzeichnis des Programms für den nächsten Aufruf
@@ -570,15 +594,19 @@
 
       <informaltable>
         <tgroup cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" colwidth="3*" />
+
           <tbody>
             <row>
-              <entry>An:</entry>
+              <entry>An</entry>
 
               <entry>Anzeige an- bzw. ausschalten</entry>
             </row>
 
             <row>
-              <entry>Rechte y-Achse:</entry>
+              <entry>Rechte y-Achse</entry>
 
               <entry>Datenreihe bezieht sich auf die rechte y-Achse. In der
               Legende steht die Linie der Datenreihe zur Kennzeichnung rechts
@@ -586,16 +614,16 @@
             </row>
 
             <row>
-              <entry>Diagrammart:</entry>
+              <entry>Diagrammart</entry>
 
               <entry>Darstellungsart der Kurven</entry>
             </row>
 
             <row>
-              <entry>Entferne Nr.:</entry>
+              <entry>Entferne Nr.</entry>
 
               <entry>Bei Auswahl einer Nummer wird nach Betätigen von
-              <guimenu>Ok</guimenu> die Datenreihe aus der grafischen
+              <guimenu>OK</guimenu> die Datenreihe aus der grafischen
               Darstellung vollständig entfernt.</entry>
             </row>
           </tbody>
@@ -607,7 +635,8 @@
       <title>Maßstabsänderungen</title>
 
       <figure>
-        <title>Schaltfläche Maßstabsänderungen (Tastenkürzel "M")</title>
+        <title>Schaltfläche Maßstabsänderungen (Tastenkürzel
+        <quote>M</quote>)</title>
 
         <mediaobject>
           <imageobject>
@@ -645,12 +674,15 @@
 
       <para>Über den Schalter <emphasis role="bold">Darstellung</emphasis>
       kann der für die Achsendarstellung tatsächlich dargestellte Bereich
-      eingegrenzt werden.</para>
+      vorgegeben werden.</para>
 
       <para>Die Einstellungen für die rechte y-Achse werden nur dann
       verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet
-      wurde. Die Zuordnung erfolgt über den Menüpunkt <guimenu>Anzeige -&gt;
-      Aktuelle Kurven</guimenu>.</para>
+      wurde. Die Zuordnung erfolgt über den Menüpunkt <menuchoice>
+          <guimenu>Anzeige</guimenu>
+
+          <guimenuitem>Aktuelle Kurven</guimenuitem>
+        </menuchoice>.</para>
     </section>
 
     <section>
@@ -666,8 +698,9 @@
         </mediaobject>
       </figure>
 
-      <para>Nach dem Zoomen mit der Maus (Rechteck aufziehen) wird die letzte
-      Maßstabseinstellung wieder aufgerufen.</para>
+      <para>Zoomen mit der Maus (Rechteck aufziehen) bewirkt eine Veränderung
+      des Maßstabs und Diagrammausschnitts. Mit dieser Schaltfläche wird die
+      letzte Maßstabseinstellung wieder aufgerufen.</para>
     </section>
 
     <section>
@@ -705,8 +738,8 @@
       <title>Vorlagenliste anzeigen</title>
 
       <para>Über eine Vorlagenliste (siehe auch <xref
-      linkend="grafik_vorlagenliste" />) kann eine Art "Film" durch Ablauf
-      verschiedener Darstellungen erzielt werden.</para>
+      linkend="grafik_vorlagenliste" />) kann eine Art <quote>Film</quote>
+      durch Ablauf verschiedener Darstellungen erzielt werden.</para>
     </section>
 
     <section>
@@ -768,23 +801,27 @@
         </mediaobject>
       </figure>
 
-      <para>Über das Werkzeug zur Textbeschriftung<emphasis role="bold"> TXT
-      </emphasis>können bis zu 100 Textfelder beliebig im Diagrammbereich
-      gesetzt werden. Zu Beginn der Eingabe muss immer die Schaltfläche
-      aktiviert sein.</para>
+      <para>Über das Werkzeug zur Textbeschriftung <emphasis
+      role="bold">TXT</emphasis> können bis zu 100 Textfelder beliebig im
+      Diagrammbereich gesetzt werden. Zu Beginn der Eingabe muss immer die
+      Schaltfläche aktiviert sein.</para>
 
       <informaltable>
         <tgroup cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" colwidth="3*" />
+
           <tbody>
             <row>
-              <entry>Text neu setzen:</entry>
+              <entry>Text neu setzen</entry>
 
               <entry>Mit der linken Maustaste wird eine neue Position
               angeklickt. Es erscheint ein Texteingabedialog.</entry>
             </row>
 
             <row>
-              <entry>Textinhalt ändern:</entry>
+              <entry>Textinhalt ändern</entry>
 
               <entry>Wird beim Festlegen der Mausposition für den neuen Text
               festgestellt, dass hier bereits ein Text vorliegt, so wird
@@ -792,7 +829,7 @@
             </row>
 
             <row>
-              <entry>Textposition ändern:</entry>
+              <entry>Textposition ändern</entry>
 
               <entry>Es wird auf eine alte Textposition geklickt. Bei gedrückt
               gehaltener linker Maustaste wird der alte Textinhalt
@@ -913,8 +950,13 @@
       <para>Auf Basis eines eingestellten Zeitrasters wird ermittelt, ob
       mindestens ein Messwert vorliegt. Ist dies nicht der Fall, wird ein
       Kennwert für Messwertausfall eingetragen. Die Kennung ist auch unter
-      <guimenu>Extras -&gt; Optionen -&gt; Daten laden</guimenu>
-      einstellbar.</para>
+      <menuchoice>
+          <guimenu>Extras</guimenu>
+
+          <guisubmenu>Optionen</guisubmenu>
+
+          <guimenuitem>Daten laden</guimenuitem>
+        </menuchoice> einstellbar.</para>
     </section>
 
     <section>
@@ -1162,13 +1204,23 @@
       gewünschtes Format voreingestellt werden. Soll die Datei nur zur
       Identifikation der einzulesenden Daten genutzt werden, so muss diese
       Einstellung gewählt werden. Die Einstiegsdatei muss dann im folgenden
-      Format aufgebaut worden:</para>
+      Format aufgebaut werden:</para>
 
       <informaltable>
         <tgroup cols="5">
+          <colspec align="left" colwidth="4*" />
+
+          <colspec align="center" colwidth="2*" />
+
+          <colspec align="center" colwidth="2*" />
+
+          <colspec align="center" colwidth="2*" />
+
+          <colspec align="left" colwidth="3*" />
+
           <tbody>
             <row>
-              <entry>&lt;Dateiname&gt;</entry>
+              <entry align="center">&lt;Dateiname&gt;</entry>
 
               <entry>&lt;x-Spalte&gt;</entry>
 
@@ -1176,7 +1228,7 @@
 
               <entry>&lt;y-Spalte&gt;</entry>
 
-              <entry>&lt;y-Name&gt;</entry>
+              <entry align="center">&lt;y-Name&gt;</entry>
             </row>
 
             <row>
@@ -1294,10 +1346,16 @@
 
     <title>Auswertung: Messwertausfall</title>
 
-    <para>Die Behandlung von Datenausfällen kann über <guimenu>Extras Optionen
-    Daten laden Kennzeichnung von Messwertausfällen</guimenu> eingestellt
-    werden. Alle Datenwerte, die mit dieser Kennung übereinstimmen
-    werden:</para>
+    <para>Die Behandlung von Datenausfällen kann über <menuchoice>
+        <guimenu>Extras</guimenu>
+
+        <guisubmenu>Optionen</guisubmenu>
+
+        <guisubmenu>Daten laden</guisubmenu>
+
+        <guimenuitem>Kennzeichnung von Messwertausfällen</guimenuitem>
+      </menuchoice> eingestellt werden. Alle Datenwerte, die mit dieser
+    Kennung übereinstimmen werden:</para>
 
     <itemizedlist>
       <listitem>
@@ -1371,7 +1429,7 @@
     <para>Der Ablauf wird nachfolgend näher erläutert:</para>
 
     <para><emphasis role="bold">Einlesen und Darstellen der Abflussganglinie
-    und des zugehörigen Effektivniederschlages </emphasis>und</para>
+    und des zugehörigen Effektivniederschlages</emphasis> und</para>
 
     <para><emphasis role="bold">Auswahl des Hochwasserereignisses aus diesen
     Zeitreihen.</emphasis></para>
@@ -1405,8 +1463,11 @@
 
     <para>Über die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die
     nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der
-    Werkzeugleiste zur Korrektur von Datenreihen (<guimenu>bearbeiten -&gt;
-    Korrekturmodus</guimenu>) enthalten.</para>
+    Werkzeugleiste zur Korrektur von Datenreihen (<menuchoice>
+        <guiicon>Bearbeiten</guiicon>
+
+        <guimenuitem>Korrekturmodus</guimenuitem>
+      </menuchoice>) enthalten.</para>
 
     <para><emphasis role="bold">Interaktive Möglichkeit zum Abzug des
     Basisabflusse vom Hochwasserereignis</emphasis> Der Bereich des
@@ -1444,7 +1505,15 @@
     <para>Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro
     abgelegt.</para>
 
-    <graphic fileref="img/ganglinien_bild23.png" />
+    <figure>
+      <title>Ergebnis einer Abflussbeiwertermittlung (Beispiel)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/ganglinien_bild23.png" scale="80" />
+        </imageobject>
+      </mediaobject>
+    </figure>
   </section>
 
   <section id="grafik_vorlagenliste">
@@ -1458,7 +1527,7 @@
 
     <para>Über eine Liste, in der die Namen von mehreren vorher erstellten
     Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der
-    Name dieser Datei endet mit "*.lst".</para>
+    Name dieser Datei endet mit <quote>*.lst</quote>.</para>
 
     <para>Bsp.:</para>
 

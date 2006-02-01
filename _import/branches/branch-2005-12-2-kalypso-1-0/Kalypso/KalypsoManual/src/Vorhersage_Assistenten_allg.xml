@@ -6,7 +6,7 @@
     <primary>Vorhersage-Assistenten</primary>
   </indexterm>
 
-  <para>Zur Durchführung von Hochwasservorhersagen wird der Anwender mithilfe
+  <para>Zur Durchführung von Hochwasservorhersagen wird der Anwender mit Hilfe
   von Assistenten durch die verschiedenen Bearbeitungsschritte geführt. Die
   Gestaltung und Abfolge der einzelnen Assistenten-Seiten ist fest in KALYPSO
   konfiguriert und kann im Vorhersagemodus nicht verändert werden. Im
@@ -86,7 +86,7 @@
   dargestellt. Auf diesen Seiten werden die Zeitreihen auch tabellarsich
   angezeigt. Auf Seiten, die der Berechnung, Ergebniskontrolle, -bearbeitung
   und -ablage dienen, werden im Diagramm jeweils mehrere Datenarten angezeigt
-  (vergl. <xref linkend="gui-zml_diagramm_ansicht" />). Je nach dargestellter
+  (siehe <xref linkend="gui-zml_diagramm_ansicht" />). Je nach dargestellter
   Datenart kann es unterhalb des Diagramms Optionsknöpfe geben, mit deren
   Hilfe die Anzeige umgeschaltet werden kann (z.B. zwischen Wasserstand und
   Abfluss). Diese Umschaltung betrifft dann auch ggf. vorhandene
@@ -95,8 +95,8 @@
   <para>Werden Zeitreihen in Tabellen angezeigt, so können die Daten vom
   Benutzer geändert bzw. müssen ergänzt werden. Dies wird deutlich erleichtert
   durch die in <xref linkend="tabellen_bearbeiten" /> beschriebenen Funktionen
-  zur Tabellenbearbeitung. Es können aber selbstverständlich keine Datenpunkte
-  hinzugefügt bzw. Datumsänderungen vorgenommen werden.</para>
+  zur Tabellenbearbeitung. Es können aber keine Datenpunkte hinzugefügt bzw.
+  Datumsänderungen vorgenommen werden.</para>
 
   <section>
     <title>Programm-Start</title>
@@ -137,12 +137,12 @@
     </indexterm>
 
     <para>Wenn der Knopf <guilabel>Vorhersagen verwalten</guilabel> gedrückt
-    wird, erscheint der Dialog (<xref
+    wird, erscheint der Dialog (siehe <xref
     linkend="pic_SA_Assi_allg_03_HWV_verwalten" />) mit dessen Hilfe die
     bereits gemachten Vorhersagen verwaltet werden: sie können gelöscht oder
     auf dem Server archiviert werden. Archivierte Rechenvarianten sind für
     andere Nutzer zugänglich und können als Kopie weiter verwendet werden
-    (vergl. <xref linkend="SA_Assi_allg_04_HWV_starten" />).<figure
+    (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />).<figure
         id="pic_SA_Assi_allg_03_HWV_verwalten">
         <title>Vorhersagen verwalten</title>
 
@@ -156,6 +156,11 @@
           </mediaobject>
         </screenshot>
       </figure></para>
+
+    <note>
+      <para>Hiermit werden nur die lokal erstellten Vorhersagen
+      verwaltet.</para>
+    </note>
   </section>
 
   <section id="SA_Assi_allg_04_HWV_starten">
@@ -166,7 +171,7 @@
     </indexterm>
 
     <para>Der Knopf <guilabel>Vorhersage starten</guilabel> ruft den
-    Vorhersage-Assistenten für das gewählte Einzugsgebiet auf (<xref
+    Vorhersage-Assistenten für das gewählte Einzugsgebiet auf (siehe <xref
     linkend="pic_SA_Assi_allg_04_HWV_starten" />).</para>
 
     <para><figure id="pic_SA_Assi_allg_04_HWV_starten">
@@ -196,7 +201,7 @@
         unteren Teil des Dialogs ist die bereits erzeugte Rechenvariante
         auszuwählen, welche fortgeführt werden soll. Diese Option ist z.B. zu
         wählen, wenn Arbeiten an einer Rechenvariante noch nicht abgeschlossen
-        waren, Daten ergänzt oder verändert werden sollen. Es wird dabei die
+        sind, Daten ergänzt oder verändert werden sollen. Es wird dabei die
         urprüngliche Rechenvariante verändert.</para>
       </listitem>
 
@@ -223,18 +228,18 @@
     benötigten Dateien werden im lokalen Arbeitsverzeichnis gespeichert. Im
     weiteren Verlauf besteht die Möglichkeit, die derzeit bearbeitete
     Rechenvariante auf dem Server zu archivieren und somit für die anderen
-    Nutzer zugänglich zu machen ( <xref
+    Nutzer zugänglich zu machen ( siehe <xref
     linkend="SA_Assi_Ilse_05_Berichtsablage_VarianteArchivieren" />, <xref
     linkend="SA_Assi_Bode_12_Berichtsablage_Pegel_VarianteArchivieren" /> ,
     <xref linkend="SA_Assi_Saale_05_Berichtsablage_VarianteArchivieren" /> ).
     Rechenvarianten können auch über <guilabel>Vorhersagen
-    verwalten</guilabel> auf dem Server archiviert werden (vergl. <xref
+    verwalten</guilabel> auf dem Server archiviert werden (siehe <xref
     linkend="SA_Assi_allg_03_VorhersagenVerw" />). Dieser Dialog kann auch
     über <menuchoice>
         <guimenu>Modell</guimenu>
 
         <guisubmenu>Vorhersagen verwalten</guisubmenu>
-      </menuchoice> auch dem Expertenmodus heraus aufgerufen werden.</para>
+      </menuchoice> aus dem Expertenmodus heraus aufgerufen werden.</para>
 
     <para>Die weiteren Seiten des Assistenten sind modellabhängig und werden
     im Folgenden einzeln beschrieben.</para>
