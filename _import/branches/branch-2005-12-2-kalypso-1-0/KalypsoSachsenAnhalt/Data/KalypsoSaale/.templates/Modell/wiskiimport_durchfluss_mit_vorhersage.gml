@@ -43,44 +43,16 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
-    <Wiski fid="Pegel-579011">
-      <name>Rappbode-TS-Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579011.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579011"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579011"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
-    <Wiski fid="Pegel-579015">
-      <name>TS-Wendefurth-Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579015.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579015"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579015"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
     <Wiski fid="Pegel-579045">
       <name>Wegeleben</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579045.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.579045"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.579049"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Wasserstand.579045"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Wasserstand.579049"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
@@ -113,20 +85,6 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
-    <Wiski fid="Pegel-575406">
-      <name>Kelbra-Abgabe</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575406.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.575406"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Wasserstand.575406"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
     <Wiski fid="Pegel-575410">
       <name>Bennungen</name>
       <lokal>
@@ -151,34 +109,6 @@
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Wasserstand.579330"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
-    <Wiski fid="Pegel-579000">
-      <name>Ül-Spere, Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579000.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579000"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579000"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
-    <Wiski fid="Pegel-579012">
-      <name>Rappbode-TS-Abgabe</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579012.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579012"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579012"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
@@ -211,16 +141,86 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
+    <Wiski fid="Pegel-579012">
+      <name>Rappbode-TS-Abgabe</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579012.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579012.zml"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579012.zml"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
+    <Wiski fid="Pegel-575406">
+      <name>Kelbra-Abgabe</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575406.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.575406.zml"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.575406.zml"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
     <Wiski fid="Pegel-579999">
       <name>ÜL zur Rappbode</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579999.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579999"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579999.zml"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579999"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579999.zml"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
+    <Wiski fid="Pegel-579011">
+      <name>Rappbode-TS-Zulauf</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579011.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579011.zml"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579011.zml"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
+    <Wiski fid="Pegel-579000">
+      <name>Ül-Sperre, Zulauf</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579000.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579000.zml"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579000.zml"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
+    <Wiski fid="Pegel-579015">
+      <name>TS-Wendefurth-Zulauf</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579015.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579015.zml"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/DurchflussVorlagen/.Vorlage.579015.zml"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>

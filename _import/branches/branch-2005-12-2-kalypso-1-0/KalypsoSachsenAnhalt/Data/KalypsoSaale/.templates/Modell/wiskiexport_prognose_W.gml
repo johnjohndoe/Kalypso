@@ -33,22 +33,6 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
-    <Wiski fid="Pegel-570000">
-      <name>Saale-TS-Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
-      </lokal>
-      <wiski_vergangenheit/>
-      <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.570000"/>
-      </wiski_zukunft>
-      <wiski_simulation_vergangenheit/>
-      <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.570000"/>
-      </wiski_simulation_zukunft>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
     <Wiski fid="Pegel-572115">
       <name>Schwarzburg</name>
       <lokal>
@@ -141,22 +125,6 @@
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.573010"/>
-      </wiski_simulation_zukunft>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
-    <Wiski fid="Pegel-573090">
-      <name>Straußfurt Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
-      </lokal>
-      <wiski_vergangenheit/>
-      <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.573090"/>
-      </wiski_zukunft>
-      <wiski_simulation_vergangenheit/>
-      <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.573090"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>
@@ -344,11 +312,11 @@
       </lokal>
       <wiski_vergangenheit/>
       <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.577570"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.577571"/>
       </wiski_zukunft>
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.577570"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.577571"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>
@@ -616,11 +584,11 @@
       </lokal>
       <wiski_vergangenheit/>
       <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.553061"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.553060"/>
       </wiski_zukunft>
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.553061"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.553060"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>
@@ -680,11 +648,11 @@
       </lokal>
       <wiski_vergangenheit/>
       <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.575402"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.575401"/>
       </wiski_zukunft>
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.575402"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.575401"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>
@@ -749,22 +717,6 @@
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.579621"/>
-      </wiski_simulation_zukunft>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
-    <Wiski fid="Pegel-579306">
-      <name>HWR Kalte Bode -Zulauf</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
-      </lokal>
-      <wiski_vergangenheit/>
-      <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Wasserstand.579306"/>
-      </wiski_zukunft>
-      <wiski_simulation_vergangenheit/>
-      <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Wasserstand.579306"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>

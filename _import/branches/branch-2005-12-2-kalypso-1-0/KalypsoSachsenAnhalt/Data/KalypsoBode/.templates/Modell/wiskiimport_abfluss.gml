@@ -238,4 +238,18 @@
 			</wiski_simulation_vergangenheit>
 		</Wiski>
 	</WiskiMember>
+	<WiskiMember>
+		<Wiski fid="Wiski_Q_18">
+			<name>Neugattersleben</name>
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Messung/Neugattersleben.zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/Zeitreihen/.Vorlage.Neugattersleben.zml"/>
+			</wiski_vergangenheit>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/Zeitreihen/.Vorlage.Neugattersleben.zml"/>
+			</wiski_simulation_vergangenheit>
+		</Wiski>
+	</WiskiMember>
 </WiskiCollection>

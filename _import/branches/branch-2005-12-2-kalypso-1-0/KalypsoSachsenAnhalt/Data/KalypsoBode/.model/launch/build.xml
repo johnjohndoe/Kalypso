@@ -95,13 +95,6 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<!-- Pegelabfluss aus ZML-Vorlagen-Datei (wegen Metadaten) -->
-		<!-- hier kein Token-Replace im filter für den Namen: es steht alles in der ZML-Vorlage -->
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_abfluss_aus_zml_datei.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}" tokens="featureName-name">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/>
-			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation>
-
 		<!-- Niederschlagsstationen (Messung) -->
 		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_niederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}" tokens="featureName-name">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/>
