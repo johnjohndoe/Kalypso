@@ -1,15 +1,3 @@
-package org.kaylpso.ui.view.action;
-
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
-
-//import org.kalypso.ui.action.wizard.ImportWmsSourceWizard;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -50,9 +38,22 @@ import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kaylpso.ui.view.action;
+
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
+import org.kaylpso.ui.KalypsoAddLayerPlugin;
 
 public class AddThemeAction implements PluginMapOutlineAction
 {
+
+  private ISelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -61,12 +62,13 @@ public class AddThemeAction implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      GisMapOutlineViewer viewer = ( (PluginMapOutlineActionDelegate)action ).getOutlineviewer();
-      Shell shell = viewer.getControl().getShell();
-      KalypsoAddLayerWizard wizard2 = new KalypsoAddLayerWizard( viewer );
-      wizard2.setForcePreviousAndNextButtons(true);
-
-      final WizardDialog dialog = new WizardDialog( shell, wizard2 );
+      final GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      final Shell shell = viewer.getControl().getShell();
+      final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
+      final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+      wizard.init( activeWorkbenchWindow.getWorkbench(), m_selection );
+      wizard.setForcePreviousAndNextButtons( true );
+      final WizardDialog dialog = new WizardDialog( shell, wizard );
       dialog.open();
     }
   }
@@ -77,7 +79,7 @@ public class AddThemeAction implements PluginMapOutlineAction
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-  // donothing
+    m_selection = selection;
   }
 
 }
