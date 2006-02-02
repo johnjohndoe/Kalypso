@@ -11,7 +11,7 @@
             title="AddLayer"
             enabled="true"
             icon="icon/add_row.gif"
-            class="org.kaylpso.ui.view.action.AddThemeAction"
+            class="org.kalypso.ui.view.action.AddThemeAction"
             tooltip="Thema zu Karte hinzufügen"/>
    </extension>
    <extension
@@ -20,32 +20,32 @@
          point="org.kalypso.ui.addlayer.addLayerWizard">
       <wizard
             icon="icon/file_shp.GIF"
-            class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
+            class="org.kalypso.ui.wizard.shape.ImportShapeSourceWizard"
             name="%org.kalypso.ui.wizard.shape.name"
             id="org.kalypso.ui.wizard.shape"/>
       <wizard
             icon="icon/Datastore_WMS.gif"
-            class="org.kaylpso.ui.wizard.wms.ImportWmsSourceWizard"
+            class="org.kalypso.ui.wizard.wms.ImportWmsSourceWizard"
             name="%org.kalypso.ui.wizard.wms.name"
             id="org.kalypso.ui.wizard.wms"/>
       <wizard
             icon="icon/Datastore_WFS.gif"
-            class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
+            class="org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard"
             name="%org.kalypso.ui.wizard.wfs.name"
             id="org.kalypso.ui.wizard.wfs"/>
       <wizard
             icon="icon/fileGml.gif"
-            class="org.kaylpso.ui.wizard.gml.KalypsoGmlImportWizard"
+            class="org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard"
             name="%gml.name"
             id="gml"/>
       <wizard
             icon="icon/raster.GIF"
-            class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
+            class="org.kalypso.ui.wizard.raster.ImportRasterSourceWizard"
             name="%org.kalypso.ui.wizard.raster.name"
             id="org.kalypso.ui.wizard.raster"/>
       <wizard
             icon="icon/file_image.gif"
-            class="org.kaylpso.ui.wizard.image.ImportImageSourceWizard"
+            class="org.kalypso.ui.wizard.image.ImportImageSourceWizard"
             name="%org.kalypso.ui.wizard.image.name"
             id="org.kalypso.ui.wizard.image"/>
    </extension>

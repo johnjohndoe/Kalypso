@@ -4,26 +4,23 @@ Bundle-Name: KaylpsoAddLayer
 Bundle-SymbolicName: org.kalypso.ui.addlayer; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: KaylpsoAddLayerPlugin.jar
-Bundle-Activator: org.kaylpso.ui.KalypsoAddLayerPlugin
+Bundle-Activator: org.kalypso.ui.KalypsoAddLayerPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Export-Package: org.kalypso.ui.createGisMapView,
- org.kaylpso.ui,
- org.kaylpso.ui.action,
- org.kaylpso.ui.dialog,
- org.kaylpso.ui.test,
- org.kaylpso.ui.view.action,
- org.kaylpso.ui.wizard,
- org.kaylpso.ui.wizard.gml,
- org.kaylpso.ui.wizard.image,
- org.kaylpso.ui.wizard.raster,
- org.kaylpso.ui.wizard.resources.services,
- org.kaylpso.ui.wizard.shape,
- org.kaylpso.ui.wizard.wfs,
- org.kaylpso.ui.wizard.wfs.resources,
- org.kaylpso.ui.wizard.wfs.test,
- org.kaylpso.ui.wizard.wms,
- org.kaylpso.ui.wizard.wms.resources
+Export-Package: org.kalypso.ui,
+ org.kalypso.ui.action,
+ org.kalypso.ui.createGisMapView,
+ org.kalypso.ui.dialog,
+ org.kalypso.ui.test,
+ org.kalypso.ui.view.action,
+ org.kalypso.ui.wizard,
+ org.kalypso.ui.wizard.gml,
+ org.kalypso.ui.wizard.image,
+ org.kalypso.ui.wizard.raster,
+ org.kalypso.ui.wizard.shape,
+ org.kalypso.ui.wizard.wfs,
+ org.kalypso.ui.wizard.wfs.test,
+ org.kalypso.ui.wizard.wms
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.ui;visibility:=reexport,
