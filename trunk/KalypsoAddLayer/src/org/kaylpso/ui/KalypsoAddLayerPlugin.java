@@ -9,65 +9,86 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoAddLayerPlugin extends AbstractUIPlugin {
-	//The shared instance.
-	private static KalypsoAddLayerPlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
-	
-	/**
-	 * The constructor.
-	 */
-	public KalypsoAddLayerPlugin() {
-		super();
-		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.kaylpso.ui.KaylpsoAddLayerPluginPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-	}
+public class KalypsoAddLayerPlugin extends AbstractUIPlugin
+{
+  // The shared instance.
+  private static KalypsoAddLayerPlugin plugin;
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	@Override
-  public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+  // Resource bundle.
+  private ResourceBundle resourceBundle;
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	@Override
-  public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-	}
+  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd) */
+  public static final String PL_IMPORT = "addLayerWizard";
 
-	/**
-	 * Returns the shared instance.
-	 */
-	public static KalypsoAddLayerPlugin getDefault() {
-		return plugin;
-	}
+  /**
+   * The constructor.
+   */
+  public KalypsoAddLayerPlugin( )
+  {
+    super();
+    plugin = this;
+    try
+    {
+      resourceBundle = ResourceBundle.getBundle( "org.kaylpso.ui.KaylpsoAddLayerPluginPluginResources" );
+    }
+    catch( MissingResourceException x )
+    {
+      resourceBundle = null;
+    }
+  }
 
-	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = KalypsoAddLayerPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
+  /**
+   * This method is called upon plug-in activation
+   */
+  @Override
+  public void start( BundleContext context ) throws Exception
+  {
+    super.start( context );
+  }
 
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
-	}
+  /**
+   * This method is called when the plug-in is stopped
+   */
+  @Override
+  public void stop( BundleContext context ) throws Exception
+  {
+    super.stop( context );
+  }
+
+  /**
+   * Returns the shared instance.
+   */
+  public static KalypsoAddLayerPlugin getDefault( )
+  {
+    return plugin;
+  }
+
+  /**
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
+   */
+  public static String getResourceString( String key )
+  {
+    ResourceBundle bundle = KalypsoAddLayerPlugin.getDefault().getResourceBundle();
+    try
+    {
+      return (bundle != null) ? bundle.getString( key ) : key;
+    }
+    catch( MissingResourceException e )
+    {
+      return key;
+    }
+  }
+
+  /**
+   * Returns the plugin's resource bundle,
+   */
+  public ResourceBundle getResourceBundle( )
+  {
+    return resourceBundle;
+  }
+
+  public static String getId( )
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
 }

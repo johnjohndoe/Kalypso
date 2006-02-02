@@ -15,7 +15,7 @@
             tooltip="Thema zu Karte hinzufügen"/>
    </extension>
    <extension
-         id="dataimport"
+         id="addLayerWizard"
          name="dataimport"
          point="org.kalypso.ui.addlayer.addLayerWizard">
       <wizard

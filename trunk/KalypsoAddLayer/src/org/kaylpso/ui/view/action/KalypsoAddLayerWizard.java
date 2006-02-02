@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kaylpso.ui.view.action;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
@@ -48,8 +48,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 import org.eclipse.ui.model.AdaptableList;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ui.IKalypsoUIConstants;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kaylpso.ui.KalypsoAddLayerPlugin;
 
 /**
  * This class extends the ImportWizard. This enables to call the import wizard from any action. Entry point to kalypso
@@ -59,9 +58,7 @@ public class KalypsoAddLayerWizard extends Wizard
 {
   private GisMapOutlineViewer m_outlineviewer;
 
-  private IStructuredSelection selection;
-
-  private IWorkbench workbench;
+  private IWorkbench m_workbench;
 
   /**
    * Returns the import wizards that are available for invocation.
@@ -69,18 +66,19 @@ public class KalypsoAddLayerWizard extends Wizard
   public KalypsoAddLayerWizard( GisMapOutlineViewer outlineviewer )
   {
     m_outlineviewer = outlineviewer;
-
-    setWindowTitle( "Kalypso Daten Import" );
+    setWindowTitle( "Kalypso Daten Import" ); //$NON-NLS-1$
+    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
+    setNeedsProgressMonitor( true );
   }
 
   /**
    * Creates the wizard's pages lazily.
    */
   @Override
-  public void addPages()
+  public void addPages( )
   {
-    addPage( new KalypsoWizardSelectionPage( this.workbench, this.selection, getAvailableImportWizards(),
-        "Kalypso Import", m_outlineviewer ) );
+
+    addPage( new KalypsoWizardSelectionPage( m_workbench, null, getAvailableImportWizards(), "Kalypso Import", m_outlineviewer ) );
   }
 
   /**
@@ -88,35 +86,27 @@ public class KalypsoAddLayerWizard extends Wizard
    * the WizardsRegistryReader must be encapsuled in KalypsoWizardsRegistryReader to make shure only wizards from
    * org.kalypso.ui are read. And not as specified from the Workbench ui -> see WizardsRegistryReader.
    */
-  protected AdaptableList getAvailableImportWizards()
+  protected AdaptableList getAvailableImportWizards( )
   {
-    final AdaptableList wizards = new WizardsRegistryReader( KalypsoGisPlugin.getId(), IKalypsoUIConstants.PL_IMPORT ).getWizardElements();
+    final String pluginId = KalypsoAddLayerPlugin.getId();
+    final String plugInpointId = KalypsoAddLayerPlugin.PL_IMPORT;
+    final AdaptableList wizards = new WizardsRegistryReader( pluginId, plugInpointId ).getWizardElements();
     return wizards;
   }
 
-  public GisMapOutlineViewer getOutlineViewer()
+  public GisMapOutlineViewer getOutlineViewer( )
   {
     return m_outlineviewer;
   }
 
   @Override
-  public boolean performFinish()
+  public boolean performFinish( )
   {
-    //((KalypsoWizardSelectionPage) getPages()[0]).saveWidgetValues();
     return true;
   }
 
-  /**
-   * Initializes the wizard.
-   */
-  public void init( IWorkbench aWorkbench, IStructuredSelection currentSelection )
+  public void init( IWorkbench workbench, ISelection selection )
   {
-    this.workbench = aWorkbench;
-    this.selection = currentSelection;
-
-    setWindowTitle( "Diese Daten können in die Karte eingefügt werden" ); //$NON-NLS-1$
-    setDefaultPageImageDescriptor( WorkbenchImages
-        .getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
-    setNeedsProgressMonitor( true );
+    m_workbench = workbench;
   }
 }

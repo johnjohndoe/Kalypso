@@ -53,17 +53,15 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kaylpso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
- * 
  * @author kuepfer
  */
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 {
   protected GisMapOutlineViewer m_outline;
 
-  public KalypsoWizardSelectionPage( IWorkbench aWorkbench, IStructuredSelection currentSelection,
-      AdaptableList wizardElts, String message, GisMapOutlineViewer outlineview )
+  public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, IStructuredSelection selection, AdaptableList wizardElts, String message, GisMapOutlineViewer outlineview )
   {
-    super( aWorkbench, currentSelection, wizardElts, message, null );
+    super( aWorkbench,  selection, wizardElts, message,null);
     m_outline = outlineview;
   }
 
@@ -76,10 +74,10 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
     return new WorkbenchWizardNode( this, element )
     {
       @Override
-      public IWorkbenchWizard createWizard() throws CoreException
+      public IWorkbenchWizard createWizard( ) throws CoreException
       {
-        IKalypsoDataImportWizard createdwizard = (IKalypsoDataImportWizard)element.createWizard();
-        //Set the outlineViewer in the import wizard
+        IKalypsoDataImportWizard createdwizard = (IKalypsoDataImportWizard) element.createWizard();
+        // Set the outlineViewer in the import wizard
         createdwizard.setOutlineViewer( m_outline );
         return createdwizard;
       }
