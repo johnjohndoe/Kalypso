@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Jul 2005    5:48 pm
+!     Last change:  WP    2 Feb 2006    5:37 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -315,23 +315,13 @@ REAL 	:: mei (maxkla)
           STOP 'SUB EB2KS, da Fehler nicht behebbar.' 
         ENDIF 
 !JK      BERECHNUNG TEILABFLUSS                                         
-!HB***************************************                              
-!HB   11.12.02 H.BROEKER                                                
-!HB                                                                     
-!HB   im Aufruf von Lindy fehlt mei(ii), alter deaktivierte Befehl:     
-!HB         call lindy(v_ks(ii),l_ks(ii),ax(ii),ay(ii),                 
-!HB     1                   dp(ii),hvor(ii),isener,                     
-!HB     2                 u_ks(ii),a_ks(ii),ak_mi,a_li,a_re,h_li,h_re,  
-!HB     3                 aks_li,aks_re,alpha,iuerr,lein,cwr(ii),alp(ii)
-!HB     4      also(ii),anl(ii),anb(ii),vnvv(ii),cwn(ii),if_l(ii),k_ks(i
-!HB   neuer Aufruf:                                                     
         CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
         hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
         a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
         alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-        if_l (ii), k_ks (ii), formbeiwert(1) )
-!HB   Ende des neuen Aufrufs                                            
-!HB***************************************                              
+        if_l (ii), formbeiwert(1) )
+
+
                                                                         
         q_ks (ii) = v_ks (ii) * a_ks (ii) 
         qt (1) = qt (1) + q_ks (ii) 
@@ -402,25 +392,12 @@ REAL 	:: mei (maxkla)
           STOP 'SUB EB2KS, da Fehler nicht behebbar.' 
         ENDIF 
 !JK      BERECHNUNG TEILABFLUSS                                         
-!HB***************************************                              
-!HB   08.01.03 H.BROEKER                                                
-!HB                                                                     
-!HB   im Aufruf von Lindy fehlt mei(ii), alter deaktivierte Befehl:     
-!HB         call lindy(v_ks(ii),l_ks(ii),ax(ii),ay(ii),                 
-!HB     1                   dp(ii),hvor(ii),isener,                     
-!HB     2                 u_ks(ii),a_ks(ii),ak_mi,a_li,a_re,h_li,h_re,  
-!HB     3                aks_li,aks_re,alpha,iuerr,lein,cwr(ii),alp(ii),
-!HB     4      also(ii),anl(ii),anb(ii),vnvv(ii),cwn(ii),if_l(ii),k_ks(i
-!HB   neuer Aufruf:                                                     
         CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
         hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
         a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
         alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-        if_l (ii), k_ks (ii), formbeiwert(3) )
-!HB   Ende des neuen Aufrufs                                            
-!HB***************************************                              
-                                                                        
-                                                                        
+        if_l (ii), formbeiwert(3) )
+
         q_ks (ii) = v_ks (ii) * a_ks (ii) 
         qt (3) = qt (3) + q_ks (ii) 
         alsum = alsum + l_ks (ii) * u_ks (ii) 

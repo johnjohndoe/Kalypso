@@ -1,4 +1,4 @@
-!     Last change:  WP   19 Jul 2005    2:30 pm
+!     Last change:  WP   25 Jan 2006    5:19 pm
 !--------------------------------------------------------------------------
 ! This code, stop_programm.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -65,11 +65,16 @@ if (fehlnr > 0) then
     RETURN
   end if
 
-else
+else if (fehlnr == 0) then
 
   call close_units()
   WRITE ( *, 1000) VERSIONNR
   stop
+
+else
+
+  ! Fall FEHLNR kleiner 0, dann werden nur alle offenen Datein geschlossen
+  call close_units()
 
 end if
 

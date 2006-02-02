@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    2:12 pm
+!     Last change:  WP    2 Feb 2006    5:40 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -673,7 +673,12 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             ip1000 = 0
 
             !UT  MITTELUNG ALTE UND NEUE TRENNFL.-GESCHW.
-            v_tr (i1) = (v_tr (i1) + vxn) / 2.
+            !WP  Erweiterung um staerkere Unterrelaxation 02.02.2006
+            if (num < 10) then
+              v_tr (i1) = (v_tr (i1) + vxn) / 2.
+            else
+              v_tr (i1) = (2*v_tr (i1) + vxn) / 3.
+            end if
 
             !WP  BERECHNUNG CW-WERT
             cwun = GET_CW_UN (v_tr (i1), dp (ik), nue)
@@ -786,19 +791,20 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !UT                 TRENNFLAECHEN GESCHW. [m/s], FORMEL (43)
             vxn = ct * vstt
             !write (*,*) 'CT = ', ct, '   VSTT = ', vstt
+            !write (iuerr,*) ' In PASCHE. vxn = ', vxn
 
             vt_n (i1) = vxn
 
             !UT                 SCHLEIFE 1000, MEHR ALS 10mal => ENDE
             !UT                 TRENNFLAECHENGESCHWINDIGKEIT
-            IF (num.gt.10) then
+            IF (num.gt.20) then
 
               !UT                    SETZEN FEHLERKENNZAHL SCHLEIFE 1000
               ip1000 = 1000
 
               if(lein .eq. 3) then
                 write(iuerr,9002) num, v_tr(i1), vxn
-                9002 format(/1X, 'Keine konvergenz in schleife V_TR (sup pasche)!', /, &
+                9002 format(/1X, 'Keine konvergenz in schleife V_TR (sub pasche)!', /, &
                            & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
                            & 1X, 'Differenz V_TR_alt = ',F10.4, ' V_TR_neu = ',F10.4)
                 write(iuerr,8901) iter1, i1, v_tr(i1), axn2, b05f, omega, &
@@ -872,7 +878,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                                                                         
         if(lein .eq. 3) then
           write(iuerr,9003) iter5, vffa, v_hg
-          9003 format(/1X, 'Keine konvergenz in schleife 5 (sup pasche)!', /, &
+          9003 format(/1X, 'Keine konvergenz in schleife 5 (sub pasche)!', /, &
                      & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
                      & 1X, 'Differenz V_HG_alt = ',F10.4, ' V_HG_neu = ',F10.4)
         END if

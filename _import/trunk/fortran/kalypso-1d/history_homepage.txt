@@ -204,3 +204,14 @@ Kalypso 1.0.15   Januar 2006
 1.)  Bugfix bei der Berechnung von extrem komplexen Brücken.
  
                                                     Wolf Plöger, 17.01.2006
+
+
+Kalypso 1.0.16   Februar 2006
+-----------------------------
+1.)  Zusätzliche Prüfung der eingegebenen Bewuchsparameter. Bewuchs zwischen den
+     Trennflächen wird direkt gelöscht, Inkonsistente Dateieneingabe, z.B.
+     ax= 5.0,  ay = 5.0,  dp = 0.0 wird geprüft und dann Bewuchs an dieser Stelle
+     entfernt. Warnhinweise werden in error2.log geschrieben.
+2.)  Verbesserung der Iteration zur Bestimmung der Trennflächenrauhigkeit.
+
+                                                    Wolf Plöger, 02.02.2006

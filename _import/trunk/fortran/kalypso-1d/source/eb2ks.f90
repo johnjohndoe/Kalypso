@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005    9:33 am
+!     Last change:  WP    2 Feb 2006    5:36 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -554,14 +554,79 @@ DO 15 WHILE(difi.gt.0.01)
     !UT      AUFRUF VON LINDY, BERECHNUNG VON
     !UT      LAMBDA IM VORLAND AUS BEWUCHS UND SOHLRAUHEIT
 
-    !WP 11.07.2005
-    !write (*,*) 'In LINDY. Linkes Vorland. Formbeiwert = ', formbeiwert(1)
+    !WP 02.02.2006
+    !write (*,*) 'In EB2KS, kurz vor LINDY Linkes Vorland. '
+    !write (*,*) 'v_ks(ii) = ', v_ks(ii)
+    !write (*,*) 'l_ks(ii) = ', l_ks(ii)
+    !write (*,*) 'ax(ii)   = ', ax(ii)
+    !write (*,*) 'ay(ii)   = ', ay(ii)
+    !write (*,*) 'dp(ii)   = ', dp(ii)
+    !write (*,*) 'hvor(ii) = ', hvor(ii)
+    !write (*,*) 'mei(ii)  = ', mei(ii)
+    !write (*,*) 'isener   = ', isener
+    !write (*,*) 'u_ks(ii) = ', u_ks(ii)
+    !write (*,*) 'a_ks(ii) = ', a_ks(ii)
+    !write (*,*) 'ak_mi    = ', ak_mi
+    !write (*,*) 'a_li     = ', a_li
+    !write (*,*) 'a_re     = ', a_re
+    !write (*,*) 'h_li     = ', h_li
+    !write (*,*) 'h_re     = ', h_re
+    !write (*,*) 'aks_li   = ', aks_li
+    !write (*,*) 'aks_re   = ', aks_re
+    !write (*,*) 'alpha    = ', alpha
+    !write (*,*) 'iuerr    = ', iuerr
+    !write (*,*) 'lein     = ', lein
+    !write (*,*) 'cwr(ii)  = ', cwr(ii)
+    !write (*,*) 'alp(ii)  = ', alp(ii)
+    !write (*,*) 'also(ii) = ', also(ii)
+    !write (*,*) 'anl(ii)  = ', anl(ii)
+    !write (*,*) 'anb(ii)  = ', anb(ii)
+    !write (*,*) 'vnvv(ii) = ', vnvv(ii)
+    !write (*,*) 'cwn(ii)  = ', cwn(ii)
+    !write (*,*) 'if_l(ii) = ', if_l(ii)
+    !write (*,*) 'k_ks(ii) = ', k_ks(ii)
+    !write (*,*) 'formb(1) = ', formbeiwert(1)
 
     CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
      & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
      & a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
      & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-     & if_l (ii), k_ks (ii), formbeiwert(1) )
+     & if_l (ii), formbeiwert(1) )
+
+
+    !WP 02.02.2006
+    !write (*,*) 'In EB2KS, kurz nach LINDY Linkes Vorland. '
+    !write (*,*) 'v_ks(ii) = ', v_ks(ii)
+    !write (*,*) 'l_ks(ii) = ', l_ks(ii)
+    !write (*,*) 'ax(ii)   = ', ax(ii)
+    !write (*,*) 'ay(ii)   = ', ay(ii)
+    !write (*,*) 'dp(ii)   = ', dp(ii)
+    !write (*,*) 'hvor(ii) = ', hvor(ii)
+    !write (*,*) 'mei(ii)  = ', mei(ii)
+    !write (*,*) 'isener   = ', isener
+    !write (*,*) 'u_ks(ii) = ', u_ks(ii)
+    !write (*,*) 'a_ks(ii) = ', a_ks(ii)
+    !write (*,*) 'ak_mi    = ', ak_mi
+    !write (*,*) 'a_li     = ', a_li
+    !write (*,*) 'a_re     = ', a_re
+    !write (*,*) 'h_li     = ', h_li
+    !write (*,*) 'h_re     = ', h_re
+    !write (*,*) 'aks_li   = ', aks_li
+    !write (*,*) 'aks_re   = ', aks_re
+    !write (*,*) 'alpha    = ', alpha
+    !write (*,*) 'iuerr    = ', iuerr
+    !write (*,*) 'lein     = ', lein
+    !write (*,*) 'cwr(ii)  = ', cwr(ii)
+    !write (*,*) 'alp(ii)  = ', alp(ii)
+    !write (*,*) 'also(ii) = ', also(ii)
+    !write (*,*) 'anl(ii)  = ', anl(ii)
+    !write (*,*) 'anb(ii)  = ', anb(ii)
+    !write (*,*) 'vnvv(ii) = ', vnvv(ii)
+    !write (*,*) 'cwn(ii)  = ', cwn(ii)
+    !write (*,*) 'if_l(ii) = ', if_l(ii)
+    !write (*,*) 'k_ks(ii) = ', k_ks(ii)
+    !write (*,*) 'formb(1) = ', formbeiwert(1)
+
 
     !***********************************************************************
     !        DK 29/05/01
@@ -831,7 +896,7 @@ DO 15 WHILE(difi.gt.0.01)
      & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
      & a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
      & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-     & if_l (ii), k_ks (ii), formbeiwert(3) )
+     & if_l (ii), formbeiwert(3) )
 
 
     !***********************************************************************

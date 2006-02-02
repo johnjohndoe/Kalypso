@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Jul 2005    5:41 pm
+!     Last change:  WP    2 Feb 2006    6:03 pm
 !--------------------------------------------------------------------------
 ! This code, lindy.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,9 +38,9 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE lindy (vxmvor, lamvog, ax, az, dp, h_mi, meil, is, &
+SUBROUTINE lindy (vxmvor, lamvog, ax, ay, dp, h_mi, meil, is, &
      & u_mi, a_mi, rau_mi, a_li, a_re, h_li, h_re, rau_li, rau_re, alpha, &
-     & iuerr, lein, cwr, lamv, aln_mi, axn1, b05, vv2, cwn, ifehl, ks_mi, fbw)
+     & iuerr, lein, cwr, lamv, aln_mi, axn1, b05, vv2, cwn, ifehl, fbw)
 
 !***********************************************************************
 !**                                                                     
@@ -60,21 +60,13 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, az, dp, h_mi, meil, is, &
 !**   alpha        - NEIGUNGSWINKEL SOHLE, BOESCHUNG QUER ZUR FLIESS-   
 !**                  RICHTUNG                                           
 !**   a_mi/li/re   - FLAECHE DES TEILABSCHNITTES DES VORLANDES [m]      
-!**   ax,az,dp     - BEWUCHSPARAMETER                                   
-!**   b05          -                                                    
-!**   dp           - BEWUCHSPARAMETER                                   
-!**   h_mi/li/re   - WASSERSPIEGELHOEHE IM VORLAND [M]                  
-!**   ifehl                                                             
-!**   is           - GEFAELLE [-]                                       
-!**   ks_mi        - RAUHEIT DES TEILABSCHNITTES DES VORLANDES [m]      
-!**   lamvog       - WIDERSTANDSBEIWERT (LAMBDA) DES TEILABSCHNITTES    
-!**                  DES VORLANDES [-]                                  
-!**   lamv         - WIDERSTANDSBEIWERT DURCH BEWUCHS [m]               
+!**   b05          -
+!**   h_mi/li/re   - WASSERSPIEGELHOEHE IM VORLAND [M]
+!**   is           - GEFAELLE [-]
+!**   lamv         - WIDERSTANDSBEIWERT DURCH BEWUCHS [m]
 !**   rau_mi/li/re - KORRIGIERTE RAUHEIT DES TEILABSCHNITTES DES        
 !**                  VORLANDES [m]                                      
-!**   u_mi         - BENETZTER UMFANG DES TEILABSCHNITTES DES           
-!**                  VORLANDES [m]                                      
-!**   vxmvor       - MITTLERE GESCHWINDIGKEIT IM VORLAND [m/s]          
+
 !**                                                                     
 !**   DIREKTE AUSGABE                                                   
 !**   ---------------                                                   
@@ -89,24 +81,20 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, az, dp, h_mi, meil, is, &
 !**   ak1_li  - abgeminderte Rauheit des linken Absturzes               
 !**   ak1_mi  - abgeminderte Rauheit des mittleren Abschnittes          
 !**   ak1_re  - abgeminderte Rauheit des rechten Absturzes              
-!**   al_li   - Widerstandsbeiwert des linken Absturzes                 
+!**   al_li   - Widerstandsbeiwert des linken Absturzes (Falls senkrechte Wand!)
 !**   al_mi   - Widerstandsbeiwert des mittleren Abschnittes            
-!**   al_re   - Widerstandsbeiwert des rechten Absturzes                
-!**   aln_li  - Widerstandsbeiwert des linken Absturzes                 
+!**   al_re   - Widerstandsbeiwert des rechten Absturzes (Falls senkrechte Wand!)
+!**   aln_li  - Widerstandsbeiwert des linken Absturzes (Falls senkrechte Wand!)
 !**   aln_mi  - Widerstandsbeiwert des Teilabschnittes                  
 !**             des Vorlandes aus der Rauheit                           
-!**   aln_re  - Widerstandsbeiwert des rechten Absturzes                
+!**   aln_re  - Widerstandsbeiwert des rechten Absturzes (Falls senkrechte Wand!)
 !**   alpha   - Böschungswinkel                                         
 !**   ax      - Bewuchsparameter                                        
 !**   axj1    - Nachlauflänge                                           
-!**   axn1    - Nachlauflänge                                           
-!**   ay      - Bewuchsparameter                                        
-!**   az      - Parameter des Verbauverhältnisses                       
-!**   b05     - Nachlaufbreite [m]                                      
-!**   cc      - Verbauverhältnis                                        
+!**   ay      - Bewuchsparameter
+!**   cc      - Verbauverhältnis
 !**   cwn     - Formwiderstandsbeiwert eines Zylinders in einer Gruppe  
-!**   cwr     - Formwiderstandsbeiwert eines Zylinders in einer Gruppe  
-!**   cwun    - Formwiderstandsbeiwert eines einzelnen Zylinders        
+!**   cwun    - Formwiderstandsbeiwert eines einzelnen Zylinders
 !**   dcw     - Schwerewelle                                            
 !**   delhyd  - Grenzbedingung                                          
 !**   dellam  - Grenzbedingung                                          
@@ -129,8 +117,7 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, az, dp, h_mi, meil, is, &
 !**   h_mi    - mittlere Wsp-höhe des Teilabschnittes des Vorlandes     
 !**   h_re    - Wasserspiegelhöhe am rechten Absturz                    
 !**   il_fr30 - = 1                                                     
-!**   ifehl   -                                                         
-!**   is      - Energiegefälle                                          
+!**   is      - Energiegefälle
 !**   itcwr   - ANZAHL DER ITERATIONEN                                  
 !**   itcwm   - 40. Maximum                                             
 !**   iter    - ITERATIONSCHRITTE FUER FROUDZAHL fr1 und fr2            
@@ -188,9 +175,30 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, az, dp, h_mi, meil, is, &
 USE KONSTANTEN
 
 ! Calling variables
-REAL, INTENT(OUT) :: vxmvor
-REAL, INTENT(OUT) :: lamvog
-REAL, INTENT(IN)  :: fbw                ! Formbeiwert fuer LAMBDA-Berechnung
+REAL, INTENT(OUT) 	:: vxmvor             	! MITTLERE GESCHWINDIGKEIT IM VORLAND [m/s]
+REAL, INTENT(OUT) 	:: lamvog             	! Lambda_ges auf dem Vorland [-]
+REAL, INTENT(IN)  	:: ax, ay, dp         	! Bewuchsparameter [m]
+REAL, INTENT(IN)  	:: h_mi               	! Wassertiefe auf dem Vorland [m]
+REAL, INTENT(INOUT)	:: meil               	! DK, 21/06/01 Stiffness parameter in Kouwen procedure
+REAL, INTENT(IN)  	:: is                 	! Energieliniengefaelle [-]
+REAL, INTENT(IN)  	:: u_mi               	! BENETZTER UMFANG DES TEILABSCHNITTES DES VORLANDES [m]
+REAL, INTENT(IN)  	:: a_mi               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
+REAL, INTENT(IN)        :: rau_mi               ! Rauhigkeit (ks) des Abschnittes [m]
+
+INTEGER, INTENT(IN)     :: iuerr                ! Unit der Kontroll.log
+INTEGER, INTENT(IN)     :: lein                 ! Steuerung Ausgabe in Kontroll.log
+
+REAL, INTENT(OUT)       :: cwr                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe
+REAL, INTENT(OUT)       :: lamv                 ! WIDERSTANDSBEIWERT DURCH BEWUCHS [-]
+REAL, INTENT(OUT)       :: aln_mi               ! WIDERSTANDSBEIWERT DURCH SOHLRAUHEIT [-]
+REAL, INTENT(OUT)       :: axn1                 ! Nachlauflaenge [m]
+REAL, INTENT(OUT)       :: b05                  ! Nachlaufbreite [m]
+REAL, INTENT(OUT)       :: vv2                  ! relative Anströmgeschwindigkeit
+REAL, INTENT(INOUT)     :: cwn                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe ??
+INTEGER, INTENT(OUT)    :: ifehl                ! Fehlernummer (=0 wenn fehlerfrei!)
+
+REAL, INTENT(IN)  	:: fbw                	! Formbeiwert fuer LAMBDA-Berechnung
+
 
 INTEGER, parameter :: iterm = 20
 
@@ -198,21 +206,8 @@ REAL :: GET_CW_UN
 REAL :: GET_A_NL
 REAL :: GET_LAMBDA, rhy
                                                                         
-REAL :: lamv, is
-                                                                        
-!**   ZUSATZ FUER ERWEITERUNG VON JANA KIEKBUSCH, 16.06.00 -------------
-!      CHARACTER*3 ber_art                                              
-REAL ks_mi
-                                                                        
-!**   ZUSATZ FUER KORREKTUR VON JANA KIEKBUSCH, 23.06.00 ---------------
-!      CHARACTER*1 korrekt                                              
-!JK   ENDE ZUSATZ-------------------------------------------------------
-                                                                        
-!***********************************************************************
-! DK, 21/06/01 - Stiffness parameter in Kouwen procedure!
-REAL meil
-!***********************************************************************
-                                                                        
+
+
 !***********************************************************************
 ! DK, 21/06/01 - Parameters of bottom roughness type and grass type!
 CHARACTER(4) tbr1, tbr2, tbr3, tgr1, tgr2, tgr3, tbedr, tgrar
@@ -228,6 +223,8 @@ COMMON / pri / ibed, icwl, icwm, icwr, ikol, ikom, ikor, ifum
 ! -----------------------------------------------------------------------
 ! Initialisieren
 ! -----------------------------------------------------------------------
+ifehl = 0
+
 lamvog = 0.0
 vxmvor = 0.0
 
@@ -255,7 +252,7 @@ ENDif
 !      print *, 'tbr1: ', tbr1, '  tbr2: ', tbr2, '  tbr3: ', tbr3
 !      print *,'Data introduced into LINDY:'
 !      print *,'v=',vxmvor,' lambda=',lamvog
-!      print *,'ax=',ax,' az=',az,' dp=',dp
+!      print *,'ax=',ax,' ay=',ay,' dp=',dp
 !      print *,'h_mi=',h_mi,' a_mi=',a_mi,' u_mi=',u_mi,' rau_mi=',rau_m
 !      print *,'h_li=',h_li,' a_li=',a_li,' rau_li=',rau_li
 !      print *,'h_re=',h_re,' a_re=',a_re,' rau_re=',rau_re
@@ -321,7 +318,7 @@ aln_mi = 0.09
 !UT   lamv  - aus Bewuchs
 !UT   lamvog- komplett
 IF (abs (dp - 0.0) .gt.1.e-04) then
-  lamv = 4. * cwn * h_mi * dp / ax / az * cos (alpha)
+  lamv = 4. * cwn * h_mi * dp / ax / ay * cos (alpha)
 ELSE
   lamv = 0.
 ENDIF
@@ -412,9 +409,15 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
   ELSE
 
     !UT      MITTELUNG NEUER UND ALTER CW-WERT
-    cwr = (cwn + cwr) / 2.
-    !UT      BWK, Formel 27, S.28, WARUM az STATT ay ????, 24.08.2000
-    lamv = 4. * cwr * h_mi * dp / ax / az * cos (alpha)
+    !WP  Erweiterung um staerkere Unterrelaxation 02.02.2006
+    if (itcwr < (itcwm/2)) then
+      cwr = (cwn + cwr) / 2.
+    else
+      cwr = (cwn + 2*cwr) / 3.
+    end if
+
+    !UT      BWK, Formel 27, S.28
+    lamv = 4. * cwr * h_mi * dp / ax / ay * cos (alpha)
 
     !UT MIT GESCHW. UND BEWUCHSPARAMETER WIRD DER CW-WERT BERECHNET
     !UT IN ANLEHNUNG FORMEL 30, BWK, S.30
@@ -429,7 +432,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     b05  = GET_A_NB (cwun, dp, axn1)
 
     ! BERECHNUNG REL. ANSTROEMGESCHW. NACH FORMEL 29, BWK, S.30
-    vv2  = GET_REL_V_AN (axn1, ax, b05, az)
+    vv2  = GET_REL_V_AN (axn1, ax, b05, ay)
 
 
     ! Iteration bis zum endkriterium fr1=fr2 :
@@ -442,7 +445,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !UT      FORMEL BWK, S.30, MITTE
     fr1 = vxmvor / (g * h_mi) **.5
     !UT      FORMEL 31A, BWK, S.30,
-    fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - az / (az - dp) ) ) ) **.5
+    fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - ay / (ay - dp) ) ) ) **.5
 
     2500 CONTINUE
     !                                               /* schleife 3
@@ -452,9 +455,9 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
       !UT          ZAEHLEN DER ITERATIONSSCHRITTE FUER FROUDZAHL
       iter = iter + 1
-      fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - az / (az - dp) ) ) ) **.5
+      fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - ay / (ay - dp) ) ) ) **.5
       !UT          BERECHNE VERBAUVERHAELTNIS
-      cc = az / (az - dp)
+      cc = ay / (ay - dp)
 
       IF (abs (fr2) .lt.1.e-06) then
         il_fr30 = 1
@@ -515,7 +518,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
         DO 2550 WHILE(abs (fr1 - fr2) / fr2.gt.1.e-02)
 
           fr2a = fr2
-          fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - az / (az - dp) ) ) ) **.5
+          fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - ay / (ay - dp) ) ) ) **.5
           diff = abs (fr1 - fr2)
 
           IF (difmin.gt.diff) then
@@ -839,74 +842,11 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
         iter4 = iter4 + 1
 
 
-        !***********************************************************************
-        !     DK, 15/05/01
-        !      PRINT *,'Sub LINDY - entered the cycle for lambda!'
-        !      PRINT *,'iter4=',iter4
-        !      PRINT *
-        !***********************************************************************
-
-        !***********************************************************************
-        !     DK, 15/05/01
-        !      PRINT *,'Sub LINDY, cycle for lambda, before setting al_* values!
-        !      PRINT *,'al_li=',al_li,' al_mi=',al_mi,' al_re=',al_re
-        !      PRINT *,'aln_li=',aln_li,' aln_mi=',aln_mi,' aln_re=',aln_re
-        !      PRINT *
-        !***********************************************************************
-
-
         !UT               NEUSETZEN DER WIDERSTANDSBEIWERTE DER ABSTUERZE
         al_mi = aln_mi
         al_li = aln_li
         al_re = aln_re
 
-        !**********************************************************************
-        !**   PROGRAMMERWEITERUNG, 16. JUNI 2000, JANA KIEKBUSCH
-        !**   -----------------------------------------------------------------
-        !**
-        !**   BERECHNUNGSART BESTIMMEN:
-        !**     ber_art = 'bwk' --> WIDERSTANDSGESETZ NACH BWK
-        !**                         MIT RAUHEITSUNTERSCHEIDUNG
-        !**
-        !**     ber_art = 'alt' --> WIDERSTANDSGESETZ NACH PASCHE
-        !      ber_art='bwk'
-        !      if (ber_art.eq.'bwk') then
-        !          call fuent_l(rau_mi,rau_li,rau_re,dh_mi,dh_li,dh_re,
-        !     +re_mi,re_li,re_re,aln_mi,aln_li,aln_re,al_mi,al_li,al_re,
-        !     +grenzkrit_mi,grenzkrit_li,grenzkrit_re,dm_mi,dm_li,dm_re,ks_mi)
-        !          GOTO 888
-        !      endif
-        !**
-        !**   ENDE PROGRAMMERWEITERUNG
-        !***********************************************************************
-
-        !           aln_mi=(1./(-2.03*alog10(ak1_mi/dh_mi/3.71)))**2
-        !JK         WAR SCHON DEAKTIVIERT, 01.05.00, JK
-
-
-        !***********************************************************************
-        !     DK, 15/05/01
-        !      PRINT *,'Sub LINDY, cycle for lambda, before calc. aln_* values!'
-        !      PRINT *,'al_li=',al_li,' al_mi=',al_mi,' al_re=',al_re
-        !      PRINT *
-        !***********************************************************************
-
-        !           aln_mi=(1./(-2.03*alog10(5.8/(re_mi*sqrt(al_mi))+ak1_mi/
-        !     &             dh_mi/3.71)))**2
-        !
-        !                  if (ak_li .gt.0 .AND. dh_li.gt.0) then
-        !                      aln_li=(1./(-2.03*alog10(5.8/(re_li*al_li**0.5)
-        !     &               +ak1_li/dh_li/3.71)))**2
-        !                  else
-        !                      aln_li=0.0
-        !                  endif
-        !
-        !                  if (ak_re.gt.0.AND.dh_re.gt.0) then
-        !                      aln_re=(1./(-2.03*alog10(5.8/(re_re*al_re**0.5)
-        !     &               +ak1_re/dh_re/3.71)))**2            ! ren_re chang
-        !                  else
-        !                      aln_re=0.0
-        !                  endif
 
         !***********************************************************************
         !     DK, 21/05/01 - Calculation of the friction factor using
@@ -1267,6 +1207,10 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     cwn = cwr
                                                                         
   ENDIF
+
+  ! WP 02.02.2006
+  !write (iuerr,*) ' In LINDY. Iteration ', itcwr, ' cwr = ', cwr
+
                                                                         
 !UT   SCHLEIFE ZUR BERECHNUNG VON CWR, MAXIMAL 40 ITERATIONEN -----------------------
 3000 CONTINUE

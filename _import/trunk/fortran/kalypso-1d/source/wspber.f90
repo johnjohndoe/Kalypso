@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Nov 2005    2:24 pm
+!     Last change:  WP    2 Feb 2006    2:25 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -525,7 +525,6 @@ text = ' '
 !HB   Aenderung von 15 Leerzeichen in 6 (frueher: text(15:nch80)= )
 text (6:nch80)  = 'Ergebnis der Wasserspiegellagenberechnung fuer '
 
-!ilen = ju0nch (text)
 ilen = LEN_TRIM (text)
 
 IF (bordvoll.eq.'n') then
@@ -570,44 +569,44 @@ REWIND (jw2)
 !WP -----------------------------------------------------------------------------------
 
 Hauptschleife: DO i = 1, maxger
-                                                                        
-                                                                        
-  !**   Einlesen aus flussname.dat:
+
+  ! Einlesen aus flussname.dat:
   READ (jw2, '(a)', end = 5000) dummy
                                                                         
   CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
 
   IF (ifehl.ne.0.or.ianz.eq.0) then
-    PRINT * , 'Fehlerhaftes Format in der Profil.dat-datei.'
-    PRINT * , 'Es wurde keine Station gelesen.'
-    PRINT * , 'Eingelesen wurde : ', dummy
-    STOP 0
+    write (*, 9000) dummy
+    9000 format (/1X, 'Fehlerhaftes Format in der Profildatei!', /, &
+                & 1X, 'Es wurde keine Station gelesen -> Abbruch!', /, &
+                &/1X, '(gelesen wurde: ', A, ')' )
+    call stop_programm(0)
   ENDIF
 
+  ! Station gelesen
   statles = feldr (1)
 
-  !ilen = ju0nch (char (1) )
   ilen = LEN_TRIM (char (1) )
 
   nr = char (1) (1:ilen)        ! NR beinhaltet den Namen der Profildatei (z.b. St000150.prf)
 
-  !** ENDE DER EINLESESCHLEIFE wenn das eingelesene FELD KLEINER ALS ANFANGSFELD?
-  !** 5000 FAST PROGRAMMENDE, statles=feldr(1)
+  !WP Wenn gelesene Station kleiner als Anfangsstation, dann nochmal lesen
   IF (statles .lt. staanf) CYCLE Hauptschleife
+
+  !WP Wenn gelesene Station größer als Endstation, dann Programm beenden
   IF (statles .gt. staend) EXIT Hauptschleife
                                                                         
                                                                         
-  !**   Anzahl der Profile fuer die WSP-Berechnung:
+  ! Anzahl der Profile fuer die WSP-Berechnung:
   nprof = nprof + 1
   stat (nprof) = statles
   prof_it (nprof) = 0
                                                                         
                                                                         
-  !**   ------------------------------------------------------------------
-  !**   Einlesen der Profildatei prof(nr).dat
-  !**   ------------------------------------------------------------------
+  ! ------------------------------------------------------------------
+  ! Einlesen der Profildatei NR (z.B. St000150.prf)
+  ! ------------------------------------------------------------------
                                                                         
-  !ilen = ju0nch (fnam1)
   ilen = LEN_TRIM (fnam1)
 
   unit4 = fnam1
@@ -615,9 +614,8 @@ Hauptschleife: DO i = 1, maxger
   unit4 (ilen + 1:nch80) = nr           ! Kompletter Pfad zur Profildatei
   CALL lcase (unit4)
 
-  jw4 = ju0gfu ()
+  jw4 = ju0gfu ()                       ! Leere Unit holen
   ierr = 0
-
 
   !**   lein=3 im Falle der Erstellung des Kontrollfiles
   IF (lein.eq.3) then
@@ -630,29 +628,24 @@ Hauptschleife: DO i = 1, maxger
 
   OPEN (unit = jw4, iostat = ierr, file = unit4, status = 'old')
   IF (ierr.ne.0) then
-    PRINT * , ' ', unit4, ' existiert nicht !!'
-
-    !**       SCHREIBEN DER FEHLERMELDUNG IN KONTROLLFILE,
-    !**       WENN lein=3 UND ES ANGELEGT WIRD
+    write (*, 9001) unit4
     IF (lein.eq.3) then
-      WRITE (jw8, '(a,'' existiert nicht !!'')') unit4
-      WRITE (jw8, '(''--> Abbruch des Programms'')')
+      write (jw8, 9001) unit4
     ENDIF
-
-    !UT  ERLAEUTERUNG WARUM UND WO ABBRUCH
-    PRINT * , ' Abbruch des Programms in WSPber, Es fehlt Datei: ', unit4
+    9001 format (/1X, 'Fehler: Datei existiert nicht: ', A, /, &
+                & 1X, '-> Programm wird beendet.')
     GOTO 999
   ENDIF
 
-  !**   ------------------------------------------------------------------
-  !**   Eroeffnen der Ausgabedatei *.pro bei Bordvollberechnung
-  !**   --> Wasserstands-Abflussbeziehung fuer jede Station
-  !**   ------------------------------------------------------------------
+
+  ! ------------------------------------------------------------------
+  ! Eroeffnen der Ausgabedatei *.pro bei Bordvollberechnung
+  ! --> Wasserstands-Abflussbeziehung fuer jede Station
+  ! ------------------------------------------------------------------
 
   IF (idr1.eq.'j') then
 
-    WRITE (text, '(f11.4)') statles
-    !jlen = ju0nch (text)
+    WRITE (text, '(f11.4)') stat(nprof)
     jlen = LEN_TRIM (text)
 
     DO k = 1, jlen
@@ -661,14 +654,11 @@ Hauptschleife: DO i = 1, maxger
       ENDIF
     END DO
 
-    !CALL u0ljst (text)
     text = ADJUSTL (text)
 
     unit7 = fnam1
-    !ilen = ju0nch (unit7)
     ilen = LEN_TRIM (unit7)
     unit7 (ilen - 4:ilen - 1) = 'dath'
-    !iflen = ju0nch (fluss)
     iflen = LEN_TRIM (fluss)
 
     IF (iflen.gt.2) then
@@ -676,16 +666,13 @@ Hauptschleife: DO i = 1, maxger
     ENDIF
 
     unit7 (ilen + 1:nch80) = fluss (1:iflen)
-    !ilen = ju0nch (unit7)
     ilen = LEN_TRIM (unit7)
     unit7 (ilen + 1:nch80) = text
-    !ilen = ju0nch (unit7)
     ilen = LEN_TRIM (unit7)
     unit7 (ilen + 1:nch80) = '.pro'
     jw7 = ju0gfu ()
 
     OPEN (unit = jw7, file = unit7, status = 'unknown')
-
 
     IF (isch.eq.1) then
 
@@ -697,6 +684,7 @@ Hauptschleife: DO i = 1, maxger
 
       INQUIRE (UNIT = jw7, OPENED = is_open, IOSTAT = ierr)
       if (ierr /= 0) then
+        ! 9002
         write (*,*) ' In WSPBER ist ein Fehler beim Untersuchen des Zustandes'
         write (*,*) ' einer UNIT aufgetreten (INQUIRE-Befehl), ca. Zeile 697'
         write (*,*) ' -> Versuche weiterzurechnen...'
@@ -706,10 +694,11 @@ Hauptschleife: DO i = 1, maxger
       IF (is_open) then
         fehler_id = fseek (jw7, 0, 2)
         if (fehler_id /= 0) then
+          ! 9003
           write (*,*) ' In WSPBER ist ein Fehler aufgetreten beim Platzieren eines'
           WRITE (*,*) ' Pointers in einer Datei! (Nach FSEEK ca. Zeile 706)'
           write (*,*) ' -> Versuche weiterzurechnen...'
-          stop
+          GOTO 999
         end if
       end if
 
@@ -719,11 +708,13 @@ Hauptschleife: DO i = 1, maxger
   ENDIF
 
 
-  !**   ------------------------------------------------------------------
-  !**   Einlesen der Daten in Sub proein und Weiterverarbeitung in intdat
-  !**   ------------------------------------------------------------------
+  ! ------------------------------------------------------------------
+  ! Einlesen der Daten in Sub proein und Weiterverarbeitung in intdat
+  ! ------------------------------------------------------------------
 
-  CALL proe_pro (jw4, text33, unit4)
+  CALL proe_pro (jw4,		& 	! <- Unit der Profildatei *.prf
+               & text33, 	& 	! -> Station km als Zeichenkette (Character)
+               & unit4)                 ! <- Kompletter Pfad zur Profildatei
 
   text32 = text321
 
@@ -742,7 +733,6 @@ Hauptschleife: DO i = 1, maxger
   prof_nr = text32 (i6 + 1:36)          ! PROF_NR beinhaltet nur die Nummer des Profils aus der Oberflaeche,
                                         ! hat keine Bedeutung!
 
-  !ilen = ju0nch (prof_nr)
   ilen = LEN_TRIM (prof_nr)
 
   find_space: DO i7 = 1, 26
@@ -758,7 +748,10 @@ Hauptschleife: DO i = 1, maxger
   CALL intdat (staso, ifehl)
 
   IF (ifehl.ne.0) then
-    STOP
+    write (*, 9004) stat(nprof)
+    9004 format (/1X, 'Fehler in INTDAT bei Station ', F12.4, '.', /, &
+                & 1X, '-> Programm wird beendet.')
+    call stop_programm(0)
   ENDIF
 
 
@@ -783,45 +776,30 @@ Hauptschleife: DO i = 1, maxger
   !**   SCHREIBEN VON STASO IN KONTROLLFILE
   IF (lein.eq.3) write (jw8, '(''Bearbeiten Station km '',f12.4)') staso
 
-  !     ******************************************************************
-  !     ausdruck der eingelesenen daten im .dat-file
-  !     ******************************************************************
-  !     call druckles
-  !     ******************************************************************
-  !     q-wert-zuordnung
-  !     ******************************************************************
-
-
   !**   Abspeichern alter Q-Wert:
   IF (nprof.gt.1) q1 = q
 
   IF (bordvoll.eq.'n'.and. nq.gt.1) then
 
     IF (nprof.gt.1) then
+
       dif1 = qstat (izz) - stat (nprof - 1)
       dif2 = qstat (izz) - stat (nprof)
 
-      IF (dif1.gt.0..and.dif2.le.0.) then
+      IF (dif1.gt.0. .and. dif2.le.0.) then
 
         WRITE (jw5, 13) stat (nprof), qwert (izz)
+        nz = nz + 2  ! Anzahl der Zeilen auf Seite in Dateo mit Tabellenausgabe (jw5)
+        IF (lein.eq.3) write (jw8, 13) stat (nprof), qwert (izz)
         13 FORMAT (/,5x,'Durchflussaenderung bei Station km ',f7.3, &
                 & ' :  Q = ',f7.2,' m**3/s')
 
-        !** Bildschirmausausgabe deaktiviert
-        !** write(*,13) stat(nprof),qwert(izz)
-
-        !** SCHREIBEN IN KONTROLLFILE jw8
-        IF (lein.eq.3) write (jw8, 13) stat (nprof), qwert (izz)
-
-        nz = nz + 2
         q = qwert (izz)
 
         IF (izz.ne.merg) izz = izz + 1
 
-      !**  ENDIF ZU if (dif1.gt.0.and.dif2.le.0.) then
       ENDIF
 
-    !** ELSE ZU if (nprof.gt.1)
     ELSE
 
       !**          nprof=1:

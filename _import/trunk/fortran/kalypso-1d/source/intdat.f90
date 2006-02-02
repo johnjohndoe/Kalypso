@@ -1,4 +1,4 @@
-!     Last change:  WP   16 Nov 2005    3:15 pm
+!     Last change:  WP    2 Feb 2006    3:00 pm
 !--------------------------------------------------------------------------
 ! This code, intda.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -328,6 +328,8 @@ CHARACTER(LEN=1) 	:: fehler
 
 REAL 			:: xokw1 (maxkla), hokw1 (maxkla)
 REAL 			:: feldr (merg)
+
+REAL, PARAMETER         :: toleranz = 1.E-06
 
 INTEGER :: j, i1, i2, istat
 INTEGER :: int (idim)
@@ -918,7 +920,6 @@ DO 1000 j = 1, npr
       !            ianf = 0
       !            iend = 0
 
-
       DO 1071 ii = 1, np (j)
         !JK                   DEFINITION LINKE TRENNFLAECHE
         DO 1070 i = 1, nknot
@@ -948,6 +949,7 @@ DO 1000 j = 1, npr
               ENDIF
             ENDIF
           ENDIF
+
         1070 END DO
 
 
@@ -987,6 +989,7 @@ DO 1000 j = 1, npr
 
     !JK  ENDIF ZU (iprof.eq.' ')
     ENDIF
+
 
   !JK       BORDVOLL
   !JK       --------
@@ -1214,6 +1217,74 @@ DO 1000 j = 1, npr
                                                                         
 1000 END DO
                                                                         
+
+
+! ------------------------------------------------------------------------------------
+! WP 02.02.2006
+! Kontrolle der Bewuchsparameter
+!
+!write (*,9200)
+!9200 format (/1X, 'Kontrolle der Eingabe der Bewuchsparameter')
+
+! Globaler Check fuer alle Punkte, ob Dateieingabe konsistent
+do i = 1, nknot
+
+  ! Ausgehend von DP
+  if (dp(i) > toleranz) then
+    if (ax(i) < toleranz .or. ay(i) < toleranz) then
+      write (*,9201) staso, i, ax(i), ay(i), dp(i)
+      ax(i) = 0.0
+      ay(i) = 0.0
+      dp(i) = 0.0
+    end if
+
+  ! Ausgehend von AX
+  else if (ax(i) > toleranz) then
+    if (dp(i) < toleranz .or. ay(i) < toleranz) then
+      write (*,9201) staso, i, ax(i), ay(i), dp(i)
+      ax(i) = 0.0
+      ay(i) = 0.0
+      dp(i) = 0.0
+    end if
+
+  ! Ausgehend von AY
+  else if (ay(i) > toleranz) then
+    if (ax(i) < toleranz .or. dp(i) < toleranz) then
+      write (*,9201) staso, i, ax(i), ay(i), dp(i)
+      ax(i) = 0.0
+      ay(i) = 0.0
+      dp(i) = 0.0
+    end if
+
+  end if
+
+end do
+
+9201 format (/1X, 'Warnung! In Profil km ', F10.4, ' sind die Bewuchsparameter', /, &
+            & 1X, 'nicht richtig gesetzt! Fehler tritt bei Punkt ', I5, ' auf.', /, &
+            & 1X, '(AX = ', F10.4, ' AY = ', F10.4, ' DP = ', F10.4, ')', /, &
+            & 1X, '-> Loesche Bewuchsparameter fuer diesen Punkt! Bitte Pruefen!' )
+
+
+! Lokaler Check der Dateneingabe fuer den Flussschlauch
+do i = itrli, itrre-1
+
+  if (ax(i) > toleranz .or. ay(i) > toleranz .or. dp(i) > toleranz) then
+    write (*,9202) staso, i, ax(i), ay(i), dp(i)
+    9202 format (/1X, 'Warnung! In Profil km ', F10.4, ' sind zwischen den', /, &
+                & 1X, 'Trennflaechen bei Punkt ', I5, ' Bewuchsparameter gesetzt!', /, &
+                & 1X, '(AX = ', F10.4, ' AY = ', F10.4, ' DP = ', F10.4, ')', /, &
+                & 1X, '-> Loesche Bewuchsparameter fuer diesen Punkt! Bitte Pruefen!' )
+    ax(i) = 0.0
+    ay(i) = 0.0
+    dp(i) = 0.0
+
+  end if
+
+end do
+!
+! Ende Kontrolle Bewuchsparameter
+! ------------------------------------------------------------------------------------
 
 
 

@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Jan 2006    1:15 pm
+!     Last change:  WP    2 Feb 2006    3:01 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -49,8 +49,10 @@ INTEGER, parameter :: ipro = 16        ! Max. Anzahl von Bloecken in Profildatei
 INTEGER, parameter :: itmax = 99       ! Max. Anzahl von Iterationen in versch. Subroutinen
 INTEGER, parameter :: maxw = 50        ! Max. Anzahl von Wehrfeldern
 INTEGER, parameter :: mpts = 1000       ! ?? WP wahrscheinlich = maxkla
-INTEGER, parameter :: max2 = 20        ! ?? WP wird nur in wenigen SUBs verwendet
-INTEGER, parameter :: min2 =500        ! ?? WP wird nur in wenigen SUBs verwendet
+INTEGER, parameter :: max2 = 50         ! ?? WP wird nur in wenigen SUBs verwendet,
+					! vor allem bei Bruecken (Polygonzugberechnung in AlWSP.f90)!
+INTEGER, parameter :: min2 = 1000        ! ?? WP wird nur in wenigen SUBs verwendet
+					! vor allem bei Bruecken (Polygonzugberechnung in AlWSP.f90)!
 
 INTEGER, parameter :: idim = 1000       ! ?? WP wird nur in wenigen SUBs verwendet, wahrscheinlich = maxkla
 INTEGER, parameter :: idim4 = 20       ! ?? WP wird nur in wenigen SUBs verwendet
@@ -120,8 +122,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.15'
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 17.01.2006'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.16'
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 02.02.2006'
 
 end module VERSION
 

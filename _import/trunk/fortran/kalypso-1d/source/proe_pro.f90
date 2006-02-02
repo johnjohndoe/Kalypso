@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005   11:14 am
+!     Last change:  WP    2 Feb 2006   11:38 am
 !--------------------------------------------------------------------------
 ! This code, proe_pro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,11 +41,13 @@
 
 
 
-!***********************************************************************
+! -----------------------------------------------------------------------------------------
 SUBROUTINE proe_pro (nfil, textkm, filename)
 !
 ! Einlesen der Daten aus den Profildateien. Die Werte werden den
 ! globalen Variablen zugewiesen
+!
+! -----------------------------------------------------------------------------------------
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
@@ -470,7 +472,6 @@ flag = .false.
 
 IF (flag) then
 
-  !ilen = ju0nch (filename)
   ilen = LEN_TRIM (filename)
   WRITE ( *, 3500) filename (:ilen), isatz, n
   3500 FORMAT (/1X, 'Fehler in der Datei ',  (a) , /, &

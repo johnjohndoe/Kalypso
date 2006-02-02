@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005   11:17 am
+!     Last change:  WP    2 Feb 2006   11:42 am
 !--------------------------------------------------------------------------
 ! This code, R_WSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -698,15 +698,12 @@ END DO
                                                                         
 10 CONTINUE
 
-!CALL u0ljst (string)    ! Loescht alle linksbuendigen Leerzeichen von string
-string = ADJUSTL (string)
 
-!ilen = ju0nch (string)   ! Ersetzen der Funktion JU0NCH durch LEN_TRIM! WP 11.01.05
+string = ADJUSTL (string)
 ilen = LEN_TRIM(string)
 
 IF (ilen.eq.0) return
                                                                         
-!ianf = 1                  ! Keine Funktion
 
 DO 20 i = 1, ilen 
                                                                         
