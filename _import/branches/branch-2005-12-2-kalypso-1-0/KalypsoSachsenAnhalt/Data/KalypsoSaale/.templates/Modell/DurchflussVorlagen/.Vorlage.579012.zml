@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Rappbode-TS-Abgabe</name>
+    <metadataList>
+        <metadata name="Kennziffer" value="579012"/>
+        <metadata name="Name" value="Rappbode-TS-Abgabe"/>
+        <metadata name="Beschreibung" value=""/>
+        <metadata name="Zeitzone" value="Europe/Berlin"/>
+        <metadata name="Gewässer" value="Rappbode"/>
+        <metadata name="Koordinatensystem" value="EPSG:31468"/>
+        <metadata name="Rechtswert" value="0"/>
+        <metadata name="Hochwert" value="0"/>
+        <metadata name="Entstehung" value="Vorlagendatei"/>
+    </metadataList>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
+        <valueArray separator=";"></valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";"></valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";"></valueArray>
+    </axis>
+</observation>
+
