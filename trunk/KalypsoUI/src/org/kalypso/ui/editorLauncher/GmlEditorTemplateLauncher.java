@@ -70,7 +70,7 @@ import org.kalypso.template.types.ObjectFactory;
  */
 public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
 {
-  public GmlEditorTemplateLauncher()
+  public GmlEditorTemplateLauncher( )
   {
     super();
   }
@@ -78,7 +78,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
-  public String getFilename()
+  public String getFilename( )
   {
     return "<Standard Baumansicht>.gmv";
   }
@@ -86,7 +86,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
-  public IEditorDescriptor getEditor()
+  public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -100,18 +100,19 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   {
     final org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
     final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
+
     try
     {
+
       final ObjectFactory typesFac = new ObjectFactory();
+
       final LayerType type = typesFac.createLayerType();
       LayerTypeUtilities.initLayerType( type, file );
 
       final Gistreeview gistreeview = gisViewFact.createGistreeview();
       gistreeview.setInput( type );
 
-      final Marshaller marshaller = jc.createMarshaller();
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       final StringWriter w = new StringWriter();
       marshaller.marshal( gistreeview, w );
       w.close();
@@ -119,8 +120,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file
-          .getFullPath() ) );
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file.getFullPath() ) );
 
       return input;
     }
@@ -133,4 +133,5 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
+
 }

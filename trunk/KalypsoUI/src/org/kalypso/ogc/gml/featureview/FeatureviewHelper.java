@@ -308,8 +308,8 @@ public class FeatureviewHelper
         addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
       }
 
-      final Validator validator = JC.createValidator();
-      validator.validate( featureview );
+//      final Validator validator = JC.createValidator();
+//      validator.validate( featureview );
 
       return featureview;
     }

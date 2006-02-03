@@ -45,7 +45,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   /**
    * Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander ausgeführt werden
    */
-  private final ISchedulingRule m_mutexRule = new MutexSchedulingRule();
+  private final ISchedulingRule m_mutexRule = new MutexRule();
 
   private ICommandManager m_commandManager;
 
@@ -83,7 +83,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     setCommandManager( commandManager );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     undoAction.dispose();
     redoAction.dispose();
@@ -92,12 +92,12 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
       m_commandManager.removeCommandManagerListener( this );
   }
 
-  public boolean isDirty()
+  public boolean isDirty( )
   {
     return m_commandManager == null ? false : m_commandManager.isDirty();
   }
 
-  public void resetDirty()
+  public void resetDirty( )
   {
     if( m_commandManager != null )
       m_commandManager.resetDirty();
@@ -106,7 +106,8 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -123,7 +124,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
       m_dirtyRunnable.run();
   }
 
-  public ISchedulingRule getSchedulingRule()
+  public ISchedulingRule getSchedulingRule( )
   {
     return m_mutexRule;
   }
