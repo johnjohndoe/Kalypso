@@ -22,7 +22,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -47,7 +47,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * The view analyses the currently selection, and shows the first element which is a
  * {@link org.kalypsodeegree.model.feature.Feature}.
  * <p>
- * 
  * <p>
  * Features:
  * </p>
@@ -66,7 +65,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * content.</li>
  * <li></li>
  * </ul>
- * 
  * TODO 's:
  * <ul>
  * <li>Save data: ceate a global action handler to save gml-data. Every workbench part which changes a GmlWorkspace,
@@ -77,7 +75,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * </ul>
  * 
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
- *  
  */
 public class FeatureView extends ViewPart implements ModellEventListener
 {
@@ -88,9 +85,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
     public void featureChanged( final FeatureChange change )
     {
       // we know that it is a commandable workspace
-      final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
-      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[]
-      { change } );
+      final CommandableWorkspace workspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
+      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
 
       m_target.setCommandManager( workspace );
       m_target.postCommand( command, null );
@@ -98,14 +94,13 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
     {
-      final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+      final CommandableWorkspace workspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
       // just show this feature in the view, don't change the selection this doesn't work
       activateFeature( workspace, feature );
     }
   };
 
-  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin
-      .getDefault().getSelectionManager() );
+  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin.getDefault().getSelectionManager() );
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -120,7 +115,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
-  private ISchedulingRule m_mutextRule = new MutexSchedulingRule();
+  private ISchedulingRule m_mutextRule = new MutexRule();
 
   private ISelectionListener m_selectionListener = new ISelectionListener()
   {
@@ -147,7 +142,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     activateFeature( null, null ); // to unhook listeners
     m_featureComposite.dispose();
@@ -160,7 +155,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   {
     if( selection instanceof IFeatureSelection )
     {
-      final IFeatureSelection featureSel = (IFeatureSelection)selection;
+      final IFeatureSelection featureSel = (IFeatureSelection) selection;
 
       final Feature feature = featureFromSelection( featureSel );
       activateFeature( featureSel.getWorkspace( feature ), feature );
@@ -180,7 +175,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
-        return (Feature)object;
+        return (Feature) object;
     }
     return null;
   }
@@ -202,7 +197,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * Passing the focus request to the viewer's control.
    */
-  public void setFocus()
+  public void setFocus( )
   {
     m_mainGroup.setFocus();
   }
@@ -219,7 +214,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
       public IStatus runInUIThread( IProgressMonitor monitor )
       {
         // we know that we always have CommandableWorkspace
-        final CommandableWorkspace oldWorkspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+        final CommandableWorkspace oldWorkspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
         final Feature oldFeature = m_featureComposite.getFeature();
 
         if( oldWorkspace == workspace && oldFeature == feature )
@@ -243,10 +238,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
         m_featureComposite.setFeature( workspace, feature );
 
         final String groupLabel;
-        if( workspace != null && feature != null && mainGroup != null && ( !mainGroup.isDisposed() ) )
+        if( workspace != null && feature != null && mainGroup != null && (!mainGroup.isDisposed()) )
         {
           workspace.addModellListener( FeatureView.this );
-          //          getSite().setSelectionProvider( workspace.getSelectionManager() );
+          // getSite().setSelectionProvider( workspace.getSelectionManager() );
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -281,9 +276,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     // this is the official way to do it
     // but gives no response (busy-cursor) to the user
-    //    final IWorkbenchSiteProgressService siteService = (IWorkbenchSiteProgressService)getSite().getAdapter(
-    //        IWorkbenchSiteProgressService.class );
-    //    siteService.schedule( job, 0 /* now */, true /* use half-busy cursor in part */);
+    // final IWorkbenchSiteProgressService siteService = (IWorkbenchSiteProgressService)getSite().getAdapter(
+    // IWorkbenchSiteProgressService.class );
+    // siteService.schedule( job, 0 /* now */, true /* use half-busy cursor in part */);
   }
 
   /**
@@ -297,7 +292,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
       if( control != null && !control.isDisposed() )
         control.getDisplay().asyncExec( new Runnable()
         {
-          public void run()
+          public void run( )
           {
             m_featureComposite.updateControl();
           }
@@ -305,17 +300,17 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   }
 
-  public GMLWorkspace getCurrentworkspace()
+  public GMLWorkspace getCurrentworkspace( )
   {
     return m_featureComposite.getWorkspace();
   }
 
-  public Feature getCurrentFeature()
+  public Feature getCurrentFeature( )
   {
     return m_featureComposite.getFeature();
   }
 
-  public FeatureviewType getCurrentViewTemplates()
+  public FeatureviewType getCurrentViewTemplates( )
   {
     final Feature feature = getCurrentFeature();
     if( feature == null )

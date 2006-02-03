@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -78,7 +78,7 @@ public class ResourcePool
   /**
    * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
    */
-  private final ISchedulingRule m_mutex = new MutexSchedulingRule();
+  private final ISchedulingRule m_mutex = new MutexRule();
 
   public ResourcePool( final ILoaderFactory factory )
   {
@@ -122,6 +122,8 @@ public class ResourcePool
         }
         catch( final Exception e )
         {
+          e.printStackTrace();
+          e.getMessage();
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
           m_logger.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
