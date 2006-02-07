@@ -445,7 +445,7 @@ public class WiskiTimeserie implements IObservation
     WQTableSet wqTableSet = null;
 
     // 1. first try: using the normal way (our tsinfo)
-    WQTable wqt = internFetchTable( m_tsinfo, rep, dateFrom, dateTo );
+    WQTable wqt = fetchWQTableIntern( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
       LOG.info( "Trying to find WQ-Table with siblings for " + getName() );
@@ -468,7 +468,7 @@ public class WiskiTimeserie implements IObservation
             final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
             if( tsi != null )
             {
-              wqt = internFetchTable( tsi, rep, dateFrom, dateTo );
+              wqt = fetchWQTableIntern( tsi, rep, dateFrom, dateTo );
               if( wqt != null )
               {
                 LOG.info( "Found WQ-Table in sibling!" );
@@ -535,14 +535,20 @@ public class WiskiTimeserie implements IObservation
   /**
    * Helper: tries to load the wq table from wiski. If fails or if no table found, null is returned
    */
-  private WQTable internFetchTable( final TsInfoItem tsinfo, final WiskiRepository rep, final Date from, final Date to )
+  private WQTable fetchWQTableIntern( final TsInfoItem tsinfo, final WiskiRepository rep, final Date from, final Date to )
   {
-    final String type = KiWWDataProviderInterface.OBJECT_PARAMETER;
+//    final String type = KiWWDataProviderInterface.OBJECT_PARAMETER;
+//
+//    LOG.info( "Calling getRatingTables() with param-id= " + tsinfo.getWiskiParameterId() + " validity= " + to + " type= "
+//        + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= " + tsinfo.getWiskiIdAsString() );
+//
+//    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
+    final String type = KiWWDataProviderInterface.OBJECT_STATION;
 
-    LOG.info( "Calling getRatingTables() with id= " + tsinfo.getWiskiParameterId() + " validity= " + to + " type= "
-        + type );
+    LOG.info( "Calling getRatingTables() with param-id= " + tsinfo.getWiskiParameterId() + " validity= " + to + " type= "
+        + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= " + tsinfo.getWiskiIdAsString() );
 
-    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
+    final GetRatingTables call = new GetRatingTables( Long.valueOf( tsinfo.getWiskiStationId() ), to, type );
     try
     {
       rep.executeWiskiCall( call );

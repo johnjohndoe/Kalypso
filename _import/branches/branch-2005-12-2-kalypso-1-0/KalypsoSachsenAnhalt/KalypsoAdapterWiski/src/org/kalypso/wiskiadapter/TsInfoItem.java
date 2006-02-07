@@ -80,7 +80,7 @@ public class TsInfoItem implements IRepositoryItem
   public String getIdentifier()
   {
     //return m_rep.getIdentifier() + getName();
-    
+
     return m_rep.getIdentifier() + getWiskiSuperGroupName() + "." + getWiskiGroupName() + "." + getWiskiStationNo();
   }
 
@@ -149,7 +149,7 @@ public class TsInfoItem implements IRepositoryItem
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id", "-1" ) );
   }
-  
+
   /**
    * @return the internal id of the parameter
    */
@@ -166,11 +166,12 @@ public class TsInfoItem implements IRepositoryItem
   String getWiskiDescription()
   {
     final String noValue = "<kein Eintrag:";
-    
+
     final StringBuffer bf = new StringBuffer();
     bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
     bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) )
+        .append( " - " );
     bf.append( m_map.getProperty( "station_name", noValue + "station_name>" ) );
 
     return bf.toString();
@@ -203,7 +204,7 @@ public class TsInfoItem implements IRepositoryItem
   {
     return m_group.getName();
   }
-  
+
   String getWiskiStationName()
   {
     return m_map.getProperty( "station_name", "<?>" );
@@ -268,10 +269,14 @@ public class TsInfoItem implements IRepositoryItem
   {
     final SuperGroupItem supergroup = (SuperGroupItem)m_group.getParent();
     final GroupItem group = supergroup.findGroup( parameterName );
-    
+
+    if( group == null )
+      throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName
+          + ", supergroup is: " + supergroup.getName() );
+
     return group.findTsInfo( "station_no", getWiskiStationNo() );
   }
-  
+
   /**
    * @return true if the container is designed for forecasts
    */
