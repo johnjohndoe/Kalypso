@@ -72,67 +72,12 @@
 
 	<target name="clean">
 		<echo message="Raeume auf..." />
-		<delete dir="${project.bin}" />
 		<delete dir="${project.deploy}" />
 		<delete dir="${project.doc}" />
 		<delete dir="${build.web}" />
 		<delete dir="${build.proxy}" />
 	</target>
 
-<!-- commented out by marc -->
-<!--	<target name="build-war" depends="prepare,generate-wsdl,compile" description="Runs wsdeploy to generate the ties and 
-	                     create a deployable WAR file">
-
-		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
-
-		<delete verbose="true" failonerror="false">
-			<fileset dir="${build.web}">
-				<include name="jaxrpc-ri.xml" />
-			</fileset>
-		</delete>
-
-		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
-
-		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
--->
-		<!-- delete existing .wsdl file -->
-<!--		<delete>
-			<fileset dir="${build.web.inf}">
-				<filename name="*.wsdl" />
-			</fileset>
-		</delete>
-
-		<echo message="Packaging the WAR...." />
-
-		<copy todir="${build.web.inf}/classes">
-			<fileset dir="${project.bin}">
-				<include name="**/*" />
-			</fileset>
-		</copy>
--->
-		<!-- convert compile path to a fileset in order to copy
-			the libs for runtime dependencies -->
-<!--		<pathtofileset name="compile.libs"
-                       pathrefid="compile.classpath"
-                       dir="${workspace}"/>
-
-		<copy todir="${build.web.inf}/lib" flatten="true">
-			<fileset refid="compile.libs"/>
-		</copy>
-
-		<jar jarfile="${java.io.tmpdir}/${portable.war}">
-			<fileset dir="${build.web}" includes="*/**" />
-		</jar>
-
-		<echo message="Process WAR File to generate ties...." />
-
-		<wsdeploy verbose="true" outwarfile="${project.deploy}/${deployable.war}" inwarfile="${java.io.tmpdir}/${portable.war}">
-			<classpath refid="generate.classpath" />
-		</wsdeploy>
-
-		<delete file="${java.io.tmpdir}/${portable.war}" />
-	</target>
--->
 	<target name="generate-wsdl" depends="prepare" description="Erzeugt das wsld File aus dem Service-Interface">
 <!--		<delete verbose="true" failonerror="false">
 			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
@@ -179,6 +124,59 @@
 		<jar jarfile="${project.deploy}/${client.jar}">
 			<fileset dir="${build.proxy}" includes="**/*" />
 		</jar>
+	</target>
+
+	<target name="build-war" depends="prepare,generate-wsdl" description="Runs wsdeploy to generate the ties and 
+	                     create a deployable WAR file">
+
+		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
+
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${build.web}">
+				<include name="jaxrpc-ri.xml" />
+			</fileset>
+		</delete>
+
+		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
+
+		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
+
+		<!-- delete existing .wsdl file -->
+		<delete>
+			<fileset dir="${build.web.inf}">
+				<filename name="*.wsdl" />
+			</fileset>
+		</delete>
+
+		<echo message="Packaging the WAR...." />
+
+		<copy todir="${build.web.inf}/classes">
+			<fileset dir="${project.bin}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+		<!-- convert compile path to a fileset in order to copy
+			the libs for runtime dependencies -->
+		<pathtofileset name="deploy.libs"
+                       pathrefid="deploy.classpath"
+                       dir="${workspace}"/>
+
+		<copy todir="${build.web.inf}/lib" flatten="true">
+			<fileset refid="deploy.libs"/>
+		</copy>
+
+		<jar jarfile="${java.io.tmpdir}/${portable.war}">
+			<fileset dir="${build.web}" includes="*/**" />
+		</jar>
+
+		<echo message="Process WAR File to generate ties...." />
+
+		<wsdeploy verbose="true" outwarfile="${project.deploy}/${deployable.war}" inwarfile="${java.io.tmpdir}/${portable.war}">
+			<classpath refid="generate.proxy.classpath" />
+		</wsdeploy>
+
+		<delete file="${java.io.tmpdir}/${portable.war}" />
 	</target>
 
 </project>
