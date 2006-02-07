@@ -11,33 +11,33 @@
      -->
     <property name="web.xml" value="${project}/src/org/kalypso/dwd/servlet/dwdfilecopy/web.xml"/>
     
-    <path id="compile.classpath">
+    <!--path id="compile.classpath">
         <fileset dir="${project.lib}" includes="**/*.jar" />
         <fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
         <fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
         <fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
         <fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
         <fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
-    </path>
+    </path-->
 
     <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
     <property name="project-name" value="KalypsoDWD" />
 
-    <target name="binding">
+    <!--target name="binding">
         <ant antfile="${project}/etc/schemas/build.xml"
              inheritall="false"
              target="deploy"
              dir="${project}/etc/schemas/dwd" />
-    </target>
+    </target-->
 
     <!-- Override compile to resolve dependencies to binding and for copying non-java files -->
-    <target name="compile" depends="prepare,binding">
+    <!--target name="compile" depends="prepare,binding">
         <antcall target="commonbuild.compile" />
 
         <copy todir="${project.bin}">
             <fileset dir="${project.src}" excludes="**/*.java" />
         </copy>
-    </target>
+    </target-->
 
     <!-- Specific Build for creating the jar that contains the Ant-Task -->
     <target name="build-ant-task-jar" depends="deploy">
@@ -45,13 +45,13 @@
     </target>
         
     <!-- Specific Build for KalypsoDWDFileCopyServlet -->
-    <target name="build-filecopyservlet-war" depends="compile">
+    <target name="build-filecopyservlet-war" depends="prepare">
 
         <echo message="Building DWDFileCopy Servlet with deployment desc from: ${web.xml}"/>
         
         <war webxml="${web.xml}"
              destfile="${project}/build/deploy/KalypsoDWDFileCopyServlet.war">
-            <classes dir="${project}/build/class" excludes="*.xml" />
+            <classes dir="${project}/build/bin" excludes="*.xml" />
             <lib dir="${project}/etc/libdeploy" />
         </war>
     </target>
