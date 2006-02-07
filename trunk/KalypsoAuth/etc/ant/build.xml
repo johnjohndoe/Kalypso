@@ -5,10 +5,10 @@
 	
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
 
-	<path id="compile.classpath">
+	<!--path id="compile.classpath">
 		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
-	</path>
+	</path-->
 
 	<property name="project-name" value="KalypsoAuth" />
 

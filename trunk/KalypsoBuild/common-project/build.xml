@@ -24,7 +24,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<dirname property="commonbuild.basedir" file="${ant.file.commonbuild}" />
 
-	<property file="${commonbuild.basedir}/project.properties" />
+	<property file="${commonbuild.basedir}/../common.properties" />
 
 	<!-- Define these elements in your own project
 	
@@ -35,18 +35,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	-->
 
 	<target name="prepare">
-		<mkdir dir="${project.build}" />
-		<mkdir dir="${project.bin}" />
 		<mkdir dir="${project.deploy}" />
 		<mkdir dir="${project.doc}" />
 	</target>
 
-	<target name="compile" depends="prepare">
+	<!--target name="compile" depends="prepare">
 		<echo message="Compiliere Sourcen für ${project-name}" />
 		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
-	</target>
-
-	<target name="test" depends="prepare,compile">
+	</target-->
+	
+	<target name="test" depends="prepare">
 		<junit haltonerror="false" fork="true">
 			<classpath>
 				<path refid="compile.classpath" />
@@ -62,7 +60,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 		</junit>
 	</target>
 
-	<target name="deploy" depends="compile">
+	<target name="deploy" depends="prepare">
 		<echo message="Erzeuge Jar Files ..." />
 		<jar destfile="${project.deploy}/${project-name}.jar">
 			<fileset dir="${project.bin}" includes="**/*" />
@@ -84,7 +82,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="clean">
 		<echo message="Raeume auf..." />
-		<delete dir="${project.bin}" />
 		<delete dir="${project.deploy}" />
 		<delete dir="${project.doc}" />
 	</target>
