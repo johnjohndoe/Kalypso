@@ -9,7 +9,7 @@
 
 	<path id="generate.proxy.classpath.extra"/>
 
-	<!--path id="compile.classpath">
+	<path id="deploy.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar"/>
 
 	    <fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
@@ -19,7 +19,7 @@
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
-	</path-->
+	</path>
 	
 	<!-- Fake target just to allow a default target since ant requires it. Using
          of the parent build target does not work...
