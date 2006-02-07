@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="deegree"/>
-	<classpathentry kind="src" path="srcbind/"/>
+	<classpathentry kind="src" path="srcbind"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
@@ -14,5 +14,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/shiftone/shiftone-cache.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="build/bin"/>
 </classpath>

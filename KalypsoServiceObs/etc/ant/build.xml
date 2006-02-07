@@ -7,7 +7,11 @@
 
 	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml" />
 
-	<path id="compile.classpath">
+	<path id="generate.proxy.classpath.extra">
+		<dirset dir="${workspace}/KalypsoRepository/build/bin"/>
+	</path>
+	
+	<!--path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 
 	    <fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
@@ -20,10 +24,10 @@
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar" />
-	</path>
-	
-    <!-- Fake target just to allow a default target since ant requires it. Using
+	</path-->
+
+	<!-- Fake target just to allow a default target since ant requires it. Using
            of the parent build target does not work...
   	-->
-  	<target name="fake"/>
+	<target name="fake" />
 </project>

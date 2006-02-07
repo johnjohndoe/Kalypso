@@ -3,7 +3,7 @@
 
 	<dirname property="coreservicesbuild.basedir" file="${ant.file.coreservicesbuild}" />
 
-	<property file="${workspace}/KalypsoBuild/common-project/project.properties" />
+	<property file="${workspace}/KalypsoBuild/common.properties" />
 	<property file="${coreservicesbuild.basedir}/build.properties" />
 
 	<!-- TODO: define these elements in your own project 
@@ -11,7 +11,10 @@
 		<property name="project" value="full path of the project"/>
 		<property name="project-name" value="used as name for jar file"/>
 	
-		<path id="compile.classpath"/>
+		<path id="generate.proxy.classpath.extra"/>
+			Define (optionally) an extra classpath with classes from
+			another project, if required. Only the ServiceCore/build/bin
+			and the YourService/build/bin are integrated by default.
 	-->
 	
 	<import file="${workspace}/KalypsoBuild/common-tomcat/build.xml"/>
@@ -24,20 +27,23 @@
 		<property name="service.name" value="" />
 		<property name="war.path" value="" />	
 	-->
-	
-	<path id="generate.classpath">
-		<path refid="compile.classpath"/>
-		
-		<pathelement path="${project.bin}"/>
-		
+
+	<path id="jaxrpc.classpath">
 		<fileset dir="${jwsdp}/jaxp/lib" includes="*.jar" />
 		<fileset dir="${jwsdp}/jaxrpc/lib" includes="*.jar" />
 		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="*.jar" />
 		<fileset dir="${jwsdp}/saaj/lib" includes="*.jar" />
 	</path>
+	
+	<path id="generate.proxy.classpath">
+		<pathelement path="${workspace}/KalypsoServiceCore/build/bin" /> 
+		<pathelement path="${project.bin}" />
+		<path refid="jaxrpc.classpath"/>
+		<path refid="generate.proxy.classpath.extra"/> <!-- defined in sub build file -->
+	</path>
 
-	<taskdef name="wscompile" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wscompile" />
-	<taskdef name="wsdeploy" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wsdeploy" />
+	<taskdef name="wscompile" classpathref="jaxrpc.classpath" classname="com.sun.xml.rpc.tools.ant.Wscompile" />
+	<taskdef name="wsdeploy" classpathref="jaxrpc.classpath" classname="com.sun.xml.rpc.tools.ant.Wsdeploy" />
 	
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 	  <classpath>
@@ -50,6 +56,8 @@
 		<mkdir dir="${project.build}" />
 		<mkdir dir="${project.deploy}" />
 		<mkdir dir="${project.doc}" />
+		
+		<mkdir dir="${generate.dir}"/>
 
 		<mkdir dir="${build.proxy}" />
 		<mkdir dir="${build.web}" />
@@ -71,12 +79,8 @@
 		<delete dir="${build.proxy}" />
 	</target>
 
-	<target name="compile" depends="prepare">
-		<echo message="Compiliere Sourcen für ${project-name}" />
-		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
-	</target>
-
-	<target name="build-war" depends="prepare,generate-wsdl,compile" description="Runs wsdeploy to generate the ties and 
+<!-- commented out by marc -->
+<!--	<target name="build-war" depends="prepare,generate-wsdl,compile" description="Runs wsdeploy to generate the ties and 
 	                     create a deployable WAR file">
 
 		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
@@ -90,9 +94,9 @@
 		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
 
 		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
-
+-->
 		<!-- delete existing .wsdl file -->
-		<delete>
+<!--		<delete>
 			<fileset dir="${build.web.inf}">
 				<filename name="*.wsdl" />
 			</fileset>
@@ -105,10 +109,10 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-
+-->
 		<!-- convert compile path to a fileset in order to copy
 			the libs for runtime dependencies -->
-		<pathtofileset name="compile.libs"
+<!--		<pathtofileset name="compile.libs"
                        pathrefid="compile.classpath"
                        dir="${workspace}"/>
 
@@ -128,41 +132,34 @@
 
 		<delete file="${java.io.tmpdir}/${portable.war}" />
 	</target>
-
-	<target name="generate-wsdl" depends="prepare,compile" description="Erzegt das wsld File aus dem Service-Interface">
-		<delete verbose="true" failonerror="false">
+-->
+	<target name="generate-wsdl" depends="prepare" description="Erzeugt das wsld File aus dem Service-Interface">
+<!--		<delete verbose="true" failonerror="false">
 			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
 		</delete>
-
-		<mkdir dir="${java.io.tmpdir}/config-interface" />
-
+-->
+<!--		<mkdir dir="${java.io.tmpdir}/config-interface" />
+-->
 		<echo message="config interface file: ${config.interface.file}" />
 		<echo message="header: ${config.interface.header}" />
 		<echo message="body: ${config.interface.body}" />
 
-		<echo message="${config.interface.header}${config.interface.body}" file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+		<echo message="${config.interface.header}${config.interface.body}" 
+			file="${generate.dir}/${config.interface.file}" />
 
-		<wscompile define="true" model="${build.web.inf}/${model.file}" base="${build.web.inf}" nonClassDir="${build.web.inf}" verbose="true" config="${java.io.tmpdir}config-interface/${config.interface.file}">
-			<classpath refid="generate.classpath" />
+		<wscompile define="true"
+			model="${build.web.inf}/${model.file}"
+			base="${build.web.inf}" 
+			nonClassDir="${build.web.inf}" 
+			verbose="true"
+			xPrintStackTrace="false"
+			debug="${flag-debug}"
+			optimize="${flag-optimize}"
+			config="${generate.dir}/${config.interface.file}">
+			<classpath refid="generate.proxy.classpath" />
 		</wscompile>
 
-		<delete file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
-	</target>
-
-	<target name="build-client" depends="generate-proxy,compile" description="Erzeugt die Bibliothek fuer den Client">
-
-		<echo message="Building client part of service ${service.name} to ${project.deploy}/${client.jar}"/>
-		
-		<pathconvert property="clientjar_cp" pathsep=" " refid="compile.classpath" dirsep="/">
-			<map from="${basedir}" to="." />
-		</pathconvert>
-
-		<!-- package all -->
-		<jar jarfile="${project.deploy}/${client.jar}">
-			<fileset dir="${project.bin}" includes="**/*" />
-			<fileset dir="${build.proxy}" includes="**/*" />
-		</jar>
-
+		<delete file="${generate.dir}/${config.interface.file}" />
 	</target>
 
 	<target name="generate-proxy" depends="generate-wsdl" description="Erzeugt die Proxy-Klassen aus der WSDL">
@@ -170,9 +167,19 @@
 		<echo message="${config.wsdl.header}${config.wsdl.body}" file="${java.io.tmpdir}/${config.wsdl.file}" />
 
 		<wscompile client="true" base="${build.proxy}" nonclassdir="${build.proxy}" config="${java.io.tmpdir}/${config.wsdl.file}">
-			<classpath refid="generate.classpath" />
+			<classpath refid="generate.proxy.classpath" />
 		</wscompile>
 
 	</target>
+
+	<target name="build-client" depends="generate-proxy" description="Erzeugt die Bibliothek fuer den Client">
+
+		<echo message="Building client part of service ${service.name} to ${project.deploy}/${client.jar}"/>
+		
+		<jar jarfile="${project.deploy}/${client.jar}">
+			<fileset dir="${build.proxy}" includes="**/*" />
+		</jar>
+	</target>
+
 </project>
 

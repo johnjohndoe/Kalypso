@@ -4,12 +4,13 @@ Bundle-Name: KalypsoUI
 Bundle-SymbolicName: org.kalypso.ui; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: KalypsoUi.jar,
- lib/kalypsoservice_observation.jar,
- lib/kalypsoservice_calculation.jar,
- lib/KalypsoServiceCore.jar,
  lib/swtcalendar.jar,
  lib/jcommon-0.9.6.jar,
- lib/jfreechart-0.9.21.jar
+ lib/jfreechart-0.9.21.jar,
+ lib/kalypsoAnt.jar,
+ lib/kalypsoservice_calculation.jar,
+ lib/kalypsoservice_observation.jar,
+ lib/KalypsoServiceCore.jar
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
@@ -133,8 +134,6 @@ Export-Package: com.keypoint,
  org.kalypso.services.ocs,
  org.kalypso.services.ocs.repository,
  org.kalypso.services.proxy,
- org.kalypso.services.sensor,
- org.kalypso.services.sensor.impl,
  org.kalypso.ui,
  org.kalypso.ui.editor,
  org.kalypso.ui.editor.abstractobseditor,

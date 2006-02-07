@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="KalypsoServiceMetaDocClient" default="fake" basedir=".">
+<project name="KalypsoServiceUserClient" default="fake" basedir=".">
 
 	<!-- 
 		Description: currently only support for generating the service-proxies
@@ -21,23 +21,23 @@
 	
 	<target name="fake" description="fake target, does nothing">
 	</target>
-	
-	<target name="clean">
-		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
-	</target>
-	
-	<target name="build-core" depends="clean">
+    
+    <target name="clean">
+    	<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
+    </target>
+    	
+    <target name="build-core" depends="clean">
 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
 		
 		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
-	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="../lib" overwrite="true"/>
+	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="${workspace}/KalypsoServiceUserClient/lib" overwrite="true"/>
 	</target>
 	
-	<target name="proxy-MetaDocService" depends="build-core">
-		<echo message="Proxy the metadoc service and copy the client jar"/>
+	<target name="proxy-UserService" depends="build-core">
+		<echo message="Proxy the user service and copy the client jar"/>
 
-		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="build-client" inheritall="false"/>
- 		<copy file="${workspace}/KalypsoServiceMetaDoc/build/deploy/kalypsoservice_metadoc.jar" todir="../lib" overwrite="true"/>
+		<ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="build-client" inheritall="false"/>
+ 		<copy file="${workspace}/KalypsoServiceUser/build/deploy/kalypsoservice_user.jar" todir="${workspace}/KalypsoServiceUserClient/lib" overwrite="true"/>
 	</target>
 
 </project>

@@ -30,33 +30,35 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     </patternset>
 
 	-->
+	
+	<dirname property="commonbinding.basedir" file="${ant.file.commonbinding}" />
+	<property file="${commonbinding.basedir}/../common.properties" />
 
-	<property name="build.source" value="${project}/srcbind" />
-	<property name="jwsdpDir" value="${workspace}/JWSDPInstallation/jwsdp" />
+	<property name="gen.srcbind" value="${project}/srcbind" />
 
-	<path id="cpref">
-		<fileset dir="${jwsdpDir}">
+	<path id="binding.classpath">
+		<fileset dir="${jwsdp}">
 			<include name="jaxb/lib/*.jar" />
 			<include name="jwsdp-shared/lib/*.jar" />
 		</fileset>
 	</path>
 
-	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="cpref" />
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="binding.classpath" />
 
 	<target name="init" description="erzeugt die Build-Verzeichnisse">
-		<mkdir dir="${build.source}" />
+		<mkdir dir="${gen.srcbind}" />
 	</target>
 
 	<target name="clean" description="cleans it up - totally">
 		<delete includeemptydirs="true">
-			<fileset dir="${build.source}" includes="**/*" />
+			<fileset dir="${gen.srcbind}" includes="**/*" />
 		</delete>
 	</target>
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project}" />
 
-		<xjc target="${build.source}" extension="true" removeoldoutput="true">
+		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />
 			</schema>
@@ -82,6 +84,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			faster!
 			-->
 		</xjc>
+	</target>
+	
+	<target name="compile" depends="generate">
+		<echo message="Compiling binding sources for ${project-name}" />
+		<javac srcdir="${gen.srcbind}" destdir="${project.bin}" classpathref="binding.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
 	</target>
 
 </project>
