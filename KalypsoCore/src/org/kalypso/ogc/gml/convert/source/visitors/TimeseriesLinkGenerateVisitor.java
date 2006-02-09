@@ -42,11 +42,13 @@ package org.kalypso.ogc.gml.convert.source.visitors;
 
 import java.util.Properties;
 
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Generiert TimeseriesLinks in einem Features anhand von String-Patterns.
@@ -95,8 +97,8 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     
     final TimeseriesLinkType link = m_linkFactory.createTimeseriesLinkType();
     link.setHref( href );
-
-    f.setProperty( FeatureFactory.createFeatureProperty( m_propertyName, link ) );
+    final IPropertyType pt = FeatureHelper.getPT(f,m_propertyName);
+    f.setProperty( FeatureFactory.createFeatureProperty( pt, link ) );
 
     return true;
   }

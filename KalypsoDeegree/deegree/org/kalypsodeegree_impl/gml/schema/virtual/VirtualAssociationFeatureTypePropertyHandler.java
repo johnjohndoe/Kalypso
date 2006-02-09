@@ -1,8 +1,8 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -49,49 +49,47 @@ public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeat
 {
 
   /*
-   * 
    * @author doemming
    */
-  public VirtualAssociationFeatureTypePropertyHandler()
+  public VirtualAssociationFeatureTypePropertyHandler( )
   {
     super();
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public boolean isDekoratorOf( FeatureTypeProperty ftp )
+  public boolean isDekoratorOf( IPropertyType ftp )
   {
-    if( ftp instanceof FeatureAssociationTypeProperty )
+    if( ftp instanceof IRelationType )
     {
       return true;
-      //      linkFT.getDefaultGeometryPropertyPosition() > -1;
+      // linkFT.getDefaultGeometryPropertyPosition() > -1;
     }
     return false;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
   {
-    return new FeatureTypeProperty[]
-    { new VirtualFeatureAssociationTypeProperty( (FeatureAssociationTypeProperty)ftp ) };
+    return new VirtualFeatureTypeProperty[] { new VirtualFeatureAssociationTypeProperty( (IRelationType) ftp ) };
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean isDekoratorOf( FeatureType ft )
+  public boolean isDekoratorOf( IFeatureType ft )
   {
     return false;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
   {
-    return new FeatureTypeProperty[0];
+    return new VirtualFeatureTypeProperty[0];
   }
 }

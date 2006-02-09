@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
@@ -66,7 +67,6 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -85,9 +85,9 @@ public class RuleTabItem
 
   private KalypsoUserStyle m_userStyle;
 
-  private final FeatureType m_featureType;
+  private final IFeatureType m_featureType;
 
-  public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, FeatureType featureType )
+  public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, IFeatureType featureType )
   {
     m_ruleTabFolder = ruleTabFolder;
     m_userStyle = userStyle;

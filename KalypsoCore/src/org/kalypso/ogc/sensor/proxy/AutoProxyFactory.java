@@ -60,9 +60,9 @@ public class AutoProxyFactory implements IProxyFactory
 {
   private static AutoProxyFactory m_instance = null;
 
-  private AutoProxyFactory()
+  private AutoProxyFactory( )
   {
-  // do not instanciate
+    // do not instanciate
   }
 
   /**
@@ -122,13 +122,15 @@ public class AutoProxyFactory implements IProxyFactory
 
         final String realAxisType = foundType1 ? type1 : type2;
         final String proxyAxisType = foundType1 ? type2 : type1;
-        
+
         final WQTimeserieProxy wqf = new WQTimeserieProxy( realAxisType, proxyAxisType, obs );
         return wqf;
       }
       catch( final Exception e )
       {
-        e.printStackTrace();
+        final StackTraceElement trace = e.getStackTrace()[0];
+        System.out.println( trace.getClassName() + ":" + trace.getMethodName() + "#" + trace.getLineNumber() );
+        // e.printStackTrace();
         return obs;
       }
       finally
@@ -190,7 +192,7 @@ public class AutoProxyFactory implements IProxyFactory
   /**
    * @return default instance of this factory class
    */
-  public static AutoProxyFactory getInstance()
+  public static AutoProxyFactory getInstance( )
   {
     if( m_instance == null )
       m_instance = new AutoProxyFactory();

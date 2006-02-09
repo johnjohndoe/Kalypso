@@ -83,6 +83,10 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -106,11 +110,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
@@ -118,6 +119,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -377,7 +379,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     m_focusedFeature = row == null ? null : (Feature) row.getData();
 
-    final FeatureTypeProperty focusedProperty = (column < 0 || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
+    final IPropertyType focusedProperty = (column < 0 || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
     m_focusedProperty = focusedProperty == null ? null : focusedProperty.getName();
   }
 
@@ -483,11 +485,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     try
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
-      final FeatureType featureType = theme.getFeatureType();
-      FeatureTypeProperty property = featureType.getProperty( propertyName );
+      final IFeatureType featureType = theme.getFeatureType();
+      final IPropertyType property = featureType.getProperty( propertyName );
 
-      final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
-      final Annotation annotation = property.getAnnotation( lang );
+      final Annotation annotation = AnnotationUtilities.getAnnotation( property );
       text = annotation.getLabel();
       tooltip = annotation.getTooltip();
     }
@@ -509,7 +510,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Object input = getInput();
     if( input == null || !(input instanceof GisTemplateFeatureTheme) )
       return;
-    final FeatureType featureType = ((GisTemplateFeatureTheme) input).getFeatureType();
+    final IFeatureType featureType = ((GisTemplateFeatureTheme) input).getFeatureType();
     final Table table = getTable();
 
     if( featureType == null || table == null || table.isDisposed() )
@@ -590,7 +591,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     setCellEditors( editors );
 
     final IKalypsoTheme theme = (IKalypsoTheme) getInput();
-    final FeatureType featureType = theme == null ? null : getTheme().getFeatureType();
+    final IFeatureType featureType = theme == null ? null : getTheme().getFeatureType();
     if( featureType == null )
       return;
     // set new modifiers, new celleditors and new cellvalidators
@@ -599,7 +600,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     {
       final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
       final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-      final FeatureTypeProperty ftp = featureType.getProperty( propName );
+      final IPropertyType ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
         m_modifier[i] = m_featureControlFactory.createFeatureModifier( getTheme().getWorkspace(), ftp, format, m_selectionManager, m_fcl );
@@ -950,8 +951,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( object instanceof FeatureChange )
         fc = (FeatureChange) object;
       else
-        fc = new FeatureChange( feature, property, object );
-
+      {
+        final IPropertyType pt = FeatureHelper.getPT( feature, property );
+        fc = new FeatureChange( feature, pt, object );
+      }
       final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[] { fc } );
       theme.postCommand( command, new Runnable()
       {
@@ -972,7 +975,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         final IFeatureModifier fm = m_modifier[i];
         if( fm != null )
         {
-          final FeatureTypeProperty ftp = fm.getFeatureTypeProperty();
+          final IPropertyType ftp = fm.getFeatureTypeProperty();
           if( ftp.getName().equals( name ) )
             return fm;
         }
@@ -1030,7 +1033,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_tableCursor.setMenu( cursormenu );
   }
 
-  public void setFocusedFeature( final Feature f, final FeatureTypeProperty ftp )
+  public void setFocusedFeature( final Feature f, final IPropertyType ftp )
   {
     m_focusedFeature = f;
     m_focusedProperty = ftp == null ? null : ftp.getName();

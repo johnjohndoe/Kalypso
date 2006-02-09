@@ -32,16 +32,15 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -54,6 +53,7 @@ public class GMLEditorLabelProvider2 extends LabelProvider
    * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
+  @Override
   public Image getImage( Object element )
   {
     ImageDescriptor descriptor = null;
@@ -63,19 +63,20 @@ public class GMLEditorLabelProvider2 extends LabelProvider
       descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
     else if( element instanceof LinkedFeatureElement2 )
       descriptor = ImageProvider.IMAGE_FEATURE_LINKED;
-    else if( element instanceof FeatureTypeProperty )
+    else if( element instanceof IValuePropertyType )
     {
-      if( GeometryUtilities.isPointGeometry( (FeatureTypeProperty)element ) )
+      final IValuePropertyType vpt = (IValuePropertyType) element;
+      if( GeometryUtilities.isPointGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_POINT;
-      if( GeometryUtilities.isMultiPointGeometry( (FeatureTypeProperty)element ) )
+      if( GeometryUtilities.isMultiPointGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
-      if( GeometryUtilities.isLineStringGeometry( (FeatureTypeProperty)element ) )
+      if( GeometryUtilities.isLineStringGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_LINE;
-      if( GeometryUtilities.isMultiLineStringGeometry( (FeatureTypeProperty)element ) )
+      if( GeometryUtilities.isMultiLineStringGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
-      if( GeometryUtilities.isPolygonGeometry( (FeatureTypeProperty)element ) )
+      if( GeometryUtilities.isPolygonGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
-      if( GeometryUtilities.isMultiPolygonGeometry( (FeatureTypeProperty)element ) )
+      if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
     }
     else
@@ -88,33 +89,31 @@ public class GMLEditorLabelProvider2 extends LabelProvider
    * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
+  @Override
   public String getText( Object element )
   {
-    final String lang = KalypsoGisPlugin.getDefault().getLang();
     if( element instanceof GMLWorkspace )
       return "GML";
     if( element instanceof Feature )
     {
-      final Feature feature = (Feature)element;
-      final Annotation annotation = feature.getFeatureType().getAnnotation( lang );
+      final Feature feature = (Feature) element;
+      final Annotation annotation =  AnnotationUtilities.getAnnotation(feature.getFeatureType());
       return annotation.getLabel() + " #" + feature.getId();
     }
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final Annotation annotation = ( (FeatureAssociationTypeElement)element ).getAssociationTypeProperty()
-          .getAnnotation( lang );
+      final Annotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty());
       return annotation.getLabel();
     }
     if( element instanceof LinkedFeatureElement2 )
     {
-      final Feature decoratedFeature = ( (LinkedFeatureElement2)element ).getDecoratedFeature();
+      final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
     }
-    if( element instanceof FeatureTypeProperty )
+    if( element instanceof IValuePropertyType )
     {
-      FeatureTypeProperty ftp = (FeatureTypeProperty)element;
-      return GeometryUtilities.getClass( ftp ).getName().replaceAll( ".+\\.", "" );
-
+      IValuePropertyType vpt = (IValuePropertyType) element;
+      return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
     }
     return "unknown";
   }

@@ -44,8 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
@@ -66,11 +67,11 @@ public class MoveFeatureCommand implements ICommand
 
   private int index = -1;
 
-  private final String m_propName;
+  private final IRelationType m_propName;
 
   private final GMLWorkspace m_workspace;
 
-  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName, Object moveItem,
+  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, IRelationType propName, Object moveItem,
       int type )
   {
     m_workspace = workspace;
@@ -116,11 +117,11 @@ public class MoveFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+    int maxOccurs = m_parentFeature.getFeatureType().getProperties(propIndex).getMaxOccurs();
 
-    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
     {
-      List list = (List)prop;
+      final List list = (List)prop;
       index = list.indexOf( m_moveItem );
       if( m_type == UP && ( ( index - 1 ) >= 0 ) )
       {
@@ -156,9 +157,9 @@ public class MoveFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+    int maxOccurs = m_parentFeature.getFeatureType().getProperties(propIndex).getMaxOccurs();
 
-    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
     {
       List list = (List)prop;
       index = list.indexOf( m_moveItem );

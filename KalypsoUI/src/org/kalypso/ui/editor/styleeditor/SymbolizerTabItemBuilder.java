@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.LineSymbolizerLayout;
@@ -64,7 +65,6 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author F.Lindemann
@@ -74,7 +74,7 @@ public class SymbolizerTabItemBuilder
 {
 
   public SymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle,
-      FeatureType featureType )
+      IFeatureType featureType )
   {
     TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 

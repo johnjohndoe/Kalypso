@@ -45,15 +45,16 @@ import java.net.URL;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -63,11 +64,11 @@ import org.w3c.dom.NodeList;
  */
 public class ObservationLinkHandler implements IMarshallingTypeHandler
 {
-  public static final String CLASS_NAME = TimeseriesLinkType.class.getName();
+  public static final Class CLASS_NAME = TimeseriesLinkType.class;
 
   public static final String NAMESPACE = "obslink.zml.kalypso.org";
 
-  public static final String TYPE_NAME = NAMESPACE + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
+  public static final QName[] TYPE_NAME = new QName[] { new QName( NAMESPACE, ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class ) ) };
 
   private final static ObjectFactory m_factory = new ObjectFactory();
 
@@ -76,7 +77,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName( )
+  public Class getValueClass( )
   {
     return CLASS_NAME;
   }
@@ -84,7 +85,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName( )
+  public QName[] getTypeName( )
   {
     return TYPE_NAME;
   }
@@ -179,6 +180,14 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     final TimeseriesLinkType link = factory.createTimeseriesLinkType();
     link.setHref( text );
     return link;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
   }
 
 }

@@ -60,6 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -89,9 +91,9 @@ public interface DeegreeFeature
   String getId();
 
   /**
-   * returns the FeatureType of this Feature
+   * returns the IFeatureType of this Feature
    */
-  FeatureType getFeatureType();
+  IFeatureType getFeatureType();
 
   /**
    * returns the properties of the feature as array of Objects
@@ -99,9 +101,9 @@ public interface DeegreeFeature
   Object[] getProperties();
 
   /**
-   * returns the property of the feature that matches the submitted name
+   * returns the property of the feature that matches the submitted propertytype
    */
-  Object getProperty( String name );
+  Object getProperty( IPropertyType propertyType);
 
   /**
    * returns the property of the feature that matches the submitted index

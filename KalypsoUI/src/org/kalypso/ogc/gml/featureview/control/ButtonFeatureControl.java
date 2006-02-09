@@ -54,6 +54,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.gmlschema.DateWithoutTime;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
@@ -66,12 +71,9 @@ import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
@@ -89,7 +91,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureSelectionManager selectionManager )
   {
     super( workspace, feature, ftp );
 
@@ -101,7 +103,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         fireFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature featureToOpen, final FeatureTypeProperty ftpToOpen )
+      public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
       {
         fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }
@@ -110,51 +112,54 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     m_dialog = chooseDialog( workspace, feature, ftp, listener, selectionManager );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureChangeListener listener, final IFeatureSelectionManager selectionManager )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener, final IFeatureSelectionManager selectionManager )
   {
-    final String typename = ftp.getType();
-    if( DateWithoutTime.class.getName().equals( typename ) )
-      return new CalendarFeatureDialog( feature, ftp );
-
-    if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    // final String typename = ftp.getType();
+    if( ftp instanceof IValuePropertyType )
     {
-      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
-          .getTypeHandlerForClassName( typename );
-      return handler.createFeatureDialog( workspace, feature, ftp );
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final Class clazz = vpt.getValueClass();
+      if( DateWithoutTime.class == clazz ) // TODO register in registry !
+        return new CalendarFeatureDialog( feature, vpt );
+
+      if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
+      {
+        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
+        return handler.createFeatureDialog( workspace, feature, ftp );
+      }
+      // TODO: use GUITypeHandler for those two!
+      if( RectifiedGridDomain.class == clazz )
+        return new RectifiedGridDomainFeatureDialog( feature, ftp );
+
+      if( RangeSet.class == clazz )
+        return new RangeSetFeatureDialog( feature, ftp );
     }
 
-    if( "FeatureAssociationType".equals( typename ) )
+    if( ftp instanceof IRelationType )
     {
-      int maxOccurs = feature.getFeatureType().getMaxOccurs( ftp.getName() );
-      if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+      int maxOccurs = ftp.getMaxOccurs();
+      if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
       {
         // it is a list of features or links to features or mixed
-//        return new FeatureDialog( workspace, feature, ftp, selectionManager );
+        // return new FeatureDialog( workspace, feature, ftp, selectionManager );
         return new JumpToFeatureDialog( listener, feature, ftp );
       }
       // it is not a list
-      final Object property = feature.getProperty( ftp.getName() );
+      final Object property = feature.getProperty( ftp );
       final Feature linkedFeature;
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
-        if( ( (String)property ).length() < 1 )
+        if( ((String) property).length() < 1 )
           return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
-        linkedFeature = workspace.getFeature( (String)property );
+        linkedFeature = workspace.getFeature( (String) property );
       }
       else if( property instanceof Feature )
-        linkedFeature = (Feature)property;
+        linkedFeature = (Feature) property;
       else
         return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
 
       return new JumpToFeatureDialog( listener, linkedFeature, null );
     }
-
-    // TODO: use GUITypeHandler for those two!
-    if( RectifiedGridDomain.class.getName().equals( typename ) )
-      return new RectifiedGridDomainFeatureDialog( feature, ftp );
-
-    if( RangeSet.class.getName().equals( typename ) )
-      return new RangeSetFeatureDialog( feature, ftp );
 
     return new NotImplementedFeatureDialog();
   }
@@ -162,9 +167,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-    if( !( m_button.isDisposed() ) )
+    if( !(m_button.isDisposed()) )
       m_button.dispose();
   }
 
@@ -190,14 +195,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     return m_button;
   }
 
-  protected void buttonPressed()
+  protected void buttonPressed( )
   {
     if( m_dialog.open( m_button.getShell() ) == Window.OK )
     {
       final Collection c = new LinkedList();
       m_dialog.collectChanges( c );
       for( final Iterator iter = c.iterator(); iter.hasNext(); )
-        fireFeatureChange( (FeatureChange)iter.next() );
+        fireFeatureChange( (FeatureChange) iter.next() );
 
       fireModfied();
 
@@ -205,11 +210,11 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     }
   }
 
-  private void fireModfied()
+  private void fireModfied( )
   {
     for( final Iterator iter = m_modifyListener.iterator(); iter.hasNext(); )
     {
-      final ModifyListener l = (ModifyListener)iter.next();
+      final ModifyListener l = (ModifyListener) iter.next();
       final Event event = new Event();
       event.widget = m_button;
       l.modifyText( new ModifyEvent( event ) );
@@ -221,7 +226,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid()
+  public boolean isValid( )
   {
     return true;
   }
@@ -253,7 +258,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl()
+  public void updateControl( )
   {
     m_button.setText( m_dialog.getLabel() );
   }

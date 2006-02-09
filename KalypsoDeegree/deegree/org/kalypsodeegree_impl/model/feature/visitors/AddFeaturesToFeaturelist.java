@@ -3,9 +3,9 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.Map;
 import java.util.Properties;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -24,7 +24,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   private final Properties m_propertyMap;
 
-  private final FeatureType m_featureType;
+  private final IFeatureType m_featureType;
 
   private final String m_fromID;
 
@@ -49,7 +49,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    *          <li>count</li>
    *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final FeatureType featureType,
+  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType,
       final String fromID, final String toID, final String handleExisting, final String fid )
   {
     m_list = list;
@@ -74,7 +74,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final Object fromID = f.getProperty( m_fromID );
+    final Object fromID = f.getProperty(  m_fromID);
 
     final Feature existingFeature = (Feature)m_idHash.get( fromID );
     final String fid = createID( existingFeature, fromID );

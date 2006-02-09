@@ -22,6 +22,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -30,8 +32,6 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -57,7 +57,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final IFeatureChangeListener m_fcl;
 
-  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+  public TableFeatureContol( final GMLWorkspace workspace, final IPropertyType ftp,
       final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     super( workspace, ftp );
@@ -153,11 +153,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       // create columns
       // add all columns: TODO: use template?
-      final FeatureType featureType = m_kft.getFeatureType();
-      final FeatureTypeProperty[] properties = featureType == null ? new FeatureTypeProperty[0] : featureType.getProperties();
+      final IFeatureType featureType = m_kft.getFeatureType();
+      final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        final FeatureTypeProperty ftp = properties[i];
+        final IPropertyType ftp = properties[i];
         m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
       }
     }

@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
@@ -81,7 +82,6 @@ import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.xml.sax.InputSource;
@@ -116,7 +116,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       onFeatureChanged( change );
     }
 
-    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       // TODO: open Dialog?
     }

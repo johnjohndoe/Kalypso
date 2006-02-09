@@ -75,10 +75,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
@@ -93,9 +95,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * <p>
@@ -109,7 +109,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IExportableObjectFactory
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+//  private final static ObjectFactory OF = new ObjectFactory();
 
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
@@ -122,7 +122,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     {
     }
 
-    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       // feature view öffnen
       final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -202,6 +202,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
@@ -230,6 +231,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     load();
   }
 
+  @Override
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
     if( !(input instanceof IFileEditorInput) )
@@ -300,18 +302,16 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     if( theme == null )
       return;
 
-    final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-    // TODO: use platform mechanism instead:
-    // Platform.getNL();
-    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
+    final IPropertyType[] ftps = theme.getFeatureType().getProperties();
 
     for( int i = 0; i < ftps.length; i++ )
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), ftps[i].getAnnotation( lang ) ) );
+      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), AnnotationUtilities.getAnnotation(ftps[i]) ) );
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )

@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -31,14 +32,15 @@ import org.xml.sax.InputSource;
 public class WQTableFactory implements ISerializer
 {
   private final static ObjectFactory OF = new ObjectFactory();
-  private final static JAXBContext JC = JaxbUtilities.createQuiet(ObjectFactory.class);
 
-  private WQTableFactory()
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+
+  private WQTableFactory( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
-  public static WQTableFactory getInstance()
+  public static WQTableFactory getInstance( )
   {
     return new WQTableFactory();
   }
@@ -51,7 +53,8 @@ public class WQTableFactory implements ISerializer
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
-      final RatingTableList xmlTableList = (RatingTableList)unm.unmarshal( ins );
+      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unm.unmarshal( ins );
+      final RatingTableList xmlTableList = element.getValue();
 
       return xmlTableList;
     }
@@ -76,7 +79,7 @@ public class WQTableFactory implements ISerializer
       int iTable = 0;
       for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
       {
-        final RatingTable xmlTable = (RatingTable)it.next();
+        final RatingTable xmlTable = (RatingTable) it.next();
 
         final Date validity = xmlTable.getValidity().getTime();
         final int offset = xmlTable.getOffset();
@@ -115,7 +118,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final RatingTableList xmlTables = OF.createRatingTableList(  );
+      final RatingTableList xmlTables = OF.createRatingTableList();
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
@@ -177,7 +180,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final String xml = createXMLString( (WQTableSet)object );
+      final String xml = createXMLString( (WQTableSet) object );
       os.write( xml.getBytes() );
     }
     catch( final Exception e ) // WQException, IOException

@@ -40,23 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import java.util.HashMap;
+import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 
 /**
  * creatres a virtual property that shows the features ID
  * 
  * @author doemming
  */
-public class VirtualIdFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
+public class VirtualIdFeatureTypeProperty extends AbstractVirtualPropertyType
 {
 
-  public VirtualIdFeatureTypeProperty()
+  public VirtualIdFeatureTypeProperty( )
   {
-    super( "GML_FID", "virtual", new HashMap() );
+    super( new QName( "virtual", "GML_FID" ), 1, 1, String.class );
   }
 
   /**
@@ -66,22 +65,6 @@ public class VirtualIdFeatureTypeProperty extends AbstractFeatureType implements
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
     return feature.getId();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
-   */
-  public String getType()
-  {
-    return String.class.getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
-   */
-  public boolean isNullable()
-  {
-    return false;
   }
 
 }

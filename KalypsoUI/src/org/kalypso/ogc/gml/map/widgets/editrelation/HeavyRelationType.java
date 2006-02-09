@@ -1,8 +1,8 @@
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class HeavyRelationType implements IRelationType
+public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType
 {
 
   private RelationType m_relationType1;
@@ -57,19 +57,17 @@ public class HeavyRelationType implements IRelationType
   /**
    * @author doemming
    */
-  public HeavyRelationType( FeatureType ft1, FeatureAssociationTypeProperty linkFTP1, FeatureType ft2,
-      FeatureAssociationTypeProperty linkFTP2, FeatureType ft3 )
+  public HeavyRelationType( IFeatureType ft1, IRelationType linkFTP1, IFeatureType ft2, IRelationType linkFTP2, IFeatureType ft3 )
   {
     m_relationType1 = new RelationType( ft1, linkFTP1, ft2 );
     m_relationType2 = new RelationType( ft2, linkFTP2, ft3 );
   }
 
   /**
-   * 
-   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#fitsTypes(org.kalypsodeegree.model.feature.FeatureType,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#fitsTypes(org.kalypsodeegree.model.feature.IFeatureType,
+   *      org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean fitsTypes( FeatureType f1, FeatureType f2 )
+  public boolean fitsTypes( IFeatureType f1, IFeatureType f2 )
   {
     if( f1 == null || f2 == null )
       return false;
@@ -77,7 +75,6 @@ public class HeavyRelationType implements IRelationType
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getFitProblems(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
    */
@@ -97,7 +94,7 @@ public class HeavyRelationType implements IRelationType
   /**
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getDestFT()
    */
-  public FeatureType getDestFT()
+  public IFeatureType getDestFT( )
   {
     return m_relationType2.getDestFT();
   }
@@ -105,64 +102,64 @@ public class HeavyRelationType implements IRelationType
   /**
    * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getSrcFT()
    */
-  public FeatureType getSrcFT()
+  public IFeatureType getSrcFT( )
   {
     return m_relationType1.getSrcFT();
   }
 
-  public FeatureAssociationTypeProperty getLink1()
+  public IRelationType getLink1( )
   {
     return m_relationType1.getLink();
   }
 
-  public FeatureAssociationTypeProperty getLink2()
+  public IRelationType getLink2( )
   {
     return m_relationType2.getLink();
   }
 
-  public FeatureType getBodyFT()
+  public IFeatureType getBodyFT( )
   {
     return m_relationType1.getDestFT();
   }
 
-  //  private final FeatureType m_bodyFT;
+  // private final IFeatureType m_bodyFT;
   //
-  //  private final FeatureAssociationTypeProperty m_destLinkFTP;
+  // private final FeatureAssociationTypeProperty m_destLinkFTP;
   //
-  //  /*
+  // /*
   //
-  //  public FeatureType getBodyFT()
-  //  {
-  //    return m_bodyFT;
-  //  }
+  // public IFeatureType getBodyFT()
+  // {
+  // return m_bodyFT;
+  // }
   //
-  //  public FeatureType getDestFT()
-  //  {
-  //    return m_destFT;
-  //  }
+  // public IFeatureType getDestFT()
+  // {
+  // return m_destFT;
+  // }
   //
-  //  public FeatureAssociationTypeProperty getDestLinkFTP()
-  //  {
-  //    return m_destLinkFTP;
-  //  }
+  // public FeatureAssociationTypeProperty getDestLinkFTP()
+  // {
+  // return m_destLinkFTP;
+  // }
   //
-  //  public FeatureType getSrcFT()
-  //  {
-  //    return m_srcFT;
-  //  }
+  // public IFeatureType getSrcFT()
+  // {
+  // return m_srcFT;
+  // }
   //
-  //  public boolean equals( Object obj )
-  //  {
-  //    if( obj == null || !( obj instanceof HeavyRelationType ) )
-  //      return false;
-  //    final HeavyRelationType other = (HeavyRelationType)obj;
-  //    return super.equals( obj ) && other.getBodyFT().equals( m_bodyFT )
-  //        && other.getDestLinkFTP().equals( m_destLinkFTP );
-  //  }
+  // public boolean equals( Object obj )
+  // {
+  // if( obj == null || !( obj instanceof HeavyRelationType ) )
+  // return false;
+  // final HeavyRelationType other = (HeavyRelationType)obj;
+  // return super.equals( obj ) && other.getBodyFT().equals( m_bodyFT )
+  // && other.getDestLinkFTP().equals( m_destLinkFTP );
+  // }
   //
-  //  public int hashCode()
-  //  {
-  //    return ( getSrcFT().getName() + getLink().getName() + m_bodyFT.getName()
-  //        + m_destLinkFTP.getName() + getDestFT().getName() ).hashCode();
-  //  }
+  // public int hashCode()
+  // {
+  // return ( getSrcFT().getName() + getLink().getName() + m_bodyFT.getName()
+  // + m_destLinkFTP.getName() + getDestFT().getName() ).hashCode();
+  // }
 }

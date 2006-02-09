@@ -95,9 +95,9 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       // String featurePath = null;
       // if( FeatureHelper.isCollection( feature ) )
       // {
-      // FeatureTypeProperty ftp = feature.getFeatureType().getProperties()[0];
+      // IPropertyType ftp = feature.getFeatureType().getProperties()[0];
       // FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
-      // FeatureType[] associationFeatureTypes = fatp.getAssociationFeatureTypes();
+      // IFeatureType[] associationFeatureTypes = fatp.getAssociationFeatureTypes();
       // String typeName = fatp.getName();
       // if( associationFeatureTypes.length == 1 )
       // {
@@ -113,11 +113,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       // int open = dialog.open();
       // if( open == Window.OK )
       // {
-      // FeatureType[] selectedFeatureTypes = dialog.getSelectedFeatureTypes();
+      // IFeatureType[] selectedFeatureTypes = dialog.getSelectedFeatureTypes();
       //
       // for( int j = 0; j < selectedFeatureTypes.length; j++ )
       // {
-      // FeatureType ftype = selectedFeatureTypes[j];
+      // IFeatureType ftype = selectedFeatureTypes[j];
       // featureName = ftype.getName();
       // featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName
       // + FeaturePath.TYPENAME_TAG_OPEN + featureName + FeaturePath.TYPENAME_TAG_CLOSE;

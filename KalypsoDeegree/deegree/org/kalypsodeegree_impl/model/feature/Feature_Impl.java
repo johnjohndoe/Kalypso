@@ -3,11 +3,13 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -15,15 +17,14 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author doemming
- * 
- * implementation of ogc feature that supports different cardinalities of properties, but not "unbound" cardinalities
- * (use FeatureCollections for unbound cardinalities)
+ * @author doemming implementation of ogc feature that supports different cardinalities of properties, but not "unbound"
+ *         cardinalities (use FeatureCollections for unbound cardinalities)
  */
 public class Feature_Impl implements Feature
 {
@@ -38,7 +39,7 @@ public class Feature_Impl implements Feature
    */
   private final Object[] m_properties;
 
-  private final FeatureType m_featureType;
+  private final IFeatureType m_featureType;
 
   private final String m_id;
 
@@ -46,24 +47,25 @@ public class Feature_Impl implements Feature
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
    * 
    * @deprecated use Constructor:
-   *             <code>Feature_Impl( final FeatureType ft, final String id, boolean initializeWithDefaults )</code>
+   *             <code>Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )</code>
    *             instead.
    */
-  protected Feature_Impl( final FeatureType ft, final String id )
+  @Deprecated
+  protected Feature_Impl( final IFeatureType ft, final String id )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
     m_featureType = ft;
     m_id = id;
     // initialize
-    final FeatureTypeProperty[] ftp = ft.getProperties();
+    final IPropertyType[] ftp = ft.getProperties();
     m_properties = new Object[ftp.length];
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( m_featureType.getMaxOccurs( i ) != 1 )
+      if( m_featureType.getProperties( i ).getMaxOccurs() != 1 )
       {
-        if( ftp[i] instanceof FeatureAssociationTypeProperty )
-          m_properties[i] = FeatureFactory.createFeatureList( this, ftp[i] );
+        if( ftp[i] instanceof IRelationType )
+          m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );
         else
           m_properties[i] = new ArrayList();
       }
@@ -74,7 +76,7 @@ public class Feature_Impl implements Feature
     final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
     for( int i = 0; i < properties.length; i++ )
     {
-      if( properties[i].getValue() != null && ft.getMaxOccurs( properties[i].getName() ) == 1 )
+      if( properties[i].getValue() != null && ft.getProperty( properties[i].getName() ).getMaxOccurs() == 1 )
         setProperty( properties[i] );
     }
   }
@@ -86,21 +88,22 @@ public class Feature_Impl implements Feature
    *          set <code>true</code> when generating from UserInterface <br>
    *          set <code>false</code> when generating from GML or so.
    */
-  protected Feature_Impl( final FeatureType ft, final String id, boolean initializeWithDefaults )
+  protected Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
     m_featureType = ft;
     m_id = id;
+
     // initialize
-    final FeatureTypeProperty[] ftp = ft.getProperties();
+    final IPropertyType[] ftp = ft.getProperties();
     m_properties = new Object[ftp.length];
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( m_featureType.getMaxOccurs( i ) != 1 )
+      if( m_featureType.getProperties( i ).getMaxOccurs() != 1 )
       {
-        if( ftp[i] instanceof FeatureAssociationTypeProperty )
-          m_properties[i] = FeatureFactory.createFeatureList( this, ftp[i] );
+        if( ftp[i] instanceof IRelationType )
+          m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );
         else
           m_properties[i] = new ArrayList();
       }
@@ -112,13 +115,13 @@ public class Feature_Impl implements Feature
       final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
       for( int i = 0; i < properties.length; i++ )
       {
-        if( properties[i].getValue() != null && ft.getMaxOccurs( properties[i].getName() ) == 1 )
+        if( properties[i].getValue() != null && ft.getProperty( properties[i].getName() ).getMaxOccurs() == 1 )
           setProperty( properties[i] );
       }
     }
   }
 
-  protected Feature_Impl( FeatureType ft, String id, Object[] propValues )
+  protected Feature_Impl( IFeatureType ft, String id, Object[] propValues )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
@@ -131,7 +134,7 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getId()
    */
-  public String getId()
+  public String getId( )
   {
     return m_id;
   }
@@ -139,7 +142,7 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
    */
-  public FeatureType getFeatureType()
+  public IFeatureType getFeatureType( )
   {
     return m_featureType;
   }
@@ -149,7 +152,7 @@ public class Feature_Impl implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
-  public Object[] getProperties()
+  public Object[] getProperties( )
   {
     return m_properties;
   }
@@ -159,20 +162,31 @@ public class Feature_Impl implements Feature
    * 
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
-   * 
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
-  public Object getProperty( String name )
+  public Object getProperty( IPropertyType pt )
   {
-    final int pos = m_featureType.getPropertyPosition( name );
-    if( pos == -1 )
-      return null;
-
-    return m_properties[pos];
+    final int pos = m_featureType.getPropertyPosition( pt );
+    return getProperty( pos );
   }
 
+  // /**
+  // * format of name if "namespace:name" or just "name" - both will work
+  // *
+  // * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
+  // * java.util.List-objects
+  // * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
+  // */
+  // public Object getProperty( QName name )
+  // {
+  // final int pos = FeatureTypeUtilities.getFirstPropertyPosition(this, name );
+  // if( pos == -1 )
+  // return null;
+  //
+  // return m_properties[pos];
+  // }
+
   /**
-   * 
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
@@ -185,10 +199,10 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
    */
-  public GM_Object[] getGeometryProperties()
+  public GM_Object[] getGeometryProperties( )
   {
     final List result = new ArrayList();
-    final FeatureTypeProperty[] ftp = m_featureType.getProperties();
+    final IPropertyType[] ftp = m_featureType.getProperties();
     for( int p = 0; p < ftp.length; p++ )
     {
       if( GeometryUtilities.isGeometry( ftp[p] ) )
@@ -198,37 +212,37 @@ public class Feature_Impl implements Feature
           continue;
         if( o instanceof List )
         {
-          result.addAll( (List)o );
+          result.addAll( (List) o );
         }
         else
           result.add( o );
       }
     }
     // TODO allways use virtual ftp to calculate bbox ??
-    final FeatureTypeProperty[] vftp = m_featureType.getVirtuelFeatureTypeProperty();
+    final VirtualFeatureTypeProperty[] vftp = VirtualPropertyUtilities.getVirtualProperties( m_featureType );
     for( int p = 0; p < vftp.length; p++ )
     {
       if( GeometryUtilities.isGeometry( vftp[p] ) )
       {
-        Object o = getVirtuelProperty( vftp[p].getName(), null );
+        Object o = getVirtuelProperty( vftp[p], null );
         if( o == null )
           continue;
         if( o instanceof List )
         {
-          result.addAll( (List)o );
+          result.addAll( (List) o );
         }
         else
           result.add( o );
       }
     }
 
-    return (GM_Object[])result.toArray( new GM_Object[result.size()] );
+    return (GM_Object[]) result.toArray( new GM_Object[result.size()] );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
    */
-  public GM_Object getDefaultGeometryProperty()
+  public GM_Object getDefaultGeometryProperty( )
   {
     int pos = m_featureType.getDefaultGeometryPropertyPosition();
     if( pos < 0 )
@@ -236,12 +250,12 @@ public class Feature_Impl implements Feature
     Object prop = m_properties[pos];
     if( prop instanceof List )
     {
-      List props = (List)prop;
-      return (GM_Object)( props.size() > 0 ? props.get( 0 ) : null );
+      List props = (List) prop;
+      return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
-    if( !( prop == null || prop instanceof GM_Object ) )
+    if( !(prop == null || prop instanceof GM_Object) )
       throw new UnsupportedOperationException( "wrong geometry type" );
-    return (GM_Object)prop;
+    return (GM_Object) prop;
   }
 
   /**
@@ -253,10 +267,10 @@ public class Feature_Impl implements Feature
   {
     if( property == null )
       return;
-    FeatureType ft = getFeatureType();
+    IFeatureType ft = getFeatureType();
     if( ft == null )
       return;
-    FeatureTypeProperty ftp = ft.getProperty( property.getName() );
+    IPropertyType ftp = ft.getProperty( property.getName() );
     if( ftp == null )
     {
       return;
@@ -264,29 +278,28 @@ public class Feature_Impl implements Feature
     if( GeometryUtilities.isGeometry( ftp ) )
       invalidEnvelope();
 
-    int pos = m_featureType.getPropertyPosition( property.getName() );
+    int pos = m_featureType.getPropertyPosition( property.getPropertyType() );
     m_properties[pos] = property.getValue();
   }
 
   /**
-   * 
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public void addProperty( FeatureProperty property )
   {
     // to handle boundingbox if geometryproperty
-    int pos = m_featureType.getPropertyPosition( property.getName() );
+    int pos = m_featureType.getPropertyPosition( property.getPropertyType() );
     Object newValue = property.getValue();
     Object oldValue = m_properties[pos];
     if( oldValue instanceof List )
     {
       if( newValue instanceof List )
       {
-        ( (List)oldValue ).addAll( (List)newValue );
+        ((List) oldValue).addAll( (List) newValue );
       }
       else
       {
-        ( (List)oldValue ).add( newValue );
+        ((List) oldValue).add( newValue );
       }
     }
     else
@@ -298,20 +311,20 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
-  public GM_Envelope getEnvelope()
+  public GM_Envelope getEnvelope( )
   {
     if( m_envelope == INVALID_ENV )
       calculateEnv();
     return m_envelope;
   }
 
-  private void calculateEnv()
+  private void calculateEnv( )
   {
     GM_Envelope env = null;
     GM_Object[] geoms = getGeometryProperties();
     for( int i = 0; i < geoms.length; i++ )
     {
-      if( !( geoms[i] instanceof GM_Point ) )
+      if( !(geoms[i] instanceof GM_Point) )
       {
         if( env == null )
           env = geoms[i].getEnvelope();
@@ -320,7 +333,7 @@ public class Feature_Impl implements Feature
       }
       else
       {
-        GM_Position pos = ( (GM_Point)geoms[i] ).getPosition();
+        GM_Position pos = ((GM_Point) geoms[i]).getPosition();
         GM_Envelope env2 = GeometryFactory.createGM_Envelope( pos, pos );
         if( env == null )
           env = env2;
@@ -331,64 +344,18 @@ public class Feature_Impl implements Feature
     m_envelope = env;
   }
 
-  private void invalidEnvelope()
+  private void invalidEnvelope( )
   {
     m_envelope = INVALID_ENV;
-  }
-
-  public void debugOut( int indent )
-  {
-    System.out.println( getIndent( indent ) + "Name:      " + m_featureType.getName() );
-    System.out.println( getIndent( indent ) + "NameSpace: " + m_featureType.getNamespace() );
-    System.out.println( getIndent( indent ) + " TYPE:      Feature" );
-    System.out.println( getIndent( indent ) + " props:" );
-    final FeatureTypeProperty[] ftps = m_featureType.getProperties();
-    indent++;
-    for( int i = 0; i < ftps.length; i++ )
-    {
-      System.out.println( getIndent( indent ) + "Name:      " + ftps[i].getName() );
-      System.out.println( getIndent( indent ) + "NameSpace: " + ftps[i].getNamespace() );
-      System.out.println( getIndent( indent ) + " TYPE:     " + ftps[i].getType() );
-      Object value = m_properties[i];
-      if( value == null )
-        System.out.println( getIndent( indent ) + "null" );
-      else if( value instanceof List )
-      {
-        List vList = (List)value;
-        for( int j = 0; j < vList.size(); j++ )
-        {
-          Object lValue = vList.get( j );
-          debugOutProperty( indent, lValue );
-        }
-      }
-      else
-        debugOutProperty( indent, value );
-
-    }
-  }
-
-  private void debugOutProperty( int indent, Object value )
-  {
-    if( value instanceof Feature )
-      ( (Feature_Impl)value ).debugOut( indent + 1 );
-    else
-      System.out.println( getIndent( indent ) + value.toString() );
-  }
-
-  private String getIndent( int indent )
-  {
-    return "                                                  ".substring( 0, indent * 4 );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String,
    *      org.kalypsodeegree.model.feature.GMLWorkspace)
    */
-  public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
+  public Object getVirtuelProperty( VirtualFeatureTypeProperty vpt, GMLWorkspace workspace )
   {
-    VirtualFeatureTypeProperty virtuelFeatureTypeProperty = (VirtualFeatureTypeProperty)m_featureType
-        .getVirtuelFeatureTypeProperty( propertyName );
-    return virtuelFeatureTypeProperty.getVirtuelValue( this, workspace );
+    return vpt.getVirtuelValue( this, workspace );
   }
 
   /**
@@ -396,8 +363,8 @@ public class Feature_Impl implements Feature
    */
   public void accept( final IFeaturePropertyVisitor visitor )
   {
-    final FeatureType featureType = getFeatureType();
-    final FeatureTypeProperty[] ftps = featureType.getProperties();
+    final IFeatureType featureType = getFeatureType();
+    final IPropertyType[] ftps = featureType.getProperties();
     final Object[] properties = getProperties();
 
     for( int i = 0; i < ftps.length; i++ )
@@ -407,8 +374,40 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
-  public void setProperty( String propertyName, Object value )
+  public void setProperty( IPropertyType pt, Object value )
   {
-    setProperty( FeatureFactory.createFeatureProperty( propertyName, value ) );
+    setProperty( FeatureFactory.createFeatureProperty( pt, value ) );
   }
+
+  /**
+   * @deprecated use getProperty(IPropertyType)
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
+   */
+  public Object getProperty( String propNameLocalPart )
+  {
+    if( propNameLocalPart.indexOf( ':' ) > 0 )
+      throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
+    final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
+    return getProperty( pt );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
+   */
+  public Object getProperty( QName propQName )
+  {
+    final IPropertyType pt = m_featureType.getProperty( propQName );
+    return getProperty( pt );
+  }
+
+  /**
+   * @deprecated
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
+   */
+  public void setProperty( String propLocalName, Object value )
+  {
+    final IPropertyType pt = FeatureHelper.getPT( this, propLocalName );
+    setProperty( pt, value );
+  }
+
 }

@@ -43,8 +43,8 @@ package org.kalypsodeegree_impl.tools;
 
 import java.text.ParseException;
 
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -63,24 +63,24 @@ public class FeatureUtils
    * 
    * @throws NumberFormatException
    */
-  public static final Object createFeaturePropertyFromStrings( final String type, final String format, final String[] input )
+  public static final Object createFeaturePropertyFromStrings( final Class type, final String format, final String[] input )
   {
-    if( String.class.getName().equals( type ) )
+    if( String.class==type  )
       return input[0];
 
-    if( Integer.class.getName().equals( type ) )
+    if( Integer.class==type)
       return new Integer( input[0] );
 
-    if( Long.class.getName().equals( type ) )
+    if( Long.class==type)
       return new Long( input[0] );
 
-    if( Float.class.getName().equals( type ) )
+    if( Float.class==type)
       return new Float( input[0] );
 
-    if( Double.class.getName().equals( type ) )
+    if( Double.class==type)
       return new Double( input[0].replace( ',', '.' ) );
 
-    if( GeometryUtilities.getPointClass().getName().equals( type ) )
+    if( GeometryUtilities.getPointClass()==type)
     {
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();

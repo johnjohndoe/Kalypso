@@ -62,6 +62,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
@@ -70,8 +72,7 @@ import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -84,7 +85,7 @@ public class AddSymbolizerPanel
 
   private final Composite m_composite;
 
-  private final FeatureType m_featureType;
+  private final IFeatureType m_featureType;
 
   private Combo m_symbolizerCombo = null;
 
@@ -99,7 +100,7 @@ public class AddSymbolizerPanel
   /**
    *  
    */
-  public AddSymbolizerPanel( Composite parent, String label, FeatureType featureType )
+  public AddSymbolizerPanel( Composite parent, String label, IFeatureType featureType )
   {
     m_label = label;
     m_featureType = featureType;
@@ -117,7 +118,7 @@ public class AddSymbolizerPanel
     init();
   }
 
-  public AddSymbolizerPanel( Composite parent, String label, FeatureType featureType, boolean isSimpleRule )
+  public AddSymbolizerPanel( Composite parent, String label, IFeatureType featureType, boolean isSimpleRule )
   {
     m_label = label;
     m_featureType = featureType;
@@ -173,10 +174,10 @@ public class AddSymbolizerPanel
     } );
 
     List geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
-    geometryItems = queryGeometriesPropertyNames( m_featureType.getVirtuelFeatureTypeProperty(), geometryItems );
+    geometryItems = queryGeometriesPropertyNames( VirtualPropertyUtilities.getVirtualProperties(m_featureType) , geometryItems );
     if( geometryItems != null && geometryItems.size() > 0 )
     {
-      m_geometryCombo.setItems( (String[])geometryItems.toArray( new String[geometryItems.size()] ) );
+      m_geometryCombo.setItems( (String[]) geometryItems.toArray( new String[geometryItems.size()] ) );
       m_geometryCombo.select( 0 );
     }
 
@@ -246,9 +247,9 @@ public class AddSymbolizerPanel
     return getSymbolizer( geometryPropertyName, symbolizerString, m_featureType );
   }
 
-  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString, FeatureType featureType )
+  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString, IFeatureType featureType )
   {
-    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
+    final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
 
     if( symbolizerString.equals( "Point" ) )
     {
@@ -296,7 +297,7 @@ public class AddSymbolizerPanel
     }
   }
 
-  public static List queryGeometriesPropertyNames( FeatureTypeProperty[] ftp, List list )
+  public static List queryGeometriesPropertyNames( IPropertyType[] ftp, List list )
   {
     if( list == null )
       list = new ArrayList();
@@ -312,7 +313,7 @@ public class AddSymbolizerPanel
   private String[] getSymbolizerTypesByFeatureProperty( String propName )
   {
 
-    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType, propName );
+    final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType, propName );
 
     String items[] = null;
     // in case of Pattern-Rule it does not make sense to have a pattern for

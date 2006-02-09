@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -11,7 +12,6 @@ import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -25,7 +25,7 @@ public class SubFeatureControl extends AbstractFeatureControl
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public SubFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
+  public SubFeatureControl( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
     super( workspace, ftp );
     m_selectionManager = selectionManager;
@@ -52,7 +52,7 @@ public class SubFeatureControl extends AbstractFeatureControl
         fireFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature featureToOpen, final FeatureTypeProperty ftpToOpen )
+      public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
       {
         fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }

@@ -289,7 +289,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_group.setText( "Optionen" );
     m_group.setLayoutData( datag );
     m_topLevel.layout();
-    m_topLevel.pack();
+//    m_topLevel.pack();
 
     // update content
     m_modeForce = true;

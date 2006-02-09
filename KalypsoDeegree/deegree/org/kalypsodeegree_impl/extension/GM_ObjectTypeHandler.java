@@ -27,19 +27,20 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.typehandler;
+package org.kalypsodeegree_impl.extension;
 
 import java.io.StringReader;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
@@ -50,7 +51,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -59,8 +59,6 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
 {
   private final Class m_clazz;
 
-  private final String m_typeName;
-
   private static final String PSEUDEGMLHEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
       + "<GMLHelper xmlns=\"http://www.opengis.net/gml\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">";
 
@@ -68,11 +66,13 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
 
   private final String m_shortName;
 
-  public GM_ObjectTypeHandler( final String schemaTypeName, final Class clazz )
+  private final QName[] m_qName;
+
+  public GM_ObjectTypeHandler( final QName[] typeNames, final Class clazz )
   {
-    m_typeName = schemaTypeName;
     m_clazz = clazz;
     m_shortName = m_clazz.getName().replaceAll( ".+\\.", "" );
+    m_qName = typeNames;
   }
 
   /**
@@ -87,13 +87,13 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
     try
     {
       xml.append( PSEUDEGMLHEADER );
-      xml.append( GMLAdapter.export( (GM_Object)value ) );
+      xml.append( GMLAdapter.export( (GM_Object) value ) );
       xml.append( PSEUDOGMLFOOTER );
 
       final StringReader reader = new StringReader( xml.toString() );
-      
-//      final ReaderInputStream stream = new ReaderInputStream( reader );
-      final InputSource source = new InputSource(reader);
+
+      // final ReaderInputStream stream = new ReaderInputStream( reader );
+      final InputSource source = new InputSource( reader );
       final Document dom = XMLHelper.getAsDOM( source, true );
       final NodeList childs = dom.getElementsByTagNameNS( XMLHelper.GMLSCHEMA_NS, "GMLHelper" );
       final Node gmlHelperNode = childs.item( 0 );
@@ -127,12 +127,12 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
       {
         GMLGeometry gml = GMLFactory.createGMLGeometry( element );
         GM_Object object = GMLAdapter.wrap( gml );
-        //        if( !m_clazz.isInstance( object ) )
-        //        {
-        //          System.out.println( "hier ist der falsche type angegeben biem typehandler" );
-        //          System.out.println( "registriert: " + m_clazz.getName() );
-        //          System.out.println( "wert ist " + object.getClass().getName() );
-        //        }
+        // if( !m_clazz.isInstance( object ) )
+        // {
+        // System.out.println( "hier ist der falsche type angegeben biem typehandler" );
+        // System.out.println( "registriert: " + m_clazz.getName() );
+        // System.out.println( "wert ist " + object.getClass().getName() );
+        // }
         return object;
       }
       catch( GM_Exception e )
@@ -145,7 +145,7 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return m_shortName;
   }
@@ -155,7 +155,7 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
    */
   public Object cloneObject( final Object objectToClone )
   {
-    final GM_Object geom = (GM_Object)objectToClone;
+    final GM_Object geom = (GM_Object) objectToClone;
     GMLGeometry gml = null;
 
     try
@@ -174,24 +174,32 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass( )
   {
-    return m_clazz.getName();
+    return m_clazz;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
-    return XMLHelper.GMLSCHEMA_NS + ":" + m_typeName;
+    return m_qName;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return true;
   }
 }

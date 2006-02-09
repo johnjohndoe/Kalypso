@@ -2,6 +2,8 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
@@ -16,19 +18,19 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass( )
   {
-    return Feature.class.getName().toString();
+    return Feature.class;
   }
 
-  private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "FeatureAssociationType";
+  private final QName[] m_typeName = new QName[]{new QName( XMLHelper.GMLSCHEMA_NS, "FeatureAssociationType" )};
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
-    return m_nameSpaceURI;
+    return m_typeName;
   }
 
   /**
@@ -52,7 +54,7 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return "Feature link";
   }
@@ -72,5 +74,13 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return true;
   }
 }

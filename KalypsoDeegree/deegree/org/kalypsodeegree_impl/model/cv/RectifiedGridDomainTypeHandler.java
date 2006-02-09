@@ -4,12 +4,14 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.Vector;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
@@ -22,7 +24,6 @@ import org.w3c.dom.NodeList;
  * TypeHandler for GridDomain of RectifiedGridCoverages
  * 
  * @author N. Peiler
- *  
  */
 public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
 {
@@ -31,35 +32,32 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
 
   private static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
 
-  public static final String TYPENAME = NSRGC + ":" + "RectifiedGridDomainType";
+  public static final QName[] TYPENAME = new QName[] { new QName( NSRGC, "RectifiedGridDomainType" ) };
 
   /**
-   * 
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass( )
   {
-    return RectifiedGridDomain.class.getName();
+    return RectifiedGridDomain.class;
   }
 
   /**
-   * 
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
     return TYPENAME;
   }
 
   /**
-   * 
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
 
-    RectifiedGridDomain gridDomain = (RectifiedGridDomain)object;
+    RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
     Document ownerDocument = node.getOwnerDocument();
 
     Element e_rectifiedGrid = ownerDocument.createElementNS( NSRGC, "rgc:RectifiedGrid" );
@@ -69,10 +67,9 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
     Element e_gridEnvelope = ownerDocument.createElementNS( NSRGC, "rgc:GridEnvelope" );
     GridRange gridRange = gridDomain.getGridRange();
     double[] lows = gridRange.getLow();
-    String stringLows = new String( ( new Double( lows[0] ) ).intValue() + " " + ( new Double( lows[1] ) ).intValue() );
+    String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
     double[] highs = gridRange.getHigh();
-    String stringHighs = new String( ( new Double( highs[0] ) ).intValue() + " "
-        + ( new Double( highs[1] ) ).intValue() );
+    String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
     Element e_low = ownerDocument.createElementNS( NSRGC, "rgc:low" );
     e_low.appendChild( ownerDocument.createTextNode( stringLows ) );
     Element e_high = ownerDocument.createElementNS( NSRGC, "rgc:high" );
@@ -121,7 +118,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
     e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );
 
-    ( (Element)node ).appendChild( e_rectifiedGrid );
+    ((Element) node).appendChild( e_rectifiedGrid );
   }
 
   /**
@@ -130,11 +127,11 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
-    Node node_rg = ( (Element)node ).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
+    Node node_rg = ((Element) node).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
 
-    Node node_limits = ( (Element)node_rg ).getElementsByTagNameNS( NSRGC, "limits" ).item( 0 );
-    Node node_gridEnv = ( (Element)node_limits ).getElementsByTagNameNS( NSRGC, "GridEnvelope" ).item( 0 );
-    Node n_low = ( (Element)node_gridEnv ).getElementsByTagNameNS( NSRGC, "low" ).item( 0 );
+    Node node_limits = ((Element) node_rg).getElementsByTagNameNS( NSRGC, "limits" ).item( 0 );
+    Node node_gridEnv = ((Element) node_limits).getElementsByTagNameNS( NSRGC, "GridEnvelope" ).item( 0 );
+    Node n_low = ((Element) node_gridEnv).getElementsByTagNameNS( NSRGC, "low" ).item( 0 );
     String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
     double[] low = new double[lows.length];
     for( int i = 0; i < low.length; i++ )
@@ -142,7 +139,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
       low[i] = Double.parseDouble( lows[i] );
     }
     System.out.println( low[0] + " " + low[1] );
-    Node n_high = ( (Element)node_gridEnv ).getElementsByTagNameNS( NSRGC, "high" ).item( 0 );
+    Node n_high = ((Element) node_gridEnv).getElementsByTagNameNS( NSRGC, "high" ).item( 0 );
     String[] highs = n_high.getFirstChild().getNodeValue().trim().split( " " );
     double[] high = new double[highs.length];
     for( int i = 0; i < high.length; i++ )
@@ -152,16 +149,16 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
     System.out.println( high[0] + " " + high[1] );
     GridRange gridRange = new GridRange_Impl( low, high );
 
-    Node n_origin = ( (Element)node_rg ).getElementsByTagNameNS( NSRGC, "origin" ).item( 0 );
-    Node n_point = ( (Element)n_origin ).getElementsByTagNameNS( NSGML, "Point" ).item( 0 );
+    Node n_origin = ((Element) node_rg).getElementsByTagNameNS( NSRGC, "origin" ).item( 0 );
+    Node n_point = ((Element) n_origin).getElementsByTagNameNS( NSGML, "Point" ).item( 0 );
     try
     {
-      GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element)n_point );
-      GM_Point origin = (GM_Point)GMLAdapter.wrap( gmlGeom );
+      GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
+      GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );
       System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
       System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 
-      NodeList nl_offSetVector = ( (Element)node_rg ).getElementsByTagNameNS( NSRGC, "offsetVector" );
+      NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NSRGC, "offsetVector" );
       Vector offSetVectors = new Vector();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
@@ -171,14 +168,14 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
         for( int n = 0; n < vectorCoo.length; n++ )
         {
           vectorCoo[n] = Double.parseDouble( vectorCoos[n] );
-          //System.out.println(n+": "+vectorCoo[n]);
+          // System.out.println(n+": "+vectorCoo[n]);
         }
         offSetVectors.addElement( vectorCoo );
       }
       double[] offset = new double[2];
-      double[] p1 = (double[])offSetVectors.get( 0 );
+      double[] p1 = (double[]) offSetVectors.get( 0 );
       offset[1] = p1[1];
-      double[] p2 = (double[])offSetVectors.get( 1 );
+      double[] p2 = (double[]) offSetVectors.get( 1 );
       offset[0] = p2[0];
       System.out.println( "OffSetX: " + p2[0] + ", OffSetY: " + p1[1] );
 
@@ -195,7 +192,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return "rectifiedGridDomain";
   }
@@ -215,6 +212,15 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text ) throws ParseException
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    // TODO check this
+    return false;
   }
 
 }

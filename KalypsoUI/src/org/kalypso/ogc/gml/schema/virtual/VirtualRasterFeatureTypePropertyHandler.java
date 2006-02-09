@@ -1,7 +1,9 @@
 package org.kalypso.ogc.gml.schema.virtual;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
@@ -50,45 +52,44 @@ public class VirtualRasterFeatureTypePropertyHandler implements VirtualFeatureTy
 {
 
   /*
-   * 
    * @author doemming
    */
-  public VirtualRasterFeatureTypePropertyHandler()
+  public VirtualRasterFeatureTypePropertyHandler( )
   {
     super();
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public boolean isDekoratorOf( FeatureTypeProperty ftp )
+  public boolean isDekoratorOf( IPropertyType ftp )
   {
-    String type = ftp.getType();
-    return type.equals( RectifiedGridDomain.class.getName() );
+    if( ftp instanceof IValuePropertyType )
+      return ((IValuePropertyType) ftp).getValueClass() == RectifiedGridDomain.class;
+    return false;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
   {
-    return new FeatureTypeProperty[]
-    { new VirtualRasterFeatureTypeProperty( ftp ) };
+    return new VirtualFeatureTypeProperty[] { new VirtualRasterFeatureTypeProperty( ftp ) };
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean isDekoratorOf( FeatureType ft )
+  public boolean isDekoratorOf( IFeatureType ft )
   {
     return false;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
   {
-    return new FeatureTypeProperty[0];
+    return new VirtualFeatureTypeProperty[0];
   }
 }

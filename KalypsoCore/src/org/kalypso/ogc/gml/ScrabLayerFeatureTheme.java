@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -44,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -121,7 +121,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
    */
-  public FeatureType getFeatureType()
+  public IFeatureType getFeatureType()
   {
     return m_scrabLayerTheme.getFeatureType();
   }

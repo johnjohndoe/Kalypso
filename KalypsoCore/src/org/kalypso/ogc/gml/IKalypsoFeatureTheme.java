@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -57,7 +57,7 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public ISchedulingRule getSchedulingRule();
 
-  public FeatureType getFeatureType();
+  public IFeatureType getFeatureType();
 
   public void addStyle( final KalypsoUserStyle style );
 

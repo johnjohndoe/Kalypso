@@ -29,7 +29,11 @@
  */
 package org.kalypso.ogc.gml.gui;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -42,7 +46,6 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -60,9 +63,9 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
+  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
   {
     return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
   }
@@ -86,35 +89,46 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, selectionManager, fcl );
+    return new ButtonModifier( workspace, (IValuePropertyType) ftp, selectionManager, fcl );
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass( )
   {
-    return m_typeHandler.getClassName();
+    return m_typeHandler.getValueClass();
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
     return m_typeHandler.getTypeName();
   }
 
+  @Override
   public String getText( Object o )
   {
-    //    final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
-    //    if( o == null )
-    //      return prefix + "-";
-    //    return prefix + ( (IObservation)o ).getName();
+    // final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
+    // if( o == null )
+    // return prefix + "-";
+    // return prefix + ( (IObservation)o ).getName();
     return "<Editieren...>";
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return true;
   }
 }

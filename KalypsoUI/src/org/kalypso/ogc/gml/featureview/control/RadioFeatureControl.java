@@ -51,16 +51,18 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This feature control is a radio button, which just sets the feature-value to the goven value when selected. If
  * unselected, nothing happens.
- * 
- * <p>Today only properties with String type are supported.</p>
+ * <p>
+ * Today only properties with String type are supported.
+ * </p>
  * 
  * @author belger
  */
@@ -70,12 +72,12 @@ public class RadioFeatureControl extends AbstractFeatureControl
   {
     public void widgetSelected( final SelectionEvent e )
     {
-      buttonSelected(  );
+      buttonSelected();
     }
 
     public void widgetDefaultSelected( final SelectionEvent e )
     {
-      buttonSelected(  );
+      buttonSelected();
     }
   };
 
@@ -87,14 +89,12 @@ public class RadioFeatureControl extends AbstractFeatureControl
 
   private final String m_text;
 
-  public RadioFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final Object valueToSet,
-      final String text )
+  public RadioFeatureControl( final GMLWorkspace workspace, final IPropertyType ftp, final Object valueToSet, final String text )
   {
     this( workspace, null, ftp, valueToSet, text );
   }
 
-  public RadioFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp,
-      final Object valueToSet, final String text )
+  public RadioFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final Object valueToSet, final String text )
   {
     super( workspace, feature, ftp );
 
@@ -105,7 +105,8 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
    */
-  public void dispose()
+  @Override
+  public void dispose( )
   {
     if( m_radio != null && !m_radio.isDisposed() )
       m_radio.removeSelectionListener( m_listener );
@@ -116,13 +117,13 @@ public class RadioFeatureControl extends AbstractFeatureControl
    */
   public Control createControl( final Composite parent, final int style )
   {
+    final IPropertyType pt = getFeatureTypeProperty();
     m_radio = new Button( parent, style | SWT.RADIO );
-
     final String text;
     if( m_text != null )
       text = m_text;
     else
-      text = getFeatureTypeProperty().getName();
+      text = AnnotationUtilities.getAnnotation( pt ).getLabel();
 
     m_radio.setText( text );
     m_radio.addSelectionListener( m_listener );
@@ -132,22 +133,22 @@ public class RadioFeatureControl extends AbstractFeatureControl
     return m_radio;
   }
 
-  protected void buttonSelected(  )
+  protected void buttonSelected( )
   {
     final Feature feature = getFeature();
-    final String name = getFeatureTypeProperty().getName();
-    final Object currentFeatureValue = feature.getProperty( name );
-    
+    final IPropertyType pt = getFeatureTypeProperty();
+    final Object currentFeatureValue = feature.getProperty( pt );
+
     if( !m_valueToSet.equals( currentFeatureValue ) )
-      fireFeatureChange( new FeatureChange( feature, name, m_valueToSet ) );
+      fireFeatureChange( new FeatureChange( feature, pt, m_valueToSet ) );
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl()
+  public void updateControl( )
   {
-    final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty().getName() );
+    final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty());
     final boolean toBeSelected = currentFeatureValue.equals( m_valueToSet );
     if( toBeSelected != m_radio.getSelection() )
     {
@@ -158,7 +159,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid()
+  public boolean isValid( )
   {
     // a radio button is always valid
     return true;

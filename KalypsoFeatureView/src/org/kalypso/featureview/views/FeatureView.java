@@ -25,6 +25,10 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
@@ -33,10 +37,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -92,7 +93,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_target.postCommand( command, null );
     }
 
-    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       final CommandableWorkspace workspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
       // just show this feature in the view, don't change the selection this doesn't work
@@ -109,6 +110,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /** Recreates the Feature-Composite inside a scrollable container. */
   private final ScrolledCompositeCreator m_creator = new ScrolledCompositeCreator( null )
   {
+    @Override
     protected Control createContents( final Composite scrollParent, int style )
     {
       return m_featureComposite.createControl( scrollParent, style );
@@ -131,6 +133,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
    */
+  @Override
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
@@ -142,6 +145,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
+  @Override
   public void dispose( )
   {
     activateFeature( null, null ); // to unhook listeners
@@ -180,6 +184,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return null;
   }
 
+  @Override
   public void createPartControl( final Composite parent )
   {
     m_mainGroup = new Group( parent, SWT.NONE );
@@ -197,6 +202,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   /**
    * Passing the focus request to the viewer's control.
    */
+  @Override
   public void setFocus( )
   {
     m_mainGroup.setFocus();
@@ -211,6 +217,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // we get a hour-glass everytime we select anything
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
+      @Override
       public IStatus runInUIThread( IProgressMonitor monitor )
       {
         // we know that we always have CommandableWorkspace
@@ -246,8 +253,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-          final FeatureType featureType = feature.getFeatureType();
-          final Annotation annotation = featureType.getAnnotation( "de" );
+          final IFeatureType featureType = feature.getFeatureType();
+          final Annotation annotation = AnnotationUtilities.getAnnotation( featureType );
           final String label = annotation == null ? featureType.getName() : annotation.getLabel();
           groupLabel = label + " - " + feature.getId();
         }

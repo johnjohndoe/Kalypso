@@ -37,13 +37,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureRemoveActionDelegate
@@ -65,14 +66,14 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
 
     final Feature focusedFeature = m_selection.getFocusedFeature();
     final String focusedProperty = m_selection.getFocusedProperty();
-    final FeatureTypeProperty focusedFTP = focusedFeature.getFeatureType().getProperty( focusedProperty );
+    final IPropertyType focusedFTP = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
     if( focusedFTP != null )
     {
       final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
 
       final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-      final FeatureTypeProperty[] ftpToCopy = new FeatureTypeProperty[]
+      final IPropertyType[] ftpToCopy = new IPropertyType[]
       { focusedFTP };
       final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, focusedFeature, ftpToCopy, fes );
       try
@@ -113,12 +114,12 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       if( focusedFeature != null )
       {
         final String focusedProperty = m_selection.getFocusedProperty();
-        final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+        final IPropertyType ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
         if( ftp != null && m_selection.size() >= 2 )
         {
           action.setEnabled( true );
-          newText += " (" + ftp.getAnnotation( lang ).getLabel() + ")";
+          newText += " (" + AnnotationUtilities.getAnnotation( ftp).getLabel() + ")";
         }
       }
     }

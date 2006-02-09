@@ -40,21 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import java.util.HashMap;
+import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*
- * 
  * @author doemming
  */
-public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
+public class VirtualVelocityFeatureTypeProperty extends AbstractVirtualPropertyType
 {
 
   private final static String DECORATED_NS = "http://elbe.wb.tu-harburg.de/2dModel";
@@ -65,9 +63,11 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  public VirtualVelocityFeatureTypeProperty()
+  private QName m_qName;
+
+  public VirtualVelocityFeatureTypeProperty( )
   {
-    super( "arrow_velocity", "virtual", new HashMap() );
+    super(new QName( "virtual", "arrow_velocity" ),0,1,GeometryUtilities.getLineStringClass());
   }
 
   /**
@@ -76,19 +76,18 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
    */
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
-    final GM_Point srcP = (GM_Point)feature.getProperty( PROP_GEOM );
-    final Float xv = (Float)feature.getProperty( PROP_XVELOCITY );
-    final Float yv = (Float)feature.getProperty( PROP_YVELOCITY );
+    final GM_Point srcP = (GM_Point) feature.getProperty( PROP_GEOM );
+    final Float xv = (Float) feature.getProperty( PROP_XVELOCITY );
+    final Float yv = (Float) feature.getProperty( PROP_YVELOCITY );
     if( xv == null || srcP == null || yv == null )
       return null;
     double factor = 0.1;
 
-    final GM_Point targetP = GeometryFactory.createGM_Point( srcP.getX() + factor * xv.floatValue(), srcP.getY()
-        + factor * yv.floatValue(), srcP.getCoordinateSystem() );
+    final GM_Point targetP = GeometryFactory.createGM_Point( srcP.getX() + factor * xv.floatValue(), srcP.getY() + factor * yv.floatValue(), srcP.getCoordinateSystem() );
     try
     {
       return GeometryUtilities.createArrowLineString( srcP, targetP );
-      //      return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
+      // return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
     }
     catch( GM_Exception e )
     {
@@ -96,21 +95,4 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
       return null;
     }
   }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
-   */
-  public String getType()
-  {
-    return GeometryUtilities.getLineStringClass().getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
-   */
-  public boolean isNullable()
-  {
-    return false;
-  }
-
 }

@@ -206,7 +206,7 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
     GMLGeometry result = null;
 
     // get the element holding the geometry
-    Element geom = XMLTools.getFirstElement( element );
+    Element geom = XMLTools.getFirstElement( m_element );
 
     // determine the geometry type
     int type = this.getPropertyType();
@@ -254,19 +254,19 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
     // isn't of the same type as the property respresented by the class
     validate( value );
 
-    NodeList nl = element.getChildNodes();
+    NodeList nl = m_element.getChildNodes();
 
     if( nl != null )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
-        element.removeChild( nl.item( i ) );
+        m_element.removeChild( nl.item( i ) );
       }
     }
 
     Element elem = ( (GMLGeometry_Impl)value ).getAsElement();
 
-    XMLTools.insertNodeInto( elem, element );
+    XMLTools.insertNodeInto( elem, m_element );
 
     Debug.debugMethodEnd();
   }
@@ -364,7 +364,7 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
 
   public String toString()
   {
-    return DOMPrinter.nodeToString( element, "" );
+    return DOMPrinter.nodeToString( m_element, "" );
   }
 }
 
@@ -372,6 +372,9 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.8  2006/02/09 18:16:22  doemming
+ * *** empty log message ***
+ *
  * Revision 1.7  2005/06/20 14:07:46  belger
  * Formatierung
  * Revision 1.6 2005/03/08 11:01:03 doemming *** empty log message ***

@@ -74,15 +74,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
  * @author Kuepferle
@@ -157,6 +157,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_authSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       if( m_authentification.getSelection() )
@@ -179,11 +180,13 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_userSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       reloadServer();
     }
 
+    @Override
     public void widgetDefaultSelected( SelectionEvent e )
     {
       reloadServer();
@@ -192,11 +195,13 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_passSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       reloadServer();
     }
 
+    @Override
     public void widgetDefaultSelected( SelectionEvent e )
     {
       reloadServer();
@@ -205,6 +210,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_leftSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( final SelectionEvent e )
     {
       updateButtons();
@@ -213,6 +219,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_addButtonSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       addButtonPressed();
@@ -221,6 +228,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_removeButtonSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       removeButtonPressed();
@@ -229,6 +237,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_filterButtonSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       filterPressed();
@@ -237,11 +246,13 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_rightSelectionListener = new SelectionAdapter()
   {
+    @Override
     public void widgetSelected( SelectionEvent e )
     {
       updateButtons();
     }
 
+    @Override
     public void widgetDefaultSelected( SelectionEvent e )
     {
       updateButtons();
@@ -581,7 +592,7 @@ public class ImportWfsWizardPage extends WizardPage
     return m_listRightSide.getItems();
   }
 
-  public FeatureType[] getSelectedFeatureTypes( ) throws Exception
+  public IFeatureType[] getSelectedFeatureTypes( ) throws Exception
   {
     String[] selectedFeatureNames = getSelectedFeatureNames();
     return getFeatureTypes( selectedFeatureNames );
@@ -596,10 +607,10 @@ public class ImportWfsWizardPage extends WizardPage
    * This method returns a featureType from a specific feature property passed as a java.lang.Class object.
    * 
    * @param layer
-   *          name of layer to get the FeatureType
+   *          name of layer to get the IFeatureType
    * @return returns a hash set of feature type properties that is passed trough <em>clazz</em> parameter.
    */
-  private FeatureType[] getFeatureTypes( String[] layer )
+  private IFeatureType[] getFeatureTypes( String[] layer )
 
   {
     HashSet res = new HashSet();
@@ -611,11 +622,11 @@ public class ImportWfsWizardPage extends WizardPage
       {
         try
         {
-          URL url = new URL( getUrl().toString().trim() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
+          final URL url = new URL( getUrl().toString().trim() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
           // featureTypeSchema = GMLSchemaCatalog.getSchema( url );
           // HACK
           featureTypeSchema = GMLSchemaCatalog.getSchema( "http://bsu.hamburg.de/huis" );
-          final FeatureType featureType = featureTypeSchema.getFeatureType( l );
+          final IFeatureType featureType = featureTypeSchema.getFeatureType( l );
           if( featureType != null )
             m_featureTypes.put( l, featureType );
           else if( l.indexOf( ":" ) >= 0 )
@@ -630,10 +641,10 @@ public class ImportWfsWizardPage extends WizardPage
           setPageComplete( false );
         }
       }
-      final FeatureType featureType = (FeatureType) m_featureTypes.get( l );
+      final IFeatureType featureType = (IFeatureType) m_featureTypes.get( l );
       res.add( featureType );
     }
-    return (FeatureType[]) res.toArray( new FeatureType[res.size()] );
+    return (IFeatureType[]) res.toArray( new IFeatureType[res.size()] );
   }
 
   /**
@@ -646,18 +657,18 @@ public class ImportWfsWizardPage extends WizardPage
   {
     // FIXME this method is not working properly, it has to be adjusted
     // when the Schema parser is adjusted!!!!!!
-    GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
-    FeatureType[] featureTypes = schema.getFeatureTypes();
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
+    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     if( featureTypes.length == 1 )
       return featureTypes[0].getName();
     for( int i = 0; i < featureTypes.length; i++ )
     {
-      FeatureType ft = featureTypes[i];
-      FeatureTypeProperty[] properties = ft.getProperties();
+      IFeatureType ft = featureTypes[i];
+      IPropertyType[] properties = ft.getProperties();
       for( int j = 0; j < properties.length; j++ )
       {
-        FeatureTypeProperty property = properties[j];
-        if( property instanceof FeatureAssociationTypeProperty )
+        IPropertyType property = properties[j];
+        if( property instanceof IRelationType )
         {
           return property.getName();
         }
@@ -677,7 +688,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   public Filter getFilter( String layerName )
   {
-    FeatureType featureType = getFeatureType( layerName );
+    IFeatureType featureType = getFeatureType( layerName );
     return (Filter) m_filter.get( featureType );
   }
 
@@ -747,7 +758,7 @@ public class ImportWfsWizardPage extends WizardPage
   protected void filterPressed( )
   {
     // the add filter button is only enabled if the selection size == 1
-    FeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
+    IFeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
     Filter filter = (Filter) m_filter.get( ft );
     final FilterDialog dialog = new FilterDialog( getShell(), ft, filter, m_mapModel );
     int open = dialog.open();
@@ -771,9 +782,9 @@ public class ImportWfsWizardPage extends WizardPage
     revalidatePage();
   }
 
-  private FeatureType getFeatureType( String layerName )
+  private IFeatureType getFeatureType( String layerName )
   {
-    FeatureType[] featureTypes = getFeatureTypes( new String[] { layerName } );
+    IFeatureType[] featureTypes = getFeatureTypes( new String[] { layerName } );
     return featureTypes[0];
   }
 }

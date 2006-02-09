@@ -6,13 +6,20 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvSourceType;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -43,23 +50,28 @@ public class CsvSourceHandler implements ISourceHandler
     final String href = m_type.getHref();
     final CsvFeatureReader reader = new CsvFeatureReader();
     final List propList = m_type.getFeatureproperty();
-    for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
-    {
-      final CsvSourceType.Featureproperty element = (CsvSourceType.Featureproperty) propIt.next();
-      final List<Integer> columnList = element.getColumn();
-      final int[] columns = new int[columnList.size()];
-      for( int i = 0; i < columnList.size(); i++ )
-      {
-        final Integer col = columnList.get( i );
-        columns[i] = col.intValue();
-      }
-      final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element.getType(), false, null );
-      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
-      reader.addInfo( ftp, info );
-    }
     InputStream stream = null;
+    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
+      for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
+      {
+        final CsvSourceType.Featureproperty element = (CsvSourceType.Featureproperty) propIt.next();
+        final List<Integer> columnList = element.getColumn();
+        final int[] columns = new int[columnList.size()];
+        for( int i = 0; i < columnList.size(); i++ )
+        {
+          final Integer col = columnList.get( i );
+          columns[i] = col.intValue();
+        }
+        final Class clazz = Class.forName( element.getType() );
+        final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( clazz );
+        // final IPropertyType ftp = FeatureFactory.createFeatureTypeProperty( new QName( "namespace", element.getName()
+        // ), clazz, false, null );
+        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", element.getName() ), typeHandler.getTypeName()[0], typeHandler, 0, 1 );
+        final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
+        reader.addInfo( ftp, info );
+      }
       final URL url = m_resolver.resolveURL( m_context, href );
       final URLConnection connection = url.openConnection();
       stream = connection.getInputStream();
@@ -69,6 +81,7 @@ public class CsvSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new GmlConvertException( "CSV konnte nicht geladen werden: " + href, e );
     }
     finally

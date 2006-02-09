@@ -64,6 +64,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -71,18 +74,15 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.RemoveHeavyRelationCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.CascadingFeatureList;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -142,6 +142,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super( name, toolTip );
   }
 
+  @Override
   public void leftPressed( Point p )
   {
     if( m_srcFE != null && m_targetFE != null )
@@ -169,6 +170,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
+  @Override
   public void finish()
   {
     super.finish();
@@ -216,6 +218,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     return m_modificationMode;
   }
 
+  @Override
   public void dragged( Point p )
   {
     moved( p );
@@ -224,6 +227,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
+  @Override
   public void moved( Point p )
   {
     super.moved( p );
@@ -249,6 +253,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     updateProblemsText();
   }
 
+  @Override
   public void leftReleased( Point p )
   {
     perform();
@@ -258,11 +263,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
+  @Override
   public void rightClicked( Point p )
   {
     finish();
   }
 
+  @Override
   public void paint( Graphics g )
   {
     if( m_srcFE == null || m_targetFE == null )
@@ -421,7 +428,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           else
           {
             final RelationType normalRelation = (RelationType)relation;
-            command = new AddRelationCommand( workspace, srcFeature, normalRelation.getLink().getName(), 0,
+            command = new AddRelationCommand( workspace, srcFeature, normalRelation.getLink(), 0,
                 targetFeature );
           }
           break;
@@ -435,15 +442,15 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             visitor.visit( srcFeature );
             Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( targetFeature );
             if( bodyFeatureFor.length > 0 )
-              command = new RemoveHeavyRelationCommand( workspace, srcFeature, heavyRealtion.getLink1().getName(),
-                  bodyFeatureFor[0], heavyRealtion.getLink2().getName(), targetFeature );
+              command = new RemoveHeavyRelationCommand( workspace, srcFeature, heavyRealtion.getLink1(),
+                  bodyFeatureFor[0], heavyRealtion.getLink2(),targetFeature );
             else
               command = null;
           }
           else
           {
             final RelationType normalRelation = (RelationType)relation;
-            command = new RemoveRelationCommand( workspace, srcFeature, normalRelation.getLink().getName(),
+            command = new RemoveRelationCommand( workspace, srcFeature, normalRelation.getLink(),
                 targetFeature );
           }
           break;
@@ -487,7 +494,6 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   void updateInfoText()
   {
-    final String lang = KalypsoGisPlugin.getDefault().getLang();
     final StringBuffer labelBuffer = new StringBuffer();
     final StringBuffer tipBuffer = new StringBuffer();
     labelBuffer.append( "Relation" );
@@ -502,10 +508,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     else
     {
-      final FeatureType ft = m_srcFE.getFeatureType();
-      final Annotation annotation = ft.getAnnotation( lang );
+      final IFeatureType ft = m_srcFE.getFeatureType();
+      final Annotation annotation = AnnotationUtilities.getAnnotation(ft);
       labelBuffer.append( annotation.getLabel() + "#" + m_srcFE.getId() );
-      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_srcFE.getId() );
+      tipBuffer.append( ft.getQName()+ "#" + m_srcFE.getId() );
     }
     labelBuffer.append( "\n nach: " );
     tipBuffer.append( "\n nach: " );
@@ -516,10 +522,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     else
     {
-      final FeatureType ft = m_targetFE.getFeatureType();
-      final Annotation annotation = ft.getAnnotation( lang );
+      final IFeatureType ft = m_targetFE.getFeatureType();
+      final Annotation annotation = AnnotationUtilities.getAnnotation(ft);
       labelBuffer.append( annotation.getLabel() + "#" + m_targetFE.getId() );
-      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_targetFE.getId() );
+      tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() );
     }
     if( m_textInfo != null && !m_textInfo.isDisposed() )
     {
@@ -632,6 +638,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     viewer.setAutoExpandLevel( 2 );
     viewer.getTree().addMouseListener( new MouseAdapter()
     {
+      @Override
       public void mouseUp( final MouseEvent e )
       {
         final TreeItem item = viewer.getTree().getItem( new org.eclipse.swt.graphics.Point( e.x, e.y ) );

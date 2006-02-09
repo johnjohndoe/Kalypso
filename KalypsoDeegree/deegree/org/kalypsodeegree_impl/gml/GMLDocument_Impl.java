@@ -65,9 +65,15 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLFeature;
@@ -75,14 +81,11 @@ import org.kalypsodeegree.gml.GMLFeatureCollection;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.gml.GMLNameSpace;
 import org.kalypsodeegree.gml.GMLProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.DOMPrinter;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -634,9 +637,9 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document;
   }
 
-  public GMLFeature createGMLFeature( final FeatureType featureType )
+  public GMLFeature createGMLFeature( final IFeatureType featureType )
   {
-    Debug.debugMethodBegin( "", "createGMLFeature(Document, FeatureType)" );
+    Debug.debugMethodBegin( "", "createGMLFeature(Document, IFeatureType)" );
     final Element elem = createElementNS( featureType.getNamespace(), featureType.getName() );
     final GMLFeature feature = new GMLFeature_Impl( elem );
     Debug.debugMethodEnd();
@@ -658,10 +661,10 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.FeatureType,
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.IFeatureType,
    *      java.lang.String, org.kalypsodeegree.gml.GMLProperty[])
    */
-  public GMLFeature createGMLFeature( final FeatureType featureType, final String id, GMLProperty[] properties ) throws GMLException
+  public GMLFeature createGMLFeature( final IFeatureType featureType, final String id, GMLProperty[] properties ) throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLFeature(Document, String, String, GMLProperty[])" );
     final GMLFeature feature = createGMLFeature( featureType );
@@ -674,35 +677,38 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * factory method to create a GMLProperty. the property that will be return doesn't contain a value.
    */
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp )
+  public GMLProperty createGMLProperty( final IPropertyType ftp )
   {
-    final Element elem = createElementNS( ftp.getNamespace(), ftp.getName() );
+    final QName qName = ftp.getQName();
+    final Element elem = createElementNS( qName.getNamespaceURI(), qName.getLocalPart() );
     final GMLProperty ls = new GMLProperty_Impl( elem );
     return ls;
   }
 
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Element propertyValue )
+  public GMLProperty createGMLProperty( final IPropertyType ftp, final Element propertyValue )
   {
     final GMLProperty ls = createGMLProperty( ftp );
     ls.setPropertyValue( propertyValue );
     return ls;
   }
 
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue )
+  public GMLProperty createGMLProperty( final IPropertyType ftp, final String attributeValue )
   {
-    final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
+    final QName qName = ftp.getQName();
+    final Element element = createElementNS( qName.getNamespaceURI(), qName.getLocalPart());
     GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
     gmlProp.setPropertyValue( attributeValue );
     return gmlProp;
   }
 
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException
+  public GMLProperty createGMLProperty( final IPropertyType ftp, final Object customObject ) throws GMLException
   {
     try
     {
-      final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
+      final QName qName = ftp.getQName();
+      final Element element = createElementNS(qName.getNamespaceURI(),qName.getLocalPart() );
       // marshalling
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
       // TODO give context not null
       typeHandler.marshall( customObject, element, null );
       GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
@@ -717,10 +723,10 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
 
   /**
    * @throws GMLException
-   * @see org.kalypsodeegree.gml.GMLDocument#createGMLGeoProperty(org.kalypsodeegree.model.feature.FeatureTypeProperty,
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLGeoProperty(org.kalypsodeegree.model.feature.IPropertyType,
    *      org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public GMLProperty createGMLGeoProperty( FeatureTypeProperty ftp, GM_Object geom ) throws GMLException
+  public GMLProperty createGMLGeoProperty( IPropertyType ftp, GM_Object geom ) throws GMLException
   {
     final GMLProperty ls = createGMLProperty( ftp );
     GMLGeometry geometry = GMLFactory.createGMLGeometry( this, geom );

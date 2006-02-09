@@ -1,7 +1,8 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -45,7 +46,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface VirtualFeatureTypeProperty extends FeatureTypeProperty
+public interface VirtualFeatureTypeProperty extends IValuePropertyType
 {
   public Object getVirtuelValue( final Feature feature, final GMLWorkspace workspace );
 }

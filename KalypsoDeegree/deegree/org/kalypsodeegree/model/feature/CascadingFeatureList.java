@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -452,7 +454,7 @@ public class CascadingFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    * @return null, as this are mixed lists
    */
-  public FeatureTypeProperty getParentFeatureTypeProperty()
+  public IRelationType getParentFeatureTypeProperty()
   {
     return null;
   }

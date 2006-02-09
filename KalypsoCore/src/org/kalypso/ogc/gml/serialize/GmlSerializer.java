@@ -58,19 +58,19 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLNameSpace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree_impl.gml.GMLDocument_Impl;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.GMLNameSpace_Impl;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -85,19 +85,17 @@ import org.xml.sax.InputSource;
 public final class GmlSerializer
 {
 
-  private GmlSerializer()
+  private GmlSerializer( )
   {
-  // do not instantiate this class
+    // do not instantiate this class
   }
 
-  public static void serializeWorkspace( final OutputStreamWriter writer, final GMLWorkspace workspace )
-      throws GmlSerializeException
+  public static void serializeWorkspace( final OutputStreamWriter writer, final GMLWorkspace workspace ) throws GmlSerializeException
   {
     serializeWorkspace( writer, workspace, writer.getEncoding() );
   }
 
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace, final String charsetEncoding )
-      throws GmlSerializeException
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace, final String charsetEncoding ) throws GmlSerializeException
   {
     try
     {
@@ -113,8 +111,8 @@ public final class GmlSerializer
       final Map namespaces = workspace.getNamespaceMap();
       for( final Iterator entryIt = namespaces.entrySet().iterator(); entryIt.hasNext(); )
       {
-        final Map.Entry entry = (Entry)entryIt.next();
-        final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String)entry.getKey(), (String)entry.getValue() );
+        final Map.Entry entry = (Entry) entryIt.next();
+        final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String) entry.getKey(), (String) entry.getValue() );
         // do not use the xmlns:xmlns namespace, its the LAW!
         if( !ns.getSubSpaceName().equals( "xmlns" ) )
           gmlDoc.addNameSpace( ns );
@@ -128,8 +126,7 @@ public final class GmlSerializer
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
 
-      final GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace.getRootFeature(), workspace
-          .getContext() );
+      final GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace.getRootFeature(), workspace.getContext() );
       gmlDoc.setRoot( gmlFeature );
 
       workspace.getContext();
@@ -157,17 +154,16 @@ public final class GmlSerializer
     final GMLFeature gmlFeature = gml.getRootFeature();
 
     // load schema
-    final GMLSchema schema = new GMLSchema( schemaURL );
+    final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaURL );
 
     // create feature and workspace gml
-    final FeatureType[] types = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
+    final IFeatureType[] types = schema.getAllFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types, gmlURL, null );
 
     // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
     final String schemaLocationName = gml.getSchemaLocationName();
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(), schema
-        .getNamespaceMap() );
+    return new GMLWorkspace_Impl( schema, types, feature, gmlURL, schemaLocationName );
   }
 
   /**
@@ -206,8 +202,7 @@ public final class GmlSerializer
       if( isr.getEncoding() == null )
       {
         IOUtils.closeQuietly( isr );
-        throw new NullPointerException(
-            "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
+        throw new NullPointerException( "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
       }
 
       reader = new BufferedReader( isr );
@@ -217,11 +212,11 @@ public final class GmlSerializer
       rt.setEndToken( ':' );
       for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
       {
-        final Map.Entry entry = (Entry)tokenIt.next();
+        final Map.Entry entry = (Entry) tokenIt.next();
 
         final Token token = new ReplaceTokens.Token();
-        token.setKey( (String)entry.getKey() );
-        token.setValue( (String)entry.getValue() );
+        token.setKey( (String) entry.getKey() );
+        token.setValue( (String) entry.getValue() );
 
         rt.addConfiguredToken( token );
       }
@@ -234,8 +229,7 @@ public final class GmlSerializer
     }
   }
 
-  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context,
-      final IUrlResolver urlResolver ) throws Exception, GmlSerializeException
+  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IUrlResolver urlResolver ) throws Exception, GmlSerializeException
   {
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
@@ -245,15 +239,13 @@ public final class GmlSerializer
     return createGMLWorkspace( gml, schema, context, urlResolver );
   }
 
-  private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml, final GMLSchema schema,
-      final URL context, final IUrlResolver urlResolver ) throws Exception
+  private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml, final GMLSchema schema, final URL context, final IUrlResolver urlResolver ) throws Exception
   {
     // create feature and workspace gml
-    final FeatureType[] types = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
+    final IFeatureType[] types = schema.getAllFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types, context, urlResolver );
 
-    return new GMLWorkspace_Impl( types, feature, context, gml.getSchemaLocationName(), schema.getTargetNS(), schema
-        .getNamespaceMap() );
+    return new GMLWorkspace_Impl( schema, types, feature, context, gml.getSchemaLocationName() );
   }
 
   /**
@@ -262,8 +254,7 @@ public final class GmlSerializer
    * @param context
    *          context to resolve relative urls, or <code>null</code> if context unknown
    */
-  private static GMLSchema loadSchemaForGmlDoc( final URL context, final GMLDocument gmldoc )
-      throws GmlSerializeException
+  private static GMLSchema loadSchemaForGmlDoc( final URL context, final GMLDocument gmldoc ) throws GmlSerializeException
   {
     final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
     final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
@@ -283,21 +274,20 @@ public final class GmlSerializer
       }
       catch( final MalformedURLException e )
       {
-        errorMessage
-            .append( e.getLocalizedMessage() )
-            .append(
-                ". Häufige Ursache ist ein fehlendes Schema im Cache (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)" );
+        errorMessage.append( e.getLocalizedMessage() ).append( ". Häufige Ursache ist ein fehlendes Schema im Cache (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)" );
 
         Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage.toString() );
       }
 
-      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: " + schemaURI
-          + errorMessage );
+      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: " + schemaURI + errorMessage );
     }
 
     return schema;
   }
 
+  /**
+   * @deprecated does not use THE CACHE
+   */
   public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURL ) throws Exception
   {
     final Document gmlAsDOM = XMLHelper.getAsDOM( new InputSource( inputStream ), true );
@@ -305,11 +295,10 @@ public final class GmlSerializer
 
     GMLSchema schema = null;
     if( schemaURL != null )
-      schema = new GMLSchema( schemaURL );
+      schema = GMLSchemaFactory.createGMLSchema( schemaURL );
     else
-      //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
+      // TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
       schema = loadSchemaForGmlDoc( null, gml );
-
-    return createGMLWorkspace( gml, schema, schema.getUrl(), null );
+    return createGMLWorkspace( gml, schema, schemaURL, null );
   }
 }

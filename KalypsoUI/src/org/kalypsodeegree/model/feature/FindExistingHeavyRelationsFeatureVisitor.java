@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType;
 
 /**
@@ -82,8 +83,8 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
   {
     if( srcFE.getFeatureType() != m_relation.getSrcFT() )
       return false;
-    final String link1Name = m_relation.getLink1().getName();
-    final String link2Name = m_relation.getLink2().getName();
+    final IRelationType link1Name = m_relation.getLink1();
+    final IRelationType link2Name = m_relation.getLink2();
     final Feature[] props1 = m_workspace.resolveLinks( srcFE, link1Name );
     for( int i = 0; i < props1.length; i++ )
     {

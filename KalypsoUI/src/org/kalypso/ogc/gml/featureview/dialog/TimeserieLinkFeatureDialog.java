@@ -33,12 +33,12 @@ import java.util.Collection;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -50,13 +50,13 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
 
-  private final FeatureTypeProperty m_ftp;
+  private final IPropertyType m_ftp;
 
   private FeatureChange m_change;
 
   private final GMLWorkspace m_workspace;
 
-  public TimeserieLinkFeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public TimeserieLinkFeatureDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -69,7 +69,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
-    final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp.getName() );
+    final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp );
     dialog.setContext( m_workspace.getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() );
 
@@ -79,13 +79,13 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     {
       final String href = (String) dialog.getInput();
       if( href == null )
-        fChange = new FeatureChange( m_feature, m_ftp.getName(), null );
+        fChange = new FeatureChange( m_feature, m_ftp,null );
       else if( href != null && href.length() > 0 )
       {
         final ObjectFactory linkFactory = new ObjectFactory();
         final TimeseriesLinkType link = linkFactory.createTimeseriesLinkType();
         link.setHref( href );
-        fChange = new FeatureChange( m_feature, m_ftp.getName(), link );
+        fChange = new FeatureChange( m_feature, m_ftp, link );
       }
     }
     m_change = fChange;

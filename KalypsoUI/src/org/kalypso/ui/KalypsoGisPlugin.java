@@ -85,6 +85,9 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -95,11 +98,9 @@ import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandle
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
@@ -110,15 +111,12 @@ import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
@@ -288,7 +286,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       catch( final Exception e ) // gen ex for simplicity
       {
         // do nothing, try with next location
-//        e.printStackTrace();
+        // e.printStackTrace();
 
         String msg = "Konnte Konfigurationsdatei nicht laden: " + locs[i] + "\n";
 
@@ -414,6 +412,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // server steht nicht zur Verfügung oder ist falsch konfiguriert
       // exception wird gefangen, damit man immer noch lokal rechnen kann
     }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+    }
 
     return proxies;
   }
@@ -450,6 +453,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
             proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
           }
           catch( final CoreException e )
+          {
+            // just log
+            e.printStackTrace();
+          }
+          catch( final Exception e )
           {
             // just log
             e.printStackTrace();
@@ -716,11 +724,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      // TODO: read TypeHandler from property-file
       registry.registerTypeHandler( new ObservationLinkHandler() );
-      // TODO: make new NA-project and move registration to it
-      // TODO delete next
       registry.registerTypeHandler( new DiagramTypeHandler() );
+      TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
+      TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
 
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
@@ -729,26 +736,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       // register gml-geometry types
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities.getMultiPointClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities.getLineStringClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities.getMultiLineStringClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities.getMultiPolygonClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities.getUndefinedGeometryClass() ) );
-      // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
 
       // register inlines
 
-      final String[] wvqAxis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
-      final String[] taAxis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
-      final String[] wtKcLaiAxis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis, "KCWTLAI" );
+      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType",
+      // wvqAxis,ZmlInlineTypeHandler.WVQ "WVQ" );
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
+      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
+      // final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
+      // "KCWTLAI" );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
       registry.registerTypeHandler( wtKcLaiInline );

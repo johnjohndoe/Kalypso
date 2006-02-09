@@ -5,8 +5,9 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -68,7 +69,7 @@ public class WFSTest extends TestCase
     GMLSchema schema = null;
     try
     {
-      schema = new GMLSchema( url );
+      schema = GMLSchemaFactory.createGMLSchema( url );
     }
     catch( Exception e )
     {
@@ -76,10 +77,10 @@ public class WFSTest extends TestCase
       e.printStackTrace();
     }
 
-    FeatureType[] featureTypes = schema.getFeatureTypes();
+    IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
-      FeatureType type = featureTypes[i];
+      IFeatureType type = featureTypes[i];
       System.out.println( type.getNamespace() + ":" + type.getName() );
       System.out.println( type.getNamespace() + ":" + type.getName() );
 

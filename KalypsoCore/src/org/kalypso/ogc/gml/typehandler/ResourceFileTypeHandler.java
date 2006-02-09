@@ -31,20 +31,21 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
  * ResourceFileTypeHandler
  * <p>
- * 
  * created by
  * 
  * @author Nadja Peiler (16.06.2005)
@@ -53,23 +54,23 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
 {
   public static final String NSHWS = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData";
 
-  public static final String TYPENAME = NSHWS + ":" + "resourceFile";
+  public static final Class CLASSNAME = IFile.class;
 
-  public static final String CLASSNAME = IFile.class.getName();
+  public static QName[] QNAME = new QName[] { new QName( NSHWS, "resourceFile" ) };
 
-  public String getClassName()
+  public Class getValueClass( )
   {
     return CLASSNAME;
   }
 
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
-    return TYPENAME;
+    return QNAME;
   }
 
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
-    IFile resourceFile = (IFile)object;
+    IFile resourceFile = (IFile) object;
     String path = resourceFile.getFullPath().toString();
     Document ownerDoc = node.getOwnerDocument();
     node.appendChild( ownerDoc.createTextNode( path ) );
@@ -82,7 +83,7 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
     return ResourceUtilities.findFileFromPath( path );
   }
 
-  public String getShortname()
+  public String getShortname( )
   {
     return "IFile";
   }
@@ -102,6 +103,14 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
   }
 
 }

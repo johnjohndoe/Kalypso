@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -71,7 +72,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
@@ -341,7 +341,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
    */
-  public FeatureType getFeatureType( )
+  public IFeatureType getFeatureType( )
   {
     if( m_theme != null )
       return m_theme.getFeatureType();

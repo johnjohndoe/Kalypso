@@ -1,13 +1,3 @@
-package org.kalypso.ogc.gml.map.widgets.editrelation;
-
-import java.util.List;
-
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -48,28 +38,37 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.map.widgets.editrelation;
 
-public class RelationType implements IRelationType
+import java.util.List;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType
 {
 
-  protected final FeatureType m_srcFT;
+  protected final IFeatureType m_srcFT;
 
-  protected final FeatureType m_destFT;
+  protected final IFeatureType m_destFT;
 
-  private final FeatureAssociationTypeProperty m_link;
+  private final IRelationType m_link;
 
   /*
-   * 
    * @author doemming
    */
-  public RelationType( FeatureType srcFT, FeatureAssociationTypeProperty link, FeatureType destFT )
+  public RelationType( IFeatureType srcFT, IRelationType link, IFeatureType destFT )
   {
     m_srcFT = srcFT;
     m_destFT = destFT;
     m_link = link;
   }
 
-  public boolean fitsTypes( FeatureType f1, FeatureType f2 )
+  public boolean fitsTypes( IFeatureType f1, IFeatureType f2 )
   {
     if( f1 == null || f2 == null )
       return false;
@@ -79,7 +78,7 @@ public class RelationType implements IRelationType
   public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
   {
 
-    boolean exists = workspace.isExistingRelation( f1, f2, m_link.getName() );
+    boolean exists = workspace.isExistingRelation( f1, f2, m_link );
 
     if( !isAddMode )
       return exists ? null : "diese Relation existiert nicht";
@@ -91,96 +90,94 @@ public class RelationType implements IRelationType
     return getFitProblemsfromOccurency( f1, isAddMode );
   }
 
-  //  private boolean isExistingRelation( Feature f1, Feature f2 )
-  //  {
-  //    if( f2.getFeatureType().getName().startsWith( "KMCh" ) )
-  //    {
-  //      System.out.println( "test" );
-  //    }
-  //    final Object property = f1.getProperty( m_link.getName() );
-  //    if( property == null )
-  //      return false;
-  //    if( property instanceof List )
-  //    {
-  //      if( ( (List)property ).contains( f2 ) )
-  //        return true;
-  //      if( ( (List)property ).contains( f2.getId() ) )
-  //        return true;
-  //      return false;
-  //    }
-  //    if( property == f2 )
-  //      return true;
-  //    if( f2.getId().equals( property ) )
-  //      return true;
-  //    return false;
-  //  }
+  // private boolean isExistingRelation( Feature f1, Feature f2 )
+  // {
+  // if( f2.getFeatureType().getName().startsWith( "KMCh" ) )
+  // {
+  // System.out.println( "test" );
+  // }
+  // final Object property = f1.getProperty( m_link.getName() );
+  // if( property == null )
+  // return false;
+  // if( property instanceof List )
+  // {
+  // if( ( (List)property ).contains( f2 ) )
+  // return true;
+  // if( ( (List)property ).contains( f2.getId() ) )
+  // return true;
+  // return false;
+  // }
+  // if( property == f2 )
+  // return true;
+  // if( f2.getId().equals( property ) )
+  // return true;
+  // return false;
+  // }
   //
   public String getFitProblemsfromOccurency( Feature f1, boolean isAddMode )
   {
-    final String propName = m_link.getName();
-    final String lang = KalypsoGisPlugin.getDefault().getLang();
-    final String ftLabel = f1.getFeatureType().getAnnotation( lang ).getLabel();
-    final String linkLabel = m_link.getAnnotation( lang ).getLabel();
+    final String ftLabel = AnnotationUtilities.getAnnotation( f1.getFeatureType() ).getLabel();
+    final String linkLabel = AnnotationUtilities.getAnnotation( m_link ).getLabel();
 
-    final Object property = f1.getProperty( propName );
-    int max = m_srcFT.getMaxOccurs( propName );
-    //    int min = m_srcFT.getMinOccurs( propName );
+    final Object property = f1.getProperty( m_link );
+    int max = m_link.getMaxOccurs();
+    // int min = m_srcFT.getMinOccurs( propName );
     if( isAddMode )
     {
       switch( max )
       {
-      case FeatureType.UNBOUND_OCCURENCY:
-        return null;
-      case 1:
-        return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
-      default:
-        return ( (List)property ).size() + 1 < max ? null : ftLabel + "." + linkLabel
-            + " besitzt schon maximale relationen (" + max + ")";
+        case IPropertyType.UNBOUND_OCCURENCY:
+          return null;
+        case 1:
+          return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
+        default:
+          return ((List) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + " besitzt schon maximale relationen (" + max + ")";
       }
     }
     // else remove mode:
     switch( max )
     {
-    case 1:
-      return property != null ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
-    default: // minOccurs should not be validated here.
-      return ( (List)property ).size() > 0 ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
+      case 1:
+        return property != null ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
+      default: // minOccurs should not be validated here.
+        return ((List) property).size() > 0 ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
     }
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
-    return m_srcFT.getName() + " > " + m_destFT.getName();
+    return AnnotationUtilities.getAnnotation(m_srcFT).getLabel()+ " > " + AnnotationUtilities.getAnnotation(m_destFT).getLabel();
   }
 
-  public FeatureType getDestFT()
+  public IFeatureType getDestFT( )
   {
     return m_destFT;
   }
 
-  public FeatureAssociationTypeProperty getLink()
+  public IRelationType getLink( )
   {
     return m_link;
   }
 
-  public FeatureType getSrcFT()
+  public IFeatureType getSrcFT( )
   {
     return m_srcFT;
   }
 
-  //  public boolean equals( Object obj )
-  //  {
-  //    if( obj == null || !( obj instanceof RelationType ) )
-  //      return false;
-  //    final RelationType other = (RelationType)obj;
-  //    return ( other.getSrcFT().equals( m_srcFT ) && other.getDestFT().equals(
+  // public boolean equals( Object obj )
+  // {
+  // if( obj == null || !( obj instanceof RelationType ) )
+  // return false;
+  // final RelationType other = (RelationType)obj;
+  // return ( other.getSrcFT().equals( m_srcFT ) && other.getDestFT().equals(
   // m_destFT ) && other
-  //        .getLink().equals( m_link ) );
-  //  }
+  // .getLink().equals( m_link ) );
+  // }
   //
-  //  public int hashCode()
-  //  {
-  //    return ( m_srcFT.getName() + m_link.getName() + m_destFT.getName()
+  // public int hashCode()
+  // {
+  // return ( m_srcFT.getName() + m_link.getName() + m_destFT.getName()
   // ).hashCode();
-  //  }
+  // }
 }
