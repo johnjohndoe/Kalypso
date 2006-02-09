@@ -51,14 +51,15 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author belger
@@ -69,30 +70,30 @@ public class StringModifier implements IFeatureModifier
 
   private final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
 
-  private final FeatureTypeProperty m_ftp;
+  private final IValuePropertyType m_ftp;
 
   private final IGuiTypeHandler m_guiTypeHandler;
 
   private final IMarshallingTypeHandler m_marshallingTypeHandler;
 
-  public StringModifier( final FeatureTypeProperty ftp )
+  public StringModifier( final IValuePropertyType ftp )
   {
     m_ftp = ftp;
 
     // wen need both registered type handler types
     final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = (IGuiTypeHandler)guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
-    
+    m_guiTypeHandler = (IGuiTypeHandler) guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+
     final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
+    m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // nix zu tun
+    // nix zu tun
   }
 
   /**
@@ -103,11 +104,11 @@ public class StringModifier implements IFeatureModifier
     if( m_ftp == null )
       return null;
 
-    final Object data = f.getProperty( m_ftp.getName() );
+    final Object data = f.getProperty( m_ftp );
 
     return toText( data );
   }
-  
+
   private String toText( final Object data )
   {
     if( m_guiTypeHandler != null )
@@ -149,25 +150,24 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    final String typeName = m_ftp.getType();
+    final Class clazz = m_ftp.getValueClass();
     if( m_guiTypeHandler != null )
       return m_marshallingTypeHandler.parseType( text );
-    else if( typeName.equals( "java.lang.String" ) )
+    else if( clazz == java.lang.String.class )
       return text;
-    else if( typeName.equals( "java.lang.Boolean" ) )
+    else if( clazz == Boolean.class )
       return new Boolean( text );
-    else if( typeName.equals( "java.util.Date" ) )
+    else if( clazz == Date.class )
       return DATE_FORMATTER.parse( text );
-    else if( typeName.equals( "java.lang.Double" ) )
+    else if( clazz == Double.class )
       // allways use NumberUtils to parse double, so to allow input of '.' or ','
       return new Double( NumberUtils.parseDouble( text ) );
-    else if( typeName.equals( "java.lang.Integer" ) )
+    else if( clazz == Integer.class )
       return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
-    else if( typeName.equals( "java.lang.Float" ) )
+    else if( clazz == Float.class )
       return new Float( NumberUtils.parseDouble( text ) );
-    else if( typeName.equals( "java.lang.Long" ) )
+    else if( clazz == Long.class )
       return new Long( NUMBER_FORMAT.parse( text ).longValue() );
-    
     return null;
   }
 
@@ -203,7 +203,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public FeatureTypeProperty getFeatureTypeProperty()
+  public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
   }
@@ -227,7 +227,7 @@ public class StringModifier implements IFeatureModifier
 
     return null;
   }
-  
+
   /**
    * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.
    * 

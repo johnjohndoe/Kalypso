@@ -2,6 +2,8 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -23,19 +25,19 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass()
   {
-    return GM_Envelope.class.getName().toString();
+    return GM_Envelope.class;
   }
 
-  private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "BoundingShapeType";
+  private final QName[] m_typeNames = new QName[]{new QName( XMLHelper.GMLSCHEMA_NS, "BoundingShapeType")};
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName()
   {
-    return m_nameSpaceURI;
+    return m_typeNames;
   }
 
   /**
@@ -149,6 +151,14 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return true;
   }
 
 }

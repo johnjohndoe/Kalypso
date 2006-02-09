@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -17,7 +18,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -108,8 +108,8 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       {
         gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
-        FeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverageMember" );
-        // FeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
+        IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverageMember" );
+        // IFeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
         styleName = ft.getName();
         stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft, styleName ).toString();
       }

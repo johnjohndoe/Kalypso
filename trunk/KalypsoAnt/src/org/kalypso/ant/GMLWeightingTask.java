@@ -47,6 +47,7 @@ import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.CopyObservationMappingHelper;
@@ -59,6 +60,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
@@ -145,13 +147,15 @@ public class GMLWeightingTask extends Task
         final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
 
         // 5. resolve weights
-        final Feature[] weightFEs = workspace.resolveLinks( targetFE, m_propRelationWeightMember );
+        final IRelationType pt = (IRelationType) FeatureHelper.getPT(targetFE, m_propRelationWeightMember);
+        final Feature[] weightFEs = workspace.resolveLinks( targetFE, pt );
 
         // 6. loop weights
         for( int j = 0; j < weightFEs.length; j++ )
         {
           // 7. resolve feature that has source zml reference
-          final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
+          final IRelationType pt2 = (IRelationType) FeatureHelper.getPT(weightFEs[j], m_propRelationSourceFeature);
+          final Feature sourceFE = workspace.resolveLink( weightFEs[j], pt2 );
           if( sourceFE == null )
           {
             logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );

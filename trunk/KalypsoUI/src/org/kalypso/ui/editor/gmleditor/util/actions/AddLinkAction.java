@@ -55,26 +55,27 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 public class AddLinkAction extends Action
 {
-  private String m_propertyName;
+  private IRelationType m_propertyName;
 
   private int pos = 0;
 
   private CommandableWorkspace m_workspace;
 
-  private FeatureType m_type;
+  private IFeatureType m_type;
 
   private Feature m_parentFeature;
 
   private Shell m_shell;
 
-  public AddLinkAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature, String propertyName,
+  public AddLinkAction( IFeatureType type, CommandableWorkspace workspace, Feature parentFeature, IRelationType propertyName,
       int i, Shell shell )
   {
     super( type.getName() + " Link" );
@@ -89,6 +90,7 @@ public class AddLinkAction extends Action
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
+  @Override
   public void run()
   {
     AddRelationCommand command = null;
@@ -144,6 +146,7 @@ public class AddLinkAction extends Action
       m_features = features;
     }
 
+    @Override
     protected Control createDialogArea( final Composite parent )
     {
       final Composite area = new Composite( parent, SWT.NULL );

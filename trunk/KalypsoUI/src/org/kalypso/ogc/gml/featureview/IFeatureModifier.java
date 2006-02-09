@@ -44,8 +44,8 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -79,7 +79,7 @@ public interface IFeatureModifier extends ICellEditorValidator
 
   public String isValid( final Object value );
 
-  public FeatureTypeProperty getFeatureTypeProperty();
+  public IPropertyType getFeatureTypeProperty();
 
   /** Compares two object using the represantation by this modifier. Used to determine, if a feature should really be changed. */
   public boolean equals( final Object newData, final Object oldData );

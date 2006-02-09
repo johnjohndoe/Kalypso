@@ -9,11 +9,11 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -67,12 +67,11 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
   private final HashSet m_checkedElements = new HashSet();
 
   /*
-   * 
    * @author doemming
    */
-  public CopyOfEditRelationOptionsContentProvider()
+  public CopyOfEditRelationOptionsContentProvider( )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -81,67 +80,67 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
   public Object[] getChildren( Object parentElement )
   {
     if( m_childCache.containsKey( parentElement ) )
-      return (Object[])m_childCache.get( parentElement );
+      return (Object[]) m_childCache.get( parentElement );
     final List result = new ArrayList();
     if( parentElement == null )
       return new Object[0];
 
     if( parentElement instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)parentElement;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) parentElement;
       final CommandableWorkspace workspace = featureTheme.getWorkspace();
       if( workspace != null )
         result.add( workspace );
     }
     if( parentElement instanceof GMLWorkspace )
     {
-      final FeatureType[] featureTypes = ( (GMLWorkspace)parentElement ).getFeatureTypes();
+      final IFeatureType[] featureTypes = ((GMLWorkspace) parentElement).getFeatureTypes();
 
       for( int i = 0; i < featureTypes.length; i++ )
       {
-        FeatureType ft = featureTypes[i];
-        if( ft.getDefaultGeometryProperty() != null )
+        IFeatureType ft = featureTypes[i];
+        if( ft.getDefaultGeometryPropertyPosition() >= -1 )
           result.add( ft );
       }
     }
 
-    if( parentElement instanceof FeatureType )
+    if( parentElement instanceof IFeatureType )
     {
-      FeatureType ft1 = (FeatureType)parentElement;
-      FeatureTypeProperty[] properties = ft1.getProperties();
+      IFeatureType ft1 = (IFeatureType) parentElement;
+      IPropertyType[] properties = ft1.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        FeatureTypeProperty property = properties[i];
-        if( property instanceof FeatureAssociationTypeProperty )
+        IPropertyType property = properties[i];
+        if( property instanceof IRelationType )
         {
           // test is heavy relationship
-          FeatureAssociationTypeProperty linkFTP1 = (FeatureAssociationTypeProperty)property;
-          FeatureType[] associationFeatureTypes = linkFTP1.getAssociationFeatureTypes();
+          final IRelationType linkFTP1 = (IRelationType) property;
+          final IFeatureType[] associationFeatureTypes = linkFTP1.getTargetFeatureTypes( null, false );
           for( int j = 0; j < associationFeatureTypes.length; j++ )
           {
-            FeatureType ft2 = associationFeatureTypes[j];
+            IFeatureType ft2 = associationFeatureTypes[j];
             // leight: FT,Prop,FT
             // heavy: FT,Prop,FT,PropFT
             // leight relationship ?
-            if( ft2.getDefaultGeometryProperty() != null )
+            if( ft2.getDefaultGeometryPropertyPosition() >-1)
             {
               result.add( new RelationType( ft1, linkFTP1, ft2 ) );
             }
             // heavy relationship?
             else
             {
-              FeatureTypeProperty[] properties2 = ft2.getProperties();
+              IPropertyType[] properties2 = ft2.getProperties();
               for( int l = 0; l < properties2.length; l++ )
               {
-                FeatureTypeProperty property2 = properties2[l];
-                if( property2 instanceof FeatureAssociationTypeProperty )
+                IPropertyType property2 = properties2[l];
+                if( property2 instanceof IRelationType )
                 {
-                  FeatureAssociationTypeProperty linkFTP2 = (FeatureAssociationTypeProperty)property2;
-                  FeatureType[] associationFeatureTypes2 = linkFTP2.getAssociationFeatureTypes();
+                  final IRelationType linkFTP2 = (IRelationType) property2;
+                  final IFeatureType[] associationFeatureTypes2 = linkFTP2.getTargetFeatureTypes(null,false);
                   for( int k = 0; k < associationFeatureTypes2.length; k++ )
                   {
-                    final FeatureType ft3 = associationFeatureTypes2[k];
-                    if( ft3.getDefaultGeometryProperty() != null )
+                    final IFeatureType ft3 = associationFeatureTypes2[k];
+                    if( ft3.getDefaultGeometryPropertyPosition() >-1)
                     {
                       // it is a heavy relationship;
                       result.add( new HeavyRelationType( ft1, linkFTP1, ft2, linkFTP2, ft3 ) );
@@ -162,7 +161,7 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
         m_parentCache.put( array[i], parentElement );
     }
     if( m_childCache.containsKey( parentElement ) )
-      return (Object[])m_childCache.get( parentElement );
+      return (Object[]) m_childCache.get( parentElement );
     return new Object[0];
   }
 
@@ -196,9 +195,8 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
   {
     if( inputElement != null && inputElement instanceof IKalypsoFeatureTheme )
     {
-      IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)inputElement;
-      return new GMLWorkspace[]
-      { featureTheme.getWorkspace() };
+      IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) inputElement;
+      return new GMLWorkspace[] { featureTheme.getWorkspace() };
     }
     return new Object[0];
   }
@@ -206,9 +204,9 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // nothing to do
+    // nothing to do
   }
 
   /**
@@ -246,7 +244,7 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
       m_checkedElements.remove( element );
   }
 
-  public RelationType[] getCheckedRelations()
+  public RelationType[] getCheckedRelations( )
   {
     final List result = new ArrayList();
     for( Iterator iter = m_checkedElements.iterator(); iter.hasNext(); )
@@ -255,6 +253,6 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
       if( element instanceof RelationType )
         result.add( element );
     }
-    return (RelationType[])result.toArray( new RelationType[result.size()] );
+    return (RelationType[]) result.toArray( new RelationType[result.size()] );
   }
 }

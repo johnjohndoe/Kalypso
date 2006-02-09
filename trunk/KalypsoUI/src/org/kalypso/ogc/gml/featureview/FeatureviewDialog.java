@@ -54,10 +54,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -96,7 +96,7 @@ public class FeatureviewDialog extends Dialog
         updateButtons();
       }
 
-      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
       // TODO: stack dialogs
       }
@@ -113,7 +113,7 @@ public class FeatureviewDialog extends Dialog
     getShell().setText( "Feature editieren" );
 
     final Feature feature = m_featureComposite.getFeature();
-    final FeatureType featureType = feature.getFeatureType();
+    final IFeatureType featureType = feature.getFeatureType();
 
     final Group panel = new Group( parent, SWT.NONE );
     panel.setText( featureType.getName() + " - " + feature.getId() );

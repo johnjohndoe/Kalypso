@@ -48,12 +48,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -181,7 +181,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
 
         final UserStyle[] styles = featureTheme.getStyles();
-        final FeatureType ft = featureTheme.getFeatureType();
+        final IFeatureType ft = featureTheme.getFeatureType();
 
         for( int n = 0; n < styles.length; n++ )
         {
@@ -233,7 +233,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     fireModellEvent( new ModellEvent( null, ModellEvent.LEGEND_UPDATED ) );
   }
 
-  private Image getLegend( FeatureType ft, UserStyle style, int width, int height )
+  private Image getLegend( IFeatureType ft, UserStyle style, int width, int height )
   {
     double yborder = m_font.getSize() + 3;
     double xborder = width / 3;

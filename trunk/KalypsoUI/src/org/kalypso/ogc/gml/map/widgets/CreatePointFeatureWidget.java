@@ -42,8 +42,8 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author vDoemming
@@ -52,14 +52,14 @@ public class CreatePointFeatureWidget extends AbstractWidget
 {
   //  private Point myPoint = null;
 
-  //  private final FeatureTypeProperty myFtp;
+  //  private final IPropertyType myFtp;
 
   private final CreateGeometryFeatureWidget myParentWidget;
 
   //  private final IKalypsoFeatureTheme m_theme;
 
   public CreatePointFeatureWidget( String name, String tooltip, CreateGeometryFeatureWidget parentWidget,
-      final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
+      final IKalypsoFeatureTheme theme, IPropertyType ftp )
   {
     super( name, tooltip );
     myParentWidget = parentWidget;

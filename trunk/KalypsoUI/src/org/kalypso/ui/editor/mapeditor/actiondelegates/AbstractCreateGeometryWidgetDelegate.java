@@ -32,14 +32,15 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -63,6 +64,7 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
     m_geometryClass = geometryClass;
   }
 
+  @Override
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( fitsToAction() );
@@ -71,6 +73,7 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
+  @Override
   protected void refreshAction( IAction action )
   {
     super.refreshAction( action );
@@ -89,17 +92,17 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
       return MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING;
     if( geometryClass == GeometryUtilities.getPolygonClass() )
       return MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON;
-    //        if( geometryClass == null || geometryClass == GM_Object.class )
+    // if( geometryClass == null || geometryClass == GM_Object.class )
     // default:
     return MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY;
   }
 
-  public boolean fitsToAction()
+  public boolean fitsToAction( )
   {
     final IEditorPart editor = getEditor();
     if( editor != null && editor instanceof GisMapEditor )
     {
-      final MapPanel mapPanel = ( (GisMapEditor)editor ).getMapPanel();
+      final MapPanel mapPanel = ((GisMapEditor) editor).getMapPanel();
       if( mapPanel == null )
         return false;
       final IMapModell mapModell = mapPanel.getMapModell();
@@ -110,16 +113,18 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
         return false;
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final FeatureType featureType = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
+        final IFeatureType featureType = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();
         if( featureType == null )
           return false;
-        final FeatureTypeProperty[] geomProps = featureType.getAllGeomteryProperties();
+        final IPropertyType[] geomProps = featureType.getAllGeomteryProperties();
         for( int i = 0; i < geomProps.length; i++ )
         {
-          final FeatureTypeProperty property = geomProps[i];
-          if( m_geometryClass == null || m_geometryClass == GM_Object.class
-              || property.getType().equals( m_geometryClass.getName() ) )
-            return true;
+          if( geomProps[i] instanceof IValuePropertyType )
+          {
+            final IValuePropertyType vpt = (IValuePropertyType) geomProps[i];
+            if( m_geometryClass == null || m_geometryClass == GM_Object.class || vpt.getValueClass() == m_geometryClass )
+              return true;
+          }
         }
       }
     }

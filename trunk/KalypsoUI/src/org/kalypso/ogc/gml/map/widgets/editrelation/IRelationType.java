@@ -41,8 +41,8 @@
 
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -54,11 +54,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface IRelationType
 {
-  public abstract boolean fitsTypes( FeatureType f1, FeatureType f2 );
+  public abstract boolean fitsTypes( IFeatureType f1, IFeatureType f2 );
 
   public abstract String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode );
 
-  public abstract FeatureType getDestFT();
+  public abstract IFeatureType getDestFT();
 
-  public abstract FeatureType getSrcFT();
+  public abstract IFeatureType getSrcFT();
 }

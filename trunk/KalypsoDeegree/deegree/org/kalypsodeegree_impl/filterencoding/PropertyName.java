@@ -64,6 +64,9 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.w3c.dom.Element;
 
 /**
@@ -152,12 +155,12 @@ public class PropertyName extends Expression_Impl
    */
   public Object evaluate( Feature feature )
   {
-    //        FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
+    //        IPropertyType[] ftp = feature.getFeatureType().getProperties();
     final Object object = getProperty( feature, m_value );
 
     //        if (feature.getFeatureType ().getProperty (value) == null) {
     //            throw new FilterEvaluationException (
-    //                "FeatureType '" + feature.getFeatureType ().getName () +
+    //                "IFeatureType '" + feature.getFeatureType ().getName () +
     //                "' has no property with name '" + value + "'!");
     //        }
     //        Object object = feature.getProperty (value);
@@ -186,14 +189,15 @@ public class PropertyName extends Expression_Impl
   {
     if( feature.getFeatureType().getProperty( value ) != null )
     {
-      return feature.getProperty( value );
+      return feature.getProperty(value);
     }
-    if( feature.getFeatureType().getVirtuelFeatureTypeProperty( value ) != null )
+    final VirtualFeatureTypeProperty vpt= VirtualPropertyUtilities.getPropertyType(feature.getFeatureType(), value);
+    if(vpt!=null )
     {
-      return feature.getVirtuelProperty( value, null );
+      return vpt.getVirtuelValue(feature, null);
     }
     return null;
-    //    throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
+    //    throw new FilterEvaluationException( "IFeatureType '" + feature.getFeatureType().getName()
     //        + "' has no property with name '" + value + "'!" );
   }
 }

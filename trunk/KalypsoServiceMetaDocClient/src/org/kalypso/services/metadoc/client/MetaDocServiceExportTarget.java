@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ import java.util.Map.Entry;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.configuration.BaseConfiguration;
@@ -76,6 +78,13 @@ import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.Mapper;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
@@ -86,9 +95,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.Mapper;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -110,8 +118,9 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 {
   public final static String CONF_METADATA = MetaDocServiceExportTarget.class.getName() + ".METADATA";
 
-  public IStatus commitDocument( final IExportableObject document, final Configuration conf,
-      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  private static final String NS = "namespace";
+
+  public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     File file = null;
     OutputStream outputStream = null;
@@ -119,8 +128,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       monitor.beginTask( "Dokument " + document.getPreferredDocumentName() + " wird exportiert", 2 );
 
-      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document
-          .getPreferredDocumentName(), "tmp" );
+      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document.getPreferredDocumentName(), "tmp" );
       file.deleteOnExit();
 
       outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
@@ -140,12 +148,11 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       final IMetaDocService metadocService = getMetadocService();
 
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
-      
+
       // get a map out of the metadata extensions
       final Map map = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( mdEx );
 
-      metadocService.commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh,
-          document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), map );
+      metadocService.commitNewDocument( (Map) conf.getProperty( CONF_METADATA ), dh, document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), map );
 
       monitor.worked( 1 );
 
@@ -172,26 +179,23 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoServiceMetaDocClientPlugin
-        .getID(), "icons/wizban/bericht_wiz.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoServiceMetaDocClientPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
 
     final Feature feature = prepareFeature( configuration );
-    final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc,
-        false, null, feature, new FeatureSelectionManager2() )
+    final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, null, feature, new FeatureSelectionManager2() )
     {
       protected void applyFeatureChange( FeatureChange fc )
       {
         super.applyFeatureChange( fc );
 
-        final Map metadata = (Map)configuration.getProperty( CONF_METADATA );
+        final Map metadata = (Map) configuration.getProperty( CONF_METADATA );
 
         final Object newValue = Mapper.mapJavaValueToXml( fc.getNewValue() );
         metadata.put( fc.getProperty(), newValue );
       }
     };
 
-    return new IWizardPage[]
-    { page };
+    return new IWizardPage[] { page };
   }
 
   /**
@@ -209,8 +213,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Serverseitige Fehler (Berichtsablage)", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
     }
 
     configuration.setProperty( CONF_METADATA, metadata );
@@ -218,18 +221,19 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final Configuration targetProps = getProperties();
 
     // create featuretype from bean
-    final Collection ftpColl = new ArrayList();
-    final Collection fpColl = new ArrayList();
+    final Collection<IPropertyType> ftpColl = new ArrayList<IPropertyType>();
+    final Collection<FeatureProperty> fpColl = new ArrayList<FeatureProperty>();
     final int[] ints = new int[metadata.size()];
     int count = 0;
     for( final Iterator iter = metadata.entrySet().iterator(); iter.hasNext(); )
     {
-      final Map.Entry entry = (Entry)iter.next();
+      final Map.Entry entry = (Entry) iter.next();
 
       final String name = entry.getKey().toString();
 
       final String[] splits = entry.getValue().toString().split( ";" );
 
+      // @marc xml or java type ?
       final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
       String value = splits.length >= 2 ? splits[1] : null;
@@ -242,30 +246,43 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         // Important: always put value again in metadata when it changed
         metadata.put( name, value );
       }
-
-      String typename = null;
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       Object realValue = null;
+      IPropertyType pt = null;
       try
       {
-        typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
-        realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
+        final QName valueQName = new QName( XMLHelper.XMLSCHEMA_NS, xmltype );
+        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
+        realValue = typeHandler.parseType( value );
+        pt = GMLSchemaFactory.createValuePropertyType( new QName( NS, name ), valueQName, typeHandler, 1, 1 );
       }
       catch( final Exception e )
-      {
+      {// next try with xsd:string
         e.printStackTrace();
-        typename = "java.lang.String";
+        try
+        {
+          final QName valueQName = new QName( XMLHelper.XMLSCHEMA_NS, "string" );
+          final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
+          realValue = typeHandler.parseType( value );
+          pt = GMLSchemaFactory.createValuePropertyType( new QName( NS, name ), valueQName, typeHandler, 1, 1 );
+        }
+        catch( ParseException e1 )
+        {
+          e1.printStackTrace();
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
+        }
       }
-      ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
-      fpColl.add( FeatureFactory.createFeatureProperty( name, realValue ) );
-
+      ftpColl.add( pt );
+      fpColl.add( FeatureFactory.createFeatureProperty( pt, realValue ) );
       ints[count++] = 1;
     }
 
-    final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpColl.toArray( new FeatureTypeProperty[ftpColl.size()] );
-    final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap() );
+    final IPropertyType[] ftps = ftpColl.toArray( new IPropertyType[ftpColl.size()] );
+    // final IFeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap()
+    // );
+    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( NS, "docbean" ), ftps );
 
-    return FeatureFactory.createFeature( "0", ft, (FeatureProperty[])fpColl
-        .toArray( new FeatureProperty[fpColl.size()] ) );
+    return FeatureFactory.createFeature( "0", ft, (FeatureProperty[]) fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
   }
 
   /**
@@ -273,20 +290,18 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
    * @throws CoreException
    *           if client-server connection could not be established
    */
-  public static IMetaDocService getMetadocService() throws CoreException
+  public static IMetaDocService getMetadocService( ) throws CoreException
   {
     try
     {
       final ProxyFactory serviceProxyFactory = KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory();
-      return (IMetaDocService)serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", ClassUtilities
-          .getOnlyClassName( IMetaDocService.class ) );
+      return (IMetaDocService) serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", ClassUtilities.getOnlyClassName( IMetaDocService.class ) );
     }
     catch( final ServiceException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Dokumentenablage-Dienst konnte nicht initialisiert werden" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Dokumentenablage-Dienst konnte nicht initialisiert werden" ) );
     }
   }
 }

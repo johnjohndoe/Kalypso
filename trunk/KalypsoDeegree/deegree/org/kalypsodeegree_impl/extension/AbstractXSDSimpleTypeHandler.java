@@ -38,55 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature;
+package org.kalypsodeegree_impl.extension;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.namespace.QName;
 
-import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 
 /**
- * 
- * @author huebsch
+ * @author doemming
  */
-public abstract class AbstractFeatureType
+public abstract class AbstractXSDSimpleTypeHandler implements IMarshallingTypeHandler
 {
-  private final String m_name;
+  private final QName[] m_typeNames;
 
-  private final String m_namespace;
+  private final Class m_valueClass;
 
-  private final Map m_annotationMap;
-
-  public AbstractFeatureType( String name, String namespace, Map annotationMap )
+  public AbstractXSDSimpleTypeHandler( final Class valueClass, final QName[] typeNames )
   {
-    m_name = name;
-    m_namespace = namespace;
-    m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
-    m_annotationMap.put( Annotation.UNSUPPORTED_LANG_KEY, new Annotation( Annotation.UNSUPPORTED_LANG_KEY, m_name, "",
-        m_namespace + ":" + m_name ) );
+    m_valueClass = valueClass;
+    m_typeNames = typeNames;
   }
 
-  public final Map getAnnotationMap()
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getClassName()
+   */
+  public Class getValueClass( )
   {
-    return m_annotationMap;
+    return m_valueClass;
   }
 
-  public final String getName()
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
+   */
+  public QName[] getTypeName( )
   {
-    return m_name;
+    return m_typeNames;
   }
 
-  public final String getNamespace()
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
+   */
+  public String getShortname( )
   {
-    return m_namespace;
+    // TODO remove
+    return null;
   }
 
-  public final Annotation getAnnotation( String lang )
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
   {
-    final Annotation annotation = (Annotation)m_annotationMap.get( lang );
-    if( annotation == null )
-      return (Annotation)m_annotationMap.get( Annotation.UNSUPPORTED_LANG_KEY );
-    return annotation;
-
+    return false;
   }
 }

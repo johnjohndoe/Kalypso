@@ -59,14 +59,17 @@
  
  ---------------------------------------------------------------------------------------------------*/
 
-package org.kalypsodeegree.model.feature;
+package org.kalypso.gmlschema.feature;
 
 import java.util.Map;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.Annotation;
+
 /**
- * The FeatureType interface is intended to provide details of the type of a Feature that are described as Feature
+ * The IFeatureType interface is intended to provide details of the type of a Feature that are described as Feature
  * Schema in the Abstract Specification's Essential Model, specifically the names and types of the properties associated
- * with each instance of a Feature of the given FeatureType.
+ * with each instance of a Feature of the given IFeatureType.
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -74,24 +77,24 @@ import java.util.Map;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface FeatureType
+public interface IFeatureType
 {
   public static final int UNBOUND_OCCURENCY = -1;
 
   /**
-   * returns the name of the FeatureType
+   * returns the name of the IFeatureType
    */
   public String getName();
 
   /**
    * returns the properties of this feature type
    */
-  public FeatureTypeProperty[] getProperties();
+  public IPropertyType[] getProperties();
 
   /**
    * returns a property of this feature type identified by its name
    */
-  public FeatureTypeProperty getProperty( String name );
+  public IPropertyType getProperty( String name );
 
   public String getNamespace();
 
@@ -121,7 +124,7 @@ public interface FeatureType
   public int getMinOccurs( String propName );
 
   /**
-   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die FeatureTypeProperty selbst wissen
+   * TODO: warum überhaupt im IFeatureType?? sollte das nicht besser die IPropertyType selbst wissen
    * 
    * method has default modifier, other classes should use name-methodes not positions
    */
@@ -132,9 +135,9 @@ public interface FeatureType
    */
   int getDefaultGeometryPropertyPosition();
 
-  public FeatureTypeProperty getDefaultGeometryProperty();
+  public IPropertyType getDefaultGeometryProperty();
   
-  public FeatureTypeProperty[] getAllGeomteryProperties();
+  public IPropertyType[] getAllGeomteryProperties();
 
   public String getSubstitutionGroup();
 
@@ -142,11 +145,11 @@ public interface FeatureType
 
   public Map getAnnotationMap();
 
-  public void setVirtuelFeatureTypeProperty( FeatureTypeProperty[] properties );
+  public void setVirtuelFeatureTypeProperty( IPropertyType[] properties );
 
-  public FeatureTypeProperty[] getVirtuelFeatureTypeProperty();
+  public IPropertyType[] getVirtuelFeatureTypeProperty();
 
-  public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
+  public IPropertyType getVirtuelFeatureTypeProperty( String propName );
 
   public boolean isVirtuelProperty( String propertyName );
   

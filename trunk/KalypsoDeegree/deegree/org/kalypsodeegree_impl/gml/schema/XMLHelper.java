@@ -37,7 +37,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * @author doemming
  */
 public class XMLHelper
@@ -53,7 +52,7 @@ public class XMLHelper
     Node parentNode = node.getParentNode();
     String ns = parentNode.getNamespaceURI();
     String name = parentNode.getLocalName();
-    return ( XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ) );
+    return (XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ));
   }
 
   public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
@@ -101,14 +100,12 @@ public class XMLHelper
     }
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os )
-      throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os ) throws TransformerException
   {
     writeDOM( xmlDOM, charset, new StreamResult( os ) );
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer )
-      throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
   {
     // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
     // da sonst Mist rauskommt
@@ -118,8 +115,7 @@ public class XMLHelper
     writeDOM( xmlDOM, charset, new StreamResult( writer ) );
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult )
-      throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult ) throws TransformerException
   {
     final TransformerFactory tFactory = TransformerFactory.newInstance();
 
@@ -208,7 +204,7 @@ public class XMLHelper
 
     if( connect instanceof HttpURLConnection )
     {
-      HttpURLConnection uc = (HttpURLConnection)connect;
+      HttpURLConnection uc = (HttpURLConnection) connect;
       uc.setRequestMethod( "POST" );
       uc.setDoInput( true );
       uc.setDoOutput( true );
@@ -282,9 +278,8 @@ public class XMLHelper
   {
     try
     {
-      String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" "
-          + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\"" + outputMethod + "\" />"
-          + xslTemplateString + "</xsl:stylesheet>";
+      String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" " + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\""
+          + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
 
       DOMSource xmlSource = new DOMSource( domNode );
       StreamSource xslSource = new StreamSource( new StringReader( xslString ) );
@@ -322,8 +317,7 @@ public class XMLHelper
     }
   }
 
-  public static void xslTransform( final InputStream xmlInputStream, InputStream xslInputStream, Writer writer )
-      throws TransformerException, ParserConfigurationException, SAXException, IOException
+  public static void xslTransform( final InputStream xmlInputStream, InputStream xslInputStream, Writer writer ) throws TransformerException, ParserConfigurationException, SAXException, IOException
   {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
@@ -356,7 +350,7 @@ public class XMLHelper
 
   public static boolean isAbstractElementDefinition( Node node )
   {
-    String abstractStatus = ( (Element)node ).getAttribute( "abstract" );
+    String abstractStatus = ((Element) node).getAttribute( "abstract" );
     if( abstractStatus == null )
       return false;
     if( "false".equals( abstractStatus ) || "0".equals( abstractStatus ) || "".equals( abstractStatus ) )
@@ -377,47 +371,12 @@ public class XMLHelper
     return -1;
   }
 
-  /**
-   * as every Feature must extend from AbstractFeatureType or AbstractFeatureCollection this methods search for the
-   * root.
-   * 
-   * @return root type. e.g. "AbstractFeatureType" or "AbstractFeatureCollectionType"
-   */
-  public static String getGMLBaseType( GMLSchema schema, Node complexTypeNode )
-  {
-
-    Element element = (Element)complexTypeNode;
-    NodeList_Impl nl = new NodeList_Impl();
-    nl.add( element.getElementsByTagNameNS( XMLSCHEMA_NS, "restriction" ) );
-    nl.add( element.getElementsByTagNameNS( XMLSCHEMA_NS, "extension" ) );
-    // System.out.println( toString( nl ) );
-    if( nl.getLength() == 0 )
-    {
-      if( !XMLHelper.GMLSCHEMA_NS.equals( schema.getTargetNS() ) )
-        return null;
-      SchemaAttribute typeNameAttribute = new SchemaAttribute( schema, getAttributeNode( complexTypeNode, "name" ) );
-      return typeNameAttribute.getValue();
-    }
-    SchemaAttribute attribute = new SchemaAttribute( schema, getAttributeNode( nl.item( 0 ), "base" ) );
-
-    final String typeName = attribute.getValue();
-    final String typeNameSpace = attribute.getValueNS();
-    final GMLSchema typeSchema = schema.getGMLSchema( typeNameSpace );
-    if( typeSchema == null )
-      return null;
-    Node contentNode = typeSchema.getContentNode( typeNameSpace, typeName );
-    if( contentNode == null )
-      return null;
-    final String baseName = getGMLBaseType( typeSchema, contentNode );
-    return baseName;
-  }
-
   public static String getStringFromChildElement( final Element elt, final String namespace, final String eltName )
   {
     final NodeList nlL = elt.getElementsByTagNameNS( namespace, eltName );
     if( nlL.getLength() > 0 )
     {
-      final Element innerElt = (Element)nlL.item( 0 );
+      final Element innerElt = (Element) nlL.item( 0 );
       return XMLTools.getStringValue( innerElt );
     }
 
@@ -432,20 +391,20 @@ public class XMLHelper
       final Node node = childNodes.item( i );
       switch( node.getNodeType() )
       {
-      case Node.ELEMENT_NODE:
-        if( ns != null && ns.equals( node.getNamespaceURI() ) && name.equals( node.getLocalName() ) )
-          return node;
-        else if( ns == null && name.equals( node.getLocalName() ) )
-          return node;
-        if( maxDepth > 0 )
-        {
-          Node subNode = getFirstChildElement( node, ns, name, maxDepth - 1 );
-          if( subNode != null )
-            return subNode;
-        }
-        break;
-      default:
-        continue;
+        case Node.ELEMENT_NODE:
+          if( ns != null && ns.equals( node.getNamespaceURI() ) && name.equals( node.getLocalName() ) )
+            return node;
+          else if( ns == null && name.equals( node.getLocalName() ) )
+            return node;
+          if( maxDepth > 0 )
+          {
+            Node subNode = getFirstChildElement( node, ns, name, maxDepth - 1 );
+            if( subNode != null )
+              return subNode;
+          }
+          break;
+        default:
+          continue;
       }
     }
     return null;

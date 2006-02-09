@@ -47,11 +47,11 @@ import java.util.Date;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.DateWithoutTime;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 
 /**
  * @author belger
@@ -64,9 +64,9 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
   private final Feature m_feature;
 
-  private final FeatureTypeProperty m_ftp;
+  private final IValuePropertyType m_ftp;
 
-  public CalendarFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
+  public CalendarFeatureDialog( final Feature feature, final IValuePropertyType ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -83,10 +83,10 @@ public class CalendarFeatureDialog implements IFeatureDialog
     if( open == Window.OK )
     {
       Date newDate = dialog.getDate();
-      if( m_ftp.getType().equals( DateWithoutTime.class.getName() ) )
+      if( m_ftp.getValueClass()==DateWithoutTime.class )
         newDate = new DateWithoutTime( newDate );
 
-      m_change = new FeatureChange( m_feature, m_ftp.getName(), newDate );
+      m_change = new FeatureChange( m_feature, m_ftp, newDate );
     }
 
     return open;
@@ -97,7 +97,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
     if( m_change != null )
       return (Date)m_change.getNewValue();
 
-    return (Date)m_feature.getProperty( m_ftp.getName() );
+    return (Date)m_feature.getProperty( m_ftp);
   }
 
   /**

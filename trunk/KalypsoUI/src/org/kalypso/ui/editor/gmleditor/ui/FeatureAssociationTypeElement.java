@@ -29,8 +29,8 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 
 /**
  * 
@@ -41,7 +41,7 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 public class FeatureAssociationTypeElement
 {
 
-  private final FeatureAssociationTypeProperty m_featureAssociattionTypeProp;
+  private final IRelationType m_featureAssociattionTypeProp;
 
   private final Feature m_parent;
 
@@ -49,7 +49,7 @@ public class FeatureAssociationTypeElement
    *  
    */
 
-  public FeatureAssociationTypeElement( final Feature parent, final FeatureAssociationTypeProperty property )
+  public FeatureAssociationTypeElement( final Feature parent, final IRelationType property )
   {
     m_parent = parent;
     m_featureAssociattionTypeProp = property;
@@ -61,7 +61,7 @@ public class FeatureAssociationTypeElement
 
   }
 
-  public FeatureAssociationTypeProperty getAssociationTypeProperty()
+  public IRelationType getAssociationTypeProperty()
   {
     return m_featureAssociattionTypeProp;
   }

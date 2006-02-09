@@ -35,12 +35,11 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author Küpferle
@@ -49,6 +48,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
   protected GmlTreeView m_viewer = null;
 
+  @Override
   public void dispose()
   {
     if( m_viewer != null )
@@ -58,6 +58,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     super.dispose();
   }
 
+  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     ByteArrayInputStream bis = null;
@@ -98,6 +99,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     return m_viewer;
   }
 
+  @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception,
       CoreException
   {
@@ -157,6 +159,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     }
   }
 
+  @Override
   public synchronized void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
@@ -187,14 +190,13 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
         CommandableWorkspace workspace = m_viewer.getWorkspace();
         if( selection.size() == 1 && firstElement instanceof FeatureAssociationTypeElement )
         {
-          Feature parentFeature = ( (FeatureAssociationTypeElement)firstElement ).getParentFeature();
-          FeatureType featureType = parentFeature.getFeatureType();
-          FeatureAssociationTypeProperty fatp = ( (FeatureAssociationTypeElement)firstElement )
+          final Feature parentFeature = ( (FeatureAssociationTypeElement)firstElement ).getParentFeature();
+          final IRelationType fatp = ( (FeatureAssociationTypeElement)firstElement )
               .getAssociationTypeProperty();
-          if( featureType.isListProperty( fatp.getName() ) )
+          if(  fatp.getMaxOccurs()>1 )
           {
-            List list = (List)parentFeature.getProperty( fatp.getName() );
-            if( list.size() < featureType.getMaxOccurs( fatp.getName() ) )
+            final List list = (List)parentFeature.getProperty( fatp );
+            if( list.size() < fatp.getMaxOccurs() ) 
               menuManager.add( new AddEmptyLinkAction( "Feature neu", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE, fatp,
                   parentFeature, workspace, KalypsoCorePlugin.getDefault().getSelectionManager() ) );
           }
@@ -210,6 +212,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IPostSelectionProvider.class )
@@ -223,6 +226,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
    */
+  @Override
   public void setFocus()
   {
     m_viewer.getTreeViewer().getControl().setFocus();

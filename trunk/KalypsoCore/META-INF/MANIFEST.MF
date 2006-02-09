@@ -79,6 +79,7 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.zml.filters.valuecomp,
  org.kalypso.zml.repository.virtual,
  org.kalypso.zml.request,
+ org.w3._1999.xlink,
  org.w3._1999.xlinkext,
  org.w3._2001.xmlschema
 Require-Bundle: org.eclipse.core.resources,

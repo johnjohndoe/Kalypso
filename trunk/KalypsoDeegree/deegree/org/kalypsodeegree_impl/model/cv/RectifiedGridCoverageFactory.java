@@ -1,8 +1,11 @@
 package org.kalypsodeegree_impl.model.cv;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -10,7 +13,6 @@ import org.w3c.dom.Element;
  * Class for reading and writing RectifiedGridCoverages
  * 
  * @author N. Peiler
- *  
  */
 public class RectifiedGridCoverageFactory
 {
@@ -26,9 +28,9 @@ public class RectifiedGridCoverageFactory
    */
   public static RectifiedGridCoverage createRectifiedGridCoverage( Feature feat )
   {
-    Feature feat_rectifiedGridCoverage = (Feature)feat.getProperty( "RectifiedGridCoverageMember" );
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feat_rectifiedGridCoverage.getProperty( "rectifiedGridDomain" );
-    RangeSet rangeSet = (RangeSet)feat_rectifiedGridCoverage.getProperty( "rangeSet" );
+    Feature feat_rectifiedGridCoverage = (Feature) feat.getProperty( "RectifiedGridCoverageMember" );
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain) feat_rectifiedGridCoverage.getProperty( "rectifiedGridDomain" );
+    RangeSet rangeSet = (RangeSet) feat_rectifiedGridCoverage.getProperty("rangeSet" );
     RectifiedGridCoverage gridCoverage = new RectifiedGridCoverage( rgDomain, rangeSet );
     return gridCoverage;
   }
@@ -48,14 +50,13 @@ public class RectifiedGridCoverageFactory
 
     Element e_rectifiedGridDomain = doc.createElementNS( NSRGC, "rgc:rectifiedGridDomain" );
     RectifiedGridDomain gridDomain = gridCoverage.getGridDomain();
-    IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName(
-        NSRGC + ":" + "RectifiedGridDomainType" );
+    IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NSRGC, "RectifiedGridDomainType" ) );
     typeHandler.marshall( gridDomain, e_rectifiedGridDomain, null );
     e_rectifiedGridCoverage.appendChild( e_rectifiedGridDomain );
 
     Element e_rangeSet = doc.createElementNS( NSRGC, "rgc:rangeSet" );
     RangeSet rangeSet = gridCoverage.getRangeSet();
-    typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( NSRGC + ":" + "RangeSetType" );
+    typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NSRGC, "RangeSetType" ) );
     typeHandler.marshall( rangeSet, e_rangeSet, null );
     e_rectifiedGridCoverage.appendChild( e_rangeSet );
 

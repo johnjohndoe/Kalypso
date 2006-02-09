@@ -47,8 +47,9 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -58,16 +59,16 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class TextLabelComboPanel extends ComboPanel
 {
 
-  public TextLabelComboPanel( Composite parent, String label, FeatureType featureType, String value )
+  public TextLabelComboPanel( Composite parent, String label, IFeatureType featureType, String value )
   {
     super( parent, label );
     // read possible items to get the label text from
     ArrayList labelStringItems = new ArrayList();
-    final FeatureTypeProperty[] ftp = featureType.getProperties();
+    final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( ! GeometryUtilities.isGeometry(ftp[i]) )
         labelStringItems.add( ftp[i].getName() );
-    final FeatureTypeProperty[] vftp = featureType.getVirtuelFeatureTypeProperty();
+    final IPropertyType[] vftp = VirtualPropertyUtilities.getVirtualProperties(featureType);
     for( int i = 0; i < vftp.length; i++ )
       if(! GeometryUtilities.isGeometry(vftp[i]) )
         labelStringItems.add( vftp[i].getName() );

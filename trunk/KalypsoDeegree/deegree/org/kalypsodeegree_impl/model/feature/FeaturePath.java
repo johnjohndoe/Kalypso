@@ -1,24 +1,21 @@
 package org.kalypsodeegree_impl.model.feature;
 
+import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 
 /**
- * Der FeaturePath denotiert ein Feature, eine FeatureList oder einen FeatureType innerhalb eines GMLWorkspace.
- * 
+ * Der FeaturePath denotiert ein Feature, eine FeatureList oder einen IFeatureType innerhalb eines GMLWorkspace.
  * Notation: <br>
  * property ::= Der Name einer FeatureAssociationProperty <br>
  * typename ::= Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden <br>
- * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ
- * 
- * segment ::= #fid# <id>| <property>| <property>[ <typename>]
- * 
- * featurePath ::= <emptypath>| <segment>/ <segment>]]>
+ * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ segment ::= #fid# <id>| <property>|
+ * <property>[ <typename>] featurePath ::= <emptypath>| <segment>/ <segment>]]>
  * 
  * @author belger
  */
@@ -53,8 +50,7 @@ public class FeaturePath
     if( id == null || id.length() < 1 )
       m_segments = new Segment[0];
     else
-      m_segments = new Segment[]
-      { new Segment( feature ) };
+      m_segments = new Segment[] { new Segment( feature ) };
   }
 
   public FeaturePath( final FeaturePath parent, final String segment )
@@ -95,9 +91,9 @@ public class FeaturePath
 
     final Object value = m_segments[segmentIndex].getValue( workspace, feature );
     if( value instanceof Feature )
-      return getFeatureForSegment( workspace, (Feature)value, segmentIndex + 1 );
+      return getFeatureForSegment( workspace, (Feature) value, segmentIndex + 1 );
     else if( value instanceof String )
-      return getFeatureForSegment( workspace, workspace.getFeature( (String)value ), segmentIndex + 1 );
+      return getFeatureForSegment( workspace, workspace.getFeature( (String) value ), segmentIndex + 1 );
     else if( value instanceof FeatureList && segmentIndex == m_segments.length - 1 )
       return value;
 
@@ -106,20 +102,19 @@ public class FeaturePath
   }
 
   /** Voraussetzung, mindestens das Root-Feature muss existieren */
-  public FeatureType getFeatureType( final GMLWorkspace workspace )
+  public IFeatureType getFeatureType( final GMLWorkspace workspace )
   {
-    final FeatureType rootType = workspace.getRootFeature().getFeatureType();
+    final IFeatureType rootType = workspace.getRootFeature().getFeatureType();
     return getFeatureTypeForSegment( workspace, rootType, 0 );
   }
 
-  private FeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType,
-      final int segmentIndex )
+  private IFeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final IFeatureType featureType, final int segmentIndex )
   {
     if( segmentIndex >= m_segments.length )
       return featureType;
 
     final Segment segment = m_segments[segmentIndex];
-    final FeatureType type = segment.getType( workspace, featureType );
+    final IFeatureType type = segment.getType( workspace, featureType );
 
     return getFeatureTypeForSegment( workspace, type, segmentIndex + 1 );
   }
@@ -127,7 +122,7 @@ public class FeaturePath
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  public String toString( )
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -185,12 +180,12 @@ public class FeaturePath
       m_isId = true;
     }
 
-    public final String getName()
+    public final String getName( )
     {
       return m_name;
     }
 
-    public boolean isID()
+    public boolean isID( )
     {
       return m_isId;
     }
@@ -202,19 +197,15 @@ public class FeaturePath
       if( isID() )
         return workspace.getFeature( name );
 
-      if( name.equals( "gewichtung" ) )
-        System.out.println(); // TODO debug?
 
       final Object value = feature.getProperty( name );
-      if( value == null )
-        System.out.println(); // TODO debug?
 
       // falls ein bestimmter typ gewünscht ist, jetzt filtern
       // geht natürlich nur bei FeatureListen
       if( m_typename != null )
       {
         if( value instanceof FeatureList )
-          return new FilteredFeatureList( (FeatureList)value, m_typename, true );
+          return new FilteredFeatureList( (FeatureList) value, m_typename, true );
 
         return null;
       }
@@ -222,21 +213,21 @@ public class FeaturePath
       return value;
     }
 
-    public FeatureType getType( final GMLWorkspace workspace, final FeatureType featureType )
+    public IFeatureType getType( final GMLWorkspace workspace, final IFeatureType featureType )
     {
       if( isID() )
         return workspace.getFeature( getName() ).getFeatureType();
 
-      final FeatureTypeProperty ftp = featureType.getProperty( getName() );
-      if( ftp instanceof FeatureAssociationTypeProperty )
+      final IPropertyType ftp = featureType.getProperty( getName() );
+      if( ftp instanceof IRelationType )
       {
-        final FeatureAssociationTypeProperty assocFtp = (FeatureAssociationTypeProperty)ftp;
+        final IRelationType relationPT = (IRelationType) ftp;
         if( m_typename != null )
         {
-          final FeatureType[] associationFeatureTypes = assocFtp.getAssociationFeatureTypes();
+          final IFeatureType[] associationFeatureTypes = relationPT.getTargetFeatureTypes( null, false );
           for( int i = 0; i < associationFeatureTypes.length; i++ )
           {
-            final FeatureType type = associationFeatureTypes[i];
+            final IFeatureType type = associationFeatureTypes[i];
             if( m_typename.equals( type.getName() ) )
               return type;
           }
@@ -244,16 +235,17 @@ public class FeaturePath
           return null;
         }
 
-        return assocFtp.getAssociationFeatureType();
+        final IFeatureType[] targetFeatureTypes = relationPT.getTargetFeatureTypes( null, true );
+        if( targetFeatureTypes.length > 0 )
+          return targetFeatureTypes[0];
       }
-
       return null;
     }
 
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString()
+    public String toString( )
     {
       final StringBuffer buffer = new StringBuffer();
 

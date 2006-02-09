@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -64,9 +64,9 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
 
   private final Feature m_feature;
 
-  private final FeatureTypeProperty m_ftp;
+  private final IPropertyType m_ftp;
 
-  public RectifiedGridDomainFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
+  public RectifiedGridDomainFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     m_feature = feature;
     m_ftp = ftp;

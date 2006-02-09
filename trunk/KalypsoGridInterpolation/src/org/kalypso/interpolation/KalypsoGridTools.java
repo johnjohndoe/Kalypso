@@ -33,7 +33,7 @@ public class KalypsoGridTools implements IKalyposGridTools
   private static final MeshReader reader = new MeshReader();
 
   public KalypsoGridTools()
-  {};
+  {}
 
   /*
    * (non-Javadoc)

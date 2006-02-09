@@ -39,9 +39,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -54,11 +54,11 @@ public class ResourceFileDialog implements IFeatureDialog
 
   private Feature m_feature;
 
-  private FeatureTypeProperty m_ftp;
+  private IPropertyType m_ftp;
 
   private FeatureChange m_change;
 
-  public ResourceFileDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public ResourceFileDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -73,16 +73,15 @@ public class ResourceFileDialog implements IFeatureDialog
     resultFile = getResourceFile();
     if( resultFile == null )
       resultFile = workspaceRoot;
-    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null,
-        workspaceRoot );
+    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot );
     final int open;
     selectionDialog.open();
     Object[] result = selectionDialog.getResult();
     if( result != null )
     {
-      Path resultPath = (Path)result[0];
+      Path resultPath = (Path) result[0];
 
-      m_change = new FeatureChange( m_feature, m_ftp.getName(), ResourceUtilities.findFileFromPath( resultPath ) );
+      m_change = new FeatureChange( m_feature, m_ftp, ResourceUtilities.findFileFromPath( resultPath ) );
       open = Window.OK;
     }
     else
@@ -92,12 +91,12 @@ public class ResourceFileDialog implements IFeatureDialog
     return open;
   }
 
-  private IFile getResourceFile()
+  private IFile getResourceFile( )
   {
     if( m_change != null )
-      return (IFile)m_change.getNewValue();
+      return (IFile) m_change.getNewValue();
 
-    return (IFile)m_feature.getProperty( m_ftp.getName() );
+    return (IFile) m_feature.getProperty( m_ftp );
   }
 
   public void collectChanges( Collection c )
@@ -106,7 +105,7 @@ public class ResourceFileDialog implements IFeatureDialog
       c.add( m_change );
   }
 
-  public String getLabel()
+  public String getLabel( )
   {
     String label = "Choose...";
     if( getResourceFile() != null )

@@ -56,7 +56,6 @@ import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.KalypsoUser;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.services.proxy.IUserService;
-import org.kalypso.services.proxy.ScenarioBean;
 
 /**
  * @author schlienger

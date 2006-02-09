@@ -92,18 +92,19 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author N. Peiler
- *  
  */
-public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements RasterDisplayElement,
-    Serializable
+public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements RasterDisplayElement, Serializable
 {
 
   private TiledImage m_surrogateTiledImage;
@@ -126,14 +127,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     super( feature, geometry, symbolizer );
   }
 
-  private TiledImage getImage()
+  private TiledImage getImage( )
   {
     if( m_surrogateTiledImage == null || !m_valid )
     {
-      RasterSymbolizer rasterSym = (RasterSymbolizer)symbolizer;
+      RasterSymbolizer rasterSym = (RasterSymbolizer) symbolizer;
 
-      RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
-      RangeSet rangeSet = (RangeSet)feature.getProperty( "rangeSet" );
+      RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
+      RangeSet rangeSet = (RangeSet) feature.getProperty( "rangeSet" );
 
       Raster surrogateRaster = getSurrogateRaster( rgDomain, rangeSet, rasterSym );
       m_surrogateTiledImage = new TiledImage( getSurrogateImage( surrogateRaster ), true );
@@ -148,12 +149,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   public void paint( Graphics g, GeoTransform projection )
   {
     // cast Graphics to Graphics2D
-    Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D) g;
     // get the geometry informations of the RectifiedGridCoverage
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
     // create the target Coordinate system
-    GM_Object geom = (GM_Object)feature.getVirtuelProperty( "RasterBoundary_rectifiedGridDomain", null );
-    CS_CoordinateSystem cs = geom.getCoordinateSystem();
+
+    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( feature.getFeatureType(), "RasterBoundary_rectifiedGridDomain" );
+    final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
+    final CS_CoordinateSystem cs = geom.getCoordinateSystem();
 
     TiledImage rasterImage = getImage();
 
@@ -166,14 +169,11 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       System.out.println( e );
     }
     /*
-     * Graphics2D g2 = (Graphics2D)g; try {
-     * 
-     * PlanarImage image = getImage(); RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature .getProperty(
-     * "rectifiedGridDomain" ); String targetSrs = "EPSG:31469"; ConvenienceCSFactoryFull csFac = new
-     * ConvenienceCSFactoryFull(); CS_CoordinateSystem cs =
-     * org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( targetSrs ) );
-     * 
-     * GM_Surface destSurface = rgDomain.getGM_Surface( cs ); GM_Ring destExtRing =
+     * Graphics2D g2 = (Graphics2D)g; try { PlanarImage image = getImage(); RectifiedGridDomain rgDomain =
+     * (RectifiedGridDomain)feature .getProperty( "rectifiedGridDomain" ); String targetSrs = "EPSG:31469";
+     * ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull(); CS_CoordinateSystem cs =
+     * org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( targetSrs ) ); GM_Surface
+     * destSurface = rgDomain.getGM_Surface( cs ); GM_Ring destExtRing =
      * destSurface.getSurfaceBoundary().getExteriorRing(); GM_Position llCorner = destExtRing.getPositions()[0];
      * GM_Position lrCorner = destExtRing.getPositions()[1]; GM_Position urCorner = destExtRing.getPositions()[2];
      * GM_Position ulCorner = destExtRing.getPositions()[3]; GM_Position pixel_llCorner = projection.getDestPoint(
@@ -184,47 +184,40 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
      * image.getHeight(); double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX(); double shearY =
      * pixel_lrCorner.getY() - pixel_llCorner.getY(); AffineTransform trafo = new AffineTransform(); trafo.scale(
      * scaleX, scaleY ); trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
-     * trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
-     * 
-     * GM_Position scaledImage_min = pixel_ulCorner; GM_Position scaledImage_max = GeometryFactory.createGM_Position(
-     * pixel_urCorner.getX(), pixel_llCorner.getY() );
-     * 
+     * trafo.shear( shearX / destImageHeight, shearY / destImageWidth ); GM_Position scaledImage_min = pixel_ulCorner;
+     * GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
      * GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
      * scaledImage_min.getY() - Math.abs( shearY ) ); GM_Position buffImage_max = GeometryFactory.createGM_Position(
      * scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) ); GM_Envelope
-     * buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-     * 
-     * BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv .getHeight(),
-     * BufferedImage.TYPE_INT_ARGB ); Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
-     * //bufferGraphics.setColor(Color.GREEN); bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-     * bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
-     * bufferGraphics.drawRenderedImage( image, trafo ); g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
-     * (int)buffImageEnv.getMin().getY(), null ); } catch( Exception e ) { // TODO Auto-generated catch block
-     * e.printStackTrace(); }
+     * buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max ); BufferedImage buffer = new
+     * BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv .getHeight(), BufferedImage.TYPE_INT_ARGB );
+     * Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics(); //bufferGraphics.setColor(Color.GREEN);
+     * bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) ); bufferGraphics.fillRect( 0, 0,
+     * (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() ); bufferGraphics.drawRenderedImage( image, trafo );
+     * g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(), null ); } catch(
+     * Exception e ) { // TODO Auto-generated catch block e.printStackTrace(); }
      */
   }
 
-  public void drawRasterImage( Graphics2D g2, GeoTransform projection, TiledImage rasterImage,
-      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS ) throws Exception
+  public void drawRasterImage( Graphics2D g2, GeoTransform projection, TiledImage rasterImage, RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS ) throws Exception
   {
-    //  get the Screen extent in real coordinates
+    // get the Screen extent in real coordinates
     GM_Envelope sourceScreenRect = projection.getSourceRect();
     // create a surface and transform it in the coordinate system of the
     // RectifiedGridCoverage
     GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
     GM_Surface destScreenSurface = null;
-    if( !( targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) ) )
+    if( !(targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() )) )
     {
       GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
-      destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
+      destScreenSurface = (GM_Surface) geoTrans1.transform( sourceScreenSurface );
     }
     else
     {
       destScreenSurface = sourceScreenSurface;
     }
     // get the gridExtent for the envelope of the surface
-    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null )
-        .getCoordinateSystem() );
+    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
     int lowX = gridExtent[0];
     int lowY = gridExtent[1];
     int highX = gridExtent[2];
@@ -266,8 +259,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     AffineTransform trafo = new AffineTransform();
     // translate the image, so that the subImage is at the right position
-    trafo
-        .translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY() - pixel_ulCorner.getY() );
+    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY() - pixel_ulCorner.getY() );
     // scale the image
     trafo.scale( scaleX, scaleY );
     // translate the image to compensate the shearing
@@ -279,23 +271,20 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     GM_Position scaledImage_min = pixel_ulCorner;
     GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
 
-    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
-        scaledImage_min.getY() - Math.abs( shearY ) );
-    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ),
-        scaledImage_max.getY() + Math.abs( shearY ) );
+    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
+    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
     GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
 
-    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight(),
-        BufferedImage.TYPE_INT_ARGB );
-    Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
-    //bufferGraphics.setColor(Color.GREEN);
+    BufferedImage buffer = new BufferedImage( (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight(), BufferedImage.TYPE_INT_ARGB );
+    Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
+    // bufferGraphics.setColor(Color.GREEN);
     // draw a transparent backround on the bufferedImage
     bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-    bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+    bufferGraphics.fillRect( 0, 0, (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight() );
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
     // draw bufferedImage on the screen
-    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(), null );
+    g2.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
   }
 
   /**
@@ -324,8 +313,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   private PlanarImage getPlanarImage( Raster raster )
   {
     ColorModel colorModel = PlanarImage.createColorModel( raster.getSampleModel() );
-    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster.getHeight(), 0, 0, raster.getSampleModel(),
-        colorModel );
+    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster.getHeight(), 0, 0, raster.getSampleModel(), colorModel );
     tiledImage.setData( raster );
     return tiledImage;
   }
@@ -352,43 +340,43 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     Vector rangeSetData = rangeSet.getRangeSetData();
     for( int i = 0; i < rangeSetData.size(); i++ )
     {
-      Vector rangeSetDataRow = (Vector)rangeSetData.get( i );
+      Vector rangeSetDataRow = (Vector) rangeSetData.get( i );
       for( int j = 0; j < rangeSetDataRow.size(); j++ )
       {
         Color actualColor = Color.DARK_GRAY;
         int alphaValue = 255;
         if( rangeSetDataRow.get( j ) != null )
         {
-          double actualValue = ( (Double)rangeSetDataRow.get( j ) ).doubleValue();
+          double actualValue = ((Double) rangeSetDataRow.get( j )).doubleValue();
           switch( mode )
           {
-          case mode_intervalColorMapping:
-          {
-            Iterator it = intervalMap.keySet().iterator();
-            while( it.hasNext() )
+            case mode_intervalColorMapping:
             {
-              Interval interval = (Interval)it.next();
-              if( interval.contains( actualValue ) )
+              Iterator it = intervalMap.keySet().iterator();
+              while( it.hasNext() )
               {
-                actualColor = (Color)intervalMap.get( interval );
-                alphaValue = actualColor.getAlpha();
-                break;
+                Interval interval = (Interval) it.next();
+                if( interval.contains( actualValue ) )
+                {
+                  actualColor = (Color) intervalMap.get( interval );
+                  alphaValue = actualColor.getAlpha();
+                  break;
+                }
               }
+              break;
             }
-            break;
-          }
-          case mode_valueColorMapping:
-          {
-            TreeMap colorMap = rasterSym.getColorMap();
-            if( colorMap.containsKey( new Double( actualValue ) ) )
+            case mode_valueColorMapping:
             {
-              ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( actualValue ) );
-              actualColor = colorMapEntry.getColor();
-              double opacity = colorMapEntry.getOpacity();
-              alphaValue = (int)Math.round( opacity * 255 );
+              TreeMap colorMap = rasterSym.getColorMap();
+              if( colorMap.containsKey( new Double( actualValue ) ) )
+              {
+                ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( new Double( actualValue ) );
+                actualColor = colorMapEntry.getColor();
+                double opacity = colorMapEntry.getOpacity();
+                alphaValue = (int) Math.round( opacity * 255 );
+              }
+              break;
             }
-            break;
-          }
           }
         }
         else
@@ -397,10 +385,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           double nullValue = -9999;
           if( colorMap.containsKey( new Double( nullValue ) ) )
           {
-            ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( nullValue ) );
+            ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( new Double( nullValue ) );
             actualColor = colorMapEntry.getColor();
             double opacity = colorMapEntry.getOpacity();
-            alphaValue = (int)Math.round( opacity * 255 );
+            alphaValue = (int) Math.round( opacity * 255 );
           }
           else
           {
@@ -411,10 +399,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
         int redValue = actualColor.getRed();
         int greenValue = actualColor.getGreen();
         int blueValue = actualColor.getBlue();
-        dataBuffer.setElem( 0, j + ( i * nCols ), redValue );
-        dataBuffer.setElem( 1, j + ( i * nCols ), greenValue );
-        dataBuffer.setElem( 2, j + ( i * nCols ), blueValue );
-        dataBuffer.setElem( 3, j + ( i * nCols ), alphaValue );
+        dataBuffer.setElem( 0, j + (i * nCols), redValue );
+        dataBuffer.setElem( 1, j + (i * nCols), greenValue );
+        dataBuffer.setElem( 2, j + (i * nCols), blueValue );
+        dataBuffer.setElem( 3, j + (i * nCols), alphaValue );
       }
     }
     Point origin = new Point( 0, 0 );

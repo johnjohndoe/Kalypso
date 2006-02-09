@@ -32,10 +32,10 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -93,22 +93,23 @@ public class RelationCircleFinder
   private Feature[] getLinkedFeatures( Feature feature )
   {
     List result = new ArrayList();
-    FeatureType featureType = feature.getFeatureType();
-    FeatureTypeProperty[] properties = featureType.getProperties();
+    IFeatureType featureType = feature.getFeatureType();
+    IPropertyType[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      FeatureTypeProperty property = properties[i];
-      if( property instanceof FeatureAssociationTypeProperty )
+      IPropertyType property = properties[i];
+      if( property instanceof IRelationType )
       {
-        if( featureType.getMaxOccurs( property.getName() ) == 1 )
+        final IRelationType linkPT=(IRelationType) property;
+        if(  property.getMaxOccurs()  == 1 )
         {
-          Feature link = m_workspace.resolveLink( feature, property.getName() );
+          Feature link = m_workspace.resolveLink( feature, linkPT );
           if( link != null )
             result.add( link );
         }
         else
         {
-          Feature[] links = m_workspace.resolveLinks( feature, property.getName() );
+          Feature[] links = m_workspace.resolveLinks( feature, linkPT );
           result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
         }
       }

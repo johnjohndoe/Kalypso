@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -64,13 +65,13 @@ public class RemoveRelationCommand implements ICommand
 
   private final Feature m_destFE;
 
-  private final String m_linkPropName;
+  private final IRelationType m_linkPropName;
 
   private final boolean m_isComposition;
 
   private final int m_pos;
 
-  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkPropName, Feature destFE )
+  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType linkPropName, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;

@@ -37,16 +37,18 @@ import java.util.Properties;
 
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
@@ -79,10 +81,9 @@ public class CopyObservationMappingHelper
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS );
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
-    final FeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
+    final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
     final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT, true );
-    return new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, context, null, schema.getTargetNS(), schema
-        .getNamespaceMap() );
+    return new GMLWorkspace_Impl(schema, schema.getAllFeatureTypes(), rootFE, context, null);
   }
 
   /**
@@ -99,21 +100,21 @@ public class CopyObservationMappingHelper
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
-    final FeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
+    final IFeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
     final Feature mapFE = workspace.createFeature( mapFT );
     // in
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     inLink.setHref( inHref );
-    final FeatureProperty inProp = FeatureFactory.createFeatureProperty(
-        CopyObservationMappingHelper.RESULT_TS_IN_PROP, inLink );
-    mapFE.setProperty( inProp );
+    final IPropertyType pt = FeatureHelper.getPT(mapFE, CopyObservationMappingHelper.RESULT_TS_IN_PROP);
+    mapFE.setProperty(pt, inLink);
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
-    final FeatureProperty outProp = FeatureFactory.createFeatureProperty( RESULT_TS_OUT_PROP, outLink );
-    mapFE.setProperty( outProp );
-    workspace.addFeatureAsComposition( workspace.getRootFeature(), RESULT_LIST_PROP, 0, mapFE );
+    final IPropertyType pt2 = FeatureHelper.getPT(mapFE, RESULT_TS_OUT_PROP);
+    mapFE.setProperty( pt2,outLink );
+    final IRelationType pt3 = (IRelationType) FeatureHelper.getPT(mapFE, RESULT_LIST_PROP);
+    workspace.addFeatureAsComposition( workspace.getRootFeature(), pt3, 0, mapFE );
   }
 
   /**

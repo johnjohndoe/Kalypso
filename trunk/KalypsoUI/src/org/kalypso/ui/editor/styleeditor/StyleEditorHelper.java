@@ -1,7 +1,8 @@
 package org.kalypso.ui.editor.styleeditor;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -46,11 +47,11 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 public class StyleEditorHelper
 {
-  public static FeatureTypeProperty getFeatureTypeProperty( FeatureType ft, String propName )
+  public static IPropertyType getFeatureTypeProperty( IFeatureType ft, String propName )
   {
-    final FeatureTypeProperty ftp = ft.getProperty( propName );
+    final IPropertyType ftp = ft.getProperty( propName );
     if( ftp == null )
-      return ft.getVirtuelFeatureTypeProperty( propName );
+      return VirtualPropertyUtilities.getPropertyType( ft, propName);
     return ftp;
   }
 }

@@ -73,6 +73,7 @@ import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Element;
 
@@ -247,7 +248,7 @@ public class SpatialOperation extends AbstractOperation
    */
   public GM_Object getGeometryProperty( Feature feature ) throws FilterEvaluationException
   {
-    Object o = feature.getProperty( propertyName.getValue() );
+    Object o = feature.getProperty(propertyName.getValue() );
 
     if( o != null && !( o instanceof GM_Object ) )
     {

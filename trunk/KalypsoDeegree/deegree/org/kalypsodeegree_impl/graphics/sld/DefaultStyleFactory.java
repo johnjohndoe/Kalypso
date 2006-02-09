@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.deegree.services.wms.StyleNotDefinedException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -95,7 +96,7 @@ public class DefaultStyleFactory
     throw new IOException( "The name for the default style directory is not a valid path." );
   }
 
-  private String getStyle( final FeatureType featureType, final String styleName ) throws StyleNotDefinedException
+  private String getStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
   {
     final StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
     return ( (StyledLayerDescriptor_Impl)sld ).exportAsXML();
@@ -110,7 +111,7 @@ public class DefaultStyleFactory
    * @return returns the location (absolute path to local file system ) where the style is saved in a file
    *  
    */
-  public URL getDefaultStyle( FeatureType featureType, String styleName ) throws StyleNotDefinedException
+  public URL getDefaultStyle( IFeatureType featureType, String styleName ) throws StyleNotDefinedException
   {
     String myStyleName = styleName;
     if( myStyleName == null )
@@ -138,7 +139,7 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( final FeatureType featureType, final String styleName )
+  private StyledLayerDescriptor createDefaultStyle( final IFeatureType featureType, final String styleName )
       throws StyleNotDefinedException
   {
     final UserStyle userStyle = createUserStyle( featureType, styleName );
@@ -151,26 +152,26 @@ public class DefaultStyleFactory
   }
 
   /** Create a default user style for a given type name. */
-  public UserStyle createUserStyle( final FeatureType featureType, final String styleName )
+  public UserStyle createUserStyle( final IFeatureType featureType, final String styleName )
       throws StyleNotDefinedException
   {
     final ArrayList symbolizer = new ArrayList();
     if( featureType.getName().equals( "RectifiedGridCoverage" ) )
       symbolizer.add( createRasterSymbolizer() );
 
-    final FeatureTypeProperty[] properties = featureType.getProperties();
+    final IPropertyType[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      final FeatureTypeProperty property = properties[i];
-      if( GeometryUtilities.isUndefinedGeometry( property ) )
+      final IPropertyType pt = properties[i];
+      if( pt instanceof IValuePropertyType && GeometryUtilities.isUndefinedGeometry((IValuePropertyType) pt ) )
       {
         symbolizer.add( StyleFactory.createPointSymbolizer() );
         symbolizer.add( StyleFactory.createLineSymbolizer() );
         symbolizer.add( StyleFactory.createPolygonSymbolizer() );
       }
-      else if( GeometryUtilities.isGeometry( property ) )
+      else if( GeometryUtilities.isGeometry( pt ) )
       {
-        symbolizer.add( createGeometrySymbolizer( property ) );
+        symbolizer.add( createGeometrySymbolizer((IValuePropertyType) pt ) );
       }
     }
 
@@ -197,7 +198,7 @@ public class DefaultStyleFactory
     return sld;
   }
 
-  //  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
+  //  private Symbolizer createTextSymbolizer( IPropertyType property ) throws StyleNotDefinedException
   //  {
   //    String type = property.getType();
   //    if( type.equals( String.class.getName() ) )
@@ -209,8 +210,9 @@ public class DefaultStyleFactory
   //        + property.getName() );
   //  }
 
-  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty ftp ) throws StyleNotDefinedException
+  private Symbolizer createGeometrySymbolizer( IValuePropertyType ftp ) throws StyleNotDefinedException
   {
+    
     if( GeometryUtilities.isPointGeometry( ftp ) )
       return StyleFactory.createPointSymbolizer();
     else if( GeometryUtilities.isLineStringGeometry( ftp ) )
@@ -218,7 +220,7 @@ public class DefaultStyleFactory
     else if( GeometryUtilities.isPolygonGeometry( ftp ) )
       return StyleFactory.createPolygonSymbolizer();
     else
-      throw new StyleNotDefinedException( "This geometry type: " + ftp.getType() + " has no default style available" );
+      throw new StyleNotDefinedException( "This geometry type: " + ftp.getQName() + " has no default style available" );
   }
 
   private Symbolizer createRasterSymbolizer()
@@ -226,7 +228,7 @@ public class DefaultStyleFactory
     return StyleFactory.createRasterSymbolizer();
   }
 
-  private Integer generateKey( FeatureType ft )
+  private Integer generateKey( IFeatureType ft )
   {
 
     String key = ft.getNamespace() + " " + ft.getName();

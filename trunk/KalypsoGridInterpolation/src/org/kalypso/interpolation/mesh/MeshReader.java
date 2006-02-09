@@ -71,7 +71,6 @@ import com.vividsolutions.jts.algorithm.CGAlgorithms;
 /**
  * KalypsoFileParser
  * <p>
- * 
  * created by
  * 
  * @author kuepfer (27.05.2005)
@@ -86,7 +85,7 @@ public class MeshReader
 
   private ElementTable m_elements = null;
 
-  //  private boolean m_initialise = false;
+  // private boolean m_initialise = false;
 
   protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String shapeBase )
   {
@@ -98,30 +97,28 @@ public class MeshReader
     GM_Surface finalWishbox = null;
     try
     {
-      //read border line
+      // read border line
       if( shapeBase != null )
       {
         GM_Object border = readBorder( shapeBase, cs );
 
         if( border instanceof GM_Surface )
-          mesh.setBorderLine( (GM_Surface)border );
+          mesh.setBorderLine( (GM_Surface) border );
         else if( border instanceof GM_Polygon )
         {
 
-          mesh.setBorderLine( GeometryFactory.createGM_Surface( ( (GM_Polygon)border ).getExteriorRing(), null, null,
-              cs ) );
+          mesh.setBorderLine( GeometryFactory.createGM_Surface( ((GM_Polygon) border).getExteriorRing(), null, null, cs ) );
         }
         else
-          throw new Exception( "the border line is of type " + border.getClass().toString()
-              + " and not as required of type " + GeometryUtilities.getPolygonClass().getName() + ".\nProgram aborted!" );
-        //kleinstes Polygon um die elemente zu suchen
+          throw new Exception( "the border line is of type " + border.getClass().toString() + " and not as required of type " + GeometryUtilities.getPolygonClass().getName() + ".\nProgram aborted!" );
+        // kleinstes Polygon um die elemente zu suchen
         if( wishbox == null )
           finalWishbox = mesh.getBorderLine();
         else
-          finalWishbox = (GM_Surface)border.intersection( wishbox );
+          finalWishbox = (GM_Surface) border.intersection( wishbox );
       }
       String fileName;
-      //for each file
+      // for each file
       for( int i = 0; i < files.length; i++ )
       {
         fileName = files[i].getName();
@@ -129,24 +126,24 @@ public class MeshReader
         // node-file
         if( fileName.matches( ".+\\.(n|N)(o|O)(d|D)(e|E)$" ) )
           nodefile = files[i];
-        //element file
+        // element file
         if( fileName.matches( ".+\\.(e|E)(l|L)(e|E)$" ) )
           elementfile = files[i];
-        //attribut file containing elevations
+        // attribut file containing elevations
         if( fileName.matches( ".+\\.(d|D)(a|A)(t|T)$" ) )
           attributefile = files[i];
-        //gml file containing set of polygons/elements
+        // gml file containing set of polygons/elements
         if( fileName.matches( ".+\\.(g|G)(m|M)(l|L)$" ) )
           gmlfile = files[i];
         if( fileName.matches( ".+\\.(s|S)(h|H)(p|P)$" ) )
         {
           shapefile.add( files[i] );
         }
-      }//for i
+      }// for i
       if( gmlfile == null && shapefile.size() == 0 )
       {
         System.out.println( "Starting Import.." );
-        //reads node file
+        // reads node file
         m_points = createNodes( nodefile, attributefile, cs );
 
         createElements( elementfile, cs, mesh, finalWishbox );
@@ -157,7 +154,7 @@ public class MeshReader
       else if( gmlfile != null )
       {
 
-        //read gml file
+        // read gml file
         System.out.print( "\n" + "Importing gml file.." );
         readGmlFile( gmlfile, cs, mesh );
         System.out.print( "finished" );
@@ -167,7 +164,7 @@ public class MeshReader
       else if( shapefile.size() > 0 )
       {
         System.out.print( "\n" + "Importing shp file.." );
-        //TODO property muss angegeben werden
+        // TODO property muss angegeben werden
         String property = "FLIESSTIEFE";
         readShapeFiles( mesh, shapefile, property, cs, wishbox );
       }
@@ -189,75 +186,74 @@ public class MeshReader
     System.out.println( "Reading Nodes.." );
     try
     {
-      //reads the file into string tokernizer
+      // reads the file into string tokernizer
       StreamTokenizer st = new StreamTokenizer( new InputStreamReader( new FileInputStream( nodefile ) ) );
       st.parseNumbers(); // sets the tokenizer to parse for numbers
       st.nextToken();
       st.nextToken();
       st.nextToken();
       st.nextToken();
-      //till endoffile
+      // till endoffile
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
-        String pointID = String.valueOf( (int)st.nval );
+        String pointID = String.valueOf( (int) st.nval );
         st.nextToken();
         double xcor = st.nval;
         st.nextToken();
         double ycor = st.nval;
         st.nextToken();
-        //create a point from x,y coordinate and with dummy initial
+        // create a point from x,y coordinate and with dummy initial
         // elevation attribute
         Point p = new Point( pointID, xcor, ycor, crs );
         pt.addPoint( p );
-      }//while
-    }//try
+      }// while
+    }// try
     catch( Exception e )
     {
       System.out.println( "Exception: " + e.toString() );
     }
-    //assigning BoundigBox of Mesh
+    // assigning BoundigBox of Mesh
     try
     {
       System.out.print( pt.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv );
       System.out.println( "Reading Attributes.." );
-      //reads file into streamtokenizer
+      // reads file into streamtokenizer
       StreamTokenizer st = new StreamTokenizer( new InputStreamReader( new FileInputStream( attributefile ) ) );
       st.parseNumbers(); // sets the tonenizer to parse for numbers
       st.nextToken();
-      //      int nrOfRows = (int)st.nval;
-      //till endoffile
+      // int nrOfRows = (int)st.nval;
+      // till endoffile
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
-        //reads the ID
-        String pointID = String.valueOf( (int)( st.nval                                                                                                      ) );
+        // reads the ID
+        String pointID = String.valueOf( (int) (st.nval                                                                                                      ) );
         st.nextToken();
-        //reads elevation value
+        // reads elevation value
         Double elevation = new Double( st.nval );
-        //creates FeatureProperty with the elevation value
+        // creates FeatureProperty with the elevation value
         Point p = pt.getPoint( pointID );
         if( p != null )
           p.addAttribute( elevation, true );
         else
           throw new Exception( "Point does not exist!" );
-      }//while
-    }//try
+      }// while
+    }// try
     catch( Exception e )
     {
       System.out.println( "Exception : " + e.toString() );
-    }//catch
+    }// catch
 
     System.out.print( "finished" );
 
     return pt;
 
-  }//createNodes
+  }// createNodes
 
-  private void createElements( File elementfile, CS_CoordinateSystem crs, Mesh mesh, GM_Surface wishbox )
-      throws Exception
+  private void createElements( File elementfile, CS_CoordinateSystem crs, Mesh mesh, GM_Surface wishbox ) throws Exception
   {
     System.out.println( "Reading Elements.." );
-    //reads file into streamtokenizer
+    // reads file into streamtokenizer
     BufferedReader bEleFReader = new BufferedReader( new InputStreamReader( new FileInputStream( elementfile ) ) );
     StringTokenizer st;
     String eleLine = bEleFReader.readLine();
@@ -273,11 +269,11 @@ public class MeshReader
     for( eleLine = bEleFReader.readLine(); eleLine != null; eleLine = bEleFReader.readLine() )
     {
       st = new StringTokenizer( eleLine );
-      int totalNodes = st.countTokens() - 1;//-1 was not there, but
+      int totalNodes = st.countTokens() - 1;// -1 was not there, but
       // changed later
 
       if( totalNodes == 3 || totalNodes == 4 )
-      {//check element is
+      {// check element is
         // triangle or
         // parallelogram and
         // nothing else
@@ -299,7 +295,7 @@ public class MeshReader
         }
         if( nodeCounter == 3 )
         {// its element is triangle
-          //First vertex equals last vertex - > defines a closed
+          // First vertex equals last vertex - > defines a closed
           // element!
           verticies[3] = verticies[0];
           MeshElement me = new MeshElement( elementID, verticies, pointarray, crs );
@@ -309,21 +305,21 @@ public class MeshReader
             mesh.addElement( me );
         }
         if( nodeCounter == 4 )
-        {//if element is parallelogram then
+        {// if element is parallelogram then
           // split that into 2 triangles
           verticies[4] = verticies[0];
           MeshElement me = new MeshElement( elementID, verticies, pointarray, crs );
-          int pType = me.getPolygonType();//get type of
+          int pType = me.getPolygonType();// get type of
           // parallelogram
           // (Convex or Concave)
           if( pType == Element.CONCAVE_POLYGON )
-          {//if its Concave,
+          {// if its Concave,
             // then its
             // not supported
             throw new Exception( "Concave polygon import is not supported yet." );
           }
 
-          //otherwise if its Convex then split it based on
+          // otherwise if its Convex then split it based on
           // diagonal slope and keep it least
           MeshElement[] splitElements = me.splitElement();
 
@@ -336,16 +332,16 @@ public class MeshReader
               mesh.addElement( element );
           }
         }
-      }//if 3 || 4
+      }// if 3 || 4
       else
       {
         throw new Exception( "Element having less than 3 or more than 4 nodes is not supported." );
       }
-    }//for
+    }// for
     System.out.print( " finished" );
     System.out.println( "Total MeshElements read: " + mesh.size() );
 
-  }//createElements
+  }// createElements
 
   private void readGmlFile( File gmlfile, CS_CoordinateSystem cs, Mesh mesh ) throws Exception
   {
@@ -354,12 +350,12 @@ public class MeshReader
     Document d = null;
 
     m_points = new PointTable();
-    //    m_elements = new ElementTable();
+    // m_elements = new ElementTable();
 
     try
     {
       db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-      //read gml file into dom document object
+      // read gml file into dom document object
       d = db.parse( gmlfile );
 
     }
@@ -398,7 +394,7 @@ public class MeshReader
 
       Node n;
       String pNr;
-      //      Point p;
+      // Point p;
       double xcor, ycor, xmin = 0.0, ymin = 0.0, xmax = 0.0, ymax = 0.0;
       Double attribute;
 
@@ -407,7 +403,7 @@ public class MeshReader
         for( int i = 0; i < pointList.getLength(); i++ )
         {
           n = pointList.item( i );
-          //System.out.println(XPathAPI.selectSingleNode(n,"feId/text()").getNodeValue());
+          // System.out.println(XPathAPI.selectSingleNode(n,"feId/text()").getNodeValue());
 
           pNr = XPathAPI.selectSingleNode( n, ".//@fid" ).getNodeValue();
 
@@ -437,8 +433,8 @@ public class MeshReader
             else if( ycor > ymax )
               ymax = ycor;
           }
-          //         p = new Point( pNr, attribute, xcor, ycor, cs );
-          //         m_points.addPoint( p );
+          // p = new Point( pNr, attribute, xcor, ycor, cs );
+          // m_points.addPoint( p );
           points.put( String.valueOf( xcor ) + String.valueOf( ycor ), attribute );
         }
       }
@@ -447,9 +443,9 @@ public class MeshReader
         System.out.println( "Exception: " + exception.toString() );
       }
 
-      //assigning BoundigBox of Mesh
+      // assigning BoundigBox of Mesh
       m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), cs );
-      //logWriter.newLine();
+      // logWriter.newLine();
       System.out.println( "Total Nodes read: " + m_points.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv.toString() );
     }
@@ -472,9 +468,9 @@ public class MeshReader
 
       Node n;
       String eNr;
-      //      Element e, e1, e2;
+      // Element e, e1, e2;
       MeshElement me;
-      //      Point p;
+      // Point p;
       String outerBoundry, coordinates[];
       double xcor, ycor;
 
@@ -488,8 +484,7 @@ public class MeshReader
 
           System.out.println( "reading element :" + eNr );
 
-          outerBoundry = XPathAPI.selectSingleNode( n, ".//outerBoundaryIs/LinearRing/coordinates/text()" )
-              .getNodeValue();
+          outerBoundry = XPathAPI.selectSingleNode( n, ".//outerBoundaryIs/LinearRing/coordinates/text()" ).getNodeValue();
           coordinates = outerBoundry.split( " " );
 
           int totalNodes = coordinates.length;
@@ -497,7 +492,7 @@ public class MeshReader
           GM_Position[] verticies = new GM_Position[totalNodes];
           double[] values = new double[totalNodes];
           if( totalNodes == 4 || totalNodes == 5 )
-          {//check element is
+          {// check element is
             // triangle or
             // parallelogram and
             // nothing else
@@ -506,46 +501,45 @@ public class MeshReader
               String[] pnt = coordinates[c].split( "," );
               xcor = Double.parseDouble( pnt[0] );
               ycor = Double.parseDouble( pnt[1] );
-              //pNr =
+              // pNr =
               // XPathAPI.selectSingleNode(e,"//featurePoint/id[.//X/text()=pnt[0]
               // and .//Y/text()=pnt[1]]/text()").getNodeValue();
-              curPoint = XPathAPI.selectSingleNode( root, ".//featurePoint[.//X/text()='" + pnt[0]
-                  + "' and .//Y/text()= '" + pnt[1] + "']" );
+              curPoint = XPathAPI.selectSingleNode( root, ".//featurePoint[.//X/text()='" + pnt[0] + "' and .//Y/text()= '" + pnt[1] + "']" );
               /* pNr = */XPathAPI.selectSingleNode( curPoint, ".//@fid" ).getNodeValue();
-              //Node attr =
+              // Node attr =
               // XPathAPI.selectSingleNode(curPoint,".//riverDepth/text()");
 
-              double value = ( (Double)points.get( String.valueOf( xcor ) + String.valueOf( ycor ) ) ).doubleValue();
+              double value = ((Double) points.get( String.valueOf( xcor ) + String.valueOf( ycor ) )).doubleValue();
               values[nodeCounter] = value;
               verticies[nodeCounter++] = GeometryFactory.createGM_Position( xcor, ycor );
-              //              if( value <= 0.0 )
-              //                m_initialise = true;
+              // if( value <= 0.0 )
+              // m_initialise = true;
             }
 
-            //*System.out.println("nodeocunter:" + nodeCounter);
+            // *System.out.println("nodeocunter:" + nodeCounter);
             if( nodeCounter == 4 )
             {// its element is triangle
-              //              e = new Element( eNr, vertIDs, verticies, cs );
+              // e = new Element( eNr, vertIDs, verticies, cs );
               me = new MeshElement( eNr, verticies, values, cs );
               mesh.addElement( me );
-              //              m_elements.addElement( e );
+              // m_elements.addElement( e );
             }
             if( nodeCounter == 5 )
-            {//if element is parallelogram then
+            {// if element is parallelogram then
               // split that into 2 triangles
-              //              e = new Element( eNr, vertIDs, verticies, cs );
+              // e = new Element( eNr, vertIDs, verticies, cs );
               me = new MeshElement( eNr, verticies, values, cs );
-              int pType = me.getPolygonType();//get type of
+              int pType = me.getPolygonType();// get type of
               // parallelogram
               // (Convex or Concave)
               if( pType == Element.CONCAVE_POLYGON )
-              {//if its Concave,
+              {// if its Concave,
                 // then its
                 // not supported
                 throw new Exception( "Concave polygon import is not supported yet." );
               }
 
-              //otherwise if its Convex then split it based on
+              // otherwise if its Convex then split it based on
               // diagonal slope and keep it least
               MeshElement[] splitElements = me.splitElement();
               for( int j = 0; j < splitElements.length; j++ )
@@ -554,42 +548,40 @@ public class MeshReader
                 mesh.addElement( element );
               }
             }
-          }//if 3 || 4
+          }// if 3 || 4
           else
           {
             throw new Exception( "Element having less than 3 or more than 4 nodes is not supported." );
           }
 
-        }//for
+        }// for
       }
       catch( Exception exception )
       {
         System.out.println( "Exception: " + exception.toString() );
       }
       System.out.println( m_elements.size() + " elements created." );
-    }//if
+    }// if
     mesh.setBoundingBox( m_meshEnv );
-  }//readGmlFile
+  }// readGmlFile
 
   private void readShapeFiles( Mesh mesh, Vector shapefile, String property, CS_CoordinateSystem crs, GM_Surface wishbox )
   {
     for( int i = 0; i < shapefile.size(); i++ )
     {
-      File file = (File)shapefile.get( i );
+      File file = (File) shapefile.get( i );
       String shapebase = FileUtilities.nameWithoutExtension( file.getPath() );
       try
       {
         GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs );
         Feature root = gml.getRootFeature();
-        List features = (List)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-        //check geometry type to disdinguish the two diffrent files
-        GM_Object geom = ( (Feature)features.get( 0 ) ).getDefaultGeometryProperty();
+        List features = (List) root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+        // check geometry type to disdinguish the two diffrent files
+        GM_Object geom = ((Feature) features.get( 0 )).getDefaultGeometryProperty();
         if( geom instanceof GM_Point )
-          createNodes( (Feature[])features.toArray( new Feature[features.size()] ), ShapeSerializer.PROPERTY_GEOMETRY,
-              property );
+          createNodes( (Feature[]) features.toArray( new Feature[features.size()] ), ShapeSerializer.PROPERTY_GEOMETRY.getLocalPart(), property );
         if( geom instanceof GM_Surface )
-          createElements( mesh, (Feature[])features.toArray( new Feature[features.size()] ),
-              ShapeSerializer.PROPERTY_GEOMETRY, wishbox );
+          createElements( mesh, (Feature[]) features.toArray( new Feature[features.size()] ), ShapeSerializer.PROPERTY_GEOMETRY.getLocalPart(), wishbox );
       }
       catch( GmlSerializeException e )
       {
@@ -600,7 +592,7 @@ public class MeshReader
         e.printStackTrace();
       }
 
-    }//for
+    }// for
   }
 
   private void createNodes( Feature[] pointFeature, String geometryPropertyPoint, String valueProperty )
@@ -608,15 +600,14 @@ public class MeshReader
     for( int i = 0; i < pointFeature.length; i++ )
     {
       Feature feature = pointFeature[i];
-      GM_Point geom = (GM_Point)feature.getProperty( geometryPropertyPoint );
+      GM_Point geom = (GM_Point) feature.getProperty( geometryPropertyPoint );
       Object value = feature.getProperty( valueProperty );
       String key = String.valueOf( geom.getX() ) + "#" + String.valueOf( geom.getY() );
       m_hasMapPoints.put( key, value );
     }
   }
 
-  private void createElements( Mesh mesh, Feature[] meshElements, String geometryProperteyElement, GM_Surface wishbox )
-      throws GM_Exception
+  private void createElements( Mesh mesh, Feature[] meshElements, String geometryProperteyElement, GM_Surface wishbox ) throws GM_Exception
   {
     CS_CoordinateSystem cs = null;
     for( int i = 0; i < meshElements.length; i++ )
@@ -627,13 +618,13 @@ public class MeshReader
       Object geom = feature.getProperty( geometryProperteyElement );
       if( geom instanceof GM_Polygon )
       {
-        positions = ( (GM_Polygon)geom ).getExteriorRing();
-        cs = ( (GM_Polygon)geom ).getCoordinateSystem();
+        positions = ((GM_Polygon) geom).getExteriorRing();
+        cs = ((GM_Polygon) geom).getCoordinateSystem();
       }
       else if( geom instanceof GM_Surface )
       {
-        positions = ( (GM_Surface)geom ).getSurfaceBoundary().getExteriorRing().getPositions();
-        cs = ( (GM_Surface)geom ).getCoordinateSystem();
+        positions = ((GM_Surface) geom).getSurfaceBoundary().getExteriorRing().getPositions();
+        cs = ((GM_Surface) geom).getCoordinateSystem();
       }
       double[] values = new double[positions.length];
       for( int j = 0; j < positions.length; j++ )
@@ -643,12 +634,11 @@ public class MeshReader
         if( value != null )
         {
           if( value instanceof Double )
-            values[j] = ( (Double)value ).doubleValue();
+            values[j] = ((Double) value).doubleValue();
           else if( value instanceof Float )
-            values[j] = ( (Float)value ).doubleValue();
+            values[j] = ((Float) value).doubleValue();
           else
-            throw new NumberFormatException( "The value to interpolate is of type " + value.getClass().toString()
-                + " instead of Float or Double.\n" + "Change type in shape file!" );
+            throw new NumberFormatException( "The value to interpolate is of type " + value.getClass().toString() + " instead of Float or Double.\n" + "Change type in shape file!" );
         }
         else
           throw new GM_Exception( "Point: " + pos + " has no value assigned. Mesh import aborted" );
@@ -700,20 +690,17 @@ public class MeshReader
     }
   }// createElements
 
-  public void importMesh( Mesh mesh, Feature[] points, String geometryPropertyPoints, String valueProperty,
-      Feature[] elements, String geometryPropertyElements, GM_Surface wishbox ) throws GM_Exception
+  public void importMesh( Mesh mesh, Feature[] points, String geometryPropertyPoints, String valueProperty, Feature[] elements, String geometryPropertyElements, GM_Surface wishbox ) throws GM_Exception
   {
-
     createNodes( points, geometryPropertyPoints, valueProperty );
     createElements( mesh, elements, geometryPropertyElements, wishbox );
-
   }
 
   private GM_Object readBorder( String shapefile, CS_CoordinateSystem cs ) throws GmlSerializeException
   {
     GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs );
     Feature root = ws.getRootFeature();
-    FeatureList geoProperty = (FeatureList)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    FeatureList geoProperty = (FeatureList) root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     Feature features = geoProperty.toFeatures()[0];
     GM_Object geom = features.getDefaultGeometryProperty();
     return geom;

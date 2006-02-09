@@ -70,17 +70,17 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -115,7 +115,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   private HashSet m_feature = null;
 
-  private FeatureAssociationTypeProperty m_fatp = null;
+  private IRelationType m_fatp = null;
 
   private HashSet m_featureAssTypeProp = null;
 
@@ -277,9 +277,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   void validateFeaturePathFromSelection( final IStructuredSelection selection )
   {
-    // TODO put lang somwhere else
-    final String lang = KalypsoGisPlugin.getDefault().getLang();
-
     final List pathList = new ArrayList();
     final List titleList = new ArrayList();
     final Object firstElement = selection.getFirstElement();
@@ -287,7 +284,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     { // create featurepath for element
       final Feature feature = (Feature) firstElement;
       final FeaturePath featurepath = m_workspace.getFeaturepathForFeature( feature );
-      final FeatureType ft = feature.getFeatureType();
+      final IFeatureType ft = feature.getFeatureType();
       // find title
       String title = null;
       try
@@ -300,7 +297,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
         // nothing
       }
       if( title == null || title.length() < 1 )
-        title = ft.getAnnotation( lang ).getLabel();
+        title = AnnotationUtilities.getAnnotation( ft ).getLabel();
       pathList.add( featurepath.toString() );
       titleList.add( title );
     }
@@ -310,12 +307,12 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
       final Feature parent = link.getParentFeature();
       final FeaturePath parentFeaturePath = getWorkspace().getFeaturepathForFeature( parent );
-      final FeatureAssociationTypeProperty ftp = link.getAssociationTypeProperty();
-      final FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
+      final IRelationType ftp = link.getAssociationTypeProperty();
+      final IFeatureType[] associationFeatureTypes = ftp.getTargetFeatureTypes( null, false );
       for( int i = 0; i < associationFeatureTypes.length; i++ )
       {
-        final FeatureType ft = associationFeatureTypes[i];
-        final String title = ft.getAnnotation( lang ).getLabel();
+        final IFeatureType ft = associationFeatureTypes[i];
+        final String title = AnnotationUtilities.getAnnotation(ft).getLabel();
         final FeaturePath path = new FeaturePath( parentFeaturePath, ftp.getName() + "[" + ft.getName() + "]" );
         pathList.add( path.toString() );
         titleList.add( title );
@@ -339,10 +336,10 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   // Feature feature = (Feature)o;
   // if( FeatureHelper.isCollection( feature ) )
   // {
-  // FeatureType[] featureType = FeatureHelper.getFeatureTypeFromCollection( feature );
+  // IFeatureType[] featureType = FeatureHelper.getFeatureTypeFromCollection( feature );
   // for( int j = 0; j < featureType.length; j++ )
   // {
-  // FeatureType type = featureType[j];
+  // IFeatureType type = featureType[j];
   // if( type.hasGeometryProperty() )
   // {
   // m_feature.add( feature );
@@ -367,7 +364,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     return m_source;
   }
 
-  public FeatureAssociationTypeProperty getFatp( )
+  public IRelationType getFatp( )
   {
     return m_fatp;
   }
@@ -383,9 +380,9 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_sourceFileText.removeModifyListener( this );
   }
 
-  public FeatureAssociationTypeProperty[] getFeatureAssociations( )
+  public IRelationType[] getFeatureAssociations( )
   {
-    return (FeatureAssociationTypeProperty[]) m_featureAssTypeProp.toArray( new FeatureAssociationTypeProperty[m_featureAssTypeProp.size()] );
+    return (IRelationType[]) m_featureAssTypeProp.toArray( new IRelationType[m_featureAssTypeProp.size()] );
 
   }
 

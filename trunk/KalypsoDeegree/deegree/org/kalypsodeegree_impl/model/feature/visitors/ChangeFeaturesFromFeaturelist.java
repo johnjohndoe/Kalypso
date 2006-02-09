@@ -41,7 +41,7 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final Object index = f.getProperty( m_sourceID );
+    final Object index = f.getProperty( m_sourceID);
     final Feature targetFeature = (Feature)m_index.get( index );
     if( targetFeature != null )
     {

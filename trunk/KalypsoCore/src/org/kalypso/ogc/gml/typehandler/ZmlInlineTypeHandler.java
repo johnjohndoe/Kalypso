@@ -32,19 +32,24 @@ package org.kalypso.ogc.gml.typehandler;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
@@ -53,19 +58,21 @@ import org.xml.sax.InputSource;
  */
 public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 {
+  // public static final class CLASS_ZmlInlineIdealKcWtLaiType=new
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
-  public final String m_typeName;
+  public final QName[] m_typeName;
 
   protected final String[] m_axisTypes;
 
-  private final String m_className;
+  private final Class m_className;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, String classNameSuffix )
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, Class clazz )
   {
     m_axisTypes = axisTypes;
-    m_typeName = NAMESPACE + ":" + name;
-    m_className = IObservation.class.getName() + "." + classNameSuffix;
+    m_typeName = new QName[] { new QName( NAMESPACE, name ) };
+    m_className = clazz;
+    // IObservation.class;.getName() + "." + classNameSuffix;
   }
 
   /**
@@ -131,7 +138,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public String getClassName( )
+  public Class getValueClass( )
   {
     return m_className;
   }
@@ -139,7 +146,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public String getTypeName( )
+  public QName[] getTypeName( )
   {
     return m_typeName;
   }
@@ -188,5 +195,28 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  public interface TA extends IObservation
+  {
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
+  }
+
+  public interface WtKcLai extends IObservation
+  {
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
+  }
+
+  public interface WVQ extends IObservation
+  {
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
   }
 }

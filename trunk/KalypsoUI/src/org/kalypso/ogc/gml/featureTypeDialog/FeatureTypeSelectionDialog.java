@@ -44,12 +44,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.Annotation;
-import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 
 /**
- * 
  * This Dialog only lists FeatureTypes where the substitution group is not _Feature.
  * 
  * @author kuepfer
@@ -57,39 +56,37 @@ import org.kalypsodeegree.model.feature.FeatureType;
 public class FeatureTypeSelectionDialog extends Dialog
 {
 
-  private FeatureType[] m_ft;
-
-  private String m_lang;
+  private IFeatureType[] m_ft;
 
   private String[] m_selectedFeatureTypeName;
 
   private final int m_multiSelection;
 
-  public FeatureTypeSelectionDialog( Shell parentShell, FeatureType[] featureTypes, int multiSelection )
+  public FeatureTypeSelectionDialog( Shell parentShell, IFeatureType[] featureTypes, int multiSelection )
   {
     super( parentShell );
     m_ft = featureTypes;
-    m_lang = KalypsoGisPlugin.getDefault().getLang();
+
     m_multiSelection = multiSelection;
   }
 
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite main = (Composite)super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     GridLayout mainLayout = new GridLayout( 1, true );
     GridData gd1 = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     main.setLayout( mainLayout );
     main.setLayoutData( gd1 );
-    
+
     final Label lable = new Label( main, SWT.NULL );
 
     lable.setText( "Wählen sie den gewünschten Datentypen aus:" );
     final List list = new List( main, SWT.BORDER | m_multiSelection );
     for( int i = 0; i < m_ft.length; i++ )
     {
-      FeatureType ft = m_ft[i];
-      Annotation annotation = ft.getAnnotation( m_lang );
+      final IFeatureType ft = m_ft[i];
+      final Annotation annotation = AnnotationUtilities.getAnnotation( ft );
       list.add( annotation.getLabel() );
     }
     final GridData data = new GridData();
@@ -122,15 +119,15 @@ public class FeatureTypeSelectionDialog extends Dialog
     }
   }
 
-  public FeatureType[] getSelectedFeatureTypes()
+  public IFeatureType[] getSelectedFeatureTypes( )
   {
-    final ArrayList<FeatureType> res = new ArrayList<FeatureType>();
-    for( final FeatureType ft : m_ft )
+    final ArrayList<IFeatureType> res = new ArrayList<IFeatureType>();
+    for( final IFeatureType ft : m_ft )
     {
-      final int index = ArrayUtils.indexOf( m_selectedFeatureTypeName, ft.getAnnotation( m_lang ).getLabel() );
+      final int index = ArrayUtils.indexOf( m_selectedFeatureTypeName, AnnotationUtilities.getAnnotation( ft ).getLabel() );
       if( index > -1 )
         res.add( ft );
     }
-    return res.toArray( new FeatureType[res.size()] );
+    return res.toArray( new IFeatureType[res.size()] );
   }
 }

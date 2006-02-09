@@ -60,8 +60,10 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -71,15 +73,12 @@ import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.extension.GM_ObjectTypeHandler;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Exposes the {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}suitable as web-service.
  * (default constructor etc.).
- * 
  * <p>
  * Reads configuration from file, support logging and register TypeHandler for GML.
  * </p>
@@ -92,13 +91,12 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
   private final ICalculationService m_service;
 
-  public QueuedCalcJobServiceWrapper() throws RemoteException
+  public QueuedCalcJobServiceWrapper( ) throws RemoteException
   {
     // Logger initialisieren
     try
     {
-      LOGGER.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/"
-          + ClassUtilities.getOnlyClassName( ICalculationService.class ) + "%g.log", 10000000, 10, true ) );
+      LOGGER.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/" + ClassUtilities.getOnlyClassName( ICalculationService.class ) + "%g.log", 10000000, 10, true ) );
     }
     catch( final IOException e ) // generic Exception caught for simplicity
     {
@@ -114,28 +112,34 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
       // TODO TODO TODO: refaktor this shit!
       registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
-          .getMultiPointClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities.getMultiPointClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
-          .getLineStringClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
-          .getMultiLineStringClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities.getLineStringClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities.getMultiLineStringClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
-          .getPolygonClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
-          .getMultiPolygonClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities.getMultiPolygonClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
-          .getUndefinedGeometryClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities.getUndefinedGeometryClass() ) );
 
-      final String[] wvqAxis = new String[]
-      { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
-      final String[] taAxis = new String[]
-      { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM, };
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType",
+      // wvqAxis,ZmlInlineTypeHandler.WVQ "WVQ" );
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
+      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
+      // final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
+      // "KCWTLAI" );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
+      registry.registerTypeHandler( wvqInline );
+      registry.registerTypeHandler( taInline );
+      registry.registerTypeHandler( wtKcLaiInline );
+
+      // final String[] wvqAxis = new String[]
+      // { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
+      // final String[] taAxis = new String[]
+      // { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM, };
+      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
+      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
 
@@ -157,14 +161,12 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     try
     {
       final URL confLocation = ServiceConfig.getConfLocation();
-      final URL myConfUrl = UrlResolverSingleton.resolveUrl( confLocation, ClassUtilities
-          .getOnlyClassName( ICalculationService.class )
-          + "/" );
+      final URL myConfUrl = UrlResolverSingleton.resolveUrl( confLocation, ClassUtilities.getOnlyClassName( ICalculationService.class ) + "/" );
 
       // Konfiguration der Modelltypen
       final URL typeUrl = UrlResolverSingleton.resolveUrl( myConfUrl, "modelltypen.properties" );
-      //    if( !typeFile.exists() )
-      //      throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
+      // if( !typeFile.exists() )
+      // throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
       factory = new PropertyCalcJobFactory( typeUrl );
 
       // Konfiguration dieser Service-Implementation
@@ -194,7 +196,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       {
         protected void fillCatalog( final Class myClass, final Map katalog )
         {
-        // nix, ist leer
+          // nix, ist leer
         }
       };
 
@@ -223,11 +225,9 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       m_service = new QueuedCalcJobService( factory, catalog, maxThreads, schedulingPeriod );
     }
 
-    LOGGER
-        .info( "Service initialisiert mit:\nMAX_THREAD = " + maxThreads + "\nSCHEDULING_PERIOD = " + schedulingPeriod );
+    LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + maxThreads + "\nSCHEDULING_PERIOD = " + schedulingPeriod );
     if( classCatalogUrl == null )
-      LOGGER
-          .warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
+      LOGGER.warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
     else
       LOGGER.info( "CLASS_CATALOG = " + classCatalogUrl.toString() );
   }
@@ -236,17 +236,17 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
    * @throws RemoteException
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion() throws RemoteException
+  public int getServiceVersion( ) throws RemoteException
   {
     return m_service.getServiceVersion();
   }
 
-  public synchronized final String[] getJobTypes() throws CalcJobServiceException
+  public synchronized final String[] getJobTypes( ) throws CalcJobServiceException
   {
     return m_service.getJobTypes();
   }
 
-  public synchronized CalcJobInfoBean[] getJobs() throws CalcJobServiceException
+  public synchronized CalcJobInfoBean[] getJobs( ) throws CalcJobServiceException
   {
     return m_service.getJobs();
   }
@@ -276,8 +276,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
    *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
-      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
+  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     return m_service.startJob( typeID, description, zipHandler, input, output );
   }
@@ -338,7 +337,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
    */
-  public String[] getSupportedSchemata() throws CalcJobServiceException
+  public String[] getSupportedSchemata( ) throws CalcJobServiceException
   {
     return m_service.getSupportedSchemata();
   }

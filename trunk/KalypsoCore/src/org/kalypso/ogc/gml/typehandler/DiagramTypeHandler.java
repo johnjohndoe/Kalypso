@@ -42,11 +42,13 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Node;
 
 /**
@@ -60,20 +62,21 @@ public class DiagramTypeHandler implements IMarshallingTypeHandler
 
   private final Class m_typeClass = DiagramProperty.class;
 
+  private final QName[] m_qName=new QName[]{new QName(m_typeNamespace,m_typeName)};
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public String getClassName()
+  public Class getValueClass()
   {
-    return m_typeClass.getName();
+    return m_typeClass;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public String getTypeName()
+  public QName[] getTypeName()
   {
-    return m_typeNamespace + ":" + m_typeName;
+    return m_qName;
   }
 
   /**
@@ -159,5 +162,13 @@ public class DiagramTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
   }
 }

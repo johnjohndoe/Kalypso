@@ -70,6 +70,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
@@ -79,7 +80,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
@@ -89,7 +89,7 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
  */
 public class FilterDialog extends TitleAreaDialog implements ModellEventListener, IErrorMessageReciever
 {
-  protected final FeatureType m_featureType;
+  protected final IFeatureType m_featureType;
 
   protected FilterRootElement m_root;
 
@@ -111,7 +111,7 @@ public class FilterDialog extends TitleAreaDialog implements ModellEventListener
 
   private final IMapModell m_mapModel;
 
-  public FilterDialog( Shell parent, FeatureType featureType, Filter root, IMapModell model )
+  public FilterDialog( Shell parent, IFeatureType featureType, Filter root, IMapModell model )
   {
     super( parent );
     m_mapModel = model;

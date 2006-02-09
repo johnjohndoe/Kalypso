@@ -30,9 +30,12 @@
 package org.kalypso.ogc.gml.gui;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -45,16 +48,14 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
  * @author Nadja Peiler
  */
 public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
+  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
   {
     return new ResourceFileDialog( workspace, feature, ftp );
   }
@@ -72,27 +73,36 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return button;
   }
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp,  selectionManager, fcl );
+    return new ButtonModifier( workspace, (IValuePropertyType) ftp, selectionManager, fcl );
   }
 
+  @Override
   public String getText( Object element )
   {
     if( element == null )
       return "";
 
-    final String href = ( (IFile)element ).getFullPath().toString();
+    final String href = ((IFile) element).getFullPath().toString();
     return href == null ? "" : href;
   }
 
-  public String getClassName()
+  public Class getValueClass( )
   {
     return ResourceFileTypeHandler.CLASSNAME;
   }
 
-  public String getTypeName()
+  public QName[] getTypeName( )
   {
-    return ResourceFileTypeHandler.TYPENAME;
+    return ResourceFileTypeHandler.QNAME;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
   }
 }

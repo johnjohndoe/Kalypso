@@ -41,18 +41,14 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * 
- * class RemoveHeavyRelationCommand
- * 
- * Command to remove a normal relation
- * 
- * created by
+ * class RemoveHeavyRelationCommand Command to remove a normal relation created by
  * 
  * @author doemming (13.05.2005)
  */
@@ -66,9 +62,9 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private final Feature m_destFE;
 
-  private final String m_linkName1;
+  private final IRelationType m_linkName1;
 
-  private final String m_linkName2;
+  private final IRelationType m_linkName2;
 
   private final boolean m_isComposition1;
 
@@ -78,8 +74,7 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private boolean m_isComposition2;
 
-  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkName1, Feature bodyFE,
-      String linkName2, Feature destFE )
+  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType linkName1, Feature bodyFE, IRelationType linkName2, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -96,7 +91,7 @@ public class RemoveHeavyRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -104,7 +99,7 @@ public class RemoveHeavyRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     // first remove 2. normal relation
     if( m_isComposition2 )
@@ -113,9 +108,9 @@ public class RemoveHeavyRelationCommand implements ICommand
       m_workspace.removeLinkedAsAggregationFeature( m_bodyFE, m_linkName2, m_destFE.getId() );
 
     // TODO is this event needed ??
-    //    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
+    // m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
     // m_workspace, m_bodyFE,
-    //        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
     // then remove 1. normal relation
     if( m_isComposition1 )
@@ -123,14 +118,13 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkName1, m_bodyFE.getId() );
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
@@ -138,7 +132,7 @@ public class RemoveHeavyRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     if( m_isComposition1 )
       m_workspace.addFeatureAsComposition( m_srcFE, m_linkName1, m_pos1, m_bodyFE );
@@ -150,17 +144,16 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_workspace.addFeatureAsAggregation( m_bodyFE, m_linkName2, m_pos2, m_destFE.getId() );
     // TODO is this event needed ??
-    //    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
+    // m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
     // m_workspace, m_bodyFE,
-    //        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Relation aufheben";
   }

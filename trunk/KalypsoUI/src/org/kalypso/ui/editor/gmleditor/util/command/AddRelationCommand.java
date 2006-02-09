@@ -1,6 +1,7 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -53,13 +54,13 @@ public class AddRelationCommand implements ICommand
 
   private int m_pos = 0;
 
-  private final String m_propName;
+  private final IRelationType m_propName;
 
   private Feature m_linkFeature;
 
   private final GMLWorkspace m_workspace;
 
-  public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, String propertyName, int pos, Feature destFE )
+  public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType propertyName, int pos, Feature destFE )
   {
     m_workspace = workspace;
     m_parentFeature = srcFE;

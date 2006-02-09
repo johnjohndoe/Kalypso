@@ -3,9 +3,9 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -54,19 +54,19 @@ public class TransformVisitor implements FeatureVisitor
   {
     try
     {
-      final FeatureTypeProperty[] ftps = f.getFeatureType().getProperties();
+      final IPropertyType[] ftps = f.getFeatureType().getProperties();
       for( int i = 0; i < ftps.length; i++ )
       {
         // TODO: also handle list of geoobjects
 
-        final FeatureTypeProperty ftp = ftps[i];
+        final IPropertyType ftp = ftps[i];
         if( GeometryUtilities.isGeometry(ftp) )
         {
-          final GM_Object object = (GM_Object)f.getProperty( ftp.getName() );
+          final GM_Object object = (GM_Object)f.getProperty( ftp);
           if( object != null )
           {
             GM_Object newGeo = m_transformer.transform( object );
-            FeatureProperty fProp = FeatureFactory.createFeatureProperty( ftp.getName(), newGeo );
+            FeatureProperty fProp = FeatureFactory.createFeatureProperty( ftp, newGeo );
             f.setProperty( fProp );
           }
         }

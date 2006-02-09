@@ -52,12 +52,12 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author F.Lindemann
@@ -74,7 +74,7 @@ public class RuleTabItemBuilder
 
   private KalypsoUserStyle userStyle = null;
 
-  private FeatureType featureType = null;
+  private IFeatureType featureType = null;
 
   private int focusedRuleItem = -1;
 

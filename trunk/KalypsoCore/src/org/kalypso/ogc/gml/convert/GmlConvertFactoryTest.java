@@ -14,11 +14,11 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
