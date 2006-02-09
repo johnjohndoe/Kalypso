@@ -255,16 +255,16 @@ public class KalypsoNAFileImportPage extends WizardPage
     fileGroup.pack();
   }
 
-//  private FeatureType getSourceFT()
+//  private IFeatureType getSourceFT()
 //  {
 //    Feature rootFeature = sourceWorkspace.getRootFeature();
 //
-//    FeatureType rootFT = rootFeature.getFeatureType();
+//    IFeatureType rootFT = rootFeature.getFeatureType();
 //    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT
 //        .getProperty( "featureMember" );
 //
-//    FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
-//    FeatureType shapeFT = associationFeatureTypes[0];
+//    IFeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
+//    IFeatureType shapeFT = associationFeatureTypes[0];
 //    return shapeFT;
 //  }
 

@@ -37,12 +37,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -51,8 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.FindSomeNearestVisitor;
@@ -77,7 +77,7 @@ public class DWDRasterGeoLayer
 
   private final DWDRaster m_yRaster;
 
-  private FeatureType m_positionFeature;
+  private IFeatureType m_positionFeature;
 
   private static final String GEO_PROP_POINT = "center";
 
@@ -134,15 +134,16 @@ public class DWDRasterGeoLayer
   {
     final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer" );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
-    final FeatureType layerFT = schema.getFeatureType( "DWDLayer" );
+    final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
     final Feature rootFE = FeatureFactory.createFeature( "main", layerFT );
-    m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null );
+    m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null ,null);
 
+    IRelationType cellMemeberPT=(IRelationType) layerFT.getProperty(PROP_CELLMEMBER);
     // create all feature with point geom property
     for( int pos = 0, size = m_xRaster.size(); pos < size; pos++ )
     {
       Feature feature = createFeature( pos );
-      m_workspace.addFeatureAsComposition( rootFE, PROP_CELLMEMBER, 0, feature );
+      m_workspace.addFeatureAsComposition( rootFE,cellMemeberPT , 0, feature );
     }
     m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
     // resort it before using the query
@@ -158,8 +159,8 @@ public class DWDRasterGeoLayer
   {
     final Feature feature = FeatureFactory.createFeature( Integer.toString( pos ), m_positionFeature );
     GM_Object point = createGeometryPoint( pos );
-    feature.setProperty( FeatureFactory.createFeatureProperty( GEO_PROP_POINT, point ) );
-    feature.setProperty( FeatureFactory.createFeatureProperty( POS_PROP, new Integer( pos ) ) );
+    feature.setProperty(  GEO_PROP_POINT, point ) ;
+    feature.setProperty(  POS_PROP, new Integer( pos ) );
     return feature;
   }
 
@@ -176,8 +177,6 @@ public class DWDRasterGeoLayer
     {
       if( !f.getFeatureType().getName().equals( "DWDCell" ) )
         return true;
-      if( ( (Integer)f.getProperty( POS_PROP ) ).intValue() == 2421 )
-        System.out.println( "debug" );
       GM_Point point = (GM_Point)f.getProperty( GEO_PROP_POINT );
       GM_Position centerPos = point.getPosition();
       //      GM_Envelope cellEnv = GeometryFactory.createGM_Envelope( centerPos, centerPos );
@@ -209,8 +208,7 @@ public class DWDRasterGeoLayer
       try
       {
         convexHull = multiPoint.getConvexHull();
-        FeatureProperty property = FeatureFactory.createFeatureProperty( GEO_PROP_SURFACE, convexHull );
-        f.setProperty( property );
+        f.setProperty(  GEO_PROP_SURFACE, convexHull );
       }
       catch( GM_Exception e )
       {

@@ -42,12 +42,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.ImageProvider;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
 /**
- * 
  * @author kuepfer
  */
 public class KalypsoNAProjectPreferences extends WizardPage
@@ -73,15 +72,14 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
   /**
    * @param schema
-   *  
    */
 
   public KalypsoNAProjectPreferences( String pageName, GMLSchema schema )
   {
     super( pageName );
-    setTitle( WizardMessages.getString("KalypsoNAProjectPreferences.Title") ); //$NON-NLS-1$
+    setTitle( WizardMessages.getString( "KalypsoNAProjectPreferences.Title" ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    setDescription( WizardMessages.getString("KalypsoNAProjectPreferences.Description") ); //$NON-NLS-1$
+    setDescription( WizardMessages.getString( "KalypsoNAProjectPreferences.Description" ) ); //$NON-NLS-1$
     m_modelSchema = schema;
   }
 
@@ -103,33 +101,34 @@ public class KalypsoNAProjectPreferences extends WizardPage
     Composite topComposite = new Composite( parent, SWT.NONE );
     topComposite.setLayout( new GridLayout() );
     Group soil = new Group( topComposite, SWT.NONE );
-    soil.setText( WizardMessages.getString("KalypsoNAProjectPreferences.SoilGroupText") ); //$NON-NLS-1$
+    soil.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.SoilGroupText" ) ); //$NON-NLS-1$
     soil.setLayout( new GridLayout( 2, true ) );
     soil.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     Label soilLabel = new Label( soil, SWT.NONE );
-    soilLabel.setText( WizardMessages.getString("KalypsoNAProjectPreferences.SoilGroupLable") ); //$NON-NLS-1$
+    soilLabel.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    FeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
-    int maxOccursSoil = catchmentFT.getMaxOccurs( SOIL_FT_NAME );
+    IFeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
+    int maxOccursSoil = catchmentFT.getProperty( SOIL_FT_NAME ).getMaxOccurs();
     ArrayList noSoilLayer = new ArrayList();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
-    m_soilCombo.setItems( (String[])noSoilLayer.toArray( new String[maxOccursSoil] ) );
+    m_soilCombo.setItems( (String[]) noSoilLayer.toArray( new String[maxOccursSoil] ) );
     m_soilCombo.select( 1 );
     GridData soilComboGridData = new GridData();
     soilComboGridData.widthHint = 50;
     soilComboGridData.horizontalAlignment = GridData.END;
     m_soilCombo.setLayoutData( soilComboGridData );
-    m_soilCombo.setToolTipText( WizardMessages.getString("KalypsoNAProjectPreferences.SoilDataToolTipText") ); //$NON-NLS-1$
+    m_soilCombo.setToolTipText( WizardMessages.getString( "KalypsoNAProjectPreferences.SoilDataToolTipText" ) ); //$NON-NLS-1$
     m_soilCombo.addSelectionListener( new SelectionAdapter()
     {
 
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        Combo combo = (Combo)e.widget;
+        Combo combo = (Combo) e.widget;
         m_soilLayerNo = combo.getItem( combo.getSelectionIndex() );
         setPageComplete( validatePage() );
       }
@@ -137,34 +136,34 @@ public class KalypsoNAProjectPreferences extends WizardPage
     m_soilLayerNo = m_soilCombo.getItem( 1 );
 
     Group channel = new Group( topComposite, SWT.NONE );
-    channel.setText( WizardMessages.getString("KalypsoNAProjectPreferences.KMChannelGroupText") ); //$NON-NLS-1$
+    channel.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.KMChannelGroupText" ) ); //$NON-NLS-1$
     channel.setLayout( new GridLayout( 2, true ) );
     channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     Label channelLabel = new Label( channel, SWT.NONE );
-    channelLabel.setText( WizardMessages.getString("KalypsoNAProjectPreferences.KMChannelGroupLable") ); //$NON-NLS-1$
+    channelLabel.setText( WizardMessages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     m_channelCombo.setLayout( new GridLayout() );
-    FeatureType kmChannelFT = m_modelSchema.getFeatureType( KM_CHANNEL );
-    int maxOccursKM = kmChannelFT.getMaxOccurs( KMCHANNEL_MEMBER );
+    IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KM_CHANNEL );
+    int maxOccursKM = kmChannelFT.getProperty( KMCHANNEL_MEMBER ).getMaxOccurs();
     ArrayList noKMDischarge = new ArrayList();
     for( int i = 0; i < maxOccursKM + 1; i++ )
       noKMDischarge.add( String.valueOf( i ) );
-    m_channelCombo.setItems( (String[])noKMDischarge.toArray( new String[maxOccursKM] ) );
+    m_channelCombo.setItems( (String[]) noKMDischarge.toArray( new String[maxOccursKM] ) );
     GridData channelComboGridData = new GridData();
     channelComboGridData.widthHint = 50;
     channelComboGridData.horizontalAlignment = GridData.END;
     m_channelCombo.setLayoutData( channelComboGridData );
-    m_channelCombo
-        .setToolTipText( WizardMessages.getString("KalypsoNAProjectPreferences.KMChannelDataLable") ); //$NON-NLS-1$
+    m_channelCombo.setToolTipText( WizardMessages.getString( "KalypsoNAProjectPreferences.KMChannelDataLable" ) ); //$NON-NLS-1$
     m_channelCombo.addSelectionListener( new SelectionAdapter()
     {
 
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        Combo combo = (Combo)e.widget;
+        Combo combo = (Combo) e.widget;
         m_kmChannelNo = combo.getItem( combo.getSelectionIndex() );
         setPageComplete( validatePage() );
       }
@@ -175,22 +174,22 @@ public class KalypsoNAProjectPreferences extends WizardPage
     setControl( topComposite );
   }
 
-  public String getSoilLayerNo()
+  public String getSoilLayerNo( )
   {
     return m_soilLayerNo;
   }
 
-  public String getKMChannelNo()
+  public String getKMChannelNo( )
   {
     return m_kmChannelNo;
   }
 
-  boolean validatePage()
+  boolean validatePage( )
   {
-    //  TODO wenn das NA Modell zukünftig ungleich fünf Abflüsse rechnen kann, dies entfernen!!
+    // TODO wenn das NA Modell zukünftig ungleich fünf Abflüsse rechnen kann, dies entfernen!!
     if( !m_kmChannelNo.equals( String.valueOf( 5 ) ) )
     {
-      setErrorMessage( WizardMessages.getString("KalypsoNAProjectPreferences.KMChannelErrorMessage") ); //$NON-NLS-1$
+      setErrorMessage( WizardMessages.getString( "KalypsoNAProjectPreferences.KMChannelErrorMessage" ) ); //$NON-NLS-1$
       return false;
     }
     setErrorMessage( null );

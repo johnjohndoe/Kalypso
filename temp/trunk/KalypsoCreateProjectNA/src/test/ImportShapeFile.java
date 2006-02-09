@@ -20,26 +20,24 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
- *  
  */
 public class ImportShapeFile
 {
@@ -50,157 +48,94 @@ public class ImportShapeFile
 
   HashMap m_mapping = new HashMap();
 
-//  private static Group m_sourceGroup;
+  // private static Group m_sourceGroup;
 
-  static String noElements[] =
-  {
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-      "17",
-      "18",
-      "19",
-      "20",
-      "21",
-      "22",
-      "23",
-      "24",
-      "25",
-      "26",
-      "27",
-      "28",
-      "29",
-      "30",
-      "31",
-      "32",
-      "33",
-      "34",
-      "34",
-      "35",
-      "36",
-      "37",
-      "38",
-      "39",
-      "40",
-      "42",
-      "43",
-      "44",
-      "45",
-      "46",
-      "47",
-      "48",
-      "49",
-      "50",
-      "51",
-      "52",
-      "53",
-      "54",
-      "55",
-      "56",
-      "57",
-      "58",
-      "59",
-      "60" };
+  static String noElements[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+      "30", "31", "32", "33", "34", "34", "35", "36", "37", "38", "39", "40", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60" };
 
   public static void main( String[] args )
   {
 
-    //String shpBase = "D://Daten//DataForCK//KalypsoQM//GIS//teilgebiete_qm";
+    // String shpBase = "D://Daten//DataForCK//KalypsoQM//GIS//teilgebiete_qm";
     String shpBase = "D://KalypsoWorkspace//Spree//Grunddaten//Shapes//sachsen";
-//    URL modelURL;
+    // URL modelURL;
     URL schemaURL;
 
     CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     try
     {
 
-//      modelURL = ( new File( "D://temp//modell.gml" ) ).toURL();
+      // modelURL = ( new File( "D://temp//modell.gml" ) ).toURL();
       schemaURL = new URL( "file:/D:/KalypsoWorkspace/KalypsoWeisseElster/.model/schema/namodell.xsd" );
-//      String schema = schemaURL.getPath();
-//      String host = schemaURL.getHost();
+      // String schema = schemaURL.getPath();
+      // String host = schemaURL.getHost();
       GMLWorkspace gmlWS = ShapeSerializer.deserialize( shpBase, cs );
       ShapeSerializer.serialize( gmlWS, "D://Temp//test" );
       Feature rootFeature = gmlWS.getRootFeature();
-//      List propertyList = (List)rootFeature.getProperty( "featureMember" );
+      // List propertyList = (List)rootFeature.getProperty( "featureMember" );
 
-//      Feature feature = (Feature)propertyList.get( 0 );
-//      Object o = feature.getProperty( "TEILGEBNR" );
-//      if( o instanceof Integer )
-//      {
-//        int no = ( (Integer)o ).intValue();
-//      }
+      // Feature feature = (Feature)propertyList.get( 0 );
+      // Object o = feature.getProperty( "TEILGEBNR" );
+      // if( o instanceof Integer )
+      // {
+      // int no = ( (Integer)o ).intValue();
+      // }
       System.out.println( "test" );
 
-      FeatureType rootFT = rootFeature.getFeatureType();
+      IFeatureType rootFT = rootFeature.getFeatureType();
 
-      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT.getProperty( "featureMember" );
+      final IRelationType ftp = (IRelationType) rootFT.getProperty( "featureMember" );
 
-      FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
-      FeatureType shapeFT = associationFeatureTypes[0];
-      FeatureTypeProperty[] sourceFtp = shapeFT.getProperties();
+      final IFeatureType[] associationFeatureTypes = ftp.getTargetFeatureTypes( null, false );
+      final IFeatureType shapeFT = associationFeatureTypes[0];
+      final IPropertyType[] sourceFtp = shapeFT.getProperties();
 
-      //			FeatureTypeProperty o = shapeFT.getProperty("TEILGEBNR");
+      // IPropertyType o = shapeFT.getProperty("TEILGEBNR");
 
       final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( schemaURL );
-      FeatureType targetFT = gmlSchema.getFeatureType( "Node" );
-      FeatureTypeProperty targetFTP = targetFT.getProperty( "num" );
-      //      String key = Locale.getDefault().getLanguage();
-      final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
-      Annotation annotation = targetFTP.getAnnotation( key );
+      final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
+      final Annotation annotation = AnnotationUtilities.getAnnotation( targetFT );
       String label = annotation.getLabel();
       String tooltip = annotation.getTooltip();
       System.out.println( label + "/t" + tooltip );
 
-      //			GMLWorkspace gmlModel = GmlSerializer.createGMLWorkspace(modelURL,
-      //					schemaURL);
-      //			GMLWorkspace gmlModel = GmlSerializer.createGMLWorkspace(modelURL, new UrlResolver());
+      // GMLWorkspace gmlModel = GmlSerializer.createGMLWorkspace(modelURL,
+      // schemaURL);
+      // GMLWorkspace gmlModel = GmlSerializer.createGMLWorkspace(modelURL, new UrlResolver());
 
-      FeatureType catchmentFt = gmlSchema.getFeatureType( "Catchment" );
-      //			Featurefeature = FeatureFactory.createFeature("c1",
+      IFeatureType catchmentFt = gmlSchema.getFeatureType( "Catchment" );
+      // Featurefeature = FeatureFactory.createFeature("c1",
       // catchmentFt);
-      //			FeatureProperty fpNum = FeatureFactory.createFeatureProperty(
-      //					"inum", new Integer(100));
-      //			feature.addProperty(fpNum);
-      //			FeatureTypeProperty[] targetFtp = sourceFtp;
-      FeatureTypeProperty[] targetFtp = catchmentFt.getProperties();
+      // FeatureProperty fpNum = FeatureFactory.createFeatureProperty(
+      // "inum", new Integer(100));
+      // feature.addProperty(fpNum);
+      // IPropertyType[] targetFtp = sourceFtp;
+      IPropertyType[] targetFtp = catchmentFt.getProperties();
 
-      //Control
+      // Control
       Display display = new Display();
       Shell shell = new Shell( display );
 
       GridLayout gridLayout = new GridLayout();
       gridLayout.numColumns = 1;
       shell.setLayout( gridLayout );
-      //Top Group
+      // Top Group
       Composite group = new Composite( shell, SWT.NONE );
       group.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       ScrolledComposite topSCLComposite = new ScrolledComposite( shell, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER );
       final Composite topComposite = new Composite( topSCLComposite, SWT.NONE );
-      //group.setSize(400,600);
+      // group.setSize(400,600);
       topSCLComposite.setContent( topComposite );
       topSCLComposite.setVisible( true );
       topComposite.setVisible( true );
       GridLayout topCompositeLayout = new GridLayout();
       topComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       topCompositeLayout.numColumns = 1;
-      //topCompositeLayout.makeColumnsEqualWidth = true;
+      // topCompositeLayout.makeColumnsEqualWidth = true;
       topComposite.setLayout( topCompositeLayout );
-      //topComposite.pack();
+      // topComposite.pack();
 
       Group topGroup = new Group( topComposite, SWT.NONE );
       topGroup.setText( "Mapping der Feature" );
@@ -208,9 +143,9 @@ public class ImportShapeFile
       GridLayout topGroupLayout = new GridLayout();
       topGroupLayout.numColumns = 2;
       topGroup.setLayout( topGroupLayout );
-      //topGroup.pack();
+      // topGroup.pack();
 
-      //Source
+      // Source
       Group sourceGroup = new Group( topGroup, SWT.NONE );
       GridLayout sourceGroupLayout = new GridLayout();
       sourceGroupLayout.numColumns = 1;
@@ -226,6 +161,7 @@ public class ImportShapeFile
         combo.redraw();
         combo.addSelectionListener( new SelectionAdapter()
         {
+          @Override
           public void widgetSelected( SelectionEvent e )
           {
             Widget w = e.widget;
@@ -245,9 +181,9 @@ public class ImportShapeFile
         }
         combo.select( 0 );
       }
-      //sourceGroup.pack();
-      //sourceGroup.redraw();
-      //Target
+      // sourceGroup.pack();
+      // sourceGroup.redraw();
+      // Target
 
       Group targetGroup = new Group( topGroup, SWT.NONE );
       GridLayout targetGroupLayout = new GridLayout();
@@ -256,15 +192,15 @@ public class ImportShapeFile
       targetGroup.setVisible( true );
       targetGroup.setLayout( targetGroupLayout );
       targetGroup.setText( "Ziel" );
-      //			Table table0 = new Table (targetGroup, SWT.BORDER |
+      // Table table0 = new Table (targetGroup, SWT.BORDER |
       // SWT.V_SCROLL);
       for( int i = 0; i < targetFtp.length; i++ )
       {
-        FeatureTypeProperty featureTypeProperty = targetFtp[i];
+        IPropertyType featureTypeProperty = targetFtp[i];
         String name = featureTypeProperty.getName();
-        //				table0.setLinesVisible (true);
-        //				TableItem tableItem1 = new TableItem (table0, SWT.NONE);
-        //				tableItem1.setText (name);
+        // table0.setLinesVisible (true);
+        // TableItem tableItem1 = new TableItem (table0, SWT.NONE);
+        // tableItem1.setText (name);
         Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
         text.setText( name );
       }
@@ -279,6 +215,7 @@ public class ImportShapeFile
       okButton.setText( "Auswahl bestätigen" );
       okButton.addSelectionListener( new SelectionAdapter()
       {
+        @Override
         public void widgetSelected( SelectionEvent e )
         {
           handelOKSelection();
@@ -288,21 +225,22 @@ public class ImportShapeFile
       resetButton.setText( "Auswahl zurücksetzen" );
       resetButton.addSelectionListener( new SelectionAdapter()
       {
+        @Override
         public void widgetSelected( SelectionEvent e )
         {
           handelResetSelection();
         }
       } );
-      //			buttonbar.setVisible(true);
-      //			sourceGroup.pack();
-      //			targetGroup.pack();
-      //			topGroup.pack();
-      //			topSCLComposite.pack();
-      //			Point pt = topComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-      //	         topSCLComposite.setExpandHorizontal(true);
-      //	         topSCLComposite.setExpandVertical(true);
-      //	         topSCLComposite.setMinWidth(pt.x);
-      //	         topSCLComposite.setMinHeight(pt.y);
+      // buttonbar.setVisible(true);
+      // sourceGroup.pack();
+      // targetGroup.pack();
+      // topGroup.pack();
+      // topSCLComposite.pack();
+      // Point pt = topComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+      // topSCLComposite.setExpandHorizontal(true);
+      // topSCLComposite.setExpandVertical(true);
+      // topSCLComposite.setMinWidth(pt.x);
+      // topSCLComposite.setMinHeight(pt.y);
 
       Point size = topComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
       topComposite.setSize( size );
@@ -321,55 +259,55 @@ public class ImportShapeFile
       {
         Control c = cArray[i];
         System.out.println( c );
-        Combo combo = (Combo)c;
+        Combo combo = (Combo) c;
         System.out.println( combo );
       }
       while( !shell.isDisposed() )
       {
-//        m_sourceGroup = sourceGroup;
+        // m_sourceGroup = sourceGroup;
         if( !display.readAndDispatch() )
           display.sleep();
       }
 
       display.dispose();
 
-      //			Group group = new Group(toplevelShell, 0);
-      //			Combo noSelect = new Combo(toplevelShell,SWT.READ_ONLY |
+      // Group group = new Group(toplevelShell, 0);
+      // Combo noSelect = new Combo(toplevelShell,SWT.READ_ONLY |
       // SWT.DROP_DOWN | SWT.SINGLE);
-      //			noSelect.add("- null -");
-      //			for(int i = 0; i < ftp1.length; i++){
-      //				Combo combo = new Combo(toplevelShell,SWT.READ_ONLY |
+      // noSelect.add("- null -");
+      // for(int i = 0; i < ftp1.length; i++){
+      // Combo combo = new Combo(toplevelShell,SWT.READ_ONLY |
       // SWT.DROP_DOWN | SWT.SINGLE);
-      //				FeatureTypeProperty featureTypeProperty = ftp1[i];
-      //				String name = featureTypeProperty.getName();
-      //				combo.add(name);
-      //				combo.addSelectionListener(new SelectionAdapter() {
-      //					public void widgetSelected(SelectionEvent e) {
-      //						handleComboSelection(e);
-      //					}
-      //				});
-      //				toplevelShell.redraw();
-      //			}
-      //			while (!toplevelShell.isDisposed ()) {
-      //				if (!display.readAndDispatch ())
-      //					display.sleep ();
-      //			}
-      //			display.dispose ();
-      //			while (true){
-      //				MessageBox box = new MessageBox(toplevelShell, SWT.RETRY |
+      // IPropertyType featureTypeProperty = ftp1[i];
+      // String name = featureTypeProperty.getName();
+      // combo.add(name);
+      // combo.addSelectionListener(new SelectionAdapter() {
+      // public void widgetSelected(SelectionEvent e) {
+      // handleComboSelection(e);
+      // }
+      // });
+      // toplevelShell.redraw();
+      // }
+      // while (!toplevelShell.isDisposed ()) {
+      // if (!display.readAndDispatch ())
+      // display.sleep ();
+      // }
+      // display.dispose ();
+      // while (true){
+      // MessageBox box = new MessageBox(toplevelShell, SWT.RETRY |
       // SWT.CANCEL | SWT.APPLICATION_MODAL | SWT.ICON_QUESTION);
-      //				box.setText("Test");
-      //				box.setMessage("Nochmal ?");
-      //				if(box.open() == SWT.CANCEL)break;
-      //			}
-      //			MappingControl mc = new MappingControl(toplevelShell,
+      // box.setText("Test");
+      // box.setMessage("Nochmal ?");
+      // if(box.open() == SWT.CANCEL)break;
+      // }
+      // MappingControl mc = new MappingControl(toplevelShell,
       // toplevelShell.getStyle(), shapeFT, shapeFT);
 
-      //List featureList = (List) rootFeature.getProperty("featureMember");
+      // List featureList = (List) rootFeature.getProperty("featureMember");
 
-      //FeatureType riverFt = gmlSchema.getFeatureType("")
+      // IFeatureType riverFt = gmlSchema.getFeatureType("")
 
-      //			String description = (String) feature.getProperty("description");
+      // String description = (String) feature.getProperty("description");
 
     }
     catch( Exception e )
@@ -378,25 +316,25 @@ public class ImportShapeFile
     }
   }
 
-//  protected static void handleComboSelection( String name, int j )
-//  {
-//
-//  }
+  // protected static void handleComboSelection( String name, int j )
+  // {
+  //
+  // }
 
-  protected static void handelOKSelection()
+  protected static void handelOKSelection( )
   {
     System.out.println( "OK wurde gedrückt" );
   }
 
-  protected static void handelResetSelection()
+  protected static void handelResetSelection( )
   {
     System.out.println( "RESET wurde gedrückt" );
   }
 
-//  public void test()
-//  {
-//    URL url = getClass().getResource( "lkjfds" );
-//    //	  IFile.create...
-//
-//  }
+  // public void test()
+  // {
+  // URL url = getClass().getResource( "lkjfds" );
+  // // IFile.create...
+  //
+  // }
 }
