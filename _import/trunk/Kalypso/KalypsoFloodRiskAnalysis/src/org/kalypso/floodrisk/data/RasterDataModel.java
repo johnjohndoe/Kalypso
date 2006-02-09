@@ -46,14 +46,14 @@ import java.io.FileWriter;
 import java.net.URL;
 
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -126,14 +126,14 @@ public class RasterDataModel
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
 
     // create feature and workspace gml
-    final FeatureType[] types = schema.getFeatureTypes();
+    final IFeatureType[] types = schema.getAllFeatureTypes();
 
     String rootFeatureTypeName = "RasterDataModel";
     String rgcFeatureTypePropertyName = "RectifiedGridCoverageMember";
 
-    FeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
+    IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
     Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0", rootFeatureType );
-    FeatureTypeProperty ftp_rgc = rootFeature.getFeatureType().getProperty( rgcFeatureTypePropertyName );
+    IPropertyType ftp_rgc = rootFeature.getFeatureType().getProperty( rgcFeatureTypePropertyName );
     // create feature: RectifiedGridCoverage
     Object[] properties = new Object[]
     {
@@ -142,13 +142,12 @@ public class RasterDataModel
         null,
         grid.getGridDomain(),
         grid.getRangeSet() };
-    Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
-        ( (FeatureAssociationTypeProperty)ftp_rgc ).getAssociationFeatureType(), properties );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc.getName(), rectifiedGridCoverageFeature ) );
+    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
+        ( (IRelationType)ftp_rgc ).getTargetFeatureTypes(schema,false)[0], properties );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc, rectifiedGridCoverageFeature ) );
 
     //create workspace
-    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, rasterDataModelGML.toURL(), "", schema
-        .getTargetNS(), schema.getNamespaceMap() );
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, rasterDataModelGML.toURL(), "" );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( rasterDataModelGML );

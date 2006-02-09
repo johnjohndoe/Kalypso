@@ -62,6 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -95,7 +96,8 @@ public class LineBC
    */
   public StringBuffer createLineBC( GMLWorkspace ws, Feature rootFeature, URL file2d, URL schema2d )
   {
-    Feature lineCollectionFE = ws.resolveLink( rootFeature, "lineCollectionMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "lineCollectionMember" );
+    Feature lineCollectionFE = ws.resolveLink( rootFeature, linkPT );
     List list = (List)lineCollectionFE.getProperty( "lineMember" );
     StringBuffer sb = new StringBuffer();
     sb.append( "           read(iin,'(60i5)')(line(j,k),k=1,60)" + "\n" );

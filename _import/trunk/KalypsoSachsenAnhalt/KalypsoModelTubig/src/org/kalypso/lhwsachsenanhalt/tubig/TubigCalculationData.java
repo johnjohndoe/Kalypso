@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -90,7 +91,8 @@ public final class TubigCalculationData
       // kleiner Hack, weil maxOccurs auf 1 gesetzt werden kann und dann gibt es eine classCastException
       if( batchIDObject instanceof Feature )
       {
-        final FeatureList list = FeatureFactory.createFeatureList( featCtrlBatchColl, featCtrlBatchColl.getFeatureType().getProperty( "BatchIDAssociation" ) );
+        final IRelationType linkPT = (IRelationType) featCtrlBatchColl.getFeatureType().getProperty( "BatchIDAssociation" );
+        final FeatureList list = FeatureFactory.createFeatureList( featCtrlBatchColl, linkPT );
         list.add( batchIDObject );
         featLstCtrlBatch = list;
       }

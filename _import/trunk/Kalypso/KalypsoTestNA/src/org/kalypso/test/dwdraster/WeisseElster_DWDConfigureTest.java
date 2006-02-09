@@ -54,17 +54,17 @@ import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
 import org.kalypso.dwd.schema.UrlCatalogDWD;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -175,7 +175,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
       conf.setNumberOfCells( geoRaster.getNumberOfCells() );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass().getResource(
           "resources/modell_epsg31469.gml" ) );
-      final FeatureType featureType = workspace.getFeatureType( "Catchment" );
+      final IFeatureType featureType = workspace.getFeatureType( "Catchment" );
       final Feature[] features = workspace.getFeatures( featureType );
       final List<Target> targetList = conf.getTarget();
       for( int i = 0; i < features.length; i++ )

@@ -59,6 +59,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -80,7 +81,8 @@ public class DischargeBC
    */
   public StringBuffer createDischarge( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature dischargeCollectionFE = ws.resolveLink( rootFeature, "dischargeCollectionMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("dischargeCollectionMember");
+    Feature dischargeCollectionFE = ws.resolveLink( rootFeature, linkPT );
     List list = (List)dischargeCollectionFE.getProperty( "dischargeMember" );
     StringBuffer sb = getQFHF( list );
 

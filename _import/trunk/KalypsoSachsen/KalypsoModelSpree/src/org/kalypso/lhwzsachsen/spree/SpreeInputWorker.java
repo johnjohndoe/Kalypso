@@ -22,6 +22,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -35,7 +36,6 @@ import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
@@ -376,7 +376,7 @@ public class SpreeInputWorker
   {
     try
     {
-      final FeatureType featureType = workspace.getFeatureType( layerName );
+      final IFeatureType featureType = workspace.getFeatureType( layerName );
       if( featureType == null )
         throw new CalcJobServiceException(
             "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: " + layerName, null );

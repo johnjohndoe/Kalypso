@@ -8,7 +8,7 @@
 //import org.apache.commons.io.FileUtils;
 //import org.kalypsodeegree.model.feature.Feature;
 //import org.kalypsodeegree.model.feature.FeatureProperty;
-//import org.kalypsodeegree.model.feature.FeatureType;
+//import org.kalypsodeegree.model.feature.IFeatureType;
 //import org.kalypsodeegree.model.feature.GMLWorkspace;
 //import org.kalypsodeegree_impl.extension.ITypeRegistry;
 //import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
@@ -83,7 +83,7 @@
 //
 //    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelFile.toURL(),
 //        KalypsoNADefaultSchema.getDefaultNaModellSchemaURL() );
-//    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+//    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
 //    final Feature[] features = workspace.getFeatures( nodeFT );
 //    StringBuffer failBuffer = new StringBuffer();
 //    // first test the difficult

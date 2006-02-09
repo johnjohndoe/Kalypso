@@ -58,8 +58,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -81,7 +81,8 @@ public class IterationBC
    */
   public StringBuffer createIterationProp( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature iterationCollectionFE = ws.resolveLink( rootFeature, "iterationCollectionMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("iterationCollectionMember");
+    Feature iterationCollectionFE = ws.resolveLink( rootFeature, linkPT );
     List list = (List)iterationCollectionFE.getProperty( "iterationMember" );
     StringBuffer sb = new StringBuffer();
     for( Iterator iter = list.iterator(); iter.hasNext(); )

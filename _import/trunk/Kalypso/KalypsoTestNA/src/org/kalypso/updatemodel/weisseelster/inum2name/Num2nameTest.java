@@ -38,15 +38,14 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * 
  * @author doemming
  */
 public class Num2nameTest extends TestCase
@@ -56,12 +55,12 @@ public class Num2nameTest extends TestCase
    * @see junit.framework.TestCase#setUp()
    */
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     KalypsoTest.init();
   }
 
-  public void testUpdate() throws Exception
+  public void testUpdate( ) throws Exception
   {
     final URL modellURL = getClass().getResource( "resource/modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL );
@@ -76,12 +75,11 @@ public class Num2nameTest extends TestCase
   }
 
   /**
-   * 
    * @param workspace
    * @param propName
    * @param featureType
    */
-  private void updateName( GMLWorkspace workspace, String propName, FeatureType featureType )
+  private void updateName( GMLWorkspace workspace, String propName, IFeatureType featureType )
   {
     final Feature[] features = workspace.getFeatures( featureType );
     for( int i = 0; i < features.length; i++ )
@@ -90,20 +88,13 @@ public class Num2nameTest extends TestCase
       final Object value = feature.getProperty( propName );
       if( value != null )
       {
-        final String orgName = (String)feature.getProperty( "name" );
+        final String orgName = (String) feature.getProperty( "name" );
         final String addName = feature.getProperty( propName ).toString();
         final String newName = orgName + "_" + addName;
         if( orgName == null || orgName.length() == 0 )
-        {
-          //          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", value );
-          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", addName );
-          feature.setProperty( property );
-        }
+          feature.setProperty( "name", addName );
         else
-        {
-          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", newName );
-          feature.setProperty( property );
-        }
+          feature.setProperty( "name", newName );
       }
     }
   }

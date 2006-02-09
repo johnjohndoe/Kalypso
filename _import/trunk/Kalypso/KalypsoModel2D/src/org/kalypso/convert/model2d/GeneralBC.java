@@ -58,8 +58,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -69,7 +69,6 @@ import com.braju.format.Format;
  * ----------------------------------------------------------------------
  * 
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
 public class GeneralBC
 {
@@ -82,14 +81,15 @@ public class GeneralBC
    */
   public StringBuffer createGeneral2BC( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature generalCollectionFE = ws.resolveLink( rootFeature, "genCollectionMember" );
-    List generalList = (List)generalCollectionFE.getProperty( "genMember" );
-    //TODO new addtional param group
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "genCollectionMember" );
+    Feature generalCollectionFE = ws.resolveLink( rootFeature, linkPT );
+    List generalList = (List) generalCollectionFE.getProperty( "genMember" );
+    // TODO new addtional param group
     StringBuffer sb = new StringBuffer();
     for( int i = 0; i < generalList.size(); i++ )
     {
-      Feature generalFE = (Feature)generalList.get( i );
-      //TODO why is generalFE == null?
+      Feature generalFE = (Feature) generalList.get( i );
+      // TODO why is generalFE == null?
       if( generalFE != null )
       {
         String blockNames = "  FEM     MORPH       P_BOTTOM             MINEDDY";
@@ -100,14 +100,9 @@ public class GeneralBC
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter( stringWriter );
         String format = "%5d%5d%5d%5d%10.3f%10.3f%10.1f";
-        Object[] o = new Object[]
-        {
-            new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "FEM" ) ) ),
-            new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "AUSSTEU" ) ) ),
-            new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "MORPH" ) ) ),
-            new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "ITURB" ) ) ),
-            new Double( Double.parseDouble( "" + generalFE.getProperty( "P_BOTTOM" ) ) ),
-            new Double( Double.parseDouble( "" + generalFE.getProperty( "P_PRANDTL" ) ) ),
+        Object[] o = new Object[] { new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "FEM" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "AUSSTEU" ) ) ),
+            new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "MORPH" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "ITURB" ) ) ),
+            new Double( Double.parseDouble( "" + generalFE.getProperty( "P_BOTTOM" ) ) ), new Double( Double.parseDouble( "" + generalFE.getProperty( "P_PRANDTL" ) ) ),
             new Double( Double.parseDouble( "" + generalFE.getProperty( "MINEDDY" ) ) ),
 
         };
@@ -138,44 +133,34 @@ public class GeneralBC
   }
 
   /**
-   * 
    * @param ws
    * @param rootFeature
    */
   public StringBuffer createGeneralBC( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature generalCollectionFE = ws.resolveLink( rootFeature, "generalCollectionMember" );
-    List generalList = (List)generalCollectionFE.getProperty( "generalMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "generalCollectionMember" );
+    final Feature generalCollectionFE = ws.resolveLink( rootFeature, linkPT );
+    List generalList = (List) generalCollectionFE.getProperty( "generalMember" );
 
     StringBuffer sb = new StringBuffer();
     for( Iterator iter = generalList.iterator(); iter.hasNext(); )
     {
-      Feature generalFE = (Feature)iter.next();
+      Feature generalFE = (Feature) iter.next();
       String blockNames = "   NE NMAT  NPX  NBX NWID NSID IPRT  NCL       IRO     IQGEN    ISTGEN    IDNOPT";
       String blockNames2 = "                                        IWIND     IRSLP     IHGEN     NCFLW     IBGEN";
 
       StringWriter stringWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter( stringWriter );
       String format = "%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d";
-      Object[] o = new Object[]
-      {
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NE" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NMAT" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NPX" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NBX" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NWID" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NSID" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IPRT" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NCL" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IWIND" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IRO" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IRSLP" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IQGEN" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IHGEN" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "ISTGEN" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "NCFLW" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IDNOPT" ) ) ),
-          new Integer( (int)Double.parseDouble( "" + generalFE.getProperty( "IBGEN" ) ) ), };
+      Object[] o = new Object[] { new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NE" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NMAT" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NPX" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NBX" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NWID" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NSID" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IPRT" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NCL" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IWIND" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IRO" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IRSLP" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IQGEN" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IHGEN" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "ISTGEN" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NCFLW" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IDNOPT" ) ) ),
+          new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IBGEN" ) ) ), };
       try
       {
         Format.fprintf( printWriter, format + "\n", o );

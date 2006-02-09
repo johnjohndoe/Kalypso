@@ -72,6 +72,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -83,7 +84,6 @@ import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -115,7 +115,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
       final IKalypsoTheme activeTheme = viewer.getMapModell().getActiveTheme();
       if( activeTheme instanceof GisTemplateFeatureTheme )
       {
-        FeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
+        IFeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
         if( featureType.getName().equals( "RectifiedGridCoverage" ) )
         {
           //System.out.println( "CreateImage" );

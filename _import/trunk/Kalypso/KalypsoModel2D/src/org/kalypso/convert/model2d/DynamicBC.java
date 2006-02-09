@@ -58,6 +58,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -79,7 +80,8 @@ public class DynamicBC
    */
   public StringBuffer createDynamicBC( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature dynamicCollectionFE = ws.resolveLink( rootFeature, "dynamicBC_CollectionMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("dynamicBC_CollectionMember");
+    Feature dynamicCollectionFE = ws.resolveLink( rootFeature, linkPT );
     List list = (List)dynamicCollectionFE.getProperty( "dynamicBC_Member" );
     StringBuffer sb = new StringBuffer();
     StringBuffer qfhf = new StringBuffer();

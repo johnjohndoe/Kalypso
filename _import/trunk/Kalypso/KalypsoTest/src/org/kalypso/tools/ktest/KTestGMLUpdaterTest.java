@@ -44,6 +44,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.CloneUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -52,7 +54,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -146,7 +147,7 @@ public class KTestGMLUpdaterTest extends TestCase
     final URL modelURL = getClass().getResource( "resources/weisseElster/modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelURL );
     final GMLWorkspace mappingWorkspace = createEmptyMappingWorkspace();
-    final FeatureType mappingFT = mappingWorkspace.getFeatureType( "MappingObservation" );
+    final IFeatureType mappingFT = mappingWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapColFE = mappingWorkspace.getRootFeature();
     final Feature[] nodeFeatures = workspace.getFeatures( workspace.getFeatureType( "Node" ) );
     final String[][] pegelData = { new String[] { "Bad Elster", "kalypso-ocs:psicompact://HN.5_WE.02PG...576391" }, new String[] { "Adorf", "kalypso-ocs:psicompact://HN.5_WE.02PG...576400" },
@@ -192,7 +193,8 @@ public class KTestGMLUpdaterTest extends TestCase
           mapFeature.setProperty( "remote7", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIDDLE ) );
           mapFeature.setProperty( "remote8", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIN ) );
           mapFeature.setProperty( "remote9", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MAX ) );
-          mappingWorkspace.addFeatureAsComposition( mapColFE, "mappingMember", 0, mapFeature );
+          IRelationType linkPT= (IRelationType) mapColFE.getFeatureType().getProperty("mappingMember");
+          mappingWorkspace.addFeatureAsComposition( mapColFE, linkPT, 0, mapFeature );
           System.out.println( "... done" );
           break;
         }
@@ -301,8 +303,7 @@ public class KTestGMLUpdaterTest extends TestCase
     if( real == null || !(real instanceof TimeseriesLinkType) )
       return;
     final TimeseriesLinkType newLink = createTSLinkForKTest( (TimeseriesLinkType) real );
-    final FeatureProperty newProp = FeatureFactory.createFeatureProperty( testProp, newLink );
-    feature.setProperty( newProp );
+    feature.setProperty(  testProp, newLink );
   }
 
   private TimeseriesLinkType createTSLinkForKTest( final TimeseriesLinkType linkEcht ) throws JAXBException

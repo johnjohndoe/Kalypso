@@ -69,12 +69,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -236,8 +236,8 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
   private void addGewichtung( final Feature f, final String pnr )
   {
     final FeatureList list = (FeatureList)f.getProperty( m_link );
-    final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)f.getFeatureType().getProperty( m_link );
-    final FeatureType elementType = ftp.getAssociationFeatureType();
+    final IRelationType ftp = (IRelationType) f.getFeatureType().getProperty( m_link );
+    final IFeatureType elementType = ftp.getTargetFeatureTypes(null,false)[0];
 
     // put values into gml
     final List metGebList = m_metGebHash.get( pnr );

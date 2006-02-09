@@ -46,18 +46,17 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.w3c.dom.Document;
 
 /**
  * ImportNA
@@ -95,9 +94,8 @@ public class ImportNA extends TestCase
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
-    final Document paraSchema = paraGmlSchema.getSchema();
-    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema.getFeatureTypes(), parameterRootFeature, null,
-        " project:/.model/schema/parameter.xsd", paraSchema.getNamespaceURI(), paraGmlSchema.getNamespaceMap() );
+    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null,
+        " project:/.model/schema/parameter.xsd" );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath());
   }

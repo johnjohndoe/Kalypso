@@ -62,6 +62,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.kalypso.convert.util.geom.GeometryHelper;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -140,7 +141,8 @@ public class FEMMesh
    */
   public void getMeshProperties( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature femCollectionFE = ws.resolveLink( rootFeature, "femCollectionMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("femCollectionMember");
+    Feature femCollectionFE = ws.resolveLink( rootFeature,  linkPT);
     List meshFEs = (List)femCollectionFE.getProperty( "meshMember" );
 
     System.out.println( "SIZE_FE " + meshFEs.size() );

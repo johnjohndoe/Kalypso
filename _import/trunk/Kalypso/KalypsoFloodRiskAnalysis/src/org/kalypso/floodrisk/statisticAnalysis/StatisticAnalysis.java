@@ -51,14 +51,14 @@ import java.util.Vector;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypso.floodrisk.tools.Number;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -277,10 +277,12 @@ public class StatisticAnalysis
     String sumPropertyName = "Sum";
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
-    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", schema.getFeatureType( rootFeatureName ) );
+    final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
+    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", rootFT );
     // create Collection
-    Feature collection = FeatureFactory.createFeature( "Collection0", schema.getFeatureType( collectionFeatureName ) );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( collectionPropertyName, collection ) );
+    final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
+    Feature collection = FeatureFactory.createFeature( "Collection0", collFT );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName), collection ) );
     // create landuseFeatures
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -313,20 +315,19 @@ public class StatisticAnalysis
           sum };
       Feature landuseFeature = FeatureFactory.createFeature( "Landuse" + landuseTypeList.get( landuse ), schema
           .getFeatureType( landuseFeatureName ), properties );
-      collection.addProperty( FeatureFactory.createFeatureProperty( landusePropertyName, landuseFeature ) );
+      collection.addProperty( FeatureFactory.createFeatureProperty(collFT.getProperty(landusePropertyName), landuseFeature ) );
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
           + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue=" + Number.round( max.doubleValue(), 4, mode ) );
       sumAll = sumAll + sum.doubleValue();
     }
-    collection.addProperty( FeatureFactory.createFeatureProperty( sumPropertyName, new Double( sumAll ) ) );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( overallSumProperty, new Double( sumAll ) ) );
+    collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName), new Double( sumAll ) ) );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty), new Double( sumAll ) ) );
     System.out.println( "Total damage= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
 
     //  create workspace
-    FeatureType[] types = schema.getFeatureTypes();
-    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, statisticDataURL, "", schema.getTargetNS(),
-        schema.getNamespaceMap() );
+    IFeatureType[] types = schema.getAllFeatureTypes();
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "");
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );
@@ -578,7 +579,8 @@ public class StatisticAnalysis
     String sumPropertyName = "Sum";
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
-    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", schema.getFeatureType( rootFeatureName ) );
+    final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
+    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", rootFT );
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -603,10 +605,11 @@ public class StatisticAnalysis
         }
       }
       // create Collection
-      Feature collection = FeatureFactory.createFeature( "Collection" + numOfCol, schema
-          .getFeatureType( collectionFeatureName ) );
-      collection.addProperty( FeatureFactory.createFeatureProperty( namePropertyName, adminUnit ) );
-      rootFeature.addProperty( FeatureFactory.createFeatureProperty( collectionPropertyName, collection ) );
+      final IFeatureType collFT = schema
+          .getFeatureType( collectionFeatureName );
+      Feature collection = FeatureFactory.createFeature( "Collection" + numOfCol, collFT );
+      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( namePropertyName), adminUnit ) );
+      rootFeature.addProperty( FeatureFactory.createFeatureProperty(rootFT.getProperty( collectionPropertyName), collection ) );
 
       System.out.println( adminUnit + ": " );
       //create landuse-features
@@ -641,24 +644,23 @@ public class StatisticAnalysis
         Feature landuseFeature = FeatureFactory.createFeature( "Landuse" + numOfFeat, schema
             .getFeatureType( landuseFeatureName ), properties );
         numOfFeat = numOfFeat + 1;
-        collection.addProperty( FeatureFactory.createFeatureProperty( landusePropertyName, landuseFeature ) );
+        collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName), landuseFeature ) );
         int mode = BigDecimal.ROUND_HALF_EVEN;
         System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
             + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue=" + Number.round( max.doubleValue(), 4, mode ) );
       }
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) );
-      collection.addProperty( FeatureFactory.createFeatureProperty( sumPropertyName, new Double( sum_adminUnit ) ) );
+      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty(sumPropertyName), new Double( sum_adminUnit ) ) );
       sumAll = sumAll + sum_adminUnit;
       numOfCol = numOfCol + 1;
     }
     System.out.println( "Total Damage=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( overallSumProperty, new Double( sumAll ) ) );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty(rootFT.getProperty( overallSumProperty), new Double( sumAll ) ) );
 
     //  create workspace
-    FeatureType[] types = schema.getFeatureTypes();
-    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, statisticDataURL, "", schema.getTargetNS(),
-        schema.getNamespaceMap() );
+    final IFeatureType[] types = schema.getAllFeatureTypes();
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );

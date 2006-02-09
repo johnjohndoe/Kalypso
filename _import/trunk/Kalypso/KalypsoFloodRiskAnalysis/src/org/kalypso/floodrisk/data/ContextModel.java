@@ -48,9 +48,11 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.kalypso.floodrisk.mathTool.ParseFunction;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -162,8 +164,10 @@ public class ContextModel
       for( int i = 0; i < list.size(); i++ )
       {
         Feature feat = (Feature)list.get( i );
-        Feature[] landuse = workspace.resolveLinks( feat, "LanduseLink" );
-        Feature damageFunction = workspace.resolveLink( feat, "DamageFunctionLink" );
+        final IRelationType lanuseLinkPT = (IRelationType) feat.getFeatureType().getProperty("LanduseLink" );
+        Feature[] landuse = workspace.resolveLinks( feat, lanuseLinkPT);
+        final IRelationType damageFctLinkPT = (IRelationType) feat.getFeatureType().getProperty( "DamageFunctionLink" );
+        Feature damageFunction = workspace.resolveLink( feat, damageFctLinkPT);
         for( int j = 0; j < landuse.length; j++ )
         {
           String function = (String)damageFunction.getProperty( "Function" );
@@ -198,11 +202,14 @@ public class ContextModel
       for( int i = 0; i < list.size(); i++ )
       {
         Feature feat = (Feature)list.get( i );
-        Feature[] landuse = workspace.resolveLinks( feat, "LanduseLink" );
-        Feature assetValue = workspace.resolveLink( feat, "AssetValueLink" );
+        final IRelationType landUseLink = (IRelationType) feat.getFeatureType().getProperty("LanduseLink" );
+        Feature[] landuse = workspace.resolveLinks( feat,landUseLink);
+        final IRelationType assetValueLink = (IRelationType) feat.getFeatureType().getProperty( "AssetValueLink" );
+        Feature assetValue = workspace.resolveLink( feat, assetValueLink);
         if( feat.getProperty( "AdministrationUnitLink" ) != null )
         {
-          Feature administrationUnit = workspace.resolveLink( feat, "AdministrationUnitLink" );
+          final IRelationType administrationUniLink = (IRelationType) feat.getFeatureType().getProperty("AdministrationUnitLink" );
+          Feature administrationUnit = workspace.resolveLink( feat, administrationUniLink);
           for( int j = 0; j < landuse.length; j++ )
           {
             Double value = (Double)assetValue.getProperty( "Value" );
@@ -219,7 +226,7 @@ public class ContextModel
         {
           for( int j = 0; j < landuse.length; j++ )
           {
-            Double value = (Double)assetValue.getProperty( "Value" );
+            Double value = (Double) assetValue.getProperty( "Value" );
             String landuseFID = landuse[j].getId();
             assetValueList.put( getID( landuseFID, landuse[j].getFeatureType() ).toString(), value );
             System.out.println( "Value=" + value + ", Landuse=" + landuse[j].getProperty( "Name" ) );
@@ -233,7 +240,7 @@ public class ContextModel
 //  /**
 //   * returns the IntegerValue of the featureID (Format: "Name_ID")
 //   * 
-//   * @deprecated should use getID( String fid, FeatureType featureType )
+//   * @deprecated should use getID( String fid, IFeatureType featureType )
 //   * 
 //   * @param fid
 //   *          featureID (Format: "Name_ID")
@@ -255,7 +262,7 @@ public class ContextModel
    *          featureType of the feature
    * @return ID as Integer
    */
-  private Integer getID( String fid, FeatureType featureType )
+  private Integer getID( String fid, IFeatureType featureType )
   {
     String id = fid.replaceFirst( featureType.getName(), "" );
     return new Integer( id );

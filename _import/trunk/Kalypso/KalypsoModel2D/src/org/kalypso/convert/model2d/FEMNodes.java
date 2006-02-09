@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -101,7 +102,8 @@ public class FEMNodes {
      * @param rootFeature
      */
     public void createNodeProperties(GMLWorkspace ws, Feature rootFeature){
-        Feature fpCollectionFE = ws.resolveLink(rootFeature, "featurePointCollectionMember");
+      final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("featurePointCollectionMember");  
+      Feature fpCollectionFE = ws.resolveLink(rootFeature, linkPT);
         List fpFEs = (List) fpCollectionFE.getProperty("featurePointMember");
         for (Iterator iter = fpFEs.iterator(); iter.hasNext();) {
             try{

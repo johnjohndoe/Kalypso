@@ -59,6 +59,7 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -80,8 +81,9 @@ public class Viscosity
    */
   public StringBuffer createViscosity( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature viscosityCollectionFE = ws.resolveLink( rootFeature, "viscosityCollectionMember" );
-    List list = (List)viscosityCollectionFE.getProperty( "viscosityMember" );
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "viscosityCollectionMember" );
+    Feature viscosityCollectionFE = ws.resolveLink( rootFeature, linkPT );
+    List list = (List) viscosityCollectionFE.getProperty( "viscosityMember" );
 
     StringBuffer sb = new StringBuffer();
     sb.append( "NMAT Zeilen Zuordnung von Rauhigkeitsklasse" + "\n" );
@@ -90,53 +92,37 @@ public class Viscosity
     Object[] o;
     for( int i = 0; i < list.size(); i++ )
     {
-      Feature viscosityFE = (Feature)list.get( i );
+      Feature viscosityFE = (Feature) list.get( i );
       StringWriter stringWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter( stringWriter );
       String format = "%10d%10.2f%10.2f%10.2f%10.2f%11.2f";
-      o = new Object[]
-      {
-          new Integer( (int)Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ),
-          new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
-          new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ),
-          new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
-          new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ),
-          new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ), };
+      o = new Object[] { new Integer( (int) Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
+          new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
+          new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ), new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ), };
 
       if( viscosityFE.getProperty( "abst" ) != null )
       {
-        List l = (List)viscosityFE.getProperty( "abst" );
+        List l = (List) viscosityFE.getProperty( "abst" );
         if( l.size() > 0 )
         {
           format = "%10d%10.2f%10.2f%10.2f%10.2f%11.2f%9.1f";
-          o = new Object[]
-          {
-              new Integer( (int)Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ),
-              new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ),
+          o = new Object[] { new Integer( (int) Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
+              new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
+              new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ), new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ),
               new Double( Double.parseDouble( "" + l.get( 0 ) ) ), };
         }
       }
       if( viscosityFE.getProperty( "durchbaum" ) != null )
       {
-        List l = (List)viscosityFE.getProperty( "durchbaum" );
-        List lAbst = (List)viscosityFE.getProperty( "abst" );
+        List l = (List) viscosityFE.getProperty( "durchbaum" );
+        List lAbst = (List) viscosityFE.getProperty( "abst" );
         if( l.size() > 0 )
         {
           format = "%10d%10.2f%10.2f%10.2f%10.2f%11.2f%9.1f%10.2f";
-          o = new Object[]
-          {
-              new Integer( (int)Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
-              new Double( (int)Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ),
-              new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ),
-              new Double( Double.parseDouble( "" + lAbst.get( 0 ) ) ),
-              new Double( Double.parseDouble( "" + l.get( 0 ) ) ), };
+          o = new Object[] { new Integer( (int) Double.parseDouble( "" + viscosityFE.getProperty( "id" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv1" ) ) ),
+              new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv2" ) ) ), new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv3" ) ) ),
+              new Double( (int) Double.parseDouble( "" + viscosityFE.getProperty( "wv4" ) ) ), new Double( Double.parseDouble( "" + viscosityFE.getProperty( "ks" ) ) ),
+              new Double( Double.parseDouble( "" + lAbst.get( 0 ) ) ), new Double( Double.parseDouble( "" + l.get( 0 ) ) ), };
         }
       }
       try

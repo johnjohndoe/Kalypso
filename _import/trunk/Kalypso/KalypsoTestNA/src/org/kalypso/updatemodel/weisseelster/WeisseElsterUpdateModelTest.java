@@ -49,14 +49,13 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author doemming
@@ -83,15 +82,14 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final URL inputModel = getClass().getResource( "resources/modell.gml" );
     final File outputFile = new File( "C:\\TMP\\modell.gml" );
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel );
-    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] features = workspace.getFeatures( catchmentFT );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       final TimeseriesLinkType link = m_zmlLinkFac.createTimeseriesLinkType();
       link.setHref( "Temperatur/Temperatur_" + feature.getId() + ".zml" );
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( "temperaturZR", link );
-      feature.setProperty( property );
+      feature.setProperty( "temperaturZR", link );
     }
     updateGMLTemperaturMapping( workspace );
     final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( outputFile ), "UTF-8" );
@@ -105,9 +103,9 @@ public class WeisseElsterUpdateModelTest extends TestCase
     final URL inputMappingURL = getClass().getResource( "resources/ObsTGebMapping.gml" );
     final File outputFile = new File( "C:\\TMP\\ObsTGebMapping.gml" );
     final GMLWorkspace mapWorkspace = GmlSerializer.createGMLWorkspace( inputMappingURL );
-    final FeatureType mapFT = mapWorkspace.getFeatureType( "MappingObservation" );
+    final IFeatureType mapFT = mapWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapRootFeature = mapWorkspace.getRootFeature();
-    final FeatureType catchmentFT = modelWorkspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = modelWorkspace.getFeatureType( "Catchment" );
     final Feature[] features = modelWorkspace.getFeatures( catchmentFT );
     for( int i = 0; i < features.length; i++ )
     {
@@ -115,25 +113,22 @@ public class WeisseElsterUpdateModelTest extends TestCase
       // srcProp
       final TimeseriesLinkType srcLink = m_zmlLinkFac.createTimeseriesLinkType();
       srcLink.setHref( "Ombrometer/T_virtuell.zml" );
-      final FeatureProperty srcProperty = FeatureFactory.createFeatureProperty( "inObservationLink", srcLink );
       // targetProp
       final Object targetLink = modelFeature.getProperty( "temperaturZR" );
-      final FeatureProperty targetProperty = FeatureFactory.createFeatureProperty( "outObservationLink", targetLink );
       // nameProp
       final Object nameValue = modelFeature.getProperty( "inum" );
-      final FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", nameValue );
       // geoProp
       final Object geoValue = modelFeature.getProperty( "Ort" );
-      final FeatureProperty geoProp = FeatureFactory.createFeatureProperty( "polygon", geoValue );
 
       // createFeature
       final Feature mapFeature = mapWorkspace.createFeature( mapFT );
-      mapWorkspace.addFeatureAsComposition(mapRootFeature, "mappingMember",0, mapFeature);
+      final IRelationType linkFT = (IRelationType) mapRootFeature.getFeatureType().getProperty("mappingMember");
+      mapWorkspace.addFeatureAsComposition(mapRootFeature, linkFT,0, mapFeature);
       //set props
-      mapFeature.setProperty( nameProp );
-      mapFeature.setProperty( geoProp );
-      mapFeature.setProperty( srcProperty );
-      mapFeature.setProperty( targetProperty );
+      mapFeature.setProperty(  "name", nameValue );
+      mapFeature.setProperty(  "polygon", geoValue );
+      mapFeature.setProperty(  "inObservationLink", srcLink );
+      mapFeature.setProperty(  "outObservationLink", targetLink );
     }
 
     final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( outputFile ), "UTF-8" );

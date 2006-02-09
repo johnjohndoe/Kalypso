@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -51,7 +52,6 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
@@ -360,7 +360,7 @@ public class SpreeCalcJob implements ICalcJob
     //////////////////////////////////////////////////
     // NAP Werte (Bodenfeuchten) in GML Übertragen) //
     //////////////////////////////////////////////////
-    final FeatureType napFT = workspace.getFeatureType( NAP_NAME );
+    final IFeatureType napFT = workspace.getFeatureType( NAP_NAME );
     if( napFT != null )
     {
       final Feature[] napFeatures = workspace.getFeatures( napFT );
@@ -370,7 +370,7 @@ public class SpreeCalcJob implements ICalcJob
     /////////////////////////////////////////////////////////////////
     // FLP Werte (Empfehlung KorrekturLaufzeit) in GML Übertragen) //
     /////////////////////////////////////////////////////////////////
-    final FeatureType flpFT = workspace.getFeatureType( FLP_NAME );
+    final IFeatureType flpFT = workspace.getFeatureType( FLP_NAME );
     if( flpFT != null )
     {
       final Feature[] flpFeatures = workspace.getFeatures( flpFT );
@@ -425,9 +425,8 @@ public class SpreeCalcJob implements ICalcJob
       final Feature gmlFeature = gmlFeatures[i];
 
       final double optimalValue = ( (Double)dbfFeature.getProperty( dbfProperty ) ).doubleValue();
-
-      final FeatureProperty newValue = FeatureFactory.createFeatureProperty( gmlProperty, new Double( optimalValue ) );
-      gmlFeature.setProperty( newValue );
+      
+      gmlFeature.setProperty(gmlProperty, new Double( optimalValue ) );
     }
   }
 

@@ -59,6 +59,7 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -68,7 +69,6 @@ import com.braju.format.Format;
  * -----------------------------------------------------------------
  * 
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
 public class BCGeom
 {
@@ -81,33 +81,27 @@ public class BCGeom
    */
   public StringBuffer createBCGeom( GMLWorkspace ws, Feature rootFeature )
   {
-    Feature geomCollectionFE = ws.resolveLink( rootFeature, "geomCollectionMember" );
-    List geomList = (List)geomCollectionFE.getProperty( "geomMember" );
+    IRelationType collLink = (IRelationType) rootFeature.getFeatureType().getProperty( "geomCollectionMember" );
+    Feature geomCollectionFE = ws.resolveLink( rootFeature, collLink );
+    List geomList = (List) geomCollectionFE.getProperty( "geomMember" );
     StringBuffer sb = new StringBuffer();
     for( Iterator iter = geomList.iterator(); iter.hasNext(); )
     {
-      Feature geomFE = (Feature)iter.next();
+      Feature geomFE = (Feature) iter.next();
       String blockNames = "     OMEGA     ,ELEV,   XSCALE,   ZSCALE,     DSET    ,DSETD,     UNOM,     HMIN   ,ASCALE      URFC";
       sb.append( blockNames + "\n" );
 
       StringWriter stringWriter = new StringWriter();
       PrintWriter printWriter = new PrintWriter( stringWriter );
-      String format = "%10.2f%10.3f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f";
-      Object[] o = new Object[]
-      {
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "OMEGA" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "ELEV" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "XSCALE" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "ZSCALE" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "DSET" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "DSETD" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "UNOM" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "HMIN" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "ASCALE" ) ) ),
-          new Double( Double.parseDouble( "" + geomFE.getProperty( "URFC" ) ) ),
+      final String format = "%10.2f%10.3f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f";
+      final Object[] o = new Object[] { new Double( Double.parseDouble( "" + geomFE.getProperty( "OMEGA" ) ) ), new Double( Double.parseDouble( "" + geomFE.getProperty( "ELEV" ) ) ),
+          new Double( Double.parseDouble( "" + geomFE.getProperty( "XSCALE" ) ) ), new Double( Double.parseDouble( "" + geomFE.getProperty( "ZSCALE" ) ) ),
+          new Double( Double.parseDouble( "" + geomFE.getProperty( "DSET" ) ) ), new Double( Double.parseDouble( "" + geomFE.getProperty( "DSETD" ) ) ),
+          new Double( Double.parseDouble( "" + geomFE.getProperty( "UNOM" ) ) ), new Double( Double.parseDouble( "" + geomFE.getProperty( "HMIN" ) ) ),
+          new Double( Double.parseDouble( "" + geomFE.getProperty( "ASCALE" ) ) ), new Double( Double.parseDouble( "" + geomFE.getProperty( "URFC" ) ) ),
 
       };
-      
+
       try
       {
         Format.fprintf( printWriter, format + "\n", o );

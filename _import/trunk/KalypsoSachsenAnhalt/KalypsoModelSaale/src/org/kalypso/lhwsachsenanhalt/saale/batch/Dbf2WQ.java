@@ -45,10 +45,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * 
@@ -75,7 +75,7 @@ public class Dbf2WQ
       final Feature f = (Feature)iter.next();
       if( count == 0 )
       {
-        final FeatureType featureType = f.getFeatureType();
+        final IFeatureType featureType = f.getFeatureType();
         if( featureType.getProperty( "WT" ) == null )
         {
           System.out.println( "WQ-Datei hat keine WT Spalte: " + basename );

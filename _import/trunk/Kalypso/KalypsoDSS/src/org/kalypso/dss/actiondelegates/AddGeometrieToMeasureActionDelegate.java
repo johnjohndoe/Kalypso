@@ -47,6 +47,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.MeasuresConstants;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -55,14 +58,11 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -79,8 +79,8 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
   {
     if( m_selection != null && action.isEnabled() )
     {
-      //get geometry property from selected Feature
-      final KalypsoFeatureThemeSelection featureSelection = (KalypsoFeatureThemeSelection)m_selection;
+      // get geometry property from selected Feature
+      final KalypsoFeatureThemeSelection featureSelection = (KalypsoFeatureThemeSelection) m_selection;
       final Feature firstFeature = FeatureSelectionHelper.getFirstFeature( featureSelection );
       if( firstFeature == null )
         return;
@@ -88,7 +88,7 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
       if( geometryProperties.length < 1 && geometryProperties.length > 1 )
         return;
       final GM_Object geom = geometryProperties[0];
-      //Load default workspace for measures from file
+      // Load default workspace for measures from file
       final URL url = getClass().getResource( "../resources/v0.1/empty_measures_collection.gml" );
       CommandableWorkspace measures = null;
       try
@@ -98,25 +98,22 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
         if( measureRootFeature == null )
           throw new SAXParseException( "Document root element is missing", new LocatorImpl() );
 
-        final FeatureType selectedFT = firstFeature.getFeatureType();
-        final FeatureType[] measureFT = measures.getFeatureTypes();
-        final FeatureType[] possibleFt = getMatchingFT( selectedFT.getAllGeomteryProperties(), measureFT,
-            MeasuresConstants.DSS_MEASURES_SUBST_GROUP, MeasuresConstants.DSS_MEASURES_NS );
-        //choose the feature type to add the geometry property to
-        final FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog(
-            Display.getCurrent().getActiveShell(), possibleFt, SWT.SINGLE );
+        final IFeatureType selectedFT = firstFeature.getFeatureType();
+        final IFeatureType[] measureFT = measures.getFeatureTypes();
+        final IFeatureType[] possibleFt = getMatchingFT( selectedFT.getAllGeomteryProperties(), measureFT, MeasuresConstants.DSS_MEASURES_SUBST_GROUP, MeasuresConstants.DSS_MEASURES_NS );
+        // choose the feature type to add the geometry property to
+        final FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( Display.getCurrent().getActiveShell(), possibleFt, SWT.SINGLE );
         final int status = dialog.open();
-        FeatureType[] ftFromDialog = null;
+        IFeatureType[] ftFromDialog = null;
         if( status == Window.OK )
         {
           ftFromDialog = dialog.getSelectedFeatureTypes();
-          FeatureType ft = ftFromDialog[0];
-          Feature newFeature = measures.createFeature( ft );
+          IFeatureType ft = ftFromDialog[0];
+          final Feature newFeature = measures.createFeature( ft );
 
-          IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-
-          AddFeatureCommand command = new AddFeatureCommand( measures, ft, measureRootFeature,
-              KalypsoDSSPlugin.MEASUER_MEMBER, 0, null, selectionManager );
+          final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+          final IRelationType rPT = (IRelationType) measureRootFeature.getFeatureType().getProperty( KalypsoDSSPlugin.MEASUER_MEMBER );
+          final AddFeatureCommand command = new AddFeatureCommand( measures, ft, measureRootFeature, rPT, 0, null, selectionManager );
           measures.postCommand( command );
 
         }
@@ -142,23 +139,22 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
    * @param measureFT
    * @return
    */
-  private FeatureType[] getMatchingFT( FeatureTypeProperty[] possibleFtp, FeatureType[] availableFT,
-      String substitutionGroup, String nameSpace )
+  private IFeatureType[] getMatchingFT( IPropertyType[] possibleFtp, IFeatureType[] availableFT, String substitutionGroup, String nameSpace )
   {
     final ArrayList res = new ArrayList();
     for( int i = 0; i < availableFT.length; i++ )
     {
-      FeatureType ft = availableFT[i];
-      String substitutionGroup2 = ft.getSubstitutionGroup();
+      IFeatureType ft = availableFT[i];
+      IFeatureType substitutionGroup2 = ft.getSubstitutionGroupFT();
       if( substitutionGroup2 == null )
         continue;
-      String ns = ft.getNamespace();
+      final String ns = ft.getNamespace();
       if( !substitutionGroup2.equals( substitutionGroup ) && !ns.equals( nameSpace ) )
         continue;
-      FeatureTypeProperty[] allGeomteryProperties = ft.getAllGeomteryProperties();
+      IPropertyType[] allGeomteryProperties = ft.getAllGeomteryProperties();
       for( int j = 0; j < allGeomteryProperties.length; j++ )
       {
-        FeatureTypeProperty property = allGeomteryProperties[j];
+        IPropertyType property = allGeomteryProperties[j];
         if( ArrayUtils.contains( allGeomteryProperties, property ) )
         {
           res.add( ft );
@@ -166,7 +162,7 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
         }
       }
     }
-    return (FeatureType[])res.toArray( new FeatureType[res.size()] );
+    return (IFeatureType[]) res.toArray( new IFeatureType[res.size()] );
   }
 
   /**
@@ -178,10 +174,10 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
     action.setEnabled( false );
     if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IStructuredSelection)selection;
+      m_selection = (IStructuredSelection) selection;
       if( m_selection instanceof KalypsoFeatureThemeSelection )
       {
-        KalypsoFeatureThemeSelection kalypsoFeatureThemeSelection = ( (KalypsoFeatureThemeSelection)m_selection );
+        KalypsoFeatureThemeSelection kalypsoFeatureThemeSelection = ((KalypsoFeatureThemeSelection) m_selection);
         if( !m_selection.isEmpty() && m_selection.size() == 1 )
           action.setEnabled( true );
       }

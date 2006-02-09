@@ -48,9 +48,10 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.kalypso.floodrisk.tools.Interval;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -146,10 +147,14 @@ public class RiskContextModel
     for( int i = 0; i < intervalMappingList.size(); i++ )
     {
       Feature intervalMappingMember = (Feature)intervalMappingList.get( i );
-      Feature intervalCollection = workspace.resolveLink( intervalMappingMember, "IntervalCollectionLink" );
+      final IFeatureType intervalFT = intervalMappingMember.getFeatureType();
+      IRelationType collLink = (IRelationType) intervalFT.getProperty("IntervalCollectionLink");
+      Feature intervalCollection = workspace.resolveLink( intervalMappingMember, collLink );
       System.out.println( "RiskClassList:" );
       Hashtable riskClassList = getRiskClassList( intervalCollection );
-      Feature[] landuseLinks = workspace.resolveLinks( intervalMappingMember, "LanduseLink" );
+      
+      final IRelationType landUselinkLink = (IRelationType) intervalFT.getProperty("LanduseLink");
+      Feature[] landuseLinks = workspace.resolveLinks( intervalMappingMember, landUselinkLink );
       for( int j = 0; j < landuseLinks.length; j++ )
       {
         String fid = landuseLinks[j].getId();
@@ -174,10 +179,11 @@ public class RiskContextModel
     List intervalMemberList = (List)intervalCollection.getProperty( "IntervalMember" );
     for( int i = 0; i < intervalMemberList.size(); i++ )
     {
-      Feature intervalMember = (Feature)intervalMemberList.get( i );
-      Feature featRisk = workspace.resolveLink( intervalMember, "RiskClassLink" );
-      Double minValue = (Double)intervalMember.getProperty( "minValue" );
-      Double maxValue = (Double)intervalMember.getProperty( "maxValue" );
+      final Feature intervalMember = (Feature)intervalMemberList.get( i );
+      final IRelationType riskClassLink = (IRelationType) intervalMember.getFeatureType().getProperty("RiskClassLink");
+      final Feature featRisk = workspace.resolveLink( intervalMember, riskClassLink );
+      final Double minValue = (Double)intervalMember.getProperty( "minValue" );
+      final Double maxValue = (Double)intervalMember.getProperty( "maxValue" );
       Interval interval = new Interval( minValue.doubleValue(), maxValue.doubleValue() );
       Integer key = getID( featRisk.getId(), featRisk.getFeatureType() );
       riskClassList.put( key, interval );
@@ -190,7 +196,7 @@ public class RiskContextModel
 //  /**
 //   * returns the IntegerValue of the featureID (Format: "Name_ID")
 //   * 
-//   * @deprecated should use getID( String fid, FeatureType featureType )
+//   * @deprecated should use getID( String fid, IFeatureType featureType )
 //   * 
 //   * @param fid
 //   *          featureID (Format: "Name_ID")
@@ -212,7 +218,7 @@ public class RiskContextModel
    *          featureType of the feature
    * @return ID as Integer
    */
-  private Integer getID( String fid, FeatureType featureType )
+  private Integer getID( String fid, IFeatureType featureType )
   {
     String id = fid.replaceFirst( featureType.getName(), "" );
     return new Integer( id );
