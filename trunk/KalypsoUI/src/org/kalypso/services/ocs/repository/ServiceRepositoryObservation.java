@@ -40,15 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.List;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
@@ -66,9 +66,10 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.proxy.DataBean;
-import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.ObservationBean;
+import org.kalypso.services.sensor.impl.DataBean;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
+import org.kalypso.services.sensor.impl.ObservationBean;
+import org.kalypso.services.sensor.impl.ObservationBean.MetadataList.Entry;
 import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
@@ -79,7 +80,7 @@ import org.xml.sax.InputSource;
  */
 public class ServiceRepositoryObservation implements IObservation
 {
-  private final IObservationService m_srv;
+  private final KalypsoObservationService m_srv;
 
   private final ObservationBean m_ob;
 
@@ -87,7 +88,7 @@ public class ServiceRepositoryObservation implements IObservation
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
-  public ServiceRepositoryObservation( final IObservationService srv, final ObservationBean ob )
+  public ServiceRepositoryObservation( final KalypsoObservationService srv, final ObservationBean ob )
   {
     m_srv = srv;
     m_ob = ob;
@@ -125,8 +126,12 @@ public class ServiceRepositoryObservation implements IObservation
     {
       final DataBean db = m_srv.readData( href );
 
-      ins = db.getDataHandler().getInputStream();
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+//      ins = db.getDataHandler().getInputStream();
+//      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+//      ins.close();
+
+      final InputStream stream = new BufferedInputStream( new ByteArrayInputStream( db.getDataHandler() ) );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( stream ), "", null );
       ins.close();
 
       m_srv.clearTempData( db.getId() );
@@ -188,7 +193,12 @@ public class ServiceRepositoryObservation implements IObservation
       return m_obs.getMetadataList();
 
     final MetadataList md = new MetadataList();
-    md.putAll( m_ob.getMetadataList() );
+
+    final org.kalypso.services.sensor.impl.ObservationBean.MetadataList omdl = m_ob.getMetadataList();
+    final List<Entry> entries = omdl.getEntry();
+    for( final Entry entry : entries )
+      md.put( entry.getKey(), entry.getValue() );
+    
     return md;
   }
 
@@ -241,22 +251,25 @@ public class ServiceRepositoryObservation implements IObservation
       // save zml
       final Observation obst = ZmlFactory.createXML( obs, null );
 
-      final File tmpFile = File.createTempFile( "towards-server", "zml" );
-      tmpFile.deleteOnExit();
+      //final File tmpFile = File.createTempFile( "towards-server", "zml" );
+      //tmpFile.deleteOnExit();
 
-      final FileOutputStream stream = new FileOutputStream( tmpFile );
+      //final FileOutputStream stream = new FileOutputStream( tmpFile );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING ).toString();
+      
+      final ByteArrayOutputStream stream = new ByteArrayOutputStream();
       fw = new OutputStreamWriter( stream, enc );
 
       marshaller.marshal( obst, fw );
       fw.close();
 
       // let server read file and save on its own
-      m_srv.writeData( m_ob, new DataHandler( new FileDataSource( tmpFile ) ) );
+      //m_srv.writeData( m_ob, new DataHandler( new FileDataSource( tmpFile ) ) );
+      m_srv.writeData( m_ob, stream.toByteArray() );
 
       // and clean temp stuff
-      tmpFile.delete();
+//      tmpFile.delete();
 
       m_evtPrv.fireChangedEvent( null );
     }
@@ -273,11 +286,13 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * Sets the given values to the server side observation defined by the given href.
    */
-  public static void setValuesFor( final ITuppleModel values, final String href, final IObservationService srv )
+  public static void setValuesFor( final ITuppleModel values, final String href, final KalypsoObservationService srv )
       throws SensorException
   {
-    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, new ObservationBean( href, "",
-        null ) );
+    final ObservationBean bean = new ObservationBean();
+    bean.setId( href );
+    
+    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, bean );
 
     srvObs.setValues( values );
   }
@@ -286,7 +301,7 @@ public class ServiceRepositoryObservation implements IObservation
    * Reads the file as a ZML-File and sets the values of the parsed observation to the server one defined by the given
    * href.
    */
-  public static void setValuesFor( final IFile file, final String href, final IObservationService srv )
+  public static void setValuesFor( final IFile file, final String href, final KalypsoObservationService srv )
       throws SensorException
   {
     InputStreamReader in = null;

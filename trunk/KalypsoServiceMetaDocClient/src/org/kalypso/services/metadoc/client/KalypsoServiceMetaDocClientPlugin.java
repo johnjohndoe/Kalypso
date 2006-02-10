@@ -1,8 +1,9 @@
 package org.kalypso.services.metadoc.client;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
-import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -30,22 +31,6 @@ public class KalypsoServiceMetaDocClientPlugin extends Plugin
     {
       resourceBundle = null;
     }
-  }
-
-  /**
-   * This method is called upon plug-in activation
-   */
-  public void start( BundleContext context ) throws Exception
-  {
-    super.start( context );
-  }
-
-  /**
-   * This method is called when the plug-in is stopped
-   */
-  public void stop( BundleContext context ) throws Exception
-  {
-    super.stop( context );
   }
 
   /**

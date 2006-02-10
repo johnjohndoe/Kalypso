@@ -85,9 +85,6 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -98,9 +95,11 @@ import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandle
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
@@ -108,15 +107,18 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.calculation.ICalculationServiceProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.ICalculationService;
-import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
@@ -415,7 +417,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final Exception e )
     {
       e.printStackTrace();
-
     }
 
     return proxies;
@@ -477,9 +478,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * @return WebService proxy for the IObservationService
    * @throws ServiceException
    */
-  public IObservationService getObservationServiceProxy( ) throws ServiceException
+  public KalypsoObservationService getObservationServiceProxy( ) throws ServiceException
   {
-    return (IObservationService) KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAnyProxy( "Kalypso_ObservationService", ClassUtilities.getOnlyClassName( IObservationService.class ) );
+    return (KalypsoObservationService) KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
   }
 
   public ILoaderFactory getLoaderFactory( )
@@ -752,8 +753,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       registry.registerTypeHandler( wtKcLaiInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
-    }
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );    }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();

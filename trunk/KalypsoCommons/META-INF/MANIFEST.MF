@@ -6,15 +6,12 @@ Bundle-Version: 0.0.1
 Bundle-ClassPath: KalypsoCommons.jar,
  lib/commons-io-1.0.jar,
  lib/commons-lang-2.0.jar,
- lib/hb15.jar,
  lib/commons-logging.jar,
  lib/commons-httpclient-2.0.2.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Export-Package: com.braju.format,
- com.braju.lang,
- org.apache.commons.httpclient,
+Export-Package: org.apache.commons.httpclient,
  org.apache.commons.httpclient.auth,
  org.apache.commons.httpclient.cookie,
  org.apache.commons.httpclient.methods,

@@ -19,10 +19,10 @@ public class ModellEvent
   /** Das sendende Objekt hat sich völlig geändert (Value 16) */
   public static final long FULL_CHANGE = 1 << 4;
 
-  /** TODO: this is not a modell-event type (it has nothing todo with the workspace) (Value 32) */
+  /** TODO: this is not a modell-event type (it has nothing to do with the workspace) (Value 32) */
   public static final long THEME_ADDED = 1 << 5;
 
-  /** TODO: this is not a modell-event type (it has nothing todo with the workspace) (Value 64) */
+  /** TODO: this is not a modell-event type (it has nothing to do with the workspace) (Value 64) */
   public static final long LEGEND_UPDATED = 1 << 6;
 
   private final ModellEventProvider m_eventSource;

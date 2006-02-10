@@ -52,6 +52,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
+import javax.jws.WebService;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -66,7 +67,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
@@ -85,6 +85,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Belger
  */
+@WebService
 public class QueuedCalcJobServiceWrapper implements ICalculationService
 {
   protected static final Logger LOGGER = Logger.getLogger( QueuedCalcJobServiceWrapper.class.getName() );

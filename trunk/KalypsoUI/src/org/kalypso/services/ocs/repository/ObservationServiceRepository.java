@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
@@ -49,8 +49,9 @@ import javax.xml.rpc.ServiceException;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.ItemBean;
+import org.kalypso.services.sensor.impl.ItemBean;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
+import org.kalypso.services.sensor.impl.RepositoryException_Exception;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -63,7 +64,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /** root item is identified by the null bean */
   private final static ItemBean ROOT_ITEM = null;
 
-  private final IObservationService m_srv;
+  private final KalypsoObservationService m_srv;
 
   private final Map m_foundItems = new HashMap();
 
@@ -78,21 +79,10 @@ public class ObservationServiceRepository extends AbstractRepository
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
   }
 
-  /**
-   * @see org.kalypso.repository.AbstractRepository#getDescription()
-   */
+  @Override
   public String getDescription()
   {
-    try
-    {
-      return m_srv.getDescription();
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-
-      return "<Fehler...>";
-    }
+    return m_srv.getDescription();
   }
 
   /**
@@ -104,7 +94,7 @@ public class ObservationServiceRepository extends AbstractRepository
     {
       return m_srv.hasChildren( ROOT_ITEM );
     }
-    catch( RemoteException e )
+    catch( final RepositoryException_Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -117,16 +107,16 @@ public class ObservationServiceRepository extends AbstractRepository
   {
     try
     {
-      final ItemBean[] beans = m_srv.getChildren( ROOT_ITEM );
+      final List<ItemBean> beans = m_srv.getChildren( ROOT_ITEM );
 
-      final IRepositoryItem[] items = new IRepositoryItem[beans.length];
+      final IRepositoryItem[] items = new IRepositoryItem[beans.size()];
 
       for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( m_srv, beans[i], null, this );
+        items[i] = new ServiceRepositoryItem( m_srv, beans.get(i), null, this );
 
       return items;
     }
-    catch( RemoteException e )
+    catch( final RepositoryException_Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -151,7 +141,7 @@ public class ObservationServiceRepository extends AbstractRepository
     {
       m_srv.reload();
     }
-    catch( RemoteException e )
+    catch( final RepositoryException_Exception e )
     {
       throw new RepositoryException( e );
     }

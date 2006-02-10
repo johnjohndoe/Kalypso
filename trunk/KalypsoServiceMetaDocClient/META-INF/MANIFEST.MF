@@ -12,8 +12,7 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.services,
  org.kalypso.services.common,
  org.kalypso.services.metadoc,
- org.kalypso.services.metadoc.client,
- org.kalypso.services.proxy
+ org.kalypso.services.metadoc.client
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.kalypso.auth,

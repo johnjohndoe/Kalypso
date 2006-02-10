@@ -61,7 +61,7 @@ public class DataBean implements Serializable
     return m_dh;
   }
 
-  public void setDataHandler( DataHandler dh )
+  public void setDataHandler( final DataHandler dh )
   {
     m_dh = dh;
   }
@@ -71,7 +71,7 @@ public class DataBean implements Serializable
     return m_id;
   }
 
-  public void setId( String id )
+  public void setId( final String id )
   {
     m_id = id;
   }

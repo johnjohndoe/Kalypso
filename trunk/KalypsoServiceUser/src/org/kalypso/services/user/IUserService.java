@@ -40,9 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.user;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 import org.kalypso.services.IKalypsoService;
 
 /**
@@ -50,7 +47,7 @@ import org.kalypso.services.IKalypsoService;
  * 
  * @author belger
  */
-public interface IUserService extends Remote, IKalypsoService
+public interface IUserService extends IKalypsoService
 {
   /**
    * Returns the rights of the given user
@@ -59,9 +56,8 @@ public interface IUserService extends Remote, IKalypsoService
    *          name of the user who has already authenticated himself against the operating system
    * 
    * @return list of rights
-   * @throws RemoteException
    */
-  public String[] getRights( final String username ) throws RemoteException;
+  public String[] getRights( final String username ) throws UserRightsException;
 
   /**
    * Returns the rights of the given user
@@ -72,22 +68,21 @@ public interface IUserService extends Remote, IKalypsoService
    * @param password
    *          TODO encode password, make this call secure
    * @return list of rights
-   * @throws RemoteException
    */
-  public String[] getRights( final String username, final String password ) throws RemoteException;
+  public String[] getRightsWithAuth( final String username, final String password ) throws UserRightsException;
 
   /**
    * @return whether user should be asked to enter its login information or not
    */
-  public boolean isAskForLogin() throws RemoteException;
+  public boolean isAskForLogin() throws UserRightsException;
 
   /**
    * @return whether user should be asked for scenario or not
    */
-  public boolean isAskForScenario() throws RemoteException;
+  public boolean isAskForScenario() throws UserRightsException;
 
   /**
    * @return list of scenarios that must be managed by clients
    */
-  public ScenarioBean[] getScenarios() throws RemoteException;
+  public ScenarioBean[] getScenarios() throws UserRightsException;
 }
