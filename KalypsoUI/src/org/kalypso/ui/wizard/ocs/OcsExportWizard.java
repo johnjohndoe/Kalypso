@@ -58,7 +58,7 @@ import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
-import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.ocs.idtable.IdStruct;
 
@@ -92,7 +92,7 @@ public class OcsExportWizard extends Wizard implements IExportWizard
   public boolean performFinish()
   {
     final IdStruct[] structs = m_idPage.getResourcesToExport();
-    IObservationService srv = null;
+    KalypsoObservationService srv = null;
     try
     {
       srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();

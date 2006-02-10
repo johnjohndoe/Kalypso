@@ -42,22 +42,16 @@
 package org.kalypso.services.metadoc.client;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.RemoteException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.configuration.BaseConfiguration;
@@ -74,29 +68,26 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.Mapper;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
-import org.kalypso.services.proxy.IMetaDocService;
+import org.kalypso.services.metadoc.impl.DocumentBean;
+import org.kalypso.services.metadoc.impl.KalypsoMetaDocService;
+import org.kalypso.services.metadoc.impl.MetaDocException_Exception;
+import org.kalypso.services.metadoc.impl.PrepareBean;
+import org.kalypso.services.metadoc.impl.DocumentBean.Metadata;
+import org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -118,41 +109,75 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 {
   public final static String CONF_METADATA = MetaDocServiceExportTarget.class.getName() + ".METADATA";
 
-  private static final String NS = "namespace";
-
   public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    File file = null;
-    OutputStream outputStream = null;
+    // File file = null;
+    ByteArrayOutputStream outputStream = null;
     try
     {
       monitor.beginTask( "Dokument " + document.getPreferredDocumentName() + " wird exportiert", 2 );
 
-      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document.getPreferredDocumentName(), "tmp" );
-      file.deleteOnExit();
+      // file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document
+      // .getPreferredDocumentName(), "tmp" );
+      // file.deleteOnExit();
 
-      outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
+      // outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
+      outputStream = new ByteArrayOutputStream();
 
       // important: use a BaseConfiguration not a MapConfiguration because of the addProperty() contract.
-      final BaseConfiguration mdEx = new BaseConfiguration();
+      final BaseConfiguration confEx = new BaseConfiguration();
       // copy our properties into the metadataExtensions, will be used by the webservice
-      ConfigurationUtils.copy( getProperties(), mdEx );
+      ConfigurationUtils.copy( getProperties(), confEx );
 
-      final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ), mdEx );
+      final IStatus status = document.exportObject( new BufferedOutputStream( outputStream ), new SubProgressMonitor( monitor, 1 ), confEx );
       outputStream.close();
 
       // in the case of an error, and just in this case, break export. In other cases, continue.
       if( status.matches( IStatus.ERROR ) )
         return status;
 
-      final IMetaDocService metadocService = getMetadocService();
+      // final DataHandler dh = new DataHandler( new FileDataSource( file ) );
 
-      final DataHandler dh = new DataHandler( new FileDataSource( file ) );
+      final KalypsoMetaDocService metadocService = getMetadocService();
+
+      // metadocService.commitNewDocument( conf.getProperty( CONF_METADATA ), dh, document.getPreferredDocumentName(),
+      // document.getIdentifier(), document.getCategory(), map );
+
+      final Map<Object, Object> confMap = (Map<Object, Object>) conf.getProperty( CONF_METADATA );
+      final Set<Map.Entry<Object, Object>> confMapEntries = confMap.entrySet();
+
+      final Metadata md = new Metadata();
+      final List<org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry> mdEntries = md.getEntry();
+      for( Map.Entry<Object, Object> confMapEntry : confMapEntries )
+      {
+        final org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry mdEntry = new org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry();
+        mdEntry.setKey( confMapEntry.getKey() );
+        mdEntry.setValue( confMapEntry.getValue() );
+        mdEntries.add( mdEntry );
+      }
 
       // get a map out of the metadata extensions
-      final Map map = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( mdEx );
+      final Map<Object,Object> exMap = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( confEx );
+      final Set<Entry<Object, Object>> exMapEntries = exMap.entrySet();
 
-      metadocService.commitNewDocument( (Map) conf.getProperty( CONF_METADATA ), dh, document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), map );
+      final MetadataExtensions mdEx = new MetadataExtensions();
+      final List<org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry> mdExEntries = mdEx.getEntry();
+      for( Entry<Object, Object> exMapEntry : exMapEntries )
+      {
+        final org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry mdExEntry = new org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry();
+        mdExEntry.setKey( exMapEntry.getKey() );
+        mdExEntry.setValue( exMapEntry.getValue() );
+        mdExEntries.add( mdExEntry );
+      }
+
+      final DocumentBean docBean = new DocumentBean();
+      docBean.setMetadata( md );
+      docBean.setPreferredFilename( document.getPreferredDocumentName() );
+      docBean.setDocumentIdentifier( document.getIdentifier() );
+      docBean.setDocumentCategory( document.getCategory() );
+      docBean.setMetadataExtensions( mdEx );
+
+      metadocService.commitNewDocument( docBean, outputStream.toByteArray() );
 
       monitor.worked( 1 );
 
@@ -172,8 +197,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       IOUtils.closeQuietly( outputStream );
 
-      if( file != null )
-        file.delete();
+      // if( file != null )
+      // file.delete();
     }
   }
 
@@ -184,11 +209,12 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final Feature feature = prepareFeature( configuration );
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, null, feature, new FeatureSelectionManager2() )
     {
+      @Override
       protected void applyFeatureChange( FeatureChange fc )
       {
         super.applyFeatureChange( fc );
 
-        final Map metadata = (Map) configuration.getProperty( CONF_METADATA );
+        final Map<Object,Object> metadata = (Map<Object,Object>) configuration.getProperty( CONF_METADATA );
 
         final Object newValue = Mapper.mapJavaValueToXml( fc.getNewValue() );
         metadata.put( fc.getProperty(), newValue );
@@ -205,35 +231,38 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
   {
     final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
 
-    final Map metadata;
+    final PrepareBean pBean;
     try
     {
-      metadata = getMetadocService().prepareNewDocument( authPlugin.getCurrentUser().getUserName() );
+      pBean = getMetadocService().prepareNewDocument( authPlugin.getCurrentUser().getUserName() );
     }
-    catch( final RemoteException e )
+    catch( final MetaDocException_Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
     }
 
-    configuration.setProperty( CONF_METADATA, metadata );
+    final Map<Object,Object> map = new HashMap<Object,Object>();
+    configuration.setProperty( CONF_METADATA, map );
+    
+    final org.kalypso.services.metadoc.impl.PrepareBean.Metadata metadata = pBean.getMetadata();
+    final List<org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry> entries = metadata.getEntry();
 
     final Configuration targetProps = getProperties();
 
     // create featuretype from bean
-    final Collection<IPropertyType> ftpColl = new ArrayList<IPropertyType>();
+    final Collection<FeatureTypeProperty> ftpColl = new ArrayList<FeatureTypeProperty>();
     final Collection<FeatureProperty> fpColl = new ArrayList<FeatureProperty>();
-    final int[] ints = new int[metadata.size()];
+    final int[] ints = new int[map.size()];
     int count = 0;
-    for( final Iterator iter = metadata.entrySet().iterator(); iter.hasNext(); )
+    for( org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry entry : entries )
     {
-      final Map.Entry entry = (Entry) iter.next();
+      map.put( entry.getKey(), entry.getValue() );
 
       final String name = entry.getKey().toString();
 
       final String[] splits = entry.getValue().toString().split( ";" );
 
-      // @marc xml or java type ?
       final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
       String value = splits.length >= 2 ? splits[1] : null;
@@ -244,45 +273,31 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         value = targetProps.getString( value );
 
         // Important: always put value again in metadata when it changed
-        metadata.put( name, value );
+        map.put( name, value );
       }
-      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
+      String typename = null;
       Object realValue = null;
-      IPropertyType pt = null;
       try
       {
-        final QName valueQName = new QName( XMLHelper.XMLSCHEMA_NS, xmltype );
-        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
-        realValue = typeHandler.parseType( value );
-        pt = GMLSchemaFactory.createValuePropertyType( new QName( NS, name ), valueQName, typeHandler, 1, 1 );
+        typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
+        realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
-      {// next try with xsd:string
+      {
         e.printStackTrace();
-        try
-        {
-          final QName valueQName = new QName( XMLHelper.XMLSCHEMA_NS, "string" );
-          final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
-          realValue = typeHandler.parseType( value );
-          pt = GMLSchemaFactory.createValuePropertyType( new QName( NS, name ), valueQName, typeHandler, 1, 1 );
-        }
-        catch( ParseException e1 )
-        {
-          e1.printStackTrace();
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
-        }
+        typename = "java.lang.String";
       }
-      ftpColl.add( pt );
-      fpColl.add( FeatureFactory.createFeatureProperty( pt, realValue ) );
+      ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
+      fpColl.add( FeatureFactory.createFeatureProperty( name, realValue ) );
+
       ints[count++] = 1;
     }
 
-    final IPropertyType[] ftps = ftpColl.toArray( new IPropertyType[ftpColl.size()] );
-    // final IFeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap()
-    // );
-    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( NS, "docbean" ), ftps );
+    final FeatureTypeProperty[] ftps = ftpColl.toArray( new FeatureTypeProperty[ftpColl.size()] );
+    final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap() );
 
-    return FeatureFactory.createFeature( "0", ft, (FeatureProperty[]) fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
+    return FeatureFactory.createFeature( "0", ft, fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
   }
 
   /**
@@ -290,12 +305,12 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
    * @throws CoreException
    *           if client-server connection could not be established
    */
-  public static IMetaDocService getMetadocService( ) throws CoreException
+  public static KalypsoMetaDocService getMetadocService( ) throws CoreException
   {
     try
     {
       final ProxyFactory serviceProxyFactory = KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory();
-      return (IMetaDocService) serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", ClassUtilities.getOnlyClassName( IMetaDocService.class ) );
+      return (KalypsoMetaDocService) serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", "IMetaDocService" );
     }
     catch( final ServiceException e )
     {

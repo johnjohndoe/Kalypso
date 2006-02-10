@@ -40,12 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service;
 
-import java.rmi.RemoteException;
 
 /**
  * @author Belger
  */
-public class CalcJobServiceException extends RemoteException
+public class CalcJobServiceException extends Exception
 {
   public CalcJobServiceException( final String s, final Throwable ex )
   {

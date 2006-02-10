@@ -11,7 +11,6 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services,
  org.kalypso.services.common,
- org.kalypso.services.proxy,
  org.kalypso.services.user,
  org.kalypso.services.user.client
 Require-Bundle: org.eclipse.core.runtime,

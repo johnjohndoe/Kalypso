@@ -40,24 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.proxy.DataBean;
-import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.sensor.impl.DataBean;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
@@ -73,9 +74,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 {
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
-  /**
-   * @see java.net.URLStreamHandler#openConnection(java.net.URL)
-   */
+  @Override
   public URLConnection openConnection( final URL u ) throws IOException
   {
     final String href = u.toExternalForm();
@@ -99,7 +98,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       }
     }
 
-    InputStream ins = null;
+    //InputStream ins = null;
+    OutputStream stream = null;
     File file = null;
 
     try
@@ -109,7 +109,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         return u.openConnection();
 
       // else fetch the observation from the server
-      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+      final KalypsoObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 
       final DataBean data = srv.readData( href );
 
@@ -117,9 +117,14 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
       file.deleteOnExit();
 
-      ins = data.getDataHandler().getInputStream();
-      FileUtilities.makeFileFromStream( false, file, ins );
-      ins.close();
+//      ins = data.getDataHandler().getInputStream();
+//      FileUtilities.makeFileFromStream( false, file, ins );
+//      ins.close();
+      final byte[] bytes = data.getDataHandler();
+      
+      stream = new BufferedOutputStream( new FileOutputStream( file ) );
+      stream.write( bytes );
+      stream.close();
 
       srv.clearTempData( data.getId() );
 
@@ -148,7 +153,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     finally
     {
-      IOUtils.closeQuietly( ins );
+//      IOUtils.closeQuietly( ins );
+      IOUtils.closeQuietly( stream );
     }
   }
 

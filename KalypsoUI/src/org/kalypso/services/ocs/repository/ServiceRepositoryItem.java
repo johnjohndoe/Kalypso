@@ -40,15 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
-import java.rmi.RemoteException;
+import java.util.List;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.ItemBean;
-import org.kalypso.services.proxy.ObservationBean;
+import org.kalypso.services.sensor.impl.ItemBean;
+import org.kalypso.services.sensor.impl.KalypsoObservationService;
+import org.kalypso.services.sensor.impl.ObservationBean;
+import org.kalypso.services.sensor.impl.RepositoryException_Exception;
+import org.kalypso.services.sensor.impl.SensorException_Exception;
 
 /**
  * @author schlienger
@@ -59,12 +61,11 @@ public class ServiceRepositoryItem implements IRepositoryItem
 
   private final ServiceRepositoryItem m_parent;
 
-  private final IObservationService m_srv;
+  private final KalypsoObservationService m_srv;
 
   private final IRepository m_rep;
 
-  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent,
-      final IRepository rep )
+  public ServiceRepositoryItem( final KalypsoObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent, final IRepository rep )
   {
     m_rep = rep;
     m_srv = srv;
@@ -75,7 +76,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_bean.getName();
   }
@@ -83,7 +84,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -91,13 +92,13 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren( ) throws RepositoryException
   {
     try
     {
       return m_srv.hasChildren( m_bean );
     }
-    catch( RemoteException e )
+    catch( final RepositoryException_Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -106,20 +107,20 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
-      final ItemBean[] beans = m_srv.getChildren( m_bean );
+      final List<ItemBean> beans = m_srv.getChildren( m_bean );
 
-      final IRepositoryItem[] items = new ServiceRepositoryItem[beans.length];
+      final IRepositoryItem[] items = new ServiceRepositoryItem[beans.size()];
 
       for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( m_srv, beans[i], this, m_rep );
+        items[i] = new ServiceRepositoryItem( m_srv, beans.get( i ), this, m_rep );
 
       return items;
     }
-    catch( RemoteException e )
+    catch( final RepositoryException_Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -141,7 +142,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
 
         return new ServiceRepositoryObservation( m_srv, bean );
       }
-      catch( RemoteException e )
+      catch( final SensorException_Exception e )
       {
         e.printStackTrace();
       }
@@ -150,10 +151,8 @@ public class ServiceRepositoryItem implements IRepositoryItem
     return null;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return getName();
   }
@@ -161,7 +160,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_bean.getId();
   }
@@ -169,7 +168,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     return m_rep;
   }

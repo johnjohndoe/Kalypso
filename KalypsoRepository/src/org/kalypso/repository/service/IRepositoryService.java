@@ -40,8 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.service;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import org.kalypso.repository.RepositoryException;
 
 /**
  * General service base interface for repositories.
@@ -53,33 +52,33 @@ import java.rmi.RemoteException;
  * 
  * @author schlienger
  */
-public interface IRepositoryService extends Remote
+public interface IRepositoryService
 {
   /**
    * @param parent
    * @return true if the given parent has children.
    * @throws RemoteException
    */
-  public boolean hasChildren( final ItemBean parent ) throws RemoteException;
+  public boolean hasChildren( final ItemBean parent ) throws RepositoryException;
 
   /**
    * @param parent
    * @return the children of the given item (parent node). Returns an empty array when the parent has no children.
    * @throws RemoteException
    */
-  public ItemBean[] getChildren( final ItemBean parent ) throws RemoteException;
+  public ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException;
 
   /**
    * @param id
    * @return ItemBean if found, else null.
    * @throws RemoteException
    */
-  public ItemBean findItem( final String id ) throws RemoteException;
+  public ItemBean findItem( final String id ) throws RepositoryException;
 
   /**
    * Forces the refresh of the remote repository.
    * 
    * @throws RemoteException
    */
-  public void reload() throws RemoteException;
+  public void reload() throws RepositoryException;
 }
