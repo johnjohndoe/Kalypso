@@ -401,7 +401,7 @@ public class PersistentPageFile extends PageFile
    */
   public void finalize() throws Throwable
   {
-    if( !closed )
+    if( !closed && file!=null)
     {
       file.close();
     }
