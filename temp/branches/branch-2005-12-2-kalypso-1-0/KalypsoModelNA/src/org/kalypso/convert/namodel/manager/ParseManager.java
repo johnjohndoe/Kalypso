@@ -78,9 +78,12 @@ public class ParseManager
 
   private final SchneeManager m_schneeManager;
 
+  private final IdleLanduseManager m_idleLanduseManager;
+
   public ParseManager( GMLSchema schema, GMLSchema paraSchema, NAConfiguration conf, CatchmentManager catchmentManager,
       ChannelManager channelManager, NetFileManager nodeManager, RHBManager rhbManager, BodenartManager bodartManager,
-      BodentypManager bodtypManager, NutzungManager nutzManager, SchneeManager schneeManager )
+      BodentypManager bodtypManager, NutzungManager nutzManager, SchneeManager schneeManager,
+      IdleLanduseManager idleLanduseManager )
   {
     m_conf = conf;
     m_catchmentManager = catchmentManager;
@@ -93,6 +96,7 @@ public class ParseManager
     m_bodtypManager = bodtypManager;
     m_nutzManager = nutzManager;
     m_schneeManager = schneeManager;
+    m_idleLanduseManager = idleLanduseManager;
   }
 
   public Feature modelAsciiToFeature() throws Exception, Exception
@@ -160,74 +164,67 @@ public class ParseManager
     ModelManager modelManager = new ModelManager();
     // get all FeatureTypes...
     FeatureType naParaFT = m_paraSchema.getFeatureType( "Parameter" );
-    FeatureType bodenartCollectionFT = m_paraSchema.getFeatureType( "BodenartCollection" );
-    FeatureType bodentypCollectionFT = m_paraSchema.getFeatureType( "BodentypCollection" );
-    FeatureType nutzungCollectionFT = m_paraSchema.getFeatureType( "NutzungCollection" );
-    FeatureType schneeCollectionFT = m_paraSchema.getFeatureType( "SnowCollection" );
-
+    FeatureProperty prop;
     // create all Features (and FeatureCollections)
     Feature naParaFe = modelManager.createFeature( naParaFT );
-    Feature bodenartCollectionFe = modelManager.createFeature( bodenartCollectionFT );
-    Feature bodentypCollectionFe = modelManager.createFeature( bodentypCollectionFT );
-    Feature nutzungCollectionFe = modelManager.createFeature( nutzungCollectionFT );
-    Feature schneeCollectionFe = modelManager.createFeature( schneeCollectionFT );
 
-    // complete Feature NaParameter
-    FeatureProperty prop = FeatureFactory.createFeatureProperty( "BodenartCollectionMember", bodenartCollectionFe );
-    naParaFe.setProperty( prop );
-
-    prop = FeatureFactory.createFeatureProperty( "BodentypCollectionMember", bodentypCollectionFe );
-    naParaFe.setProperty( prop );
-
-    prop = FeatureFactory.createFeatureProperty( "NutzungCollectionMember", nutzungCollectionFe );
-    naParaFe.setProperty( prop );
-
-    prop = FeatureFactory.createFeatureProperty( "SnowCollectionMember", schneeCollectionFe );
-    naParaFe.setProperty( prop );
-
-    //    complete Feature ParameterCollection - Bodenart
+    //    complete Feature soilLayerMember
     Feature[] features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
     for( int i = 0; i < features.length; i++ )
     {
       Feature bodenartFE = features[i];
-      prop = FeatureFactory.createFeatureProperty( "BodenartMember", bodenartFE );
-      bodenartCollectionFe.addProperty( prop );
+      prop = FeatureFactory.createFeatureProperty( "soilLayerMember", bodenartFE );
+      naParaFe.addProperty( prop );
     }
 
-    //    complete Feature ParameterCollection - Bodentyp
+    //    complete Feature soiltypeMember
     features = m_bodtypManager.parseFile( m_conf.getBodentypFile().toURL() );
     for( int i = 0; i < features.length; i++ )
     {
       Feature bodentypFE = features[i];
-      prop = FeatureFactory.createFeatureProperty( "BodentypMember", bodentypFE );
-      bodentypCollectionFe.addProperty( prop );
+      prop = FeatureFactory.createFeatureProperty( "soiltypeMember", bodentypFE );
+      naParaFe.addProperty( prop );
     }
 
-    //complete Feature ParameterCollection - Nutzung
+    //  complete Feature idealLandUseMember
     File nutzungDir = m_conf.getNutzungDir();
     FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" );
     File nutzFiles[] = nutzungDir.listFiles( filter );
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println("Nutzungsdatei: " + nutzFiles[i].toURL().toString());
+      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
+      features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
+      for( int f = 0; f < features.length; f++ )
+      {
+        Feature idleNutzFE = features[f];
+        prop = FeatureFactory.createFeatureProperty( "idealLandUseMember", idleNutzFE );
+        naParaFe.addProperty( prop );
+      }
+    }
+
+    //complete Feature landuseMember
+    for( int i = 0; i < nutzFiles.length; i++ )
+    {
+      // es kommt pro file immer nur ein feature zurück
+      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
       {
         Feature nutzFE = features[f];
-        prop = FeatureFactory.createFeatureProperty( "NutzungMember", nutzFE );
-        nutzungCollectionFe.addProperty( prop );
+        prop = FeatureFactory.createFeatureProperty( "landuseMember", nutzFE );
+        naParaFe.addProperty( prop );
       }
     }
-    System.out.println("---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen");
+    System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
 
-    //complete Feature ParameterCollection - Schnee
+    //complete Feature snowMember
     features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
     for( int i = 0; i < features.length; i++ )
     {
       Feature schneeFE = features[i];
-      prop = FeatureFactory.createFeatureProperty( "SnowMember", schneeFE );
-      schneeCollectionFe.addProperty( prop );
+      prop = FeatureFactory.createFeatureProperty( "snowMember", schneeFE );
+      naParaFe.addProperty( prop );
     }
 
     System.out.println( "\n\n-----------------" );

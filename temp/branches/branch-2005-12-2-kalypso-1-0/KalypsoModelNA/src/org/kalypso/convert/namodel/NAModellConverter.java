@@ -56,6 +56,7 @@ import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.HydrotopManager;
+import org.kalypso.convert.namodel.manager.IdleLanduseManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.ParseManager;
@@ -116,6 +117,8 @@ public class NAModellConverter
   private final NutzungManager m_nutzManager;
 
   private final SchneeManager m_schneeManager;
+
+  private final IdleLanduseManager m_idleLanduseManager;
 
   public static void main( String[] args )
   {
@@ -248,9 +251,10 @@ public class NAModellConverter
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
+    m_idleLanduseManager = new IdleLanduseManager( m_parameterSchema, m_conf );
 
     m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager,
-        m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager );
+        m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager,m_idleLanduseManager );
   }
 
   public ParseManager getParseManager()
@@ -292,7 +296,7 @@ public class NAModellConverter
 
     if( hydrotopeWorkspace != null )
     {
-      m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace );
+      m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace, parameterWorkspace );
       Writer writer5 = new FileWriter( m_conf.getHydrotopFile() );
       writer5.write( asciiBuffer.getHydBuffer().toString() );
       writer5.close();
@@ -301,21 +305,22 @@ public class NAModellConverter
     if( parameterWorkspace != null )
     {
       m_bodartManager.writeFile( asciiBuffer, parameterWorkspace );
-      m_bodtypManager.writeFile( asciiBuffer, parameterWorkspace );
-      m_nutzManager.writeFile( parameterWorkspace );
-      m_schneeManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer6 = new FileWriter( m_conf.getBodenartFile() );
       writer6.write( asciiBuffer.getBodartBuffer().toString() );
       writer6.close();
-
+      
+      m_bodtypManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer7 = new FileWriter( m_conf.getBodentypFile() );
       writer7.write( asciiBuffer.getBodtypBuffer().toString() );
       writer7.close();
-
+      
+      m_schneeManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer8 = new FileWriter( m_conf.getSchneeFile() );
       writer8.write( asciiBuffer.getSnowBuffer().toString() );
       writer8.close();
 
+      m_nutzManager.writeFile( parameterWorkspace );
+      
     }
 
   }
