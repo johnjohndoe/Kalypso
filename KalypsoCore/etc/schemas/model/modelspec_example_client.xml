@@ -4,5 +4,5 @@
 	<input id="MODEL" path="model.gml" relativeToCalcCase="false"/>
 	<input id="KALIB" path="kalib.gml" relativeToCalcCase="true"/>
 	
-	<output id="LOG" path="Ergebnise/rechnung.log"/>
+	<output id="LOG" path="Ergebnise/rechnung.log" relativeToCalcCase="true"/>
 </modeldata>

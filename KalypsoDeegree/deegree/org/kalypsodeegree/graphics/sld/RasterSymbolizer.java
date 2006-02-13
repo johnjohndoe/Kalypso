@@ -63,7 +63,6 @@ package org.kalypsodeegree.graphics.sld;
 import java.util.TreeMap;
 
 /**
- * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -73,13 +72,13 @@ import java.util.TreeMap;
  */
 public interface RasterSymbolizer extends Symbolizer
 {
-  TreeMap getColorMap();
+  TreeMap<Double, ColorMapEntry> getColorMap( );
 
-  void setColorMap( TreeMap colorMap );
+  void setColorMap( TreeMap<Double, ColorMapEntry> colorMap );
 
-  int getMode();
+  int getMode( );
 
   void setMode( int mode );
 
-  TreeMap getIntervalMap();
+  TreeMap getIntervalMap( );
 }
