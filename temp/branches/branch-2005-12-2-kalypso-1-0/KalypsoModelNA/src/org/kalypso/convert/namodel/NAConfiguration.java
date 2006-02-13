@@ -142,11 +142,6 @@ public class NAConfiguration
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    // schemas
-    //    m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
-    //    m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    //    m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
-    //    m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
     final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
     final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
 
@@ -156,7 +151,7 @@ public class NAConfiguration
     m_stChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
-    m_bodartFT = paraSchema.getFeatureType( "Bodenart" );
+    m_bodartFT = paraSchema.getFeatureType( "SoilLayer" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
