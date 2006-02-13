@@ -14,4 +14,4 @@ Export-Package: org.kalypso.optimize,
  org.w3._2001.xmlschema
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.jwsdp;visibility:=reexport,
- org.kalypso.services.calculation.local;visibility:=reexport
+ org.kalypso.simulation.core

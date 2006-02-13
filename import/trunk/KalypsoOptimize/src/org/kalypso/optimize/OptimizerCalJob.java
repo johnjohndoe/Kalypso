@@ -45,17 +45,17 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.kalypso.optimizer.AutoCalibration;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
 
 /**
  * calcjob that optimizes parameters of an encapsulated caljob
  * 
  * @author doemming
  */
-public class OptimizerCalJob implements ICalcJob
+public class OptimizerCalJob implements ISimulation
 {
   private final IOptimizingJob m_optimizingJob;
 
@@ -85,8 +85,8 @@ public class OptimizerCalJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      final ICalcMonitor monitor )
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater,
+      final ISimulationMonitor monitor )
   {
     try
     {

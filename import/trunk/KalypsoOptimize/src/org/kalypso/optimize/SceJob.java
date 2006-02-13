@@ -70,17 +70,15 @@ import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * this class encapsulates the optimizing fortran SCE optimizing tool
  * 
  * @author doemming
- *  
  */
 public class SceJob
 {
@@ -100,14 +98,14 @@ public class SceJob
     m_sceExe = prepareSCE();
   }
 
-  public void optimize( final SceIOHandler sceIO, final ICalcMonitor monitor ) throws Exception
+  public void optimize( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws Exception
   {
     makeinputFiles();
-    //    Parameter
+    // Parameter
     startSCEOptimization( sceIO, monitor );
   }
 
-  private File prepareSCE()
+  private File prepareSCE( )
   {
     final InputStream sceStream = getClass().getResourceAsStream( "resource/sce.exe_" );
     final File tmpDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
@@ -130,22 +128,22 @@ public class SceJob
   /**
    * prepare SCE configuration file "scein.dat"
    */
-  private void makeinputFiles() throws TransformerException, ParserConfigurationException, SAXException, IOException,
-      JAXBException
+  private void makeinputFiles( ) throws TransformerException, ParserConfigurationException, SAXException, IOException, JAXBException
   {
-    //prepare scein.dat
+    // prepare scein.dat
 
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    
-//    final Marshaller marshaller = fac.createMarshaller();
+
+    // final Marshaller marshaller = fac.createMarshaller();
     // TODO: @Andreas: die nächsten beiden Zeilen ersetzen die vorhergehende
     // teste mal, obs immer noch klappt. In Zukunft sollten die Marshaller und Unmarshaller immer so erzeugt
-    //  werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der Umstellung auf jwsdp-2.0)
-    final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+    // werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der
+    // Umstellung auf jwsdp-2.0)
+    final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
     final Marshaller marshaller = context.createMarshaller();
-    //marshaller.setProperty( "jaxb.encoding", "UTF-8" );
+    // marshaller.setProperty( "jaxb.encoding", "UTF-8" );
 
     final Document xmlDOM = docuBuilder.newDocument();
     marshaller.marshal( m_autoCalibration, xmlDOM );
@@ -159,8 +157,7 @@ public class SceJob
     writer.close();
   }
 
-  private void startSCEOptimization( final SceIOHandler sceIO, final ICalcMonitor monitor )
-      throws CalcJobServiceException
+  private void startSCEOptimization( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws SimulationException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -228,12 +225,12 @@ public class SceJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
+      throw new SimulationException( "Fehler beim Ausfuehren", e );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "beim Ausfuehren unterbrochen", e );
+      throw new SimulationException( "beim Ausfuehren unterbrochen", e );
     }
     finally
     {
@@ -241,8 +238,7 @@ public class SceJob
       IOUtils.closeQuietly( errStream );
       if( procCtrlThread != null && procCtrlThread.procDestroyed() )
       {
-        throw new CalcJobServiceException( "beim Ausfuehren unterbrochen", new ProcessTimeoutException(
-            "Timeout bei der Abarbeitung der Optimierung" ) );
+        throw new SimulationException( "beim Ausfuehren unterbrochen", new ProcessTimeoutException( "Timeout bei der Abarbeitung der Optimierung" ) );
       }
     }
   }

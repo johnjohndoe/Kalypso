@@ -46,8 +46,8 @@ import java.util.TreeMap;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * IOptimizingJob
@@ -68,19 +68,20 @@ public interface IOptimizingJob
 
   /**
    * start calculation
+   * 
    * @throws MalformedURLException
    */
-  public void calculate() throws Exception;
+  public void calculate( ) throws Exception;
 
   /**
    * @return timeseries of measured values
    */
-  public TreeMap getMeasuredTimeSeries() throws MalformedURLException, SensorException;
+  public TreeMap getMeasuredTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * @return calculated timeseries from last calculation run
    */
-  public TreeMap getCalcedTimeSeries() throws MalformedURLException, SensorException;
+  public TreeMap getCalcedTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * inform job, if last calculation got the best results (till last run)</br> e.g. to implement: keep best results and
@@ -90,8 +91,8 @@ public interface IOptimizingJob
    */
   public void setBestEvaluation( boolean wasBest );
 
-  public AutoCalibration getOptimizeConfiguration();
+  public AutoCalibration getOptimizeConfiguration( );
 
-  public void publishResults( ICalcResultEater resultEater ) throws CalcJobServiceException;
+  public void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
 }
