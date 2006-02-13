@@ -97,7 +97,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private final Date m_forecastTo;
 
   private final Properties m_metadata;
-
+  
   /**
    * Die Liste der Tokens und deren Ersetzung in der Form:
    * <p>

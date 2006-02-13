@@ -4,8 +4,8 @@
 		<restriction base="string"/>
 	</simpleType>
 
-    <!-- W Q v z.B. RHB-->
-    <simpleType name="ZmlInlineWQVType">
+    <!-- W V Q z.B. RHB-->
+    <simpleType name="ZmlInlineWVQType">
 		<restriction base="string"/>
 	</simpleType>
     <!-- T A z.B. Zeit-Flächenfunktion-->
