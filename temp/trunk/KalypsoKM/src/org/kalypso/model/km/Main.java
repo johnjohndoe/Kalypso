@@ -16,6 +16,8 @@ public class Main
 		System.out.println();
 		System.out
 				.println("usage: java -jar km.jar <kmStart> <kmEnd> <nkm> <path>");
+		System.out
+				.println("example to print result to file name result.txt:\n usage: java -jar km.jar <kmStart> <kmEnd> <nkm> <path> >result.txt");
 		System.out.println();
 		System.out
 				.println("kmStart: KM-channel start-position [km]. It might be before first profile");
@@ -48,7 +50,7 @@ public class Main
 			System.out.println();
 			final ProfileDataSet pSet = ProfileFactory.createProfileSet(path,
 					kmStart, kmEnd);
-			final AbstractKMValue[] kmValues = pSet.getKMValues(5);
+			final AbstractKMValue[] kmValues = pSet.getKMValues(nkm);
 			System.out.println("Ergebnis:");
 			for (int i = 0; i < kmValues.length; i++)
 			{
