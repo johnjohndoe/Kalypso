@@ -3,8 +3,8 @@ package org.kalypso.convert.namodel.optimize;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -47,19 +47,16 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class OptimizeCalcDataProvider implements ICalcDataProvider
+public class OptimizeCalcDataProvider implements ISimulationDataProvider
 {
+  private final ISimulationDataProvider m_calcDataProvider;
 
-  private final ICalcDataProvider m_calcDataProvider;
-
-  private final HashMap m_map = new HashMap();
+  private final HashMap<String, URL> m_map = new HashMap<String, URL>();
 
   /**
-   * @author doemming
-   * 
-   * TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
+   * @author doemming TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
    */
-  public OptimizeCalcDataProvider( ICalcDataProvider calcDataProvider )
+  public OptimizeCalcDataProvider( ISimulationDataProvider calcDataProvider )
   {
     m_calcDataProvider = calcDataProvider;
   }
@@ -69,12 +66,11 @@ public class OptimizeCalcDataProvider implements ICalcDataProvider
     m_map.put( id, url );
   }
 
-  public URL getURLForID( String id ) throws CalcJobServiceException
+  public URL getURLForID( String id ) throws SimulationException
   {
     if( m_map.containsKey( id ) )
-    {
-      return (URL)m_map.get( id );
-    }
+      return m_map.get( id );
+
     return m_calcDataProvider.getURLForID( id );
   }
 

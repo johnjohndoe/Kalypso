@@ -102,11 +102,11 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.zml.Observation;
@@ -128,13 +128,12 @@ import org.w3c.dom.Document;
 /**
  * @author doemming, huebsch
  */
-public class NaModelInnerCalcJob implements ICalcJob
+public class NaModelInnerCalcJob implements ISimulation
 {
-
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  //  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
+  // private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
   private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
   private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
@@ -147,7 +146,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   final HashMap<String, String> m_resultMap = new HashMap<String, String>();
 
-  public NaModelInnerCalcJob()
+  public NaModelInnerCalcJob( )
   {
     m_urlUtilities = new UrlUtilities();
   }
@@ -155,20 +154,18 @@ public class NaModelInnerCalcJob implements ICalcJob
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     // this is just an inner job, so need not return this
     return null;
   }
 
   /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
+   * @throws SimulationException
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( final File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final Logger logger = Logger.getAnonymousLogger();
     final File infoFile = new File( tmpdir, "infolog.txt" );
@@ -192,7 +189,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       resultEater.addResult( NaModelConstants.LOG_INFO_ID, infoFile );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
     }
@@ -278,7 +275,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     catch( Exception e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Simulation konnte nicht durchgefuehrt werden", e );
+      throw new SimulationException( "Simulation konnte nicht durchgefuehrt werden", e );
     }
   }
 
@@ -289,32 +286,30 @@ public class NaModelInnerCalcJob implements ICalcJob
    * @param conf
    * @throws Exception
    */
-  private void loadTesultTSPredictionIntervals( final GMLWorkspace naControlWorkspace, final Logger logger,
-      final File resultDir, final NAConfiguration conf ) throws Exception
+  private void loadTesultTSPredictionIntervals( final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
   {
     final Feature rootFeature = naControlWorkspace.getRootFeature();
-    //    final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    final TimeseriesLinkType resultLink = (TimeseriesLinkType)rootFeature.getProperty( "qberechnetZR" );
+    // final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
+    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
     double accuracyPrediction = 5d;
     try
     {
-      accuracyPrediction = ( (Double)rootFeature.getProperty( "accuracyPrediction" ) ).doubleValue();
+      accuracyPrediction = ((Double) rootFeature.getProperty( "accuracyPrediction" )).doubleValue();
     }
     catch( Exception e )
     {
-      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
-          + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
+      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
     }
     // Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
-    //    if(accuracyProp==null)
-    //      return;
-    //    accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
+    // if(accuracyProp==null)
+    // return;
+    // accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
 
     final Date startPrediction = conf.getSimulationForecastStart();
     final Date endPrediction = conf.getSimulationEnd();
 
     final UrlResolver urlResolver = new UrlResolver();
-    //TODO if measured does not exists
+    // TODO if measured does not exists
 
     // find values at startPrediction
     final String axisType = TimeserieConstants.TYPE_WATERLEVEL;
@@ -337,8 +332,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       throw e;
     }
 
-    double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
-        startPrediction );
+    double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, startPrediction );
 
     double deltaMeasureCalculation;
     try
@@ -351,8 +345,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       final ITuppleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
-      double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis,
-          startPrediction );
+      double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis, startPrediction );
       deltaMeasureCalculation = measureValue - calcValue;
     }
     catch( Exception e )
@@ -365,33 +358,29 @@ public class NaModelInnerCalcJob implements ICalcJob
     final Calendar calEnd = timeSettings.getCalendar( endPrediction );
 
     // test
-    //    final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
-    //    observationType.setName( "orginal-ergebnis" );
-    //    final Marshaller m = ZmlFactory.getMarshaller();
-    //    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    //    FileOutputStream stream = null;
-    //    OutputStreamWriter writer = null;
-    //    try
-    //    {
-    //      stream = new FileOutputStream( new File( "C://TMP/2-test-org.zml" ) );
-    //      writer = new OutputStreamWriter( stream, "UTF-8" );
-    //      m.marshal( observationType, writer );
-    //    }
-    //    finally
-    //    {
-    //      IOUtils.closeQuietly( writer );
-    //      IOUtils.closeQuietly( stream );
-    //    }
+    // final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
+    // observationType.setName( "orginal-ergebnis" );
+    // final Marshaller m = ZmlFactory.getMarshaller();
+    // m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    // FileOutputStream stream = null;
+    // OutputStreamWriter writer = null;
+    // try
+    // {
+    // stream = new FileOutputStream( new File( "C://TMP/2-test-org.zml" ) );
+    // writer = new OutputStreamWriter( stream, "UTF-8" );
+    // m.marshal( observationType, writer );
+    // }
+    // finally
+    // {
+    // IOUtils.closeQuietly( writer );
+    // IOUtils.closeQuietly( stream );
+    // }
     // test
-    final File[] result = new File[]
-    {
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ),
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
+    final File[] result = new File[] { getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ), getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
         getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ) };
-    //    accuracyPrediction // cm/day
+    // accuracyPrediction // cm/day
     final long dayOfMillis = 1000 * 60 * 60 * 24;
-    final double endOffest = accuracyPrediction
-        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
+    final double endOffest = accuracyPrediction * (((double) (endPrediction.getTime() - startPrediction.getTime())) / ((double) dayOfMillis));
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
@@ -404,30 +393,16 @@ public class NaModelInnerCalcJob implements ICalcJob
     else
       offsetEndPrediction = 0;
 
-    final double[] operandStart = new double[]
-    {
-        offsetStartPrediction,
-        offsetStartPrediction,
-        offsetStartPrediction };
-    final double[] operandEnd = new double[]
-    {
-        offsetEndPrediction,
-        offsetEndPrediction - endOffest,
-        offsetEndPrediction + endOffest };
-    final String[] sufix = new String[]
-    {
-        " - Spur Mitte",
-        " - spur Unten",
-        " - spur Oben" };
+    final double[] operandStart = new double[] { offsetStartPrediction, offsetStartPrediction, offsetStartPrediction };
+    final double[] operandEnd = new double[] { offsetEndPrediction, offsetEndPrediction - endOffest, offsetEndPrediction + endOffest };
+    final String[] sufix = new String[] { " - Spur Mitte", " - spur Unten", " - spur Oben" };
     for( int i = 0; i < 3; i++ )
     {
-      TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, calEnd, operandStart[i], operandEnd[i],
-          "+", axisType, KalypsoStati.BIT_DERIVATED, result[i], sufix[i] );
+      TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, calEnd, operandStart[i], operandEnd[i], "+", axisType, KalypsoStati.BIT_DERIVATED, result[i], sufix[i] );
     }
   }
 
   /**
-   * 
    * @param resultDir
    * @param feature
    * @param tsLinkPropName
@@ -437,7 +412,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     try
     {
-      final TimeseriesLinkType trackLink = (TimeseriesLinkType)feature.getProperty( tsLinkPropName );
+      final TimeseriesLinkType trackLink = (TimeseriesLinkType) feature.getProperty( tsLinkPropName );
       final String href = trackLink.getHref();
       final File resultFile = new File( resultDir, href );
       resultFile.getParentFile().mkdirs();
@@ -461,10 +436,9 @@ public class NaModelInnerCalcJob implements ICalcJob
       logFileReader = new FileReader( logFile );
       reader = new LineNumberReader( logFileReader );
       String line;
-      while( ( line = reader.readLine() ) != null )
+      while( (line = reader.readLine()) != null )
       {
-        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0
-            || line.indexOf( "Berechnung wurde ohne Fehler beendet!" ) >= 0 )
+        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0 || line.indexOf( "Berechnung wurde ohne Fehler beendet!" ) >= 0 )
           m_succeeded = true;
       }
     }
@@ -479,52 +453,46 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ICalcDataProvider dataProvider,
-      final File newModellFile ) throws Exception
+  private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
   {
-    //    final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
+    // final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
     //
-    //    // calualtion model
-    //    final URL newModellURL = newModellFile.toURL();
-    //    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
+    // // calualtion model
+    // final URL newModellURL = newModellFile.toURL();
+    // final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_META_ID ) );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
 
-    //model Parameter
+    // model Parameter
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
       parameterWorkspace = null;
 
     // initialize model with values of control file
-    initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ),
-        newModellFile );
+    initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
-    ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
+    ((GMLWorkspace_Impl) modellWorkspace).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
     final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace );
     conf.setNodeResultProvider( nodeResultProvider );
     updateModelWithExtraVChannel( modellWorkspace, nodeResultProvider );
 
-    //  model Hydrotop
+    // model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
-      hydrotopWorkspace = GmlSerializer
-          .createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
       final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
       {
-        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "Ort" );
+        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( "Ort" );
         if( geom != null && geom.getCoordinateSystem() != null )
           targetCS = geom.getCoordinateSystem();
       }
@@ -539,14 +507,14 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     // setting duration of simulation...
     // start
-    conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
-    conf.setSzenarioID( (String)metaFE.getProperty( "scenarioId" ) );
+    conf.setSimulationStart( (Date) metaFE.getProperty( "startsimulation" ) );
+    conf.setSzenarioID( (String) metaFE.getProperty( "scenarioId" ) );
     // start forecast
-    final Date startForecastDate = (Date)metaFE.getProperty( "startforecast" );
+    final Date startForecastDate = (Date) metaFE.getProperty( "startforecast" );
     conf.setSimulationForecasetStart( startForecastDate );
     // end of simulation
     int hoursForecast = 0; // default length of forecast hours
-    final Integer hoursOfForecast = (Integer)metaFE.getProperty( "hoursforecast" );
+    final Integer hoursOfForecast = (Integer) metaFE.getProperty( "hoursforecast" );
     if( hoursOfForecast != null )
       hoursForecast = hoursOfForecast.intValue();
     final Calendar c = Calendar.getInstance();
@@ -557,16 +525,16 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     // calculate timestep
     int minutesTimeStep = 60;
-    final Integer minutesOfTimeStep = (Integer)metaFE.getProperty( "minutesTimestep" );
+    final Integer minutesOfTimeStep = (Integer) metaFE.getProperty( "minutesTimestep" );
     if( minutesOfTimeStep != null )
       minutesTimeStep = minutesOfTimeStep.intValue() != 0 ? minutesOfTimeStep.intValue() : 60;
     conf.setMinutesOfTimeStep( minutesTimeStep );
 
     // choose simulation kernel
-    chooseSimulationExe( (String)metaFE.getProperty( "versionKalypsoNA" ) );
+    chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
 
     // set rootnode
-    conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
+    conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
     NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
@@ -614,8 +582,7 @@ public class NaModelInnerCalcJob implements ICalcJob
    * @param workspace
    * @throws Exception
    */
-  private void updateModelWithExtraVChannel( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider )
-      throws Exception
+  private void updateModelWithExtraVChannel( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     updateGWNet( workspace );
     updateNode2NodeNet( workspace );
@@ -670,8 +637,7 @@ public class NaModelInnerCalcJob implements ICalcJob
    * @param workspace
    * @throws Exception
    */
-  private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider )
-      throws Exception
+  private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider ) throws Exception
   {
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final FeatureType abstractChannelFT = workspace.getFeatureType( "_Channel" );
@@ -708,9 +674,7 @@ public class NaModelInnerCalcJob implements ICalcJob
    * <code>
    * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)| 
    *                                          A- input.zml <br>
-   * </code>
-   * 
-   * constant inflow <br>
+   * </code> constant inflow <br>
    * before: <br>
    * <code>
    * |Channel| <- o(1) <- Q(constant) <br>
@@ -830,15 +794,13 @@ public class NaModelInnerCalcJob implements ICalcJob
       m_kalypsoKernelPath = EXE_FILE_2_02;
     else if( kalypsoNAVersion.equals( "test" ) )
       m_kalypsoKernelPath = EXE_FILE_2_03beta;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" )
-        || kalypsoNAVersion.equals( "latest" ) )
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
       m_kalypsoKernelPath = EXE_FILE_2_03beta;
     else
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
   }
 
-  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws IOException,
-      Exception
+  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws IOException, Exception
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
@@ -857,26 +819,9 @@ public class NaModelInnerCalcJob implements ICalcJob
   /**
    *  
    */
-  private final static String[][] m_catchmentFactorsParameter =
-  {
-      new String[]
-      {
-          "retob",
-          "faktorRetobRetint" },
-      new String[]
-      {
-          "retint",
-          "faktorRetobRetint" },
-      new String[]
-      {
-          "aigw",
-          "faktorAigw" } };
+  private final static String[][] m_catchmentFactorsParameter = { new String[] { "retob", "faktorRetobRetint" }, new String[] { "retint", "faktorRetobRetint" }, new String[] { "aigw", "faktorAigw" } };
 
-  private static String[] m_catchmentFactorParameterTarget =
-  {
-      "retob",
-      "retint",
-      "aigw" };
+  private static String[] m_catchmentFactorParameterTarget = { "retob", "retint", "aigw" };
 
   private final UrlUtilities m_urlUtilities;
 
@@ -899,11 +844,11 @@ public class NaModelInnerCalcJob implements ICalcJob
       Feature feature = kmChanneFEs[i];
       double rkfFactor = FeatureHelper.getAsDouble( feature, "faktorRkf", 1.0 );
       double rnfFactor = FeatureHelper.getAsDouble( feature, "faktorRnf", 1.0 );
-      List kmParameter = (List)feature.getProperty( "KMParameterMember" );
+      List kmParameter = (List) feature.getProperty( "KMParameterMember" );
       Iterator iterator = kmParameter.iterator();
       while( iterator.hasNext() )
       {
-        final Feature kmParameterFE = (Feature)iterator.next();
+        final Feature kmParameterFE = (Feature) iterator.next();
         // rnf
         final double _rnf = rnfFactor * FeatureHelper.getAsDouble( kmParameterFE, "rnf", 1.0 );
         FeatureProperty rnfProp = FeatureFactory.createFeatureProperty( "rnf", new Double( _rnf ) );
@@ -936,9 +881,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace,
-      final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, ICalcResultEater resultEater,
-      final NAConfiguration conf ) throws Exception
+  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, ICalcResultEater resultEater, final NAConfiguration conf ) throws Exception
   {
     loadTSResults( tmpdir, modellWorkspace, logger, resultDir, conf );
     try
@@ -947,8 +890,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
     catch( Exception e )
     {
-      logger.info( "konnte Umhüllende nicht generieren, evt. keine WQ-Informationen vorhanden , Fehler: "
-          + e.getLocalizedMessage() );
+      logger.info( "konnte Umhüllende nicht generieren, evt. keine WQ-Informationen vorhanden , Fehler: " + e.getLocalizedMessage() );
     }
     loadTextFileResults( tmpdir, logger, resultDir );
     loadLogs( tmpdir, logger, resultEater );
@@ -968,177 +910,154 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   private String getTitleForSuffix( String suffix )
   {
-    //    j Temperatur .tmp
+    // j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
       return "Temperatur TG";
-    //    j Niederschlag .pre
+    // j Niederschlag .pre
     if( suffix.equalsIgnoreCase( "pre" ) )
       return "Niederschlag TG";
-    //    n Schnee .sch
+    // n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) )
       return "Schneehöhe TG";
-    //    j Bodenfeuchte .bof
+    // j Bodenfeuchte .bof
     if( suffix.equalsIgnoreCase( "bof" ) )
       return "Bodenfeuchte";
-    //    n Bodenspeicher .bsp
+    // n Bodenspeicher .bsp
     if( suffix.equalsIgnoreCase( "bsp" ) )
       return "Bodenspeicherbilanz";
-    //    n Grundwasserstand .gws
+    // n Grundwasserstand .gws
     if( suffix.equalsIgnoreCase( "gws" ) )
       return "Grundwasserstand TG";
-    //    j Gesamtabfluss Knoten .qgs
+    // j Gesamtabfluss Knoten .qgs
     if( suffix.equalsIgnoreCase( "qgs" ) )
       return "Gesamtabfluss K";
-    //    n Gesamtabfluss TG .qgg
+    // n Gesamtabfluss TG .qgg
     if( suffix.equalsIgnoreCase( "qgg" ) )
       return "Gesamtabfluss TG";
-    //    n Oberflaechenabfluss .qna
+    // n Oberflaechenabfluss .qna
     if( suffix.equalsIgnoreCase( "qna" ) )
       return "Oberflaechenabfluss nat. Flaechen TG";
-    //    n Interflow .qif
+    // n Interflow .qif
     if( suffix.equalsIgnoreCase( "qif" ) )
       return "Interflow TG";
-    //    n Abfluss vers. Flaechen .qvs
+    // n Abfluss vers. Flaechen .qvs
     if( suffix.equalsIgnoreCase( "qvs" ) )
       return "Abfluss vers. Flaechen TG";
-    //    n Basisabfluss .qbs
+    // n Basisabfluss .qbs
     if( suffix.equalsIgnoreCase( "qbs" ) )
       return "Basisabfluss TG";
-    //    n Kluftgrundw1 .qt1
+    // n Kluftgrundw1 .qt1
     if( suffix.equalsIgnoreCase( "qt1" ) )
       return "Abfluss Kluftgrundw1";
-    //    n Kluftgrundw .qtg
+    // n Kluftgrundw .qtg
     if( suffix.equalsIgnoreCase( "qtg" ) )
       return "Abfluss KluftGW";
-    //    n Grundwasser .qgw
+    // n Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgw" ) )
       return "Grundwasserabfluss TG";
-    //    n Evapotranspiration .vet
+    // n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
-    //    n Ausgabe hydrotope .hyd
+    // n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) )
       return "Ausgabe Hydrotope";
-    //    n Abflussbilanz .bil
+    // n Abflussbilanz .bil
     if( suffix.equalsIgnoreCase( "bil" ) )
       return "Abflussbilanz";
-    //    n Statistische Abflusswerte .nmq
+    // n Statistische Abflusswerte .nmq
     if( suffix.equalsIgnoreCase( "nmq" ) )
       return "Statistische Abflusswerte";
-    //    n Speicherinhalt .spi
+    // n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) )
       return "Füllvolumen";
-    //    n Wasserspiegelhöhe .sph
+    // n Wasserspiegelhöhe .sph
     if( suffix.equalsIgnoreCase( "sph" ) )
       return "Wasserspiegelhöhe";
-    //    n Verdunstung aus Talsperre .spv
+    // n Verdunstung aus Talsperre .spv
     if( suffix.equalsIgnoreCase( "spv" ) )
       return "Talsperrenverdunstung";
-    //    n Niederschlag in Talsperre .spn
+    // n Niederschlag in Talsperre .spn
     if( suffix.equalsIgnoreCase( "spn" ) )
       return "Niederschlag";
-    //    n Zehrung .spb
+    // n Zehrung .spb
     if( suffix.equalsIgnoreCase( "spb" ) )
       return "Zehrung";
-    //    n Speicherueberlauf .sup
+    // n Speicherueberlauf .sup
     if( suffix.equalsIgnoreCase( "sup" ) )
       return "Speicherueberlauf";
-    //    n Kapil.Aufstieg/Perkolation .kap - not available, because not used in the calculation core
-    //    if( suffix.equalsIgnoreCase( "kap" ) )
-    //      return "Kapil.Aufstieg/Perkolation";
+    // n Kapil.Aufstieg/Perkolation .kap - not available, because not used in the calculation core
+    // if( suffix.equalsIgnoreCase( "kap" ) )
+    // return "Kapil.Aufstieg/Perkolation";
     return suffix;
   }
 
-  private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger,
-      final File outputDir, final NAConfiguration conf ) throws Exception
+  private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
   {
-    //    j Gesamtabfluss Knoten .qgs
+    // j Gesamtabfluss Knoten .qgs
     final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
-    loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, conf );
+    loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
 
     final FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     final FeatureType rhbChannelFT = modellWorkspace.getFeatureType( "StorageChannel" );
-    //    j Niederschlag .pre
-    loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    j Temperatur .tmp
-    loadTSResults( "tmp", catchmentFT, "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, conf );
-    //    n Interflow .qif
-    loadTSResults( "qif", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Grundwasser .qgw
-    loadTSResults( "qgw", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Gesamtabfluss TG .qgg
-    loadTSResults( "qgg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Grundwasserstand .gws - Umrechnung von m auf cm
-    loadTSResults( "gws", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 100.0d, conf );
-    //    n Basisabfluss .qbs
-    loadTSResults( "qbs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Oberflaechenabfluss .qna
-    loadTSResults( "qna", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Abfluss vers. Flaechen .qvs
-    loadTSResults( "qvs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //TODO:check output for the next time series
-    //    n Schnee .sch [mm]
-    loadTSResults( "sch", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, conf );
-    //    n Kluftgrundw1 .qt1
-    loadTSResults( "qt1", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Kluftgrundw .qtg
-    loadTSResults( "qtg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Evapotranspiration .vet [mm]
-    loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, conf );
-    //    j Bodenfeuchte .bof [mm]
-    loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, conf );
+    // j Niederschlag .pre
+    loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // j Temperatur .tmp
+    loadTSResults( "tmp", catchmentFT, "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Interflow .qif
+    loadTSResults( "qif", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Grundwasser .qgw
+    loadTSResults( "qgw", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Gesamtabfluss TG .qgg
+    loadTSResults( "qgg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Grundwasserstand .gws - Umrechnung von m auf cm
+    loadTSResults( "gws", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir, 100.0d, conf );
+    // n Basisabfluss .qbs
+    loadTSResults( "qbs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Oberflaechenabfluss .qna
+    loadTSResults( "qna", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Abfluss vers. Flaechen .qvs
+    loadTSResults( "qvs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // TODO:check output for the next time series
+    // n Schnee .sch [mm]
+    loadTSResults( "sch", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir, 0.1d, conf );
+    // n Kluftgrundw1 .qt1
+    loadTSResults( "qt1", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Kluftgrundw .qtg
+    loadTSResults( "qtg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Evapotranspiration .vet [mm]
+    loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir, 0.1d, conf );
+    // j Bodenfeuchte .bof [mm]
+    loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir, 0.1d, conf );
 
-    //Straenge
-    //    n Wasserstand Speicher .sph [muNN]
-    loadTSResults( "sph", rhbChannelFT, "name", TimeserieConstants.TYPE_NORMNULL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, conf );
-    //    n Speicherueberlauf .sup [m³/s]
-    loadTSResults( "sup", rhbChannelFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //        n Speicherinhalt .spi [hm³]
-    loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, conf );
-    //    n Talsperrenverdunstung .spv [m³/d]
-    //    loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
-    //    n Zehrung .spn [m³/d]
-    //    loadTSResults( "spn", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
+    // Straenge
+    // n Wasserstand Speicher .sph [muNN]
+    loadTSResults( "sph", rhbChannelFT, "name", TimeserieConstants.TYPE_NORMNULL, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Speicherueberlauf .sup [m³/s]
+    loadTSResults( "sup", rhbChannelFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Speicherinhalt .spi [hm³]
+    loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
+    // n Talsperrenverdunstung .spv [m³/d]
+    // loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
+    // modellWorkspace, logger, outputDir, 1.0d , idManager);
+    // n Zehrung .spn [m³/d]
+    // loadTSResults( "spn", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
+    // modellWorkspace, logger, outputDir, 1.0d , idManager);
 
-    //    n Kapil.Aufstieg/Perkolation .kap [mm]
-    //    loadTSResults( "kap", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-    //        modellWorkspace, logger, outputDir, 0.1d , idManager);
-    //    n Ausgabe hydrotope .hyd
-    //    loadTSResults( "hyd", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
+    // n Kapil.Aufstieg/Perkolation .kap [mm]
+    // loadTSResults( "kap", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    // modellWorkspace, logger, outputDir, 0.1d , idManager);
+    // n Ausgabe hydrotope .hyd
+    // loadTSResults( "hyd", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    // modellWorkspace, logger, outputDir, 1.0d , idManager);
   }
 
-  private void loadTSResults( final String suffix, final FeatureType resultFT, final String titlePropName,
-      final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir,
-      final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor,
-      final NAConfiguration conf ) throws Exception
+  private void loadTSResults( final String suffix, final FeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
   {
     final IDManager idManager = conf.getIdManager();
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
     final File ascciResultDir = new File( inputDir, "out_we.nat" );
-    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[]
-    { "*" + suffix + "*" }, false, false, true );
+    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*" + suffix + "*" }, false, false, true );
     final File[] qgsFiles = ascciResultDir.listFiles( filter );
     if( qgsFiles.length != 0 )
     {
@@ -1153,17 +1072,15 @@ public class NaModelInnerCalcJob implements ICalcJob
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == ( modellWorkspace.getFeatureType( "Node" ) )
-            || resultFT == ( modellWorkspace.getFeatureType( "Catchment" ) ) )
+        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" )) )
         {
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
         }
-        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-            IKalypsoPreferences.LANGUAGE );
+        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
         final String annotation = feature.getFeatureType().getAnnotation( lang ).getLabel();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
-        final String feName = (String)feature.getProperty( titlePropName );
+        final String feName = (String) feature.getProperty( titlePropName );
         final String observationTitle;
         if( feName != null && feName.length() > 0 )
           observationTitle = feName;
@@ -1184,29 +1101,24 @@ public class NaModelInnerCalcJob implements ICalcJob
         int pos = 0;
         while( iter.hasNext() )
         {
-          Map.Entry entry = (Map.Entry)iter.next();
-          tupelData[pos][0] = (Date)entry.getKey();
+          Map.Entry entry = (Map.Entry) iter.next();
+          tupelData[pos][0] = (Date) entry.getKey();
           tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
           tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
           pos++;
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-        final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class,
-            false );
+        final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
-        final IAxis[] axis = new IAxis[]
-        {
-            dateAxis,
-            qAxis,
-            statusAxis };
+        final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
         final ITuppleModel qTuppelModel = new SimpleTuppleModel( axis, tupelData );
 
         final MetadataList metadataList = new MetadataList();
 
         // if pegel exists, copy metadata (inclusive wq-function)
 
-        final TimeseriesLinkType pegelLink = (TimeseriesLinkType)feature.getProperty( metadataTSLink );
+        final TimeseriesLinkType pegelLink = (TimeseriesLinkType) feature.getProperty( metadataTSLink );
         if( pegelLink != null )
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
@@ -1223,27 +1135,13 @@ public class NaModelInnerCalcJob implements ICalcJob
           }
           if( itExists )
           {
-            logger
-                .info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
+            logger.info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
 
-            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[]
-            {
-                TimeserieConstants.MD_ALARM_1,
-                TimeserieConstants.MD_ALARM_2,
-                TimeserieConstants.MD_ALARM_3,
-                TimeserieConstants.MD_ALARM_4,
-                TimeserieConstants.MD_GEWAESSER,
-                TimeserieConstants.MD_FLUSSGEBIET,
-                TimeserieConstants.MD_GKH,
-                TimeserieConstants.MD_GKR,
-                TimeserieConstants.MD_HOEHENANGABEART,
-                TimeserieConstants.MD_PEGELNULLPUNKT,
-                TimeserieConstants.MD_WQWECHMANN,
-                TimeserieConstants.MD_WQTABLE,
-                TimeserieConstants.MD_TIMEZONE,
-                TimeserieConstants.MD_VORHERSAGE,
-                ObservationConstants.MD_SCENARIO } );
+            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { TimeserieConstants.MD_ALARM_1, TimeserieConstants.MD_ALARM_2, TimeserieConstants.MD_ALARM_3,
+                TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
+                TimeserieConstants.MD_HOEHENANGABEART, TimeserieConstants.MD_PEGELNULLPUNKT, TimeserieConstants.MD_WQWECHMANN, TimeserieConstants.MD_WQTABLE, TimeserieConstants.MD_TIMEZONE,
+                TimeserieConstants.MD_VORHERSAGE, ObservationConstants.MD_SCENARIO } );
 
           }
         }
@@ -1251,7 +1149,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         String resultPathRelative;
         try
         {
-          TimeseriesLinkType resultLink = (TimeseriesLinkType)feature.getProperty( targetTSLink );
+          TimeseriesLinkType resultLink = (TimeseriesLinkType) feature.getProperty( targetTSLink );
           if( resultLink == null )
           {
             logger.info( "kein ergebnislink gesetzt für FID=#" + feature.getId() + " ." );
@@ -1262,11 +1160,10 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          //          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
-          //              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
+          // resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
+          // + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
 
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "/" + suffix + "("
-              + observationTitle + ").zml";
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "/" + suffix + "(" + observationTitle + ").zml";
         }
         if( !m_resultMap.containsKey( resultPathRelative ) )
         {
@@ -1275,9 +1172,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "(ID"
-              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "(" + observationTitle
-              + ").zml";
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "("
+              + observationTitle + ").zml";
           m_resultMap.put( resultPathRelative, observationTitle );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }
@@ -1286,11 +1182,10 @@ public class NaModelInnerCalcJob implements ICalcJob
         resultFile.getParentFile().mkdirs();
 
         // create observation object
-        //        final IObservation resultObservation = new SimpleObservation(
+        // final IObservation resultObservation = new SimpleObservation(
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID",
-            getTitleForSuffix( suffix ) + observationTitle, false, null, metadataList, axis, qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", getTitleForSuffix( suffix ) + observationTitle, false, null, metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
 
@@ -1326,58 +1221,57 @@ public class NaModelInnerCalcJob implements ICalcJob
    */
   private String getAxisTitleForSuffix( String suffix )
   {
-    //    j Temperatur .tmp
+    // j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
       return "Temperatur";
-    //    j Niederschlag .pre
+    // j Niederschlag .pre
     if( suffix.equalsIgnoreCase( "pre" ) )
       return "Niederschlag";
-    //    n Schnee .sch
+    // n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) )
       return "Schneehöhe";
-    //    j Bodenfeuchte .bof
+    // j Bodenfeuchte .bof
     if( suffix.equalsIgnoreCase( "bof" ) )
       return "Bodenfeuchte";
-    //    n Bodenspeicher .bsp
+    // n Bodenspeicher .bsp
     if( suffix.equalsIgnoreCase( "bsp" ) )
       return "Bodenspeicherbilanz";
-    //    n Grundwasserstand .gws
+    // n Grundwasserstand .gws
     if( suffix.equalsIgnoreCase( "gws" ) )
       return "Grundwasserstand";
-    //    Gesamtabfluss Knoten .qgs, Gesamtabfluss TG .qgg, Oberflaechenabfluss .qna, Interflow .qif, Abfluss vers.
+    // Gesamtabfluss Knoten .qgs, Gesamtabfluss TG .qgg, Oberflaechenabfluss .qna, Interflow .qif, Abfluss vers.
     // Flaechen .qvs, Basisabfluss .qbs, Kluftgrundw1 .qt1, Kluftgrundw .qtg, Grundwasser .qgw
-    if( suffix.equalsIgnoreCase( "qgs" ) | suffix.equalsIgnoreCase( "qgg" ) | suffix.equalsIgnoreCase( "qna" )
-        | suffix.equalsIgnoreCase( "qif" ) | suffix.equalsIgnoreCase( "qvs" ) | suffix.equalsIgnoreCase( "qbs" )
-        | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" ) | suffix.equalsIgnoreCase( "qgw" ) )
+    if( suffix.equalsIgnoreCase( "qgs" ) | suffix.equalsIgnoreCase( "qgg" ) | suffix.equalsIgnoreCase( "qna" ) | suffix.equalsIgnoreCase( "qif" ) | suffix.equalsIgnoreCase( "qvs" )
+        | suffix.equalsIgnoreCase( "qbs" ) | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" ) | suffix.equalsIgnoreCase( "qgw" ) )
       return "Abfluss";
-    //    n Evapotranspiration .vet
+    // n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
-    //    n Ausgabe hydrotope .hyd
+    // n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) )
       return "Ausgabe Hydrotope";
-    //    n Abflussbilanz .bil
+    // n Abflussbilanz .bil
     if( suffix.equalsIgnoreCase( "bil" ) )
       return "Abflussbilanz";
-    //    n Statistische Abflusswerte .nmq
+    // n Statistische Abflusswerte .nmq
     if( suffix.equalsIgnoreCase( "nmq" ) )
       return "Statistische Abflusswerte";
-    //    n Speicherinhalt .spi
+    // n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) )
       return "Füllvolumen";
-    //    n Wasserspiegelhöhe .sph
+    // n Wasserspiegelhöhe .sph
     if( suffix.equalsIgnoreCase( "sph" ) )
       return "Wasserspiegelhöhe";
-    //    n Verdunstung aus Talsperre .spv
+    // n Verdunstung aus Talsperre .spv
     if( suffix.equalsIgnoreCase( "spv" ) )
       return "Talsperrenverdunstung";
-    //    n Niederschlag in Talsperre .spn
+    // n Niederschlag in Talsperre .spn
     if( suffix.equalsIgnoreCase( "spn" ) )
       return "Niederschlag";
-    //    n Zehrung .spb
+    // n Zehrung .spb
     if( suffix.equalsIgnoreCase( "spb" ) )
       return "Zehrung";
-    //    n Speicherueberlauf .sup
+    // n Speicherueberlauf .sup
     if( suffix.equalsIgnoreCase( "sup" ) )
       return "Speicherueberlauf";
     return suffix;
@@ -1387,12 +1281,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     // ASCII-Files
     // kopiere statistische Ergebnis-Dateien
-    final String[] wildcards = new String[]
-    {
-        "*" + "bil" + "*",
-        "*" + "txt" + "*",
-        "*" + "nmq" + "*",
-        "*" + "bsp" + "*" };
+    final String[] wildcards = new String[] { "*" + "bil" + "*", "*" + "txt" + "*", "*" + "nmq" + "*", "*" + "bsp" + "*" };
     final File ascciResultDir = new File( inputDir, "out_we.nat" );
     MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
 
@@ -1442,13 +1331,13 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private void loadLogs( final File tmpDir, final Logger logger, ICalcResultEater resultEater )
+  private void loadLogs( final File tmpDir, final Logger logger, ISimulationResultEater resultEater )
   {
     try
     {
       resultEater.addResult( NaModelConstants.LOG_EXE_STDOUT_ID, new File( tmpDir, "exe.log" ) );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
       logger.info( e.getMessage() );
@@ -1457,7 +1346,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       resultEater.addResult( NaModelConstants.LOG_EXE_ERROUT_ID, new File( tmpDir, "exe.err" ) );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
       logger.info( e.getMessage() );
@@ -1467,7 +1356,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       resultEater.addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
       logger.info( e.getMessage() );
@@ -1476,7 +1365,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( tmpDir, "start/output.err" ) );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
       logger.info( e.getMessage() );
@@ -1518,7 +1407,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private void startCalculation( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
+  private void startCalculation( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File exeFile = new File( basedir, m_kalypsoKernelPath );
     final File exeDir = exeFile.getParentFile();
@@ -1535,7 +1424,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
+      throw new SimulationException( "Fehler beim Ausfuehren", e );
     }
     finally
     {
@@ -1544,7 +1433,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  public boolean isSucceeded()
+  public boolean isSucceeded( )
   {
     return m_succeeded;
   }

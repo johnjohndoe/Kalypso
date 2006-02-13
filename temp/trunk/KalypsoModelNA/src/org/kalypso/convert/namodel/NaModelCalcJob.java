@@ -58,11 +58,11 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerCalJob;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -80,10 +80,10 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * @author doemming
  */
-public class NaModelCalcJob implements ICalcJob
+public class NaModelCalcJob implements ISimulation
 {
 
-  private ICalcJob m_calcJob = null;
+  private ISimulation m_calcJob = null;
 
   private static final String MEASURE_SEAL_FEATURE = "MeasureSealing";
 
@@ -108,15 +108,15 @@ public class NaModelCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ICalcDataProvider dataProvider, final ICalcResultEater resultEater,
-      final ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater,
+      final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
       final Logger logger = Logger.getAnonymousLogger();
 
       // TODO make seperate calcjob for next function !
-      final ICalcDataProvider innerDataProvider = getDataProviderFromMeasure( logger, dataProvider, tmpdir );
+      final ISimulationDataProvider innerDataProvider = getDataProviderFromMeasure( logger, dataProvider, tmpdir );
 
       // testen ob calcjob optimization hat
       //      final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
@@ -139,7 +139,7 @@ public class NaModelCalcJob implements ICalcJob
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "could not instantiate NAOptimizingJob", e );
+      throw new SimulationException( "could not instantiate NAOptimizingJob", e );
     }
   }
 
@@ -150,8 +150,8 @@ public class NaModelCalcJob implements ICalcJob
    * @return modified dataprovider including measures or same dataprovider if no measures are used <br>
    *         TODO move this business to a measureclacjob !
    */
-  private ICalcDataProvider getDataProviderFromMeasure( final Logger logger,
-      final ICalcDataProvider originalDataProvider, final File tmpDir )
+  private ISimulationDataProvider getDataProviderFromMeasure( final Logger logger,
+      final ISimulationDataProvider originalDataProvider, final File tmpDir )
   {
     final OptimizeCalcDataProvider result = new OptimizeCalcDataProvider( originalDataProvider );
     if( !( originalDataProvider.hasID( NaModelConstants.IN_MEASURE_ID )
@@ -197,8 +197,8 @@ public class NaModelCalcJob implements ICalcJob
    * @param tmpDir
    * @throws Exception
    */
-  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ICalcDataProvider originalDataProvider,
-      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws CalcJobServiceException, IOException,
+  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider,
+      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException,
       Exception
   {
     final URL hydrotopURL = originalDataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID );
@@ -288,8 +288,8 @@ public class NaModelCalcJob implements ICalcJob
    * @param tmpDir
    * @throws Exception
    */
-  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ICalcDataProvider originalDataProvider,
-      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws CalcJobServiceException, IOException,
+  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider,
+      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException,
       Exception
   {
     final URL measureURL = originalDataProvider.getURLForID( NaModelConstants.IN_MEASURE_ID );

@@ -28,9 +28,9 @@ Export-Package: org.kalypso.convert.namodel,
 Require-Bundle: org.kalypso.dwd;visibility:=reexport,
  org.kalypso.deegree;visibility:=reexport,
  org.kalypso.jwsdp;visibility:=reexport,
- org.kalypso.services.calculation.local;visibility:=reexport,
  org.kalypso.commons;visibility:=reexport,
  org.kalypso.core;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,
- org.junit
+ org.junit,
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true

@@ -50,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeMap;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.OutputKeys;
@@ -58,6 +59,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -78,11 +80,11 @@ import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.Pegel;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -106,13 +108,13 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final AutoCalibration m_autoCalibration;
 
-  private final ICalcDataProvider m_dataProvider;
+  private final ISimulationDataProvider m_dataProvider;
 
   private File m_lastOptimizedFile;
 
   private File m_bestOptimizedFile = null;
 
-  private final ICalcMonitor m_monitor;
+  private final ISimulationMonitor m_monitor;
 
   private File m_lastOptimizeRunDir = null;
 
@@ -128,41 +130,33 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private int m_bestNumber = 0;
 
-  public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor ) throws Exception
+  public NAOptimizingJob( File tmpDir, final ISimulationDataProvider dataProvider, ISimulationMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_dataProvider = dataProvider;
     m_monitor = monitor;
 
-    //    final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
-    //    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-    //        .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
+    // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+    // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = (TimeseriesLinkType)rootFeature.getProperty( "pegelZR" );
-    m_linkCalcedTS = (TimeseriesLinkType)rootFeature.getProperty( "qberechnetZR" );
+    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( "pegelZR" );
+    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
 
-    //    final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_META_ID ) );
-    //    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-    //        .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
+    // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_META_ID ) );
+    // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+    // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final Date measuredStartDate = (Date)metaFE.getProperty( "startsimulation" );
-    final Date measuredEndDate = (Date)metaFE.getProperty( "startforecast" );
+    final Date measuredStartDate = (Date) metaFE.getProperty( "startsimulation" );
+    final Date measuredEndDate = (Date) metaFE.getProperty( "startforecast" );
 
-    final ObjectFactory fac = new ObjectFactory();
-    
-//    final Unmarshaller unmarshaller = fac.createUnmarshaller();
-    // TODO: @Andreas: die nächsten beiden Zeilen ersetzen die vorhergehende
-    // teste mal, obs immer noch klappt. In Zukunft sollten die Marshaller und Unmarshaller immer so erzeugt
-    //  werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der Umstellung auf jwsdp-2.0)
-    final JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+    // todo: einmal static erzeugen
+    final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
     final Unmarshaller unmarshaller = context.createUnmarshaller();
-    
-    m_autoCalibration = (AutoCalibration)unmarshaller.unmarshal( dataProvider
-        .getURLForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
+
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( dataProvider.getURLForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
 
     // correct in intervall autocalibration
     final Pegel pegel = m_autoCalibration.getPegel();
@@ -180,7 +174,7 @@ public class NAOptimizingJob implements IOptimizingJob
    * @throws MalformedURLException
    * @see org.kalypso.optimize.IOptimizingJob#calculate()
    */
-  public void calculate() throws MalformedURLException
+  public void calculate( ) throws MalformedURLException
   {
     m_counter++;
     final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
@@ -202,13 +196,13 @@ public class NAOptimizingJob implements IOptimizingJob
         // on exception it is simply not used.
       }
     }
-    final ICalcJob calcJob = new NaModelInnerCalcJob();
+    final ISimulation calcJob = new NaModelInnerCalcJob();
     final OptimizeCalcResultEater optimizeResultEater = new OptimizeCalcResultEater();
     try
     {
       calcJob.run( optimizeRunDir, newDataProvider, optimizeResultEater, m_monitor );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
     }
@@ -241,7 +235,7 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( dir != null )
     {
-      //      System.out.println( "remove " + dir.toString() );
+      // System.out.println( "remove " + dir.toString() );
       try
       {
         FileUtils.deleteDirectory( dir );
@@ -298,11 +292,11 @@ public class NAOptimizingJob implements IOptimizingJob
    * @throws SensorException
    * @see org.kalypso.optimize.IOptimizingJob#getMeasuredTimeSeries()
    */
-  public TreeMap getMeasuredTimeSeries() throws SensorException
+  public TreeMap getMeasuredTimeSeries( ) throws SensorException
   {
     if( m_measuredTS == null )
     {
-      TreeMap result = new TreeMap();
+      TreeMap<Date, Object> result = new TreeMap<Date, Object>();
       URL measuredURL = null;
       try
       {
@@ -320,7 +314,7 @@ public class NAOptimizingJob implements IOptimizingJob
       ITuppleModel values = observation.getValues( null );
       for( int i = 0; i < values.getCount(); i++ )
       {
-        Date date = (Date)values.getElement( i, dateAxis );
+        Date date = (Date) values.getElement( i, dateAxis );
         Object value = values.getElement( i, qAxis );
         result.put( date, value );
       }
@@ -334,22 +328,21 @@ public class NAOptimizingJob implements IOptimizingJob
    * @throws MalformedURLException
    * @see org.kalypso.optimize.IOptimizingJob#getCalcedTimeSeries()
    */
-  public TreeMap getCalcedTimeSeries() throws MalformedURLException, SensorException
+  public TreeMap getCalcedTimeSeries( ) throws MalformedURLException, SensorException
   {
-    final TreeMap result = new TreeMap();
+    final TreeMap<Date, Object> result = new TreeMap<Date, Object>();
     final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
     String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
 
     final File tsFile = new File( optimizeResultDir, calcHref );
     final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" );
-    final IAxis dateAxis = ObservationUtilities
-        .findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );
     for( int i = 0; i < values.getCount(); i++ )
     {
-      Date date = (Date)values.getElement( i, dateAxis );
+      Date date = (Date) values.getElement( i, dateAxis );
       Object value = values.getElement( i, qAxis );
       result.put( date, value );
     }
@@ -360,14 +353,14 @@ public class NAOptimizingJob implements IOptimizingJob
    * @throws CalcJobServiceException
    * @see org.kalypso.optimize.IOptimizingJob#publishResults(org.kalypso.services.calculation.job.ICalcResultEater)
    */
-  public void publishResults( ICalcResultEater resultEater ) throws CalcJobServiceException
+  public void publishResults( ISimulationResultEater resultEater ) throws SimulationException
   {
     if( m_bestResultEater == null )
       return;
     for( Iterator iter = m_bestResultEater.keySet().iterator(); iter.hasNext(); )
     {
-      String id = (String)iter.next();
-      resultEater.addResult( id, (File)m_bestResultEater.get( id ) );
+      String id = (String) iter.next();
+      resultEater.addResult( id, (File) m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
     System.out.println( "best was #" + m_bestNumber );
@@ -376,7 +369,7 @@ public class NAOptimizingJob implements IOptimizingJob
   /**
    * @see org.kalypso.optimize.IOptimizingJob#getOptimizeConfiguration()
    */
-  public AutoCalibration getOptimizeConfiguration()
+  public AutoCalibration getOptimizeConfiguration( )
   {
     return m_autoCalibration;
   }

@@ -1,10 +1,3 @@
-package org.kalypso.convert.namodel.optimize;
-
-import java.io.File;
-import java.util.HashMap;
-
-import org.kalypso.services.calculation.job.ICalcResultEater;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,15 +38,19 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.optimize;
 
-public class OptimizeCalcResultEater extends HashMap implements ICalcResultEater
+import java.io.File;
+import java.util.HashMap;
+
+import org.kalypso.simulation.core.ISimulationResultEater;
+
+/**
+ * @author huebsch
+ */
+public class OptimizeCalcResultEater extends HashMap<String, File> implements ISimulationResultEater
 {
-
-  /*
-   * 
-   * @author huebsch
-   */
-  public OptimizeCalcResultEater()
+  public OptimizeCalcResultEater( )
   {
     super();
   }
