@@ -57,7 +57,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project}" />
-
 		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />

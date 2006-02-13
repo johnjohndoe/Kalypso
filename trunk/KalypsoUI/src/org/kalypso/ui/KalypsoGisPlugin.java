@@ -104,9 +104,7 @@ import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.services.calculation.ICalculationServiceProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
-import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
@@ -353,7 +351,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     // register the observation webservice url stream handler
     registerUrlStreamHandler( context, ZmlURLConstants.SCHEME_OCS, new OcsURLStreamHandler() );
-    registerUrlStreamHandler( context, CalculationSchemaStreamHandler.PROTOCOL, new CalculationSchemaStreamHandler() );
   }
 
   private void registerUrlStreamHandler( final BundleContext context, final String scheme, final URLStreamHandler handler )
@@ -390,86 +387,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       IOUtils.closeQuietly( ins );
     }
-  }
-
-  /**
-   * Convenience method that returns the calculation service proxies.
-   * 
-   * @return A map name (e.g. url) to {@link ICalculationService}
-   */
-  public Map getCalculationServiceProxies( )
-  {
-    final Map proxies = new LinkedHashMap();
-
-    // put lokal services first, so they will be taken in preference
-    proxies.putAll( getLocalCalcServices() );
-
-    try
-    {
-      final Map stubs = KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities.getOnlyClassName( ICalculationService.class ) );
-      proxies.putAll( stubs );
-    }
-    catch( final ServiceException e )
-    {
-      // server steht nicht zur Verfügung oder ist falsch konfiguriert
-      // exception wird gefangen, damit man immer noch lokal rechnen kann
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return proxies;
-  }
-
-  private Map getLocalCalcServices( )
-  {
-    if( m_localCalcServices == null )
-    {
-      final Map proxies = new HashMap();
-
-      // alle proxy-factories holen und erzeugen
-      final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint point = registry.getExtensionPoint( getId(), IKalypsoUIConstants.PL_CALCULATION_SERVICE );
-      // ??
-      // System.out.println( "extensionPoint available ?" );
-      if( point == null )
-      {
-        // System.out.println( "extensionPoint == null" );
-        return null;
-      }
-      final IExtension[] extensions = point.getExtensions();
-      for( int i = 0; i < extensions.length; i++ )
-      {
-        // System.out.println( "Extension: >" + extensions[i].getLabel() + "<" );
-        final IExtension extension = extensions[i];
-        final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
-        for( int j = 0; j < configurationElements.length; j++ )
-        {
-          // System.out.println( " ConfigElelemnt: >" + configurationElements[j].getName() + "<" );
-          final IConfigurationElement element = configurationElements[j];
-          try
-          {
-            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory) element.createExecutableExtension( "class" );
-            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
-          }
-          catch( final CoreException e )
-          {
-            // just log
-            e.printStackTrace();
-          }
-          catch( final Exception e )
-          {
-            // just log
-            e.printStackTrace();
-          }
-        }
-      }
-
-      m_localCalcServices = proxies;
-    }
-
-    return m_localCalcServices;
   }
 
   /**
@@ -778,6 +695,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       /**
        * @see java.net.Authenticator#getPasswordAuthentication()
        */
+      @Override
       protected PasswordAuthentication getPasswordAuthentication( )
       {
         return new PasswordAuthentication( getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER ), getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );

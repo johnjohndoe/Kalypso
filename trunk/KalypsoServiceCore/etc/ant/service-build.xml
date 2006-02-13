@@ -116,6 +116,9 @@
 
 		<jar jarfile="${project.deploy}/${client.jar}">
 			<fileset dir="${build.ws.import}" includes="**/*.class" />
+			<!-- Andreas sagt: -->
+			<fileset dir="${project}/build/build-gen" includes="**/*.class" />
+			<fileset dir="${project}/build/bin" includes="**/*.class" />
 		</jar>
 	</target>
 
