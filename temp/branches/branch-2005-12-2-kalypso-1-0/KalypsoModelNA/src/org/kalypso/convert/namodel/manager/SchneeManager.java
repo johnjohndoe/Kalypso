@@ -72,7 +72,7 @@ public class SchneeManager extends AbstractManager
       throws IOException
   {
     super( conf.getParameterFormatURL() );
-    m_snowFT = parameterSchema.getFeatureType( "Schnee" );
+    m_snowFT = parameterSchema.getFeatureType( "Snow" );
   }
 
   /**
@@ -120,7 +120,7 @@ public class SchneeManager extends AbstractManager
     createProperties( propCollector, line, 13 );
 
     //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "texttyp" );
+    FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
     String asciiStringId = (String)prop.getValue();
     final Feature feature = getFeature( asciiStringId, m_snowFT );
 
@@ -134,8 +134,7 @@ public class SchneeManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "SnowCollectionMember" );
-    List list = (List)col.getProperty( "SnowMember" );
+    List list = (List)rootFeature.getProperty( "snowMember" );
     asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
     asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );

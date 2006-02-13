@@ -5,15 +5,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.Writer;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -71,19 +82,22 @@ public class NutzungManager extends AbstractManager
 
   private final NAConfiguration m_conf;
 
-  private final FeatureType m_nutzungFT;
+  private final FeatureType m_LanduseFT;
 
-  private final FeatureType m_nutzParameterFT;
+  private final FeatureType m_IdleLanduseFT;
 
-  private static final String NutzParameterpropName = "NutzungParameterMember";
+  final Hashtable m_LTable = new Hashtable();
+
+  private int m_idCounter = 0;
 
   public NutzungManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
     m_conf = conf;
-    m_nutzungFT = parameterSchema.getFeatureType( "Nutzung" );
-    m_nutzParameterFT = parameterSchema.getFeatureType( "NutzungParameter" );
+    m_LanduseFT = parameterSchema.getFeatureType( "Landuse" );
+    m_IdleLanduseFT = parameterSchema.getFeatureType( "IdealLandUse" );
+
   }
 
   /**
@@ -104,9 +118,6 @@ public class NutzungManager extends AbstractManager
     String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // FileReader(
-    // file
-    // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader, nutzID ) ) != null )
       result.add( fe );
@@ -115,43 +126,47 @@ public class NutzungManager extends AbstractManager
 
   private Feature readNextFeature( LineNumberReader reader, String nutzID ) throws Exception
   {
-    HashMap propCollector = new HashMap();
+    HashMap landusePropCollector = new HashMap();
     String line;
     // 9
     line = reader.readLine();
     if( line == null )
       return null;
     System.out.println( reader.getLineNumber() + ": " + line );
-    createProperties( propCollector, line, 9 );
+
+    if( !m_LTable.containsKey( line ) )
+    {
+      m_idCounter = m_idCounter + 1;
+      Integer idleLanduseID = new Integer( m_idCounter );
+      m_LTable.put( line, idleLanduseID );
+    }
+    Object idleLanduseStringID = m_LTable.get( line );
+
     //Kommentarzeilen
     line = reader.readLine();
     line = reader.readLine();
 
-    //TODO: Filename == text (Nutzungsname)
-    FeatureProperty nutzNameProp = FeatureFactory.createFeatureProperty( "text", nutzID );
-    propCollector.put( "text", nutzNameProp );
+    FeatureProperty landuseNameProp = FeatureFactory.createFeatureProperty( "name", nutzID );
+    landusePropCollector.put( "name", landuseNameProp );
 
     //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "text" );
+    FeatureProperty prop = (FeatureProperty)landusePropCollector.get( "name" );
     String asciiStringId = (String)prop.getValue();
-    final Feature feature = getFeature( asciiStringId, m_nutzungFT );
-
-    HashMap nutzungPropCollector = new HashMap();
+    final Feature feature = getFeature( asciiStringId, m_LanduseFT );
     for( int i = 0; i < 12; i++ )
     {
-      Feature nutzungParameterFeature = createFeature( m_nutzParameterFT );
       line = reader.readLine();
       System.out.println( "NutzParameter(" + i + "): " + line );
-      createProperties( nutzungPropCollector, line, 10 );
-      Collection collection = nutzungPropCollector.values();
-      setParsedProperties( nutzungParameterFeature, collection );
-      FeatureProperty nutzProp = FeatureFactory.createFeatureProperty( NutzParameterpropName, nutzungParameterFeature );
-      feature.addProperty( nutzProp );
     }
+
+    final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
+    FeatureProperty linkedIdleLanduseProp = FeatureFactory.createFeatureProperty( "idealLandUsePeriodLink",
+        idleLanduseFE.getId() );
+    landusePropCollector.put( "idealLandUsePeriodLink", linkedIdleLanduseProp );
     line = reader.readLine();
 
     // continue reading
-    Collection collection = propCollector.values();
+    Collection collection = landusePropCollector.values();
     setParsedProperties( feature, collection );
     return feature;
   }
@@ -159,39 +174,55 @@ public class NutzungManager extends AbstractManager
   public void writeFile( GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "NutzungCollectionMember" );
-    List list = (List)col.getProperty( "NutzungMember" );
+    List list = (List)rootFeature.getProperty( "landuseMember" );
     Iterator iter = list.iterator();
 
     while( iter.hasNext() )
     {
 
       final Feature nutzungFE = (Feature)iter.next();
-      //      if( asciiBuffer.writeFeature( nutzungFE ) )
-      writeFeature( nutzungFE );
+      Feature linkedIdealLanduseFE = paraWorkspace.resolveLink( nutzungFE, "idealLandUsePeriodLink" );
+      writeFeature( nutzungFE, linkedIdealLanduseFE );
     }
 
   }
 
-  private void writeFeature( Feature feature ) throws Exception
+  private void writeFeature( Feature feature, Feature linkedIdealLanduseFE ) throws Exception
   {
 
-    List nutzungList = (List)feature.getProperty( "NutzungParameterMember" );
-    Iterator iter = nutzungList.iterator();
-    String nutzName = FeatureHelper.getAsString( feature, "text" );
+    String nutzName = FeatureHelper.getAsString( feature, "name" );
     File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" );
     FileWriter writer = new FileWriter( nutzungDir );
-    writer.write( toAscci( feature, 9 ) + "\n" );
     writer.write( "Idealisierter Jahresgang\n" );
     writer.write( "xxdatum     F EVA    We    BIMAX\n" );
-
-    while( iter.hasNext() )
-    {
-      Feature fe = (Feature)iter.next();
-      writer.write( toAscci( fe, 10 ) + "\n" );
-    }
+    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
+    writeIdealLanduse( (IObservation)idealLanduseProp, writer );
     IOUtils.closeQuietly( writer );
 
   }
 
+  private void writeIdealLanduse( IObservation observation, Writer zmlWriter ) throws SensorException, IOException
+  {
+    IAxis[] axisList = observation.getAxisList();
+    IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
+    IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_KC );
+    IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WT );
+    IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_LAI );
+    ITuppleModel values = observation.getValues( null );
+    int count = values.getCount();
+    for( int row = count-1; row >= 0; row-- )
+    {//TODO: hier evtl. noch Zeitzone berücksichtigen - außerdem mit Fortran abgleichen!!!
+      Date date = (Date)values.getElement( row, idleDateAxis );
+      SimpleDateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+      String dat = dateFormat.format( date );
+      Double kc = (Double)values.getElement( row, kcAxis );
+      Double wt = (Double)values.getElement( row, wtAxis );
+      Double lai = (Double)values.getElement( row, laiAxis );
+      zmlWriter.write( FortranFormatHelper.printf( dat, "a8" ) );
+      zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) );
+      zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) );
+      zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) );
+      zmlWriter.write( "\n");
+    }
+  }
 }

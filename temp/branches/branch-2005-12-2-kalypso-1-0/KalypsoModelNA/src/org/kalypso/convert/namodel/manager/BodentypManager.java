@@ -72,14 +72,14 @@ public class BodentypManager extends AbstractManager
 
   private final FeatureType m_bodenartFT;
 
-  private static final String BodArtParameterPropName = "BodArtParameterMember";
+  private static final String BodArtParameterPropName = "soilLayerParameterMember";
 
   public BodentypManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_conf = conf;
-    m_bodentypFT = parameterSchema.getFeatureType( "Bodentyp" );
-    m_bodenartFT = parameterSchema.getFeatureType( "BodArtParameter" );
+    m_bodentypFT = parameterSchema.getFeatureType( "Soiltype" );
+    m_bodenartFT = parameterSchema.getFeatureType( "SoilLayerParameter" );
   }
 
   /**
@@ -129,7 +129,7 @@ public class BodentypManager extends AbstractManager
     createProperties( propCollector, line, 1 );
 
     //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "text6" );
+    FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
     String asciiStringId = (String)prop.getValue();
     final Feature feature = getFeature( asciiStringId, m_bodentypFT );
 
@@ -144,10 +144,11 @@ public class BodentypManager extends AbstractManager
       System.out.println( "bodart(" + i + "): " + line );
       createProperties( bodArtPropCollector, line, 2 );
       // BodArtLink
-      final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "char3" );
+      final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "name" );
       String asciiBodArtId = (String)( BodArtNameProp.getValue() );
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
-      final FeatureProperty BodArtLink = FeatureFactory.createFeatureProperty( "BodArtLink", BodArtFE.getId() );
+      final FeatureProperty BodArtLink = FeatureFactory.createFeatureProperty( "soilLayerLink", BodArtFE.getId() );
+      bodArtPropCollector.put("soilLayerLink", BodArtLink);
       bodArtParameterFeature.setProperty( BodArtLink );
 
       Collection collection = bodArtPropCollector.values();
@@ -166,8 +167,7 @@ public class BodentypManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "BodentypCollectionMember" );
-    List list = (List)col.getProperty( "BodentypMember" );
+    List list = (List)rootFeature.getProperty( "soiltypeMember" );
     asciiBuffer.getBodtypBuffer().append( "/Bodentypen:\n" );
     asciiBuffer.getBodtypBuffer().append( "/\n" );
     asciiBuffer.getBodtypBuffer().append( "/Typ       Tiefe[dm]\n" );
@@ -188,18 +188,18 @@ public class BodentypManager extends AbstractManager
     // 1
     List bodartList = (List)feature.getProperty( BodArtParameterPropName );
     asciiBuffer.getBodtypBuffer().append(
-        FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "text6" ), "a10" )
+        FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "a10" )
             + FortranFormatHelper.printf( Integer.toString( bodartList.size() ), "i4" ) + "\n" );
     // 2
     Iterator iter = bodartList.iterator();
     while( iter.hasNext() )
     {
       Feature fe = (Feature)iter.next();
-      Feature BodArtLink = paraWorkspace.resolveLink( fe, "BodArtLink" );
+      Feature BodArtLink = paraWorkspace.resolveLink( fe, "soilLayerLink" );
       if( BodArtLink != null )
       {
         asciiBuffer.getBodtypBuffer().append(
-            FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "typchar" ), "a8" )
+            FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
                 + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " "
                 + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xret" ), "*" ) + "\n" );
       }
@@ -207,7 +207,7 @@ public class BodentypManager extends AbstractManager
       {
         // TODO use logger
         System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId() + " (Link zu Bodenart "
-            + fe.getProperty( "BodArtLink" ) + " nicht vorhanden)" );
+            + fe.getProperty( "soilLayerLink" ) + " nicht vorhanden)" );
       }
     }
 

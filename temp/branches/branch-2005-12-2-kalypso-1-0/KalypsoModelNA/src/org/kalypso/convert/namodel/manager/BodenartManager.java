@@ -71,7 +71,7 @@ public class BodenartManager extends AbstractManager
   {
     super( conf.getParameterFormatURL() );
 
-    m_bodenartFT = parameterSchema.getFeatureType( "Bodenart" );
+    m_bodenartFT = parameterSchema.getFeatureType( "SoilLayer" );
   }
 
   /**
@@ -120,7 +120,7 @@ public class BodenartManager extends AbstractManager
     createProperties( propCollector, line, 6 );
 
     //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "typchar" );
+    FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
     String asciiStringId = (String)prop.getValue();
     final Feature feature = getFeature( asciiStringId, m_bodenartFT );
 
@@ -143,8 +143,7 @@ public class BodenartManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "BodenartCollectionMember" );
-    List list = (List)col.getProperty( "BodenartMember" );
+    List list = (List)rootFeature.getProperty( "soilLayerMember" );
     Date calcDate = new Date();
     asciiBuffer.getBodartBuffer().append( "Bodenparameter NA-Modell, Datum " + ( calcDate.toString() ) + "\n" );
     asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );
