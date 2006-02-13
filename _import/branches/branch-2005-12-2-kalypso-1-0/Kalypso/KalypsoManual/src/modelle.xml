@@ -776,7 +776,7 @@
         <para>Die Relationen sind durch die Tatsache, dass die Systemstruktur
         eine gerichtete Baumstruktur sein muss in ihrer Anordnung begrenzt.
         Sollte eine Relation nicht möglich sein, so kann sie auch nicht
-        "gezogen" werden. Als Information über die getätigte Auswahl der
+        gezogen werden. Als Information über die getätigte Auswahl der
         Elemente und eventuell auftretender Probleme bei der Vernetzung dient
         das Informationsfenster am unteren Rand der Ansicht Edit
         Optionen.</para>

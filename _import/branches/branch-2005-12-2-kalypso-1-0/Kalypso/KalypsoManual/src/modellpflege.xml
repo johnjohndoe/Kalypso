@@ -259,14 +259,14 @@
           <imageobject>
             <imagedata align="center"
                        fileref="img/modellpflege/modellparameter_edit.png"
-                       scale="35"  vendor="sachsen-anhalt" />
+                       scale="35" vendor="sachsen-anhalt" />
           </imageobject>
         </mediaobject>
-        
+
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/modellparameter_edit.png"
+                       fileref="img/modellpflege/modellparameter_edit_ing.png"
                        scale="35" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
