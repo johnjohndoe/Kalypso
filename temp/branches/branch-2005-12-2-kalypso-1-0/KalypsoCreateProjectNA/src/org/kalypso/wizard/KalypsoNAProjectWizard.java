@@ -358,8 +358,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     Feature rootFeature = m_hydWS.getRootFeature();
     FeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
-    Feature hydCollectionFE = (Feature)rootFeature.getProperty( "HydrotopCollectionMember" ); //$NON-NLS-1$
-    List hydList = (List)hydCollectionFE.getProperty( "HydrotopMember" ); //$NON-NLS-1$
+    List hydList = (List)rootFeature.getProperty( "hydrotopMember" ); //$NON-NLS-1$
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
@@ -376,7 +375,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         if( so instanceof GM_Object )
         {
           area = GeometryUtilities.calcArea( (GM_Object)so );
-          FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", new Double( area ) ); //$NON-NLS-1$
+          FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "area", new Double( area ) ); //$NON-NLS-1$
           targetFeature.setProperty( fpArea );
         }
 
@@ -386,10 +385,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       // TODO: delete if default values in schema!
       // if factor of the sealing rate isn´t set, then the factor will be set as 1.0 (instead of default 0.0)
-      if( !mapping.keySet().contains( "fak_vers" ) ) //$NON-NLS-1$
+      if( !mapping.keySet().contains( "corrSealing" ) ) //$NON-NLS-1$
       {
         final double fak_vers = 1.0;
-        FeatureProperty fpFak_vers = FeatureFactory.createFeatureProperty( "fak_vers", new Double( fak_vers ) ); //$NON-NLS-1$
+        FeatureProperty fpFak_vers = FeatureFactory.createFeatureProperty( "corrSealing", new Double( fak_vers ) ); //$NON-NLS-1$
         targetFeature.setProperty( fpFak_vers );
       }
       hydList.add( targetFeature );

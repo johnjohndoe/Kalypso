@@ -117,6 +117,7 @@ public class RHBManager extends AbstractManager
     }
     FeatureProperty jevProp = (FeatureProperty)propCollector.get( "jev" );
     int jev = Integer.parseInt( (String)jevProp.getValue() );
+    //TODO: old Code - remove diagramm and add handling with new zmlinline typehandler
     final DiagramProperty diagram = new DiagramProperty();
     for( int i = 0; i < jev; i++ )
     {

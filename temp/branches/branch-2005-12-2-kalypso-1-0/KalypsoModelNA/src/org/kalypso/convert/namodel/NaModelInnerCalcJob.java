@@ -576,7 +576,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );
 
-    // modell files
+    // generate modell files
     NAModellConverter main = new NAModellConverter( conf );
     main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
 

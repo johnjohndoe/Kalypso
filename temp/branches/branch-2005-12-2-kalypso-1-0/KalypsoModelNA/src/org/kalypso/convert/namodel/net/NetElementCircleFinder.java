@@ -30,6 +30,7 @@
 package org.kalypso.convert.namodel.net;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,9 +84,9 @@ public class NetElementCircleFinder
       }
       else
       {
-        final List[] lists = findCircle( linkNetElement, copyOfListToHere);
-        if(lists.length>0)
-        result.addAll( java.util.Arrays.asList( lists ) ); //  TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok, any side-effects?
+        final List[] lists = findCircle( linkNetElement, copyOfListToHere );
+        if( lists.length > 0 )
+          result.addAll( Arrays.asList( lists ) );
       }
     }
     return (List[])result.toArray( new List[result.size()] );
