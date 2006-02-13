@@ -44,8 +44,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.view.ObservationCache;
 
 /**
  * @author schlienger

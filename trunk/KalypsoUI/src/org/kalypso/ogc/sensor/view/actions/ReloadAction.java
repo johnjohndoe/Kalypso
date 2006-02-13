@@ -48,7 +48,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;

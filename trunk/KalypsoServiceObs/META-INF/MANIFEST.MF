@@ -10,5 +10,3 @@ Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.core,
  org.kalypso.services.core,
  org.kalypso.jwsdp
-Export-Package: org.kalypso.services.sensor,
- org.kalypso.services.sensor.impl

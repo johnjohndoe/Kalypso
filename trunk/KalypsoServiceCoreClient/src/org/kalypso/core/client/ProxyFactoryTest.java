@@ -57,7 +57,8 @@ public class ProxyFactoryTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception
+  @Override
+  protected void setUp( ) throws Exception
   {
     super.setUp();
 
@@ -66,11 +67,11 @@ public class ProxyFactoryTest extends TestCase
     m_conf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
   }
 
-  public void testGetProxy() throws ServiceException
+  public void testGetProxy( ) throws ServiceException
   {
     ProxyFactory pf = new ProxyFactory( m_conf );
 
     final Stub proxy = pf.getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
-    assertNotNull( proxy  );
+    assertNotNull( proxy );
   }
 }
