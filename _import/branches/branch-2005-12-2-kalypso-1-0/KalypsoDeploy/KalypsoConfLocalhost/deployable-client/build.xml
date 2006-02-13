@@ -6,13 +6,13 @@
 >
   <!-- set installationDir! -->
   <property name="kalypso.client.install"
-	    value="P:\\transfer\\opengis\\kalypso"
+    value="P:\\Software\\KalypsoEnterpriseClient\\testing"
   />
 
   <!--
-    value="P:\\Software\\KalypsoEnterpriseClient\\testing"
-            value="C:\\Programme\\KalypsoClient\\"
+	    value="P:\\transfer\\opengis\\kalypso"
     value="P:\\Software\\KalypsoEnterpriseClient\\stable"
+            value="C:\\Programme\\KalypsoClient\\"
   />
   
 -->
