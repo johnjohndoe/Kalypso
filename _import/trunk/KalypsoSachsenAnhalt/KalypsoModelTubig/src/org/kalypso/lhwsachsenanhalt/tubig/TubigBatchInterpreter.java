@@ -50,7 +50,7 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
 import org.kalypso.lhwsachsenanhalt.tubig.utils.TubigCopyUtils;
-import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.simulation.core.ISimulationMonitor;
 
 public class TubigBatchInterpreter
 {
@@ -63,7 +63,7 @@ public class TubigBatchInterpreter
    * 
    * @author Thül
    */
-  public static void runBatch( final File fleExeDir, final File fleBatch, final ICalcMonitor cancelable )
+  public static void runBatch( final File fleExeDir, final File fleBatch, final ISimulationMonitor cancelable )
       throws TubigBatchException
   {
     final File fleLog;
@@ -75,7 +75,7 @@ public class TubigBatchInterpreter
   }
 
   public static void runBatch( final File fleExeDir, final File fleBatch, File fleLog, File fleErr,
-      final ICalcMonitor cancelable ) throws TubigBatchException
+      final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final FileOutputStream strmLog;
     final FileOutputStream strmErr;
@@ -110,7 +110,7 @@ public class TubigBatchInterpreter
   }
 
   public static void runBatch( final File fleExeDir, final File fleBatch, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ICalcMonitor cancelable ) throws TubigBatchException
+      final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     InputStreamReader rdrBatch;
 
@@ -133,7 +133,7 @@ public class TubigBatchInterpreter
   }
 
   public static void runBatch( final File fleExeDir, final Reader rdrBatch, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ICalcMonitor cancelable ) throws TubigBatchException
+      final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";

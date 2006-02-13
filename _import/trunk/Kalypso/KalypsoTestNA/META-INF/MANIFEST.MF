@@ -11,8 +11,8 @@ Require-Bundle: org.kalypso.test,
  org.kalypso.contribs.java,
  org.kalypso.jwsdp,
  org.kalypso.deegree,
- org.kalypso.services.simulation,
  org.junit,
  org.kalypso.commons,
  org.kalypso.NACalcJob,
- org.kalypso.ant
+ org.kalypso.ant,
+ org.kalypso.simulation.core

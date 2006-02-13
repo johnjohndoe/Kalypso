@@ -59,48 +59,44 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.activation.DataHandler;
-
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.calc2d.CalcJob2d;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualVelocityFeatureTypePropertyHandler;
 
 /**
- * 
  * -----------------------------------------------------------------
  * 
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
 
 public class CalcJob2dTest extends TestCase
 {
-  public void test2dModell() throws Exception
+  public void test2dModell( ) throws Exception
   {
     VirtualFeatureTypeRegistry vRegistry = VirtualFeatureTypeRegistry.getInstance();
-    vRegistry.register(new VirtualVelocityFeatureTypePropertyHandler());
-    
-    ICalcDataProvider dataProvider = new ICalcDataProvider()
+    vRegistry.register( new VirtualVelocityFeatureTypePropertyHandler() );
+
+    ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id ) throws CalcJobServiceException
+      public URL getURLForID( String id ) throws SimulationException
       {
         if( CalcJob2d.MODELL_ID.equals( id ) )
           return getClass().getResource( "calcCaseResultMesh.gml" );
         else if( CalcJob2d.CONTROL_ID.equals( id ) )
           return getClass().getResource( "boundaryConditions.gml" );
-        
-        throw new CalcJobServiceException( "resource id=" + id + " not found", null );
+
+        throw new SimulationException( "resource id=" + id + " not found", null );
       }
 
       /**
@@ -108,70 +104,45 @@ public class CalcJob2dTest extends TestCase
        */
       public boolean hasID( String id )
       {
-        return ( CalcJob2d.MODELL_ID.equals( id ) || CalcJob2d.CONTROL_ID.equals( id ) );
+        return (CalcJob2d.MODELL_ID.equals( id ) || CalcJob2d.CONTROL_ID.equals( id ));
       }
     };
 
-    ICalcResultEater resultEater = new ICalcResultEater()
+    ISimulationResultEater resultEater = new ISimulationResultEater()
     {
-      final HashMap map = new HashMap();
+      final HashMap<String, File> map = new HashMap<String, File>();
 
       /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-       *      java.io.File)
+       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
        */
       public void addResult( String id, File file )
       {
         map.put( id, file );
       }
 
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#getCurrentResults()
-       */
-      public String[] getCurrentResults()
-      {
-        return (String[])map.keySet().toArray( new String[map.size()] );
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#packCurrentResults()
-       */
-      public DataHandler packCurrentResults()
-      {
-        return null;
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addFile(java.io.File)
-       */
-      public void addFile( File file )
-      {
-      // 
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#disposeFiles()
-       */
-      public void disposeFiles()
-      {
-      //        
-      }
+      // /**
+      // * @see org.kalypso.services.calculation.job.ICalcResultEater#getCurrentResults()
+      // */
+      // public String[] getCurrentResults()
+      // {
+      // return (String[])map.keySet().toArray( new String[map.size()] );
+      // }
     };
 
-    ICalcMonitor monitor = new ICalcMonitor()
+    ISimulationMonitor monitor = new ISimulationMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
        */
-      public void cancel()
+      public void cancel( )
       {
-      //       do nothing
+        // do nothing
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
        */
-      public boolean isCanceled()
+      public boolean isCanceled( )
       {
         return false; // never in test
       }
@@ -187,7 +158,7 @@ public class CalcJob2dTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
        */
-      public int getProgress()
+      public int getProgress( )
       {
         return 0;
       }
@@ -195,7 +166,7 @@ public class CalcJob2dTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
        */
-      public String getMessage()
+      public String getMessage( )
       {
         return null;
       }
@@ -209,29 +180,30 @@ public class CalcJob2dTest extends TestCase
       }
 
       public void setFinishInfo( int status, String text )
-      {}
+      {
+      }
 
-      public String getFinishText()
+      public String getFinishText( )
       {
         return null;
       }
 
-      public int getFinishStatus()
+      public int getFinishStatus( )
       {
         return 0;
       }
     };
     try
     {
-      final ICalcJob job = new CalcJob2d();
+      final ISimulation job = new CalcJob2d();
       final File tmpDir = new File( "C:\\Temp\\2DCalcTest" );
       tmpDir.mkdirs();
       FileUtils.cleanDirectory( tmpDir );
       job.run( tmpDir, dataProvider, resultEater, monitor );
-      //      if( job.isSucceeded() )
-      //        System.out.println( "berechnung ohne Fehler beendet :-)" );
-      //      else
-      //        System.out.println( ":-( fehler irgendwo" );
+      // if( job.isSucceeded() )
+      // System.out.println( "berechnung ohne Fehler beendet :-)" );
+      // else
+      // System.out.println( ":-( fehler irgendwo" );
     }
     catch( Exception e )
     {

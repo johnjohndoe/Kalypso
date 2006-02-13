@@ -35,20 +35,18 @@ import java.util.StringTokenizer;
 
 import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
-import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.simulation.core.ISimulationMonitor;
 
 /**
  * <p>
  * This class provides static utility method for buffered copying between source <code>Reader</code> and destination
  * <code>Writer</code>.
  * </p>
- * 
  * <p>
  * The <code>copy</code> methods use an internal buffer when copying. It is therefore advisable <em>not</em> to
  * deliberately wrap the stream arguments to the <code>copy</code> methods in <code>Buffered*</code> streams. For
  * example, don't do the following:
  * </p>
- * 
  * <code>copy( new BufferedInputStream( in ), new BufferedOutputStream( out ) );</code>
  * 
  * @author Thül
@@ -56,9 +54,9 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 public class TubigCopyUtils
 {
 
-  public TubigCopyUtils()
+  public TubigCopyUtils( )
   {
-  // wird nicht instantiiert.
+    // wird nicht instantiiert.
   }
 
   // ----------------------------------------------------------------
@@ -78,8 +76,7 @@ public class TubigCopyUtils
    * @return true if ENDE token fond in input, else false
    * @throws TubigBatchException
    */
-  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ICalcMonitor monitor ) throws TubigBatchException
+  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog, final PrintWriter pwErr, final ISimulationMonitor monitor ) throws TubigBatchException
   {
     boolean bExeEnde = false;
     String sMess = "";

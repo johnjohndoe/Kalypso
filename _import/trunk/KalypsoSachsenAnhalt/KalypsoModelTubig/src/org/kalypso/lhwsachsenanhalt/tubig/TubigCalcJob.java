@@ -45,12 +45,12 @@ import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
 import org.kalypso.lhwsachsenanhalt.tubig.utils.TubigUtils;
 import org.kalypso.lhwsachsenanhalt.tubig.visitors.FileVisitorTubig2Zml;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * <p>
@@ -59,7 +59,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * 
  * @author Thül
  */
-public class TubigCalcJob implements ICalcJob
+public class TubigCalcJob implements ISimulation
 {
   /**
    * @throws CalcJobServiceException
@@ -67,8 +67,8 @@ public class TubigCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
-      final ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
+      final ISimulationMonitor monitor ) throws SimulationException
 
   {
     final File outputDir; // Grundverzeichnis für Ergebnisse (Logs, Zeitreihen)
@@ -99,8 +99,8 @@ public class TubigCalcJob implements ICalcJob
     pwCalcLog = null;
     dataCrtl = null;
 
-    outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
-    bodevorDir = new File( tmpdir, ICalcServiceConstants.CALC_DIR_NAME );
+    outputDir = new File( tmpdir, ISimulationConstants.OUTPUT_DIR_NAME );
+    bodevorDir = new File( tmpdir, ISimulationConstants.CALC_DIR_NAME );
     ergDir = new File( outputDir, TubigConst.ERGEBNISSE );
     logDir = new File( outputDir, TubigConst.LOGS );
     logCopyErgDir = new File( outputDir, TubigConst.LOGS_COPYERG );
@@ -232,12 +232,12 @@ public class TubigCalcJob implements ICalcJob
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Datei " + fleCalcLog.getName() + " nicht gefunden", e );
+      throw new SimulationException( "Datei " + fleCalcLog.getName() + " nicht gefunden", e );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Encoding " + TubigConst.TUBIG_CODEPAGE
+      throw new SimulationException( "Encoding " + TubigConst.TUBIG_CODEPAGE
           + " wird für Calc-Log nicht unterstützt.", e );
     }
     catch( final TubigBatchException e )
@@ -250,7 +250,7 @@ public class TubigCalcJob implements ICalcJob
     catch( final TubigException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( e.getLocalizedMessage(), e );
+      throw new SimulationException( e.getLocalizedMessage(), e );
     }
     finally
     {

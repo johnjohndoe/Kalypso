@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.core,
  org.kalypso.commons,
  org.kalypso.deegree,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.lhwsachsenanhalt.tubig,
  org.kalypso.lhwsachsenanhalt.tubig.exceptions,

@@ -54,10 +54,10 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobInfoBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
@@ -65,16 +65,13 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class RasterizeLanduseJobTest extends TestCase
 {
 
-  public void testRun()
+  public void testRun( )
   {
     // initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogFloodRisk() } );
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    //register typeHandler
+    // register typeHandler
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
@@ -95,34 +92,30 @@ public class RasterizeLanduseJobTest extends TestCase
   private void testRasterizeLanduse( RasterizeLanduseJob job )
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
-    //Input
+    // Input
     int numInputBeans = 3;
-    CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
-    CalcJobClientBean input1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseVectorDataID, base
-        + "Landuse//LanduseVectorData.gml" );
+    SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
+    SimulationDataPath input1 = new SimulationDataPath( RasterizeLanduseJob.LanduseVectorDataID, base + "Landuse//LanduseVectorData.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean( RasterizeLanduseJob.ContextModelID, base
-        + "Control//contextModell.gml" );
+    SimulationDataPath input2 = new SimulationDataPath( RasterizeLanduseJob.ContextModelID, base + "Control//contextModell.gml" );
     input[1] = input2;
-    CalcJobClientBean input3 = new CalcJobClientBean( RasterizeLanduseJob.BaseRasterID, base
-        + "Waterlevel//wsp_hq100.gml" );
+    SimulationDataPath input3 = new SimulationDataPath( RasterizeLanduseJob.BaseRasterID, base + "Waterlevel//wsp_hq100.gml" );
     input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
-    //Output
+    // Output
     int numOutputBeans = 1;
-    CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseRasterDataID, base
-        + "Landuse//landuseData.gml" );
+    SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
+    SimulationDataPath output1 = new SimulationDataPath( RasterizeLanduseJob.LanduseRasterDataID, base + "Landuse//landuseData.gml" );
     output[0] = output1;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "RasterizeLanduseJob", ICalcServiceConstants.RUNNING, -1, "" );
+    SimulationInfo jobBean = new SimulationInfo( "", "", "RasterizeLanduseJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
     try
     {
       job.run( null, inputProvider, resultEater, jobBean );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
     }

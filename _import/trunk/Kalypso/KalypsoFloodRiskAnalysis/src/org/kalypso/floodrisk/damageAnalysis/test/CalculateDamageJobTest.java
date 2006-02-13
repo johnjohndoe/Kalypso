@@ -55,10 +55,10 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobInfoBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
@@ -98,34 +98,34 @@ public class CalculateDamageJobTest extends TestCase
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     //Input
     int numInputBeans = 3;
-    CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
-    CalcJobClientBean input1 = new CalcJobClientBean( CalculateDamageJob.LanduseRasterDataID, base
+    SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
+    SimulationDataPath input1 = new SimulationDataPath( CalculateDamageJob.LanduseRasterDataID, base
         + "Landuse//landuseData.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean( CalculateDamageJob.WaterlevelDataID, base
+    SimulationDataPath input2 = new SimulationDataPath( CalculateDamageJob.WaterlevelDataID, base
         + "Control//waterlevelData.gml" );
     input[1] = input2;
-    CalcJobClientBean input3 = new CalcJobClientBean( CalculateDamageJob.ContextModelID, base
+    SimulationDataPath input3 = new SimulationDataPath( CalculateDamageJob.ContextModelID, base
         + "Control//contextModell.gml" );
     input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
     //Output
     int numOutputBeans = 2;
-    CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( CalculateDamageJob.DamageDirectoryID, base + "Damage" );
+    SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
+    SimulationDataPath output1 = new SimulationDataPath( CalculateDamageJob.DamageDirectoryID, base + "Damage" );
     output[0] = output1;
-    CalcJobClientBean output2 = new CalcJobClientBean( CalculateDamageJob.AnnualDamageRasterDataID, base
+    SimulationDataPath output2 = new SimulationDataPath( CalculateDamageJob.AnnualDamageRasterDataID, base
         + "Damage//annualDamage.gml" );
     output[1] = output2;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateDamageJob", ICalcServiceConstants.RUNNING, -1, "" );
+    SimulationInfo jobBean = new SimulationInfo( "", "", "CalculateDamageJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
     try
     {
       job.run( null, inputProvider, resultEater, jobBean );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
     }

@@ -3,15 +3,7 @@
 <plugin>
 
      <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
-   <!--<extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.kalypso.floodrisk.perspective.FloodRiskPerspective"
-            icon="icons/sample.gif"
-            fixed="false"
-            name="Kalypso FloodRisk"
-            id="KalypsoFloodRiskAnalysis"/>
-   </extension>-->
+
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
@@ -53,25 +45,8 @@
             class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
             name="%CalculateStatisticJob.name"
             id="CalculateStatisticJob"/>
-      <!--<KalypsoProcess
-            type="local"
-            class="org.kalypso.floodrisk.substract.GenerateTemplateRasterJob"
-            name="Templateraster erstellen"
-            id="GenerateTemplateRasterJob"/>-->
    </extension>
-   <!--<extension
-         point="org.kalypso.ui.mapviewaction">
-      <MapviewAction
-            title="KalypsoFloodRiskAnalysis.MapviewAction1"
-            enabled="true"
-            icon="icons/sample.gif"
-            class="org.kalypso.floodrisk.action.ExportThemeAction"
-            tooltip="Export active theme as jpg"/>
-   </extension>-->
-   <extension
-         point="org.kalypso.ui.calculationService">
-      <factory class="org.kalypso.floodrisk.process.impl.LocalCalculationServiceFactory"/>
-   </extension>
+
    <extension
          point="org.eclipse.ui.ide.resourceFilters">
       <filter

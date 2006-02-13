@@ -32,8 +32,8 @@ package org.kalypso.test.util;
 import java.io.File;
 
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
 
 /**
  * 
@@ -44,9 +44,9 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 public class CalcJobTestUtilis
 {
 
-  public static ICalcResultEater createResultEater()
+  public static ISimulationResultEater createResultEater()
   {
-    return new ICalcResultEater()
+    return new ISimulationResultEater()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
@@ -58,9 +58,9 @@ public class CalcJobTestUtilis
     };
   }
 
-  public static ICalcMonitor createMonitor()
+  public static ISimulationMonitor createMonitor()
   {
-    return new ICalcMonitor()
+    return new ISimulationMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()

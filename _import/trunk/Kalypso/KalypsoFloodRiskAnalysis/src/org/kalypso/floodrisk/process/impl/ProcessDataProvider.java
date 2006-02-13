@@ -47,21 +47,17 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationDataPath;
 
 /**
- * 
  * ProcessDataProvider
  * <p>
- * DataProvider for local calculations, data is read directly from the file system (without dataHandler)
- * 
- * created by
+ * DataProvider for local calculations, data is read directly from the file system (without dataHandler) created by
  * 
  * @author Nadja Peiler (17.06.2005)
  */
-public class ProcessDataProvider implements ICalcDataProvider
+public class ProcessDataProvider implements ISimulationDataProvider
 {
   private Map m_idhash;
 
@@ -71,7 +67,7 @@ public class ProcessDataProvider implements ICalcDataProvider
    * @param input
    *          input-Beans
    */
-  public ProcessDataProvider( CalcJobClientBean[] input )
+  public ProcessDataProvider( SimulationDataPath[] input )
   {
     m_idhash = indexInput( input );
   }
@@ -82,17 +78,16 @@ public class ProcessDataProvider implements ICalcDataProvider
    * @param input
    *          input-beans
    * @return Map(key=inputBeanID, value=inputData-URL)
-   *  
    */
-  private Map indexInput( final CalcJobClientBean[] input )
+  private Map indexInput( final SimulationDataPath[] input )
   {
-    final Map index = new HashMap( input.length );
+    final Map<String, URL> index = new HashMap<String, URL>( input.length );
     for( int i = 0; i < input.length; i++ )
     {
-      final CalcJobClientBean bean = input[i];
+      final SimulationDataPath bean = input[i];
       try
       {
-        URL path = ( new File( bean.getPath() ) ).toURL();
+        URL path = (new File( bean.getPath() )).toURL();
         index.put( bean.getId(), path );
       }
       catch( MalformedURLException e )
@@ -104,7 +99,6 @@ public class ProcessDataProvider implements ICalcDataProvider
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcDataProvider#hasID(java.lang.String)
    */
   public boolean hasID( String id )
@@ -115,9 +109,9 @@ public class ProcessDataProvider implements ICalcDataProvider
   /**
    * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
    */
-  public URL getURLForID( String id ) throws CalcJobServiceException
+  public URL getURLForID( String id )
   {
-    return (URL)m_idhash.get( id );
+    return (URL) m_idhash.get( id );
   }
 
 }

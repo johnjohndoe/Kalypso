@@ -36,11 +36,11 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
  * 
  * @author Thül
  */
-public class SaaleCalcJob implements ICalcJob
+public class SaaleCalcJob implements ISimulation
 {
   public static final String HWDIR_DATEN = "Daten";
 
@@ -84,8 +84,8 @@ public class SaaleCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
-      final ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
+      final ISimulationMonitor monitor ) throws SimulationException
   {
     final File loggerFile = new File( tmpdir, "saale.log" );
     resultEater.addResult( "LOG", loggerFile );
@@ -147,19 +147,19 @@ public class SaaleCalcJob implements ICalcJob
     }
   }
 
-  private void checkHWVORLog( final File hwqvorFile ) throws IOException
+  private void checkHWVORLog( final File hwqvorFile ) throws IOException, SimulationException
   {
     final String defaultCharset = CharsetUtilities.getDefaultCharset();
     final String string = FileUtils.readFileToString( hwqvorFile, defaultCharset );
     if( string.trim().endsWith( "ENDE QVOR" ) )
       return;
 
-    throw new CalcJobServiceException(
+    throw new SimulationException(
         "Berechnung wurde nicht erfolgreich abgeschlossen.\nBitte sehen Sie die Log-Datei unter Ergebnisse/HWQVOR.TXT ein.",
         null );
   }
 
-  private void runCalculation( final File exeFile, final ICalcMonitor monitor ) throws IOException,
+  private void runCalculation( final File exeFile, final ISimulationMonitor monitor ) throws IOException,
       ProcessTimeoutException
   {
     final StringWriter logStream = new StringWriter();
@@ -180,8 +180,8 @@ public class SaaleCalcJob implements ICalcJob
     }
   }
 
-  private SaaleInputBean createInputFiles( final File tmpdir, final ICalcDataProvider inputProvider )
-      throws CalcJobServiceException, Exception
+  private SaaleInputBean createInputFiles( final File tmpdir, final ISimulationDataProvider inputProvider )
+      throws SimulationException, Exception
   {
     // VERZEICHNISSE erstellen //
     final File hwvordir = new File( tmpdir, "HWVOR00" );
@@ -258,7 +258,7 @@ public class SaaleCalcJob implements ICalcJob
   private void writeStammdaten( final File stammdatdir, final GMLWorkspace modellWorkspace ) throws IOException,
       JAXBException, GmlConvertException
   {
-    final Map externData = new HashMap( 1 );
+    final Map<String, GMLWorkspace> externData = new HashMap<String, GMLWorkspace>( 1 );
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
 
     final URL stammdatURL = stammdatdir.toURL();
@@ -289,7 +289,7 @@ public class SaaleCalcJob implements ICalcJob
     final IUrlResolver resolver = new UrlUtilities();
 
     final URL datenURL = datendir.toURL();
-    final Map externData = new HashMap( 1 );
+    final Map<String, GMLWorkspace> externData = new HashMap<String, GMLWorkspace>( 1 );
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
     convertGml( externData, datenURL, "Daten/hwablauf.vor", "hwablauf_vor.gmc" );
 
@@ -319,7 +319,7 @@ public class SaaleCalcJob implements ICalcJob
       m_logger.info( "Keine Zeitreihen vorhanden: " + linkProperty );
   }
 
-  private File readResults( final File tmpdir, final File datendir ) throws CalcJobServiceException
+  private File readResults( final File tmpdir, final File datendir ) throws SimulationException
   {
     final File resultdir = new File( tmpdir, "out" );
     try
@@ -336,7 +336,7 @@ public class SaaleCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler beim Konvertieren der Ergebnisdaten", e );
+      throw new SimulationException( "Fehler beim Konvertieren der Ergebnisdaten", e );
     }
     return resultdir;
   }

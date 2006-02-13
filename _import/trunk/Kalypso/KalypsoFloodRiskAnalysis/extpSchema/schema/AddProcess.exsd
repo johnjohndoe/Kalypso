@@ -61,7 +61,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.services.calculation.job.ICalcJob"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.simulation.core.ISimulation"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -48,68 +48,63 @@ import java.util.Hashtable;
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 
 /**
- * 
  * CalculateStatisticJob
  * <p>
- * Job for calculating statistics of damageGrids
- * 
- * created by
+ * Job for calculating statistics of damageGrids created by
  * 
  * @author Nadja Peiler (15.06.2005)
  */
-public class CalculateStatisticJob implements ICalcJob
+public class CalculateStatisticJob implements ISimulation
 {
 
-  //IDs
-  //input
+  // IDs
+  // input
   public static final String DamageRasterID = "DamageRaster";
 
   public static final String LanduseRasterDataID = "LanduseRasterData";
 
-  //optional
+  // optional
   public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
 
   public static final String ContextModelID = "ContextModel";
 
-  //optional
+  // optional
   public static final String TemplateRasterID = "TemplateRaster";
 
-  //output
+  // output
   public static final String StatisticDataID = "StatisticData";
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      //Generate input
-      //damageRaster
+      // Generate input
+      // damageRaster
       monitor.setMessage( "Lese Eingabedateien" );
       URL damageRasterGML = inputProvider.getURLForID( DamageRasterID );
       RectifiedGridCoverage damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
 
-      //landuseRaster
+      // landuseRaster
       URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
-      //administrationUnitRaster
+      // administrationUnitRaster
       RectifiedGridCoverage administrationUnitRaster = null;
       if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
       {
@@ -117,24 +112,23 @@ public class CalculateStatisticJob implements ICalcJob
         administrationUnitRaster = rasterDataModel.getRectifiedGridCoverage( administrationUnitRasterGML );
       }
 
-      //contextModel
+      // contextModel
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
       ContextModel contextModel = new ContextModel( contextModelGML );
 
       monitor.setProgress( 40 );
 
-      //Calculation
-      //statisticAnalysis
+      // Calculation
+      // statisticAnalysis
       monitor.setMessage( "Berechne" );
       Hashtable statistics = null;
       if( inputProvider.getURLForID( TemplateRasterID ) != null )
       {
-        //templateRaster
+        // templateRaster
         URL templateRasterGML = inputProvider.getURLForID( TemplateRasterID );
         RectifiedGridCoverage templateRaster = rasterDataModel.getRectifiedGridCoverage( templateRasterGML );
         if( administrationUnitRaster != null )
-          statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster,
-              administrationUnitRaster, templateRaster );
+          statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster, administrationUnitRaster, templateRaster );
         else
           statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster, templateRaster );
       }
@@ -148,19 +142,17 @@ public class CalculateStatisticJob implements ICalcJob
 
       monitor.setProgress( 20 );
 
-      //Generate output
-      //statisticData
+      // Generate output
+      // statisticData
       monitor.setMessage( "Schreibe Ausgabedateien" );
-      CalcJobClientBean statisticDataOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( StatisticDataID );
+      SimulationDataPath statisticDataOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( StatisticDataID );
       File statisticDataFile = new File( statisticDataOutputBean.getPath() );
       if( !statisticDataFile.exists() )
       {
         statisticDataFile.createNewFile();
       }
       if( administrationUnitRaster != null )
-        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(), contextModel
-            .getAdministrationUnitList(), statisticDataFile.toURL() );
+        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(), contextModel.getAdministrationUnitList(), statisticDataFile.toURL() );
       else
         StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(), statisticDataFile.toURL() );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
@@ -169,19 +161,18 @@ public class CalculateStatisticJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e );
     }
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "resources/statisticCalcjob_spec.xml" );
   }

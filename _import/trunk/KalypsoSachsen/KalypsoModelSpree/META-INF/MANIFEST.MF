@@ -9,5 +9,5 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,
  org.kalypso.core,
  org.kalypso.jwsdp,
- org.kalypso.services.calculation.local
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true

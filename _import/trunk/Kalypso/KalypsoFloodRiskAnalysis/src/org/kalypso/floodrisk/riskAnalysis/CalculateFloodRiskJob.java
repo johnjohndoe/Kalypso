@@ -63,12 +63,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.data.RiskContextModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -83,26 +83,23 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * CalculateFloodRiskJob
  * <p>
- * Job for creating damagerisk maps
- * 
- * created by
+ * Job for creating damagerisk maps created by
  * 
  * @author Nadja Peiler (15.06.2005)
  */
-public class CalculateFloodRiskJob implements ICalcJob
+public class CalculateFloodRiskJob implements ISimulation
 {
-  //IDs
-  //input
+  // IDs
+  // input
   public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData";
 
   public static final String LanduseRasterDataID = "LanduseRasterData";
 
   public static final String RiskContextModelID = "RiskContextModel";
 
-  //output
+  // output
   public static final String FloodRiskRasterDataID = "FloodRiskRasterData";
 
   public static final String FloodRiskRasterStyleID = "FloodRiskRasterStyle";
@@ -110,44 +107,40 @@ public class CalculateFloodRiskJob implements ICalcJob
   RasterDataModel rasterDataModel = new RasterDataModel();
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      //Generate input
-      //annualDamageRaster
+      // Generate input
+      // annualDamageRaster
       monitor.setMessage( "Lese Eingabedateien" );
       URL annualDamageRasterGML = inputProvider.getURLForID( AnnualDamageRasterDataID );
       RectifiedGridCoverage annualDamageRaster = rasterDataModel.getRectifiedGridCoverage( annualDamageRasterGML );
 
-      //landuseRaster
+      // landuseRaster
       URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
-      //contextModel
+      // contextModel
       URL riskContextModelGML = inputProvider.getURLForID( RiskContextModelID );
       RiskContextModel riskContextModel = new RiskContextModel( riskContextModelGML );
 
       monitor.setProgress( 40 );
 
-      //start riskAnalysis
+      // start riskAnalysis
       monitor.setMessage( "Berechne" );
-      RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster, landuseRaster,
-          riskContextModel.getRiskClassLists() );
+      RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster, landuseRaster, riskContextModel.getRiskClassLists() );
 
       monitor.setProgress( 20 );
 
-      //Generate output
-      //floodrisk raster
+      // Generate output
+      // floodrisk raster
       monitor.setMessage( "Schreibe Ausgabedateien" );
-      CalcJobClientBean floodRiskOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap()
-          .get( FloodRiskRasterDataID );
+      SimulationDataPath floodRiskOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( FloodRiskRasterDataID );
       File floodRiskResultFile = new File( floodRiskOutputBean.getPath() );
       if( !floodRiskResultFile.exists() )
       {
@@ -158,17 +151,17 @@ public class CalculateFloodRiskJob implements ICalcJob
       rasterDataModel.toFile( floodRiskResultFile, floodRiskRaster );
       resultEater.addResult( floodRiskOutputBean.getId(), null );
 
-      //floodrisk style
+      // floodrisk style
       String styleName = "FloodRisk";
       Symbolizer rasterSymbolizer = StyleFactory.createRasterSymbolizer();
-      TreeMap defaultColorMap = ( (RasterSymbolizer)rasterSymbolizer ).getColorMap();
+      TreeMap<Double, ColorMapEntry> defaultColorMap = ((RasterSymbolizer) rasterSymbolizer).getColorMap();
       // add riskClass colorMapEntries to defaultColorMap
       Hashtable riskClassList = riskContextModel.getRiskClassKeyList();
       Iterator it = riskClassList.keySet().iterator();
       while( it.hasNext() )
       {
-        String riskClassKey = (String)it.next();
-        Integer riskClassValue = (Integer)riskClassList.get( riskClassKey );
+        String riskClassKey = (String) it.next();
+        Integer riskClassValue = (Integer) riskClassList.get( riskClassKey );
         // color (default: white)
         Color color = Color.WHITE;
         // opacity (default: 1.0)
@@ -181,13 +174,11 @@ public class CalculateFloodRiskJob implements ICalcJob
         ColorMapEntry riskClassEntry = new ColorMapEntry_Impl( color, opacity, quantity, label );
         defaultColorMap.put( new Double( quantity ), riskClassEntry );
       }
-      Symbolizer[] symbolizer = new Symbolizer[]
-      { rasterSymbolizer };
-      //create Style
+      Symbolizer[] symbolizer = new Symbolizer[] { rasterSymbolizer };
+      // create Style
       final StyledLayerDescriptor defaultRasterStyle = DefaultStyleFactory.createDefaultStyle( styleName, symbolizer );
-      //write Style to File
-      CalcJobClientBean floodRiskStyleOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( FloodRiskRasterStyleID );
+      // write Style to File
+      SimulationDataPath floodRiskStyleOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( FloodRiskRasterStyleID );
       File floodRiskStyleFile = new File( floodRiskStyleOutputBean.getPath() );
       if( !floodRiskStyleFile.exists() )
         floodRiskStyleFile.createNewFile();
@@ -198,18 +189,17 @@ public class CalculateFloodRiskJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e );
     }
   }
 
-  private void writeSLDtoFile( File targetFile, StyledLayerDescriptor sld ) throws IOException, SAXException,
-      TransformerFactoryConfigurationError, TransformerException
+  private void writeSLDtoFile( File targetFile, StyledLayerDescriptor sld ) throws IOException, SAXException, TransformerFactoryConfigurationError, TransformerException
   {
-    Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
+    Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     Result result = new StreamResult( targetFile );
     Transformer t = TransformerFactory.newInstance().newTransformer();
@@ -219,10 +209,9 @@ public class CalculateFloodRiskJob implements ICalcJob
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "resources/riskCalcjob_spec.xml" );
   }

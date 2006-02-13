@@ -49,12 +49,12 @@ import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  * 
  * @author Nadja Peiler (15.06.2005)
  */
-public class RasterizeAdministrationUnitJob implements ICalcJob
+public class RasterizeAdministrationUnitJob implements ISimulation
 {
 
   //IDs
@@ -94,8 +94,8 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
+      throws SimulationException
   {
     try
     {
@@ -123,7 +123,7 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
       RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, administrationUnitTypeList,
           baseRaster, monitor );
 
-      CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap().get(
+      SimulationDataPath outputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap().get(
           AdministrationUnitRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
@@ -134,7 +134,7 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
     }
     catch( Exception e1 )
     {
-      throw new CalcJobServiceException( e1.getMessage(), e1 );
+      throw new SimulationException( e1.getMessage(), e1 );
     }
   }
 

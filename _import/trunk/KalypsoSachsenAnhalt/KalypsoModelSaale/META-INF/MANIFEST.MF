@@ -17,5 +17,6 @@ Require-Bundle: org.kalypso.core,
  org.kalypso.jwsdp,
  org.kalypso.ui,
  org.kalypso.dwd,
- org.junit
+ org.junit,
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true

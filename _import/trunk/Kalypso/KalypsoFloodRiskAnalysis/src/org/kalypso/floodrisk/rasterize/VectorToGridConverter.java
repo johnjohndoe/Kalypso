@@ -44,7 +44,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -59,7 +59,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * (RectifiedGridCoverages)
  * 
  * @author N. Peiler
- *  
  */
 public class VectorToGridConverter
 {
@@ -76,28 +75,23 @@ public class VectorToGridConverter
    * @return new RectifiedGridCoverage
    * @throws Exception
    */
-  public static RectifiedGridCoverage toGrid( List featureList, Hashtable propertyTable,
-      RectifiedGridCoverage baseGrid, ICalcMonitor monitor ) throws Exception
+  public static RectifiedGridCoverage toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage baseGrid, ISimulationMonitor monitor ) throws Exception
   {
     String propertyName = "RasterProperty";
-    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( baseGrid.getGridDomain().getOrigin( null ), baseGrid
-        .getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
+    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( baseGrid.getGridDomain().getOrigin( null ), baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
     GM_Point origin = baseGrid.getGridDomain().getOrigin( null );
     double originX = origin.getX();
     double originY = origin.getY();
-    Vector newRangeSetData = new Vector();
+    Vector<Vector<Double>> newRangeSetData = new Vector<Vector<Double>>();
     Vector rangeSetData = baseGrid.getRangeSet().getRangeSetData();
     for( int i = 0; i < rangeSetData.size(); i++ )
     {
-      Vector rowData = (Vector)rangeSetData.get( i );
-      Vector newRowData = new Vector();
+      Vector rowData = (Vector) rangeSetData.get( i );
+      Vector<Double> newRowData = new Vector<Double>();
       for( int j = 0; j < rowData.size(); j++ )
       {
-        double x = originX + j * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() ) + 0.5
-            * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
-        double y = originY + ( rangeSetData.size() - i )
-            * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() ) - 0.5
-            * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+        double x = originX + j * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() ) + 0.5 * baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+        double y = originY + (rangeSetData.size() - i) * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() ) - 0.5 * baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
         GM_Position position = GeometryFactory.createGM_Position( x, y );
         Feature actualFeature = null;
         if( rowData.get( j ) != null )
@@ -105,12 +99,12 @@ public class VectorToGridConverter
           Integer key = null;
           for( int k = 0; k < featureList.size(); k++ )
           {
-            actualFeature = (Feature)featureList.get( k );
+            actualFeature = (Feature) featureList.get( k );
             GM_Object gm_Object = actualFeature.getDefaultGeometryProperty();
             if( gm_Object.contains( position ) )
             {
               String property = actualFeature.getProperty( propertyName ).toString();
-              key = (Integer)propertyTable.get( property );
+              key = (Integer) propertyTable.get( property );
               break;
             }
           }
@@ -131,7 +125,7 @@ public class VectorToGridConverter
       newRangeSetData.addElement( newRowData );
       monitor.setMessage( i + 1 + " rows of " + rangeSetData.size() + " calculated" );
       monitor.setProgress( 100 * i / rangeSetData.size() );
-      //System.out.println(i + 1 + " rows of " + rangeSetData.size() + "
+      // System.out.println(i + 1 + " rows of " + rangeSetData.size() + "
       // calculated"+ " Progress: "+100 * i / rangeSetData.size());
     }
     RangeSet newRangeSet = new RangeSet( newRangeSetData, null );

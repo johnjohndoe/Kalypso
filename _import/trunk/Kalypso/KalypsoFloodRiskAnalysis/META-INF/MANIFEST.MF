@@ -38,7 +38,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.jwsdp,
  org.kalypso.ui,
  org.kalypso.ui.addlayer,
- org.kalypso.services.calculation.local,
  org.kalypso.simulation.ui,
- org.junit
+ org.junit,
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true

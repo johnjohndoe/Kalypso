@@ -47,8 +47,8 @@ import java.util.Vector;
 
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * 
@@ -62,12 +62,11 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public class ProcessResultEater implements IProcessResultEater
 {
+  private HashMap<String, SimulationDataPath> m_clientOutputMap;
 
-  private HashMap m_clientOutputMap;
+  private Vector<SimulationDataPath> m_results = new Vector<SimulationDataPath>();
 
-  private Vector m_results = new Vector();
-
-  private Vector m_files = new Vector();
+  private Vector<File> m_files = new Vector<File>();
 
   /**
    * Constructor
@@ -75,12 +74,12 @@ public class ProcessResultEater implements IProcessResultEater
    * @param clientOutput
    *          output-beans
    */
-  public ProcessResultEater( final CalcJobClientBean[] clientOutput )
+  public ProcessResultEater( final SimulationDataPath[] clientOutput )
   {
-    m_clientOutputMap = new HashMap( clientOutput.length );
+    m_clientOutputMap = new HashMap<String, SimulationDataPath>( clientOutput.length );
     for( int i = 0; i < clientOutput.length; i++ )
     {
-      final CalcJobClientBean bean = clientOutput[i];
+      final SimulationDataPath bean = clientOutput[i];
       m_clientOutputMap.put( bean.getId(), bean );
     }
   }
@@ -88,11 +87,11 @@ public class ProcessResultEater implements IProcessResultEater
   /**
    * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
    */
-  public void addResult( String id, File file ) throws CalcJobServiceException
+  public void addResult( String id, File file ) throws SimulationException
   {
-    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap.get( id );
+    final SimulationDataPath clientBean = m_clientOutputMap.get( id );
     if( clientBean == null )
-      throw new CalcJobServiceException( "Unerwartete Ausgabe mit ID: " + id, null );
+      throw new SimulationException( "Unerwartete Ausgabe mit ID: " + id, null );
 
     m_results.add( clientBean );
   }
@@ -106,7 +105,7 @@ public class ProcessResultEater implements IProcessResultEater
     final String[] results = new String[m_results.size()];
     for( int i = 0; i < results.length; i++ )
     {
-      final CalcJobClientBean result = (CalcJobClientBean)m_results.get( i );
+      final SimulationDataPath result = m_results.get( i );
       results[i] = result.getId();
     }
 
@@ -121,7 +120,7 @@ public class ProcessResultEater implements IProcessResultEater
   {
     for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
     {
-      final CalcJobClientBean resultBean = (CalcJobClientBean)iter.next();
+      final SimulationDataPath resultBean = (SimulationDataPath)iter.next();
       FileUtilities.deleteRecursive( new File( resultBean.getPath() ) );
     }
   }

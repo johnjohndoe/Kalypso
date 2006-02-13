@@ -68,12 +68,12 @@ import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -104,7 +104,7 @@ import org.w3c.dom.Document;
  * 
  * @author Nadja Peiler (14.06.2005)
  */
-public class CalculateDamageJob implements ICalcJob
+public class CalculateDamageJob implements ISimulation
 {
   //IDs
   //input
@@ -130,8 +130,8 @@ public class CalculateDamageJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
+      throws SimulationException
   {
     try
     {
@@ -176,7 +176,7 @@ public class CalculateDamageJob implements ICalcJob
       //Generate Output
       // damage directory
       monitor.setMessage( "Schreibe Ausgabedateien" );
-      CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap()
+      SimulationDataPath damageDirOutputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap()
           .get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
       if( !damageResultDir.exists() )
@@ -185,7 +185,7 @@ public class CalculateDamageJob implements ICalcJob
       resultEater.addResult( damageDirOutputBean.getId(), null );
 
       // annualDamage
-      CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap()
+      SimulationDataPath annualDamageOutputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap()
           .get( AnnualDamageRasterDataID );
       File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
       if( !annualDamageResultFile.exists() )
@@ -210,11 +210,11 @@ public class CalculateDamageJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e );
     }
   }
 
@@ -234,7 +234,7 @@ public class CalculateDamageJob implements ICalcJob
     String annualityPropertyName = "Annuality";
     String waterlevelDataURLPropertyName = "WaterlevelRasterData";
 
-    TreeMap waterlevelGrids = new TreeMap();
+    TreeMap<Double, RectifiedGridCoverage> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage>();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
@@ -310,7 +310,7 @@ public class CalculateDamageJob implements ICalcJob
   private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color,
       int numOfCategories ) throws Exception
   {
-    TreeMap colorMap = new TreeMap();
+    TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     double min = grid.getRangeSet().getMinValue();

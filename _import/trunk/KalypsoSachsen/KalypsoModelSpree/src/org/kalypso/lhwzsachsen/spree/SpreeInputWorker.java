@@ -31,9 +31,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -50,9 +50,9 @@ public class SpreeInputWorker
 {
   protected final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class.getName() );
 
-  private SpreeInputWorker()
+  private SpreeInputWorker( )
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   /**
@@ -63,8 +63,7 @@ public class SpreeInputWorker
    * @return Location of native files
    * @throws IOException
    */
-  public static File createNativeInput( final File tmpdir, final ICalcDataProvider inputProvider,
-      final Properties props, final PrintWriter logwriter, final TSMap tsmap ) throws Exception
+  public static File createNativeInput( final File tmpdir, final ISimulationDataProvider inputProvider, final Properties props, final PrintWriter logwriter, final TSMap tsmap ) throws Exception
   {
     try
     {
@@ -84,7 +83,7 @@ public class SpreeInputWorker
 
       final String tsFilename = writeNonTs( props, logwriter, workspace );
 
-      final Date startDate = (Date)props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
+      final Date startDate = (Date) props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
       setAnfangsstauvolumen( "V_TSQUITZ", startDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
       setAnfangsstauvolumen( "V_TSBAUTZ", startDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
 
@@ -96,10 +95,10 @@ public class SpreeInputWorker
 
       return nativedir;
     }
-    catch( final CalcJobServiceException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
+      throw new SimulationException( "Fehler beim Erzeugen der Inputdateien", e );
     }
   }
 
@@ -117,12 +116,12 @@ public class SpreeInputWorker
         if( property instanceof Double )
         {
           // die Zuordnung erfolgt über den Namen des Links
-          final TimeseriesLinkType tsLink = (TimeseriesLinkType)f.getProperty( "Wasserstand_vorhersage" );
+          final TimeseriesLinkType tsLink = (TimeseriesLinkType) f.getProperty( "Wasserstand_vorhersage" );
           final String tsHref = tsLink.getHref();
 
           final String path = FileUtilities.nameWithoutExtension( tsHref );
           final String name = FileUtilities.nameFromPath( path );
-          tsmap.setAccuracy( name, (Double)property );
+          tsmap.setAccuracy( name, (Double) property );
         }
 
         return true;
@@ -152,7 +151,7 @@ public class SpreeInputWorker
           final Date date = dates[j];
 
           // die beiden ersten dürfen nicht gesetzt werden, sonst rechnet das Modell Mist
-          final Double value = ( j == 0 || j == 1 ) ? null : (Double)datesToValuesMap.get( date );
+          final Double value = (j == 0 || j == 1) ? null : (Double) datesToValuesMap.get( date );
 
           if( j % 2 == 0 )
             tsmap.putValue( pgid, date, null );
@@ -175,30 +174,27 @@ public class SpreeInputWorker
     }
   }
 
-  private static void setAnfangsstauvolumen( final String name, final Date startDate, final String fid,
-      final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
+  private static void setAnfangsstauvolumen( final String name, final Date startDate, final String fid, final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
   {
     // das Anfangsstauvolumen aus der GMl raussuchen und als Wert in den
     // Zeitreihen setzen
     final Feature feature = workspace.getFeature( fid );
     final Object property = feature.getProperty( "Anfangsstauvolumen" );
     if( property != null && property instanceof Double )
-      tsmap.putValue( name, startDate, (Double)property );
+      tsmap.putValue( name, startDate, (Double) property );
     else
       logwriter.println( "Kein Anfangsstauvolumen angegeben für: " + fid );
   }
 
-  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace )
-      throws IOException, FileNotFoundException, CalcJobServiceException
+  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace ) throws IOException, FileNotFoundException, SimulationException
   {
-    final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
-    final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
-    final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
-    final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
+    final File vhsFile = (File) props.get( SpreeCalcJob.DATA_VHSFILE );
+    final String flpFilename = (String) props.get( SpreeCalcJob.DATA_FLPFILENAME );
+    final String napFilename = (String) props.get( SpreeCalcJob.DATA_NAPFILENAME );
+    final String tsFilename = (String) props.get( SpreeCalcJob.DATA_TSFILENAME );
 
     logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
-    StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/" + SpreeCalcJob.VHS_FILE ),
-        new FileOutputStream( vhsFile ) );
+    StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/" + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
 
     logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
     findAndWriteLayer( workspace, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP, SpreeCalcJob.FLP_GEOM, flpFilename );
@@ -217,17 +213,16 @@ public class SpreeInputWorker
     return tsFilename;
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap )
-      throws CalcJobServiceException
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap ) throws SimulationException
   {
     try
     {
       final FieldDescriptor[] fds = new FieldDescriptor[SpreeCalcJob.TS_DESCRIPTOR.length + 5];
-      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)6, (byte)2 );
-      fds[1] = new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 );
-      fds[2] = new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 );
-      fds[3] = new FieldDescriptor( "VON", "N", (byte)2, (byte)0 );
-      fds[4] = new FieldDescriptor( "AB", "N", (byte)2, (byte)0 );
+      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte) 6, (byte) 2 );
+      fds[1] = new FieldDescriptor( "STUNDE", "N", (byte) 2, (byte) 0 );
+      fds[2] = new FieldDescriptor( "DATUM", "C", (byte) 10, (byte) 0 );
+      fds[3] = new FieldDescriptor( "VON", "N", (byte) 2, (byte) 0 );
+      fds[4] = new FieldDescriptor( "AB", "N", (byte) 2, (byte) 0 );
 
       for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
       {
@@ -237,29 +232,29 @@ public class SpreeInputWorker
         final int i = j + 5;
 
         if( name.startsWith( "S_" ) )
-          fds[i] = new FieldDescriptor( name, "C", (byte)5, (byte)0 );
+          fds[i] = new FieldDescriptor( name, "C", (byte) 5, (byte) 0 );
         else if( name.startsWith( "W_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 5, (byte) 0 );
         else if( name.startsWith( "Q_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
         else if( name.startsWith( "QX_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
         else if( name.startsWith( "WV_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 5, (byte) 0 );
         else if( name.startsWith( "QV_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
         else if( name.startsWith( "QP_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)8, (byte)3 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 8, (byte) 3 );
         else if( name.startsWith( "PG_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)6, (byte)1 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 6, (byte) 1 );
         else if( name.startsWith( "PP_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)3, (byte)0 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 3, (byte) 0 );
         else if( name.startsWith( "PA_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
         else if( name.startsWith( "V_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
         else if( name.startsWith( "ZG_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fds[i] = new FieldDescriptor( name, "N", (byte) 7, (byte) 2 );
       }
 
       final DBaseFile dbf = new DBaseFile( tsFilename, fds );
@@ -271,13 +266,13 @@ public class SpreeInputWorker
 
       final Date[] dateArray = valuesMap.getDates();
 
-      final int datelength = ( dateArray.length % 2 == 0 ) ? dateArray.length : dateArray.length - 1;
+      final int datelength = (dateArray.length % 2 == 0) ? dateArray.length : dateArray.length - 1;
 
       for( int i = 0; i < datelength; i++ )
       {
         final Date date = dateArray[i];
 
-        final ArrayList record = new ArrayList();
+        final ArrayList<Object> record = new ArrayList<Object>();
 
         calendar.setTime( date );
         record.add( new Double( specialDateFormat.format( date ) ) );
@@ -296,7 +291,7 @@ public class SpreeInputWorker
           Double outVal = null;
 
           if( datesToValuesMap != null )
-            outVal = ( (Double)datesToValuesMap.get( date ) );
+            outVal = ((Double) datesToValuesMap.get( date ));
 
           // die Erste Zeile darf keine Talsperrenabgabe enthalten
           if( id.startsWith( "QV_TS" ) && i == 0 )
@@ -315,14 +310,14 @@ public class SpreeInputWorker
     {
       e1.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler beim Scheiben der Zeitreihen", e1 );
+      throw new SimulationException( "Fehler beim Scheiben der Zeitreihen", e1 );
     }
   }
 
   /**
    * Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map)
    */
-  public static TSMap readZML( final ICalcDataProvider inputProvider, final TSMap tsmap ) throws IOException
+  public static TSMap readZML( final ISimulationDataProvider inputProvider, final TSMap tsmap ) throws IOException, SimulationException
   {
     final URL zmlURL = inputProvider.getURLForID( "ZML" );
     final String zmlURLstr = zmlURL.toExternalForm();
@@ -349,8 +344,7 @@ public class SpreeInputWorker
           {
             final String qName = "Q_" + tsDesc.id.substring( 2 );
 
-            final WQTimeserieProxy filter = new WQTimeserieProxy( TimeserieConstants.TYPE_WATERLEVEL,
-                TimeserieConstants.TYPE_RUNOFF, obs );
+            final WQTimeserieProxy filter = new WQTimeserieProxy( TimeserieConstants.TYPE_WATERLEVEL, TimeserieConstants.TYPE_RUNOFF, obs );
 
             tsmap.addObservation( filter, qName );
           }
@@ -371,15 +365,13 @@ public class SpreeInputWorker
     return tsmap;
   }
 
-  public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName, final Map mapping,
-      final String geoName, final String filenameBase ) throws CalcJobServiceException
+  public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName, final Map mapping, final String geoName, final String filenameBase ) throws SimulationException
   {
     try
     {
       final IFeatureType featureType = workspace.getFeatureType( layerName );
       if( featureType == null )
-        throw new CalcJobServiceException(
-            "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: " + layerName, null );
+        throw new SimulationException( "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: " + layerName, null );
 
       final Feature[] features = workspace.getFeatures( featureType );
 
@@ -389,18 +381,18 @@ public class SpreeInputWorker
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
+      throw new SimulationException( "Fehler beim Schreiben der Eingabedateien", e );
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL, final File nativedir ) throws CalcJobServiceException
+  public static Map parseControlFile( final URL gmlURL, final File nativedir ) throws SimulationException
   {
     try
     {
       final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
 
-      final Date startSimTime = (Date)controlFeature.getProperty( "startsimulation" );
-      final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
+      final Date startSimTime = (Date) controlFeature.getProperty( "startsimulation" );
+      final Date startForecastTime = (Date) controlFeature.getProperty( "startforecast" );
 
       final String startTimeString = new SimpleDateFormat( "yyMMdd" ).format( startForecastTime );
       final String baseFileName = "HW" + startTimeString;
@@ -413,7 +405,7 @@ public class SpreeInputWorker
       final String flpFilename = tsFilename + SpreeCalcJob.FLP_FILE;
       final File flpFile = new File( flpFilename + ".dbf" );
 
-      final Map dataMap = new HashMap();
+      final Map<Object, Object> dataMap = new HashMap<Object, Object>();
       dataMap.put( SpreeCalcJob.DATA_STARTSIM_DATE, startSimTime );
       dataMap.put( SpreeCalcJob.DATA_STARTFORECAST_DATE, startForecastTime );
       dataMap.put( SpreeCalcJob.DATA_STARTDATESTRING, startTimeString );
@@ -430,7 +422,7 @@ public class SpreeInputWorker
     }
     catch( final Exception e )
     {
-      throw new CalcJobServiceException( "Fehler beim Einlesen der Berechnungsparameter", e );
+      throw new SimulationException( "Fehler beim Einlesen der Berechnungsparameter", e );
     }
   }
 
@@ -441,18 +433,17 @@ public class SpreeInputWorker
    * @param input
    * @param basedir
    * @return file
-   * 
    * @throws CalcJobServiceException
    */
-  public static File checkInput( final String id, final Map input, final File basedir ) throws CalcJobServiceException
+  public static File checkInput( final String id, final Map input, final File basedir ) throws SimulationException
   {
-    final CalcJobClientBean bean = (CalcJobClientBean)input.get( id );
+    final SimulationDataPath bean = (SimulationDataPath) input.get( id );
     if( bean == null )
-      throw new CalcJobServiceException( "Eingabedatei für Index <" + id + "> fehlt", null );
+      throw new SimulationException( "Eingabedatei für Index <" + id + "> fehlt", null );
 
     final File file = new File( basedir, bean.getPath() );
     if( !file.exists() || !file.isFile() )
-      throw new CalcJobServiceException( "Eingabedatei für Index <" + id + "> fehlt: " + file.getAbsolutePath(), null );
+      throw new SimulationException( "Eingabedatei für Index <" + id + "> fehlt: " + file.getAbsolutePath(), null );
 
     return file;
   }

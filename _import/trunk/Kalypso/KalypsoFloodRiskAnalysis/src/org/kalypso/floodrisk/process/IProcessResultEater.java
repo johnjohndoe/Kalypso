@@ -43,7 +43,7 @@ package org.kalypso.floodrisk.process;
 import java.io.File;
 import java.util.HashMap;
 
-import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.simulation.core.ISimulationResultEater;
 
 /**
  * 
@@ -54,7 +54,7 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  * 
  * @author Nadja Peiler (17.06.2005)
  */
-public interface IProcessResultEater extends ICalcResultEater
+public interface IProcessResultEater extends ISimulationResultEater
 {
   /** Gibt zurück, welche Ergebnisse momentan verfügbar sind. */
   public String[] getCurrentResults();

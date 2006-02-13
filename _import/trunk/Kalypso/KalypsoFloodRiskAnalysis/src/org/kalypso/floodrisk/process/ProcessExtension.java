@@ -42,7 +42,7 @@
 package org.kalypso.floodrisk.process;
 
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.simulation.core.ISimulation;
 
 /**
  * ProcessExtension
@@ -62,7 +62,7 @@ public class ProcessExtension
   private final String m_type;
 
   // Class to run the calculation
-  private final ICalcJob m_calcJob;
+  private final ISimulation m_calcJob;
 
   // typeID of process
   private final String m_id;
@@ -86,7 +86,7 @@ public class ProcessExtension
    * @param id
    * @param icon
    */
-  public ProcessExtension( String name, String type, ICalcJob calcJob, String id, String icon )
+  public ProcessExtension( String name, String type, ISimulation calcJob, String id, String icon )
   {
     m_name = name;
     m_type = type;
@@ -95,7 +95,7 @@ public class ProcessExtension
     m_icon = icon;
   }
 
-  public ICalcJob getCalcJob()
+  public ISimulation getCalcJob()
   {
     return m_calcJob;
   }

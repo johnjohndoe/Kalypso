@@ -41,8 +41,8 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
 import org.kalypso.lhwsachsenanhalt.tubig.visitors.FeatureVisitorZml2Tubig;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class TubigInputWorker
@@ -52,7 +52,6 @@ public class TubigInputWorker
    * PATH_RECHENKERN_ZIP enthält alle benötigten Batch-Dateien, Steuer-Dateien, allg. Parameter-Dateien etc.
    * 
    * @throws TubigException
-   * 
    * @author Thül
    */
   public static void copyAndUnzipRechenkern( final File fleDir ) throws TubigException
@@ -82,13 +81,11 @@ public class TubigInputWorker
 
   /**
    * Bereitstellen und ggf. Umwandeln aller Eingabedaten für die Berechnung <br>
-   * 
    * Rechenkern.zip aus den Resourcen holen und entpacken <br>
    * Datei AKTDT.TXT (aktuelle Modellzeit) aus .calculation (Id = CALC) erzeugen <br>
    * Eingabedateien (Zeitreihen) konvertieren <br>
    * Parameterdateien schreiben (Speicher, WLM_ <pegel>.par <br>
    * alle Dateien werden ins Rechenverzeichnis ("BODEVOR") geschrieben <br>
-   * 
    * 
    * @param dirCalc
    *          Verzeichnis, in dem gerechnet wird (BODEVOR)
@@ -97,8 +94,7 @@ public class TubigInputWorker
    * @throws CalcJobServiceException
    * @author Thül
    */
-  public static TubigCalculationData createCalcInput( final File dirCalc, final ICalcDataProvider inputData,
-      final Map metaMap ) throws CalcJobServiceException, TubigException
+  public static TubigCalculationData createCalcInput( final File dirCalc, final ISimulationDataProvider inputData, final Map metaMap ) throws SimulationException, TubigException
   {
     final TubigCalculationData calcData;
 
@@ -119,17 +115,14 @@ public class TubigInputWorker
   }
 
   /**
-   * 
    * Liest Parameter (Speicher, Pegel) aus modell.gml und schreibt die Parameterdateien ins Rechenverzeichnis (BODEVOR)
    * 
    * @param dtStartForecast
    * @throws TubigException
-   * 
    * @author Thül
    */
 
-  private static void writeParameterAndTimeseries( final URL urlGml, final File dirCalc, final Date dtStartForecast,
-      final Map metaMap ) throws TubigException
+  private static void writeParameterAndTimeseries( final URL urlGml, final File dirCalc, final Date dtStartForecast, final Map metaMap ) throws TubigException
   {
     final GMLWorkspace gmlWrkSpce;
     try
@@ -146,33 +139,26 @@ public class TubigInputWorker
     TubigExportParameter.writePegelPars( gmlWrkSpce, dirCalc );
 
     // Speicherabgabe, Vergangenheit
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Abgabe", -1, "vsa", dtStartForecast, metaMap, TubigConst.SPEICHER );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", -1, "vsa", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Speicherabgabe, Prognose (auch Überleitung)
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Abgabe", 1, "psa", dtStartForecast, metaMap, TubigConst.SPEICHER );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", 1, "psa", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Speicherinhalt, Vergangenheit
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vvs", dtStartForecast, metaMap, TubigConst.SPEICHER );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vvs", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Abfluss am Pegel, Vergangenheit
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vq", dtStartForecast, metaMap, TubigConst.PEGEL );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vq", dtStartForecast, metaMap, TubigConst.PEGEL );
 
     // Abfluss am Pegel, Prognose (wird für Batch 3-5 elen.pq und/oder wege.pq
     // benötigt)
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Ganglinie_gerechnet", 1, "pq", dtStartForecast, null, TubigConst.PEGEL );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gerechnet", 1, "pq", dtStartForecast, null, TubigConst.PEGEL );
 
     // Gebietsniederschlag, Vergangenheit
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Niederschlag", -1, "vns", dtStartForecast, metaMap, TubigConst.PEGEL );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", -1, "vns", dtStartForecast, metaMap, TubigConst.PEGEL );
 
     // Gebietsniederschlag, Prognose
-    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc,
-        TubigConst.GML_KURZ_NAME, "Niederschlag", 1, "pns", dtStartForecast, metaMap, TubigConst.PEGEL );
+    FeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", 1, "pns", dtStartForecast, metaMap, TubigConst.PEGEL );
   }
 
   public static void main( final String[] args ) throws TubigException
@@ -180,8 +166,8 @@ public class TubigInputWorker
     copyAndUnzipRechenkern( new File( System.getProperty( "java.io.tmpdir" ) + "/rkTest" ) );
   }
 
-  public TubigInputWorker()
+  public TubigInputWorker( )
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 }

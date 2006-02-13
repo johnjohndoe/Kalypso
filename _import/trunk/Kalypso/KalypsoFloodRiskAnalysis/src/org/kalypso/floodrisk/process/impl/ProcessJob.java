@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.services.proxy.ICalculationService;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -105,7 +106,6 @@ public class ProcessJob extends Job
   @Override
   public IStatus run( IProgressMonitor monitor )
   {
-
     try
     {
       m_lock.acquire();
@@ -138,7 +138,6 @@ public class ProcessJob extends Job
    */
   private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException, ServiceException
   {
-
     monitor.beginTask( "Berechnung wird gestartet", 100 );
 
     ICalculationService calcService = findCalulationServiceForType( m_modelData.getTypeID() );
@@ -170,6 +169,8 @@ public class ProcessJob extends Job
    */
   private ICalculationService findCalulationServiceForType( final String typeID ) throws ServiceException
   {
+    KalypsoSimulationCorePlugin.getDefault();
+    
     final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
     for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
     {

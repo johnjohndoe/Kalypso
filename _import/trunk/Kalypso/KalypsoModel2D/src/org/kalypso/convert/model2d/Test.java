@@ -53,7 +53,6 @@ package org.kalypso.convert.model2d;
 import java.io.File;
 
 import org.kalypso.calc2d.Constants2D;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * this class converts the femXMLFile...
@@ -65,7 +64,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public class Test
 {
 
-  public static void main( String[] args ) throws CalcJobServiceException
+  public static void main( String[] args )
   {
 
 //    File baseDir = new File( "C:/Programme/eclipse/workspace/Kalypso2d" );

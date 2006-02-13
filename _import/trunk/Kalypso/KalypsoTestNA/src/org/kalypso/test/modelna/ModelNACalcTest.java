@@ -53,12 +53,12 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.Modeldata.Input;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.services.calculation.service.impl.JarCalcDataProvider;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.JarSimulationcDataProvider;
 import org.kalypso.test.util.CalcJobTestUtilis;
 
 /**
@@ -121,7 +121,7 @@ public class ModelNACalcTest extends TestCase
    * @throws JAXBException
    * @throws IOException
    */
-  public void calc( final String modellID, final String folder, String spec ) throws JAXBException, IOException
+  public void calc( final String modellID, final String folder, String spec ) throws JAXBException, IOException, SimulationException
   {
     final File tmpDir = CalcJobTestUtilis.getTmpDir();
     final URL resource = getClass().getResource( "testData/" + modellID + "/" + folder + "/input.jar" );
@@ -131,8 +131,8 @@ public class ModelNACalcTest extends TestCase
       spec = "_" + spec;
     final URL modelSpec = getClass().getResource( "testData/" + modellID + "/modelspec" + spec + ".xml" );
     final DataHandler dataHandler = new DataHandler( resource );
-    final CalcJobClientBean[] beans = createBeans( modelSpec );
-    final ICalcDataProvider dataProvider = new JarCalcDataProvider( dataHandler, beans )
+    final SimulationDataPath[] beans = createBeans( modelSpec );
+    final ISimulationDataProvider dataProvider = new JarSimulationcDataProvider( dataHandler, beans )
     {
       @Override
       public boolean hasID( String id )
@@ -146,7 +146,7 @@ public class ModelNACalcTest extends TestCase
        * @see org.kalypso.services.calculation.service.impl.JarCalcDataProvider#getURLForID(java.lang.String)
        */
       @Override
-      public URL getURLForID( String id ) throws CalcJobServiceException
+      public URL getURLForID( String id ) throws SimulationException
       {
         if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
           return getClass().getResource( "testData/we/hydrotop.gml" );
@@ -154,8 +154,8 @@ public class ModelNACalcTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = CalcJobTestUtilis.createResultEater();
-    final ICalcMonitor monitor = CalcJobTestUtilis.createMonitor();
+    final ISimulationResultEater resultEater = CalcJobTestUtilis.createResultEater();
+    final ISimulationMonitor monitor = CalcJobTestUtilis.createMonitor();
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
     job.run( tmpDir, dataProvider, resultEater, monitor );
 
@@ -201,9 +201,9 @@ public class ModelNACalcTest extends TestCase
     }
   }
 
-  private CalcJobClientBean[] createBeans( URL modelSpec ) throws JAXBException
+  private SimulationDataPath[] createBeans( URL modelSpec ) throws JAXBException
   {
-    final List<CalcJobClientBean> result = new ArrayList<CalcJobClientBean>();
+    final List<SimulationDataPath> result = new ArrayList<SimulationDataPath>();
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final Modeldata modeldata = (Modeldata) unmarshaller.unmarshal( modelSpec );
@@ -218,8 +218,8 @@ public class ModelNACalcTest extends TestCase
       inputPath = inputPath.replaceAll( "project:/", "" );
       if( inputItem.isRelativeToCalcCase() )
         inputPath = ".prognose/Rechenfall/" + inputPath;
-      result.add( new CalcJobClientBean( inputItem.getId(), inputPath ) );
+      result.add( new SimulationDataPath( inputItem.getId(), inputPath ) );
     }
-    return result.toArray( new CalcJobClientBean[result.size()] );
+    return result.toArray( new SimulationDataPath[result.size()] );
   }
 }

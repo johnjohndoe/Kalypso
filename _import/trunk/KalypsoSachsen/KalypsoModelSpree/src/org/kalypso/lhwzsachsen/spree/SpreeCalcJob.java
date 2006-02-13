@@ -44,16 +44,14 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -63,7 +61,7 @@ import org.xml.sax.InputSource;
  * 
  * @author Belger
  */
-public class SpreeCalcJob implements ICalcJob
+public class SpreeCalcJob implements ISimulation
 {
   public static final String VHS_FILE = "_vhs.dbf";
 
@@ -73,7 +71,7 @@ public class SpreeCalcJob implements ICalcJob
 
   public static final String FLP_GEOM = "Ort";
 
-  public static final Map FLP_MAP = new LinkedHashMap();
+  public static final Map<String, String> FLP_MAP = new LinkedHashMap<String, String>();
   static
   {
     FLP_MAP.put( "PEGEL", "Name" );
@@ -89,7 +87,7 @@ public class SpreeCalcJob implements ICalcJob
 
   public static final String NAP_GEOM = "Ort";
 
-  public static final Map NAP_MAP = new LinkedHashMap();
+  public static final Map<String, String> NAP_MAP = new LinkedHashMap<String, String>();
 
   static
   {
@@ -260,10 +258,10 @@ public class SpreeCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
-      final ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
+      final ISimulationMonitor monitor ) throws SimulationException
   {
-    final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    final File outputdir = new File( tmpdir, ISimulationConstants.OUTPUT_DIR_NAME );
 
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
@@ -328,7 +326,7 @@ public class SpreeCalcJob implements ICalcJob
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
+        throw new SimulationException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
       }
       monitor.setProgress( 34 );
       if( monitor.isCanceled() )
@@ -340,7 +338,7 @@ public class SpreeCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
+      throw new SimulationException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
     }
     finally
     {
@@ -431,7 +429,7 @@ public class SpreeCalcJob implements ICalcJob
   }
 
   private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter,
-      final ICalcMonitor monitor ) throws CalcJobServiceException
+      final ISimulationMonitor monitor ) throws SimulationException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -486,12 +484,12 @@ public class SpreeCalcJob implements ICalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
+      throw new SimulationException( "Fehler beim Ausführen der hw.exe", e );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
+      throw new SimulationException( "Fehler beim Ausführen der hw.exe", e );
     }
     finally
     {
@@ -513,7 +511,7 @@ public class SpreeCalcJob implements ICalcJob
    * 
    * @throws CalcJobServiceException
    */
-  private void prepareExe( final File exedir, final PrintWriter logwriter ) throws CalcJobServiceException
+  private void prepareExe( final File exedir, final PrintWriter logwriter ) throws SimulationException
   {
     try
     {
@@ -527,7 +525,7 @@ public class SpreeCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Ausführbares Programm konnte nicht gestartet werden", e );
+      throw new SimulationException( "Ausführbares Programm konnte nicht gestartet werden", e );
     }
   }
 
@@ -568,8 +566,8 @@ public class SpreeCalcJob implements ICalcJob
     final Calendar calendar = new GregorianCalendar();
 
     // Die erzeugten Daten sammeln
-    final Map valuesMap = new HashMap();
-    final Collection dates = new ArrayList();
+    final Map<String, Collection<Double>> valuesMap = new HashMap<String, Collection<Double>>();
+    final Collection<Date> dates = new ArrayList<Date>();
 
     for( final Iterator iter = features.iterator(); iter.hasNext(); )
     {
@@ -589,10 +587,10 @@ public class SpreeCalcJob implements ICalcJob
         if( !desc.output )
           continue;
 
-        Collection values = (Collection)valuesMap.get( column );
+        Collection<Double> values = valuesMap.get( column );
         if( values == null )
         {
-          values = new ArrayList();
+          values = new ArrayList<Double>();
           valuesMap.put( column, values );
         }
 
@@ -615,7 +613,7 @@ public class SpreeCalcJob implements ICalcJob
     final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ), Date.class,
         true );
 
-    final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
+    final Date[] dateArray = dates.toArray( new Date[dates.size()] );
 
     ///////////////////////////////////
     // create ZML for each timeserie //
@@ -636,7 +634,7 @@ public class SpreeCalcJob implements ICalcJob
       final File outFile = new File( outputDir, outfilename );
       final File outFileRelative = FileUtilities.getRelativeFileTo( outdir, outFile );
 
-      final Collection values = (Collection)valuesMap.get( column );
+      final Collection<Double> values = valuesMap.get( column );
       if( values == null )
       {
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream( "resources/empty.zml" ) );
@@ -644,9 +642,9 @@ public class SpreeCalcJob implements ICalcJob
       }
 
       final int size = values.size();
-      final Double[] valueArray = (Double[])values.toArray( new Double[size] );
+      final Double[] valueArray = values.toArray( new Double[size] );
 
-      final Collection tuples = new ArrayList( dateArray.length );
+      final Collection<Object[]> tuples = new ArrayList<Object[]>( dateArray.length );
 
       for( int j = 0; j < size; j++ )
       {
@@ -672,7 +670,7 @@ public class SpreeCalcJob implements ICalcJob
             dateAxis,
             valueAxis };
 
-        final Object[][] tupleArray = (Object[][])tuples.toArray( new Object[tuples.size()][] );
+        final Object[][] tupleArray = tuples.toArray( new Object[tuples.size()][] );
         final SimpleTuppleModel model = new SimpleTuppleModel( achsen, tupleArray );
 
         // jetzt die Metadaten entsprechend der Kennung aus den Eingangsdaten

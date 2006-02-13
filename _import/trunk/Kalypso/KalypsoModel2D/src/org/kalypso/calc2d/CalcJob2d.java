@@ -75,17 +75,16 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.convert.model2d.ConvertAsci2GML;
 import org.kalypso.convert.model2d.ConvertBC2Ascii;
 import org.kalypso.convert.model2d.ConvertGML2Asci;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
-public class CalcJob2d implements ICalcJob
+public class CalcJob2d implements ISimulation
 {
 
   private final String EXE_FILE = "StartSimulation.bat";
@@ -106,28 +105,20 @@ public class CalcJob2d implements ICalcJob
 
   private final static String ID_RESULTS = "ERGEBNISSE";
 
-  private static final String ID_LOG = "LOG";
-
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "2d_spec.xml" );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final File outputDir;
 
@@ -136,24 +127,24 @@ public class CalcJob2d implements ICalcJob
     final File exeDir = new File( tmpdir, "simulation" );
     exeDir.mkdirs();
 
-    //    File result = new File( exeDir, "test.txt" );
-    //    FileWriter writer = null;
-    //    try
-    //    {
-    //      writer = new FileWriter( result );
-    //      writer.write( "pseudo ergebnis" );
-    //    }
-    //    catch( IOException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-    //    finally
-    //    {
-    //      IOUtils.closeQuietly( writer );
-    //    }
+    // File result = new File( exeDir, "test.txt" );
+    // FileWriter writer = null;
+    // try
+    // {
+    // writer = new FileWriter( result );
+    // writer.write( "pseudo ergebnis" );
+    // }
+    // catch( IOException e )
+    // {
+    // e.printStackTrace();
+    // }
+    // finally
+    // {
+    // IOUtils.closeQuietly( writer );
+    // }
     //
-    //    resultEater.addResult( ID_RESULTS, exeDir );
-    //    resultEater.addResult( ID_LOG, result );
+    // resultEater.addResult( ID_RESULTS, exeDir );
+    // resultEater.addResult( ID_LOG, result );
 
     try
     {
@@ -168,8 +159,7 @@ public class CalcJob2d implements ICalcJob
       monitor.setMessage( "generating mesh ascii file" );
 
       ConvertBC2Ascii bc2asci = new ConvertBC2Ascii( exeDir );
-      bc2asci.convertBC2Ascii( inputProvider.getURLForID( CONTROL_ID ), schemaControlURL,
-          inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
+      bc2asci.convertBC2Ascii( inputProvider.getURLForID( CONTROL_ID ), schemaControlURL, inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
       monitor.setMessage( "generating boundary conditions ascii file" );
 
       copySim( exeDir );
@@ -195,12 +185,10 @@ public class CalcJob2d implements ICalcJob
         for( int i = 0; i < files.length; i++ )
         {
           System.out.println( "name of file_" + i + ":: " + files[i].getName() );
-          if( !files[i].getName().equalsIgnoreCase( "erg.2d" )
-              && !files[i].getName().equalsIgnoreCase( "fehler.2d" )
-              && !files[i].getName().equalsIgnoreCase( "out.2d" )
+          if( !files[i].getName().equalsIgnoreCase( "erg.2d" ) && !files[i].getName().equalsIgnoreCase( "fehler.2d" ) && !files[i].getName().equalsIgnoreCase( "out.2d" )
               && !files[i].getName().equalsIgnoreCase( "marsh.2d" ) )
           {
-            addResult( resultEater, files[i], outputDir, exeDir );
+            addResult( files[i], outputDir );
           }
           monitor.setProgress( 99 );
         }
@@ -216,18 +204,17 @@ public class CalcJob2d implements ICalcJob
     catch( Exception e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "simulation couldn't be finished", e );
+      throw new SimulationException( "simulation couldn't be finished", e );
     }
   }
 
-  private void addResult( ICalcResultEater resultEater, File file, File outputDir, File exeDir )
+  private void addResult( File file, File outputDir )
   {
     try
     {
       final URL schemaModellXMLURL = getClass().getResource( "schema/2d.xsd" );
       String fileName = file.getName();
-      if( !fileName.equalsIgnoreCase( "erg.2d" ) && !fileName.equalsIgnoreCase( "marsh.2d" )
-          && !fileName.equalsIgnoreCase( "out.2d" ) && !fileName.equalsIgnoreCase( "fehler" ) )
+      if( !fileName.equalsIgnoreCase( "erg.2d" ) && !fileName.equalsIgnoreCase( "marsh.2d" ) && !fileName.equalsIgnoreCase( "out.2d" ) && !fileName.equalsIgnoreCase( "fehler" ) )
       {
 
         int pos = fileName.indexOf( "." );
@@ -239,28 +226,26 @@ public class CalcJob2d implements ICalcJob
         String gmlFileName = outputDir + "\\" + name + ".gml";
 
         ConvertAsci2GML gmlFile = new ConvertAsci2GML();
-        File gml = gmlFile.convertAsci2GML( file.toString(), tmpXMLFile,
-            "http://elbe.wb.tu-harburg.de", schemaModellXMLURL.toString(), gmlFileName );
+        /* File gml = */gmlFile.convertAsci2GML( file.toString(), tmpXMLFile, "http://elbe.wb.tu-harburg.de", schemaModellXMLURL.toString(), gmlFileName );
 
-        StringBuffer sb = new StringBuffer();   
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-        sb.append("<gismapview xmlns=\"gismapview.template.kalypso.org\">");
-        sb.append("<extent bottom=\"5978152.499976501\" left=\"3545304.474577534\" right=\"3548446.416650312\" top=\"5981196.0\"/>");
-        sb.append("<layers active=\"ID_2\">");
-        sb.append(" <layer name=\"Knoten\" visible=\"true\" featurePath=\"featurePointCollectionMember/featurePointMember\" id=\"ID_1\" linktype=\"gml\" ns1:actuate=\"onRequest\" " +
-            "ns1:href=\""+name+".gml\" ns1:type=\"simple\" xmlns:ns1=\"http://www.w3.org/1999/xlink\">");
-        sb.append("<ns2:style linktype=\"sld\" style=\"FEM\" ns1:actuate=\"onRequest\" ns1:href=\"project:/.styles/sldPfeile.sld\" ns1:type=\"simple\" xmlns:ns2=\"types.template.kalypso.org\"/>");
-        sb.append("</layer>");
-        sb.append("<layer name=\"FEM\" visible=\"true\" featurePath=\"femCollectionMember/meshMember\" id=\"ID_2\" linktype=\"gml\" ns3:actuate=\"onRequest\" " +
-            "ns3:href=\""+name+".gml\" ns3:type=\"simple\" xmlns:ns3=\"http://www.w3.org/1999/xlink\">");
-        sb.append("<ns4:style linktype=\"sld\" style=\"FEM\" ns3:actuate=\"onRequest\" ns3:href=\"project:/.styles/sldResults.sld\" ns3:type=\"simple\" xmlns:ns4=\"types.template.kalypso.org\"/>");
-        sb.append(" </layer>");
-        sb.append("</layers>");
-        sb.append("</gismapview>");
-        
-        OutputStreamWriter writer = new OutputStreamWriter(
-            new FileOutputStream(new File(outputDir, name+".gmt")), "UTF-8");
-        writer.write(sb.toString());
+        StringBuffer sb = new StringBuffer();
+        sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" );
+        sb.append( "<gismapview xmlns=\"gismapview.template.kalypso.org\">" );
+        sb.append( "<extent bottom=\"5978152.499976501\" left=\"3545304.474577534\" right=\"3548446.416650312\" top=\"5981196.0\"/>" );
+        sb.append( "<layers active=\"ID_2\">" );
+        sb.append( " <layer name=\"Knoten\" visible=\"true\" featurePath=\"featurePointCollectionMember/featurePointMember\" id=\"ID_1\" linktype=\"gml\" ns1:actuate=\"onRequest\" " + "ns1:href=\""
+            + name + ".gml\" ns1:type=\"simple\" xmlns:ns1=\"http://www.w3.org/1999/xlink\">" );
+        sb.append( "<ns2:style linktype=\"sld\" style=\"FEM\" ns1:actuate=\"onRequest\" ns1:href=\"project:/.styles/sldPfeile.sld\" ns1:type=\"simple\" xmlns:ns2=\"types.template.kalypso.org\"/>" );
+        sb.append( "</layer>" );
+        sb.append( "<layer name=\"FEM\" visible=\"true\" featurePath=\"femCollectionMember/meshMember\" id=\"ID_2\" linktype=\"gml\" ns3:actuate=\"onRequest\" " + "ns3:href=\"" + name
+            + ".gml\" ns3:type=\"simple\" xmlns:ns3=\"http://www.w3.org/1999/xlink\">" );
+        sb.append( "<ns4:style linktype=\"sld\" style=\"FEM\" ns3:actuate=\"onRequest\" ns3:href=\"project:/.styles/sldResults.sld\" ns3:type=\"simple\" xmlns:ns4=\"types.template.kalypso.org\"/>" );
+        sb.append( " </layer>" );
+        sb.append( "</layers>" );
+        sb.append( "</gismapview>" );
+
+        OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( new File( outputDir, name + ".gmt" ) ), "UTF-8" );
+        writer.write( sb.toString() );
         writer.close();
       }
     }
@@ -295,7 +280,7 @@ public class CalcJob2d implements ICalcJob
   /**
    * @return boolean succeeded
    */
-  public boolean isSucceeded()
+  public boolean isSucceeded( )
   {
     return this.succeeded;
   }
@@ -305,8 +290,7 @@ public class CalcJob2d implements ICalcJob
    * 
    * @param monitor
    */
-  private void startCalculation( ICalcMonitor monitor, final File basedir )
-      throws CalcJobServiceException
+  private void startCalculation( ISimulationMonitor monitor, final File basedir ) throws SimulationException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -352,12 +336,12 @@ public class CalcJob2d implements ICalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "error occurred...", e );
+      throw new SimulationException( "error occurred...", e );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "error occurred...", e );
+      throw new SimulationException( "error occurred...", e );
     }
     finally
     {
@@ -385,7 +369,7 @@ public class CalcJob2d implements ICalcJob
   /**
    * checks if calculation of simulations is succeeded
    */
-  public void checkSucceeded( ICalcMonitor monitor, final File inputDir )
+  public void checkSucceeded( ISimulationMonitor monitor, final File inputDir )
   {
     Reader logFileReader = null;
     LineNumberReader reader = null;
@@ -395,7 +379,7 @@ public class CalcJob2d implements ICalcJob
       logFileReader = new FileReader( logFile );
       reader = new LineNumberReader( logFileReader );
       String line;
-      while( ( line = reader.readLine() ) != null )
+      while( (line = reader.readLine()) != null )
       {
         if( line.indexOf( " KALYPSO-2D: instationaere Berechnung ordnungsgemaess gelaufen" ) >= 0 )
           succeeded = true;

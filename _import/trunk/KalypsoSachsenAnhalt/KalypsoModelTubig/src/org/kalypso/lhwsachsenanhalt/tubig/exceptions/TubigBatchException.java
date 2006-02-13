@@ -29,7 +29,7 @@
  */
 package org.kalypso.lhwsachsenanhalt.tubig.exceptions;
 
-import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.simulation.core.ISimulationMonitor;
 
 /**
  * @author Thül
@@ -48,34 +48,31 @@ public class TubigBatchException extends Exception
 
   public static final int STATUS_CANCEL = 0x08;
 
-  public TubigBatchException( ICalcMonitor monitor, final int iStatus, final String sFinishText )
+  public TubigBatchException( ISimulationMonitor monitor, final int iStatus, final String sFinishText )
   {
     super();
     monitor.setFinishInfo( iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final ICalcMonitor monitor, final int iStatus,
-      final String sFinishText )
+  public TubigBatchException( final String message, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
   {
     super( message );
     monitor.setFinishInfo( iStatus, sFinishText );
   }
 
-  public TubigBatchException( final Throwable cause, final ICalcMonitor monitor, final int iStatus,
-      final String sFinishText )
+  public TubigBatchException( final Throwable cause, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
   {
     super( cause );
     monitor.setFinishInfo( iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final Throwable cause, final ICalcMonitor monitor,
-      final int iStatus, final String sFinishText )
+  public TubigBatchException( final String message, final Throwable cause, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
   {
     super( message, cause );
     monitor.setFinishInfo( iStatus, sFinishText );
   }
 
-  public TubigBatchException()
+  public TubigBatchException( )
   {
     super();
   }

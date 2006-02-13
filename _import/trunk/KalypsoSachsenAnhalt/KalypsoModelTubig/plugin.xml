@@ -21,11 +21,11 @@
             axisType="Q"/>
    </extension>
    <extension
-         point="org.kalypso.services.calculation.local.calcJob">
-      <calcJob
-            typeID="TubigV1.0"
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
             catalogClass="org.kalypso.lhwsachsenanhalt.tubig.TubigUrlCatalog"
-            jobClass="org.kalypso.lhwsachsenanhalt.tubig.TubigCalcJob"/>
+            simulationClass="org.kalypso.lhwsachsenanhalt.tubig.TubigCalcJob"
+            typeID="TubigV1.0"/>
    </extension>
 
 </plugin>

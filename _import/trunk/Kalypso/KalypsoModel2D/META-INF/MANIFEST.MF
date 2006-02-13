@@ -17,6 +17,7 @@ Export-Package: org.kalypso.calc2d,
  org.kalypso.convert.util.geom,
  org.kalypso.convert.util.geom.test
 Require-Bundle: org.kalypso.deegree,
- org.kalypso.services.calculation.local,
- org.junit
+ org.junit,
+ org.kalypso.simulation.core,
+ org.kalypso.commons
 Eclipse-AutoStart: true

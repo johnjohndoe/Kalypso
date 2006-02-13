@@ -46,66 +46,60 @@ import java.net.URL;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 
 /**
- * 
  * GenerateTemplateRasterJob
  * <p>
- * Job for generating TemplateRaster
- * 
- * created by
+ * Job for generating TemplateRaster created by
  * 
  * @author Nadja Peiler (17.06.2005)
  */
-public class GenerateTemplateRasterJob implements ICalcJob
+public class GenerateTemplateRasterJob implements ISimulation
 {
 
-  //IDs
-  //input
+  // IDs
+  // input
   public static final String Raster1ID = "Raster1";
 
   public static final String Raster2ID = "Raster2";
 
-  //output
+  // output
   public static final String TemplateRasterID = "TemplateRaster";
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      //Generate input
-      //Raster1
+      // Generate input
+      // Raster1
       URL raster1GML = inputProvider.getURLForID( Raster1ID );
       RectifiedGridCoverage raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML );
 
-      //Raster2
+      // Raster2
       URL raster2GML = inputProvider.getURLForID( Raster2ID );
       RectifiedGridCoverage raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML );
 
-      //Calculation
-      //substract Grids
+      // Calculation
+      // substract Grids
       RectifiedGridCoverage templateRaster = RasterTools.substractGrids( raster1, raster2 );
 
-      //Generate output
-      //template raster
-      CalcJobClientBean templateRasterOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( TemplateRasterID );
+      // Generate output
+      // template raster
+      SimulationDataPath templateRasterOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( TemplateRasterID );
       File templateRasterFile = new File( templateRasterOutputBean.getPath() );
       if( !templateRasterFile.exists() )
         templateRasterFile.createNewFile();
@@ -114,19 +108,18 @@ public class GenerateTemplateRasterJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e );
     }
   }
 
   /**
-   * 
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "resources/generateTemplateCalcjob_spec.xml" );
   }

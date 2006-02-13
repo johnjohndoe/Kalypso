@@ -53,10 +53,10 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobInfoBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
@@ -64,16 +64,13 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class GenerateTemplateRasterJobTest extends TestCase
 {
 
-  public void testRun()
+  public void testRun( )
   {
-    //  initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogFloodRisk() } );
+    // initialize schemaCatalog
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    //  register typeHandler
+    // register typeHandler
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
@@ -92,38 +89,34 @@ public class GenerateTemplateRasterJobTest extends TestCase
   private void testGenerateTemplateRaster( GenerateTemplateRasterJob job )
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
-    //Input
+    // Input
     int numInputBeans = 2;
-    CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
-    CalcJobClientBean input1 = new CalcJobClientBean( GenerateTemplateRasterJob.Raster1ID, base
-        + "Waterlevel//wsp_hq10.gml" );
+    SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
+    SimulationDataPath input1 = new SimulationDataPath( GenerateTemplateRasterJob.Raster1ID, base + "Waterlevel//wsp_hq10.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean( GenerateTemplateRasterJob.Raster2ID, base
-        + "Waterlevel//wsp_hq5.gml" );
+    SimulationDataPath input2 = new SimulationDataPath( GenerateTemplateRasterJob.Raster2ID, base + "Waterlevel//wsp_hq5.gml" );
     input[1] = input2;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
-    //Output
+    // Output
     int numOutputBeans = 1;
-    CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( GenerateTemplateRasterJob.TemplateRasterID, base
-        + "Waterlevel//templatehq10_5.gml" );
+    SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
+    SimulationDataPath output1 = new SimulationDataPath( GenerateTemplateRasterJob.TemplateRasterID, base + "Waterlevel//templatehq10_5.gml" );
     output[0] = output1;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "GenerateTemplateRasterJob", ICalcServiceConstants.RUNNING,
-        -1, "" );
+    SimulationInfo jobBean = new SimulationInfo( "", "", "GenerateTemplateRasterJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
     try
     {
       job.run( null, inputProvider, resultEater, jobBean );
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
     }
   }
 
-  public void testGetSpezifikation()
+  public void testGetSpezifikation( )
   {
     System.out.println( "testGetSpezifikation" );
   }
