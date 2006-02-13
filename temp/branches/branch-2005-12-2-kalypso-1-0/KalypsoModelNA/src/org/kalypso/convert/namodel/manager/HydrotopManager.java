@@ -3,6 +3,7 @@ package org.kalypso.convert.namodel.manager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -68,6 +69,8 @@ public class HydrotopManager extends AbstractManager
 {
   final NAConfiguration m_conf;
 
+  final Hashtable m_landuseMap = new Hashtable();
+
   public HydrotopManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getHydrotopFormatURL() );
@@ -91,8 +94,8 @@ public class HydrotopManager extends AbstractManager
     return null;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace, GMLWorkspace modelWorkspace )
-      throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace, GMLWorkspace modelWorkspace,
+      GMLWorkspace parameterWorkspace ) throws Exception
   {
     final IDManager idManager = m_conf.getIdManager();
     //Catchment
@@ -100,13 +103,27 @@ public class HydrotopManager extends AbstractManager
     Feature modelCol = (Feature)modelRootFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List)modelCol.getProperty( "catchmentMember" );
 
+    Feature parameterRootFeature = parameterWorkspace.getRootFeature();
+    List landuseList = (List)parameterRootFeature.getProperty( "landuseMember" );
+    Iterator landuseIter = landuseList.iterator();
+    while( landuseIter.hasNext() )
+    {
+      Feature landuseFE = (Feature)landuseIter.next();
+      String landuseName = (String)landuseFE.getProperty( "name" );
+      Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, "sealingLink" );
+      Double SealingRate = (Double)linkedSealingFE.getProperty( "m_vers" );
+      if( !m_landuseMap.containsKey( landuseName ) )
+        m_landuseMap.put( landuseName, SealingRate );
+      //TODO: Errormassages in logger
+      else
+        System.out.println( "Der Landnutzungstyp " + landuseName
+            + "existiert mehrfach.\n Überprüfen Sie die Landnutzungstypen." );
+    }
+
     Iterator catchmentIter = catchmentList.iterator();
     // vollständige HydrotopList
     Feature rootFeature = hydWorkspace.getRootFeature();
-    Feature hydCol = (Feature)rootFeature.getProperty( "HydrotopCollectionMember" );
-    FeatureList hydList = (FeatureList)hydCol.getProperty( "HydrotopMember" );
-//    Date calcDate = new Date();
-//    asciiBuffer.getHydBuffer().append( "Hydrotope Modell, Datum " + calcDate.toString() + "\n" );
+    FeatureList hydList = (FeatureList)rootFeature.getProperty( "hydrotopMember" );
     asciiBuffer.getHydBuffer().append( "Hydrotope aus GML\n" );
 
     while( catchmentIter.hasNext() )
@@ -126,7 +143,7 @@ public class HydrotopManager extends AbstractManager
         while( hydInEnvIter.hasNext() )
         {
           final Feature hydFeature = (Feature)hydInEnvIter.next();
-          final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "Ort" );
+          final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "position" );
           // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
           //are in the same cs - see NaModelInnerCalcJob)
           final Geometry jtsTG = JTSAdapter.export( tGGeomProp );
@@ -135,8 +152,9 @@ public class HydrotopManager extends AbstractManager
           {
             hydWriteList.add( hydFeature );
             double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
-            double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
-            double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
+            String landuse = (String)hydFeature.getProperty( "landuse" );
+            double versGrad = ( (Double)m_landuseMap.get( landuse ) ).doubleValue();
+            double korVersGrad = ( (Double)hydFeature.getProperty( "corrSealing" ) ).doubleValue();
             double gesVersGrad = ( versGrad * korVersGrad );
             versFlaeche += ( hydGesFlaeche * gesVersGrad );
             natFlaeche += ( hydGesFlaeche - ( hydGesFlaeche * gesVersGrad ) );
@@ -177,19 +195,25 @@ public class HydrotopManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope ) throws Exception
   {
-    double HGesFlaeche = ( (Double)feature.getProperty( "flaech" ) ).doubleValue();
-    double HVersGrad = ( (Double)feature.getProperty( "m_vers" ) ).doubleValue();
-    double HKorVersGrad = ( (Double)feature.getProperty( "fak_vers" ) ).doubleValue();
+    //TODO: warum nicht so???
+    //    double HGesFlaeche = GeometryUtilities.calcArea( (GM_Object)feature.getProperty( "Ort" ) );
+    double HGesFlaeche = ( (Double)feature.getProperty( "area" ) ).doubleValue();
+    Double SealingRate = (Double)m_landuseMap.get( feature.getProperty( "landuse" ) );
+    double HVersGrad = ( SealingRate ).doubleValue();
+    double HKorVersGrad = ( (Double)feature.getProperty( "corrSealing" ) ).doubleValue();
     if( HKorVersGrad == 0.0 )
     {
+      //TODO: log-file
+      System.out.println( "Der Korrekturfaktor des Versiegelungsgrades im Hydrotop (ID=" + feature.getId()
+          + ") 0.0, er wird daher auf 1.0 gesetzt" );
       HKorVersGrad = 1.0;
     }
     long natHFlaeche = (long)( HGesFlaeche - ( HGesFlaeche * HVersGrad * HKorVersGrad ) );
     //  3
     StringBuffer b = new StringBuffer();
     b.append( FortranFormatHelper.printf( Long.toString( natHFlaeche ), "a10" ) );
-    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutz" ), "a10" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "a10" ) );
+    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "landuse" ), "a10" ) );
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "soiltype" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
     b.append( " " + "0.000" );
@@ -197,11 +221,18 @@ public class HydrotopManager extends AbstractManager
     b.append( " " + "0.27" );
     b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_vers" ), "*" ) );
+    b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
 
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "fak_vers" ), "*" ) );
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "corrSealing" ), "*" ) );
 
     asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
   }
+
+  /**
+   * @param asciiBuffer
+   * @param hydrotopeWorkspace
+   * @param modelWorkspace
+   * @param parameterWorkspace
+   */
 
 }
