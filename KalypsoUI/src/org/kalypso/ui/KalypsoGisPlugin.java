@@ -47,12 +47,7 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.net.URLStreamHandler;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -61,30 +56,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.UIManager;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -95,32 +85,22 @@ import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandle
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.view.ObservationCache;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.services.ocs.OcsURLStreamHandler;
-import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.url.URLConstants;
-import org.osgi.service.url.URLStreamHandlerService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -172,14 +152,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private static final String DEFAULT_CRS = "EPSG:31469";
 
   private static DefaultStyleFactory m_defaultStyleFactory;
-
-  /**
-   * The local CaluclationServices, e.g. the ones createt from the extension point
-   */
-  private Map m_localCalcServices = null;
-
-  // TODO put definition in preferences dialog
-  // TODO add crs attribute in boundingbox of *.gmt files
 
   /**
    * The constructor. Manages the configuration of the kalypso client.
@@ -338,29 +310,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Eclipse comes with its own StreamHandler proxy. So we just need to say which Handler to use for the protocol we can
-   * cover.
-   * <p>
-   * Following handlers are registered:
-   * <ul>
-   * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation WebService urls.</li>
-   * <li>XXX: insert your own handlers here...</li>
-   * </ul>
-   */
-  private void configureURLStreamHandler( final BundleContext context )
-  {
-    // register the observation webservice url stream handler
-    registerUrlStreamHandler( context, ZmlURLConstants.SCHEME_OCS, new OcsURLStreamHandler() );
-  }
-
-  private void registerUrlStreamHandler( final BundleContext context, final String scheme, final URLStreamHandler handler )
-  {
-    final Hashtable properties = new Hashtable( 1 );
-    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { scheme } );
-    context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
-  }
-
-  /**
    * Delete a list of temp dirs found in the properties file 'deletetempdir.properties'. This method is called on
    * plugin-startup to clean the specified directories.
    */
@@ -389,17 +338,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  /**
-   * Convenience method that returns the observation service proxy
-   * 
-   * @return WebService proxy for the IObservationService
-   * @throws ServiceException
-   */
-  public KalypsoObservationService getObservationServiceProxy( ) throws ServiceException
-  {
-    return (KalypsoObservationService) KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
-  }
-
   public ILoaderFactory getLoaderFactory( )
   {
     if( m_loaderFactory == null )
@@ -424,14 +362,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   /**
    * This method is called upon plug-in activation
    */
+  @Override
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
     try
     {
-      configureURLStreamHandler( context );
-
       reconfigure();
 
       getPreferenceStore().addPropertyChangeListener( this );
@@ -638,7 +575,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    // TODO TODO TODO: refaktor this shit!
 
     try
     {
@@ -670,7 +606,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       registry.registerTypeHandler( wtKcLaiInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );    }
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+    }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();

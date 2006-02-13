@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="KalypsoServiceUserClient" default="fake" basedir=".">
 
+	<property name="project" value="${workspace}/KalypsoServiceUserClient" />
+	<property name="project-name" value="KalypsoServiceUserClient" />
+    <property file="service.properties" />
+	
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml"/>
+
+	<path id="deploy.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar"/>
+
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		
+	    <fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceUser/build/deploy" includes="**/*.jar" />
+	</path>
+
 	<!-- 
 		Description: currently only support for generating the service-proxies
 		is provided.
@@ -25,19 +43,20 @@
     <target name="clean">
     	<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
     </target>
-    	
+
     <target name="build-core" depends="clean">
 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
 		
 		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
-	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="${workspace}/KalypsoServiceUserClient/lib" overwrite="true"/>
+    	
+    	<!-- why? we just have a projekt dependency instead -->
+	  	<!--copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="${workspace}/KalypsoServiceUserClient/lib" overwrite="true"/-->
 	</target>
 	
 	<target name="proxy-UserService" depends="build-core">
 		<echo message="Proxy the user service and copy the client jar"/>
 
-		<ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="build-client" inheritall="false"/>
- 		<copy file="${workspace}/KalypsoServiceUser/build/deploy/kalypsoservice_user.jar" todir="${workspace}/KalypsoServiceUserClient/lib" overwrite="true"/>
+		<antcall target="generate-proxy" inheritall="false"/>
 	</target>
-
+	
 </project>

@@ -63,7 +63,7 @@ public class ServiceProxies
   public final static String ATT_CLASS = "class";
 
   /** maps interface-name to IConfigurationElement containing classname of serviceproxy implementation */
-  private final Map m_map = new HashMap();
+  private final Map<String, IConfigurationElement> m_map = new HashMap<String, IConfigurationElement>();
   
   public ServiceProxies()
   {
@@ -105,7 +105,7 @@ public class ServiceProxies
    */
   public Object getInstanceFor( final String interfaceName ) throws CoreException
   {
-    final IConfigurationElement element = (IConfigurationElement)m_map.get( interfaceName );
+    final IConfigurationElement element = m_map.get( interfaceName );
     
     if( element == null )
       throw new IllegalArgumentException( "ServiceProxy for interface " + interfaceName + " is not defined!" );

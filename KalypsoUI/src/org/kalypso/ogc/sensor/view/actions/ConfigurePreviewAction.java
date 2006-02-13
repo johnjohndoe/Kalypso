@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
-import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;

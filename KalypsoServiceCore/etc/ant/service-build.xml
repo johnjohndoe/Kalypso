@@ -101,25 +101,15 @@
 		</war>
 	</target>
 
-	<target name="generate-gen-import" depends="generate-apt" description="Erzeugt das wsld File aus dem Service-Interface">
+	<target name="generate-proxy" depends="prepare" description="Erzeugt das wsld File aus dem Service-Interface">
 		<wsgen genwsdl="true" resourcedestdir="${build.ws.gen}" sei="${interface.impl}" verbose="${flag-verbose}" servicename="{${wsdl.namespace}}${wsdl.name}">
 			<classpath refid="jaxws.classpath" />
 			<classpath refid="deploy.classpath" />
 			<classpath path="${project.bin}" />
 		</wsgen>
 
-		<wsimport debug="${flag-debug}" verbose="${flag-verbose}" keep="true" destdir="${build.ws.import}" wsdl="${build.ws.gen}/${wsdl.name}.wsdl" />
-	</target>
-
-	<target name="build-client" depends="generate-gen-import" description="Erzeugt die Bibliothek fuer den Client">
-		<echo message="Building client part of service ${service.name} to ${project.deploy}/${client.jar}" />
-
-		<jar jarfile="${project.deploy}/${client.jar}">
-			<fileset dir="${build.ws.import}" includes="**/*.class" />
-			<!-- Andreas sagt: -->
-			<fileset dir="${project}/build/build-gen" includes="**/*.class" />
-			<fileset dir="${project}/build/bin" includes="**/*.class" />
-		</jar>
+		<echo message="Building proxy source files of ${service.name} to ${build.ws.srcproxy}" />
+		<wsimport debug="${flag-debug}" verbose="${flag-verbose}" keep="true" sourcedestdir="${build.ws.srcproxy}" wsdl="${build.ws.gen}/${wsdl.name}.wsdl" />
 	</target>
 
 </project>
