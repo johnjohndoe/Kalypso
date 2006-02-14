@@ -86,4 +86,6 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
+
+  
 }

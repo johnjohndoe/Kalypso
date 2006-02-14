@@ -1,11 +1,13 @@
-package com.bce.eind.core.profil.impl.test;
+package com.bce.eind.core.profil.test;
 
 import java.util.LinkedList;
 
 import junit.framework.TestCase;
 
+import com.bce.eind.ProfilFactory;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
+import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingFactory;
@@ -17,12 +19,15 @@ import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.PlainProfil;
+import com.bce.eind.core.profil.changes.PointAdd;
+import com.bce.eind.core.profil.changes.PointPropertyEdit;
+import com.bce.eind.core.profil.changes.ProfilChangeHint;
+
 
 /**
  * @author kimwerner
  */
-public class ProfilDataTest extends TestCase
+public class Test_IProfil extends TestCase
 {
   public void testRunTest( ) throws Exception
   {
@@ -34,7 +39,20 @@ public class ProfilDataTest extends TestCase
 
   public IProfil CreateTestProfil( ) throws Exception
   {
-    final IProfil p = new PlainProfil();
+    final IProfil p = ProfilFactory.createProfil();
+    final IProfilChange[] changes = new IProfilChange[1];
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    
+    
+    changes[0]=  new PointAdd(p, null, null);
+    changes[0].doChange(hint);
+    final IProfilPoint pkt = p.getPoints().getFirst();
+    changes[0]=  new PointPropertyEdit(pkt, null, null);
+    changes[0].doChange(hint);    
+    
+    
+    
+    
     final IProfilPoint p1 = p.addPoint( 100.0001, -100.0001 );
     final IProfilPoint p4 = p.addPoint( 200.0002, -200.0002 );
     final IProfilPoint p2 = p.insertPoint( p1 );

@@ -20,8 +20,7 @@ public class PointAdd implements IProfilChange
 
   private final IProfilPoint m_point;
 
-  public PointAdd( final IProfil profil, final IProfilPoint pointBefore,
-      final IProfilPoint point )
+  public PointAdd( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint point )
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
@@ -34,13 +33,15 @@ public class PointAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
     hint.setPointsChanged();
-    
     final IProfilPoints points = m_profil.getProfilPoints();
-    points.insertPoint( m_pointBefore, m_point );
-    
-    return new PointRemove( m_profil, m_point );
+    if( m_point == null )
+    {
+      return new PointRemove( m_profil, points.addPoint( 0, 0 ) );
+    }
+    else
+    {
+      points.insertPoint( m_pointBefore, m_point );
+      return new PointRemove( m_profil, m_point );
+    }
   }
-
- 
-
 }
