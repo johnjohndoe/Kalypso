@@ -58,6 +58,7 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.io.IOUtils;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -70,6 +71,8 @@ import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
+import org.kalypso.gmlschema.Mapper;
+import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
@@ -85,9 +88,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -196,9 +196,6 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       monitor.done();
 
       IOUtils.closeQuietly( outputStream );
-
-      // if( file != null )
-      // file.delete();
     }
   }
 
@@ -216,7 +213,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
         final Map<Object,Object> metadata = (Map<Object,Object>) configuration.getProperty( CONF_METADATA );
 
-        final Object newValue = Mapper.mapJavaValueToXml( fc.getNewValue() );
+        final Object newValue = org.kalypso.gmlschema.Mapper.mapJavaValueToXml( fc.getNewValue() );
         metadata.put( fc.getProperty(), newValue );
       }
     };

@@ -50,7 +50,6 @@
 
 		<mkdir dir="${build.ws.apt}" />
 		<mkdir dir="${build.ws.gen}" />
-		<mkdir dir="${build.ws.import}" />
 
 		<mkdir dir="${build.war.lib}" />
 		<mkdir dir="${build.war.classes}" />
@@ -62,15 +61,18 @@
 		<delete dir="${project.doc}" />
 		<delete dir="${build.war}" />
 		<delete dir="${build.ws}" />
+
+		<echo message="Cleaning ${build.ws.srcproxy}..." />
+		<delete includeemptydirs="true">
+			<fileset dir="${build.ws.srcproxy}" includes="**/*" />
+		</delete>
+
+		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
 	</target>
 
 	<target name="generate-apt" depends="prepare">
 		<echo message="Generates portable artifacts" />
-		<apt debug="${flag-debug}" 
-			verbose="${flag-verbose}" 
-			destdir="${build.ws.apt}" 
-			sourcedestdir="${build.ws.apt}" 
-			sourcepath="${project.src}">
+		<apt debug="${flag-debug}" verbose="${flag-verbose}" destdir="${build.ws.apt}" sourcedestdir="${build.ws.apt}" sourcepath="${project.src}">
 			<classpath refid="jaxws.classpath" />
 			<classpath refid="deploy.classpath" />
 			<option key="r" value="${build.ws}" />
@@ -96,20 +98,34 @@
 
 		<echo file="${build.war}/WEB-INF/sun-jaxws.xml" message="${sun-jaxws.xml}" />
 
-		<war destfile="${war.path}" webxml="${build.war}/WEB-INF/web.xml" basedir="${build.war}" >
+		<war destfile="${war.path}" webxml="${build.war}/WEB-INF/web.xml" basedir="${build.war}">
 			<classes dir="${build.ws.apt}" includes="**/*.class" />
 		</war>
 	</target>
 
-	<target name="generate-proxy" depends="prepare" description="Erzeugt das wsld File aus dem Service-Interface">
-		<wsgen genwsdl="true" resourcedestdir="${build.ws.gen}" sei="${interface.impl}" verbose="${flag-verbose}" servicename="{${wsdl.namespace}}${wsdl.name}">
+	<target name="build-proxy" depends="prepare">
+		<echo message="Builds the most common project (needed for dependency from services projects)" />
+		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+
+		<property name="tmpGenerateDir" value="${java.io.tmpdir}/${project-name}_wsimport"/>
+		<mkdir dir="${tmpGenerateDir}"/>
+		<mkdir dir="${tmpGenerateDir}/wsgen/class"/>
+		<mkdir dir="${tmpGenerateDir}/wsgen/src"/>
+		<mkdir dir="${tmpGenerateDir}/wsimport/class"/>
+
+		<echo message="Generate wsdl file from service interface" />
+		<wsgen genwsdl="true" destdir="${tmpGenerateDir}/wsgen/class" sourcedestdir="${tmpGenerateDir}/wsgen/src" resourcedestdir="${build.ws.gen}" sei="${interface.impl}" verbose="${flag-verbose}" servicename="{${wsdl.namespace}}${wsdl.name}">
 			<classpath refid="jaxws.classpath" />
 			<classpath refid="deploy.classpath" />
 			<classpath path="${project.bin}" />
 		</wsgen>
 
 		<echo message="Building proxy source files of ${service.name} to ${build.ws.srcproxy}" />
-		<wsimport debug="${flag-debug}" verbose="${flag-verbose}" keep="true" sourcedestdir="${build.ws.srcproxy}" wsdl="${build.ws.gen}/${wsdl.name}.wsdl" />
-	</target>
+		<wsimport debug="${flag-debug}" verbose="${flag-verbose}" keep="true" destdir="${tmpGenerateDir}/wsimport/class" sourcedestdir="${build.ws.srcproxy}" wsdl="${build.ws.gen}/${wsdl.name}.wsdl" />
 
+		<delete includeemptydirs="true">
+			<fileset dir="${tmpGenerateDir}" includes="**/*"/>
+		</delete>
+	</target>
+	
 </project>
