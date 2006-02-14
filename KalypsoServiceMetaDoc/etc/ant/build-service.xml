@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoServiceMetaDoc-Services" default="fake" basedir=".">
+	<property name="project-name" value="KalypsoServiceMetaDoc"/>
+	<property name="project" value="${workspace}/${project-name}" />
+	<property name="projectClient" value="${workspace}/${project-name}Client" />
+	<property file="service.properties" />
+
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml" />
+
+	<path id="deploy.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar"/>
+
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+	    
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoMetaDoc/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceMetaDoc/build/deploy" includes="**/*.jar" />
+	</path>
+
+	<target name="fake" />
+</project>
