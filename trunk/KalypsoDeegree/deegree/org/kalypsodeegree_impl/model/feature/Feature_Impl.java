@@ -88,7 +88,7 @@ public class Feature_Impl implements Feature
    *          set <code>true</code> when generating from UserInterface <br>
    *          set <code>false</code> when generating from GML or so.
    */
-  protected Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )
+  public Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );

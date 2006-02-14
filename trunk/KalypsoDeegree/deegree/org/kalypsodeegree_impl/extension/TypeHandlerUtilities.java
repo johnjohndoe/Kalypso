@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.extension;
 
-import java.util.Date;
-
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
@@ -56,16 +53,15 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class TypeHandlerUtilities
 {
   // commn typehandler that will always exist
-  
-//  final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
-//  final ITypeHandler integerTH = registry.getTypeHandlerForClassName( Integer.class );
-//  final ITypeHandler longTH = registry.getTypeHandlerForClassName( Long.class );
-//  final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
-//  final ITypeHandler floatTH = registry.getTypeHandlerForClassName( Float.class );
-//  final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
-//  final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
-  
-  
+
+  // final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
+  // final ITypeHandler integerTH = registry.getTypeHandlerForClassName( Integer.class );
+  // final ITypeHandler longTH = registry.getTypeHandlerForClassName( Long.class );
+  // final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
+  // final ITypeHandler floatTH = registry.getTypeHandlerForClassName( Float.class );
+  // final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
+  // final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
+
   public static void registerXSDSimpleTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
   {
     registry.registerTypeHandler( new XSDStringTypeHandler() );
@@ -74,6 +70,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new XSDLongTypeHandler() );
     registry.registerTypeHandler( new XSDDateTypeHandler() );
     registry.registerTypeHandler( new XSDBooleanTypeHandler() );
+    
   }
 
   public static void registerGeometryGML2typeHandler( ITypeRegistry registry ) throws TypeRegistryException
@@ -86,13 +83,13 @@ public class TypeHandlerUtilities
     final QName[] multiPoints = new QName[] { new QName( gmlns, "MultiPointPropertyType" ) };
     registry.registerTypeHandler( new GM_ObjectTypeHandler( multiPoints, GeometryUtilities.getMultiPointClass() ) );
 
-    final QName[] lineString = new QName[] {  new QName( gmlns, "LineStringPropertyType" ) };
+    final QName[] lineString = new QName[] { new QName( gmlns, "LineStringPropertyType" ) };
     registry.registerTypeHandler( new GM_ObjectTypeHandler( lineString, GeometryUtilities.getLineStringClass() ) );
 
     final QName[] multiLineStrings = new QName[] { new QName( gmlns, "MultiLineStringPropertyType" ) };
     registry.registerTypeHandler( new GM_ObjectTypeHandler( multiLineStrings, GeometryUtilities.getMultiLineStringClass() ) );
 
-    final QName[] polygon = new QName[] {  new QName( gmlns, "PolygonPropertyType" ) };
+    final QName[] polygon = new QName[] { new QName( gmlns, "PolygonPropertyType" ) };
     registry.registerTypeHandler( new GM_ObjectTypeHandler( polygon, GeometryUtilities.getPolygonClass() ) );
 
     final QName[] multPolygons = new QName[] { new QName( gmlns, "MultiPolygonPropertyType" ) };

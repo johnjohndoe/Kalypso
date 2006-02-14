@@ -25,17 +25,17 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public Class getValueClass()
+  public Class getValueClass( )
   {
     return GM_Envelope.class;
   }
 
-  private final QName[] m_typeNames = new QName[]{new QName( XMLHelper.GMLSCHEMA_NS, "BoundingShapeType")};
+  private final QName[] m_typeNames = new QName[] { new QName( XMLHelper.GMLSCHEMA_NS, "BoundingShapeType" ) };
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName()
+  public QName[] getTypeName( )
   {
     return m_typeNames;
   }
@@ -46,7 +46,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
    */
   public void marshall( final Object object, final Node node, URL context )
   {
-    final GM_Envelope envelope = (GM_Envelope)object;
+    final GM_Envelope envelope = (GM_Envelope) object;
 
     // TODO: bloed: warum muss man hier manuell die ganzen prefixes setzen
     // sollte das nicht der XML Schreiber erledigen??
@@ -125,7 +125,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname()
+  public String getShortname( )
   {
     return "Bounding Shape";
   }
@@ -135,7 +135,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
    */
   public Object cloneObject( Object objectToClone )
   {
-    final GM_Envelope env = (GM_Envelope)objectToClone;
+    final GM_Envelope env = (GM_Envelope) objectToClone;
     GM_Position min = env.getMin();
     GM_Position max = env.getMax();
     double[] maxAsArray = max.getAsArray();
@@ -158,7 +158,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
    */
   public boolean isGeometry( )
   {
-    return true;
+    return false;
   }
 
 }
