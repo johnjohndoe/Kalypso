@@ -38,34 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui;
+package org.kalypso.commons.xml;
 
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 /**
- * TODO things in this class need to be refactored
- * 
  * @author doemming
  */
-public class RefactorThis
+public class NSUtilities
 {
-
-  public static void registerSpecialTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
+  /**
+   * The NSPrefixProvider is a singelton to ensures that namespaces are allways prefixed the same way. This is not
+   * neccesary, but very nice.
+   * 
+   * @return NSPrefixProvider
+   */
+  public static NSPrefixProvider getNSProvider( )
   {
-    // TODO move these to extentionpoints...
-    registry.registerTypeHandler( new RangeSetTypeHandler() );
-    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-    registry.registerTypeHandler( new ResourceFileTypeHandler() );
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new DiagramTypeHandler() );
-    
-
+    return NSPrefixProvider.getInstance();
   }
 }
