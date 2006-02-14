@@ -418,7 +418,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1840,7 +1840,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6004,7 +6004,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579011.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6181,7 +6181,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7858,7 +7858,7 @@
           <pegel:PNR>570250</pegel:PNR>
           <pegel:Name>Kaulsdorf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8000,7 +8000,7 @@
           <pegel:PNR>573100</pegel:PNR>
           <pegel:Name>Straußfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8284,7 +8284,7 @@
           <pegel:PNR>575406</pegel:PNR>
           <pegel:Name>Kelbra-Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8347,7 +8347,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575406.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8426,7 +8426,7 @@
           <pegel:PNR>575450</pegel:PNR>
           <pegel:Name>Nikolausrieth</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8639,7 +8639,7 @@
           <pegel:PNR>579621</pegel:PNR>
           <pegel:Name>Mündung</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8773,7 +8773,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8781,7 +8781,7 @@
           <pegel:PNR>579330</pegel:PNR>
           <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8850,7 +8850,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579000">
           <pegel:PNR>579000</pegel:PNR>
-          <pegel:Name>Ül-Spere, Zulauf</pegel:Name>
+          <pegel:Name>Ül-Sperre, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8903,7 +8903,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
+          <pegel:Reserve10>Ül-Sperre, Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5210386.313997258,5741854.435113958</gml:coordinates>
@@ -8915,7 +8915,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8923,7 +8923,7 @@
           <pegel:PNR>579999</pegel:PNR>
           <pegel:Name>ÜL zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8986,7 +8986,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8994,7 +8994,7 @@
           <pegel:PNR>579012</pegel:PNR>
           <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9057,7 +9057,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579012.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9065,7 +9065,7 @@
           <pegel:PNR>579013</pegel:PNR>
           <pegel:Name>Rappbode-TS, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9136,7 +9136,7 @@
           <pegel:PNR>579001</pegel:PNR>
           <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9278,7 +9278,7 @@
           <pegel:PNR>579006</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9349,7 +9349,7 @@
           <pegel:PNR>579713</pegel:PNR>
           <pegel:Name>Mdg</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9420,7 +9420,7 @@
           <pegel:PNR>579069</pegel:PNR>
           <pegel:Name>an Holtemme</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -19657,7 +19657,7 @@
           <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
           <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>1</speicher:ST_Art>
+          <speicher:ST_Art>2</speicher:ST_Art>
           <speicher:QG1>25</speicher:QG1>
           <speicher:T1>4</speicher:T1>
           <speicher:T2>6</speicher:T2>

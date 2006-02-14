@@ -7858,7 +7858,7 @@
           <pegel:PNR>570250</pegel:PNR>
           <pegel:Name>Kaulsdorf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8000,7 +8000,7 @@
           <pegel:PNR>573100</pegel:PNR>
           <pegel:Name>Straußfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8284,7 +8284,7 @@
           <pegel:PNR>575406</pegel:PNR>
           <pegel:Name>Kelbra-Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8781,7 +8781,7 @@
           <pegel:PNR>579330</pegel:PNR>
           <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8994,7 +8994,7 @@
           <pegel:PNR>579012</pegel:PNR>
           <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9136,7 +9136,7 @@
           <pegel:PNR>579001</pegel:PNR>
           <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9278,7 +9278,7 @@
           <pegel:PNR>579006</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>00</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -19657,7 +19657,7 @@
           <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
           <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>1</speicher:ST_Art>
+          <speicher:ST_Art>2</speicher:ST_Art>
           <speicher:QG1>25</speicher:QG1>
           <speicher:T1>4</speicher:T1>
           <speicher:T2>6</speicher:T2>
