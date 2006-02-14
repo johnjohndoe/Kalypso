@@ -147,7 +147,7 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
   @Override
   public String toString( )
   {
-    return AnnotationUtilities.getAnnotation(m_srcFT).getLabel()+ " > " + AnnotationUtilities.getAnnotation(m_destFT).getLabel();
+    return AnnotationUtilities.getAnnotation( m_srcFT ).getLabel() + " > " + AnnotationUtilities.getAnnotation( m_destFT ).getLabel();
   }
 
   public IFeatureType getDestFT( )

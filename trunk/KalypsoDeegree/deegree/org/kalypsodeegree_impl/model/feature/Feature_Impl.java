@@ -62,7 +62,7 @@ public class Feature_Impl implements Feature
     m_properties = new Object[ftp.length];
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( m_featureType.getProperties( i ).getMaxOccurs() != 1 )
+      if( m_featureType.getProperties( i ).isList() )
       {
         if( ftp[i] instanceof IRelationType )
           m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );
@@ -100,7 +100,7 @@ public class Feature_Impl implements Feature
     m_properties = new Object[ftp.length];
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( m_featureType.getProperties( i ).getMaxOccurs() != 1 )
+      if( m_featureType.getProperties( i ).isList() )
       {
         if( ftp[i] instanceof IRelationType )
           m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );

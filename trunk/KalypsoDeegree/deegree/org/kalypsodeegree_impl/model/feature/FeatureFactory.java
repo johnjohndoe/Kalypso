@@ -219,8 +219,7 @@ public class FeatureFactory
       //
       Object o = wrap( ftp, gmlProp, context, urlResolver );
 
-      int maxOccurs = ftp.getMaxOccurs();
-      if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+      if( ftp.isList() )
         ((List) feature.getProperty( propertyPosition )).add( o );
       else
         feature.setProperty( createFeatureProperty( ftp, o ) );

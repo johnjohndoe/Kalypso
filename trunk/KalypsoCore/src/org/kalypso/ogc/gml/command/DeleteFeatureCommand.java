@@ -132,16 +132,15 @@ public class DeleteFeatureCommand implements ICommand
       // if( properties[propIndex] == prop )
       // break;
       final IRelationType rt = (IRelationType) FeatureHelper.getPT( parentFeature, propName );
-      int maxOccurs = rt.getMaxOccurs();
 
       // final Object prop = parentFeature.getProperty( propName );
-      if( maxOccurs == 1 )
-        workspace.addFeatureAsComposition( parentFeature, rt, 0, featureToAdd );
-      else if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+      if( rt.isList() )
       {
         final int index = (m_listIndexMap.get( wrapper )).intValue();
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
+      else
+        workspace.addFeatureAsComposition( parentFeature, rt, 0, featureToAdd );
 
       final Object oldParentFeature = parentMap.get( workspace );
       if( oldParentFeature == null )
@@ -179,9 +178,9 @@ public class DeleteFeatureCommand implements ICommand
     m_touchedWorkspaces.clear();
     // collect event information
     final Map<GMLWorkspace, Feature> parentMap = new HashMap<GMLWorkspace, Feature>( m_wrappers.length ); // key:
-                                                                                                          // workspace /
-                                                                                                          // value:
-                                                                                                          // parentFeature
+    // workspace /
+    // value:
+    // parentFeature
 
     for( int i = 0; i < m_wrappers.length; i++ )
     {
@@ -197,8 +196,7 @@ public class DeleteFeatureCommand implements ICommand
       // remember position for undo
       final IRelationType rt = (IRelationType) FeatureHelper.getPT( parentFeature, propName );
 
-      final int maxOccurs = rt.getMaxOccurs();
-      if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+      if( rt.isList() )
       {
         final Object prop = parentFeature.getProperty( rt );
         final List list = (List) prop;
@@ -242,24 +240,22 @@ public class DeleteFeatureCommand implements ICommand
             if( ftps[j] instanceof IRelationType )
             {
               IRelationType linkftp = (IRelationType) ftps[j];
-              if( linkftp.getMaxOccurs() == 1 )
-              {
-                if( workspace.isBrokenLink( f, linkftp, 1 ) )
-                {
-                  String childID = (String) f.getProperty( linkftp );
-                  m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( workspace, f, linkftp, childID, 1 ) );
-                }
-              }
-              else
+              if( linkftp.isList() )
               {
                 final List propList = (List) f.getProperty( linkftp );
                 // important: count down not up
                 for( int k = propList.size() - 1; k >= 0; k-- )
                 {
                   if( workspace.isBrokenLink( f, linkftp, k ) )
-                  {
                     m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( workspace, f, linkftp, (String) propList.get( k ), k ) );
-                  }
+                }
+              }
+              else
+              {
+                if( workspace.isBrokenLink( f, linkftp, 1 ) )
+                {
+                  String childID = (String) f.getProperty( linkftp );
+                  m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( workspace, f, linkftp, childID, 1 ) );
                 }
               }
             }

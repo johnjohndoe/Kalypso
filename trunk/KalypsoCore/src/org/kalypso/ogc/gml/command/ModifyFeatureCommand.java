@@ -170,16 +170,7 @@ public class ModifyFeatureCommand implements ICommand
             final Object value = targetFE.getProperty( linkPT );
             if( value == null ) // nothing to do
               continue;
-            final int maxOccurs = linkPT.getMaxOccurs();
-            if( maxOccurs == 1 )
-            {
-              if( value instanceof Feature )
-                m_workspace.removeLinkedAsCompositionFeature( targetFE, linkPT, (Feature) value );
-              else
-                m_workspace.removeLinkedAsAggregationFeature( targetFE, linkPT, (String) value );
-            }
-            else
-            // any
+            if( linkPT.isList() )
             {
               final List list = (List) value;
               while( !list.isEmpty() )
@@ -191,6 +182,13 @@ public class ModifyFeatureCommand implements ICommand
                 else
                   m_workspace.removeLinkedAsAggregationFeature( targetFE, linkPT, (String) object );
               }
+            }
+            else
+            {
+              if( value instanceof Feature )
+                m_workspace.removeLinkedAsCompositionFeature( targetFE, linkPT, (Feature) value );
+              else
+                m_workspace.removeLinkedAsAggregationFeature( targetFE, linkPT, (String) value );
             }
           }
         }

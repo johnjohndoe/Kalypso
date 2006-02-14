@@ -39,7 +39,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -60,7 +59,7 @@ public class RelationCircleFinder
     m_testFeature = testFeature;
   }
 
-  public List[] findCircle()
+  public List[] findCircle( )
   {
     return findCircle( m_testFeature, new ArrayList() );
   }
@@ -84,10 +83,11 @@ public class RelationCircleFinder
       else
       {
         final List[] lists = findCircle( linkFeature, newList );
-        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
+        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
+                                                            // java.util.Arrays: check if this is ok
       }
     }
-    return (List[])result.toArray( new List[result.size()] );
+    return (List[]) result.toArray( new List[result.size()] );
   }
 
   private Feature[] getLinkedFeatures( Feature feature )
@@ -100,20 +100,21 @@ public class RelationCircleFinder
       IPropertyType property = properties[i];
       if( property instanceof IRelationType )
       {
-        final IRelationType linkPT=(IRelationType) property;
-        if(  property.getMaxOccurs()  == 1 )
+        final IRelationType linkPT = (IRelationType) property;
+        if( property.isList() )
         {
-          Feature link = m_workspace.resolveLink( feature, linkPT );
-          if( link != null )
-            result.add( link );
+          final Feature[] links = m_workspace.resolveLinks( feature, linkPT );
+          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
+                                                          // java.util.Arrays: check if this is ok
         }
         else
         {
-          Feature[] links = m_workspace.resolveLinks( feature, linkPT );
-          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
+          final Feature link = m_workspace.resolveLink( feature, linkPT );
+          if( link != null )
+            result.add( link );
         }
       }
     }
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return (Feature[]) result.toArray( new Feature[result.size()] );
   }
 }

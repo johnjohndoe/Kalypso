@@ -76,7 +76,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       Feature parentFeature = ((FeatureAssociationTypeElement) currentTargetObject).getParentFeature();
       Object proptery = parentFeature.getProperty( fatp );
       final int pos;
-      if( fatp.getMaxOccurs() > 1 )
+      if( fatp.isList() )
       {
         pos = ((List) proptery).size();
       }
@@ -132,13 +132,13 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       if( matchingFt == null )
         return false;
       int maxOccurs = targetAssocFtp.getMaxOccurs();
-      boolean isList = maxOccurs > 1;
+      boolean isList = targetAssocFtp.isList();
 
       if( isList && operation == DND.DROP_LINK )
         return false;
       if( isList && (operation == DND.DROP_COPY || operation == DND.DROP_MOVE) )
       {
-        List featureList = (List) targetFeature.getProperty( targetAssocFtp );
+        final List featureList = (List) targetFeature.getProperty( targetAssocFtp );
         System.out.println( "Diff = " + new Integer( maxOccurs - (featureList.size() + selectedFeatures.length) ) );
         if( maxOccurs >= featureList.size() + selectedFeatures.length || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
           return true;
