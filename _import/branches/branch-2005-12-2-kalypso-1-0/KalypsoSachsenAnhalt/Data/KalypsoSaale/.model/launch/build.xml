@@ -90,28 +90,28 @@
 		     Greift nur für leere Zeitreihen -->
 
 		<!-- Pegelabfluss (Messung) -->
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_durchfluss.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Pegelabfluss (Messung) ; auch der Vorhersagezeitraum wird angelegt -->
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss_mit_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_durchfluss_mit_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_ombrometer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_ombrometer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${ombrometerLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsschnee.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsschnee.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
@@ -128,7 +128,7 @@
 				Macht eigentlich keinen Sinn? Deshalb hier nur bis zum Istzeitpunkt.
 		-->
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_speicher.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_speicher.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${speicherLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,V&lt;/axes&gt;&lt;statusAxes&gt;V&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
@@ -191,8 +191,8 @@
     <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_W.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false" ignoreIllegalFeaturePath="true"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_Q.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/.WISKI_Konfig/wiskiexport_prognose_W.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false" ignoreIllegalFeaturePath="true"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/.WISKI_Konfig/wiskiexport_prognose_Q.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
     </target>
 
 	<!-- ================================= 
@@ -244,7 +244,7 @@
 	<target name="updateForecastN" depends="calculationProperties">
 		<echo message="aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
 		<kalypso.dwdTask 
-			dwd2zmlconfurl="${project.url}/.templates/Modell/dwd2zmlConf.xml" 
+			dwd2zmlconfurl="${project.url}/.model/dwd/dwd2zmlConf.xml" 
 			obsrasterurl="${dwdRasterLocalURL}" 
 			targetcontext="${calc.dir}" description="raster zu zml" 
 			from="${startsim}" forecastfrom="${startforecast}" to="${stopsim}" zmlfilter="${filterN}">
