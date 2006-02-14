@@ -35,5 +35,29 @@ public final class PointPropertyEdit implements IProfilChange
     return new PointPropertyEdit( m_point, m_property, oldValue );
   }
 
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getObject()
+   */
+  public Object getObject( )
+  {
+        return m_point;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getPointProperty()
+   */
+  public POINT_PROPERTY getPointProperty( )
+  {
+        return m_property;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getValue()
+   */
+  public Double getValue( )
+  {
+       return m_newValue;
+  }
+
  
 }

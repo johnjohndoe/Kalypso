@@ -36,7 +36,7 @@ public final class PointPropertyAdd implements IProfilChange
     }
   }
 
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     hint.setPointPropertiesChanged();
     
@@ -49,6 +49,33 @@ public final class PointPropertyAdd implements IProfilChange
 
     }
     return new PointPropertyRemove( m_profil, m_property );
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getObject()
+   */
+  public Object getObject( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getPointProperty()
+   */
+  public POINT_PROPERTY getPointProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getValue()
+   */
+  public Double getValue( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   

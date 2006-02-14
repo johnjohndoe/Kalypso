@@ -3,6 +3,7 @@ package com.bce.eind.core.profil.changes;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 public class VisibleDeviderEdit implements IProfilChange
 {
@@ -30,6 +31,33 @@ public class VisibleDeviderEdit implements IProfilChange
     m_profil.setDeviderVisibility(m_typ, m_visible );
     
     return new VisibleDeviderEdit(m_profil,m_typ,oldVisible );
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getObject()
+   */
+  public Object getObject( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getPointProperty()
+   */
+  public POINT_PROPERTY getPointProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getValue()
+   */
+  public Double getValue( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   

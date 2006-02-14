@@ -7,6 +7,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilDeviderFactory;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class DeviderAdd implements IProfilChange
@@ -31,12 +32,39 @@ public class DeviderAdd implements IProfilChange
    * @throws ProfilDataException
    * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     hint.setDeviderMoved();
 
     m_profil.addDevider( m_devider );
     return new DeviderRemove( m_profil, m_devider );
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getObject()
+   */
+  public Object getObject( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getPointProperty()
+   */
+  public POINT_PROPERTY getPointProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getValue()
+   */
+  public Double getValue( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

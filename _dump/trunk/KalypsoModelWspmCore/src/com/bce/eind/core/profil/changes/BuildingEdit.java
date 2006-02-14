@@ -4,6 +4,7 @@ import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class BuildingEdit implements IProfilChange
@@ -33,6 +34,33 @@ public class BuildingEdit implements IProfilChange
     final Object oldValue = m_building.getValueFor( m_property );
     m_building.setValue( m_property, m_newValue );
     return new BuildingEdit( m_building, m_property, oldValue );
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getObject()
+   */
+  public Object getObject( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getPointProperty()
+   */
+  public POINT_PROPERTY getPointProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilChange#getValue()
+   */
+  public Double getValue( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
  
