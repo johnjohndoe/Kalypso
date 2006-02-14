@@ -13,11 +13,5 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.deegree,
  org.kalypso.NACalcJob,
  org.eclipse.ui,
- org.kalypso.tubig,
  org.junit,
  org.kalypso.simulation.core
-Export-Package: org.kalypso,
- org.kalypso.test.diff,
- org.kalypso.test.gml.serializer,
- org.kalypso.test.util,
- org.kalypso.tools.ktest
