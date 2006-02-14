@@ -61,6 +61,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -74,6 +75,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypsodeegree_impl.extension.GM_ObjectTypeHandler;
+import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -106,41 +108,21 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
     try
     {
-      // TODO sollten dies nicht die einzelnen calservices selber tun?
       final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      registry.registerTypeHandler( new ObservationLinkHandler() );
-      registry.registerTypeHandler( new DiagramTypeHandler() );
 
-      // TODO TODO TODO: refaktor this shit!
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities.getMultiPointClass() ) );
+      TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
+      TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities.getLineStringClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities.getMultiLineStringClass() ) );
+      RefactorThis.registerSpecialTypeHandler( registry );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities.getMultiPolygonClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities.getUndefinedGeometryClass() ) );
-
-      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType",
-      // wvqAxis,ZmlInlineTypeHandler.WVQ "WVQ" );
+      // TODO refactor this
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
-      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
-      // final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
-      // "KCWTLAI" );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
       registry.registerTypeHandler( wtKcLaiInline );
 
-      // final String[] wvqAxis = new String[]
-      // { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
-      // final String[] taAxis = new String[]
-      // { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM, };
-      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
 
