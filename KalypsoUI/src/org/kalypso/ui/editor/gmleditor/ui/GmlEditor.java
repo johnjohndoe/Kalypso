@@ -193,7 +193,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
           final Feature parentFeature = ( (FeatureAssociationTypeElement)firstElement ).getParentFeature();
           final IRelationType fatp = ( (FeatureAssociationTypeElement)firstElement )
               .getAssociationTypeProperty();
-          if(  fatp.getMaxOccurs()>1 )
+          if(  fatp.isList() )
           {
             final List list = (List)parentFeature.getProperty( fatp );
             if( list.size() < fatp.getMaxOccurs() ) 

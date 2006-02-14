@@ -171,7 +171,7 @@ public class FeatureHelper
     final Object property = srcFE.getProperty( linkProp );
     if( property == null )
       return false;
-    if( linkProp.getMaxOccurs() > 1 )
+    if( linkProp.isList() )
     {
       // list:
       final List list = (List) property;
@@ -186,7 +186,7 @@ public class FeatureHelper
    */
   public static int getPositionOfAssoziation( Feature srcFE, IRelationType linkProp, Feature destFE )
   {
-    if( !(linkProp.getMaxOccurs() > 1 ))
+    if( !(linkProp.isList() ))
       return 0;
 
     final List list = (List) srcFE.getProperty( linkProp );
@@ -228,7 +228,7 @@ public class FeatureHelper
     for( int i = 0; i < properties.length; i++ )
     {
       IPropertyType property = properties[i];
-      if( property.getMaxOccurs()>1 )
+      if( property.isList() )
         return true;
     }
     return false;
@@ -278,24 +278,8 @@ public class FeatureHelper
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType property = properties[i];
-      if( property.getMaxOccurs()>1)
+      if( property.isList())
         return true;
-    }
-    return false;
-  }
-
-  public static boolean isFeatuerTypeInFeatureCollection( Feature feature, IFeatureType ftToCheckFor )
-  {
-    if( isCollection( feature ) )
-    {
-      IRelationType property = (IRelationType) feature.getProperties()[0];
-      IFeatureType[] associationFeatureTypes = property.getTargetFeatureTypes(null,false);
-      for( int i = 0; i < associationFeatureTypes.length; i++ )
-      {
-        IFeatureType type = associationFeatureTypes[i];
-        if( type.equals( ftToCheckFor ) )
-          return true;
-      }
     }
     return false;
   }

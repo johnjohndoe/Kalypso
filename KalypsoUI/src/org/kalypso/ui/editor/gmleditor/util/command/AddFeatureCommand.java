@@ -147,17 +147,15 @@ public class AddFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    int maxOccurs = m_parentFeature.getFeatureType().getProperties( propIndex ).getMaxOccurs();
+    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
 
-    if( maxOccurs == 1 )
-    {
-      properties[propIndex] = null;
-    }
-    else if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+    if( pt.isList() )
     {
       List list = (List) prop;
       list.remove( newFeature );
     }
+    else
+      properties[propIndex] = null;
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 

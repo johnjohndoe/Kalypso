@@ -103,8 +103,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     // get childs
     final Feature[] destFEs;
 
-    int maxOccurs = linkProp.getMaxOccurs();
-    if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+    if( linkProp.isList())
       destFEs = m_workspace.resolveLinks( feature, linkProp );
     else
     {

@@ -145,7 +145,7 @@ public class FeatureviewHelper
     }
     else if( ftp instanceof IRelationType )
     {
-      if( ftp.getMaxOccurs() != 1 )
+      if( ftp.isList() )
       {
         final Table table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );

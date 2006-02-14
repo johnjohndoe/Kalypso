@@ -137,8 +137,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
     if( ftp instanceof IRelationType )
     {
-      int maxOccurs = ftp.getMaxOccurs();
-      if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+      if(ftp.isList())
       {
         // it is a list of features or links to features or mixed
         // return new FeatureDialog( workspace, feature, ftp, selectionManager );

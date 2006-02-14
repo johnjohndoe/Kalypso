@@ -112,7 +112,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty, final int resolveMode )
   {
-    if( linkProperty.getMaxOccurs() == 1 )
+    if( !linkProperty.isList() )
     {
       final Feature feature = resolveLink( srcFeature, linkProperty, resolveMode );
       if( feature != null )
@@ -229,7 +229,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // final IFeatureType[] substiFTs =
     // GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     final IFeatureType[] substiFTs = linkSrcFeatureType.getSubstituts( m_schema, false, true );
-    
+
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
       final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
@@ -377,7 +377,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @deprecated
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
-  public IFeatureType getFeatureType( final String nameLocalPart)
+  public IFeatureType getFeatureType( final String nameLocalPart )
   {
     for( int i = 0; i < m_featureTypes.length; i++ )
     {
@@ -389,7 +389,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(javax.xml.namespace.QName)
    */
   public IFeatureType getFeatureType( final QName featureQName )
@@ -500,8 +499,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProp, final Feature linkedFE, final boolean overwrite ) throws Exception
   {
     final Object value = parentFE.getProperty( linkProp );
-    int max = linkProp.getMaxOccurs();
-    if( max > 1 || max == IPropertyType.UNBOUND_OCCURENCY )
+    if( linkProp.isList() )
       throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
     if( value == null | overwrite )
     {
@@ -522,7 +520,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void addFeatureAsAggregation( Feature srcFE, IRelationType linkProp, int pos, String featureID ) throws Exception
   {
-    if( linkProp.getMaxOccurs() > 1 )
+    if( linkProp.isList() )
     {
       int maxOccurs = linkProp.getMaxOccurs();
       final List list = (List) srcFE.getProperty( linkProp );
@@ -545,7 +543,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
   {
-    if( linkProp.getMaxOccurs() > 1 )
+    if( linkProp.isList() )
     {
       // TODO check remove existing correctly
       final int maxOccurs = linkProp.getMaxOccurs();
@@ -584,7 +582,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public boolean removeLinkedAsAggregationFeature( Feature parentFeature, IRelationType linkProp, String childFeatureId )
   {
     final Object prop = parentFeature.getProperty( linkProp );
-    if( linkProp.getMaxOccurs() > 1 )
+    if( linkProp.isList() )
     {
       List list = (List) prop;
       return list.remove( childFeatureId );
@@ -605,19 +603,18 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     boolean result = false;
     final Object prop = parentFeature.getProperty( linkProp );
-    int maxOccurs = linkProp.getMaxOccurs();
-    switch( maxOccurs )
+    if( linkProp.isList() )
     {
-      case 1:
-        if( parentFeature.getProperty( linkProp ) == childFeature )
-        {
-          parentFeature.setProperty( FeatureFactory.createFeatureProperty( linkProp, null ) );
-          result = true;
-        }
-        break;
-      default:
-        final List list = (List) prop;
-        result = list.remove( childFeature );
+      final List list = (List) prop;
+      result = list.remove( childFeature );
+    }
+    else
+    {
+      if( parentFeature.getProperty( linkProp ) == childFeature )
+      {
+        parentFeature.setProperty( FeatureFactory.createFeatureProperty( linkProp, null ) );
+        result = true;
+      }
     }
     if( result )
     {
@@ -678,22 +675,22 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     final boolean undefined = false;
     final Object value = parent.getProperty( linkProp );
-    if( linkProp.getMaxOccurs() == 1 )
+    if( linkProp.isList() )
     {
-      if( value instanceof Feature )
+      // else must be a list
+      final List list = (List) value;
+      if( list.size() == 0 )
         return false;
-      if( value instanceof String )
+      final Object object = list.get( pos );
+      if( object instanceof Feature )
+        return false;
+      if( object instanceof String )
         return true;
       return undefined;
     }
-    // else must be a list
-    final List list = (List) value;
-    if( list.size() == 0 )
+    if( value instanceof Feature )
       return false;
-    final Object object = list.get( pos );
-    if( object instanceof Feature )
-      return false;
-    if( object instanceof String )
+    if( value instanceof String )
       return true;
     return undefined;
   }
@@ -726,7 +723,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         final IPropertyType property = ftp[i];
         if( property instanceof IRelationType )
         {
-          if( property.getMaxOccurs() > 1 )
+          if( property.isList() )
           {
             final List list = (List) f.getProperty( property );
             for( int j = 0; j < list.size(); j++ )

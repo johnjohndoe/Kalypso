@@ -118,18 +118,12 @@ public class AddHeavyRelationshipCommand implements ICommand
   public void undo( ) throws Exception
   {
     // remove second link
-    final int max = m_linkFT2.getMaxOccurs();
-    switch( max )
-    {
-      case 1:
-        m_newFeature.setProperty( m_linkFT2, null );
-        break;
-      default:
-        ((List) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
-        break;
-    }
+    if( m_linkFT2.isList() )
+      ((List) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
+    else
+      m_newFeature.setProperty( m_linkFT2, null );
     // remove relation feature and also first link
-    m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1,m_newFeature );
+    m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 

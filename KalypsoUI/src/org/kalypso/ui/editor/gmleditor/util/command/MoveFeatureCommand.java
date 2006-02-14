@@ -117,9 +117,9 @@ public class MoveFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    int maxOccurs = m_parentFeature.getFeatureType().getProperties(propIndex).getMaxOccurs();
+    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties(propIndex);
 
-    if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+    if( pt.isList())
     {
       final List list = (List)prop;
       index = list.indexOf( m_moveItem );
@@ -157,9 +157,9 @@ public class MoveFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    int maxOccurs = m_parentFeature.getFeatureType().getProperties(propIndex).getMaxOccurs();
+    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties(propIndex);
 
-    if( maxOccurs > 1 || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+    if( pt.isList())
     {
       List list = (List)prop;
       index = list.indexOf( m_moveItem );
