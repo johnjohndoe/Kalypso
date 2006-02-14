@@ -43,4 +43,5 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   
   /** Creeates an instance of my type from a string */
   public Object parseType( final String text ) throws ParseException;
+
 }

@@ -31,7 +31,7 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -45,6 +45,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -74,11 +75,12 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
 
   public ScrabLayerFeatureTheme( IFeatureSelectionManager selectionManager )
   {
-    InputStream gmlInputStream = getClass().getResourceAsStream( "../../core/resources/basicScrabLayer.gml" );
+    final URL scrabLayerURL = getClass().getResource( "../../core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
     {
-      workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlInputStream, null ) );
+      final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL);
+      workspace = new CommandableWorkspace( createGMLWorkspace ) ;
     }
     catch( Exception e )
     {

@@ -49,6 +49,8 @@ import org.deegree.services.wfs.capabilities.GetFeature;
 import org.deegree.services.wfs.capabilities.Request;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -173,7 +175,8 @@ public class WFSUtilities
         //                IOUtils.closeQuietly( outStream );
 
         final URL schemaURL = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
-        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURL );
+        final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
+        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, gmlSchema );
         inputStream.close();
         IOUtils.closeQuietly( inputStream );
 

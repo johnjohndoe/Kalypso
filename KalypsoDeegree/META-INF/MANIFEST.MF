@@ -17,6 +17,11 @@ Bundle-ClassPath: kalypsodeegree.jar,
  lib/shiftone/shiftone-cache.jar
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Require-Bundle: org.kalypso.commons,
+ org.kalypso.contribs.java,
+ org.junit,
+ org.kalypso.gmlschema;visibility:=reexport
+Eclipse-AutoStart: true
 Export-Package: Acme,
  Acme.JPM.Encoders,
  com.braju.format,
@@ -234,6 +239,7 @@ Export-Package: Acme,
  org.deegree_impl.tools.mail,
  org.deegree_impl.tools.raster,
  org.deegree_impl.tools.shape,
+ org.kalypso.gml,
  org.kalypso.zml.obslink,
  org.kalypsodeegree.filterencoding,
  org.kalypsodeegree.gml,
@@ -305,9 +311,3 @@ Export-Package: Acme,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper,
  org.w3c.dom.xpath
-Require-Bundle: org.kalypso.jwsdp,
- org.kalypso.commons,
- org.kalypso.contribs.java,
- org.junit,
- org.kalypso.gmlschema;visibility:=reexport
-Eclipse-AutoStart: true

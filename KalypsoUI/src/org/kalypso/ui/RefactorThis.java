@@ -38,56 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.extension;
+package org.kalypso.ui;
 
-import javax.xml.namespace.QName;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 /**
+ * TODO things in this class need to be refactored
+ * 
  * @author doemming
  */
-public abstract class AbstractXSDSimpleTypeHandler implements IMarshallingTypeHandler
+public class RefactorThis
 {
-  private final QName[] m_typeNames;
 
-  private final Class m_valueClass;
-
-  public AbstractXSDSimpleTypeHandler( final Class valueClass, final QName[] typeNames )
+  public static void registerSpecialTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
   {
-    m_valueClass = valueClass;
-    m_typeNames = typeNames;
-  }
+    // TODO move these to extentionpoints...
+    registry.registerTypeHandler( new RangeSetTypeHandler() );
+    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+    registry.registerTypeHandler( new ResourceFileTypeHandler() );
+    registry.registerTypeHandler( new ObservationLinkHandler() );
+    registry.registerTypeHandler( new DiagramTypeHandler() );
+    
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getClassName()
-   */
-  public Class getValueClass( )
-  {
-    return m_valueClass;
   }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
-  public QName[] getTypeName( )
-  {
-    return m_typeNames;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
-   */
-  public String getShortname( )
-  {
-    // TODO remove
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return false;
-  }
-
 }

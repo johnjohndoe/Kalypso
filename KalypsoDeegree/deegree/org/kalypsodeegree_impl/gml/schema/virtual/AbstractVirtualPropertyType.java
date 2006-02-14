@@ -68,7 +68,7 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
    *          of virtual property
    * @pt typehandler of virtual property
    */
-  public AbstractVirtualPropertyType( QName qName, int minOccurs,int maxOccurs, Class valueClass )
+  public AbstractVirtualPropertyType( QName qName, int minOccurs, int maxOccurs, Class valueClass )
   {
     m_name = qName;
     m_minOccurs = minOccurs;
@@ -91,6 +91,15 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   public int getMinOccurs( )
   {
     return m_minOccurs;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isList()
+   */
+  public boolean isList( )
+  {
+
+    return m_maxOccurs > 1 || m_maxOccurs == UNBOUND_OCCURENCY;
   }
 
   /**

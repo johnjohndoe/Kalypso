@@ -202,4 +202,5 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
   {
     return true;
   }
+
 }

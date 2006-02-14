@@ -134,7 +134,6 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
           return JC.createUnmarshaller().unmarshal( child );
         }
       }
-
       return null;
     }
     catch( final JAXBException e )

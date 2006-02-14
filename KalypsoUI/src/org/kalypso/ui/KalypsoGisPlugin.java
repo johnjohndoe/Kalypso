@@ -84,11 +84,8 @@ import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
@@ -97,8 +94,6 @@ import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
@@ -435,6 +430,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       catalog.load( is );
       is.close();
+      final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
+      JavaApiContributionsExtension.registerCatalog( url, serverUrlCatalog );
     }
     catch( final Exception e )
     {
@@ -444,18 +441,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     finally
     {
       IOUtils.closeQuietly( is );
-
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
-
       try
       {
-        final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
-        JavaApiContributionsExtension.registerCatalog( url, serverUrlCatalog );
         final IUrlCatalog theCatalog = new MultiUrlCatalog( JavaApiContributionsExtension.getRegistredCatalogs() );
         final IPath stateLocation = getStateLocation();
         final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
         cacheDir.mkdir();
-
         GMLSchemaCatalog.init( theCatalog, cacheDir );
       }
       catch( Exception e )
@@ -578,14 +570,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      registry.registerTypeHandler( new ObservationLinkHandler() );
-      registry.registerTypeHandler( new DiagramTypeHandler() );
       TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
       TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
-
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-      registry.registerTypeHandler( new ResourceFileTypeHandler() );
+      RefactorThis.registerSpecialTypeHandler( registry );
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
@@ -593,13 +580,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       // register inlines
 
-      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType",
-      // wvqAxis,ZmlInlineTypeHandler.WVQ "WVQ" );
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
-      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
-      // final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
-      // "KCWTLAI" );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
