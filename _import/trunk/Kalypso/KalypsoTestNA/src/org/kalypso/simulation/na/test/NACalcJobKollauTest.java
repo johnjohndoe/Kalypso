@@ -1,30 +1,3 @@
-package org.kalypso.simulation.na.test;
-
-import java.io.File;
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.convert.namodel.NaModelCalcJob;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.NaModelInnerCalcJob;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -65,11 +38,38 @@ import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.simulation.na.test;
+
+import java.io.File;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
+import org.kalypso.convert.namodel.NaModelCalcJob;
+import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.NaModelInnerCalcJob;
+import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+
 
 public class NACalcJobKollauTest extends TestCase
 {
 
-  public void testKollau() throws TypeRegistryException, CalcJobServiceException
+  public void testKollau() throws TypeRegistryException, SimulationException
   {
 
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
@@ -88,7 +88,7 @@ public class NACalcJobKollauTest extends TestCase
       kollau();
       //      kollauOptimize();
     }
-    catch( CalcJobServiceException e )
+    catch( SimulationException e )
     {
       e.printStackTrace();
       throw e;
@@ -102,11 +102,11 @@ public class NACalcJobKollauTest extends TestCase
     return file;
   }
 
-  public void weisseElster() throws CalcJobServiceException
+  public void weisseElster() throws SimulationException
   {
     final File tmp = getTmpDir();
 
-    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
@@ -134,18 +134,18 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = createResultEater();
-    final ICalcMonitor monitor = createMonitor();
+    final ISimulationResultEater resultEater = createResultEater();
+    final ISimulationMonitor monitor = createMonitor();
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
     job.run( tmp, dataProvider, resultEater, monitor );
     assertTrue( job.isSucceeded() );
   }
 
-  public void weisseElsterOptimize() throws CalcJobServiceException
+  public void weisseElsterOptimize() throws SimulationException
   {
     final File tmp = getTmpDir();
 
-    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
@@ -175,18 +175,18 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = createResultEater();
-    final ICalcMonitor monitor = createMonitor();
-    final ICalcJob job = new NaModelCalcJob();
+    final ISimulationResultEater resultEater = createResultEater();
+    final ISimulationMonitor monitor = createMonitor();
+    final ISimulation job = new NaModelCalcJob();
     job.run( tmp, dataProvider, resultEater, monitor );
   }
 
-  public void kollau() throws CalcJobServiceException
+  public void kollau() throws SimulationException
   {
     final File tmp = getTmpDir();
     System.out.println( "Berechnungsverzeichnis: " + tmp.getPath() );
 
-    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
@@ -217,20 +217,20 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = createResultEater();
-    final ICalcMonitor monitor = createMonitor();
+    final ISimulationResultEater resultEater = createResultEater();
+    final ISimulationMonitor monitor = createMonitor();
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
     job.run( tmp, dataProvider, resultEater, monitor );
     assertTrue( job.isSucceeded() );
   }
 
-  public void kollauOptimize() throws CalcJobServiceException
+  public void kollauOptimize() throws SimulationException
   {
 
     final NaModelCalcJob job = new NaModelCalcJob();
     final File tmp = getTmpDir();
 
-    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
@@ -260,15 +260,15 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = createResultEater();
-    final ICalcMonitor monitor = createMonitor();
+    final ISimulationResultEater resultEater = createResultEater();
+    final ISimulationMonitor monitor = createMonitor();
 
     job.run( tmp, dataProvider, resultEater, monitor );
   }
 
-  private ICalcResultEater createResultEater()
+  private ISimulationResultEater createResultEater()
   {
-    return new ICalcResultEater()
+    return new ISimulationResultEater()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
@@ -281,9 +281,9 @@ public class NACalcJobKollauTest extends TestCase
     };
   }
 
-  private ICalcMonitor createMonitor()
+  private ISimulationMonitor createMonitor()
   {
-    return new ICalcMonitor()
+    return new ISimulationMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()

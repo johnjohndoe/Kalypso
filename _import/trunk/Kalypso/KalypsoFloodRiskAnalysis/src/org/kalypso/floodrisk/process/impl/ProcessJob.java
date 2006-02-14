@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.services.proxy.ICalculationService;
+import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -140,7 +141,7 @@ public class ProcessJob extends Job
   {
     monitor.beginTask( "Berechnung wird gestartet", 100 );
 
-    ICalculationService calcService = findCalulationServiceForType( m_modelData.getTypeID() );
+    ISimulationService calcService = findCalulationServiceForType( m_modelData.getTypeID() );
     IStatus runStatus = null;
     if( m_extension.getType().equals( "local" ) )
     {
@@ -167,7 +168,7 @@ public class ProcessJob extends Job
    * @throws ServiceException
    *  
    */
-  private ICalculationService findCalulationServiceForType( final String typeID ) throws ServiceException
+  private ISimulationService findCalulationServiceForType( final String typeID ) throws ServiceException
   {
     KalypsoSimulationCorePlugin.getDefault();
     

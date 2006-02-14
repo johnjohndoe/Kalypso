@@ -15,3 +15,11 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.eclipse.ui,
  org.junit,
  org.kalypso.simulation.core
+Export-Package: org.kalypso,
+ org.kalypso.gml,
+ org.kalypso.gmlschema,
+ org.kalypso.test,
+ org.kalypso.test.diff,
+ org.kalypso.test.gml.serializer,
+ org.kalypso.test.util,
+ org.kalypso.tools.ktest
