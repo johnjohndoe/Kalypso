@@ -60,9 +60,10 @@ public class KalypsoWebBrowserView extends ViewPart implements
 	};
 
 	public KalypsoWebBrowserView() {
-	};
+	}
 
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
+	@Override
+  public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		m_memento = memento;
 	}
@@ -77,7 +78,8 @@ public class KalypsoWebBrowserView extends ViewPart implements
 		viewer.getBrowser().removeLocationListener(locationListener);
 	}
 
-	public void createPartControl(Composite parent) {
+	@Override
+  public void createPartControl(Composite parent) {
 		viewer = new BrowserViewer(parent, SWT.NONE);// BrowserViewer.LOCATION_BAR
 		viewer.setContainer(this);
 		addBrowserListener();
@@ -112,7 +114,8 @@ public class KalypsoWebBrowserView extends ViewPart implements
 		}
 	}
 
-	public void dispose() {
+	@Override
+  public void dispose() {
 		removeLocationListener();
 		if (viewer != null)
 			viewer.dispose();
@@ -124,7 +127,8 @@ public class KalypsoWebBrowserView extends ViewPart implements
 			viewer.setURL(url);
 	}
 
-	public void setFocus() {
+	@Override
+  public void setFocus() {
 		viewer.setFocus();
 	}
 
@@ -169,7 +173,8 @@ public class KalypsoWebBrowserView extends ViewPart implements
 		return false;
 	}
 
-	public void saveState(IMemento memento) {
+	@Override
+  public void saveState(IMemento memento) {
 		if (viewer == null) {
 			if (m_memento != null) // Keep the old state;
 				memento.putMemento(m_memento);
