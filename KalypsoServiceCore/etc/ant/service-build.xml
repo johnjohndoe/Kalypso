@@ -53,6 +53,8 @@
 
 		<mkdir dir="${build.war.lib}" />
 		<mkdir dir="${build.war.classes}" />
+		
+		<mkdir dir="${build.ws.srcproxy}"/>
 	</target>
 
 	<target name="clean">

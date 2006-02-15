@@ -7,7 +7,6 @@ Bundle-Localization: plugin
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.jwsdp,
- org.kalypso.bsf.core,
  org.kalypso.deegree,
  org.kalypso.simulation.ui,
  org.kalypso.ui,
