@@ -10,8 +10,6 @@ Export-Package: org.kalypso.optimize,
  org.kalypso.optimize.errorfunctions,
  org.kalypso.optimize.resource,
  org.kalypso.optimize.transform,
- org.kalypso.optimizer,
- org.w3._2001.xmlschema
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.simulation.core
