@@ -14,5 +14,6 @@ Export-Package: org.kalypso.dss,
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.eclipse.ui.browser
 Eclipse-AutoStart: true

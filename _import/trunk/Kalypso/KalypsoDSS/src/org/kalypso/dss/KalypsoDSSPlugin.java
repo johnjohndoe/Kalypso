@@ -9,6 +9,11 @@ import java.util.*;
  */
 public class KalypsoDSSPlugin extends AbstractUIPlugin
 {
+
+  public static final String PLUGIN_ID = "org.kalypso.dss";
+  
+  public static final String START_URL = "file://d:/temp/perspectives/DssPlanerClient.htm";
+  
   //The shared instance.
   private static KalypsoDSSPlugin THE_PLUGIN;
 

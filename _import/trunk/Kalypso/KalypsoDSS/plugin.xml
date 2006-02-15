@@ -2,22 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension
-         id="org.kalypso.dss.popupmenu"
-         name="popupmenu"
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            objectClass="org.kalypsodeegree.model.feature.Feature"
-            id="org.kalypso.objectclass.feature">
-         <action
-               label="NeueS Maßnahme..."
-               tooltip="Hinzugfügen einer Maßnahme"
-               class="org.kalypso.dss.actiondelegates.AddGeometrieToMeasureActionDelegate"
-               style="push"
-               id="org.kalypso.objectclass.dss.measure.create"/>
-      </objectContribution>
-   </extension>
    <extension
          id="org.kalypso.dss.extension.catalog"
          name="UrlCatalog"
@@ -25,6 +9,61 @@
       <catalog
             class="org.kalypso.dss.DSSUrlCatalog"
             id="org.kalypso.dss.urlcatalog"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="KalypsoDSSPlanerClient.actionSet"
+            label="Kalypso Config"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="Kalypso Config &amp;Menu">
+            <separator name="sampleGroup"/>
+         </menu>
+         <action
+               class="org.kalypso.dss.planerclient.actions.SavePrespectivePageAction"
+               icon="icons/sample.gif"
+               id="org.kalypso.dss.planerclient.actions.SavePerspectivePageAction"
+               label="&amp;Save Perspective"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Save this Workbenchepage as Perspective (incl. all open Editors and Views)"/>
+         <action
+               class="org.kalypso.dss.planerclient.actions.RestorePrespectivePageAction"
+               icon="icons/sample.gif"
+               id="org.kalypso.dss.planerclient.actions.RestorePerspectivePageAction"
+               label="&amp;Restore Perspective"
+               menubarPath="sampleMenu/sampleGroup"
+               style="push"
+               toolbarPath="sampleGroup"
+               tooltip="Restore Workbenchpage from a file (incl. all open Editors and Views)"/>
+      </actionSet>   
+   </extension>
+   <extension
+   		 id="org.kalypso.dss.planerclient.perspectives"
+         name="Kalypso Planer-Client"
+         point="org.eclipse.ui.perspectives">
+       <perspective
+            class="org.kalypso.dss.planerclient.perspectives.KalypsoDssPlanerClientPhaseOnePerspectiveFactory"
+            fixed="true"
+            icon="icons/sample.gif"
+            id="org.kalypso.dss.planerclient.perspectiv.phase.one"
+            name="Kalypso Planer-Client Phase 1"/>
+      <perspective
+            class="org.kalypso.dss.planerclient.perspectives.KalypsoDssPlanerPhaseTwoClientPerspectiveFactory"
+            fixed="false"
+            icon="icons/sample.gif"
+            id="org.kalypso.dss.planerclient.perspectiv.phase.two"
+            name="Kalypso Planer-Client Phase 2"/>  
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.dss.planerclient.browser.KalypsoWebBrowserView"
+            id="org.kalypso.dss.planerclient.view.browser"
+            name="Kalypso Browser"/>   
    </extension>
 
 </plugin>
