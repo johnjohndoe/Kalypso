@@ -52,16 +52,17 @@ import java.util.TreeMap;
  */
 public class FunctionMultiError extends IErrorFunktion
 {
-  private final List m_functions;
+  private final List <IErrorFunktion> m_functions;
 
   private boolean m_normalized = false;
 
   public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare )
   {
     super( measuredTS, startCompare, endCompare );
-    m_functions = new ArrayList();
+    m_functions = new ArrayList<IErrorFunktion>();
   }
 
+  @Override
   public double calculateError( TreeMap calcedTS )
   {
     // first time normalize offsets
@@ -80,7 +81,7 @@ public class FunctionMultiError extends IErrorFunktion
     Arrays.fill( valid, true );
     for( int i = 0; i < m_functions.size(); i++ )
     {
-      final IErrorFunktion function = (IErrorFunktion)m_functions.get( i );
+      final IErrorFunktion function = m_functions.get( i );
       final double calculateError = function.calculateError( calcedTS );
       if( !Double.isInfinite( calculateError ) && !Double.isNaN( calculateError ) )
         error[i] = calculateError;
@@ -96,7 +97,7 @@ public class FunctionMultiError extends IErrorFunktion
     final double maxError = org.kalypso.contribs.java.util.Arrays.findMax( error );
     for( int i = 0; i < m_functions.size(); i++ )
     {
-      final IErrorFunktion function = (IErrorFunktion)m_functions.get( i );
+      final IErrorFunktion function = m_functions.get( i );
       if( valid[i] )
         function.setNormalizeOffset( maxError - error[i] );
       else
