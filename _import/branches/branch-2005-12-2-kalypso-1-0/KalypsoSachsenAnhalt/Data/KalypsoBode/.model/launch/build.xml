@@ -17,10 +17,11 @@
 		<copy todir="${calc.dir}">
 			<fileset dir="${modell.template.dir}">
 				<include name="modell.gml" />
-				<include name="Info_Rechenvariante.gft" />
 				<include name="**/*.gmt" />		<!-- Kartenansichten -->
 				<include name="**/*.ott" />		<!-- Zeitreihen-Tabellen -->
 				<include name="**/*.gtt" />		<!-- GIS-Tabellen (Parameteransichten) -->
+				<include name="**/*.gft" />
+				<include name="**/*.odt" />
 			</fileset>
 		</copy>
 

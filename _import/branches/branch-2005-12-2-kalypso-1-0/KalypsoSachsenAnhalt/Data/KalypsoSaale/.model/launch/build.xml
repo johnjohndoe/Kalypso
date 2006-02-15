@@ -68,8 +68,11 @@
 		<copy todir="${calc.dir}">
 			<fileset dir="${modell.template.dir}">
 				<include name="modell.gml" />
+				<include name="**/*.gft" />
 				<include name="**/*.gmt" />
 				<include name="**/*.gtt" />
+				<include name="**/*.ott" />
+				<include name="**/*.odt" />
 			</fileset>
 		</copy>
 	</target>

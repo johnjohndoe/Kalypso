@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<layer xlink:href=".calculation" featurePath="" linktype="gml" id="blubb"/>
-	<view typename="TubigControl" style="SWT.NONE">
+	<view typename="SaaleControl" style="SWT.NONE">
 		<gridData grabExcessHorizontalSpace="false"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
 		
@@ -38,17 +38,10 @@
 	</view>	
 	<view typename="Control" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
-		<label property="startsimulation" style="0"/>
-		<text property="startsimulation" style="2048" editable="false">
-			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
-		</text>
 		<label property="startforecast" style="0"/>
 		<text property="startforecast" style="2048" editable="false">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
-		<subcomposite property="BatchIDCollectionAssociation" style="SWT.NONE">
-			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
-		</subcomposite>
 	</view>
 	<view typename="Metadata" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
@@ -70,29 +63,5 @@
 		<text property="calctime" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
-	</view>
-	<view typename="BatchIDCollection" style="SWT.NONE">
-		<gridLayout numColumns="1" horizontalSpacing="10"/>
-		<subcomposite property="BatchIDAssociation" style="SWT.NONE">
-			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
-		</subcomposite>
-	</view>
-	<view typename="BatchID" style="SWT.NONE">
- 		<gridLayout numColumns="1" horizontalSpacing="10"/>
-        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="RUN1.BAT">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </radiobutton>
-        <radiobutton text="Q-Prognose oh. Speicher" style="SWT.NONE" tooltip="Abfluss-Prognose oberhalb Speicher" property="id" valueToSet="run2.bat">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </radiobutton>
-        <radiobutton text="Speicherrechnung" style="SWT.NONE" tooltip="Speicherrechnung bei Vorgabe der Abgaben" property="id" valueToSet="run3.bat">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </radiobutton>
-        <radiobutton text="TS-Steuerung ohne Optim." style="SWT.NONE" tooltip="TS-Steuerung ohne Optimierung" property="id" valueToSet="run4.bat">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </radiobutton>
-        <radiobutton text="TS-Steuerung mit Optim." style="SWT.NONE" tooltip="TS-Steuerung mit Optimierung" property="id" valueToSet="run5.bat">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </radiobutton>
 	</view>
 </featuretemplate>
