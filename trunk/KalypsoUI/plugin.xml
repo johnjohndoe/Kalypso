@@ -503,7 +503,7 @@
          point="org.eclipse.ui.popupMenus">
        <objectContribution
             objectClass="org.kalypsodeegree.model.feature.Feature"
-            adaptable="true"
+            adaptable="false"
             id="org.kalypso.objectclass.feature">
          <action
                enablesFor="1"
