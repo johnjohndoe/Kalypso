@@ -136,7 +136,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
           {
             Job createImageJob = new Job( "Create Image" )
             {
-
+              @Override
               protected IStatus run( IProgressMonitor monitor )
               {
                 return createImage( (GisTemplateFeatureTheme)activeTheme, monitor );

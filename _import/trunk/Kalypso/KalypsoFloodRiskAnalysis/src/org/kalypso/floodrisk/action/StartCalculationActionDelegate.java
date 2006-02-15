@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.action;
 
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -50,15 +50,14 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.floodrisk.KalypsoFloodRiskAnalysisExtensions;
 import org.kalypso.floodrisk.process.ProcessExtension;
-import org.kalypso.floodrisk.process.ProcessExtensionReader;
 import org.kalypso.floodrisk.wizard.ChooseProcessDialog;
 import org.kalypso.floodrisk.wizard.ProcessInputWizard;
 
 /**
  * StartCalculationActionDelegate
  * <p>
- * 
  * created by
  * 
  * @author Nadja Peiler (13.05.2005)
@@ -68,16 +67,14 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
   private IWorkbenchWindow m_window;
 
   /**
-   * 
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  //nothing
+    // nothing
   }
 
   /**
-   * 
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
   public void init( IWorkbenchWindow window )
@@ -92,45 +89,32 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void run( IAction action )
   {
-    //System.out.println( "Run..." );
-    try
+    if( ProjectUtilities.getSelectedProjects().length > 0 )
     {
-      if( ProjectUtilities.getSelectedProjects().length > 0 )
+      final IProject firstSelectedProject = ProjectUtilities.getSelectedProjects()[0];
+      final ProcessExtension[] processes = KalypsoFloodRiskAnalysisExtensions.retrieveExtensions();
+      ChooseProcessDialog dialog = new ChooseProcessDialog( m_window.getShell(), processes );
+      int open = dialog.open();
+      if( open == Window.OK )
       {
-        final IProject firstSelectedProject = ProjectUtilities.getSelectedProjects()[0];
-        final ProcessExtension[] processes = ProcessExtensionReader.retrieveExtensions();
-        ChooseProcessDialog dialog = new ChooseProcessDialog( m_window.getShell(), processes );
-        int open = dialog.open();
-        if( open == Window.OK )
-        {
-          ProcessInputWizard processInputWizard = new ProcessInputWizard( firstSelectedProject, dialog.getProcesses() );
-          final WizardDialog wizardDialog = new WizardDialog( m_window.getShell(), processInputWizard );
-          wizardDialog.open();
-        }
-        else
-        {
-          //nothing
-        }
-      }
-      else
-      {
-        MessageDialog.openError( m_window.getShell(), "Error", "Bitte Projekt auswählen!" );
+        final ProcessInputWizard processInputWizard = new ProcessInputWizard( firstSelectedProject, dialog.getProcesses() );
+        final WizardDialog wizardDialog = new WizardDialog( m_window.getShell(), processInputWizard );
+        wizardDialog.open();
       }
     }
-    catch( CoreException e )
+    else
     {
-      e.printStackTrace();
+      MessageDialog.openError( m_window.getShell(), "Error", "Bitte Projekt auswählen!" );
     }
   }
 
   /**
-   * 
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-  //nothing
+    // nothing
   }
 
 }

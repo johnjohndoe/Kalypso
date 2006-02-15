@@ -2,13 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
+     <extension-point id="AddProcess" name="AddProcess" schema="schema/AddProcess.exsd"/>
 
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="%KalypsoFloodRiskAnalysis.Start.label"
-            visible="false"
+            visible="true"
             id="KalypsoFloodRiskAnalysis.Start">
          <menu
                label="%KalypsoFloodRiskAnalysis.startMenu.label"
@@ -26,24 +26,20 @@
    <extension
          point="org.kalypso.floodrisk.AddProcess">
       <KalypsoProcess
-            type="local"
-            class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
             name="%RasterizeLanduseJob.name"
+            simulationID="RasterizeLanduseJob"
             id="RasterizeLanduseJob"/>
       <KalypsoProcess
-            type="local"
-            class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
             name="%CalculateDamageJob.name"
+            simulationID="CalculateDamageJob"
             id="CalculateDamageJob"/>
       <KalypsoProcess
-            type="local"
-            class="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
             name="%CalculateFloodRiskJob.name"
+            simulationID="CalculateFloodRiskJob"
             id="CalculateFloodRiskJob"/>
       <KalypsoProcess
-            type="local"
-            class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
             name="%CalculateStatisticJob.name"
+            simulationID="CalculateStatisticJob"
             id="CalculateStatisticJob"/>
    </extension>
 
@@ -52,6 +48,21 @@
       <filter
             selected="false"
             pattern="*.dat"/>
+   </extension>
+   <extension
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
+            simulationClass="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
+            typeID="RasterizeLanduseJob"/>
+      <simulation
+            simulationClass="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
+            typeID="CalculateDamageJob"/>
+      <simulation
+            simulationClass="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
+            typeID="CalculateFloodRiskJob"/>
+      <simulation
+            simulationClass="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
+            typeID="CalculateStatisticJob"/>
    </extension>
 
 </plugin>

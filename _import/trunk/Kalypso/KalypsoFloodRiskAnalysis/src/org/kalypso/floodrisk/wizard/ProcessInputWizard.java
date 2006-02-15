@@ -48,10 +48,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -61,9 +61,7 @@ import org.kalypso.model.xml.ObjectFactory;
 /**
  * ProcessInputWizard
  * <p>
- * Wizard for getting the inputdata files (modeldata.xml)
- * 
- * created by
+ * Wizard for getting the inputdata files (modeldata.xml) created by
  * 
  * @author Nadja Peiler (18.05.2005)
  */
@@ -74,7 +72,6 @@ public class ProcessInputWizard extends Wizard
   private IProject m_project;
 
   private ProcessExtension[] m_processes;
-
 
   /**
    * Constructor
@@ -96,7 +93,7 @@ public class ProcessInputWizard extends Wizard
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
-  public void addPages()
+  public void addPages( )
   {
     super.addPages();
 
@@ -106,8 +103,7 @@ public class ProcessInputWizard extends Wizard
       // calculated, need input
       if( m_processes[i].getState() )
       {
-        ProcessInputWizardPage page = new ProcessInputWizardPage( m_processes[i].getName(), m_processes[i].getName(),
-            null );
+        ProcessInputWizardPage page = new ProcessInputWizardPage( m_processes[i].getName(), m_processes[i].getName(), null );
         page.setProcessExtension( m_processes[i] );
         page.setProject( m_project );
         addPage( page );
@@ -116,31 +112,30 @@ public class ProcessInputWizard extends Wizard
   }
 
   /**
-   * 
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
   @Override
-  public boolean performFinish()
+  public boolean performFinish( )
   {
-
     try
     {
-      final ILock lock = Platform.getJobManager().newLock();
-      for( int i = 0; i < m_processes.length; i++ )
+      // all jobs should run one after another
+      final ISchedulingRule rule = new MutexRule();
+      for( final ProcessExtension processExtension : m_processes )
       {
-        if( m_processes[i].getState() )
+        if( processExtension.getState() )
         {
-          //read ModelData
-          final Modeldata modelData = readModelData( m_processes[i].getModelDataPath() );
-          //check if typeID in modelData equals typeID of process
-          if( !m_processes[i].getId().equals( modelData.getTypeID() ) )
+          // read ModelData
+          final Modeldata modelData = readModelData( processExtension.getModelDataPath() );
+          // check if typeID in modelData equals typeID of process
+          if( !processExtension.getId().equals( modelData.getTypeID() ) )
           {
-            throw new CoreException( StatusUtilities.createErrorStatus( "TypeId of modelData (" + modelData.getTypeID()
-                + ") does not fit to typeID of process (" + m_processes[i].getId() + ")! Check modelData!" ) );
+            throw new CoreException( StatusUtilities.createErrorStatus( "TypeId of modelData (" + modelData.getTypeID() + ") does not fit to typeID of process (" + processExtension.getId()
+                + ")! Check modelData!" ) );
           }
-          //create job
-          ProcessJob processJob = new ProcessJob( modelData, m_project, m_processes[i], lock );
-          //run job
+          // create job
+          final ProcessJob processJob = new ProcessJob( modelData, m_project );
+          processJob.setRule( rule );
           processJob.schedule();
         }
       }
@@ -166,7 +161,7 @@ public class ProcessInputWizard extends Wizard
       final IFile file = m_project.getFile( modelDataPath.removeFirstSegments( 1 ) );
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
-      return (Modeldata)unmarshaller.unmarshal( file.getContents() );
+      return (Modeldata) unmarshaller.unmarshal( file.getContents() );
     }
     catch( final JAXBException e )
     {

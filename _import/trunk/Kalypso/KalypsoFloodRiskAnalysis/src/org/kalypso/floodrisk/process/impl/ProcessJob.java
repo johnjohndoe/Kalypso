@@ -40,22 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.process.impl;
 
-import java.rmi.RemoteException;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.rpc.ServiceException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.model.xml.Modeldata;
-import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
@@ -64,7 +55,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * ProcessJob
  * <p>
- * 
  * created by
  * 
  * @author Nadja Peiler (19.05.2005)
@@ -74,10 +64,6 @@ public class ProcessJob extends Job
   private Modeldata m_modelData;
 
   private IProject m_project;
-
-  private ILock m_lock;
-
-  private ProcessExtension m_extension;
 
   /**
    * Constructor
@@ -89,42 +75,28 @@ public class ProcessJob extends Job
    *          information of process
    * @param lock
    */
-  public ProcessJob( final Modeldata modelData, final IProject project, final ProcessExtension extension,
-      final ILock lock )
+  public ProcessJob( final Modeldata modelData, final IProject project )
   {
     super( "Berechne: " + modelData.getTypeID() );
     m_modelData = modelData;
     m_project = project;
-    m_extension = extension;
-    m_lock = lock;
     setUser( true );
   }
 
   /**
-   * 
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus run( IProgressMonitor monitor )
+  public IStatus run( final IProgressMonitor monitor )
   {
     try
     {
-      m_lock.acquire();
       return runCalculation( monitor );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       return e.getStatus();
-    }
-    catch( ServiceException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "ServiceException", null );
-    }
-    finally
-    {
-      m_lock.release();
     }
   }
 
@@ -135,65 +107,22 @@ public class ProcessJob extends Job
    * @return Status of the calculation
    * @throws CoreException
    * @throws ServiceException
-   *  
    */
-  private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException, ServiceException
+  private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnung wird gestartet", 100 );
 
-    ISimulationService calcService = findCalulationServiceForType( m_modelData.getTypeID() );
+    final ISimulationService simulationService = KalypsoSimulationCorePlugin.findCalculationServiceForType( m_modelData.getTypeID() );
+
     IStatus runStatus = null;
-    if( m_extension.getType().equals( "local" ) )
-    {
-      final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler( m_modelData, calcService );
-      runStatus = cjHandler.runJob( m_project, monitor );
-    }
-    else
-    {
-      final CalcJobHandler cjHandler = new CalcJobHandler( m_modelData, calcService );
-      //TODO: get calculationFolder
-      runStatus = cjHandler.runJob( null, monitor );
-    }
+
+    final CalcJobHandler cjHandler = new CalcJobHandler( m_modelData, simulationService );
+    runStatus = cjHandler.runJob( m_project, monitor );
 
     if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
       return runStatus;
 
     return new Status( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Berechnung abgeschlossen.", null );
-  }
-
-  /**
-   * 
-   * @param typeID
-   * @return CalculationService for given typeID of process
-   * @throws ServiceException
-   *  
-   */
-  private ISimulationService findCalulationServiceForType( final String typeID ) throws ServiceException
-  {
-    KalypsoSimulationCorePlugin.getDefault();
-    
-    final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
-    for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
-    {
-      final ICalculationService proxy = (ICalculationService)iter.next();
-      try
-      {
-        final String[] jobTypes = proxy.getJobTypes();
-        for( int i = 0; i < jobTypes.length; i++ )
-        {
-          if( typeID.equals( jobTypes[i] ) )
-            return proxy;
-        }
-      }
-      catch( final RemoteException e )
-      {
-        // ignore, this service is invalid
-        e.printStackTrace();
-      }
-    }
-
-    throw new ServiceException( "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen: "
-        + typeID );
   }
 
 }
