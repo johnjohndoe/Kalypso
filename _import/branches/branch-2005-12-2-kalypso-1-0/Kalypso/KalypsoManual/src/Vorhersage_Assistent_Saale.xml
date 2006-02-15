@@ -37,7 +37,7 @@
     <para>Der Eintrag zum <guilabel>Szenario</guilabel>
     (<quote>Regelbetrieb</quote> oder <quote>Simulationsbetrieb</quote>) dient
     zur Information darüber, welchem Szenario die Rechenvariante zugeordnet
-    ist (siehe <xref linkend="SA_Assi_allg_00_Start" />). Dieser Eintrag ist
+    ist (siehe <xref linkend="kalypso_testbetrieb" />). Dieser Eintrag ist
     unveränderlich und spiegelt den bei der Erstellung gewählten Betriebsmodus
     wider.</para>
 

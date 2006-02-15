@@ -186,20 +186,20 @@
 
     <para>Prinzipiell ist die Bedienung der Anwendung im Simulationsbetrieb
     identisch zur Anwendung im Regelbetrieb. Der Sinn des Simulationsbetriebes
-    besteht letzendlich hauptäschlich darin, zu verhindern, dass aufgrund der
+    besteht letzendlich hauptsächlich darin, zu verhindern, dass aufgrund der
     Arbeiten am System reale Hochwasserwarnungen produziert werden.</para>
 
     <para>Der aktuelle Betriebsmodus der Anwendung (Regelbetrieb oder
     Simulationsbetrieb) ist zunächst nur daran zu erkennen, dass dieser in der
     Statusleiste angezeigt wird. Konkret bewirkt der Simulationsbetrieb, dass
-    Neuangelegte Rechenvarianten (vergleiche <xref
+    neuangelegte Rechenvarianten (vergleiche <xref
     linkend="definition_calccase" />) als Varianten des Simulationsbetriebs
     (<quote>Simulationsvarianten</quote>) markiert werden. Abgesehen von der
     folgenden Auflistung werden diese Rechenvarianten analog zu
     Rechenvarianten des Regelbetriebs behandelt. Insbesondere bleibt die
-    Markierung als Testvariante erhalten, so dass auch zu einem späteren
-    Aufruf der Rechenvariante im Normalebetrieb keine Verwechslung geschehen
-    kann.</para>
+    Markierung als Simulationsvariante erhalten, so dass auch zu einem
+    späteren Aufruf der Rechenvariante im Regelbetrieb keine Verwechslung
+    geschehen kann.</para>
 
     <para>In den folgenden Punkten unterscheiden sich die Rechenvarianten des
     Regelbetriebs von den <quote>normalen</quote> Rechenvarianten:</para>
@@ -236,8 +236,6 @@
     </formalpara>
 
     <para>Mehr Details zu den Auswirkungen des Simulationsbetriebs finden sich
-    auch in den entsprechenden Abschnitten der folgenden Kapitel. Insbesondere
-    wird in <xref linkend="SA_Assi_allg_00_Start" /> noch mal auf die
-    Unterschiede den Vorhersageassistenten betreffend eingegangen.</para>
+    auch in den entsprechenden Abschnitten der folgenden Kapitel.</para>
   </section>
 </chapter>

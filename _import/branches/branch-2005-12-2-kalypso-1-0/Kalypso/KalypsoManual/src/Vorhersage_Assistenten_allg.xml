@@ -96,7 +96,10 @@
   Benutzer geändert bzw. müssen ergänzt werden. Dies wird deutlich erleichtert
   durch die in <xref linkend="tabellen_bearbeiten" /> beschriebenen Funktionen
   zur Tabellenbearbeitung. Es können aber keine Datenpunkte hinzugefügt bzw.
-  Datumsänderungen vorgenommen werden.</para>
+  Datumsänderungen vorgenommen werden, da die Modelle mit Stundenwerten
+  arbeiten. Datenänderungen werden automatisch gespeichert wenn Berechnungen
+  gestartet werden bzw. der Assistent über den Knopf
+  <guilabel>Beenden</guilabel> beendet wird.</para>
 
   <section>
     <title>Programm-Start</title>
@@ -242,6 +245,9 @@
       </menuchoice> aus dem Expertenmodus heraus aufgerufen werden.</para>
 
     <para>Die weiteren Seiten des Assistenten sind modellabhängig und werden
-    im Folgenden einzeln beschrieben.</para>
+    im Folgenden einzeln beschrieben. Informationen über den jeweiligen
+    Modellaufbau sowie die im Modell angewandten theoretischen Grundlagen sind
+    den bei der HVZ vorliegenden Dokumentationen der ursprünglichen Modelle zu
+    entnehmen.</para>
   </section>
 </section>
