@@ -107,16 +107,25 @@
 
 	<target name="build-proxy" depends="prepare">
 		<echo message="Builds the most common project (needed for dependency from services projects)" />
+		<!-- TODO:
+This is only necessary, because we cannot access the classpath from the calling plugin
+from within eclipse. Maybe there is a soluation for this?
+-->
 		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
 
-		<property name="tmpGenerateDir" value="${java.io.tmpdir}/${project-name}_wsimport"/>
-		<mkdir dir="${tmpGenerateDir}"/>
-		<mkdir dir="${tmpGenerateDir}/wsgen/class"/>
-		<mkdir dir="${tmpGenerateDir}/wsgen/src"/>
-		<mkdir dir="${tmpGenerateDir}/wsimport/class"/>
+		<property name="tmpGenerateDir" value="${java.io.tmpdir}/${project-name}_wsimport" />
+		<mkdir dir="${tmpGenerateDir}" />
+		<mkdir dir="${tmpGenerateDir}/wsgen/class" />
+		<mkdir dir="${tmpGenerateDir}/wsgen/src" />
+		<mkdir dir="${tmpGenerateDir}/wsimport/class" />
 
 		<echo message="Generate wsdl file from service interface" />
+
 		<wsgen genwsdl="true" destdir="${tmpGenerateDir}/wsgen/class" sourcedestdir="${tmpGenerateDir}/wsgen/src" resourcedestdir="${build.ws.gen}" sei="${interface.impl}" verbose="${flag-verbose}" servicename="{${wsdl.namespace}}${wsdl.name}">
+			<!-- TODO:
+ This is only necessary, because we cannot access the classpath from the calling plugin
+ from within eclipse. Maybe there is a soluation for this?
+-->
 			<classpath refid="jaxws.classpath" />
 			<classpath refid="deploy.classpath" />
 			<classpath path="${project.bin}" />
@@ -126,8 +135,8 @@
 		<wsimport debug="${flag-debug}" verbose="${flag-verbose}" keep="true" destdir="${tmpGenerateDir}/wsimport/class" sourcedestdir="${build.ws.srcproxy}" wsdl="${build.ws.gen}/${wsdl.name}.wsdl" />
 
 		<delete includeemptydirs="true">
-			<fileset dir="${tmpGenerateDir}" includes="**/*"/>
+			<fileset dir="${tmpGenerateDir}" includes="**/*" />
 		</delete>
 	</target>
-	
+
 </project>
