@@ -15,4 +15,5 @@ Require-Bundle: org.kalypso.test,
  org.kalypso.commons,
  org.kalypso.NACalcJob,
  org.kalypso.ant,
- org.kalypso.simulation.core
+ org.kalypso.simulation.core,
+ org.kalypso.dwd
