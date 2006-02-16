@@ -4,6 +4,8 @@
 		 Hier passiert nichts, diese Datei ist dazu da, von den spezial Plugins ueberschrieben zu werden
 	-->
 
+    <!-- Einkommentieren, damit KEIN vendor mti ausgegeben wird, kommentieren, damit ALLE vendoren
+    mit ausgegeben werden-->
 	<xsl:param name="profile.vendor" select="'-none-'"/>
 
 </xsl:stylesheet>
