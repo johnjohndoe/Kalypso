@@ -43,6 +43,7 @@ package org.kalypso.ui.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 
 /**
  * The perspective for the Kalypso Modeler.
@@ -70,8 +71,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
 
     setContentsOfShowViewMenu( layout );
 
-    layout.addActionSet( "org.kalypso.actionSet.model" );
-    layout.addActionSet( "KalypsoFloodRiskAnalysis.Start" );
+    layout.addActionSet( IKalypsoSimulationUIConstants.ID_SIMULATION_ACTIONSET );
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
