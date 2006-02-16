@@ -92,9 +92,10 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
     }
     else
     {
-      final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
+//      final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
+//          nodeFE == m_singleResultNode ) );
+      nodeFE.setProperty( "generateResult", new Boolean(
           nodeFE == m_singleResultNode ) );
-      nodeFE.setProperty( createResultProp );
       if( m_singleResultNode == nodeFE )
         m_rootNetElements.add( netElement );
     }

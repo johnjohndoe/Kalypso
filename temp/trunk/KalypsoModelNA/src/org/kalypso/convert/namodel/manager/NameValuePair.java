@@ -38,35 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
-package org.kalypso.convert.namodel.schema;
-
-import java.util.Map;
-
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+package org.kalypso.convert.namodel.manager;
 
 /**
- * class UrlCatalogNA
- * 
- * provides the schemas for kalypso rainfall runoff simulation
- * 
- * created by
- * 
- * @author doemming (08.05.2005)
+ * @author doemming
  */
-public class UrlCatalogNA extends AbstractUrlCatalog
+public class NameValuePair
 {
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
-  protected void fillCatalog( final Class myClass, final Map catalog )
+  private final String m_name;
+
+  private final Object m_value;
+
+  public NameValuePair( String name, Object value )
   {
-    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.4/control.xsd" ) );
-    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v0.5/namodell.xsd" ) );
-    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "v0.5/nacontrol.xsd" ) );
-    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.5/hydrotop.xsd" ) );
-    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "v0.5/parameter.xsd" ) );
-    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "v0.2/ombrometer.xsd" ) );
+    m_name = name;
+    m_value = value;
   }
+
+  public String getName( )
+  {
+    return m_name;
+
+  }
+
+  public Object getValue( )
+  {
+    return m_value;
+
+  }
+
 }

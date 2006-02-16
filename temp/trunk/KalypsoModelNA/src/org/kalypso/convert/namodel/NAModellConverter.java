@@ -56,12 +56,18 @@ import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.HydrotopManager;
+import org.kalypso.convert.namodel.manager.IdleLanduseManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.ParseManager;
 import org.kalypso.convert.namodel.manager.RHBManager;
 import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -69,25 +75,17 @@ import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.w3c.dom.Document;
 
 /**
  * import and export of kalypso rainfall runoff models converts between custom ascii format and gml format. importing
- * ascii is always processed into a gml file-structure (includes generating of zml files).
- * 
- * export to ascii can be generated from a gml file or from a gml workspace
+ * ascii is always processed into a gml file-structure (includes generating of zml files). export to ascii can be
+ * generated from a gml file or from a gml workspace
  * 
  * @author doemming
  */
@@ -117,12 +115,11 @@ public class NAModellConverter
 
   private final SchneeManager m_schneeManager;
 
+  private final IdleLanduseManager m_idleLanduseManager;
+
   public static void main( String[] args )
   {
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogNA() } );
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
     try
     {
@@ -138,11 +135,10 @@ public class NAModellConverter
     }
   }
 
-  public static void completeascii2gml() throws Exception
+  public static void completeascii2gml( ) throws Exception
   {
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
-    File asciiBaseDir = new File(
-        "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
+    File asciiBaseDir = new File( "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
 
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     Feature modelRootFeature = modelAsciiToFeature( conf );
@@ -152,12 +148,12 @@ public class NAModellConverter
 
     File modelGmlFile = new File( gmlBaseDir, "modell.gml" );
     final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
-    final Document modelSchema = modelGmlSchema.getSchema();
+    // final Document modelSchema = modelGmlSchema.getSchema();
 
-    FeatureType[] featureTypes = GMLSchemaUtils.getAllFeatureTypesFromSchema( modelGmlSchema );
+    // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
+    IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
 
-    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( featureTypes, modelRootFeature, null,
-        " project:/.model/schema/namodell.xsd", modelSchema.getNamespaceURI(), modelGmlSchema.getNamespaceMap() );
+    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, modelRootFeature, modelGmlFile.toURL(), " project:/.model/schema/namodell.xsd" );
     GmlSerializer.serializeWorkspace( new FileWriter( modelGmlFile ), modelWorkspace );
 
     System.out.println( "Conversion from ASCII to GML was successfull!!!" );
@@ -168,49 +164,41 @@ public class NAModellConverter
   {
     // load ShapeFile
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-        csFac.getCSByName( "EPSG:31467" ) );
+    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teilgebiete", cSystem );
-    final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
-        ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\gewaesser", cSystem );
-    final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty(
-        ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List channelFeatures = (List) channelWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\knoten", cSystem );
-    final List nodeFeatures = (List)nodeWorkspace.getRootFeature()
-        .getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List nodeFeatures = (List) nodeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     // insertGeometries
 
     System.out.println( "inserting geometries: catchments" );
-    Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
-    List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
-    copyProperties( catchmentFeatures, "GEOM", "TEILGEBNR", (Feature[])catchmentList.toArray( new Feature[catchmentList
-        .size()] ), "Ort", "inum" );
+    Feature catchmentCollection = (Feature) modelFeature.getProperty( "CatchmentCollectionMember" );
+    List catchmentList = (List) catchmentCollection.getProperty( "catchmentMember" );
+    copyProperties( catchmentFeatures, "GEOM", "TEILGEBNR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: channels" );
-    Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
-    List channelList = (List)channelCollection.getProperty( "channelMember" );
-    copyProperties( channelFeatures, "GEOM", "STRANGNR", (Feature[])channelList
-        .toArray( new Feature[channelList.size()] ), "Ort", "inum" );
+    Feature channelCollection = (Feature) modelFeature.getProperty( "ChannelCollectionMember" );
+    List channelList = (List) channelCollection.getProperty( "channelMember" );
+    copyProperties( channelFeatures, "GEOM", "STRANGNR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
-    Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
-    List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
-    copyProperties( nodeFeatures, "GEOM", "KNOTENNR", (Feature[])nodeList.toArray( new Feature[nodeList.size()] ),
-        "Ort", "num" );
+    Feature nodeCollection = (Feature) modelFeature.getProperty( "NodeCollectionMember" );
+    List nodeList = (List) nodeCollection.getProperty( "nodeMember" );
+    copyProperties( nodeFeatures, "GEOM", "KNOTENNR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "num" );
   }
 
-  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName,
-      Feature[] destFE, String destGeomPropName, String destIdPropName )
+  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
   {
     HashMap orgHash = new HashMap();
     for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
     {
-      final Feature f = (Feature)iter.next();
+      final Feature f = (Feature) iter.next();
       String id = f.getProperty( orgIdPropName ).toString();
       orgHash.put( id, f );
     }
@@ -218,15 +206,15 @@ public class NAModellConverter
     {
       Feature destFeature = destFE[i];
       String id = destFeature.getProperty( destIdPropName ).toString();
-      //            System.out.println("processing id=" + id);
-      Feature orgFeaure = (Feature)orgHash.get( id );
+      // System.out.println("processing id=" + id);
+      Feature orgFeaure = (Feature) orgHash.get( id );
       if( orgFeaure != null )
       {
         Object value = orgFeaure.getProperty( orgGeomPropName );
         if( value == null )
           System.out.println( "copyvalue is null: id=" + id );
-        FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
-        destFeature.setProperty( fProp );
+        // FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
+        destFeature.setProperty( destGeomPropName, value );
       }
       else
         System.out.println( "not found in shapeFile: id=" + id );
@@ -248,23 +236,22 @@ public class NAModellConverter
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
+    m_idleLanduseManager = new IdleLanduseManager( m_parameterSchema, m_conf );
 
-    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager,
-        m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager );
+    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager, m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
   }
 
-  public ParseManager getParseManager()
+  public ParseManager getParseManager( )
   {
     return m_parseManager;
   }
 
-  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace ,final NaNodeResultProvider nodeResultProvider)
-      throws Exception
+  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
 
     AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer, modelWorkspace,nodeResultProvider );
+    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, nodeResultProvider );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
 
@@ -287,12 +274,10 @@ public class NAModellConverter
     Writer writer9 = new FileWriter( m_conf.getZFTFile() );
     writer9.write( asciiBuffer.getZFTBuffer().toString() );
     writer9.close();
-    
-    
 
     if( hydrotopeWorkspace != null )
     {
-      m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace );
+      m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace, parameterWorkspace );
       Writer writer5 = new FileWriter( m_conf.getHydrotopFile() );
       writer5.write( asciiBuffer.getHydBuffer().toString() );
       writer5.close();
@@ -301,20 +286,21 @@ public class NAModellConverter
     if( parameterWorkspace != null )
     {
       m_bodartManager.writeFile( asciiBuffer, parameterWorkspace );
-      m_bodtypManager.writeFile( asciiBuffer, parameterWorkspace );
-      m_nutzManager.writeFile( parameterWorkspace );
-      m_schneeManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer6 = new FileWriter( m_conf.getBodenartFile() );
       writer6.write( asciiBuffer.getBodartBuffer().toString() );
       writer6.close();
 
+      m_bodtypManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer7 = new FileWriter( m_conf.getBodentypFile() );
       writer7.write( asciiBuffer.getBodtypBuffer().toString() );
       writer7.close();
 
+      m_schneeManager.writeFile( asciiBuffer, parameterWorkspace );
       Writer writer8 = new FileWriter( m_conf.getSchneeFile() );
       writer8.write( asciiBuffer.getSnowBuffer().toString() );
       writer8.close();
+
+      m_nutzManager.writeFile( parameterWorkspace );
 
     }
 
@@ -332,10 +318,9 @@ public class NAModellConverter
     return main.getParseManager().parameterAsciiToFeature();
   }
 
-  public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace,
-      GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace,final NaNodeResultProvider nodeResultProvider ) throws Exception
+  public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     NAModellConverter main = new NAModellConverter( conf );
-    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace,nodeResultProvider );
+    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
   }
 }

@@ -53,6 +53,10 @@ import java.util.List;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -61,9 +65,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -80,13 +82,13 @@ public class ChannelManager extends AbstractManager
 
   private static final String KMParameterpropName = "KMParameterMember";
 
-  private final FeatureType m_virtualChannelFT;
+  private final IFeatureType m_virtualChannelFT;
 
-  private final FeatureType m_storageChannelFT;
+  private final IFeatureType m_storageChannelFT;
 
-  private final FeatureType m_kmChannelFT;
+  private final IFeatureType m_kmChannelFT;
 
-  private FeatureType m_kmParameterFT;
+  private IFeatureType m_kmParameterFT;
 
   private final NAConfiguration m_conf;
 
@@ -111,16 +113,16 @@ public class ChannelManager extends AbstractManager
     // file
     // ) );
     Feature fe = null;
-    while( ( fe = readNextFeature( reader ) ) != null )
+    while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return (Feature[]) result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
-    HashMap propCollector = new HashMap();
+    final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
-    //  0-1
+    // 0-1
     for( int i = 0; i <= 1; i++ )
     {
       line = reader.readLine();
@@ -129,44 +131,46 @@ public class ChannelManager extends AbstractManager
       System.out.println( i + ": " + line );
       createProperties( propCollector, line, i );
     }
-    FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
-    FeatureProperty artProp = (FeatureProperty)propCollector.get( "iart" );
-    int asciiID = Integer.parseInt( (String)idProp.getValue() );
-    int art = Integer.parseInt( (String)artProp.getValue() );
+    // FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
+    // FeatureProperty artProp = (FeatureProperty)propCollector.get( "iart" );
+
+    int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
+    int art = Integer.parseInt( propCollector.get( "iart" ) );
     Feature feature;
     switch( art )
     {
-    case VIRTUALCHANNEL:
-      feature = getFeature( asciiID, m_virtualChannelFT );
-      break;
-    case KMCHANNEL:
-      feature = getFeature( asciiID, m_kmChannelFT );
-      line = reader.readLine();
-      System.out.println( 2 + ": " + line );
-      createProperties( propCollector, line, 2 );
-      // parse kalinin-miljukov-parameter
-      HashMap kmPropCollector = new HashMap();
-
-      for( int i = 0; i < 5; i++ )
-      {
-        Feature kmParameterFeature = createFeature( m_kmParameterFT );
+      case VIRTUALCHANNEL:
+        feature = getFeature( asciiID, m_virtualChannelFT );
+        break;
+      case KMCHANNEL:
+        feature = getFeature( asciiID, m_kmChannelFT );
         line = reader.readLine();
-        System.out.println( " km(" + i + "): " + line );
-        createProperties( kmPropCollector, line, 3 );
-        Collection collection = kmPropCollector.values();
-        setParsedProperties( kmParameterFeature, collection );
-        FeatureProperty kmProp = FeatureFactory.createFeatureProperty( KMParameterpropName, kmParameterFeature );
-        feature.addProperty( kmProp );
-      }
-      break;
-    case STORAGECHANNEL:
-      feature = getFeature( asciiID, m_storageChannelFT );
-      break;
-    default:
-      throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
+        System.out.println( 2 + ": " + line );
+        createProperties( propCollector, line, 2 );
+        // parse kalinin-miljukov-parameter
+        HashMap<String,String> kmPropCollector = new HashMap<String, String>();
+
+        for( int i = 0; i < 5; i++ )
+        {
+          Feature kmParameterFeature = createFeature( m_kmParameterFT );
+          line = reader.readLine();
+          System.out.println( " km(" + i + "): " + line );
+          createProperties( kmPropCollector, line, 3 );
+//          final Collection collection = kmPropCollector.values();
+          setParsedProperties( kmParameterFeature, kmPropCollector,null);
+          final IPropertyType pt = feature.getFeatureType().getProperty( KMParameterpropName );
+          final FeatureProperty kmProp = FeatureFactory.createFeatureProperty( pt, kmParameterFeature );
+          feature.addProperty( kmProp );
+        }
+        break;
+      case STORAGECHANNEL:
+        feature = getFeature( asciiID, m_storageChannelFT );
+        break;
+      default:
+        throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
     }
-    Collection collection = propCollector.values();
-    setParsedProperties( feature, collection );
+//    Collection collection = propCollector.values();
+    setParsedProperties( feature,propCollector,null);
     return feature;
   }
 
@@ -179,7 +183,7 @@ public class ChannelManager extends AbstractManager
     final Iterator iter = channelList.iterator();
     while( iter.hasNext() )
     {
-      final Feature channelFE = (Feature)iter.next();
+      final Feature channelFE = (Feature) iter.next();
       if( asciiBuffer.writeFeature( channelFE ) )
         writeFeature( asciiBuffer, channelFE, workspace );
     }
@@ -189,8 +193,8 @@ public class ChannelManager extends AbstractManager
   {
     IDManager idManager = m_conf.getIdManager();
     asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature ) + "\n" );
-    //    asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
-    FeatureType ft = feature.getFeatureType();
+    // asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
+    IFeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
       asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" );
     else if( "KMChannel".equals( ft.getName() ) )
@@ -198,10 +202,10 @@ public class ChannelManager extends AbstractManager
       asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
 
       asciiBuffer.getChannelBuffer().append( toAscci( feature, 2 ) + "\n" );
-      List kmFeatures = (List)feature.getProperty( KMParameterpropName );
+      List kmFeatures = (List) feature.getProperty( KMParameterpropName );
       for( int i = 0; i < kmFeatures.size(); i++ )
       {
-        Feature kmFE = (Feature)kmFeatures.get( i );
+        Feature kmFE = (Feature) kmFeatures.get( i );
         asciiBuffer.getChannelBuffer().append( toAscci( kmFE, 3 ) + "\n" );
       }
 
@@ -212,10 +216,10 @@ public class ChannelManager extends AbstractManager
 
       // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)
       // RHB 5-7
-      asciiBuffer.getRhbBuffer().append(
-          "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
-      //Ueberlaufknoten optional
-      Feature nodeFE = workspace.resolveLink( feature, "iknotNodeMember" );
+      asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
+      // Ueberlaufknoten optional
+      final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( "iknotNodeMember" );
+      Feature nodeFE = workspace.resolveLink( feature, rt2);
       if( nodeFE == null )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
@@ -228,26 +232,24 @@ public class ChannelManager extends AbstractManager
 
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
-      Feature dnodeFE = workspace.resolveLink( feature, "downStreamNodeMember" );
+      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "downStreamNodeMember" );
+      final Feature dnodeFE = workspace.resolveLink( feature,rt);
       asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       Object wvqProp = feature.getProperty( "hvvsqd" );
       if( wvqProp instanceof IObservation )
       {
-        int size = ( ( (IObservation)wvqProp ).getValues( null ) ).getCount();
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" )+"\n" );
+        int size = (((IObservation) wvqProp).getValues( null )).getCount();
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" ) + "\n" );
         if( size > 24 )
-          throw new Exception(
-              "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rückhaltebecken: #"
-                  + FeatureHelper.getAsString( feature, "name" ) );
-      // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
-        writeWVQ( (IObservation)wvqProp, asciiBuffer.getRhbBuffer() );
+          throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rückhaltebecken: #" + FeatureHelper.getAsString( feature, "name" ) );
+        // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
+        writeWVQ( (IObservation) wvqProp, asciiBuffer.getRhbBuffer() );
       }
       else
       {
-        System.out.println( "Es existiert keine (gültige) WQV-Beziehung für das Rückhaltebecken, ID: "
-            + idManager.getAsciiID( feature ) );
+        System.out.println( "Es existiert keine (gültige) WQV-Beziehung für das Rückhaltebecken, ID: " + idManager.getAsciiID( feature ) );
       }
 
       // Kommentar Ende Speicher
@@ -274,16 +276,16 @@ public class ChannelManager extends AbstractManager
     int count = values.getCount();
     for( int row = 0; row < count; row++ )
     {
-      Double w = (Double)values.getElement( row, waterTableAxis );
-      Double v = (Double)values.getElement( row, volumeAxis );
-      Double q = (Double)values.getElement( row, dischargeAxis );
+      Double w = (Double) values.getElement( row, waterTableAxis );
+      Double v = (Double) values.getElement( row, volumeAxis );
+      Double q = (Double) values.getElement( row, dischargeAxis );
       rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) );
       rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) );
       rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" );
     }
   }
 
-  public String mapID( int id, FeatureType ft )
+  public String mapID( int id, IFeatureType ft )
   {
     return ft.getName() + id;
   }

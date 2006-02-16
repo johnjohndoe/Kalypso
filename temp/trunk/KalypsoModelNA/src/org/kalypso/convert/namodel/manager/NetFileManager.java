@@ -65,6 +65,9 @@ import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -72,26 +75,17 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author doemming
- * 
- * erstellt die netzdatei aus namodell.gml oder liest aus netzdatei und erstellt namodell.gml
- * 
- * ---- logik bei der netzerstellung:
- * 
- * wird im control ein rootnode angegeben, so wird das netz hierfuer erstellt. vorhandene ergebnisse oberhalb des
- * rootnode werden als zufluss gerechnet.
- * 
- * oder
- * 
- * wird im control kein rotnode angegeben so wird das netz fuer die zu generierenden ergebnisse erstellt vorhandene
- * ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende Ergebnisse stets
- * neu berechnet werden und niemals als Zufluss dienen.
+ * @author doemming erstellt die netzdatei aus namodell.gml oder liest aus netzdatei und erstellt namodell.gml ----
+ *         logik bei der netzerstellung: wird im control ein rootnode angegeben, so wird das netz hierfuer erstellt.
+ *         vorhandene ergebnisse oberhalb des rootnode werden als zufluss gerechnet. oder wird im control kein rotnode
+ *         angegeben so wird das netz fuer die zu generierenden ergebnisse erstellt vorhandene ergebnisse oberhalb der
+ *         zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende Ergebnisse stets neu berechnet
+ *         werden und niemals als Zufluss dienen.
  */
 public class NetFileManager extends AbstractManager
 {
@@ -101,6 +95,8 @@ public class NetFileManager extends AbstractManager
 
   private final UrlUtilities m_urlUtilities;
 
+  // private IPropertyType m_property;
+
   public NetFileManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getNetFormatURL() );
@@ -109,7 +105,7 @@ public class NetFileManager extends AbstractManager
   }
 
   @Override
-  public String mapID( int id, FeatureType ft )
+  public String mapID( int id, IFeatureType ft )
   {
     return ft.getName() + id;
   }
@@ -136,47 +132,50 @@ public class NetFileManager extends AbstractManager
   private void readNodeList( LineNumberReader reader ) throws Exception
   {
     String line;
-    while( ( line = reader.readLine() ) != null )
+    while( (line = reader.readLine()) != null )
     {
       if( line.startsWith( "9999" ) )
         return;
 
-      final HashMap<String, FeatureProperty> propCollector = new HashMap<String, FeatureProperty>();
+      final HashMap<String, String> propCollector = new HashMap<String, String>();
+      final Collection<FeatureProperty> fePropCol = new ArrayList<FeatureProperty>();
       System.out.println( 3 + ": " + line );
       createProperties( propCollector, line, 2 );
-      final FeatureProperty knotProp = propCollector.get( "knot" );
-      final FeatureProperty izugProp = propCollector.get( "izug" );
-      final FeatureProperty iabgProp = propCollector.get( "iabg" );
-      final FeatureProperty iuebProp = propCollector.get( "iueb" );
-      final FeatureProperty izufProp = propCollector.get( "izuf" );
-      final FeatureProperty ivzwgProp = propCollector.get( "ivzwg" );
-      int knot = Integer.parseInt( (String)knotProp.getValue() );
-      int izug = Integer.parseInt( (String)izugProp.getValue() );
-      int iabg = Integer.parseInt( (String)iabgProp.getValue() );
-      int iueb = Integer.parseInt( (String)iuebProp.getValue() );
-      int izuf = Integer.parseInt( (String)izufProp.getValue() );
-      int ivzwg = Integer.parseInt( (String)ivzwgProp.getValue() );
-      final Feature fe = getFeature( knot, m_conf.getNodeFT() );
+      // final FeatureProperty knotProp = propCollector.get( "knot" );
+      // final FeatureProperty izugProp = propCollector.get( "izug" );
+      // final FeatureProperty iabgProp = propCollector.get( "iabg" );
+      // final FeatureProperty iuebProp = propCollector.get( "iueb" );
+      // final FeatureProperty izufProp = propCollector.get( "izuf" );
+      // final FeatureProperty ivzwgProp = propCollector.get( "ivzwg" );
+
+      int knot = Integer.parseInt( propCollector.get( "knot" ) );
+      int izug = Integer.parseInt( propCollector.get( "izug" ) );
+      int iabg = Integer.parseInt( propCollector.get( "iabg" ) );
+      int iueb = Integer.parseInt( propCollector.get( "iueb" ) );
+      int izuf = Integer.parseInt( propCollector.get( "izuf" ) );
+      int ivzwg = Integer.parseInt( propCollector.get( "ivzwg" ) );
+
+      final IFeatureType nodeFT = m_conf.getNodeFT();
+      final Feature fe = getFeature( knot, nodeFT );
       if( izug > 0 ) // ZUGABE
       {
         throw new UnsupportedOperationException( "Netzdatei: izug>0 wird nicht unterstuetzt" );
-        //TODO...
+        // TODO...
       }
       if( iabg > 0 ) // ABGABE
       {
         throw new UnsupportedOperationException( "Netzdatei: iabg>0 wird nicht unterstuetzt" );
-        //TODO...
+        // TODO...
       }
       if( iueb > 0 ) // UEBERLAUF
       {
         throw new UnsupportedOperationException( "Netzdatei: iueb>0 wird nicht unterstuetzt" );
-        //TODO...
+        // TODO...
       }
       if( izuf > 0 ) // ZUGABE oder ABGABE Kennlinie
       {
         if( izuf != 5 )
-          throw new UnsupportedOperationException( "Netzdatei: Kennziffer Zu- oder Abgabekennlinie izuf=" + izuf
-              + " wird nicht unterstuetzt. Unterstuetzt werden izuf=0 und izuf=5." );
+          throw new UnsupportedOperationException( "Netzdatei: Kennziffer Zu- oder Abgabekennlinie izuf=" + izuf + " wird nicht unterstuetzt. Unterstuetzt werden izuf=0 und izuf=5." );
         line = reader.readLine();
         System.out.println( 6 + ": " + line );
         // da nur izuf==5 unterstuetzt wird ist zeile 6 nicht relevant
@@ -184,22 +183,22 @@ public class NetFileManager extends AbstractManager
         line = reader.readLine();
         System.out.println( 7 + ": " + line );
         createProperties( propCollector, line, 7 );// nzufPfad
-        String nzufPfad = (String)propCollector.get( "nzufPfad" ).getValue();
+        String nzufPfad = propCollector.get( "nzufPfad" );
         // create timeserieslink
 
         String zmlPath = "Zufluss/Zufluss_" + fe.getId() + ".zml";
-        String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\",
-            m_conf.getAsciiBaseDir().toString() + "/Zufluss/" );
+        String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" );
         File tsFile = new File( correctedPath );
-        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE,
-            TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
-        FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( "zuflussZRRepository", link1 );
-        propCollector.put( "zuflussZRRepository", linkPropertyRepository );
+        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
 
-        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE,
-            TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
-        FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link2 );
-        propCollector.put( "zuflussZR", linkProperty );
+        final IPropertyType pt = nodeFT.getProperty( "zuflussZRRepository" );
+        FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( pt, link1 );
+        fePropCol.add( linkPropertyRepository );
+
+        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
+        final IPropertyType pt2 = nodeFT.getProperty( "zuflussZR" );
+        FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( pt2, link2 );
+        fePropCol.add( linkProperty );
       }
       if( ivzwg > 0 ) // VERZWEIGUNG
       {
@@ -207,36 +206,36 @@ public class NetFileManager extends AbstractManager
         System.out.println( 8 + ": " + line );
         createProperties( propCollector, line, 10 );// zproz ikz
         // resolve targetnode
-        FeatureProperty ikzProp = propCollector.get( "ikz" );
-        int ikz = Integer.parseInt( (String)ikzProp.getValue() );
-        Feature targetNodeFE = getFeature( ikz, m_conf.getNodeFT() );
-        FeatureProperty linkedNodeProp = FeatureFactory.createFeatureProperty( "verzweigungNodeMember", targetNodeFE
-            .getId() );
-        propCollector.put( "verzweigungNodeMember", linkedNodeProp );
+        // FeatureProperty ikzProp = propCollector.get( "ikz" );
+        int ikz = Integer.parseInt( propCollector.get( "ikz" ) );
+        final Feature targetNodeFE = getFeature( ikz, nodeFT );
+        final IPropertyType pt = nodeFT.getProperty( "verzweigungNodeMember" );
+        final FeatureProperty linkedNodeProp = FeatureFactory.createFeatureProperty( pt, targetNodeFE.getId() );
+        fePropCol.add( linkedNodeProp );
       }
       Set set = propCollector.entrySet();
       for( Iterator iter = set.iterator(); iter.hasNext(); )
       {
-        Entry element = (Entry)iter.next();
-        System.out.println( element.getKey() + "=" + ( (FeatureProperty)element.getValue() ).getValue() );
+        Entry element = (Entry) iter.next();
+        System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
       }
 
       // adding Timeseries links
 
-      final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE,
-          TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
-              // NA_PEGEL
-              .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );
-      FeatureProperty pegelProp = FeatureFactory.createFeatureProperty( "pegelZR", pegelLink );
-      propCollector.put( "pegelZR", pegelProp );
+      final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
+          // NA_PEGEL
+          .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );
+      final IPropertyType pt = nodeFT.getProperty( "pegelZR" );
+      final FeatureProperty pegelProp = FeatureFactory.createFeatureProperty( pt, pegelLink );
+      fePropCol.add( pegelProp );
 
-      final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE,
-          TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(),
-          "Ergebnisse/Berechnet/Abfluss_" + fe.getId() + ".zml", true, true );
-      FeatureProperty ergProp = FeatureFactory.createFeatureProperty( "qberechnetZR", resultLink );
-      propCollector.put( "qberechnetZR", ergProp );
+      final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_"
+          + fe.getId() + ".zml", true, true );
+      final IPropertyType pt2 = nodeFT.getProperty( "qberechnetZR" );
+      FeatureProperty ergProp = FeatureFactory.createFeatureProperty( pt2, resultLink );
+      fePropCol.add( ergProp );
 
-      setParsedProperties( fe, propCollector.values() );
+      setParsedProperties( fe, propCollector, fePropCol );
     }
   }
 
@@ -245,7 +244,7 @@ public class NetFileManager extends AbstractManager
    */
   private void readNet( LineNumberReader reader, HashMap<String, Feature> nodeCollector ) throws Exception
   {
-    final HashMap<String, FeatureProperty> propCollector = new HashMap<String, FeatureProperty>();
+    final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
     line = reader.readLine();
     if( line == null || line.startsWith( "9999" ) )
@@ -257,58 +256,54 @@ public class NetFileManager extends AbstractManager
     }
     System.out.println( 0 + ": " + line );
     createProperties( propCollector, line, 0 );
-    final FeatureProperty iteilProp = propCollector.get( "iteil" );
-    final FeatureProperty istrngProp = propCollector.get( "istrng" );
-    final FeatureProperty iknotoProp = propCollector.get( "iknoto" );
-    final FeatureProperty iknotuProp = propCollector.get( "iknotu" );
-    int iteil = Integer.parseInt( (String)iteilProp.getValue() );
-    int istrngNr = Integer.parseInt( (String)istrngProp.getValue() );
-    int iknotoNr = Integer.parseInt( (String)iknotoProp.getValue() );
-    int iknotuNr = Integer.parseInt( (String)iknotuProp.getValue() );
+    // final FeatureProperty iteilProp = propCollector.get( "iteil" );
+    // final FeatureProperty istrngProp = propCollector.get( "istrng" );
+    // final FeatureProperty iknotoProp = propCollector.get( "iknoto" );
+    // final FeatureProperty iknotuProp = propCollector.get( "iknotu" );
+    int iteil = Integer.parseInt( propCollector.get( "iteil" ) );
+    int istrngNr = Integer.parseInt( propCollector.get( "istrng" ) );
+    int iknotoNr = Integer.parseInt( propCollector.get( "iknoto" ) );
+    int iknotuNr = Integer.parseInt( propCollector.get( "iknotu" ) );
     // create node feature and
     // set node numbers
 
-    final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
+    // final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
     final Feature knotoFE = getFeature( iknotoNr, m_conf.getNodeFT() );
     nodeCollector.put( knotoFE.getId(), knotoFE );
-    knotoFE.setProperty( numPropertyKnotO );
-    final FeatureProperty numPropertyKnotU = FeatureFactory.createFeatureProperty( "num", "" + iknotuNr );
+    knotoFE.setProperty( "num", "" + iknotoNr );
+    // final FeatureProperty numPropertyKnotU = FeatureFactory.createFeatureProperty( "num", "" + iknotuNr );
     final Feature knotuFE = getFeature( iknotuNr, m_conf.getNodeFT() );
     nodeCollector.put( knotuFE.getId(), knotuFE );
-    knotuFE.setProperty( numPropertyKnotU );
+    knotuFE.setProperty( "num", "" + iknotuNr );
     // set node channel relations
-    final Feature strangFE = getExistingFeature( istrngNr, new FeatureType[]
-    {
-        m_conf.getKmChannelFT(),
-        m_conf.getVChannelFT(),
-        m_conf.getStChannelFT() } );
+    final Feature strangFE = getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
     // node -> strang
     if( strangFE == null )
       System.out.println( istrngNr );
     //
     else
     {
-      final FeatureProperty downStreamProp1 = FeatureFactory.createFeatureProperty( "downStreamChannelMember", strangFE
-          .getId() );
-      knotoFE.setProperty( downStreamProp1 );
+      // final FeatureProperty downStreamProp1 = FeatureFactory.createFeatureProperty( "downStreamChannelMember",
+      // strangFE.getId() );
+      knotoFE.setProperty( "downStreamChannelMember", strangFE.getId() );
       // strang -> node
-      final FeatureProperty downStreamProp2 = FeatureFactory.createFeatureProperty( "downStreamNodeMember", knotuFE
-          .getId() );
-      strangFE.setProperty( downStreamProp2 );
+      // final FeatureProperty downStreamProp2 = FeatureFactory.createFeatureProperty( "downStreamNodeMember",
+      // knotuFE.getId() );
+      strangFE.setProperty( "downStreamNodeMember", knotuFE.getId() );
 
       // Teilgebiete lesen
       for( int i = 0; i < iteil; i++ )
       {
         line = reader.readLine();
-        final HashMap<String, FeatureProperty> col = new HashMap<String, FeatureProperty>();
+        final HashMap<String, String> col = new HashMap<String, String>();
         System.out.println( 1 + ": " + line );
         createProperties( col, line, 1 );
-        final FeatureProperty nteilProp = col.get( "nteil" );
-        final int nteil = Integer.parseInt( (String)nteilProp.getValue() );
+        // final FeatureProperty nteilProp = col.get( "nteil" );
+        final int nteil = Integer.parseInt( col.get( "nteil" ) );
         final Feature teilgebFE = getFeature( nteil, m_conf.getCatchemtFT() );
-        final FeatureProperty downStreamProp = FeatureFactory.createFeatureProperty( "entwaesserungsStrangMember",
-            strangFE.getId() );
-        teilgebFE.setProperty( downStreamProp );
+        // final FeatureProperty downStreamProp = FeatureFactory.createFeatureProperty( "entwaesserungsStrangMember",
+        // strangFE.getId() );
+        teilgebFE.setProperty( "entwaesserungsStrangMember", strangFE.getId() );
       }
       //
     }
@@ -318,21 +313,20 @@ public class NetFileManager extends AbstractManager
   /*
    *  
    */
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider )
-      throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     // to remove yellow thing ;-)
     nodeResultProvider.getClass();
 
-    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
-    //    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
-    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
-    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
-    //    x -> rootNode
-    //    |
-    //    O -> virtueller Strang generiert NR xxx
-    //    |
-    //    x -> virtueller knoten generiert NR 10000
+    final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    // final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final IFeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final IFeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
+    // x -> rootNode
+    // |
+    // O -> virtueller Strang generiert NR xxx
+    // |
+    // x -> virtueller knoten generiert NR 10000
 
     // list of channels
     final List<Feature> channelList = new ArrayList<Feature>();
@@ -355,20 +349,26 @@ public class NetFileManager extends AbstractManager
       netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], m_conf ) );
 
     // find dependencies
-    //   dependency: node - node
+    // dependency: node - node
     final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       final Feature upStreamNodeFE = nodeFEs[i];
-      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, "downStreamChannelMember" );
-      final Feature branchingFE = workspace.resolveLink( upStreamNodeFE, "branchingMember" );
+      final IFeatureType upstreamFT = upStreamNodeFE.getFeatureType();
+      final IRelationType rt = (IRelationType) upstreamFT.getProperty( "downStreamChannelMember" );
+      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, rt );
+      final IRelationType rt2 = (IRelationType) upstreamFT.getProperty( "branchingMember" );
+      final Feature branchingFE = workspace.resolveLink( upStreamNodeFE, rt2 );
       if( branchingFE != null )
       {
-        final FeatureType branchingFT = branchingFE.getFeatureType();
+        final IFeatureType branchingFT = branchingFE.getFeatureType();
         if( branchingFT == kontEntnahmeFT || branchingFT == ueberlaufFT || branchingFT == verzweigungFT )
         {
-          final Feature downStreamNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
-          final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, "downStreamChannelMember" );
+          final IRelationType rt1 = (IRelationType) branchingFT.getProperty( "branchingNodeMember" );
+          final Feature downStreamNodeFE = workspace.resolveLink( branchingFE, rt1 );
+
+          final IRelationType rt3 = (IRelationType) branchingFT.getProperty( "downStreamChannelMember" );
+          final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt3 );
           if( upStreamChannelFE == downStreamChannelFE )
           {
             System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" );
@@ -381,18 +381,20 @@ public class NetFileManager extends AbstractManager
         }
       }
     }
-    //   dependency: channel - node
+    // dependency: channel - node
 
     for( int i = 0; i < channelFEs.length; i++ )
     {
       final Feature channel = channelFEs[i];
-      final Feature downStreamNodeFE = workspace.resolveLink( channel, "downStreamNodeMember" );
+      IRelationType rt = (IRelationType) channel.getFeatureType().getProperty( "downStreamNodeMember" );
+      final Feature downStreamNodeFE = workspace.resolveLink( channel, rt );
       if( downStreamNodeFE == null )
       {
         System.out.println( "Channel #" + channel.getId() + "is outside network" );
         continue;
       }
-      final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, "downStreamChannelMember" );
+      final IRelationType rt2 = (IRelationType) downStreamNodeFE.getFeatureType().getProperty( "downStreamChannelMember" );
+      final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt2 );
       if( downStreamChannelFE == null )
       {
         System.out.println( "Node #" + downStreamNodeFE.getId() + " has no downstream connection" );
@@ -411,13 +413,14 @@ public class NetFileManager extends AbstractManager
       downStreamElement.addUpStream( upStreamElement );
     }
     // TODO check dependency storagechannel -> overflownode
-    //   dependency: catchment -> catchment
+    // dependency: catchment -> catchment
     Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       final Feature catchmentFE = catchmentFEs[i];
       // upstream
-      final Feature upStreamFE = workspace.resolveLink( catchmentFE, "entwaesserungsStrangMember" );
+      final IRelationType rt = (IRelationType) catchmentFE.getFeatureType().getProperty( "entwaesserungsStrangMember" );
+      final Feature upStreamFE = workspace.resolveLink( catchmentFE, rt );
       if( upStreamFE == null )
       {
         System.out.println( " Catchment #" + catchmentFE.getId() + " is not connected to network" );
@@ -426,12 +429,15 @@ public class NetFileManager extends AbstractManager
 
       final NetElement upStreamElement = netElements.get( upStreamFE.getId() );
       // downstream
-      final Feature[] abflussFEs = workspace.resolveLinks( catchmentFE, "grundwasserabflussMember" );
+      final IRelationType rt1 = (IRelationType) catchmentFE.getFeatureType().getProperty( "grundwasserabflussMember" );
+      final Feature[] abflussFEs = workspace.resolveLinks( catchmentFE, rt1 );
       for( int j = 0; j < abflussFEs.length; j++ )
       {
         final Feature abflussFE = abflussFEs[j];
-        final Feature downStreamCatchmentFE = workspace.resolveLink( abflussFE, "ngwzu" );
-        final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, "entwaesserungsStrangMember" );
+        final IRelationType rt2 = (IRelationType) abflussFE.getFeatureType().getProperty( "ngwzu" );
+        final Feature downStreamCatchmentFE = workspace.resolveLink( abflussFE, rt2 );
+        final IRelationType rt3 = (IRelationType) downStreamCatchmentFE.getFeatureType().getProperty( "entwaesserungsStrangMember" );
+        final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, rt3 );
         if( downStreamChannelFE == null )
         {
           System.out.println( " Catchment #" + downStreamCatchmentFE.getId() + " is not connected to network" );
@@ -467,7 +473,7 @@ public class NetFileManager extends AbstractManager
       rootNodeVisitor = new RootNodeCollectorVisitor();
     for( Iterator iter = netElements.values().iterator(); iter.hasNext(); )
     {
-      NetElement element = (NetElement)iter.next();
+      NetElement element = (NetElement) iter.next();
       element.accept( rootNodeVisitor );
     }
     final List rootNetElements = rootNodeVisitor.getRootNodeElements();
@@ -477,16 +483,15 @@ public class NetFileManager extends AbstractManager
     final SimulationVisitor simulationVisitor = new SimulationVisitor( writeAsciiVisitor );
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
-      NetElement element = (NetElement)iter.next();
+      NetElement element = (NetElement) iter.next();
       simulationVisitor.visit( element );
     }
 
     // write ascii: complete network below root nodes
-    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor(
-        asciiBuffer );
+    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( asciiBuffer );
     for( Iterator iter = netElements.values().iterator(); iter.hasNext(); )
     {
-      NetElement netElement = (NetElement)iter.next();
+      NetElement netElement = (NetElement) iter.next();
       netElement.accept( completeNetVisitor );
     }
     final List nodeCollector = writeAsciiVisitor.getNodeCollector();
@@ -495,19 +500,18 @@ public class NetFileManager extends AbstractManager
     asciiBuffer.getNetBuffer().append( "99999\n" );
   }
 
-  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer ) throws Exception,
-      Exception
+  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer ) throws Exception, Exception
   {
-    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
-    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
-    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
-    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
+    final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final IFeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final IFeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
 
     final IDManager idManager = m_conf.getIdManager();
     final Iterator iter = nodeCollector.iterator();
     while( iter.hasNext() )
     {
-      final Feature nodeFE = (Feature)iter.next();
+      final Feature nodeFE = (Feature) iter.next();
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) );
 
       final int izug;
@@ -518,12 +522,14 @@ public class NetFileManager extends AbstractManager
 
       final StringBuffer specialBuffer = new StringBuffer();
 
-      final TimeseriesLinkType zuflussLink = (TimeseriesLinkType)nodeFE.getProperty( "zuflussZR" );
-      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
-
+      final TimeseriesLinkType zuflussLink = (TimeseriesLinkType) nodeFE.getProperty( "zuflussZR" );
+      final IFeatureType nodeFT = nodeFE.getFeatureType();
+      final IRelationType rt = (IRelationType) nodeFT.getProperty( "branchingMember" );
+      final Feature branchingFE = workspace.resolveLink( nodeFE, rt );
+      final IRelationType branchingNodeMemberRT = (IRelationType) branchingFE.getFeatureType().getProperty( "branchingNodeMember" );
       if( branchingFE != null )
       {
-        final FeatureType branchingFT = branchingFE.getFeatureType();
+        final IFeatureType branchingFT = branchingFE.getFeatureType();
         if( branchingFT == kontZuflussFT )
         {
           izug = 1;
@@ -541,7 +547,8 @@ public class NetFileManager extends AbstractManager
           iueb = 0;
           izuf = 0;
           ivzwg = 1;
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double zproz = FeatureHelper.getAsDouble( branchingFE, "zproz", 0d );
           specialBuffer.append( FortranFormatHelper.printf( zproz, "f10.3" ) );
           specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
@@ -553,7 +560,7 @@ public class NetFileManager extends AbstractManager
           iueb = 0;
           izuf = 0;
           ivzwg = 0;
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double qabg = FeatureHelper.getAsDouble( branchingFE, "qabg", 0d );
           specialBuffer.append( FortranFormatHelper.printf( qabg, "f10.3" ) );
           specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
@@ -565,7 +572,7 @@ public class NetFileManager extends AbstractManager
           iueb = 1;
           izuf = 0;
           ivzwg = 0;
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double queb = FeatureHelper.getAsDouble( branchingFE, "queb", 0d );
           specialBuffer.append( FortranFormatHelper.printf( queb, "f10.3" ) );
           specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );

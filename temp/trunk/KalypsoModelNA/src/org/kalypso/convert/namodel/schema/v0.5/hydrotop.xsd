@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Anneliese Fey (TU Hamburg-Harburg) -->
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
 <schema xmlns:hyd="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.tuhh.de/hydrotop" elementFormDefault="qualified" version="0.5">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<element name="NAHydrotop" type="hyd:HydrotopType"/>
@@ -7,7 +7,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="HydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="hydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -26,7 +26,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="Ort" type="gml:PolygonPropertyType">
+					<element name="position" type="gml:PolygonPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Ort</label>
@@ -40,7 +40,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="flaech" type="double">
+					<element name="area" type="double">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Hydrotopflaeche</label>
@@ -54,7 +54,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="nutz" type="string">
+					<element name="landuse" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Nutzungsschlüssel</label>
@@ -69,7 +69,7 @@
 						</annotation>
 					</element>
 					<!--TODO: Link zu Parameter.xsd Bodentyp -> text6-->
-					<element name="boden" type="string">
+					<element name="soiltype" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenschlüssel</label>
@@ -83,7 +83,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="fak_vers" type="double" minOccurs="0">
+					<element name="corrSealing" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Faktor Versiegelung</label>
@@ -97,7 +97,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="entwArt" type="string">
+					<element name="drainageType" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Entwaesserung</label>

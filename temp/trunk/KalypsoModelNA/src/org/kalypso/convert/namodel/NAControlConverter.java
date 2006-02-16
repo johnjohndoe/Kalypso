@@ -46,8 +46,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -136,7 +136,7 @@ public class NAControlConverter
       final StringBuffer b, final IDManager idManager )
   {
     // knoten
-    final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+    final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
     //    boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
     //        "resultForRootNodeOnly", true );
@@ -154,7 +154,7 @@ public class NAControlConverter
     }
     b.append( "99999\n" );
     // teilgebiete
-    final FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
+    final IFeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {

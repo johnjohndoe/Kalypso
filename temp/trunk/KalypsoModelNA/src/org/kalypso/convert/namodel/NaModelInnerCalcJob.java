@@ -48,6 +48,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -70,6 +71,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -85,6 +87,9 @@ import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -107,18 +112,13 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -130,6 +130,7 @@ import org.w3c.dom.Document;
  */
 public class NaModelInnerCalcJob implements ISimulation
 {
+
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
@@ -144,7 +145,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
 
-  final HashMap<String, String> m_resultMap = new HashMap<String, String>();
+  final HashMap m_resultMap = new HashMap();
 
   public NaModelInnerCalcJob( )
   {
@@ -161,14 +162,17 @@ public class NaModelInnerCalcJob implements ISimulation
   }
 
   /**
-   * @throws SimulationException
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   * @throws CalcJobServiceException
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  // public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
+  // throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final Logger logger = Logger.getAnonymousLogger();
-    final File infoFile = new File( tmpdir, "infolog.txt" );
+    File infoFile = new File( tmpdir, "infolog.txt" );
     FileWriter writer = null;
     try
     {
@@ -542,7 +546,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );
 
-    // modell files
+    // generate modell files
     NAModellConverter main = new NAModellConverter( conf );
     main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
 
@@ -611,23 +615,25 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateNode2NodeNet( final GMLWorkspace workspace ) throws Exception
   {
-    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
-    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
-    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
-    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    final IFeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final IFeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] features = workspace.getFeatures( nodeFT );
+    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( "branchingMember" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature nodeFE = features[i];
-      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
+      final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null )
       {
-        final FeatureType branchFT = branchingFE.getFeatureType();
+        final IFeatureType branchFT = branchingFE.getFeatureType();
+        final IRelationType branchingNodeMemberRT = (IRelationType) branchFT.getProperty( "branchingNodeMember" );
         if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
         {
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final Feature newNodeFE = buildVChannelNet( workspace, targetNodeFE );
-          workspace.setFeatureAsComposition( branchingFE, "branchingNodeMember", newNodeFE, true );
+          workspace.setFeatureAsComposition( branchingFE, branchingNodeMemberRT, newNodeFE, true );
         }
       }
     }
@@ -639,8 +645,8 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider ) throws Exception
   {
-    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final FeatureType abstractChannelFT = workspace.getFeatureType( "_Channel" );
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType abstractChannelFT = workspace.getFeatureType( "_Channel" );
     final Feature[] features = workspace.getFeatures( nodeFT );
     for( int i = 0; i < features.length; i++ )
     {
@@ -649,16 +655,17 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         final Object resultValue = nodeFE.getProperty( "qberechnetZR" );
         // disconnect everything upstream (channel -> node)
-        final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, "downStreamNodeMember" );
+        final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( "downStreamNodeMember" );
+        final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
         for( int j = 0; j < channelFEs.length; j++ )
         {
           final Feature newEndNodeFE = workspace.createFeature( nodeFT );
-          workspace.setFeatureAsComposition( channelFEs[j], "downStreamNodeMember", newEndNodeFE, true );
+          workspace.setFeatureAsComposition( channelFEs[j], downStreamNodeMemberRT, newEndNodeFE, true );
         }
         // add as zufluss
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
-        final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
-        newNodeFE.setProperty( zuflussProp );
+        // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
+        newNodeFE.setProperty( "zuflussZR", resultValue );
       }
     }
   }
@@ -691,9 +698,10 @@ public class NaModelInnerCalcJob implements ISimulation
   private void updateZuflussNet( final GMLWorkspace workspace ) throws Exception
   {
 
-    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
-    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] features = workspace.getFeatures( nodeFT );
+    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( "branchingMember" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature nodeFE = features[i];
@@ -703,41 +711,52 @@ public class NaModelInnerCalcJob implements ISimulation
         // update zufluss
         Feature newNode = buildVChannelNet( workspace, nodeFE );
         // nove zufluss-property to new node
-        nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
-        newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
+        // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
+        // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
+        nodeFE.setProperty( "zuflussZR", null );
+        newNode.setProperty( "zuflussZR", zuflussValue );
       }
-      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
+      final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
       {
         // update zufluss
         Feature newNode = buildVChannelNet( workspace, nodeFE );
         // nove constant-inflow to new node
-        workspace.setFeatureAsComposition( nodeFE, "branchingMember", null, true );
-        workspace.setFeatureAsComposition( newNode, "branchingMember", branchingFE, true );
+        workspace.setFeatureAsComposition( nodeFE, branchingMemberRT, null, true );
+        workspace.setFeatureAsComposition( newNode, branchingMemberRT, branchingFE, true );
       }
     }
   }
 
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
   {
-    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final FeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
-    final Feature channelColFE = workspace.getFeatures( workspace.getFeatureType( "ChannelCollection" ) )[0];
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final IRelationType nodeMemberRT = (IRelationType) nodeFT.getProperty( "nodeMember" );
+    final IFeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+
+    final IFeatureType channelColFT = workspace.getFeatureType( "ChannelCollection" );
+    final IRelationType channelMemberRT = (IRelationType) channelColFT.getProperty( "channelMember" );
+    final Feature channelColFE = workspace.getFeatures( channelColFT )[0];
     final Feature nodeColFE = workspace.getFeatures( workspace.getFeatureType( "NodeCollection" ) )[0];
 
+    // add to collections:
     final Feature newChannelFE1 = workspace.createFeature( vChannelFT );
-    workspace.addFeatureAsComposition( channelColFE, "channelMember", 0, newChannelFE1 );
+    workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE1 );
     final Feature newChannelFE3 = workspace.createFeature( vChannelFT );
-    workspace.addFeatureAsComposition( channelColFE, "channelMember", 0, newChannelFE3 );
+    workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
     final Feature newNodeFE2 = workspace.createFeature( nodeFT );
-    workspace.addFeatureAsComposition( nodeColFE, "nodeMember", 0, newNodeFE2 );
+    workspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
+    final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
 
     // 3 -> 2
-    workspace.setFeatureAsAggregation( newChannelFE3, "downStreamNodeMember", newNodeFE2.getId(), true );
+    workspace.setFeatureAsAggregation( newChannelFE3, downStreamNodeMemberRT, newNodeFE2.getId(), true );
     // 2 -> 1
-    workspace.setFeatureAsAggregation( newNodeFE2, "downStreamChannelMember", newChannelFE1.getId(), true );
+    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( "downStreamChannelMember" );
+    workspace.setFeatureAsAggregation( newNodeFE2, downStreamChannelMemberRT, newChannelFE1.getId(), true );
     // 1 -> existing
-    workspace.setFeatureAsAggregation( newChannelFE1, "downStreamNodeMember", existingNode.getId(), true );
+
+    final IRelationType downStreamNodeMemberRT1 = (IRelationType) nodeFT.getProperty( "downStreamNodeMember" );
+    workspace.setFeatureAsAggregation( newChannelFE1, downStreamNodeMemberRT, existingNode.getId(), true );
     return newNodeFE2;
   }
 
@@ -749,21 +768,24 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void updateGWNet( final GMLWorkspace workspace )
   {
-    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
-    final FeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+    final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    final IFeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
     final Feature[] features = workspace.getFeatures( catchmentFT );
+    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( "entwaesserungsStrangMember" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature catchmentFE = features[i];
-      final Feature orgChannelFE = workspace.resolveLink( catchmentFE, "entwaesserungsStrangMember" );
+
+      final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
-      final Feature nodeFE = workspace.resolveLink( orgChannelFE, "downStreamNodeMember" );
+      final IRelationType downStreamNodeMemberRT = (IRelationType) catchmentFT.getProperty( "downStreamNodeMember" );
+      final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
       final Feature newChannelFE = workspace.createFeature( vChannelFT );
       // set new relation: catchment -> new V-channel
       try
       {
-        workspace.setFeatureAsComposition( catchmentFE, "entwaesserungsStrangMember", newChannelFE, true );
+        workspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
       }
       catch( Exception e )
       {
@@ -772,7 +794,8 @@ public class NaModelInnerCalcJob implements ISimulation
       // set new relation: new V-channel -> downstream node
       try
       {
-        workspace.addFeatureAsAggregation( newChannelFE, "downStreamNodeMember", 1, nodeFE.getId() );
+        final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+        workspace.addFeatureAsAggregation( newChannelFE, downStreamNodeMemberRT2, 1, nodeFE.getId() );
       }
       catch( Exception e )
       {
@@ -851,12 +874,12 @@ public class NaModelInnerCalcJob implements ISimulation
         final Feature kmParameterFE = (Feature) iterator.next();
         // rnf
         final double _rnf = rnfFactor * FeatureHelper.getAsDouble( kmParameterFE, "rnf", 1.0 );
-        FeatureProperty rnfProp = FeatureFactory.createFeatureProperty( "rnf", new Double( _rnf ) );
-        kmParameterFE.setProperty( rnfProp );
+        // FeatureProperty rnfProp = FeatureFactory.createFeatureProperty( "rnf", new Double( _rnf ) );
+        kmParameterFE.setProperty( "rnf", new Double( _rnf ) );
         // rkf
         final double _rkf = rkfFactor * FeatureHelper.getAsDouble( kmParameterFE, "rkf", 1.0 );
-        FeatureProperty rkfProp = FeatureFactory.createFeatureProperty( "rkf", new Double( _rkf ) );
-        kmParameterFE.setProperty( rkfProp );
+        // FeatureProperty rkfProp = FeatureFactory.createFeatureProperty( "rkf", new Double( _rkf ) );
+        kmParameterFE.setProperty( "rkf", new Double( _rkf ) );
       }
     }
   }
@@ -875,13 +898,13 @@ public class NaModelInnerCalcJob implements ISimulation
           value *= FeatureHelper.getAsDouble( feature, factors[_f], 1.0 );
         // set parameter
         final String targetPropName = targetPropNames[_p];
-        FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName, new Double( value ) );
-        feature.setProperty( valueProp );
+        // FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName, new Double( value ) );
+        feature.setProperty( targetPropName, new Double( value ) );
       }
     }
   }
 
-  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, ICalcResultEater resultEater, final NAConfiguration conf ) throws Exception
+  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, ISimulationResultEater resultEater, final NAConfiguration conf ) throws Exception
   {
     loadTSResults( tmpdir, modellWorkspace, logger, resultDir, conf );
     try
@@ -994,11 +1017,11 @@ public class NaModelInnerCalcJob implements ISimulation
   private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
   {
     // j Gesamtabfluss Knoten .qgs
-    final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+    final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
 
-    final FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
-    final FeatureType rhbChannelFT = modellWorkspace.getFeatureType( "StorageChannel" );
+    final IFeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
+    final IFeatureType rhbChannelFT = modellWorkspace.getFeatureType( "StorageChannel" );
     // j Niederschlag .pre
     loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
     // j Temperatur .tmp
@@ -1051,7 +1074,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // modellWorkspace, logger, outputDir, 1.0d , idManager);
   }
 
-  private void loadTSResults( final String suffix, final FeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
+  private void loadTSResults( final String suffix, final IFeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
   {
     final IDManager idManager = conf.getIdManager();
     // ASCII-Files
@@ -1077,8 +1100,15 @@ public class NaModelInnerCalcJob implements ISimulation
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
         }
-        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
-        final String annotation = feature.getFeatureType().getAnnotation( lang ).getLabel();
+        // FIXME @huebsch das geht so nicht, wie soll der server auf die eingestellte sprache beim client zugreifen
+        // ????, ich machs erstmal deutsch, evt. brauchen wir ein allgemeines konzept, dass der calcjob die sprache mit
+        // bekommt, askme (doemming)
+        //        
+        // final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+        // IKalypsoPreferences.LANGUAGE );
+        final String lang = "de";
+
+        final String annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() ).getLabel();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feName = (String) feature.getProperty( titlePropName );
         final String observationTitle;
@@ -1194,7 +1224,8 @@ public class NaModelInnerCalcJob implements ISimulation
           resultObservation.getMetadataList().put( ObservationConstants.MD_SCENARIO, scenarioID );
 
         // write result
-        final Observation observationType = ZmlFactory.createXML( resultObservation, null );
+        // final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
+        final Observation observation = ZmlFactory.createXML( resultObservation, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
@@ -1204,7 +1235,7 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           stream = new FileOutputStream( resultFile );
           writer = new OutputStreamWriter( stream, "UTF-8" );
-          marshaller.marshal( observationType, writer );
+          marshaller.marshal( observation, writer );
         }
         finally
         {
@@ -1430,6 +1461,82 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       IOUtils.closeQuietly( logWriter );
       IOUtils.closeQuietly( errorWriter );
+    }
+  }
+
+  private void startCalculationOld( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
+  {
+    InputStreamReader inStream = null;
+    InputStreamReader errStream = null;
+    PrintWriter outwriter = null;
+    PrintWriter errwriter = null;
+
+    try
+    {
+      final File exeFile = new File( basedir, m_kalypsoKernelPath );
+      final File exeDir = exeFile.getParentFile();
+      final String commandString = exeFile.getAbsolutePath();
+
+      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
+
+      outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+      errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
+
+      inStream = new InputStreamReader( process.getInputStream() );
+      errStream = new InputStreamReader( process.getErrorStream() );
+      while( true )
+      {
+        CopyUtils.copy( inStream, outwriter );
+        CopyUtils.copy( errStream, errwriter );
+
+        try
+        {
+          process.exitValue();
+          return;
+        }
+        catch( IllegalThreadStateException e )
+        {
+          // noch nicht fertig
+        }
+
+        if( monitor.isCanceled() )
+        {
+          process.destroy();
+          return;
+        }
+        Thread.sleep( 100 );
+      }
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler beim Ausfuehren", e );
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler beim Ausfuehren", e );
+    }
+    finally
+    {
+      try
+      {
+        if( outwriter != null )
+          outwriter.close();
+
+        if( errwriter != null )
+          errwriter.close();
+
+        if( inStream != null )
+          inStream.close();
+
+        if( errStream != null )
+          errStream.close();
+      }
+      catch( final IOException e1 )
+      {
+        e1.printStackTrace();
+      }
     }
   }
 

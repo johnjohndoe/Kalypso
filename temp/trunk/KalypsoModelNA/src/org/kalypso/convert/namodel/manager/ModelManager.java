@@ -47,8 +47,8 @@ package org.kalypso.convert.namodel.manager;
 import java.io.IOException;
 import java.net.URL;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author doemming
@@ -60,14 +60,14 @@ public class ModelManager extends AbstractManager
   /*
    * (non-Javadoc)
    * 
-   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   public ModelManager() throws IOException
   {
     super( null );
   }
 
-  public String mapID( int id, FeatureType ft )
+  public String mapID( int id, IFeatureType ft )
   {
     return ft.getName() + id;
   }

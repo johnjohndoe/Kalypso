@@ -53,31 +53,31 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
 /**
  * @author hübsch
  */
 public class BodenartManager extends AbstractManager
 {
-  private final FeatureType m_bodenartFT;
+  private final IFeatureType m_bodenartFT;
 
   public BodenartManager( GMLSchema parameterSchema, NAConfiguration conf )  
       throws IOException
   {
     super( conf.getParameterFormatURL() );
 
-    m_bodenartFT = parameterSchema.getFeatureType( "Bodenart" );
+    m_bodenartFT = parameterSchema.getFeatureType( "SoilLayer" );
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public String mapID( int id, FeatureType ft )
+  public String mapID( int id, IFeatureType ft )
   {
     throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
   }
@@ -110,7 +110,7 @@ public class BodenartManager extends AbstractManager
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
-    HashMap propCollector = new HashMap();
+    final HashMap<String,String> propCollector = new HashMap<String, String>();
     String line;
     // 6
     line = reader.readLine();
@@ -120,22 +120,22 @@ public class BodenartManager extends AbstractManager
     createProperties( propCollector, line, 6 );
 
     //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "typchar" );
-    String asciiStringId = (String)prop.getValue();
+//    FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
+    String asciiStringId = propCollector.get( "name" );
     final Feature feature = getFeature( asciiStringId, m_bodenartFT );
 
     // continue reading
 
-    Collection collection = propCollector.values();
-    setParsedProperties( feature, collection );
+//    Collection collection = propCollector.values();
+    setParsedProperties( feature, propCollector,null);
     return feature;
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#getFeature(int,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   *      org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public Feature getFeature( int asciiID, FeatureType ft )
+  public Feature getFeature( int asciiID, IFeatureType ft )
   {
     throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
   }
@@ -143,8 +143,7 @@ public class BodenartManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "BodenartCollectionMember" );
-    List list = (List)col.getProperty( "BodenartMember" );
+    List list = (List)rootFeature.getProperty( "soilLayerMember" );
     Date calcDate = new Date();
     asciiBuffer.getBodartBuffer().append( "Bodenparameter NA-Modell, Datum " + ( calcDate.toString() ) + "\n" );
     asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );

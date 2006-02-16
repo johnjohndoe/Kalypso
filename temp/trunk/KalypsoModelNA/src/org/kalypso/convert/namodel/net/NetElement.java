@@ -59,6 +59,8 @@ import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -69,27 +71,27 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
- * In the example below each channel represents one netelement. Here you can see the dependencies related the one
+ * In the example below each channel represents one netelement. Here you can see the dependencies related to the one
  * channel written in capital letter in the middle.
  * 
  * <pre>
- *                      Node-----&gt;-----Node
- *                        |              |
- *                        V              V
- *                        |              |
- *     Catchment---&gt;---CHANNEL        Channel (downstream)
- *         |              |           
- *         |              V           
- *         V              |           
- *         |             Node
- *         |              |
- *      Catchment         V
- *         |              |
- *         V           Channel (downstream)
- *         |
- *      Channel (downstream)
- *   
- *   
+ *                              Node-----&gt;-----Node
+ *                                |              |
+ *                                V              V
+ *                                |              |
+ *             Catchment---&gt;---CHANNEL        Channel (downstream)
+ *                 |              |           
+ *                 |              V           
+ *                 V              |           
+ *                 |             Node
+ *                 |              |
+ *              Catchment         V
+ *                 |              |
+ *                 V           Channel (downstream)
+ *                 |
+ *              Channel (downstream)
+ *           
+ *           
  * </pre>
  */
 public class NetElement
@@ -135,7 +137,8 @@ public class NetElement
 
   public Feature getDownStreamNode( )
   {
-    return m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    return m_workspace.resolveLink( m_channelFE, rt );
   }
 
   public boolean isCalculated( )
@@ -171,7 +174,10 @@ public class NetElement
 
   public void generateTimeSeries( ) throws IOException, Exception
   {
-    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(), "entwaesserungsStrangMember" );
+
+    final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
+    final IRelationType rt = (IRelationType) catchemtFT.getProperty( "entwaesserungsStrangMember" );
+    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchemtFT, rt );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
       final NAConfiguration conf = m_manager.m_conf;
@@ -233,7 +239,9 @@ public class NetElement
 
   public Feature getChannelsBelowDownStreamNode( )
   {
-    return m_workspace.resolveLink( getDownStreamNode(), "downStreamChannelMember" );
+    final Feature downStreamNode = getDownStreamNode();
+    final IRelationType rt = (IRelationType) downStreamNode.getFeatureType().getProperty( "downStreamChannelMember" );
+    return m_workspace.resolveLink( downStreamNode, rt );
   }
 
   public List getDownStreamNetElements( )
@@ -256,7 +264,9 @@ public class NetElement
   public void writeRootChannel( AsciiBuffer asciiBuffer, int virtualChannelId )
   {
     final IDManager idManager = m_conf.getIdManager();
-    final Feature knotu = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    final Feature knotu = m_workspace.resolveLink( m_channelFE, rt );
     if( knotu == null )
       System.out.println( "knotU=null" );
     asciiBuffer.getNetBuffer().append( "   " + virtualChannelId );
@@ -277,16 +287,20 @@ public class NetElement
   {
     final IDManager idManager = m_conf.getIdManager();
     asciiBuffer.addFeatureToWrite( getChannel() );
-    final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( "downStreamNodeMember" );
+    final Feature knotU = m_workspace.resolveLink( m_channelFE, rt );
 
     // append channel:
     asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( m_channelFE ), "i8" ) );
 
-    Feature[] features = m_workspace.getFeatures( m_manager.m_conf.getNodeFT() );
+    final IFeatureType nodeFT = m_manager.m_conf.getNodeFT();
+    final Feature[] features = m_workspace.getFeatures( nodeFT );
+    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( "downStreamChannelMember" );
     Feature knotO = null;
     for( int i = 0; i < features.length; i++ )
     {
-      if( m_channelFE == m_workspace.resolveLink( features[i], "downStreamChannelMember" ) )
+      if( m_channelFE == m_workspace.resolveLink( features[i], downStreamChannelMemberRT ) )
       {
         knotO = features[i];
         continue;
@@ -295,10 +309,13 @@ public class NetElement
     m_calculated = true;
     // collect related catchments
     final List<Feature> catchmentList = new ArrayList<Feature>();
-    final Feature[] Cfeatures = m_workspace.getFeatures( m_manager.m_conf.getCatchemtFT() );
+    final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
+    final Feature[] Cfeatures = m_workspace.getFeatures( catchemtFT );
+
+    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) nodeFT.getProperty( "entwaesserungsStrangMember" );
     for( int i = 0; i < Cfeatures.length; i++ )
     {
-      if( m_channelFE == m_workspace.resolveLink( Cfeatures[i], "entwaesserungsStrangMember" ) )
+      if( m_channelFE == m_workspace.resolveLink( Cfeatures[i], entwaesserungsStrangMemberRT ) )
         catchmentList.add( Cfeatures[i] );
     }
 

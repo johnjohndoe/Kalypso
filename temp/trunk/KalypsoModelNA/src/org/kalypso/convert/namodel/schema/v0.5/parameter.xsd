@@ -4,15 +4,82 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
-	<element name="Parameter" type="par:ParameterType"/>
+	<element name="Parameter" type="par:ParameterType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Modell-Parameter</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>snow list</label>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="ParameterType">
 		<complexContent>
 			<extension base="par:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="NutzungCollectionMember" type="par:NutzungCollectionAssociationType"/>
-					<element name="SnowCollectionMember" type="par:SnowCollectionAssociationType"/>
-					<element name="BodentypCollectionMember" type="par:BodentypCollectionAssociationType"/>
-					<element name="BodenartCollectionMember" type="par:BodenartCollectionAssociationType"/>
+					<element name="snowMember" type="par:SnowAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Schneeparameterliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>snow list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="soilLayerMember" type="par:SoilLayerAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Bodenhorizontliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil alyer list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="soiltypeMember" type="par:SoiltypeAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Bodentypenliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil type list</label>
+								<tooltip>sealing classes</tooltip>
+								<description>sealing classes</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuseMember" type="par:LanduseAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Landnutzungsgruppen</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>landuse classes</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="idealLandUseMember" type="par:IdealLandUseAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Liste idealisierter Jahresgänge</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>list of ideal landuse</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sealingMember" type="par:SealingAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Versiegelungsklassen</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>sealing classes</label>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -26,27 +93,16 @@
 				</sequence>-->
 		</complexContent>
 	</complexType>
-	<!--___SnowCollection_________________________________________________-->
-	<complexType name="SnowCollectionAssociationType">
+	<!--___Snow_________________________________________________-->
+	<complexType name="SnowAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:SnowCollection"/>
+					<element ref="par:Snow"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="SnowCollection" type="par:SnowCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="SnowCollectionType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Snow" type="par:SnowType" minOccurs="0" maxOccurs="unbounded"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!--___Snow_________________________________________________-->
 	<element name="Snow" type="par:SnowType" substitutionGroup="gml:_Feature"/>
 	<complexType name="SnowType">
 		<complexContent>
@@ -55,7 +111,8 @@
 					<!--
 (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
    -->
-					<element name="texttyp" type="string">
+					<!--ist in name schon drin!!!-->
+					<!--<element name="texttyp" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Schneetyp</label>
@@ -68,7 +125,7 @@
 								<description>Snow type, which can be assigned an area</description>
 							</documentation>
 						</annotation>
-					</element>
+					</element>-->
 					<element name="xwwo" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -143,35 +200,26 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<!--___NutzungCollection_________________________________________________-->
-	<complexType name="NutzungCollectionAssociationType">
+	<!--___Nutzung_________________________________________________-->
+	<complexType name="LanduseAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:NutzungCollection"/>
+					<element ref="par:Landuse"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="NutzungCollection" type="par:NutzungCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="NutzungCollectionType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Nutzung" type="par:NutzungType" minOccurs="0" maxOccurs="unbounded"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!--___Nutzung_________________________________________________-->
-	<element name="Nutzung" type="par:NutzungType" substitutionGroup="gml:_Feature"/>
-	<complexType name="NutzungType">
+	<element name="Landuse" type="par:LanduseType" substitutionGroup="gml:_Feature"/>
+	<complexType name="LanduseType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<!--
 (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
    -->
+   <!--kann weg, da in name enthalten-->
+   <!--
 					<element name="text" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -185,69 +233,51 @@
 								<description>Landuse labelling</description>
 							</documentation>
 						</annotation>
-					</element>
-					<element name="idealLandUse" type="zmlinline:ZmlInlineIdealKcWtLaiType">
+					</element>-->
+					<element name="idealLandUsePeriodLink" type="par:IdealLandUseAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Nutzungsparameter</label>
-								<tooltip>Idealisierte Jahresvegetationsperiode der Nutungsparameter </tooltip>
-								<description>Idealisierte Jahresvegetationsperiode mit kc=Verdunstungskorrekturfaktor gegenueber der pot. Verdunstung, wt=Wurzeltiefe und lai=Interzeptionsspeicherinhalt fuer ein Hydrologisches Jahr</description>
+								<label>NutzungsparameterLink</label>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Landuse parameter</label>
-								<tooltip>idealiszed annual vegetation cycle for the landuse parameter set</tooltip>
-								<description>idealiszed annual vegetation cycle for the landuse parameter set with kc=correction factor for evaporation vs. potential evaporation, wt=root depth of vegetation and lai=volume of interzeption storage (leaf area index) for a hydrological year</description>
+								<label>LanduseLink</label>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="m_vers" type="double">
+					<element name="sealingLink" type="par:SealingAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Versiegelungsgrad</label>
-								<tooltip>Versiegelungsgrad der Nutzung [-] (= 0-1)</tooltip>
-								<description>Versiegelungsgrad der Nutzung [-] (= 0-1)</description>
+								<label>VersiegelungsklasseLink</label>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Sealing rate</label>
-								<tooltip>Sealing rate of the landuse [-] (= 0-1)</tooltip>
-								<description>Sealing rate of the landuse [-] (= 0-1)</description>
+								<label>Sealing class link</label>
 							</documentation>
 						</annotation>
 					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!--___BodenartCollection_________________________________________________-->
-	<complexType name="BodenartCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="par:BodenartCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="BodenartCollection" type="par:BodenartCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="BodenartCollectionType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Bodenart" type="par:BodenartType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!--___Bodenart_________________________________________________-->
-	<element name="Bodenart" type="par:BodenartType" substitutionGroup="gml:_Feature"/>
-	<complexType name="BodenartType">
+	<complexType name="SoilLayerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:SoilLayer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SoilLayer" type="par:SoilLayerType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SoilLayerType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<!--
 (typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
 -->
-					<element name="typchar" type="string">
+					<!--ist in name schon drin!!!-->
+					<!--					<element name="typchar" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenartschlüssel</label>
@@ -261,6 +291,7 @@
 							</documentation>
 						</annotation>
 					</element>
+-->
 					<element name="typkap" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -350,38 +381,84 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<!--___BodentypCollection_________________________________________________-->
-	<complexType name="BodentypCollectionAssociationType">
+	<!--___VegetationCollection_________________________________________________-->
+	<complexType name="IdealLandUseAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:BodentypCollection"/>
+					<element ref="par:IdealLandUse"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="BodentypCollection" type="par:BodentypCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="BodentypCollectionType">
+	<element name="IdealLandUse" type="par:idealLandUseType" substitutionGroup="gml:_Feature"/>
+	<complexType name="idealLandUseType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="BodentypMember" type="par:BodentypAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="idealLandUseZML" type="zmlinline:ZmlInlineIdealKcWtLaiType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nutzungsparameter</label>
+								<tooltip>Idealisierte Jahresvegetationsperiode der Nutungsparameter </tooltip>
+								<description>Idealisierte Jahresvegetationsperiode mit kc=Verdunstungskorrekturfaktor gegenueber der pot. Verdunstung, wt=Wurzeltiefe und lai=Interzeptionsspeicherinhalt fuer ein Hydrologisches Jahr</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Landuse parameter</label>
+								<tooltip>idealiszed annual vegetation cycle for the landuse parameter set</tooltip>
+								<description>idealiszed annual vegetation cycle for the landuse parameter set with kc=correction factor for evaporation vs. potential evaporation, wt=root depth of vegetation and lai=volume of interzeption storage (leaf area index) for a hydrological year</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="BodentypAssociationType">
+	<!--___SealingClassCollection_________________________________________________-->
+	<complexType name="SealingAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Sealing"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Sealing" type="par:sealingType" substitutionGroup="gml:_Feature"/>
+	<complexType name="sealingType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="par:Bodentyp"/>
+					<element name="m_vers" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Versiegelungsgrad</label>
+								<tooltip>Versiegelungsgrad der Nutzung [-] (= 0-1)</tooltip>
+								<description>Versiegelungsgrad der Nutzung [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Sealing rate</label>
+								<tooltip>Sealing rate of the landuse [-] (= 0-1)</tooltip>
+								<description>Sealing rate of the landuse [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!--___Bodentyp_________________________________________________-->
-	<element name="Bodentyp" type="par:BodentypType" substitutionGroup="gml:_Feature"/>
-	<complexType name="BodentypType">
+	<complexType name="SoiltypeAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="par:Soiltype"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Soiltype" type="par:SoiltypeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SoiltypeType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -392,6 +469,8 @@
 (char3,a8)(xtief,*)_(xret,*)
 (char3,a8)(xtief,*)_(xret,*)
 			   -->
+					<!--ist in name schon drin!!!-->
+					<!--
 					<element name="text6" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -405,8 +484,8 @@
 								<description>Soil profile key, which allows classification of the Hydrotopes</description>
 							</documentation>
 						</annotation>
-					</element>
-					<element name="BodArtParameterMember" type="par:BodArtParameterAssociationType" maxOccurs="unbounded">
+					</element>-->
+					<element name="soilLayerParameterMember" type="par:SoilLayerParameterAssociationType" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenhorizonte</label>
@@ -425,21 +504,21 @@
 		</complexContent>
 	</complexType>
 	<!--BodArt Parameter-->
-	<complexType name="BodArtParameterAssociationType">
+	<complexType name="SoilLayerParameterAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:BodArtParameter"/>
+					<element ref="par:SoilLayerParameter"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="BodArtParameter" type="par:BodArtParameterType" substitutionGroup="gml:_Feature"/>
-	<complexType name="BodArtParameterType">
+	<element name="SoilLayerParameter" type="par:SoilLayerParameterType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SoilLayerParameterType">
 		<complexContent>
 			<extension base="par:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="BodArtLink" type="par:BodenartType">
+					<element name="soilLayerLink" type="par:SoilLayerAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bodenartschlüssel</label>

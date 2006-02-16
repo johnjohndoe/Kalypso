@@ -51,9 +51,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -79,7 +81,7 @@ public abstract class AbstractManager
 
   }
 
-  public Feature getFeature( String asciiStringId, FeatureType ft )
+  public Feature getFeature( String asciiStringId, IFeatureType ft )
   {
     String fId = mapID( asciiStringId, ft );
     if( !m_allFeatures.containsKey( fId ) )
@@ -93,12 +95,12 @@ public abstract class AbstractManager
   /**
    * maps the asciiStringId to the FeatureId
    */
-  private String mapID( String asciiStringId, FeatureType ft )
+  private String mapID( String asciiStringId, IFeatureType ft )
   {
     return ft.getName() + "_" + asciiStringId;
   }
 
-  public Feature getFeature( int asciiID, FeatureType ft )
+  public Feature getFeature( int asciiID, IFeatureType ft )
   {
     IntID intID = new IntID( asciiID, ft );
     if( !m_map.containsKey( intID ) )
@@ -107,7 +109,7 @@ public abstract class AbstractManager
     return m_allFeatures.get( stringID );
   }
 
-  public Feature getExistingFeature( int id, FeatureType[] ft )
+  public Feature getExistingFeature( int id, IFeatureType[] ft )
   {
     for( int i = 0; i < ft.length; i++ )
     {
@@ -118,7 +120,7 @@ public abstract class AbstractManager
     return null;
   }
 
-  public Feature getExistingFeature( int id, FeatureType ft )
+  public Feature getExistingFeature( int id, IFeatureType ft )
   {
     IntID intID = new IntID( id, ft );
     String stringID = m_map.get( intID );
@@ -128,7 +130,7 @@ public abstract class AbstractManager
 
   private static int count = 0;
 
-  public Feature createFeature( FeatureType ft )
+  public Feature createFeature( IFeatureType ft )
   {
     String stringID = mapID( count++, ft );
     return FeatureFactory.createFeature( stringID, ft, false );
@@ -153,7 +155,7 @@ public abstract class AbstractManager
     m_allFeatures.put( stringID, feature );
   }
 
-  public abstract String mapID( int id, FeatureType ft );
+  public abstract String mapID( int id, IFeatureType ft );
 
   private void createMapping( IntID intID )
   {
@@ -175,19 +177,19 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public void createProperties( HashMap<String, FeatureProperty> propCollector, String line, int formatLine ) throws Exception
+  public void createProperties( HashMap<String, String> propCollector, String line, int formatLine ) throws Exception
   {
     createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  protected void createProperties( HashMap<String, FeatureProperty> propCollector, String line, String formatLine ) throws Exception
+  protected void createProperties( HashMap<String, String> propCollector, String line, String formatLine ) throws Exception
   {
-    final HashMap propertyMap = FortranFormatHelper.scanf( formatLine, line );
+    final HashMap<String, String> propertyMap = FortranFormatHelper.scanf( formatLine, line );
     final Iterator it = propertyMap.keySet().iterator();
     while( it.hasNext() )
     {
       final String key = (String) it.next();
-      propCollector.put( key, FeatureFactory.createFeatureProperty( key, propertyMap.get( key ) ) );
+      propCollector.put( key, propertyMap.get( key ) );
     }
   }
 
@@ -196,15 +198,55 @@ public abstract class AbstractManager
     return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
   }
 
-  public void setParsedProperties( Feature feature, Collection collection )
+  /**
+   * this function sets alls properties in the feature, that can transformed to the propper typeclass, (e.g. String to
+   * Integer), methodes with not simple types must call
+   * <code>setParsedProperties( Feature feature, Collection<FeatureProperty> collection )</code>
+   */
+  public void setParsedProperties( final Feature feature, final HashMap<String, String> col )
   {
-    FeatureType ft = feature.getFeatureType();
+    final IFeatureType ft = feature.getFeatureType();
+    final IPropertyType[] props = ft.getProperties();
+    for( int i = 0; i < props.length; i++ )
+    {
+      if( props[i] instanceof IValuePropertyType )
+      {
+        final IValuePropertyType vpt = (IValuePropertyType) props[i];
+        final Class clazz = vpt.getValueClass();
+        final String value = col.get( vpt.getQName().getLocalPart() );
+        if( clazz == String.class )
+          feature.setProperty( vpt, value );
+        else if( clazz == Integer.class )
+          feature.setProperty( vpt, new Integer( value ) );
+        else if( clazz == Float.class )
+          feature.setProperty( vpt, new Float( value ) );
+        else if( clazz == Long.class )
+          feature.setProperty( vpt, new Long( value ) );
+        else if( clazz == Double.class )
+          feature.setProperty( vpt, new Double( value ) );
+        else if( clazz == Boolean.class )
+          feature.setProperty( vpt, new Boolean( value ) );
+        return;
+      }
+    }
+  }
 
-    Iterator it = collection.iterator();
+  public void setParsedProperties( final Feature feature, final HashMap<String, String> mapCol, Collection<FeatureProperty> featurePropertyCol )
+  {
+    if( mapCol != null )
+      setParsedProperties( feature, mapCol );
+    if( featurePropertyCol != null )
+      setParsedProperties( feature, featurePropertyCol );
+  }
+
+  public void setParsedProperties( Feature feature, Collection<FeatureProperty> collection )
+  {
+    final IFeatureType ft = feature.getFeatureType();
+    Iterator<FeatureProperty> it = collection.iterator();
     while( it.hasNext() )
     {
-      FeatureProperty feProp = (FeatureProperty) it.next();
-      if( ft.getProperty( feProp.getName() ) != null )
+      final FeatureProperty feProp = it.next();
+      if( ft.getProperty( feProp.getPropertyType().getQName() ) != null )
         feature.setProperty( feProp );
       else
         System.out.println( "property does not exist: >" + feProp.getName() + "=" + feProp.getValue() + "<" );
@@ -215,9 +257,9 @@ public abstract class AbstractManager
   {
     private final int m_intID;
 
-    private final FeatureType m_ft;
+    private final IFeatureType m_ft;
 
-    public IntID( int intID, FeatureType ft )
+    public IntID( int intID, IFeatureType ft )
     {
       m_intID = intID;
       m_ft = ft;
@@ -228,7 +270,7 @@ public abstract class AbstractManager
       return m_intID;
     }
 
-    public FeatureType getFeatureType( )
+    public IFeatureType getFeatureType( )
     {
       return m_ft;
     }

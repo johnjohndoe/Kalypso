@@ -48,9 +48,9 @@ import java.util.List;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -78,7 +78,7 @@ public class NaNodeResultProvider
     }
     else
     {
-      final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+      final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {

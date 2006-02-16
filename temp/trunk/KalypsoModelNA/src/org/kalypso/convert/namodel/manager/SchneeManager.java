@@ -11,11 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -61,24 +61,21 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 public class SchneeManager extends AbstractManager
 {
 
-
-  private final FeatureType m_snowFT;
+  private final IFeatureType m_snowFT;
 
   /*
-   * 
    * @author huebsch
    */
-  public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf )
-      throws IOException
+  public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
-    m_snowFT = parameterSchema.getFeatureType( "Schnee" );
+    m_snowFT = parameterSchema.getFeatureType( "Snow" );
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public String mapID( int id, FeatureType ft )
+  public String mapID( int id, IFeatureType ft )
   {
     return ft.getName() + id;
   }
@@ -90,11 +87,11 @@ public class SchneeManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-                                                                                                                     // FileReader(
-                                                                                                                     // file
+    // FileReader(
+    // file
     // ) );
     Feature fe = null;
-    //  Kommentarzeilen
+    // Kommentarzeilen
     for( int i = 0; i <= 2; i++ )
     {
       String line;
@@ -103,14 +100,14 @@ public class SchneeManager extends AbstractManager
         return null;
       System.out.println( reader.getLineNumber() + ": " + line );
     }
-    while( ( fe = readNextFeature( reader ) ) != null )
+    while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return (Feature[]) result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
-    HashMap propCollector = new HashMap();
+    final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
     // 6
     line = reader.readLine();
@@ -119,23 +116,22 @@ public class SchneeManager extends AbstractManager
     System.out.println( reader.getLineNumber() + ": " + line );
     createProperties( propCollector, line, 13 );
 
-    //  generate id:
-    FeatureProperty prop = (FeatureProperty)propCollector.get( "texttyp" );
-    String asciiStringId = (String)prop.getValue();
+    // generate id:
+    // final FeatureProperty prop = (FeatureProperty)propCollector.get( "name" );
+    String asciiStringId = propCollector.get( "name" );
     final Feature feature = getFeature( asciiStringId, m_snowFT );
 
     // continue reading
 
-    Collection collection = propCollector.values();
-    setParsedProperties( feature, collection );
+    // Collection collection = propCollector.values();
+    setParsedProperties( feature, propCollector, null );
     return feature;
   }
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
-    Feature col = (Feature)rootFeature.getProperty( "SnowCollectionMember" );
-    List list = (List)col.getProperty( "SnowMember" );
+    List list = (List) rootFeature.getProperty( "snowMember" );
     asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
     asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );
@@ -143,9 +139,9 @@ public class SchneeManager extends AbstractManager
     while( iter.hasNext() )
     {
 
-      final Feature snowFE = (Feature)iter.next();
-      //    TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-      //      if( asciiBuffer.writeFeature( snowFE ) )
+      final Feature snowFE = (Feature) iter.next();
+      // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
+      // if( asciiBuffer.writeFeature( snowFE ) )
       writeFeature( asciiBuffer, snowFE );
     }
 

@@ -49,9 +49,9 @@ import java.net.URL;
 import java.util.Date;
 
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * @author doemming
@@ -88,17 +88,17 @@ public class NAConfiguration
 
   private final File m_gmlBaseDir;
 
-  private final FeatureType m_nodeFT;
+  private final IFeatureType m_nodeFT;
 
-  private final FeatureType m_catchmentFT;
+  private final IFeatureType m_catchmentFT;
 
-  private final FeatureType m_vChannelFT;
+  private final IFeatureType m_vChannelFT;
 
-  private final FeatureType m_stChannelFT;
+  private final IFeatureType m_stChannelFT;
 
-  private final FeatureType m_kmChannelFT;
+  private final IFeatureType m_kmChannelFT;
 
-  private final FeatureType m_bodartFT;
+  private final IFeatureType m_bodartFT;
 
   private Date m_simulationForecast;
 
@@ -142,11 +142,6 @@ public class NAConfiguration
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    // schemas
-    //    m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
-    //    m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    //    m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
-    //    m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
     final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
     final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
 
@@ -156,7 +151,7 @@ public class NAConfiguration
     m_stChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
-    m_bodartFT = paraSchema.getFeatureType( "Bodenart" );
+    m_bodartFT = paraSchema.getFeatureType( "SoilLayer" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
@@ -267,27 +262,27 @@ public class NAConfiguration
     return m_gmlBaseDir;
   }
 
-  public FeatureType getNodeFT()
+  public IFeatureType getNodeFT()
   {
     return m_nodeFT;
   }
 
-  public FeatureType getCatchemtFT()
+  public IFeatureType getCatchemtFT()
   {
     return m_catchmentFT;
   }
 
-  public FeatureType getKmChannelFT()
+  public IFeatureType getKmChannelFT()
   {
     return m_kmChannelFT;
   }
 
-  public FeatureType getVChannelFT()
+  public IFeatureType getVChannelFT()
   {
     return m_vChannelFT;
   }
 
-  public FeatureType getStChannelFT()
+  public IFeatureType getStChannelFT()
   {
     return m_stChannelFT;
   }
@@ -382,7 +377,7 @@ public class NAConfiguration
     return m_nutzungDir;
   }
 
-  public FeatureType getBodartFT()
+  public IFeatureType getBodartFT()
   {
     return m_bodartFT;
   }

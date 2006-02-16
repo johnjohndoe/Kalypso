@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.optimize.OptimizeCalcDataProvider;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
@@ -65,7 +66,6 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -108,8 +108,7 @@ public class NaModelCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater,
-      final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
@@ -119,9 +118,8 @@ public class NaModelCalcJob implements ISimulation
       final ISimulationDataProvider innerDataProvider = getDataProviderFromMeasure( logger, dataProvider, tmpdir );
 
       // testen ob calcjob optimization hat
-      //      final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( innerDataProvider
-          .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+      // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( innerDataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
       final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 
@@ -150,13 +148,10 @@ public class NaModelCalcJob implements ISimulation
    * @return modified dataprovider including measures or same dataprovider if no measures are used <br>
    *         TODO move this business to a measureclacjob !
    */
-  private ISimulationDataProvider getDataProviderFromMeasure( final Logger logger,
-      final ISimulationDataProvider originalDataProvider, final File tmpDir )
+  private ISimulationDataProvider getDataProviderFromMeasure( final Logger logger, final ISimulationDataProvider originalDataProvider, final File tmpDir )
   {
     final OptimizeCalcDataProvider result = new OptimizeCalcDataProvider( originalDataProvider );
-    if( !( originalDataProvider.hasID( NaModelConstants.IN_MEASURE_ID )
-        && originalDataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) && originalDataProvider
-        .hasID( NaModelConstants.IN_MODELL_ID ) ) )
+    if( !(originalDataProvider.hasID( NaModelConstants.IN_MEASURE_ID ) && originalDataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) && originalDataProvider.hasID( NaModelConstants.IN_MODELL_ID )) )
     {
       final StringBuffer buffer = new StringBuffer();
       if( !originalDataProvider.hasID( NaModelConstants.IN_MEASURE_ID ) )
@@ -175,14 +170,13 @@ public class NaModelCalcJob implements ISimulation
       /** Get available Measuers */
       final URL measureURL = originalDataProvider.getURLForID( NaModelConstants.IN_MEASURE_ID );
       final GMLWorkspace measureWorkspace = GmlSerializer.createGMLWorkspace( measureURL );
-      /**Insert implemented Measure*/
+      /** Insert implemented Measure */
       insertStorageChannelMeasure( measureWorkspace, originalDataProvider, result, logger, tmpDir );
       insertSealingChangeMeasure( measureWorkspace, originalDataProvider, result, logger, tmpDir );
     }
     catch( Exception e )
     {
-      logger.info( "could not read measure from dataprovider, will continue no meauser used,\n reason:"
-          + e.getLocalizedMessage() );
+      logger.info( "could not read measure from dataprovider, will continue no meauser used,\n reason:" + e.getLocalizedMessage() );
       e.printStackTrace();
       return result;
     }
@@ -197,13 +191,11 @@ public class NaModelCalcJob implements ISimulation
    * @param tmpDir
    * @throws Exception
    */
-  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider,
-      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException,
-      Exception
+  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
     final URL hydrotopURL = originalDataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID );
     // Versiegelungsgrad Measure
-    final FeatureType sealingFT = measureWorkspace.getFeatureType( MEASURE_SEAL_FEATURE );
+    final IFeatureType sealingFT = measureWorkspace.getFeatureType( MEASURE_SEAL_FEATURE );
     final Feature[] sealingFEs = measureWorkspace.getFeatures( sealingFT );
     if( sealingFEs.length == 0 )
     {
@@ -211,15 +203,14 @@ public class NaModelCalcJob implements ISimulation
       return;
     }
     final GMLWorkspace hydroWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
-    //      final FeatureType hydroFT = hydroWorkspace.getFeatureType( null );
-    final FeatureList hydroList = (FeatureList)hydroWorkspace
-        .getFeatureFromPath( "HydrotopCollectionMember/HydrotopMember" );
+    // final IFeatureType hydroFT = hydroWorkspace.getFeatureType( null );
+    final FeatureList hydroList = (FeatureList) hydroWorkspace.getFeatureFromPath( "HydrotopCollectionMember/HydrotopMember" );
 
     // for geometry operations hydroworkspace and measureworkspace must use the same coordinatessystem,
     // so let measure transform to the one hydo uses. (less work than other way)
     if( hydroList.size() > 0 )
     {
-      final Feature feature = (Feature)hydroList.get( 0 );
+      final Feature feature = (Feature) hydroList.get( 0 );
       final GM_Object geom = feature.getGeometryProperties()[0];
       final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
@@ -231,17 +222,17 @@ public class NaModelCalcJob implements ISimulation
       int c_error = 0;
       final Feature sealFE = sealingFEs[i];
       double sealMeasure = FeatureHelper.getAsDouble( sealFE, MEASURE_PROP_SEAL_FACTOR, 1.0d );
-      final GM_Object measureGEOM = (GM_Object)sealFE.getProperty( MEASURE_PROP_SEAL_GEOM );
+      final GM_Object measureGEOM = (GM_Object) sealFE.getProperty( MEASURE_PROP_SEAL_GEOM );
       final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
-      //        final double areaMeasure = jtsMeasureGEOM.getArea();
+      // final double areaMeasure = jtsMeasureGEOM.getArea();
       final GM_Envelope selENV = sealFE.getEnvelope();
       final List hydrosInENV = hydroList.query( selENV, null );
       for( Iterator iter = hydrosInENV.iterator(); iter.hasNext(); )
       {
-        final Feature hydroFE = (Feature)iter.next();
+        final Feature hydroFE = (Feature) iter.next();
         final double sealHydro = FeatureHelper.getAsDouble( hydroFE, HYDRO_PROP_SEAL_FACTOR, 1.0d );
 
-        final GM_Object hydroGEOM = (GM_Object)hydroFE.getProperty( HYDRO_PROP_GEOM );
+        final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( HYDRO_PROP_GEOM );
         final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
         Geometry intersection = null;
         try
@@ -259,15 +250,13 @@ public class NaModelCalcJob implements ISimulation
         final double areaHydro = jtsHydroGEOM.getArea();
         // TODO check for numerical best order
         // remark: it does not matter, if in next loop the same hydrotop again is affected
-        final double newSealFactor = ( ( areaHydro - areaIntersection ) * sealHydro + areaIntersection * sealMeasure )
-            / areaHydro;
+        final double newSealFactor = ((areaHydro - areaIntersection) * sealHydro + areaIntersection * sealMeasure) / areaHydro;
         hydroFE.setProperty( HYDRO_PROP_SEAL_FACTOR, new Double( newSealFactor ) );
       }
-      logger.info( "Fehler Hydrotop Measure: " + c_error + "/" + ( c_success + c_error ) + "\n" );
+      logger.info( "Fehler Hydrotop Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
     }
     final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", tmpDir );
-    final Writer writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ),
-        DEFAULT_ENCONDING ) );
+    final Writer writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ), DEFAULT_ENCONDING ) );
     try
     {
       GmlSerializer.serializeWorkspace( writerHydroTop, hydroWorkspace, DEFAULT_ENCONDING );
@@ -288,31 +277,26 @@ public class NaModelCalcJob implements ISimulation
    * @param tmpDir
    * @throws Exception
    */
-  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider,
-      OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException,
-      Exception
+  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, OptimizeCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
     final URL measureURL = originalDataProvider.getURLForID( NaModelConstants.IN_MEASURE_ID );
     final URL modelURL = originalDataProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
-    //*Get available Measuers*/
-    final FeatureType measureRhbFT = measureWorkspace.getFeatureType( MEASURE_RETENSION_BASIN_FEATURE );
+    // *Get available Measuers*/
+    final IFeatureType measureRhbFT = measureWorkspace.getFeatureType( MEASURE_RETENSION_BASIN_FEATURE );
     final Feature[] measureRhbFEs = measureWorkspace.getFeatures( measureRhbFT );
     if( measureRhbFEs.length == 0 )
     {
-      logger.info( "measure " + MEASURE_RETENSION_BASIN_FEATURE
-          + " is empty, continue normal simulation without this measure" );
+      logger.info( "measure " + MEASURE_RETENSION_BASIN_FEATURE + " is empty, continue normal simulation without this measure" );
       return;
     }
     final GMLWorkspace modelworkspace = GmlSerializer.createGMLWorkspace( modelURL );
-    final FeatureList rbList = (FeatureList)modelworkspace
-        .getFeatureFromPath( "ChannelCollectionMember/channelMember[StorageChannel]" );
-    final FeatureList catchementList = (FeatureList)modelworkspace
-        .getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
+    final FeatureList rbList = (FeatureList) modelworkspace.getFeatureFromPath( "ChannelCollectionMember/channelMember[StorageChannel]" );
+    final FeatureList catchementList = (FeatureList) modelworkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
     // for geometry operations modelWorkspace and measureworkspace must use the same coordinatessystem,
     // so let measure transform to the one hydo uses. (less work than other way)
     if( rbList.size() > 0 )
     {
-      final Feature feature = (Feature)rbList.get( 0 );
+      final Feature feature = (Feature) rbList.get( 0 );
       final GM_Object geom = feature.getGeometryProperties()[0];
       final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
@@ -324,7 +308,7 @@ public class NaModelCalcJob implements ISimulation
       int c_error = 0;
 
       final Feature measureRhbFE = measureRhbFEs[i];
-      final GM_Object measureRhbGEOM = (GM_Object)measureRhbFE.getProperty( MEASURE_PROP_RETENSION_GEOM );
+      final GM_Object measureRhbGEOM = (GM_Object) measureRhbFE.getProperty( MEASURE_PROP_RETENSION_GEOM );
       GM_Envelope rbENV = measureRhbGEOM.getEnvelope();
       // TODO was passiert wenn das RHB nicht eindeutig in einem catchment liegt (hier wird angenommen das es
       // komplet
@@ -332,25 +316,23 @@ public class NaModelCalcJob implements ISimulation
       List catchmentInENV = catchementList.query( rbENV, null );
       for( Iterator iter = catchmentInENV.iterator(); iter.hasNext(); )
       {
-        Feature catchment = (Feature)iter.next();
-        GM_Object catchmentGEOM = (GM_Object)catchment.getProperty( CATCHMENT_PROP_GEOM );
+        Feature catchment = (Feature) iter.next();
+        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( CATCHMENT_PROP_GEOM );
         if( catchmentGEOM.contains( measureRhbGEOM ) )
         {
 
-          FeatureType storageChannelFT = modelworkspace.getFeatureType( NaModelHelper.STORAGE_CHANNEL_ELEMENT_NAME );
-          int error = NaModelHelper.addRHBinCatchment( new CommandableWorkspace( modelworkspace ), catchment,
-              storageChannelFT, measureRhbFE );
+          IFeatureType storageChannelFT = modelworkspace.getFeatureType( NaModelHelper.STORAGE_CHANNEL_ELEMENT_NAME );
+          int error = NaModelHelper.addRHBinCatchment( new CommandableWorkspace( modelworkspace ), catchment, storageChannelFT, measureRhbFE );
           if( error < 0 )
             c_error++;
           else
             c_success++;
         }
       }
-      logger.info( "Fehler Rückhaltebecken Measure: " + c_error + "/" + ( c_success + c_error ) + "\n" );
+      logger.info( "Fehler Rückhaltebecken Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
     }
     final File modelFile = File.createTempFile( "measured_model", ".gml", tmpDir );
-    final Writer writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ),
-        DEFAULT_ENCONDING ) );
+    final Writer writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), DEFAULT_ENCONDING ) );
     try
     {
       GmlSerializer.serializeWorkspace( writerModel, modelworkspace, DEFAULT_ENCONDING );
@@ -368,7 +350,7 @@ public class NaModelCalcJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "resources/nacalcjob_spec.xml" );
   }
