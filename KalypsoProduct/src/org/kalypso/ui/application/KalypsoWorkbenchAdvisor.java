@@ -149,11 +149,15 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       //      fileMenu.remove( "export" );
 
       final IMenuManager editMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_EDIT );
-      editMenu.remove( "bookmark" );
-      editMenu.remove( "addTask" );
+      if( editMenu != null )
+      {
+        editMenu.remove( "bookmark" );
+        editMenu.remove( "addTask" );
+      }
 
       final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
-      helpMenu.remove( "tipsAndTricks" );
+      if( helpMenu != null )
+        helpMenu.remove( "tipsAndTricks" );
     }
 
     // always show in which scenario we are
@@ -161,7 +165,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final StatusLineContributionItem item = new StatusLineContributionItem( "scenario" );
     if( scenario != null && item != null )
       item.setText( "Szenario: " + scenario.getName() );
-    
+
     if( actionConfigurer != null )
     {
       final IStatusLineManager statusLineManager = actionConfigurer.getStatusLineManager();
@@ -193,33 +197,6 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       windowConfigurer.setShowProgressIndicator( false );
       windowConfigurer.setShowStatusLine( false );
     }
-  }
-
-  /**
-   * @see org.eclipse.ui.application.WorkbenchAdvisor#postWindowOpen(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
-   */
-  public void postWindowOpen( final IWorkbenchWindowConfigurer configurer )
-  {
-    super.postWindowOpen( configurer );
-
-    // HACK: close the WizardPerspective if it is still open
-    // TODO: was?
-    //    final IWorkbenchWindow window = configurer.getWindow();
-    //    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
-    //    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
-    //        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
-    //    
-    //    final IWorkbenchPage activePage = window.getActivePage();
-    //    
-    //    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
-    //    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
-    //    {
-    //      // activate perspective, to it can be closed
-    //      activePage.setPerspective( wizardPerspective );
-    //      activePage.setPerspective( wizardPerspective );
-    //      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
-    //      closePerspAction.run();
-    //    }
   }
 
   /**

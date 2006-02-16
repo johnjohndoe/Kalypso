@@ -46,6 +46,7 @@
       <import plugin="org.kalypso.auth"/>
       <import plugin="org.kalypso.metadoc"/>
       <import plugin="org.kalypso.services.core.client"/>
+      <import plugin="org.kalypso.simulation.ui"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
