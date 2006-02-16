@@ -129,7 +129,7 @@ public class DWDConfigureTest extends TestCase
   public void createBaseRasterDWDRaster( final URL lmbaseURL, final File fileDwdZmlN ) throws Exception
   {
     System.out.println( "Start reading raster..." );
-    final DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmbaseURL, "EPSG:31469" );
+    final DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmbaseURL, "EPSG:31468" );
     System.out.println( "Raster read" );
 
     //    final File file = File.createTempFile( "raster", ".gml" );

@@ -496,8 +496,8 @@
     </indexterm>
 
     <para>Die in <xref linkend="kalypso_installation" /> beschriebene
-    Client-Server-Architektur basiert auf folgendem
-    Datenmanagement - Prinzip:</para>
+    Client-Server-Architektur basiert auf folgendem Datenmanagement -
+    Prinzip:</para>
 
     <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
     KALYPSO-Server gespeicherte Modelle geladen werden. Diese aktuellen
@@ -518,9 +518,8 @@
     gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
     kann.</para>
 
-    <para>Für den Anwender und Planer (Anwendungsbetrieb) bleibt das
-    Datenmanagement weitgehend verborgen, da er automatisch durch den
-    jeweiligen Assistenten geführt wird.</para>
+    <para>Wir der Benutzer hingegen mittels Assistenten durch das Programm
+    geführt, bleibt Ihm das Datenmanagement weitgehend verborgen.</para>
   </section>
 
   <section id="dokumentationen">
