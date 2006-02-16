@@ -81,17 +81,9 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 class FeatureProperty_Impl implements FeatureProperty, Serializable
 {
 
-//    private final String name;
-
   private final Object m_value;
 
   private IPropertyType m_propertyType;
-
-//  /**
-//   * default constructor
-//   */
-//  FeatureProperty_Impl()
-//  {}
 
   /**
    * constructor for complete initializing the FeatureProperty

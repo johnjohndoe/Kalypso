@@ -125,6 +125,7 @@ public interface DeegreeFeature
 
   /**
    * sets the value for the submitted property. if no property with the submitted exists the property will be added
+   * @deprecated use setProperty(IPropertyType pt, Object value);
    */
   void setProperty( FeatureProperty property );
 
