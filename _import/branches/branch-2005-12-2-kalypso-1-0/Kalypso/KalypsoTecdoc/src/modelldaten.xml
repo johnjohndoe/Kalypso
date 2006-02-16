@@ -29,7 +29,9 @@
     uns verwendete Verzeichnisstruktur, beginnend unterhalb des
     Projektverzeichnisses):</para>
 
-    <table>
+    <!--PROFILING ANFANG sachsen-->
+
+    <table vendor="sachsen">
       <title>Tabelle 6: Modellstruktur</title>
 
       <tgroup cols="4">
@@ -85,7 +87,7 @@
           </row>
 
           <row>
-            <entry>/.modell/</entry>
+            <entry>/.model/</entry>
 
             <entry>calcCaseConfig.xml</entry>
 
@@ -209,17 +211,158 @@
       </tgroup>
     </table>
 
+    <!--PROFILING ENDE sachsen-->
+
+    <!--PROFILING ANFANG sachsen-anhalt-->
+
+    <!--Hier fehlt das Launch-Verzeichnis, das u.a. CalcCaseConfig.xml und modelspec.xml ersetzt hat-->
+
+    <table vendor="sachsen-anhalt">
+      <title>Tabelle 6: Modellstruktur</title>
+
+      <tgroup cols="4">
+        <colspec align="left" colwidth="2*" />
+
+        <colspec align="left" colwidth="2*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="1*" />
+
+        <thead>
+          <row>
+            <entry align="center">Pfad</entry>
+
+            <entry align="center">Datei</entry>
+
+            <entry align="center">Erläuterung</entry>
+
+            <entry align="center">Standort</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>/</entry>
+
+            <entry>.project</entry>
+
+            <entry>Haupt-Projektdatei</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/</entry>
+
+            <entry>.metadata</entry>
+
+            <entry>Modell-spezifische Parameter</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/</entry>
+
+            <entry>modell.gml</entry>
+
+            <entry>Grunddaten des Modells</entry>
+
+            <entry>frei</entry>
+          </row>
+
+          <row>
+            <entry>/.model/</entry>
+
+            <entry>calcWizard.xml</entry>
+
+            <entry>Konfiguration Vorhersage-Assistent</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.prognose/</entry>
+
+            <entry>*.*</entry>
+
+            <entry>Ablage der Vorhersage-Varianten</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.settings/</entry>
+
+            <entry>*.prefs</entry>
+
+            <entry>Interne Konfigurationsdatei</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.styles/</entry>
+
+            <entry>*.sld</entry>
+
+            <entry>Style-Definitionsdateien für GIS-Darstellung</entry>
+
+            <entry>frei</entry>
+          </row>
+
+          <row>
+            <entry>/.templates/</entry>
+
+            <entry>*.odt, *.ott, *.gmt, *.gtt</entry>
+
+            <entry>Vorlagendateien für Rechenvarianten und
+            Vorhersage-Assistenten</entry>
+
+            <entry>frei</entry>
+          </row>
+
+          <row>
+            <entry>/.shapes/</entry>
+
+            <entry>*.shp, *.*</entry>
+
+            <entry>Weitere feste Grunddaten wie z.B. Shape-Dateien,
+            Rasterdaten etc.</entry>
+
+            <entry>frei</entry>
+          </row>
+
+          <row>
+            <entry>/Rechenvarianten/</entry>
+
+            <entry>*.*</entry>
+
+            <entry>Ablageverzeichnis für Rechenvarianten</entry>
+
+            <entry>frei</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <!--PROFILING ENDE sachsen-anhalt-->
+
     <para>Mit Punkt <emphasis>.</emphasis> beginnende Verzeichnisse blendet
     der Expertenmodus von KALYPSO normalerweise aus. Der Menüpunkt
-    <guimenu>Filter</guimenu> blendet den Navigator ein.</para>
+    <guimenu>Filter</guimenu> des Navigators blendet den Navigatorfilter ein.
+    Der Navigatorfilter definiert, welche Daten ausgeblendet werden.</para>
   </section>
 
   <section id="abschn_5_2">
     <title>GIS-Daten</title>
 
     <para>Die Modellierung von Modellen in KALYPSO Enterprise basiert auf den
-    Standards des OpenGIS-Konsortiums (OGC, http://www.opengis.org) und des
-    World-Wide-Web-Konsortiums (W3C, http://www.w3c.org).</para>
+    Standards des OpenGeospatial-Konsortiums (OGC, <ulink
+    url="http://www.opengeospatial.org">http://www.opengeospatial.org</ulink>)
+    und des World-Wide-Web-Konsortiums (W3C, <ulink
+    url="http://www.w3c.org">http://www.w3c.org</ulink>).</para>
 
     <para>Die Formatierung der Modelldaten ist in der vom OGC spezifizierten
     Geography Markup Language (GML) realisiert. GML ist eine XML-Codierung zum
@@ -235,12 +378,13 @@
     <title>Zeitreihen</title>
 
     <para>Das Zeitreihenformat (ZML) ähnelt dem OGC-Observation-Schema (siehe
-    http://www.opengeospatial.org/docs/03-022r3.pdf für mehr Information), ist
-    aber einfacher aufgebaut. Zum Zeitpunkt der Realisierung gab es noch keine
-    Implementierung dieses Standards.</para>
+    <ulink
+    url="http://www.opengeospatial.org/docs/03-022r3.pdf">http://www.opengeospatial.org/docs/03-022r3.pdf</ulink>
+    für mehr Information), ist aber einfacher aufgebaut. Zum Zeitpunkt der
+    Realisierung gab es noch keine Implementierung dieses Standards.</para>
 
     <para>Das ZML-Schema befindet sich im KalypsoCore-Projekt unter:
-    etc/schemas/zml/observation.xsd.</para>
+    <filename>etc/schemas/zml/observation.xsd</filename>.</para>
 
     <para>ZML ist besonders für große Datenmengen geeignet. Die
     Implementierung unterstützt drei Arten von Datenintegration:</para>
@@ -266,15 +410,16 @@
       <title>ZML-inline</title>
 
       <para>Dieses Format orientiert sich am stärksten am OGC-Schema. Die
-      Daten werden direkt in das `valueArray’-Element `axis’-Elements
-      geschrieben.</para>
+      Daten werden direkt in das <quote>valueArray</quote>-Element des
+      <quote>axis</quote>-Elements geschrieben (siehe <xref
+      linkend="abb_ZML_inline" />).</para>
 
-      <figure>
-        <title>Beispiel</title>
+      <figure id="abb_ZML_inline">
+        <title>Beispiel ZML-inline</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kap5/ZML_inline.png" />
+            <imagedata fileref="img/kap5/ZML_inline.png" scale="70" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -286,32 +431,34 @@
       <para>Dieses Format dient der Flexibilität. Wenn Zeitreihen als
       ASCII-Datei schon vorhanden sind, bietet das ZML-Schema die Möglichkeit,
       diese Daten aus der ZML-Datei zu verlinken. Eine Umformatierung der
-      Ausgangsdateien ist nicht erforderlich.</para>
+      Ausgangsdateien ist nicht erforderlich (siehe <xref
+      linkend="abb_ZML_linked" />).</para>
 
-      <figure>
-        <title>Beispiel</title>
+      <figure id="abb_ZML_linked">
+        <title>Beispiel ZML-linked</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kap5/ZML_linked.png" />
+            <imagedata fileref="img/kap5/ZML_linked.png" scale="70" />
           </imageobject>
         </mediaobject>
       </figure>
     </section>
 
-    <section>
+    <section id="sec_modelldaten_ZML_block_inline">
       <title>ZML-block-inline</title>
 
       <para>Als Alternative zum ZML-linked Format bietet sich das
-      ZML-block-inline Format an. Die Daten werden ’en bloc’ direkt in die
-      ZML-Datei gespeichert.</para>
+      ZML-block-inline Format an. Die Daten werden <quote>en bloc</quote>
+      direkt in die ZML-Datei gespeichert (siehe <xref
+      linkend="abb_ZMLblock_inline" />).</para>
 
-      <figure>
-        <title>Beispiel</title>
+      <figure id="abb_ZMLblock_inline">
+        <title>Beispiel ZML-block-inline</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/kap5/ZML_block_inline.png" />
+            <imagedata fileref="img/kap5/ZML_block_inline.png" scale="70" />
           </imageobject>
         </mediaobject>
       </figure>

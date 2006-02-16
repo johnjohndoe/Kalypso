@@ -29,30 +29,40 @@
   <section>
     <title>Modellspezifikation und Grunddaten</title>
 
+    <!--Die folgende Aufzählung sieht in PDF nicht gut aus... (taucht im weiteren Verlauf des Dokumentes auch immer wieder auf)-->
+
     <formalpara>
       <title>MODELL-PROJEKT</title>
 
       <para>Bevor mit der Spezifikation begonnen werden kann, muss im
       KALYPSO-Arbeitsbereich (<guilabel>Navigator</guilabel>) ein neues,
-      leeres Projekt über <guimenuitem>Datei-Neu</guimenuitem> angelegt
-      werden. Das neue Projekt enthält lediglich die Datei
-      <filename>.project</filename>, welche jetzt um die Zeile
-      &lt;nature&gt;org.Kalypso.ui.ModelNature&lt;/nature&gt; Im Unterpunkt
-      &lt;natures&gt; ergänzt werden muss, um es als KALYPSO-Modell-Projekt zu
-      kennzeichnen. Neue Dateien und Verzeichnisse können im Projekt ebenfalls
-      über den Menüpunkt <guimenuitem>Datei-Neu</guimenuitem> erstellt
-      werden.</para>
+      leeres Projekt über <menuchoice>
+          <guimenu>Datei</guimenu>
+
+          <guimenuitem>Neu</guimenuitem>
+        </menuchoice> angelegt werden. Das neue Projekt enthält lediglich die
+      Datei <filename>.project</filename>, welche jetzt um die Zeile
+      <programlisting>&lt;nature&gt;org.Kalypso.ui.ModelNature&lt;/nature&gt;</programlisting>Im
+      Unterpunkt &lt;natures&gt; ergänzt werden muss, um es als
+      KALYPSO-Modell-Projekt zu kennzeichnen. Neue Dateien und Verzeichnisse
+      können im Projekt ebenfalls über den Menüpunkt <menuchoice>
+          <guimenu>Datei</guimenu>
+
+          <guimenuitem>Neu</guimenuitem>
+        </menuchoice> erstellt werden.</para>
     </formalpara>
 
     <formalpara>
       <title>SPEZIFIKATION</title>
 
-      <para>Die Spezifikation der Modell-(Grund-)Daten erfolgt in Form von XML
-      Schemata (*.xsd). Die Spezifikation muss konform zum OGC GML2 Standard
-      erfolgen (siehe auch <xref linkend="abschn_5_2" />). Die Ablage der .xsd
-      Dateien ist frei wählbar, wir empfehlen die Ablage unter
-      /.model/schemata/. Ebenfalls frei wählbar ist, ob die
-      Modellspezifikation in einer einzelnen Datei abgelegt ist oder auf
+      <!--Verzeichnis schemata ist veraltet-->
+
+      <para>Die Spezifikation der Modell-(Grund-)Daten erfolgt in Form von
+      XML-Schemata (*.xsd). Die Spezifikation muss konform zum GML2-Standard
+      des OGC erfolgen (siehe auch <xref linkend="abschn_5_2" />). Die Ablage
+      der XSD-Dateien ist frei wählbar, wir empfehlen die Ablage unter
+      <filename>/.model/schemata/</filename>. Ebenfalls frei wählbar ist, ob
+      die Modellspezifikation in einer einzelnen Datei abgelegt ist oder auf
       mehrere Dateien verteilt wird. Verweise (Importe) der Schemata
       untereinander sollten immer mit relativen Pfaden erfolgen.</para>
     </formalpara>
@@ -61,9 +71,9 @@
       <title>MODELL-DATEN</title>
 
       <para>Nach der Spezifikation der Modell-Daten können bereits die
-      Modelldaten in Form einer .gml Datei erstellt werden. Diese muss
-      natürlich gegen die .xsd Schematas validieren. Die Modelldaten können
-      dabei so angelegt werden, dass alle Daten in einer einzelnen .gml Datei
+      Modelldaten in Form einer GML-Datei erstellt werden. Diese muss
+      natürlich gegen die XSD-Schemata validieren. Die Modelldaten können
+      dabei so angelegt werden, dass alle Daten in einer einzelnen GML-Datei
       abgelegt oder alternativ über mehrere Dateien verteilt werden. Je nach
       Größe des Modells kann es sinnvoll sein, die Modelldaten aus bestehenden
       Modelldaten automatisch generieren zu lassen. Hierzu wird natürlich eine
@@ -93,23 +103,25 @@
     <para>Nach dem Erstellen der Grunddaten besteht der nächste Schritt darin,
     die Konfiguration der Rechenvarianten zu definieren. Eine Rechenvariante
     besteht dabei stets aus einem Unterverzeichnis des Projektes, welches
-    durch Vorhandensein der Datei `.calculation’ als solches gekennzeichnet
-    ist. Die Datei `.calculation’ enthält dabei die für die Berechnung
-    benötigten Steuerdaten, insbesondere den Zeitraum der Modellrechnung,
-    welcher für den Import von Zeitreihen aus dem Zeitreihen-Dienst benötigt
-    wird.</para>
+    durch Vorhandensein der Datei <filename>.calculation</filename> als
+    solches gekennzeichnet ist. Die Datei <filename>.calculation</filename>
+    enthält dabei die für die Berechnung benötigten Steuerdaten, insbesondere
+    den Zeitraum der Modellrechnung, welcher für den Import von Zeitreihen aus
+    dem Zeitreihen-Dienst benötigt wird.</para>
 
     <formalpara>
       <title>.CALCULATION</title>
 
-      <para>Die Datei `.calculation’ ist eine Datei im GML Format, welche beim
-      Erzeugen einer Rechenvariante automatisch angezeigt wird. Zu diesem
-      Zweck muss als Vorlage eine Datei `.calculation.template’ im Verzeichnis
-      /.model/ des Projektes angelegt sein. Die Vorlage wird beim Erstellen
-      einer Rechenvariante automatisch in das neue Verzeichnis übernommen und
-      mittels der Standard-Feature-Ansicht visualisiert. Dabei können durch
-      Vergabe von Platzhaltern bestimmte Felder automatisch vorbelegt werden.
-      Folgende Platzhalter sind definiert: <itemizedlist>
+      <para>Die Datei <filename>.calculation</filename> ist eine Datei im
+      GML-Format, welche beim Erzeugen einer Rechenvariante automatisch
+      angezeigt wird. Zu diesem Zweck muss als Vorlage eine Datei
+      <filename>.calculation.template</filename> im Verzeichnis
+      <filename>/.model/</filename> des Projektes angelegt sein. Die Vorlage
+      wird beim Erstellen einer Rechenvariante automatisch in das neue
+      Verzeichnis übernommen und mittels der Standard-Feature-Ansicht
+      visualisiert. Dabei können durch Vergabe von Platzhaltern bestimmte
+      Felder automatisch vorbelegt werden. Folgende Platzhalter sind
+      definiert: <itemizedlist>
           <listitem>
             <para>:startsim: Vorgeschlagener Startpunkt der Simulation</para>
           </listitem>
@@ -126,28 +138,37 @@
           <listitem>
             <para>:user: Anmeldename des Benutzers</para>
           </listitem>
-        </itemizedlist> Soll die Anzeige der .calculation (=zweite Seite des
-      Wizards zur Erzeugung einer Rechenvariante - Menü „Rechenvariante-Neu“)
-      eine spezielle Formatierung erhalten, kann auch eine Vorlagendatei im
-      .gft Format unter dem Namen .calculation.view im /.model/ Verzeichnis
-      abgelegt werden. Diese wird dann zur Visualisierung herangezogen.</para>
+        </itemizedlist>Soll die Anzeige der <filename>.calculation</filename>
+      (=zweite Seite des Wizards zur Erzeugung einer Rechenvariante - Menü
+      <menuchoice>
+          <guimenu>Rechenvariante</guimenu>
+
+          <guimenuitem>Neu</guimenuitem>
+        </menuchoice>) eine spezielle Formatierung erhalten, kann auch eine
+      Vorlagendatei im GFT-Format unter dem Namen
+      <filename>.calculation.view</filename> im Verzeichnis
+      <filename>/.model/</filename> abgelegt werden. Diese wird dann zur
+      Visualisierung herangezogen.</para>
     </formalpara>
+
+    <!--Launch-Verzeichnis hat CalcCaseConfig.xml ersetzt: nur Sachsen-Anhalt oder auch Sachsen?-->
 
     <formalpara>
       <title>CALCCASECONFIG.XML</title>
 
-      <para>Die Datei calcCaseConfig.xml, die im Verzeichnis /.model/ des
-      Projektes gespeichert sein muss, beschreibt Aktionen, welche beim
-      Erstellen bzw. Aktualisieren einer Rechenvariante durchgeführt werden.
-      Jeder dieser Blöcke besteht dabei aus einer Reihe von sogenannten
-      Transformationen, welche die einzelnen Aktionen (z.B. Kopieren von
-      Dateien, Import von Zeitreihen vom Zeitreihen-Dienst) definieren. Die
-      genaue Struktur der Datei calcCaseConfig.xml ergibt sich aus ihrer
-      Schema-Definition calcCaseconfig.xsd. Eine Liste der zur Zeit
-      implementierten Transformationen und ihrer Argumente befindet sich im
-      Anhang. Falls andere Transformationen benötigt werden, können diese
-      durch Implementation des Java-Interfaces
-      org.Kalypso.util.transformation.ITransformation programmiert werden. Es
+      <para>Die Datei <filename>calcCaseConfig.xml</filename>, die im
+      Verzeichnis <filename>/.model/</filename> des Projektes gespeichert sein
+      muss, beschreibt Aktionen, welche beim Erstellen bzw. Aktualisieren
+      einer Rechenvariante durchgeführt werden. Jeder dieser Blöcke besteht
+      dabei aus einer Reihe von sogenannten Transformationen, welche die
+      einzelnen Aktionen (z.B. Kopieren von Dateien, Import von Zeitreihen vom
+      Zeitreihen-Dienst) definieren. Die genaue Struktur der Datei
+      <filename>calcCaseConfig.xml</filename> ergibt sich aus ihrer
+      Schema-Definition <filename>calcCaseconfig.xsd</filename>. Eine Liste
+      der zur Zeit implementierten Transformationen und ihrer Argumente
+      befindet sich im Anhang. Falls andere Transformationen benötigt werden,
+      können diese durch Implementation des Java-Interfaces
+      org.Kalypso.util.transformation.ITransformation hinzugefügt werden. Es
       empfiehlt sich, beim Erstellen der Rechenvariante alle zur Berechnung
       benötigten Daten in das Verzeichnis der Rechenvariante zu kopieren. Im
       gleichen Schritt können auch die Vorlagen zum Editieren der Daten
@@ -158,14 +179,17 @@
   <section>
     <title>Modell-Plugin</title>
 
+    <!--ist modelspec.xml noch aktuell? Launch-Target runCalculation der build.xml-->
+
     <para>Mit den letzten beiden Punkten ist die clientseitige Konfiguration
     fast abgeschlossen. Zum Anstoßen einer (serverseitigen) Berechnung wird im
     Projektverzeichnis aber noch die Information benötigt, welche Dateien zum
     Rechenkern übertragen werden. Diese Angabe muss in der Datei
-    `modelspec.xml’ im Verzeichnis /.model/ abgelegt werden.</para>
+    <filename>modelspec.xml</filename> im Verzeichnis
+    <filename>/.model/</filename> abgelegt werden.</para>
 
     <para>Format und Beschreibung dieser Datei kann ihrem Schema
-    (modelspec.xsd, in den Programmquellen unter
+    (<filename>modelspec.xsd</filename>, in den Programmquellen unter
     <filename>/KalypsoCore/etc/schemas/model/</filename>) entnommen werden. Im
     Wesentlichen enthält diese Datei die Liste der Dateien, die zum Start
     einer Rechnung zum Server übertragen werden, jeweils mit einer eindeutigen
@@ -197,9 +221,10 @@
     Datenmodellierung und Integration im Expertenmodus.</para>
 
     <para>Um die Funktionen des Vorhersage-Wizards zur vereinfachten
-    Benutzerführung nutzen zu können, muss im Projektverzeichnis /.model/ die
-    Datei calcWizard.xml angelegt werden. Die Datei besteht dabei aus einer
-    Liste der zu verwendenden Wizard-Seiten sowie deren
+    Benutzerführung nutzen zu können, muss im Projektverzeichnis
+    <filename>/.model/</filename> die Datei
+    <filename>calcWizard.xml</filename> angelegt werden. Die Datei besteht aus
+    einer Liste der zu verwendenden Wizard-Seiten sowie deren
     Parametrisierung.</para>
 
     <para>Eine Auflistung der bisher zur Verfügung stehenden Seiten-Typen
@@ -217,7 +242,7 @@
     <title>Zusammenfassung/Checkliste</title>
 
     <para>Zusammengefasst müssen die folgenden Schritte durchgeführt
-    werden:</para>
+    werden:<!--calcCaseConfig und modelspec sind veraltet--></para>
 
     <itemizedlist>
       <listitem>

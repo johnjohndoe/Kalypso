@@ -7,17 +7,17 @@
   Darstellung, usw.) werden in Dateien bestimmter Formate, so genannter
   Ansichtsvorlagen, gespeichert.</para>
 
-  <para>Alle Ansichtvorlagen sind Dateien im XML Format, die jeweils durch ein
-  XML-Schema spezifiziert sind. Die Schematas aller Ansichtsvorlagen befinden
-  sich in den Programmquellen im Pfad /KalypsoCore/etc/schemas/template. Im
-  gleichen Verzeichnis befindet sich für jede Vorlagenart eine
-  Beispieldatei.</para>
+  <para>Alle Ansichtvorlagen sind Dateien im XML-Format, die jeweils durch ein
+  XML-Schema spezifiziert sind. Die Schemata aller Ansichtsvorlagen befinden
+  sich in den Programmquellen im Pfad
+  <filename>/KalypsoCore/etc/schemas/template</filename>. Im gleichen
+  Verzeichnis befindet sich für jede Vorlagenart eine Beispieldatei.</para>
 
   <para>Die Ansichtvorlagen entsprechen den verschiedenen möglichen Ansichten
   in KALYPSO-Enterprise. Folgende Ansichten und somit Ansichtsvorlagen werden
-  unterstützt:</para>
+  unterstützt (<xref linkend="tbl_vorlagen_Typen" />):</para>
 
-  <table>
+  <table id="tbl_vorlagen_Typen">
     <title>Ansichtstypen und ihre Vorlagen</title>
 
     <tgroup cols="3">
@@ -33,7 +33,7 @@
 
           <entry align="center">Dateiendung der Vorlage</entry>
 
-          <entry align="center">XML Schemadatei</entry>
+          <entry align="center">XML-Schemadatei</entry>
         </row>
       </thead>
 
@@ -89,7 +89,7 @@
     </tgroup>
   </table>
 
-  <para>Allen Vorlagen ist gemein, dass in ihnen lediglich die Art der
+  <para>Allen Vorlagen ist gemeinsam, dass in ihnen lediglich die Art der
   Darstellung gespeichert ist. Die eigentlichen Daten liegen in separaten
   Datendateien (z.B. .shp, .gml, .zml) und werden aus den Vorlagen über
   URL-Verknüpfungen referenziert. Bei der Referenzierung der Datendateien sind
@@ -102,9 +102,9 @@
 
   <informaltable>
     <tgroup cols="3">
-      <colspec align="left" colwidth="1*" />
-
       <colspec align="left" colwidth="2*" />
+
+      <colspec align="left" colwidth="3*" />
 
       <colspec align="left" colwidth="2*" />
 
@@ -120,15 +120,15 @@
 
       <tbody>
         <row>
-          <entry>http</entry>
+          <entry><filename>http</filename></entry>
 
-          <entry>Übliches http Protokoll</entry>
+          <entry>Übliches http-Protokoll</entry>
 
           <entry></entry>
         </row>
 
         <row>
-          <entry>file</entry>
+          <entry><filename>file</filename></entry>
 
           <entry>Datei lokal oder im Netzwerk</entry>
 
@@ -136,7 +136,7 @@
         </row>
 
         <row>
-          <entry>project</entry>
+          <entry><filename>project</filename></entry>
 
           <entry>Pfad relativ zum aktuellen (KALYPSO-)Projekt</entry>
 
@@ -144,7 +144,7 @@
         </row>
 
         <row>
-          <entry>calcCase</entry>
+          <entry><filename>calcCase</filename></entry>
 
           <entry>Pfad relativ zur aktuellen Rechenvariante (nur bei Vorlagen
           innerhalb einer Rechenvariante zu verwenden)</entry>
@@ -154,9 +154,9 @@
         </row>
 
         <row>
-          <entry>platform:/resource/</entry>
+          <entry><filename>platform:/resource/</filename></entry>
 
-          <entry>Beliebiger Pfad innerhalb Arbeitsbereich</entry>
+          <entry>Beliebiger Pfad innerhalb des Arbeitsbereichs</entry>
 
           <entry>Allgemeiner Mechanismus der Eclipse-Platform. Siehe
           Eclipse-Dokumentation.</entry>
@@ -288,13 +288,13 @@
 
     <para>Die erste Spalte der Darstellung ist immer die Datumsachse. Die
     Sortierung erfolgt stets chronologisch, es kann also sein, dass es
-    `Löcher’ in den Daten einer Spalte gibt, wenn es für ein Datum keine Werte
-    in der grundliegenden Zeitreihe gibt.</para>
+    <quote>Löcher</quote> in den Daten einer Spalte gibt, wenn es für ein
+    Datum keine Werte in der zugrunde liegenden Zeitreihe gibt.</para>
 
     <para>In der Vorlage werden Zeitreihenthemen gelistet. Jedes Thema
     entspricht dabei einer Zeitreihe. Innerhalb jeden Themas werden die
     Spalten angegeben, die angezeigt werden sollen. Eine Spalte wird jeweils
-    zu einer Werteachse der Zeitreihe assoziiert.</para>
+    mit einer Werteachse der Zeitreihe assoziiert.</para>
 
     <para>Wie in den GIS-Vorlagen referenziert ein Thema
     (<emphasis>observation</emphasis>-Element) eine Datendatei über das
@@ -321,8 +321,8 @@
     Darstellungsparametern (Farbe etc.).</para>
 
     <para>Zusätzlich muss im Fall des Diagramms angegeben werden, welche
-    Diagrammachsen dargestellt werden sollen. Dies erfolgt über die `axis’
-    Elemente. Für jede Kurve kann nun einzeln angegeben werden, auf welchen
-    Achsen ihre Daten dargestellt werden sollen.</para>
+    Diagrammachsen dargestellt werden sollen. Dies erfolgt über die
+    <quote>axis</quote> Elemente. Für jede Kurve kann nun einzeln angegeben
+    werden, auf welchen Achsen ihre Daten dargestellt werden sollen.</para>
   </section>
 </chapter>

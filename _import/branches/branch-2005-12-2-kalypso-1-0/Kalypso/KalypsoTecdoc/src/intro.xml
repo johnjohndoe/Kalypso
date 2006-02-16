@@ -27,8 +27,9 @@
     <para>KALYPSO beruht auf einer (Rich-)Client/Server Architektur.</para>
 
     <para>Der Client wurde basierend auf der OpenSource Eclipse Rich Client
-    Platform (Eclipse Platform, siehe http://www.eclipse.org) entwickelt und
-    ist als Sammlung von Eclipse-Plugins realisiert.</para>
+    Platform (Eclipse Platform, siehe <ulink
+    url="http://www.eclipse.org">http://www.eclipse.org</ulink>) entwickelt
+    und ist als Sammlung von Eclipse-Plugins realisiert.</para>
 
     <para>Der Server besteht aus einer Anzahl von Webdiensten, die in einem
     J2EE-Container (Tomcat) installiert sind. Darüber hinaus können

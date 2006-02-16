@@ -3,7 +3,7 @@
   <section id="robotron-ldap">
     <title>Benutzerdienst: LDAP, Szenario, usw.</title>
 
-    <para>Kalypso unterstützt folgende Benutzerklassen:</para>
+    <para>KALYPSO unterstützt folgende Benutzerklassen:</para>
 
     <itemizedlist>
       <listitem>
@@ -19,8 +19,8 @@
       </listitem>
     </itemizedlist>
 
-    <para>In der HVZ wird der Recht <quote>Modellierer</quote> an Benutzer
-    vergeben die Kalypso Experten bzw. Administratoren sind. Weitere
+    <para>In der HVZ wird das Recht <quote>Modellierer</quote> an Benutzer
+    vergeben, die KALYPSO Experten bzw. Administratoren sind. Weitere
     feingranulierte Benutzerrechte werden nicht benötigt. Die Client-Anwendung
     passt die Oberfläche automatisch an die Benutzerklassen eines Benutzers
     an.</para>
@@ -29,16 +29,16 @@
     Verzeichnisdienst zugreifen zu können. Es werden also keine besondere
     Java-Bibliotheken benötigt.</para>
 
-    <para>Die Konfiguration der LDAP-Zugriffe und der allgemeine Benutzer und
-    Szenario Einstellungen werden in der Konfigurationsdatei der Kalypso User
-    Dienst.</para>
+    <para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer-
+    und Szenario-Einstellungen werden in der Konfigurationsdatei der KALYPSO
+    User Dienst vorgenommen.</para>
   </section>
 
   <section id="robotron-ims">
     <title>Schnittstelle zu IMS: Dokumentenablage</title>
 
-    <para>Die Schnittstelle basiert auf einen Webdienst Methodenaufruf. Dazu
-    wird Apache-Axis benutzt, in contrario zu den Kalypo sonst übliche
+    <para>Die Schnittstelle basiert auf einem Webdienst Methodenaufruf. Dazu
+    wird Apache-Axis benutzt, in contrario zu den in KALYPSO sonst übliche
     JAX-RCP-Aufrufe.</para>
 
     <para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und über das
@@ -50,7 +50,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/kap13/Schnittstelle_Dokumentenablage.png" />
+          <imagedata fileref="img/kap13/Schnittstelle_Dokumentenablage.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>

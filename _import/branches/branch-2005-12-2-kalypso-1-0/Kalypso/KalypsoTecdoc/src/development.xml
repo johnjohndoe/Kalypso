@@ -15,15 +15,16 @@
     <title>Umgebung und Werkzeuge</title>
 
     <para>In diesem Kapitel werden die zur Erstellung der Software verwendeten
-    Entwicklungswerkzeuge beschrieben.</para>
+    Entwicklungswerkzeuge beschrieben (siehe <xref
+    linkend="tbl_develop_Entwicklungsumgebung" />).</para>
 
-    <para><table>
+    <para><table id="tbl_develop_Entwicklungsumgebung">
         <title>Entwicklungsumgebung</title>
 
         <tgroup cols="2">
           <colspec align="left" colwidth="1*" />
 
-          <colspec align="left" colsep="1*" />
+          <colspec align="left" colwidth="1*" />
 
           <thead>
             <row>
@@ -87,7 +88,7 @@
             <row>
               <entry>Miktex und DB2Latex</entry>
 
-              <entry>Konvertierung von DocBook nach Latex und anschließend
+              <entry>Konvertierung von DocBook nach LaTeX und anschließend
               nach PDF</entry>
             </row>
 
@@ -101,16 +102,17 @@
         </tgroup>
       </table></para>
 
-    <para>Als Entwicklungsumgebung wurde die frei erhältliche Eclipse-Platform
-    verwendet. Bis auf die Wahl des Sprach-Compliance-Levels auf Version 1.4
-    wurden in Eclipse keine speziellen Einstellungen gewählt.</para>
+    <para>Als Entwicklungsumgebung wurde die frei erhältliche
+    Eclipse-Plattform verwendet. Bis auf die Wahl des Sprach-Compliance-Levels
+    auf Version 1.4 wurden in Eclipse keine speziellen Einstellungen
+    vorgenommen.</para>
 
     <para>Das Erzeugen der verschiedenen Versionen des Anwenderhandbuchs
     (html, EclipseHelp, PDF) wurde komplett per Ant-Skript automatisiert. Es
-    ist lediglich dafür zu sorgen, dass sich das zur Umwandlung Latex &gt; PDF
-    benötigte Programm pdflatex.exe (im Umfang der Miktex-Distribution
+    ist lediglich dafür zu sorgen, dass sich das zur Umwandlung von LaTeX noch
+    PDF benötigte Programm pdflatex.exe (im Umfang der Miktex-Distribution
     enthalten) im aktuellen Programmpfad befindet sowie dass alle von DB2Latex
-    benötigten Latex-Packages in der Miktex-Installation eingebunden
+    benötigten LaTeX-Packages in der Miktex-Installation eingebunden
     sind.</para>
   </section>
 
@@ -124,18 +126,19 @@
       <title>KALYPSO-Client</title>
 
       <para>Clientseitig baut KALYPSO auf der Eclipse Platform API auf:
-      KALYPSO besteht aus eine sog. Eclipse-Feature und eine Reihe von sog.
-      Eclipse-Plugins.</para>
+      KALYPSO besteht aus einem sog. Eclipse-Feature und einer Reihe von sog.
+      Eclipse-Plugins (siehe <xref
+      linkend="tbl_develop_K_Features_Plugins" />).</para>
 
-      <table>
-        <title>KALYPSO Feature und Plugins</title>
+      <table id="tbl_develop_K_Features_Plugins">
+        <title>KALYPSO Features und Plugins</title>
 
         <tgroup cols="3">
-          <colspec align="left" colwidth="2*" />
+          <colspec align="left" colwidth="3*" />
 
           <colspec align="left" colwidth="1*" />
 
-          <colspec align="left" colwidth="2*" />
+          <colspec align="left" colwidth="4*" />
 
           <thead>
             <row>
@@ -332,7 +335,7 @@
     <section id="kalypso-server">
       <title>KALYPSO-Server</title>
 
-      <para>Der KALYPSO-Server besteht aus Web Diensten, die in einem J2EE
+      <para>Der KALYPSO-Server besteht aus Web-Diensten, die in einem J2EE
       Container (Apache Tomcat) laufen. Fünf Dienste stehen den Clients zur
       Verfügung:</para>
 
@@ -348,7 +351,8 @@
         </listitem>
 
         <listitem>
-          <para>KalypsoObsService: verwaltet die operativen Daten,</para>
+          <para>KalypsoObsService: verwaltet die operativen Daten (z.B.
+          Zeitreihen),</para>
         </listitem>
 
         <listitem>
@@ -358,7 +362,7 @@
 
         <listitem>
           <para>Benutzung von WebDAV: zentrale Konfigurationsdateien werden im
-          sog. WebDAV Verzeichnis abgelegt.</para>
+          sog. WebDAV-Verzeichnis abgelegt.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -366,18 +370,18 @@
     <section id="modelle-sst">
       <title>Modell- und Schnittstellenkomponenten</title>
 
-      <para>Folgende Tabelle listet die sog. Modellplugins und die
-      Schnittstellenkomponenten auf.</para>
+      <para><xref linkend="tbl_devlop_spez_Plugins" /> listet die sog.
+      Modellplugins und die Schnittstellenkomponenten auf.</para>
 
-      <table>
+      <table id="tbl_devlop_spez_Plugins">
         <title>Spezielle Plugins</title>
 
         <tgroup cols="3">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" colwidth="1*" />
-
           <colspec align="left" colwidth="2*" />
+
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" colwidth="3*" />
 
           <thead>
             <row>
@@ -397,7 +401,7 @@
 
               <entry>Integration des Saalemodells in Form eines Plugins für
               die lokale Benutzung, und in Form einer Library für die
-              Serverseitige Benutzung.</entry>
+              serverseitige Benutzung.</entry>
             </row>
 
             <row vendor="sachsen-anhalt">
@@ -407,7 +411,7 @@
 
               <entry>Integration des Bode- und Ilsemodells in Form eines
               Plugins für die lokale Benutzung, und in Form einer Library für
-              die Serverseitige Benutzung.</entry>
+              die serverseitige Benutzung.</entry>
             </row>
 
             <row vendor="sachsen-anhalt">
@@ -417,7 +421,7 @@
 
               <entry>Implementierung der Schnittstellenfunktionen zum
               IMS-Robotron in Form eines Plugins für die lokale Benutzung, und
-              in Form einer Library für die Serverseitige Benutzung.</entry>
+              in Form einer Library für die serverseitige Benutzung.</entry>
             </row>
 
             <row vendor="sachsen-anhalt">
@@ -427,7 +431,7 @@
 
               <entry>Implementierung der Schnittstellenfunktionen zum
               WiskiDataProvider in Form eines Plugins für die lokale
-              Benutzung, und in Form einer Library für die Serverseitige
+              Benutzung, und in Form einer Library für die serverseitige
               Benutzung.</entry>
             </row>
           </tbody>
@@ -440,18 +444,18 @@
 
       <para>Neben allgemeinen Code Konfigurationen werden spezielle
       Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
-      der Hochwasserzentrale Sachsen-Anhalt benötigt. Folgende Tabelle listet
-      diese Module auf:</para>
+      der Hochwasserzentrale Sachsen-Anhalt benötigt. <xref
+      linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf:</para>
 
-      <para><table>
+      <para><table id="tbl_develop_Konfig_Plugins">
           <title>Konfigurationsmanagement-Plugins</title>
 
           <tgroup cols="3">
-            <colspec align="left" colwidth="1*" />
-
-            <colspec align="left" colwidth="1*" />
-
             <colspec align="left" colwidth="2*" />
+
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" colwidth="3*" />
 
             <thead>
               <row>
@@ -526,8 +530,9 @@
     <para>Der Quellcode wird mit CVS verwaltet. Bei jedem Meilenstein wurde
     der Projektstand mittels eines CVS Tags gekennzeichnet.</para>
 
-    <para>Die allgemeinen Teile des KALYPSO Quellcodes wurden unter der LGPL
-    (Lesser Gnu Public Licence, siehe http://www.gnu.org/) freigegeben.</para>
+    <para>Die allgemeinen Teile des KALYPSO-Quellcodes wurden unter der LGPL
+    (Lesser Gnu Public Licence, siehe <ulink
+    url="http://www.gnu.org">http://www.gnu.org</ulink>) freigegeben.</para>
 
     <para>Fremdbibliotheken wurden in jedem Projekt stets im Unterverzeichnis
     <filename>/lib</filename> abgelegt und sind dort mit der jeweiligen
@@ -538,13 +543,13 @@
     <title>Kompilation</title>
 
     <para>Unter Benutzung von Eclipse wird der Quellcode inkrementell
-    kompiliert. Für das deployen werden Ant-Skripte benutzt die der Quellcode
-    separat kompiliert.</para>
+    kompiliert. Für das Deployment werden Ant-Skripte benutzt, die den
+    Quellcode separat kompilieren.</para>
 
     <para>Die Ant-Skripte sind nach dem Standard aus dem KalypsoBuild-Plugin
-    aufgebaut und verfügen über die gleiche Targets. Manche Projekte benötigen
-    generierte Klassen für das sog. XML-Binding. Dies wird auch durch
-    entsprechende Targets in die Ant-Skripten berücksichtigt.</para>
+    aufgebaut und verfügen über die gleichen Targets. Manche Projekte
+    benötigen generierte Klassen für das sog. XML-Binding. Dies wird auch
+    durch entsprechende Targets in den Ant-Skripten berücksichtigt.</para>
   </section>
 
   <section id="deployment">
@@ -553,7 +558,7 @@
     <para vendor="sachsen-anhalt">Aus der Entwicklungsumgebung ist es möglich,
     die unterschiedlichen Dienste zu deployen. Das
     KalypsoConfSachsenAnhalt-Projekt deckt diese Aspekte ab und stellt
-    unterschiedliche übergeordnete Ant-Skripts zur Automatisierung des Deploy
+    unterschiedliche übergeordnete Ant-Skripte zur Automatisierung des Deploy
     zur Verfügung.</para>
 
     <para>Man kann:</para>
@@ -571,12 +576,12 @@
       </listitem>
     </itemizedlist>
 
-    <para vendor="sachsen-anhalt">Um dem KALYPSO-Client deployen zu können
+    <para vendor="sachsen-anhalt">Um den KALYPSO-Client deployen zu können
     wird das KalypsoFeatureSachsenAnhalt benutzt. Ein Eclipse-Export als
     Feature ist direkt möglich. Somit werden die zahlreichen KALYPSO-Plugins
     berücksichtigt. Einfaches Kopieren reicht um die Applikation zu
-    aktualisieren. Dies setzt aber vorraus, dass eine bestehende
-    KALYPSO-Client Umgebung vorbereitet ist. Mehr dazu im <xref
+    aktualisieren. Dies setzt aber voraus, dass eine bestehende KALYPSO-Client
+    Umgebung vorbereitet ist. Mehr dazu im <xref
     linkend="chapter_3_installation" />.</para>
   </section>
 </chapter>

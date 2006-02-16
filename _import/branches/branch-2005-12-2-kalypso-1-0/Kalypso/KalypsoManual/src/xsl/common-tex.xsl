@@ -32,13 +32,17 @@
 	<xsl:variable name="latex.use.fancyvrb">1</xsl:variable>
 	<xsl:variable name="latex.use.fancybox">1</xsl:variable>
 	<xsl:variable name="latex.use.fancyhdr">1</xsl:variable>
+	<xsl:variable name="latex.fancyhdr.style">natural</xsl:variable>
 	<xsl:variable name="latex.use.subfigure">1</xsl:variable>
 	<xsl:variable name="latex.use.rotating">1</xsl:variable>
 	<xsl:variable name="latex.pdf.support">1</xsl:variable>
 	<xsl:variable name="latex.math.support">1</xsl:variable>
-
+    
+    <xsl:param name="latex.url.quotation">0</xsl:param>
 	<xsl:param name="latex.hyphenation.tttricks">1</xsl:param>
+	<xsl:param name="latex.generate.indexterm">1</xsl:param>
 
+	<xsl:param name="toc.section.depth">2</xsl:param>
 	<!-- Mögliche fonts:
 		helvetic
 		palatino
