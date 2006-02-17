@@ -193,7 +193,8 @@ public class NutzungManager extends AbstractManager
     String nutzName = FeatureHelper.getAsString( feature, "name" );
     File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" );
     FileWriter writer = new FileWriter( nutzungDir );
-    writer.write( "Idealisierter Jahresgang\n" );
+    writer.write( linkedIdealLanduseFE.getProperty("name").toString() );
+    writer.write( "\nIdealisierter Jahresgang\n" );
     writer.write( "xxdatum     F EVA    We    BIMAX\n" );
     Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
     writeIdealLanduse( (IObservation)idealLanduseProp, writer );
