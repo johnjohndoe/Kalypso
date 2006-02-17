@@ -95,9 +95,6 @@ public interface IProfil
    */
   public LinkedList<POINT_PROPERTY> getPointProperties( final boolean filterNonVisible );
 
-  /**
-   * @return
-   */
   public LinkedList<IProfilPoint> getPoints( );
 
   public IProfilPoints getProfilPoints( );
