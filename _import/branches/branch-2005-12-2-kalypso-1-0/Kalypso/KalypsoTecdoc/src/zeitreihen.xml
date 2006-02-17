@@ -6,8 +6,9 @@
     <title>Grundprinzip</title>
 
     <para>Der Zeitreihenablage liegt eine hierarchische Struktur zugrunde. Die
-    Java-Schnittstelle org.Kalypso.repository.IRepository ist der zentrale
-    Punkt des Ablage-Frameworks von KALYPSO. Ablagen können sowohl
+    Java-Schnittstelle
+    <interfacename>org.kalypso.repository.IRepository</interfacename> ist der
+    zentrale Punkt des Ablage-Frameworks von KALYPSO. Ablagen können sowohl
     clientseitig als auch serverseitig in KALYPSO eingebunden werden.</para>
 
     <para>Die Zeitreihenablage ist eine Spezialisierung des
@@ -16,8 +17,8 @@
 
     <para>Der Eclipse-Erweiterungsmechanismus (Extension Point) unterstützt
     unterschiedliche Ablagearten über
-    <quote>org.Kalypso.repository.factories</quote>. Die Erweiterungen dieses
-    Extension Points stellen dem Benutzer die Ablagen clientseitig zur
+    <classname>org.kalypso.repository.factories</classname>. Die Erweiterungen
+    dieses Extension Points stellen dem Benutzer die Ablagen clientseitig zur
     Verfügung.</para>
 
     <para>Serverseitig wird die Ablage über die XML-Konfigurationsdatei vom
@@ -133,9 +134,9 @@
     kann.</para>
 
     <para>Theoretisch können alle Repositories lokal eingebunden werden, die
-    den Extension Point <filename>org.Kalypso.repository.factories</filename>
-    erweitern. Dies hängt von den in KALYPSO bzw. Eclipse eingebundenen
-    Plugins ab.</para>
+    den Extension Point
+    <classname>org.kalypso.repository.factories</classname> erweitern. Dies
+    hängt von den in KALYPSO bzw. Eclipse eingebundenen Plugins ab.</para>
 
     <figure>
       <title>Zeitreihen-Ablage zwischen Client und Server</title>
@@ -162,8 +163,8 @@
     XML-Schema-Datei, die unter
     <filename>etc/schemas/zml/zmlFilters.xsd</filename> im KalypsoCore-Projekt
     zu finden ist. Das Java-Interface
-    <filename>org.Kalypso.ogc.sensor.IObservationFilter</filename> bildet den
-    Einstieg in die Filter-Welt. Das Filter-Interface erweitert das
+    <interfacename>org.kalypso.ogc.sensor.IObservationFilter</interfacename>
+    bildet den Einstieg in die Filter-Welt. Das Filter-Interface erweitert das
     IObservation Interface, gefilterte Zeitreihen können also genauso wie
     andere Zeitreihen benutzt werden.</para>
   </section>

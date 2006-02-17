@@ -9,7 +9,7 @@
 
   <para>KALYPSO arbeitet mit ODT-Vorlagen und das Grafik-Programm mit
   TPL-Vorlagen. Die Klasse
-  <filename>org.Kalypso.ogc.sensor.diagview.grafik.GrafikLauncher</filename>
+  <classname>org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher</classname>
   kapselt die Zusammenarbeit beider Programme.</para>
 
   <para>Beim Öffnen einer ODT-Vorlage im Grafik-Programm wird zuerst eine

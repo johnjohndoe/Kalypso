@@ -96,12 +96,13 @@
     <title>Quellcode</title>
 
     <para>Die Implementierung in KALYPSO basiert auf dem IRepository-Framework
-    (siehe Java-Interface org.Kalypso.repository.IRepository). Die
+    (siehe Java-Interface
+    <interfacename>org.kalypso.repository.IRepository</interfacename>). Die
     Schnittstelle wird nur serverseitig benutzt.</para>
 
     <para>Die Firma Kisters hat die Funktionen des WDP über eine
     Java-Bilbiothek zur Verfügung gestellt. Aus dem Namensraum
-    <filename>de.kisters.wiski.webdataprovider</filename> sind alle WDP
+    <classname>de.kisters.wiski.webdataprovider</classname> sind alle WDP
     Klassen zu erreichen.</para>
   </section>
 

@@ -42,7 +42,7 @@
           <guimenuitem>Neu</guimenuitem>
         </menuchoice> angelegt werden. Das neue Projekt enthält lediglich die
       Datei <filename>.project</filename>, welche jetzt um die Zeile
-      <programlisting>&lt;nature&gt;org.Kalypso.ui.ModelNature&lt;/nature&gt;</programlisting>Im
+      <programlisting>&lt;nature&gt;org.kalypso.ui.ModelNature&lt;/nature&gt;</programlisting>Im
       Unterpunkt &lt;natures&gt; ergänzt werden muss, um es als
       KALYPSO-Modell-Projekt zu kennzeichnen. Neue Dateien und Verzeichnisse
       können im Projekt ebenfalls über den Menüpunkt <menuchoice>
@@ -168,11 +168,11 @@
       der zur Zeit implementierten Transformationen und ihrer Argumente
       befindet sich im Anhang. Falls andere Transformationen benötigt werden,
       können diese durch Implementation des Java-Interfaces
-      org.Kalypso.util.transformation.ITransformation hinzugefügt werden. Es
-      empfiehlt sich, beim Erstellen der Rechenvariante alle zur Berechnung
-      benötigten Daten in das Verzeichnis der Rechenvariante zu kopieren. Im
-      gleichen Schritt können auch die Vorlagen zum Editieren der Daten
-      kopiert bzw. erzeugt werden.</para>
+      <interfacename>org.kalypso.util.transformation.ITransformation</interfacename>
+      hinzugefügt werden. Es empfiehlt sich, beim Erstellen der Rechenvariante
+      alle zur Berechnung benötigten Daten in das Verzeichnis der
+      Rechenvariante zu kopieren. Im gleichen Schritt können auch die Vorlagen
+      zum Editieren der Daten kopiert bzw. erzeugt werden.</para>
     </formalpara>
   </section>
 
@@ -200,7 +200,7 @@
 
       <para>Das serverseitige Modell-Plugin wird realisiert, indem das
       Java-Interface
-      <filename>org.Kalypso.services.calculation.job.ICalcJob</filename>
+      <filename><interfacename>org.kalypso.services.calculation.job.ICalcJob</interfacename></filename>
       implementiert wird (siehe auch JavaDoc des Interface). Im Falle einer
       Berechnung wird die Methode <guilabel>run</guilabel> der jeweiligen
       Implementation eines Modelltyps aufgerufen. Dieser Methode wird unter
@@ -230,8 +230,8 @@
     <para>Eine Auflistung der bisher zur Verfügung stehenden Seiten-Typen
     findet sich im Anhang. Werden spezielle, nicht vorhandene Wizard-Seiten
     benötigt, können weitere durch Implementierung des Java-Interfaces
-    org.Kalypso.ui.calcwizard.modelpages.modelWizardPage zum Programm
-    hinzugefügt werden.</para>
+    <interfacename>org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage</interfacename>
+    zum Programm hinzugefügt werden.</para>
 
     <para>Die beiden ersten Seiten des Wizards <guilabel>Vorhersage
     erzeugen</guilabel> und <guilabel>Steuerparameter</guilabel> sind dabei in
