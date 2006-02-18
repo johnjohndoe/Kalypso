@@ -14,7 +14,6 @@
       <import plugin="org.kalypso.dwd" export="true"/>
       <import plugin="org.kalypso.deegree" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
-      <import plugin="org.kalypso.services.calculation.local" export="true"/>
       <import plugin="org.kalypso.commons" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.kalypso.optimize" export="true"/>

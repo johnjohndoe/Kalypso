@@ -109,8 +109,6 @@ import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -526,9 +524,13 @@ public class NaModelInnerCalcJob implements ICalcJob
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
       {
-        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "Ort" );
+        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "position" );
         if( geom != null && geom.getCoordinateSystem() != null )
+        {
           targetCS = geom.getCoordinateSystem();
+          break;
+        }
+
       }
       if( targetCS != null )
       {
@@ -1161,8 +1163,9 @@ public class NaModelInnerCalcJob implements ICalcJob
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
         }
-        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-            IKalypsoPreferences.LANGUAGE );
+        //        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+        //            IKalypsoPreferences.LANGUAGE );
+        final String lang = "de";
         final String annotation = feature.getFeatureType().getAnnotation( lang ).getLabel();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feName = (String)feature.getProperty( titlePropName );
