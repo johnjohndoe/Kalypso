@@ -94,4 +94,9 @@ public interface IOptimizingJob
 
   public void publishResults( ICalcResultEater resultEater ) throws CalcJobServiceException;
 
+  /**
+   * @return
+   */
+  public boolean isSucceeded();
+
 }

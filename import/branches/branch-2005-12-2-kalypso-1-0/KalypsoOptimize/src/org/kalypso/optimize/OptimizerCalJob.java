@@ -108,4 +108,11 @@ public class OptimizerCalJob implements ICalcJob
       e.printStackTrace();
     }
   }
+
+  /**
+   */
+  public boolean isSucceeded()
+  {
+    return m_optimizingJob.isSucceeded();
+  }
 }
