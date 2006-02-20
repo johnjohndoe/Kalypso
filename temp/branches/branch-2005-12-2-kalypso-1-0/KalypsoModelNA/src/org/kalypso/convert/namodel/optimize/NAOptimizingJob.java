@@ -129,6 +129,10 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private int m_bestNumber = 0;
 
+  private boolean m_lastRunSucceeded = false;
+
+  private boolean m_bestRunSucceeded = false;
+
   public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
@@ -196,7 +200,7 @@ public class NAOptimizingJob implements IOptimizingJob
         // on exception it is simply not used.
       }
     }
-    final ICalcJob calcJob = new NaModelInnerCalcJob();
+    final NaModelInnerCalcJob calcJob = new NaModelInnerCalcJob();
     final OptimizeCalcResultEater optimizeResultEater = new OptimizeCalcResultEater();
     try
     {
@@ -206,6 +210,7 @@ public class NAOptimizingJob implements IOptimizingJob
     {
       e.printStackTrace();
     }
+    m_lastRunSucceeded = calcJob.isSucceeded();
     m_lastOptimizeRunDir = optimizeRunDir;
     m_lastResultEater = optimizeResultEater;
   }
@@ -222,6 +227,7 @@ public class NAOptimizingJob implements IOptimizingJob
       m_bestResultEater = m_lastResultEater;
       m_bestOptimizedFile = m_lastOptimizedFile;
       m_bestNumber = m_counter;
+      m_bestRunSucceeded = m_lastRunSucceeded;
     }
     else
     {
@@ -229,6 +235,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
     m_lastOptimizeRunDir = null;
     m_lastResultEater = null;
+    m_lastRunSucceeded = false;
   }
 
   private void clear( File dir )
@@ -373,6 +380,14 @@ public class NAOptimizingJob implements IOptimizingJob
   public AutoCalibration getOptimizeConfiguration()
   {
     return m_autoCalibration;
+  }
+
+  /**
+   * @see org.kalypso.optimize.IOptimizingJob#isSucceeded()
+   */
+  public boolean isSucceeded()
+  {
+    return m_bestRunSucceeded;
   }
 
 }

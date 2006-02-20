@@ -48,7 +48,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -71,7 +70,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -211,6 +209,11 @@ public class NaModelInnerCalcJob implements ICalcJob
       if( monitor.isCanceled() )
         return;
       unzipTemplates( inputProvider.getURLForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+      URL hydrotopURL = null;
+      if( inputProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
+        hydrotopURL = inputProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID );
+      else
+        hydrotopURL = getClass().getResource( WE_RESOURCE_HYDROTOP_GML );
 
       // performance
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
@@ -229,6 +232,7 @@ public class NaModelInnerCalcJob implements ICalcJob
           final FileCopyVisitor copyVisitor = new FileCopyVisitor( from1, to1, true );
           FileUtilities.accept( from1, copyVisitor, true );
         }
+
         final File from2 = new File( url.getFile(), "zufluss" );
         final File to2 = new File( tmpdir, "zufluss" );
         if( from2.exists() && to2.exists() )
@@ -236,6 +240,15 @@ public class NaModelInnerCalcJob implements ICalcJob
           final FileCopyVisitor copyVisitor = new FileCopyVisitor( from2, to2, true );
           FileUtilities.accept( from2, copyVisitor, true );
         }
+
+        final File from3 = new File( url.getFile(), "hydro.top" );
+        final File to3 = new File( tmpdir, "hydro.top" );
+        if( from3.exists() && to3.exists() )
+        {
+          final FileCopyVisitor copyVisitor = new FileCopyVisitor( from3, to3, true );
+          FileUtilities.accept( from3, copyVisitor, true );
+        }
+        hydrotopURL = null; // this will recycle the hydrotops
       }
 
       // generiere ascii-dateien
@@ -249,7 +262,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
       final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURL(), tmpdir );
 
-      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
+      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile, hydrotopURL );
       final URL naControlURL = inputProvider.getURLForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
 
@@ -483,7 +496,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ICalcDataProvider dataProvider,
-      final File newModellFile ) throws Exception
+      final File newModellFile, final URL hydrotopURL ) throws Exception
   {
     //    final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
     //
@@ -503,7 +516,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
           .getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource(WE_PARAMETER_GML));
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_PARAMETER_GML ) );
 
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ),
@@ -519,32 +532,28 @@ public class NaModelInnerCalcJob implements ICalcJob
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
-    if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
+    if( hydrotopURL != null )
     {
-      hydrotopWorkspace = GmlSerializer
-          .createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
-    }
-    else
-    {
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_RESOURCE_HYDROTOP_GML ) );
-    }
-
-    final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
-    CS_CoordinateSystem targetCS = null;
-    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
-    {
-      final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "position" );
-      if( geom != null && geom.getCoordinateSystem() != null )
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
+      CS_CoordinateSystem targetCS = null;
+      for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
       {
-        targetCS = geom.getCoordinateSystem();
-        break;
+        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "position" );
+        if( geom != null && geom.getCoordinateSystem() != null )
+        {
+          targetCS = geom.getCoordinateSystem();
+          break;
+        }
+      }
+      if( targetCS != null )
+      {
+        final TransformVisitor visitor = new TransformVisitor( targetCS );
+        modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
       }
     }
-    if( targetCS != null )
-    {
-      final TransformVisitor visitor = new TransformVisitor( targetCS );
-      modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
-    }
+    else
+      hydrotopWorkspace = null;
 
     // setting duration of simulation...
     // start
@@ -1551,82 +1560,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       IOUtils.closeQuietly( logWriter );
       IOUtils.closeQuietly( errorWriter );
-    }
-  }
-
-  private void startCalculationOld( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
-  {
-    InputStreamReader inStream = null;
-    InputStreamReader errStream = null;
-    PrintWriter outwriter = null;
-    PrintWriter errwriter = null;
-
-    try
-    {
-      final File exeFile = new File( basedir, m_kalypsoKernelPath );
-      final File exeDir = exeFile.getParentFile();
-      final String commandString = exeFile.getAbsolutePath();
-
-      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
-
-      outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-      errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-
-      inStream = new InputStreamReader( process.getInputStream() );
-      errStream = new InputStreamReader( process.getErrorStream() );
-      while( true )
-      {
-        CopyUtils.copy( inStream, outwriter );
-        CopyUtils.copy( errStream, errwriter );
-
-        try
-        {
-          process.exitValue();
-          return;
-        }
-        catch( IllegalThreadStateException e )
-        {
-          // noch nicht fertig
-        }
-
-        if( monitor.isCanceled() )
-        {
-          process.destroy();
-          return;
-        }
-        Thread.sleep( 100 );
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
-    }
-    finally
-    {
-      try
-      {
-        if( outwriter != null )
-          outwriter.close();
-
-        if( errwriter != null )
-          errwriter.close();
-
-        if( inStream != null )
-          inStream.close();
-
-        if( errStream != null )
-          errStream.close();
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
     }
   }
 
