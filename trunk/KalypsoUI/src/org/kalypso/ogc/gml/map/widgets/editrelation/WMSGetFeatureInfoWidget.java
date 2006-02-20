@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.SWT;
@@ -61,8 +62,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
-
-import com.braju.format.Format;
 
 /**
  * 
@@ -95,6 +94,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
+  @Override
   public void leftPressed( Point p )
   {
     m_pointOfInterest = p;
@@ -104,6 +104,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
+  @Override
   public void finish()
   {
     super.finish();
@@ -123,6 +124,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
+  @Override
   public void dragged( Point p )
   {
     m_movePoint = p;
@@ -131,6 +133,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
+  @Override
   public void moved( Point p )
   {
     m_movePoint = null;
@@ -140,6 +143,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
+  @Override
   public void leftReleased( Point p )
   {
   // nothing to do here
@@ -148,6 +152,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
+  @Override
   public void rightClicked( Point p )
   {
   //    m_pointOfInterest = null;
@@ -159,6 +164,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
+  @Override
   public void paint( Graphics g )
   {
     final MapPanel mapPanel = getMapPanel();
@@ -216,11 +222,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
           else
           {
             pw.print( "\n  " );
-            Format.fprintf( pw, COORD_FORMAT, new Double[]
-            { x1 } );
+            pw.printf( Locale.US, COORD_FORMAT, x1 );
             pw.print( " / " );
-            Format.fprintf( pw, COORD_FORMAT, new Double[]
-            { y1 } );
+            pw.printf( Locale.US, COORD_FORMAT, y1 );
           }
           pw.print( "\n Information vom WebMapServer:" );
           pw.print( "\n " + message );          
@@ -331,6 +335,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
   //    super.onModellChange( modellEvent );
