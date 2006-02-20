@@ -155,10 +155,10 @@ public class ModelNACalcTest extends TestCase
        */
       public URL getURLForID( String id ) throws CalcJobServiceException
       {
-        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
-          return getClass().getResource( "testData/we/hydrotop.gml" );
-        if( NaModelConstants.IN_PARAMETER_ID.equals( id ) )
-          return getClass().getResource( "testData/we/parameter.gml" );
+//        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
+//          return getClass().getResource( "testData/we/hydrotop.gml" );
+//        if( NaModelConstants.IN_PARAMETER_ID.equals( id ) )
+//          return getClass().getResource( "testData/we/parameter.gml" );
         return super.getURLForID( id );
       }
     };
@@ -198,7 +198,7 @@ public class ModelNACalcTest extends TestCase
           "zufluss/*",
           //          "hydro.top/*",
           "klima.dat/*",
-          "hydro.top/bod_art.dat",
+          //          "hydro.top/bod_art.dat",
           "infolog.txt" };
       ILogger logger = new ILogger()
       {
