@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.deegree.services.wms.StyleNotDefinedException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -95,7 +94,7 @@ public class DefaultStyleFactory
     throw new IOException( "The name for the default style directory is not a valid path." );
   }
 
-  private String getStyle( final FeatureType featureType, final String styleName ) throws StyleNotDefinedException
+  private String getStyle( final FeatureType featureType, final String styleName ) throws Exception 
   {
     final StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
     return ( (StyledLayerDescriptor_Impl)sld ).exportAsXML();
@@ -108,9 +107,10 @@ public class DefaultStyleFactory
    * @param featureType
    *          the featureType for which a default style needs to be genearted
    * @return returns the location (absolute path to local file system ) where the style is saved in a file
+   * @throws Exception
    *  
    */
-  public URL getDefaultStyle( FeatureType featureType, String styleName ) throws StyleNotDefinedException
+  public URL getDefaultStyle( FeatureType featureType, String styleName ) throws Exception 
   {
     String myStyleName = styleName;
     if( myStyleName == null )
@@ -138,8 +138,8 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( final FeatureType featureType, final String styleName )
-      throws StyleNotDefinedException
+  private StyledLayerDescriptor createDefaultStyle( final FeatureType featureType, final String styleName ) throws Exception
+      
   {
     final UserStyle userStyle = createUserStyle( featureType, styleName );
 
@@ -150,9 +150,10 @@ public class DefaultStyleFactory
     return SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
   }
 
-  /** Create a default user style for a given type name. */
-  public UserStyle createUserStyle( final FeatureType featureType, final String styleName )
-      throws StyleNotDefinedException
+  /** Create a default user style for a given type name. 
+   * @throws Exception*/
+  public UserStyle createUserStyle( final FeatureType featureType, final String styleName ) throws Exception
+      
   {
     final ArrayList symbolizer = new ArrayList();
     if( featureType.getName().equals( "RectifiedGridCoverage" ) )
@@ -209,7 +210,7 @@ public class DefaultStyleFactory
   //        + property.getName() );
   //  }
 
-  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty ftp ) throws StyleNotDefinedException
+  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty ftp ) throws Exception 
   {
     if( GeometryUtilities.isPointGeometry( ftp ) )
       return StyleFactory.createPointSymbolizer();
@@ -218,7 +219,7 @@ public class DefaultStyleFactory
     else if( GeometryUtilities.isPolygonGeometry( ftp ) )
       return StyleFactory.createPolygonSymbolizer();
     else
-      throw new StyleNotDefinedException( "This geometry type: " + ftp.getType() + " has no default style available" );
+      throw new Exception( "This geometry type: " + ftp.getType() + " has no default style available" );
   }
 
   private Symbolizer createRasterSymbolizer()
