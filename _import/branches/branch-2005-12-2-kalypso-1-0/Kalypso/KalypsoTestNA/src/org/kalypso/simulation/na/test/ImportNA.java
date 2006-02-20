@@ -42,16 +42,10 @@ import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
@@ -59,10 +53,7 @@ import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.w3c.dom.Document;
 
 /**
@@ -84,75 +75,11 @@ public class ImportNA extends TestCase
         new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    // TODO TODO TODO: refaktor this shit!
-
-    try
-    {
-      // TODO: read TypeHandler from property-file
-      registry.registerTypeHandler( new ObservationLinkHandler() );
-      // TODO: make new NA-project and move registration to it
-      // TODO delete next
-      registry.registerTypeHandler( new DiagramTypeHandler() );
-
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-      registry.registerTypeHandler( new ResourceFileTypeHandler() );
-
-      guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
-      guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-      //register gml-geometry types
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
-          .getMultiPointClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
-          .getLineStringClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
-          .getMultiLineStringClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
-          .getPolygonClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
-          .getMultiPolygonClass() ) );
-
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
-          .getUndefinedGeometryClass() ) );
-      // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
-
-      // register inlines
-
-      final String[] wvqAxis = new String[]
-      {
-          TimeserieConstants.TYPE_NORMNULL,
-          TimeserieConstants.TYPE_VOLUME,
-          TimeserieConstants.TYPE_RUNOFF };
-      final String[] taAxis = new String[]
-      {
-          TimeserieConstants.TYPE_HOURS,
-          TimeserieConstants.TYPE_NORM };
-      final String[] wtKcLaiAxis = new String[]
-      {
-          TimeserieConstants.TYPE_DATE,
-          TimeserieConstants.TYPE_LAI,
-          TimeserieConstants.TYPE_WT,
-          TimeserieConstants.TYPE_KC };
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
-          "KCWTLAI" );
-      registry.registerTypeHandler( wvqInline );
-      registry.registerTypeHandler( taInline );
-      registry.registerTypeHandler( wtKcLaiInline );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
-    }
-    catch( Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-    }
+    KalypsoGisPlugin.registerTypeHandler( marshallingRegistry, guiRegistry );
+//    registry.registerTypeHandler( new ObservationLinkHandler() );
+//    registry.registerTypeHandler( new DiagramTypeHandler() );
 
     final File asciiBaseDir = new File( "C:\\TMP\\na" );
     final File gmlBaseDir = new File( "C:\\TMP\\import" );

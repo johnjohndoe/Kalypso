@@ -71,7 +71,7 @@ import org.kalypso.test.util.CalcJobTestUtilis;
 public class ModelNACalcTest extends TestCase
 {
 
-  final File m_compareDir = new File( "C:\\TMP\\KalypsoCalcTest" );
+  final File m_compareDir = new File( "C:\\KalypsoCalcTestWE" );
 
   /**
    * @see junit.framework.TestCase#setUp()
@@ -90,7 +90,7 @@ public class ModelNACalcTest extends TestCase
       calc( "we", "test1", "1" );
       calc( "we", "test1", "2" );
       calc( "we", "test1", "3" );
-      calc( "we", "test1", "4" ); 
+      calc( "we", "test1", "4" );
       calc( "we", "test1", "5" );
       calc( "we", "test1", "6" );
       calc( "we", "test1", "7" );
@@ -137,9 +137,17 @@ public class ModelNACalcTest extends TestCase
     {
       public boolean hasID( String id )
       {
-        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
-          return true;
-        return super.hasID( id );
+        try
+        {
+          return getURLForID( id ) != null;
+        }
+        catch( Exception e )
+        {
+          return false;
+        }
+        //        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
+        //          return false;
+        //          return true;
       }
 
       /**
@@ -149,12 +157,15 @@ public class ModelNACalcTest extends TestCase
       {
         if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
           return getClass().getResource( "testData/we/hydrotop.gml" );
+        if( NaModelConstants.IN_PARAMETER_ID.equals( id ) )
+          return getClass().getResource( "testData/we/parameter.gml" );
         return super.getURLForID( id );
       }
     };
 
     final ICalcResultEater resultEater = CalcJobTestUtilis.createResultEater();
     final ICalcMonitor monitor = CalcJobTestUtilis.createMonitor();
+    // TODO check if we can use "outer" job
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
     job.run( tmpDir, dataProvider, resultEater, monitor );
 
@@ -176,21 +187,18 @@ public class ModelNACalcTest extends TestCase
       ZipUtilities.zip( tmpResults, tmpDir );
       final String[] ignore = new String[]
       {
-          //          "inp.dat/we_nat.zft",
-          //          "inp.dat/we_nat.ntz",
-          //          "*exe",
           "*err",
-          //          "*gml",
           "*res",
           "IdMap.txt",
           "exe.log",
-          //          "start/we_nat_start.txt",
           //          "inp.dat/we.hyd",
-          //          "out_we.nat/950825.qgs",
-          //          "inp.dat/we_nat.ger",
-          "inp.dat/we_nat.geb",
+          "out_we.nat/950825.qgs", // *.qgs darf ignoriert werden, ausschlaggebend sind die *zml files und der
+          // ZMLDiffComparator, der eine kleine Tolereanz erlaubt.
+          //          "inp.dat/we_nat.geb",
           "zufluss/*",
+          //          "hydro.top/*",
           "klima.dat/*",
+          "hydro.top/bod_art.dat",
           "infolog.txt" };
       ILogger logger = new ILogger()
       {

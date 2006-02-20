@@ -50,6 +50,7 @@ import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
@@ -75,52 +76,53 @@ public class KalypsoTest
     if( init )
       return;
     init = true;
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
 
-    // TODO: read TypeHandler from property-file
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-    // TODO: make new NA-project and move registration to it
-    // TODO delete next
-    registry.registerTypeHandler( new DiagramTypeHandler() );
-
-    registry.registerTypeHandler( new RangeSetTypeHandler() );
-    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-    registry.registerTypeHandler( new ResourceFileTypeHandler() );
-
-    guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
-    guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-    //register gml-geometry types
-    registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-    registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
-        .getMultiPointClass() ) );
-
-    registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
-        .getLineStringClass() ) );
-    registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
-        .getMultiLineStringClass() ) );
-
-    registry
-        .registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
-    registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
-        .getMultiPolygonClass() ) );
-
-    // register inlines
-    final String[] wvqAxis = new String[]
-    {
-        TimeserieConstants.TYPE_NORMNULL,
-        TimeserieConstants.TYPE_VOLUME,
-        TimeserieConstants.TYPE_RUNOFF };
-    final String[] taAxis = new String[]
-    {
-        TimeserieConstants.TYPE_HOURS,
-        TimeserieConstants.TYPE_NORM, };
-    final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-    final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
-    registry.registerTypeHandler( wvqInline );
-    registry.registerTypeHandler( taInline );
-    guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
-    guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
+    KalypsoGisPlugin.registerTypeHandler(marshallingRegistry, guiRegistry);
+//    // TODO: read TypeHandler from property-file
+//    marshallingRegistry.registerTypeHandler( new ObservationLinkHandler() );
+//    // TODO: make new NA-project and move registration to it
+//    // TODO delete next
+//    marshallingRegistry.registerTypeHandler( new DiagramTypeHandler() );
+//
+//    marshallingRegistry.registerTypeHandler( new RangeSetTypeHandler() );
+//    marshallingRegistry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+//    marshallingRegistry.registerTypeHandler( new ResourceFileTypeHandler() );
+//
+//    guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+//    guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+//    //register gml-geometry types
+//    marshallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
+//    marshallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
+//        .getMultiPointClass() ) );
+//
+//    marshallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
+//        .getLineStringClass() ) );
+//    marshallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
+//        .getMultiLineStringClass() ) );
+//
+//    marshallingRegistry
+//        .registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities.getPolygonClass() ) );
+//    marshallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
+//        .getMultiPolygonClass() ) );
+//
+//    // register inlines
+//    final String[] wvqAxis = new String[]
+//    {
+//        TimeserieConstants.TYPE_NORMNULL,
+//        TimeserieConstants.TYPE_VOLUME,
+//        TimeserieConstants.TYPE_RUNOFF };
+//    final String[] taAxis = new String[]
+//    {
+//        TimeserieConstants.TYPE_HOURS,
+//        TimeserieConstants.TYPE_NORM, };
+//    final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
+//    final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+//    marshallingRegistry.registerTypeHandler( wvqInline );
+//    marshallingRegistry.registerTypeHandler( taInline );
+//    guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
+//    guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
 
     final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
