@@ -244,7 +244,9 @@
         <xref linkend="kalypso_na-mapping_teilgebiete" /> bis <xref
         linkend="kalypso_na-mapping_hydrotope" /> zu finden. Im Kalypso
         Modeler (siehe <xref linkend="programm_start" />) können diese Daten
-        dann in ein neues NA-Modell Projekt integriert werden.</para>
+        dann in ein neues NA-Modell Projekt integriert werden. Um die
+        Datenmenge zu reduzieren ist es empfehlenswert gleiche Hydrotope in
+        einem Teilgebiet zu vereinigen (GIS Anwenung dissolve).</para>
 
         <para>Ein neues Projekt kann durch Auswahl des Menüpunktes
         <guimenuitem>Datei &gt; Neu &gt; Andere</guimenuitem> mit Hilfe eines
@@ -263,34 +265,34 @@
         Bodenkorrekturparametern für die Teilgebiete angelegt), sowie die
         Anzahl der mit Hilfe des Hydraulikmodells (WspWin) ermittelten
         Abflüsse (es wird die entsprechende Anzahl von Kalinin-Miljukov
-        Parametern angelegt - zur Zeit sind immer 5 erforderlich). Im
-        Anschluss sind nacheinander die Shape Dateien der Teilgebiete,
-        Stränge, Knoten und Hydrotope mit Hilfe des Dateibrowsers auszuwählen
-        und die Inhalte den Modellelementen zuzuordnen. Hierzu ist ein Mapping
-        vorgesehen, welches auf der Seite der Quelle die Informationen aus der
-        Shape-Datei vorhält, um diese den Elementen des Zieles (des neuen
-        Modelles) zuzuordnen. Die Zuordnung richtete sich nach den Inhalten
-        der Shape Datei, wobei auch die Datentypen berücksichtigt werden.
-        Nachfolgende Tabellen zeigen eine Übersicht der Elemente, welche bei
-        der Modellerstellung in den Shape-Dateien vorhanden sein sollten. Da
-        eine Assoziation der Elemente anhand von Nummerierungen zur
-        Übersichtlichkeit beiträgt, wird diese Nummer der Elemente
-        entsprechend einer Namensgebung dem Zielobjekt <literal>name</literal>
-        zugeordnet. Zusätzlich ist das Element <literal>description</literal>
-        für eine allgemeine Beschreibung bzw. einen wirklichen Namen (z.B.
-        Pegelname) optional zu besetzen. Die Flächen der Geometrieobjekte
-        werden automatisch vom Programm ermittelt und müssen somit nicht
-        zugeordnet werden. Da das Mapping unabhängig der Namensgebung der
-        Quelle (Spaltenbezeichung in der Shape-Datei) ist, dient die Spalte
-        Quelle in den folgenden Tabellen lediglich als Hinweis. Die Verwendung
-        der Elemente ist in der Spalte Bedeutung erläutert. Zusätzliche
-        Elemente sind wahlweise in die Shape-Dateien zu integrieren und mit
-        Hilfe des Assistenten den jeweiligen Modellelementen zuzuordnen. Alle
-        Elemente, welche nicht über das Mapping übertragen werden, können
-        später bei der Modellvervollständigung in entsprechenden Tabellen
-        bearbeitet werden. Es ist aufgrund der Datenredundanz sinnvoll nur die
-        vorgeschlagenen statischen Informationen durch die Shape-Dateien
-        vorzuhalten.</para>
+        Parametern angelegt - im Modell ist dieser Wert zur Zeit auf 5
+        festgelegt). Im Anschluss sind nacheinander die Shape Dateien der
+        Teilgebiete, Stränge, Knoten und Hydrotope mit Hilfe des Dateibrowsers
+        auszuwählen und die Inhalte den Modellelementen zuzuordnen. Hierzu ist
+        ein Mapping vorgesehen, welches auf der Seite der Quelle die
+        Informationen aus der Shape-Datei vorhält, um diese den Elementen des
+        Zieles (des neuen Modelles) zuzuordnen. Die Zuordnung richtete sich
+        nach den Inhalten der Shape Datei, wobei auch die Datentypen
+        berücksichtigt werden. Nachfolgende Tabellen zeigen eine Übersicht der
+        Elemente, welche bei der Modellerstellung in den Shape-Dateien
+        vorhanden sein sollten. Da eine Assoziation der Elemente anhand von
+        Nummerierungen zur Übersichtlichkeit beiträgt, wird diese Nummer der
+        Elemente entsprechend einer Namensgebung dem Zielobjekt
+        <literal>name</literal> zugeordnet. Zusätzlich ist das Element
+        <literal>description</literal> für eine allgemeine Beschreibung bzw.
+        einen wirklichen Namen (z.B. Pegelname) optional zu besetzen. Die
+        Flächen der Geometrieobjekte werden automatisch vom Programm ermittelt
+        und müssen somit nicht zugeordnet werden. Da das Mapping unabhängig
+        der Namensgebung der Quelle (Spaltenbezeichung in der Shape-Datei)
+        ist, dient die Spalte Quelle in den folgenden Tabellen lediglich als
+        Hinweis. Die Verwendung der Elemente ist in der Spalte Bedeutung
+        erläutert. Zusätzliche Elemente sind wahlweise in die Shape-Dateien zu
+        integrieren und mit Hilfe des Assistenten den jeweiligen
+        Modellelementen zuzuordnen. Alle Elemente, welche nicht über das
+        Mapping übertragen werden, können später bei der
+        Modellvervollständigung in entsprechenden Tabellen bearbeitet werden.
+        Es ist aufgrund der Datenredundanz sinnvoll nur die vorgeschlagenen
+        statischen Informationen durch die Shape-Dateien vorzuhalten.</para>
 
         <table id="kalypso_na-mapping_teilgebiete">
           <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
@@ -308,7 +310,7 @@
               <row>
                 <entry>GEOM</entry>
 
-                <entry>Ort</entry>
+                <entry>Geometrie</entry>
 
                 <entry>Geometrie (Polygon)</entry>
               </row>
@@ -318,7 +320,7 @@
 
                 <entry>name</entry>
 
-                <entry>Teilgebietsnummer</entry>
+                <entry>Teilgebietsnummer (optional)</entry>
               </row>
 
               <row>
@@ -348,7 +350,7 @@
               <row>
                 <entry>GEOM</entry>
 
-                <entry>Ort</entry>
+                <entry>Geometrie</entry>
 
                 <entry>Geometrie (Linie)</entry>
               </row>
@@ -358,7 +360,7 @@
 
                 <entry>name</entry>
 
-                <entry>Strangnummer</entry>
+                <entry>Strangnummer (optional)</entry>
               </row>
 
               <row>
@@ -397,7 +399,7 @@
               <row>
                 <entry>GEOM</entry>
 
-                <entry>Ort</entry>
+                <entry>Geometrie</entry>
 
                 <entry>Geometrie (Punkt)</entry>
               </row>
@@ -407,7 +409,7 @@
 
                 <entry>name</entry>
 
-                <entry>Knotennummer</entry>
+                <entry>Knotennummer (optional)</entry>
               </row>
 
               <row>
@@ -435,9 +437,17 @@
               </row>
 
               <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional)</entry>
+              </row>
+
+              <row>
                 <entry>GEOM</entry>
 
-                <entry>Ort</entry>
+                <entry>Geometrie</entry>
 
                 <entry>Geometrie (Polygon)</entry>
               </row>
@@ -459,7 +469,23 @@
                 <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
                 definierten Bodenparametern)</entry>
               </row>
+<row>
+                <entry>VersiegKor</entry>
 
+                <entry>Korrekturfaktor Versiegelung</entry>
+
+                <entry>multiplikativer Korrekturfaktor des
+                Versiegelungsgrades</entry>
+              </row>
+
+              <row>
+                <entry>EntwArt</entry>
+
+                <entry>Entwässerung</entry>
+
+                <entry>Unterscheidung in besielte und unbesielte
+                Flächen</entry>
+              </row>
               <row>
                 <entry>MaxPerRate</entry>
 
@@ -480,40 +506,7 @@
                 Tiefengrundwasserleiter abgeschlagen.</entry>
               </row>
 
-              <row>
-                <entry>VersiegGr</entry>
-
-                <entry>Versiegelungsgrad</entry>
-
-                <entry>Von der Landnutzung abhängig definierter
-                Versiegelungsgrad</entry>
-              </row>
-
-              <row>
-                <entry>VersiegKor</entry>
-
-                <entry>Faktor Versiegelung</entry>
-
-                <entry>multiplikativer Korrekturfaktor des
-                Versiegelungsgrades</entry>
-              </row>
-
-              <row>
-                <entry>EntwArt</entry>
-
-                <entry>Entwaesserung</entry>
-
-                <entry>Unterscheidung in besielte und unbesielte
-                Flächen</entry>
-              </row>
-
-              <row>
-                <entry>Beschr</entry>
-
-                <entry>description</entry>
-
-                <entry>Beschreibung (optional)</entry>
-              </row>
+              
             </tbody>
           </tgroup>
         </table>
@@ -1074,7 +1067,7 @@
             <row>
               <entry>Ort</entry>
 
-              <entry>Ort</entry>
+              <entry>Geometrie</entry>
 
               <entry>[ - ]</entry>
 
@@ -1131,7 +1124,7 @@
             </row>
 
             <row>
-              <entry>Relationen</entry>
+              <entry><emphasis role="bold">Relationen</emphasis></entry>
 
               <entry></entry>
 
@@ -1176,7 +1169,8 @@
             </row>
 
             <row>
-              <entry>Retentionskonstanten</entry>
+              <entry><emphasis
+              role="bold">Retentionskonstanten</emphasis></entry>
 
               <entry></entry>
 
@@ -1274,7 +1268,7 @@
             </row>
 
             <row>
-              <entry>Grundwasser</entry>
+              <entry><emphasis role="bold">Grundwasser</emphasis></entry>
 
               <entry></entry>
 
@@ -1296,7 +1290,7 @@
 
               <entry></entry>
 
-              <entry>minimale Stauhöhe GW-Speicher</entry>
+              <entry>minimale Stauhöhe Grundwasserspeicher</entry>
 
               <entry>double</entry>
             </row>
@@ -1310,7 +1304,7 @@
 
               <entry></entry>
 
-              <entry>maximale Stauhöhe GW-Speicher</entry>
+              <entry>maximale Stauhöhe Grundwasserspeicher</entry>
 
               <entry>double</entry>
             </row>
@@ -1324,7 +1318,7 @@
 
               <entry></entry>
 
-              <entry>Porosität des GW-Leiters</entry>
+              <entry>Porosität des Grundwasserleiters</entry>
 
               <entry>double</entry>
             </row>
@@ -1338,8 +1332,8 @@
 
               <entry></entry>
 
-              <entry>Aufteilungsfaktor GW-Speicher und
-              Tiefengrundwasser</entry>
+              <entry>Aufteilungsfaktor oberflächennaher und
+              Tiefengrundwasserleiter</entry>
 
               <entry>double</entry>
             </row>
@@ -1347,7 +1341,7 @@
             <row>
               <entry>grundwasserabflussmember</entry>
 
-              <entry>Link GW Relation</entry>
+              <entry>GW Relation (Link)</entry>
 
               <entry>-</entry>
 
@@ -1362,14 +1356,14 @@
             <row>
               <entry>ngwzu</entry>
 
-              <entry>TG Nummer GW-Relation</entry>
+              <entry>Teilgebiet (Link)</entry>
 
               <entry>[ - ]</entry>
 
               <entry></entry>
 
-              <entry>Teilgebietsnummer des Gebietes, in welches das
-              Grundwasser aus dem aktuellen Gebiet fliesst</entry>
+              <entry>Link zu Teilgebiet, in welches das Grundwasser aus dem
+              aktuellen Gebiet fliesst</entry>
 
               <entry>Catchment Link Type</entry>
             </row>
@@ -1383,8 +1377,8 @@
 
               <entry></entry>
 
-              <entry>Wichtung der GW-Abflüsse in Nachbarteilgebiete (Summe =
-              1)</entry>
+              <entry>Wichtung (Anteil) der GW-Abflüsse in Nachbarteilgebiete
+              (Summe = 1)</entry>
 
               <entry>double</entry>
             </row>
@@ -1398,7 +1392,7 @@
 
               <entry></entry>
 
-              <entry>Entnahme aus dem GW-Speicher</entry>
+              <entry>kontinuierliche Entnahme aus dem Grundwasser</entry>
 
               <entry>double</entry>
             </row>
@@ -1432,7 +1426,8 @@
             </row>
 
             <row>
-              <entry>Korrekturfaktoren</entry>
+              <entry><emphasis
+              role="bold">Korrekturfaktoren</emphasis></entry>
 
               <entry></entry>
 
@@ -1480,7 +1475,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
 
@@ -1587,7 +1582,7 @@
             </row>
 
             <row>
-              <entry>Anfangswerte</entry>
+              <entry><emphasis role="bold">Anfangswerte</emphasis></entry>
 
               <entry></entry>
 
@@ -1629,7 +1624,8 @@
             </row>
 
             <row>
-              <entry>Optimierungsfaktoren</entry>
+              <entry><emphasis
+              role="bold">Optimierungsfaktoren</emphasis></entry>
 
               <entry></entry>
 
@@ -1649,7 +1645,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Faktor Anfangsinhalt Grundwasserspeicher. Parameter der
               Modelloptimierung im Vorhersagefall - anderenfalls
@@ -1665,7 +1661,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0). Parameter
               der Modelloptimierung im Vorhersagefall - anderenfalls
@@ -1681,7 +1677,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Faktor Retention Oberflächenabfluss und Interflow.
               Parameter der Modelloptimierung im Vorhersagefall - anderenfalls
@@ -1691,7 +1687,8 @@
             </row>
 
             <row>
-              <entry>Verknüpfungen Zeitreihen</entry>
+              <entry><emphasis role="bold">Verknüpfungen
+              Zeitreihen</emphasis></entry>
 
               <entry></entry>
 
@@ -1713,7 +1710,8 @@
 
               <entry></entry>
 
-              <entry>Link zur lokalen Temperaturzeitreihe</entry>
+              <entry>Link zur lokalen Temperaturzeitreihe im
+              Rechenfall</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
@@ -1727,7 +1725,8 @@
 
               <entry></entry>
 
-              <entry>Link zur lokalen Niederschlagszeitreihe</entry>
+              <entry>Link zur lokalen Niederschlagszeitreihe im
+              Rechenfall</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
@@ -1741,13 +1740,15 @@
 
               <entry></entry>
 
-              <entry>Link zur lokalen Verdunstungszeitreihe</entry>
+              <entry>Link zur lokalen Verdunstungszeitreihe im
+              Rechenfall</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
 
             <row>
-              <entry>Bodenkorrekturparameter</entry>
+              <entry><emphasis
+              role="bold">Bodenkorrekturparameter</emphasis></entry>
 
               <entry></entry>
 
@@ -1763,7 +1764,7 @@
             <row>
               <entry>bodenkorrekturmember</entry>
 
-              <entry>Link Bodenkorrektur</entry>
+              <entry>Bodenkorrektur (Link)</entry>
 
               <entry>-</entry>
 
@@ -1782,7 +1783,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Multiplikativer Korrekturfaktor des
               Infiltrationsparameters in der Kurzzeitsimulation</entry>
@@ -1797,7 +1798,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Multiplikativer Korrekturfaktor des
               Infiltrationsparameters in der Langzeitsimulation</entry>
@@ -1812,10 +1813,10 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Multiplikativer Korrekturfaktor des
-              Perkolationsparameters des Bodenhorizontes</entry>
+              Perkolationsparameters</entry>
 
               <entry>double</entry>
             </row>
@@ -1857,7 +1858,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Multiplikativer Korrekturfaktor der nutzbaren
               Feldkapazitaet</entry>
@@ -1905,7 +1906,7 @@
             <row>
               <entry>Ort</entry>
 
-              <entry>Ort</entry>
+              <entry>Geometrie</entry>
 
               <entry>[ - ]</entry>
 
@@ -1934,7 +1935,7 @@
             <row>
               <entry>downStreamChannelMember</entry>
 
-              <entry>Unterwasserstrang</entry>
+              <entry>Unterwasserstrang (Link)</entry>
 
               <entry>[ - ]</entry>
 
@@ -1947,7 +1948,8 @@
             </row>
 
             <row>
-              <entry>Verknüpfungen Zeitreihen</entry>
+              <entry><emphasis role="bold">Verknüpfungen
+              Zeitreihen</emphasis></entry>
 
               <entry></entry>
 
@@ -1969,7 +1971,7 @@
 
               <entry></entry>
 
-              <entry>Zeitreihe Pegel (lokal)</entry>
+              <entry>Pegelzeitreihe, lokal im Rechenfall (optional)</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
@@ -1983,7 +1985,7 @@
 
               <entry></entry>
 
-              <entry>Berechneter Pegel (optional)</entry>
+              <entry>Berechneter Pegel, lokal im Rechenfall (optional)</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
@@ -2018,7 +2020,8 @@
             </row>
 
             <row>
-              <entry>Knoten zu Knoten Beziehung</entry>
+              <entry><emphasis role="bold">Knoten zu Knoten
+              Beziehung</emphasis></entry>
 
               <entry></entry>
 
@@ -2034,7 +2037,7 @@
             <row>
               <entry>branchingMember</entry>
 
-              <entry>Knoten zu Knoten</entry>
+              <entry>Knoten zu Knoten (Link)</entry>
 
               <entry>[ - ]</entry>
 
@@ -2050,7 +2053,7 @@
             <row>
               <entry>branchingNodeMember</entry>
 
-              <entry>Relationsknoten</entry>
+              <entry>Relationsknoten (Link)</entry>
 
               <entry>-</entry>
 
@@ -2146,7 +2149,7 @@
             <row>
               <entry>Ort</entry>
 
-              <entry>Ort</entry>
+              <entry>Geometrie</entry>
 
               <entry>[ - ]</entry>
 
@@ -2160,7 +2163,7 @@
             <row>
               <entry>downStreamNodeMember</entry>
 
-              <entry>Relation UW-Knoten</entry>
+              <entry>Relation UW-Knoten (Link)</entry>
 
               <entry>[ - ]</entry>
 
@@ -2172,7 +2175,7 @@
             </row>
 
             <row>
-              <entry>KM Stränge</entry>
+              <entry><emphasis role="bold">K-M Stränge</emphasis></entry>
 
               <entry></entry>
 
@@ -2200,20 +2203,6 @@
             </row>
 
             <row>
-              <entry>c</entry>
-
-              <entry>Aufteilungsfaktor F-V</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry></entry>
-
-              <entry>Aufteilungsfaktor Gerinne - Vorland</entry>
-
-              <entry>double</entry>
-            </row>
-
-            <row>
               <entry>KMParameterMember</entry>
 
               <entry>Ref. KM-Parameter</entry>
@@ -2229,7 +2218,8 @@
             </row>
 
             <row>
-              <entry>Kalinin-Miljukov-Parameter</entry>
+              <entry><emphasis
+              role="bold">Kalinin-Miljukov-Parameter</emphasis></entry>
 
               <entry></entry>
 
@@ -2317,7 +2307,23 @@
             </row>
 
             <row>
-              <entry>Optimierungsfaktoren</entry>
+              <entry>c</entry>
+
+              <entry>Aufteilungsfaktor F-V</entry>
+
+              <entry>[ - ]</entry>
+
+              <entry></entry>
+
+              <entry>Aufteilungsfaktor Gerinne - Vorland (Abflussanteil des
+              Flussschlauches)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry><emphasis
+              role="bold">Optimierungsfaktoren</emphasis></entry>
 
               <entry></entry>
 
@@ -2337,7 +2343,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Korrekturfaktor Speicherkonstante. Parameter der
               Modelloptimierung im Vorhersagefall - anderenfalls
@@ -2353,7 +2359,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>1</entry>
 
               <entry>Korrekturfaktor Anzahl der Speicher. Parameter der
               Modelloptimierung im Vorhersagefall - anderenfalls
@@ -2363,7 +2369,7 @@
             </row>
 
             <row>
-              <entry>RHB Stränge</entry>
+              <entry><emphasis role="bold">RHB Stränge</emphasis></entry>
 
               <entry></entry>
 
@@ -2394,7 +2400,7 @@
             <row>
               <entry>iknotNodeMember</entry>
 
-              <entry>Überlaufknoten</entry>
+              <entry>Überlaufknoten (Link)</entry>
 
               <entry>[ - ]</entry>
 
@@ -2504,9 +2510,9 @@
             </row>
 
             <row>
-              <entry>Ort</entry>
+              <entry>position</entry>
 
-              <entry>Ort</entry>
+              <entry>Geometrie</entry>
 
               <entry>[ - ]</entry>
 
@@ -2518,7 +2524,7 @@
             </row>
 
             <row>
-              <entry>flaech</entry>
+              <entry>area</entry>
 
               <entry>Hydrotopfläche</entry>
 
@@ -2533,7 +2539,7 @@
             </row>
 
             <row>
-              <entry>nutz</entry>
+              <entry>landuse</entry>
 
               <entry>Nutzungsschlüssel</entry>
 
@@ -2549,7 +2555,7 @@
             </row>
 
             <row>
-              <entry>boden</entry>
+              <entry>soiltype</entry>
 
               <entry>Bodenschlüssel</entry>
 
@@ -2593,27 +2599,14 @@
             </row>
 
             <row>
-              <entry>m_vers</entry>
+              <entry>corrSealing</entry>
 
-              <entry>Versiegelungsgrad</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry>0-1</entry>
-
-              <entry>Versiegelungsgrad des Hydrotopes</entry>
-
-              <entry>double</entry>
-            </row>
-
-            <row>
-              <entry>fak_vers</entry>
-
-              <entry>Faktor Versiegelung</entry>
+              <entry>Korrekturfaktor Versiegelung</entry>
 
               <entry>[ - ]</entry>
 
-              <entry>so dass gilt Versiegelungsgrad * Faktor&lt; 1</entry>
+              <entry>Koorekturfaktor des Standardversiegelungsgrades der
+              zugeordneten Landnutzung</entry>
 
               <entry>Korrekturfaktor Versiegelungsgrad</entry>
 
@@ -2621,7 +2614,7 @@
             </row>
 
             <row>
-              <entry>entwArt</entry>
+              <entry>drainageType</entry>
 
               <entry>Entwässerung</entry>
 
@@ -2658,7 +2651,8 @@
             </row>
 
             <row>
-              <entry morerows="">Schneeparameter</entry>
+              <entry morerows=""><emphasis
+              role="bold">Schneeparameter</emphasis></entry>
 
               <entry></entry>
 
@@ -2672,22 +2666,22 @@
             </row>
 
             <row>
-              <entry>texttyp</entry>
+              <entry>name</entry>
 
-              <entry>Schneetyp</entry>
+              <entry>Name</entry>
 
               <entry>[text]</entry>
 
               <entry></entry>
 
-              <entry>Schneetyp, welcher einem Gebiet zugeordnet werden
-              kann</entry>
+              <entry>Schneetyp, welcher einem Gebiet zugeordnet werden kann
+              (Parameter: Schneetyp)</entry>
 
               <entry>string</entry>
             </row>
 
             <row>
-              <entry morerows="">xwwo</entry>
+              <entry>xwwo</entry>
 
               <entry>Neuschneedichte</entry>
 
@@ -2701,7 +2695,7 @@
             </row>
 
             <row>
-              <entry morerows="">xwwmax</entry>
+              <entry>xwwmax</entry>
 
               <entry>max. Wasseranteil</entry>
 
@@ -2716,7 +2710,21 @@
             </row>
 
             <row>
-              <entry morerows="">xsnotem</entry>
+              <entry>xsnotem</entry>
+
+              <entry>temp. Schneeschmelzrate</entry>
+
+              <entry>[mm/h]</entry>
+
+              <entry></entry>
+
+              <entry>temperaturabhängige Schneeschmelzrate</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>xsnorad</entry>
 
               <entry>strahl. Schneeschmelzrate</entry>
 
@@ -2730,7 +2738,7 @@
             </row>
 
             <row>
-              <entry morerows="">xh0</entry>
+              <entry>xh0</entry>
 
               <entry>Anfangsschneehöhe</entry>
 
@@ -2744,7 +2752,8 @@
             </row>
 
             <row>
-              <entry morerows="">Nutzungsparameter</entry>
+              <entry><emphasis
+              role="bold">Nutzungsparameter</emphasis></entry>
 
               <entry></entry>
 
@@ -2758,22 +2767,65 @@
             </row>
 
             <row>
-              <entry morerows="">text</entry>
+              <entry>name</entry>
 
-              <entry>Bezeichnung</entry>
+              <entry>Name</entry>
 
               <entry>[ - ]</entry>
 
               <entry></entry>
 
               <entry>Nutzungsbezeichnung (hierher wird aus den Hydrotop
-              verwiesen)</entry>
+              verwiesen; Parameter: Nutzungsschlüsse)</entry>
 
               <entry>string</entry>
             </row>
 
             <row>
-              <entry morerows="">NutzungParameterMember</entry>
+              <entry>idealLandUsePeriodLink</entry>
+
+              <entry>Nutzungsparameter (Link)</entry>
+
+              <entry>[ - ]</entry>
+
+              <entry></entry>
+
+              <entry>Verknüpfung zum idealisierten Jahresgang</entry>
+
+              <entry>IdealLandUseAssociationType</entry>
+            </row>
+
+            <row>
+              <entry>sealingLink</entry>
+
+              <entry>Versiegelungsklasse (Link)</entry>
+
+              <entry>[ - ]</entry>
+
+              <entry></entry>
+
+              <entry>Verknüpfung zur Versiegelungsklasse</entry>
+
+              <entry>SealingAssociationType</entry>
+            </row>
+
+            <row>
+              <entry><emphasis role="bold">Idealisierte
+              Landnutzung</emphasis></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+            </row>
+
+            <row>
+              <entry>idealLandUseZML</entry>
 
               <entry>Nutzungsparameter</entry>
 
@@ -2781,70 +2833,45 @@
 
               <entry></entry>
 
-              <entry>Nutzungsparameter</entry>
+              <entry>Idealisierte Jahresvegetationsperiode der
+              Nutzungsparameter (Crop Factor, Wurzeltiefe, Leaf Area
+              Index)</entry>
 
-              <entry>Nutzung Parameter Association Type</entry>
+              <entry>ZmlInlineIdealKcWtLaiType</entry>
             </row>
 
             <row>
-              <entry morerows="">dat</entry>
+              <entry><emphasis
+              role="bold">Versiegelungsklassen</emphasis></entry>
 
-              <entry>Datum</entry>
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+            </row>
+
+            <row>
+              <entry>m_vers</entry>
+
+              <entry>Versiegelungsgrad</entry>
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>0-1</entry>
 
-              <entry>Datum</entry>
-
-              <entry>string</entry>
-            </row>
-
-            <row>
-              <entry morerows="">xkc</entry>
-
-              <entry>Korrekturfaktor der Verdunstung</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry></entry>
-
-              <entry>Korrekturfaktor der Verdunstung gegenüber potentieller
-              Verdunstung</entry>
+              <entry>Versiegelungsgrad der Klasse</entry>
 
               <entry>double</entry>
             </row>
 
             <row>
-              <entry morerows="">xwt</entry>
-
-              <entry>Wurzeltiefe</entry>
-
-              <entry>[dm]</entry>
-
-              <entry></entry>
-
-              <entry>Wurzeltiefe</entry>
-
-              <entry>double</entry>
-            </row>
-
-            <row>
-              <entry morerows="">xlai</entry>
-
-              <entry>Speicherinhalt Interzeptionsspeicher</entry>
-
-              <entry>[mm]</entry>
-
-              <entry></entry>
-
-              <entry>Speicherinhalt Interzeptionsspeicher</entry>
-
-              <entry>double</entry>
-            </row>
-
-            <row>
-              <entry morerows="">Bodentypparameter</entry>
+              <entry><emphasis
+              role="bold">Bodentypparameter</emphasis></entry>
 
               <entry></entry>
 
@@ -2858,52 +2885,37 @@
             </row>
 
             <row>
-              <entry morerows="">text6</entry>
+              <entry>name</entry>
 
-              <entry>Profilbezeichnung</entry>
+              <entry>Name</entry>
 
               <entry>[-]</entry>
 
               <entry></entry>
 
               <entry>Bodenprofilschlüssel (hierher wird aus den Hydrotopen
-              verwiesen)</entry>
+              verwiesen, Parameter: Bodenschlüssel)</entry>
 
               <entry>string</entry>
             </row>
 
             <row>
-              <entry morerows="">BodArtParameterMember</entry>
+              <entry>soilLayerLink</entry>
 
-              <entry>Bodenhorizonte</entry>
-
-              <entry>[-]</entry>
-
-              <entry></entry>
-
-              <entry>Bodenhorizonte des Bodenprofils</entry>
-
-              <entry>BodArt Parameter Association Type</entry>
-            </row>
-
-            <row>
-              <entry morerows="">BodArtLink</entry>
-
-              <entry>Bodenartschlüssel</entry>
+              <entry>Bodenart (Link)</entry>
 
               <entry>[ - ]</entry>
 
               <entry></entry>
 
-              <entry>Jedem Horizont ist eine Bodenart durch einen
-              Bodenartschlüssel zugewiesen (siehe Bodenartparameter
-              Bodenartschlüssel)</entry>
+              <entry>Jedem Horizont ist eine Bodenart durch eine Link zur
+              Bodenarten zugewiesen</entry>
 
-              <entry>Bodenart Association Type</entry>
+              <entry>SoilLayerAssociationType</entry>
             </row>
 
             <row>
-              <entry morerows="">xtief</entry>
+              <entry>xtief</entry>
 
               <entry>Mächtigkeit</entry>
 
@@ -2917,7 +2929,7 @@
             </row>
 
             <row>
-              <entry morerows="">xret</entry>
+              <entry>xret</entry>
 
               <entry>Flag Interflow</entry>
 
@@ -2925,14 +2937,15 @@
 
               <entry></entry>
 
-              <entry>Auswahl, ob Interflow in diesem Horizont zugelassen
-              wird</entry>
+              <entry>Auswahl, ob Interflow in diesem Horizont zugelassen wird
+              [-] (0= nein, 1= ja)</entry>
 
               <entry>double</entry>
             </row>
 
             <row>
-              <entry morerows="">Bodenartparameter</entry>
+              <entry><emphasis
+              role="bold">Bodenartparameter</emphasis></entry>
 
               <entry></entry>
 
@@ -2946,36 +2959,22 @@
             </row>
 
             <row>
-              <entry morerows="">typchar</entry>
+              <entry>typkap</entry>
 
-              <entry>Bodenartschlüssel</entry>
+              <entry>Kurzzeichen kap. Aufstieg</entry>
 
               <entry>[ - ]</entry>
 
               <entry></entry>
 
-              <entry>Bodenartschlüssel auf den der Link aus der Bodentyppdatei
-              bezogen ist (siehe Bodentypparameter Bodenartschlüssel)</entry>
+              <entry>Kurzzeichen kap. Aufstieg (wird zur Zeit nicht
+              verwendet)</entry>
 
               <entry>string</entry>
             </row>
 
             <row>
-              <entry morerows="">typkap</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry></entry>
-
-              <entry>[ - ]</entry>
-
-              <entry>string</entry>
-            </row>
-
-            <row>
-              <entry morerows="">typwp</entry>
+              <entry>typwp</entry>
 
               <entry>Welkepunkt</entry>
 
@@ -2989,7 +2988,7 @@
             </row>
 
             <row>
-              <entry morerows="">typfk</entry>
+              <entry>typfk</entry>
 
               <entry>Feldkapazität</entry>
 
@@ -3003,7 +3002,7 @@
             </row>
 
             <row>
-              <entry morerows="">typbfm</entry>
+              <entry>typbfm</entry>
 
               <entry>maximales Porenvolumen</entry>
 
@@ -3017,7 +3016,7 @@
             </row>
 
             <row>
-              <entry morerows="">typkf</entry>
+              <entry>typkf</entry>
 
               <entry>Hydraulic conductivity</entry>
 
@@ -3031,7 +3030,7 @@
             </row>
 
             <row>
-              <entry morerows="">typbf0</entry>
+              <entry>typbf0</entry>
 
               <entry>Anfangsbodenfeuchte</entry>
 
