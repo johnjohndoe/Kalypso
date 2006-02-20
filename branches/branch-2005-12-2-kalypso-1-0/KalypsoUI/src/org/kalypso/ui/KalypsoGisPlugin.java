@@ -77,6 +77,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -215,8 +216,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       e1.printStackTrace();
     }
-
-    registerTypeHandler();
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    registerTypeHandler( marshallingRegistry, guiRegistry );
     registerVirtualFeatureTypeHandler();
   }
 
@@ -726,42 +728,46 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return mySelectionIdProvider;
   }
 
-  private void registerTypeHandler()
+  public static void registerTypeHandler( ITypeRegistry marhallingRegistry, ITypeRegistry guiRegistry )
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    // changed this to public static void, so it can be called from JUnitTests also
+    // really not nice :-(
+
+    //    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    //    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     // TODO TODO TODO: refaktor this shit!
 
     try
     {
       // TODO: read TypeHandler from property-file
-      registry.registerTypeHandler( new ObservationLinkHandler() );
+      marhallingRegistry.registerTypeHandler( new ObservationLinkHandler() );
       // TODO: make new NA-project and move registration to it
       // TODO delete next
-      registry.registerTypeHandler( new DiagramTypeHandler() );
+      marhallingRegistry.registerTypeHandler( new DiagramTypeHandler() );
 
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-      registry.registerTypeHandler( new ResourceFileTypeHandler() );
+      marhallingRegistry.registerTypeHandler( new RangeSetTypeHandler() );
+      marhallingRegistry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+      marhallingRegistry.registerTypeHandler( new ResourceFileTypeHandler() );
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       //register gml-geometry types
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities
+          .getPointClass() ) );
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
           .getMultiPointClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
           .getLineStringClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
-          .getMultiLineStringClass() ) );
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType",
+          GeometryUtilities.getMultiLineStringClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
           .getPolygonClass() ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
           .getMultiPolygonClass() ) );
 
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
+      marhallingRegistry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
           .getUndefinedGeometryClass() ) );
       // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
 
@@ -776,7 +782,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
           TimeserieConstants.TYPE_HOURS,
           TimeserieConstants.TYPE_NORM };
-          final String[] wtKcLaiAxis = new String[]
+      final String[] wtKcLaiAxis = new String[]
       {
           TimeserieConstants.TYPE_DATE,
           TimeserieConstants.TYPE_LAI,
@@ -786,18 +792,18 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
           "KCWTLAI" );
-      registry.registerTypeHandler( wvqInline );
-      registry.registerTypeHandler( taInline );
-            registry.registerTypeHandler( wtKcLaiInline );
+      marhallingRegistry.registerTypeHandler( wvqInline );
+      marhallingRegistry.registerTypeHandler( taInline );
+      marhallingRegistry.registerTypeHandler( wtKcLaiInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-            guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Interne Applikationsfehler", e
           .getLocalizedMessage() );
     }
   }
@@ -851,7 +857,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String proxyHost = System.getProperty( "proxyHost" );
       final String proxyPort = System.getProperty( "proxyPort" );
       final String proxyUser = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER );
-      
+
       // todo: this always gets the empty string, but proxy connection is working anyways
       // what to do?
       final String proxyPwd = getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS );

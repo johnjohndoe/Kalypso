@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deegree.gml.GMLException;
+import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.vistors.GMLSchemaVisitor;
 import org.kalypsodeegree_impl.gml.schema.vistors.RecursiveSchemaVisitor;
