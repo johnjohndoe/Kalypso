@@ -39,7 +39,6 @@ public class ProfilUtil
     try
     {
       return Math.abs(point1.getValueFor(property)-point2.getValueFor(property))<= (Double)property.getParameter(PARAMETER.PRECISION );
-      
     }
     catch( ProfilDataException e )
     {

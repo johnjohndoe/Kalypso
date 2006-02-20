@@ -1,6 +1,5 @@
 package com.bce.eind.core.profil.validator;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public abstract class AbstractValidatorRule implements IValidatorRule
@@ -9,7 +8,7 @@ public abstract class AbstractValidatorRule implements IValidatorRule
   private String m_description;
   private String m_type;
 
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" );
     m_type = config.getAttribute( "type" );

@@ -80,31 +80,17 @@ public class PolyGone
     m_y = newY;
   }
 
-  /**
-   * -
-   *
-   * @return -
-   */
   public double[] getX(  )
   {
     return m_x;
   }
 
-  /**
-   * -
-   *
-   * @return -
-   */
   public double[] getY(  )
   {
     return m_y;
   }
 
-  /**
-   * -
-   *
-   * @return -
-   */
+  @Override
   public String toString(  )
   {
     StringBuffer b = new StringBuffer(  );

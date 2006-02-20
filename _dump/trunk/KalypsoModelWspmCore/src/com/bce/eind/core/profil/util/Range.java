@@ -341,9 +341,8 @@ public class Range
 
   /**
    * Returns a string representation of the range in the form: [from , to]
-   * 
-   * @return -
    */
+  @Override
   public String toString( )
   {
     NumberFormat f = NumberFormat.getInstance();

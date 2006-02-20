@@ -42,6 +42,7 @@ public interface IProfilBuilding
       m_tooltip = tooltip;
     }
 
+    @Override
     public final String toString( )
     {
       return m_label;

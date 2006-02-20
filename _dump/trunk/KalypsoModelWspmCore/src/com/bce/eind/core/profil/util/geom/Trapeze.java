@@ -134,11 +134,10 @@ public class Trapeze
     return ((d1 + d2) * h) / 2;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString( )
   {
     StringBuffer buf = new StringBuffer();
