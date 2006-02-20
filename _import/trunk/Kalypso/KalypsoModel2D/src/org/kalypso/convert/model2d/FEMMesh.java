@@ -70,8 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 
-import com.braju.format.Format;
-
 /**
  * This class is for organizing the parameters of the <MeshPolygon>for converting the generated <GMLWorkspace>to the
  * ascii file for the simulation programm.
@@ -428,14 +426,7 @@ public class FEMMesh
         new Integer( rts ),
         new Integer( ord ),
         new Double( def_m ), };
-    try
-    {
-      Format.fprintf( printWriter, format + "\n", o );
-    }
-    catch( IOException e1 )
-    {
-      e1.printStackTrace();
-    }
+    printWriter.printf( Locale.US, format + "\n", o );
 
     this.sbFE.append( stringWriter.getBuffer() );
     printWriter.close();
@@ -514,14 +505,7 @@ public class FEMMesh
           new Integer( 0 ),
 
       };
-      try
-      {
-        Format.fprintf( printWriter, format + "\n", o );
-      }
-      catch( IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      printWriter.printf( Locale.US, format + "\n", o );
 
       this.sbRoughness.append( stringWriter.getBuffer() );
       printWriter.close();
@@ -585,14 +569,7 @@ public class FEMMesh
             new Integer( ed.getP2() ),
             new Integer( ed.getFE1() ),
             new Integer( ed.getFE2() ), };
-        try
-        {
-          Format.fprintf( printWriter, format + "\n", o );
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+        printWriter.printf( Locale.US, format + "\n", o );
 
         this.sbAR.append( stringWriter.getBuffer() );
         printWriter.close();

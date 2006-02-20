@@ -19,5 +19,6 @@ Export-Package: org.kalypso.calc2d,
 Require-Bundle: org.kalypso.deegree,
  org.junit,
  org.kalypso.simulation.core,
- org.kalypso.commons
+ org.kalypso.commons,
+ org.kalypso.core
 Eclipse-AutoStart: true

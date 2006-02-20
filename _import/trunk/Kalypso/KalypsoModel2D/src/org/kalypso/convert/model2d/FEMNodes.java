@@ -60,13 +60,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-
-import com.braju.format.Format;
 
 /**
  * 
@@ -165,14 +164,7 @@ public class FEMNodes {
                 new Double(y),
                 new Double(z),
         };
-        try
-        {
-          Format.fprintf( printWriter, format + "\n", o );
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+        printWriter.printf( Locale.US, format + "\n", o );
 
         this.sbNode.append(stringWriter.getBuffer());
         printWriter.close();

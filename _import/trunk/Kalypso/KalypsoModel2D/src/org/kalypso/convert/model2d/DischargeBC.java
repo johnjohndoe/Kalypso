@@ -54,16 +54,14 @@
  */
 package org.kalypso.convert.model2d;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import com.braju.format.Format;
 
 /**
  * ----------------------------------------------------------------------
@@ -81,9 +79,9 @@ public class DischargeBC
    */
   public StringBuffer createDischarge( GMLWorkspace ws, Feature rootFeature )
   {
-    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty("dischargeCollectionMember");
+    final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "dischargeCollectionMember" );
     Feature dischargeCollectionFE = ws.resolveLink( rootFeature, linkPT );
-    List list = (List)dischargeCollectionFE.getProperty( "dischargeMember" );
+    List list = (List) dischargeCollectionFE.getProperty( "dischargeMember" );
     StringBuffer sb = getQFHF( list );
 
     return sb;
@@ -97,8 +95,8 @@ public class DischargeBC
   public StringBuffer getQFHF( List list )
   {
     StringBuffer sb = new StringBuffer();
-    Feature disfe = (Feature)list.get( 0 );
-    List listQF = (List)disfe.getProperty( "ParamQF" );
+    Feature disfe = (Feature) list.get( 0 );
+    List listQF = (List) disfe.getProperty( "ParamQF" );
 
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter( stringWriter );
@@ -106,23 +104,12 @@ public class DischargeBC
     Object[] o;
     for( int i = 0; i < listQF.size(); i++ )
     {
-      Feature qfFe = (Feature)listQF.get( i );
+      Feature qfFe = (Feature) listQF.get( i );
       i = i + 1;
       if( i >= 2 )
         i = i + 1;
-      o = new Object[]
-      {
-          new Integer( i ),
-          new Double( Double.parseDouble( "" + qfFe.getProperty( "qf" ) ) ),
-          new Double( Double.parseDouble( "" + qfFe.getProperty( "qdir" ) ) ), };
-      try
-      {
-        Format.fprintf( printWriter, format + "\n", o );
-      }
-      catch( IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      o = new Object[] { new Integer( i ), new Double( Double.parseDouble( "" + qfFe.getProperty( "qf" ) ) ), new Double( Double.parseDouble( "" + qfFe.getProperty( "qdir" ) ) ), };
+      printWriter.printf( Locale.US, format + "\n", o );
     }
 
     String names = "         j        qf      qdir";
@@ -137,18 +124,8 @@ public class DischargeBC
     PrintWriter printWriter2 = new PrintWriter( stringWriter2 );
     String format2 = "%10d%10.2f";
 
-    Object[] o2 = new Object[]
-    {
-        new Integer( 2 ),
-        new Double( Double.parseDouble( "" + disfe.getProperty( "ParamHF" ) ) ), };
-    try
-    {
-      Format.fprintf( printWriter2, format2 + "\n", o2 );
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
+    Object[] o2 = new Object[] { new Integer( 2 ), new Double( Double.parseDouble( "" + disfe.getProperty( "ParamHF" ) ) ), };
+    printWriter2.printf( Locale.US, format2 + "\n", o2 );
 
     sb.append( stringWriter2.getBuffer() );
     sb.append( "x" + "\n" );
@@ -164,8 +141,8 @@ public class DischargeBC
   public StringBuffer getQFHFDyn( List list )
   {
     StringBuffer sb = new StringBuffer();
-    Feature disfe = (Feature)list.get( 0 );
-    List listQF = (List)disfe.getProperty( "ParamQF" );
+    Feature disfe = (Feature) list.get( 0 );
+    List listQF = (List) disfe.getProperty( "ParamQF" );
 
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter( stringWriter );
@@ -173,23 +150,12 @@ public class DischargeBC
     Object[] o;
     for( int i = 0; i < listQF.size(); i++ )
     {
-      Feature qfFe = (Feature)listQF.get( i );
+      Feature qfFe = (Feature) listQF.get( i );
       i = i + 1;
       if( i >= 2 )
         i = i + 1;
-      o = new Object[]
-      {
-          new Integer( i ),
-          new Double( Double.parseDouble( "" + qfFe.getProperty( "qf" ) ) ),
-          new Double( Double.parseDouble( "" + qfFe.getProperty( "qdir" ) ) ), };
-      try
-      {
-        Format.fprintf( printWriter, format + "\n", o );
-      }
-      catch( IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      o = new Object[] { new Integer( i ), new Double( Double.parseDouble( "" + qfFe.getProperty( "qf" ) ) ), new Double( Double.parseDouble( "" + qfFe.getProperty( "qdir" ) ) ), };
+      printWriter.printf( Locale.US, format + "\n", o );
     }
 
     String names = "         j        qf      qdir";
@@ -204,18 +170,8 @@ public class DischargeBC
     PrintWriter printWriter2 = new PrintWriter( stringWriter2 );
     String format2 = "%10d%10.2f";
 
-    Object[] o2 = new Object[]
-    {
-        new Integer( 2 ),
-        new Double( Double.parseDouble( "" + disfe.getProperty( "ParamHF" ) ) ), };
-    try
-    {
-      Format.fprintf(printWriter2, format2+"\n", o2);
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
+    Object[] o2 = new Object[] { new Integer( 2 ), new Double( Double.parseDouble( "" + disfe.getProperty( "ParamHF" ) ) ), };
+    printWriter2.printf( Locale.US, format2 + "\n", o2 );
 
     sb.append( stringWriter2.getBuffer() );
     sb.append( "x" + "\n" );

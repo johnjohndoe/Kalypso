@@ -58,12 +58,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import com.braju.format.Format;
 
 /**
  * ----------------------------------------------------------------------
@@ -106,14 +105,7 @@ public class GeneralBC
             new Double( Double.parseDouble( "" + generalFE.getProperty( "MINEDDY" ) ) ),
 
         };
-        try
-        {
-          Format.fprintf( printWriter, format + "\n", o );
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+        printWriter.printf( Locale.US, format + "\n", o );
 
         sb.append( stringWriter.getBuffer() );
         printWriter.close();
@@ -161,14 +153,7 @@ public class GeneralBC
           new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IHGEN" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "ISTGEN" ) ) ),
           new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "NCFLW" ) ) ), new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IDNOPT" ) ) ),
           new Integer( (int) Double.parseDouble( "" + generalFE.getProperty( "IBGEN" ) ) ), };
-      try
-      {
-        Format.fprintf( printWriter, format + "\n", o );
-      }
-      catch( IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      printWriter.printf( Locale.US, format + "\n", o );
       sb.append( blockNames + "\n" );
       sb.append( blockNames2 + "\n" );
 

@@ -63,8 +63,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import com.braju.format.Format;
-
 /**
  * -----------------------------------------------------------------
  * 
@@ -125,14 +123,7 @@ public class Viscosity
               new Double( Double.parseDouble( "" + lAbst.get( 0 ) ) ), new Double( Double.parseDouble( "" + l.get( 0 ) ) ), };
         }
       }
-      try
-      {
-        Format.fprintf( printWriter, format + "\n", o );
-      }
-      catch( IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      printWriter.printf( Locale.US, format + "\n", o );
 
       sb.append( stringWriter.getBuffer() );
       printWriter.close();

@@ -38,6 +38,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -49,8 +50,6 @@ import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import com.braju.format.Format;
 
 /**
  * Lesen und Schreiben der Speicher-Parameter <br>
@@ -73,18 +72,16 @@ public class TubigExportParameter
    */
   public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
-    //String sName;
     String sKurzName;
     Iterator itSpeicher;
     Feature featSpeicher;
 
-    final FeatureList speicherlist = (FeatureList)workspace.getFeatureFromPath( TubigConst.GML_SPEICHER_COLL );
+    final FeatureList speicherlist = (FeatureList) workspace.getFeatureFromPath( TubigConst.GML_SPEICHER_COLL );
     for( itSpeicher = speicherlist.iterator(); itSpeicher.hasNext(); )
     {
-      featSpeicher = (Feature)itSpeicher.next();
+      featSpeicher = (Feature) itSpeicher.next();
 
-      //sName = (String)featSpeicher.getProperty( "Name" );
-      sKurzName = (String)featSpeicher.getProperty( TubigConst.GML_KURZ_NAME );
+      sKurzName = (String) featSpeicher.getProperty( TubigConst.GML_KURZ_NAME );
 
       writeSpeicherStauraum( featSpeicher, dir, sKurzName );
       writeSpeicherMindestabgabe( featSpeicher, dir, sKurzName );
@@ -95,8 +92,7 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherStauraum( final Feature speicher, final File dir, final String kurzname )
-      throws TubigException
+  private static void writeSpeicherStauraum( final Feature speicher, final File dir, final String kurzname ) throws TubigException
   {
     final Feature featStauraum;
     final Double dTotraum;
@@ -119,32 +115,28 @@ public class TubigExportParameter
 
       pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
-      featStauraum = (Feature)speicher.getProperty( "StauraumParameter" );
-      dTotraum = (Double)featStauraum.getProperty( "Totraum" );
-      dReserveraum = (Double)featStauraum.getProperty( "Reserveraum" );
-      dStauraum = (Double)featStauraum.getProperty( "Stauraum" );
+      featStauraum = (Feature) speicher.getProperty( "StauraumParameter" );
+      dTotraum = (Double) featStauraum.getProperty( "Totraum" );
+      dReserveraum = (Double) featStauraum.getProperty( "Reserveraum" );
+      dStauraum = (Double) featStauraum.getProperty( "Stauraum" );
 
-      featBetriebsraumJahr = (Feature)featStauraum.getProperty( "Betriebsraum" );
-      featLstBetriebsraum = (FeatureList)featBetriebsraumJahr.getProperty( "MonatMember" );
+      featBetriebsraumJahr = (Feature) featStauraum.getProperty( "Betriebsraum" );
+      featLstBetriebsraum = (FeatureList) featBetriebsraumJahr.getProperty( "MonatMember" );
 
       // Kommentar, Totraum [Mio. m³], Reserveraum [Mio. m³],
       // Betriebsraum Jan-Dez [Mio. m³], ges. Stauraum [Mio. m³]
       pWrtr.println( "REM " + outfile.getName() );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dTotraum } );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dTotraum );
       pWrtr.println();
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dReserveraum } );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dReserveraum );
       pWrtr.println();
       for( iter = featLstBetriebsraum.iterator(); iter.hasNext(); )
       {
-        featMonat = (Feature)iter.next();
-        Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featMonat.getProperty( "Wert" ) } );
+        featMonat = (Feature) iter.next();
+        pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featMonat.getProperty( "Wert" ) );
         pWrtr.println();
       }
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dStauraum } );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dStauraum );
       pWrtr.println();
       IOUtils.closeQuietly( pWrtr );
 
@@ -160,9 +152,7 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherKommentarUndJahr( final Feature speicher, final File dir, final String dateiName,
-      final String sFeatProp1, final String sFeatProp2, final String sFeatLstProp1, final boolean bAddComment )
-      throws TubigException
+  private static void writeSpeicherKommentarUndJahr( final Feature speicher, final File dir, final String dateiName, final String sFeatProp1, final String sFeatProp2, final String sFeatLstProp1, final boolean bAddComment ) throws TubigException
   {
     final Feature featMindestabgabe;
     final Feature featMindestabgabeJahr;
@@ -182,10 +172,10 @@ public class TubigExportParameter
 
       pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
-      featMindestabgabe = (Feature)speicher.getProperty( sFeatProp1 );
+      featMindestabgabe = (Feature) speicher.getProperty( sFeatProp1 );
 
-      featMindestabgabeJahr = (Feature)featMindestabgabe.getProperty( sFeatProp2 );
-      featLstMindestabgabe = (FeatureList)featMindestabgabeJahr.getProperty( sFeatLstProp1 );
+      featMindestabgabeJahr = (Feature) featMindestabgabe.getProperty( sFeatProp2 );
+      featLstMindestabgabe = (FeatureList) featMindestabgabeJahr.getProperty( sFeatLstProp1 );
 
       // Kommentar, ggf. Zusatzzeile (f. Trinkwasser: Zahl!, die angibt in
       // welcher Einheit die Werte in der WinPro-Oberfläche angezeigt werden,
@@ -196,9 +186,8 @@ public class TubigExportParameter
         pWrtr.println( "1 " );
       for( iter = featLstMindestabgabe.iterator(); iter.hasNext(); )
       {
-        featMonat = (Feature)iter.next();
-        Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featMonat.getProperty( "Wert" ) } );
+        featMonat = (Feature) iter.next();
+        pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featMonat.getProperty( "Wert" ) );
         pWrtr.println();
       }
       IOUtils.closeQuietly( pWrtr );
@@ -214,32 +203,25 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherMindestabgabe( final Feature speicher, final File dir, final String kurzname )
-      throws TubigException
+  private static void writeSpeicherMindestabgabe( final Feature speicher, final File dir, final String kurzname ) throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qmi", "MindestabgabeParameter", "Mindestabgabe",
-        "MonatMember", false );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qmi", "MindestabgabeParameter", "Mindestabgabe", "MonatMember", false );
   }
 
-  private static void writeSpeicherMaximalabgabe( final Feature speicher, final File dir, final String kurzname )
-      throws TubigException
+  private static void writeSpeicherMaximalabgabe( final Feature speicher, final File dir, final String kurzname ) throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qma", "MaximalabgabeParameter", "Maximalabgabe",
-        "MonatMember", false );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qma", "MaximalabgabeParameter", "Maximalabgabe", "MonatMember", false );
   }
 
-  private static void writeSpeicherTrinkwasser( final Feature speicher, final File dir, final String kurzname )
-      throws TubigException
+  private static void writeSpeicherTrinkwasser( final Feature speicher, final File dir, final String kurzname ) throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".twa", "TrinkwasserParameter", "Trinkwasser",
-        "MonatMember", true );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".twa", "TrinkwasserParameter", "Trinkwasser", "MonatMember", true );
   }
 
-  private static void writeSpeicherEntlastungsanlagen( final Feature speicher, final File dir, final String kurzname )
-      throws TubigException
+  private static void writeSpeicherEntlastungsanlagen( final Feature speicher, final File dir, final String kurzname ) throws TubigException
   {
     final Feature featEntlastungsanlagen;
     final FeatureList featLstEntlastungen;
@@ -267,8 +249,8 @@ public class TubigExportParameter
 
       pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
-      featEntlastungsanlagen = (Feature)speicher.getProperty( "EACollectionAssociation" );
-      featLstEntlastungen = (FeatureList)featEntlastungsanlagen.getProperty( "EAMember" );
+      featEntlastungsanlagen = (Feature) speicher.getProperty( "EACollectionAssociation" );
+      featLstEntlastungen = (FeatureList) featEntlastungsanlagen.getProperty( "EAMember" );
 
       // Kommentar, Anzahl der Stützstellen, Stützstelle, bei der Überlauf
       // beginnt, tabellarische Info zu den Entlastungsanlagen
@@ -279,26 +261,21 @@ public class TubigExportParameter
       iNum = 0;
       for( iter = featLstEntlastungen.iterator(); iter.hasNext(); )
       {
-        featEntlastung = (Feature)iter.next();
+        featEntlastung = (Feature) iter.next();
 
-        sLeaZeile = Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Höhe" ) } );
-        dHoehe = (Double)featEntlastung.getProperty( "Höhe" );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Inhalt" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Grundablass" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Überlauf" ) } );
-        dUeberlauf = (Double)featEntlastung.getProperty( "Überlauf" );
+        sLeaZeile = String.format( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featEntlastung.getProperty( "Höhe" ) );
+        dHoehe = (Double) featEntlastung.getProperty( "Höhe" );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + String.format( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featEntlastung.getProperty( "Inhalt" ) );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + String.format( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featEntlastung.getProperty( "Grundablass" ) );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + String.format( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, featEntlastung.getProperty( "Überlauf" ) );
+        dUeberlauf = (Double) featEntlastung.getProperty( "Überlauf" );
         if( dUeberlauf.doubleValue() <= 0.0 )
         {
           iNum = iNum + 1;
         }
-        sBemerkung = (String)featEntlastung.getProperty( "Bemerkung" );
+        sBemerkung = (String) featEntlastung.getProperty( "Bemerkung" );
         if( sBemerkung != null )
-          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_STRING_FORMAT, new Object[]
-          { TubigConst.TUBIG_SEP + sBemerkung } );
+          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + String.format( Locale.US, TubigConst.TUBIG_STRING_FORMAT, TubigConst.TUBIG_SEP + sBemerkung );
         leaMap.put( dHoehe, sLeaZeile );
       }
 
@@ -308,7 +285,7 @@ public class TubigExportParameter
       iter = leaTreeMap.entrySet().iterator();
       while( iter.hasNext() )
       {
-        mapEntry = (Map.Entry)iter.next();
+        mapEntry = (Map.Entry) iter.next();
         pWrtr.println( mapEntry.getValue() );
       }
       IOUtils.closeQuietly( pWrtr );
@@ -336,27 +313,26 @@ public class TubigExportParameter
    */
   public static void writePegelPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
-    //String sName;
+    // String sName;
     String sKurzName;
     Iterator itPegel;
     Feature featPegel;
     FeatureList featLstPegel;
 
     // Parameter-Dateien für Wasserlaufmodelle
-    featLstPegel = (FeatureList)workspace.getFeatureFromPath( TubigConst.GML_WLM_COLL );
+    featLstPegel = (FeatureList) workspace.getFeatureFromPath( TubigConst.GML_WLM_COLL );
     for( itPegel = featLstPegel.iterator(); itPegel.hasNext(); )
     {
-      featPegel = (Feature)itPegel.next();
+      featPegel = (Feature) itPegel.next();
 
-      //sName = (String)featPegel.getProperty( "Name" );
-      sKurzName = (String)featPegel.getProperty( TubigConst.GML_KURZ_NAME );
+      // sName = (String)featPegel.getProperty( "Name" );
+      sKurzName = (String) featPegel.getProperty( TubigConst.GML_KURZ_NAME );
 
       writePegelWlmPars( featPegel, dir, sKurzName );
     }
   }
 
-  private static void writePegelWlmPars( final Feature featPegel, final File dir, final String kurzname )
-      throws TubigException
+  private static void writePegelWlmPars( final Feature featPegel, final File dir, final String kurzname ) throws TubigException
   {
     final File outfile;
     final FileOutputStream stream;
@@ -373,56 +349,46 @@ public class TubigExportParameter
 
       pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
-      sComment = (String)featPegel.getProperty( "Kommentar" );
+      sComment = (String) featPegel.getProperty( "Kommentar" );
       pWrtr.println( sComment );
 
-      dWert = (Double)featPegel.getProperty( "XAW" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "XAW" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "XAW" );
 
-      dWert = (Double)featPegel.getProperty( "XEW" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "XEW" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "XEW" );
 
-      dWert = (Double)featPegel.getProperty( "FK1" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "FK1" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "FK1  Rueckgangskoeffient in h" );
 
-      dWert = (Double)featPegel.getProperty( "FK2" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "FK2" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "FK2  Rueckgangskoeffient in h" );
 
-      dWert = (Double)featPegel.getProperty( "NN1" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "NN1" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "NN1" );
 
-      dWert = (Double)featPegel.getProperty( "NN2" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "NN2" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "NN2" );
 
-      nWert = (Number)featPegel.getProperty( "Laufzeit" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_INTEGER_FORMAT, new Object[]
-      { nWert } );
+      nWert = (Number) featPegel.getProperty( "Laufzeit" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_INTEGER_FORMAT, nWert );
       pWrtr.print( TubigConst.TUBIG_SEP );
-      nWert = (Number)featPegel.getProperty( "LaufzeitDefault" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_INTEGER_FORMAT, new Object[]
-      { nWert } );
+      nWert = (Number) featPegel.getProperty( "LaufzeitDefault" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_INTEGER_FORMAT, nWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "Laufzeit und LaufzeitDefault" );
 
-      dWert = (Double)featPegel.getProperty( "DM1" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "DM1" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "DM1" );
 
-      dWert = (Double)featPegel.getProperty( "DM2" );
-      Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-      { dWert } );
+      dWert = (Double) featPegel.getProperty( "DM2" );
+      pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, dWert );
       pWrtr.println( TubigConst.TUBIG_SEP + "DM2" );
       IOUtils.closeQuietly( pWrtr );
     }
@@ -440,7 +406,7 @@ public class TubigExportParameter
   public static void main( final String[] args ) throws Exception
   {
     final URL gmlurl = TubigExportParameter.class.getResource( "resources/bodemodell_test.gml" );
-    //    final URL schemaurl = TubigExportParameter.class.getResource(
+    // final URL schemaurl = TubigExportParameter.class.getResource(
     // "resources/schema/bodemodell.xsd" );
 
     MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
@@ -448,7 +414,7 @@ public class TubigExportParameter
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlurl );
 
     // zum Schreiben
-    //    GmlSerializer.serializeWorkspace( aWriter, workspace );
+    // GmlSerializer.serializeWorkspace( aWriter, workspace );
 
     final File dir = new File( System.getProperty( "java.io.tmpdir" ) );
     writeSpeicherPars( workspace, dir );

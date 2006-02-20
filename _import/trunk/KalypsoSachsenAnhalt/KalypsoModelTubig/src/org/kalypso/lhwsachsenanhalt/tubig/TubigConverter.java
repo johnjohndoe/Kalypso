@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
@@ -71,8 +72,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
-import com.braju.format.Format;
-
 /**
  * Im- und Export von TUBIG-Dateien von und nach ZML <br>
  * TUBIG = spezielles Dateiformat der Thiele & Büttner Ingenieurgesellschaft für Zeitreihen-Dateien. <br>
@@ -88,7 +87,7 @@ public class TubigConverter
    * schreibt die gesamte Zeitreihe in TUBIG-Datei
    */
   public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step, final String sValueType )
-      throws SensorException, IOException
+      throws SensorException
   {
     zml2Tubig( obsZml, wrtr, step, sValueType, null );
   }
@@ -104,7 +103,7 @@ public class TubigConverter
    *          Beginn der Vorhersage = aktuelle Modellzeit
    */
   public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step, final String sValueType,
-      final Date dtStartForecast ) throws SensorException, IOException
+      final Date dtStartForecast ) throws SensorException
   {
     final String sComment;
     final PrintWriter pWrtr;
@@ -112,17 +111,16 @@ public class TubigConverter
     final ITuppleModel tplWerte;
     final IAxis axDatum;
     final IAxis axWerte;
-    final List lstAusgWerte;
-    final List lstAusgDatum; // Ist eigentlich überflüssig
-    //final Iterator itDatum;
+    final List<Number> lstAusgWerte;
+    final List<Date> lstAusgDatum; // Ist eigentlich überflüssig
     Calendar calendar;
 
     int ii;
     Number wert;
     Date dtDatum;
 
-    lstAusgWerte = new ArrayList();
-    lstAusgDatum = new ArrayList();
+    lstAusgWerte = new ArrayList<Number>();
+    lstAusgDatum = new ArrayList<Date>();
     calendar = new GregorianCalendar();
 
     pWrtr = new PrintWriter( wrtr );
@@ -180,7 +178,7 @@ public class TubigConverter
       // wenn kein Zahlenwert vorhanden, besteht die Datei die Prüfung durch m_fehler nicht...
       if( lstAusgDatum.size() > 0 )
       {
-        dtDatum = (Date)lstAusgDatum.get( 0 );
+        dtDatum = lstAusgDatum.get( 0 );
       }
       else
       {
@@ -202,8 +200,7 @@ public class TubigConverter
       for( final Iterator it = lstAusgWerte.iterator(); it.hasNext(); )
       {
         wert = (Number)it.next();
-        Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { wert } );
+        pWrtr.printf( Locale.US, TubigConst.TUBIG_NUMBER_FORMAT, wert );
 
         // Datum kann geschrieben werden (zusätzliche Informationen werden vom
         // Rechenkern ignoriert)
@@ -242,8 +239,8 @@ public class TubigConverter
   {
     final LineNumberReader lneNumRdr;
     final Date dtDatum;
-    final List lstEingWerte;
-    final List lstEingDatum;
+    final List<Double> lstEingWerte;
+    final List<Date> lstEingDatum;
     final Calendar calendar = new GregorianCalendar();
 
     IObservation obsOut = null;
@@ -256,8 +253,8 @@ public class TubigConverter
     int step;
     int ii;
 
-    lstEingWerte = new ArrayList();
-    lstEingDatum = new ArrayList();
+    lstEingWerte = new ArrayList<Double>();
+    lstEingDatum = new ArrayList<Date>();
     Object[][] tuppleData;
     metaDataList = new MetadataList();
 

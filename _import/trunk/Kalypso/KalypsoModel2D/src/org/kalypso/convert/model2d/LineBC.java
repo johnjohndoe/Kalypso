@@ -70,8 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-import com.braju.format.Format;
-
 /**
  * ----------------------------------------------------------------------
  * 
@@ -83,7 +81,7 @@ public class LineBC
   /**
    * Constructor
    */
-  public LineBC()
+  public LineBC( )
   {
 
   }
@@ -98,26 +96,23 @@ public class LineBC
   {
     final IRelationType linkPT = (IRelationType) rootFeature.getFeatureType().getProperty( "lineCollectionMember" );
     Feature lineCollectionFE = ws.resolveLink( rootFeature, linkPT );
-    List list = (List)lineCollectionFE.getProperty( "lineMember" );
+    List list = (List) lineCollectionFE.getProperty( "lineMember" );
     StringBuffer sb = new StringBuffer();
     sb.append( "           read(iin,'(60i5)')(line(j,k),k=1,60)" + "\n" );
     sb.append( "   NCL Kontinuitaetslinien (d.h. Knotennummern der Linien)" + "\n" );
 
     try
     {
-      //	        URL gmlURL = new File(file2d).toURL();
-      //	        URL schemaUrl = new File(schema2d).toURL();
-      //	        GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
       GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace( file2d, schema2d );
       final Feature rootFeature2d = ws2d.getRootFeature();
 
       for( int i = 0; i < list.size(); i++ )
       {
         StringBuffer sb2 = new StringBuffer();
-        Feature fe = (Feature)list.get( i );
+        Feature fe = (Feature) list.get( i );
         if( fe != null )
         {
-          GM_Curve curve = (GM_Curve)fe.getProperty( "listLinePos" );
+          GM_Curve curve = (GM_Curve) fe.getProperty( "listLinePos" );
           GM_LineString asLineString = curve.getAsLineString();
           GM_Position[] positions = asLineString.getPositions();
 
@@ -130,18 +125,9 @@ public class LineBC
           {
             int id = getId( ws2d, rootFeature2d, positions[j].getX(), positions[j].getY() );
 
-            o = new Object[]
-            { new Integer( id ), };
+            o = new Object[] { new Integer( id ), };
 
-            try
-            {
-              Format.fprintf( printWriter, format + "\n", o );
-            }
-            catch( IOException e1 )
-            {
-              e1.printStackTrace();
-            }
-
+            printWriter.printf( Locale.US, format + "\n", o );
           }
 
           sb2.append( stringWriter.getBuffer() );
@@ -186,7 +172,7 @@ public class LineBC
 
     for( Iterator iter = nodeList.iterator(); iter.hasNext(); )
     {
-      Node n = (Node)iter.next();
+      Node n = (Node) iter.next();
       double xNode = n.getX();
       double yNode = n.getY();
       if( xNode == x && yNode == y )
