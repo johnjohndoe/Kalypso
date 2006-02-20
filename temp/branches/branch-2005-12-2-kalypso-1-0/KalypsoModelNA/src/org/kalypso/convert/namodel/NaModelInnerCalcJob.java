@@ -147,6 +147,10 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   final HashMap m_resultMap = new HashMap();
 
+  private static final String WE_RESOURCE_HYDROTOP_GML = "resources/WE/hydrotop.gml";
+
+  private static final String WE_PARAMETER_GML = "resources/WE/parameter.gml";
+
   public NaModelInnerCalcJob()
   {
     m_urlUtilities = new UrlUtilities();
@@ -178,7 +182,6 @@ public class NaModelInnerCalcJob implements ICalcJob
       writer = new FileWriter( infoFile );
       final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
       writer.write( "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
-
     }
     catch( IOException e1 )
     {
@@ -500,7 +503,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
           .getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
-      parameterWorkspace = null;
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource(WE_PARAMETER_GML));
 
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ),
@@ -520,26 +523,28 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       hydrotopWorkspace = GmlSerializer
           .createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
-      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
-      CS_CoordinateSystem targetCS = null;
-      for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
-      {
-        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "position" );
-        if( geom != null && geom.getCoordinateSystem() != null )
-        {
-          targetCS = geom.getCoordinateSystem();
-          break;
-        }
-
-      }
-      if( targetCS != null )
-      {
-        final TransformVisitor visitor = new TransformVisitor( targetCS );
-        modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
-      }
     }
     else
-      hydrotopWorkspace = null;
+    {
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_RESOURCE_HYDROTOP_GML ) );
+    }
+
+    final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
+    CS_CoordinateSystem targetCS = null;
+    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
+    {
+      final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "position" );
+      if( geom != null && geom.getCoordinateSystem() != null )
+      {
+        targetCS = geom.getCoordinateSystem();
+        break;
+      }
+    }
+    if( targetCS != null )
+    {
+      final TransformVisitor visitor = new TransformVisitor( targetCS );
+      modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
+    }
 
     // setting duration of simulation...
     // start
