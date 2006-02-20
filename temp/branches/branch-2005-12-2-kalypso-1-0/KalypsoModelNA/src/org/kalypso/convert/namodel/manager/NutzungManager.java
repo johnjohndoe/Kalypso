@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -193,37 +195,63 @@ public class NutzungManager extends AbstractManager
     String nutzName = FeatureHelper.getAsString( feature, "name" );
     File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" );
     FileWriter writer = new FileWriter( nutzungDir );
-    writer.write( linkedIdealLanduseFE.getProperty("name").toString() );
-    writer.write( "\nIdealisierter Jahresgang\n" );
+    String name;
+    try
+    {
+      name = linkedIdealLanduseFE.getProperty( "name" ).toString();
+    }
+    catch( Exception e )
+    {
+      name = "pflanzenabhaengige verdunstung";
+    }
+    writer.write( name );
+    writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!
     writer.write( "xxdatum     F EVA    We    BIMAX\n" );
-    Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
+    final Object idealLanduseProp = linkedIdealLanduseFE.getProperty( "idealLandUseZML" );
     writeIdealLanduse( (IObservation)idealLanduseProp, writer );
+    writer.write( "993456789012345678901234567890" );
+
     IOUtils.closeQuietly( writer );
 
   }
 
   private void writeIdealLanduse( IObservation observation, Writer zmlWriter ) throws SensorException, IOException
   {
-    IAxis[] axisList = observation.getAxisList();
-    IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
-    IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_KC );
-    IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WT );
-    IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_LAI );
-    ITuppleModel values = observation.getValues( null );
+    final IAxis[] axisList = observation.getAxisList();
+    final IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
+    final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_KC );
+    final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WT );
+    final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_LAI );
+    final ITuppleModel values = observation.getValues( null );
     int count = values.getCount();
-    for( int row = count-1; row >= 0; row-- )
+    int yearOffset = 2001;
+    for( int row = 0; row < count; row++ )
     {//TODO: hier evtl. noch Zeitzone berücksichtigen - außerdem mit Fortran abgleichen!!!
-      Date date = (Date)values.getElement( row, idleDateAxis );
-      SimpleDateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
-      String dat = dateFormat.format( date );
-      Double kc = (Double)values.getElement( row, kcAxis );
-      Double wt = (Double)values.getElement( row, wtAxis );
-      Double lai = (Double)values.getElement( row, laiAxis );
-      zmlWriter.write( FortranFormatHelper.printf( dat, "a8" ) );
+
+      final Date date = (Date)values.getElement( row, idleDateAxis );
+      final Calendar calendar = NATimeSettings.getInstance().getCalendar( date );
+
+      final int year = calendar.get( Calendar.YEAR ) - yearOffset;
+      final int month = calendar.get( Calendar.MONTH ) + 1;
+      final int day = calendar.get( Calendar.DATE );
+
+      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) );
+      zmlWriter.write( "." );
+      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) );
+      zmlWriter.write( "." );
+      zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) );
+
+      //      SimpleDateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+      //      String dat = dateFormat.format( date );
+
+      final Double kc = (Double)values.getElement( row, kcAxis );
+      final Double wt = (Double)values.getElement( row, wtAxis );
+      final Double lai = (Double)values.getElement( row, laiAxis );
+      //      zmlWriter.write( FortranFormatHelper.printf( dat, "a8" ) );
       zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) );
       zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) );
       zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) );
-      zmlWriter.write( "\n");
+      zmlWriter.write( "\n" );
     }
   }
 }

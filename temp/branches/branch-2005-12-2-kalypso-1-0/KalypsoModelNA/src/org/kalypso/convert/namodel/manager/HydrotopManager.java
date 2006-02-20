@@ -200,13 +200,15 @@ public class HydrotopManager extends AbstractManager
     double HGesFlaeche = ( (Double)feature.getProperty( "area" ) ).doubleValue();
     Double SealingRate = (Double)m_landuseMap.get( feature.getProperty( "landuse" ) );
     double HVersGrad = ( SealingRate ).doubleValue();
-    double HKorVersGrad = ( (Double)feature.getProperty( "corrSealing" ) ).doubleValue();
-    if( HKorVersGrad == 0.0 )
+    double HKorVersGrad = 1;
+    try
     {
-      //TODO: log-file
+      HKorVersGrad = ( (Double)feature.getProperty( "corrSealing" ) ).doubleValue();
+    }
+    catch( Exception e )
+    {
       System.out.println( "Der Korrekturfaktor des Versiegelungsgrades im Hydrotop (ID=" + feature.getId()
           + ") 0.0, er wird daher auf 1.0 gesetzt" );
-      HKorVersGrad = 1.0;
     }
     long natHFlaeche = (long)( HGesFlaeche - ( HGesFlaeche * HVersGrad * HKorVersGrad ) );
     //  3

@@ -13,8 +13,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.contribs.java.util.CalendarIterator;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -141,9 +144,9 @@ public class IdleLanduseManager extends AbstractManager
     final String[] wtKcLaiAxis = new String[]
     {
         TimeserieConstants.TYPE_DATE,
-        TimeserieConstants.TYPE_LAI,
-        TimeserieConstants.TYPE_WT,
-        TimeserieConstants.TYPE_KC };
+        TimeserieConstants.TYPE_KC, // xkc
+        TimeserieConstants.TYPE_WT, // xwt
+        TimeserieConstants.TYPE_LAI }; // xlai
 
     final Object[][] values = new Object[12][4];
     final IAxis[] axis = TimeserieUtils.createDefaultAxes( wtKcLaiAxis, true );
@@ -153,34 +156,49 @@ public class IdleLanduseManager extends AbstractManager
       System.out.println( "NutzParameter(" + i + "): " + line );
       createProperties( propCollector, line, 10 );
 
+      // day.month.[-1|00]
+      final String dateAsString = (String)( (FeatureProperty)propCollector.get( "dat" ) ).getValue();
+      final String[] dateComponents = dateAsString.split( "\\." );
+      int day = Integer.parseInt( dateComponents[0] );
+      int month = Integer.parseInt( dateComponents[1] );
+      int year = Integer.parseInt( dateComponents[2] );
+      final Calendar calendar = NATimeSettings.getInstance().getCalendar();
+      calendar.clear();
+      calendar.set( Calendar.SECOND, 0 );
+      calendar.set( Calendar.MINUTE, 0 );
+      calendar.set( Calendar.HOUR_OF_DAY, 12 );
+      calendar.set( Calendar.DATE, day );
+      calendar.set( Calendar.MONTH, month - 1 );
+      calendar.set( Calendar.YEAR, year + 2001 );
+
       FeatureProperty kcProp = (FeatureProperty)propCollector.get( "xkc" );
       FeatureProperty wtProp = (FeatureProperty)propCollector.get( "xwt" );
       FeatureProperty laiProp = (FeatureProperty)propCollector.get( "xlai" );
       Object xkc = kcProp.getValue();
       Object xwt = wtProp.getValue();
       Object xlai = laiProp.getValue();
-
+      values[i][0] = calendar.getTime();
       values[i][1] = xkc;
       values[i][2] = xwt;
       values[i][3] = xlai;
     }
 
-    final Calendar startDate = Calendar.getInstance();
-    startDate.set( 2000, 11, 15 );
-    final Calendar idealMonth = Calendar.getInstance();
-    idealMonth.setTimeInMillis( 30 * 24 * 60 * 60 * 1000 );
-    final Object intervall = new Date( idealMonth.getTimeInMillis() );
-    final Object min = new Date( startDate.getTimeInMillis() );
-    final int months = 12;
-
-    final Iterator iterator = new ValueIterator( min, intervall, months );
-    for( int row = 0; row < months; row++ )
-    {
-      values[row][0] = iterator.next();
-    }
+    //    final Calendar startDate = Calendar.getInstance();
+    //    startDate.set( 2000, 11, 15 );
+    //    final Calendar idealMonth = Calendar.getInstance();
+    //    idealMonth.setTimeInMillis( 30 * 24 * 60 * 60 * 1000 );
+    //    final Object intervall = new Date( idealMonth.getTimeInMillis() );
+    //    final Object min = new Date( startDate.getTimeInMillis() );
+    //    final int months = 12;
+    //
+    //    final Iterator iterator = new ValueIterator( min, intervall, months );
+    //    for( int row = 0; row < months; row++ )
+    //    {
+    //      values[row][0] = iterator.next();
+    //    }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, null, new MetadataList(),
-        axis, model );
+    final SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, null,
+        new MetadataList(), axis, model );
     feature.setProperty( "idealLandUseZML", observation );
 
     line = reader.readLine();
