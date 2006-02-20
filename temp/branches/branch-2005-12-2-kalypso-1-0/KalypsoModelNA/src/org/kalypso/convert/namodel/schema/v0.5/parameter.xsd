@@ -111,21 +111,6 @@
 					<!--
 (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
    -->
-					<!--ist in name schon drin!!!-->
-					<!--<element name="texttyp" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Schneetyp</label>
-								<tooltip>Schneetyp Name</tooltip>
-								<description>Schneetyp, welcher einem Gebiet zugeordnet werden kann</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Snow type</label>
-								<tooltip>Snow type name</tooltip>
-								<description>Snow type, which can be assigned an area</description>
-							</documentation>
-						</annotation>
-					</element>-->
 					<element name="xwwo" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -218,22 +203,6 @@
 					<!--
 (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
    -->
-   <!--kann weg, da in name enthalten-->
-   <!--
-					<element name="text" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Bezeichnung</label>
-								<tooltip>Nutzungsbezeichnung</tooltip>
-								<description>Nutzungsbezeichnung</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Labelling</label>
-								<tooltip>Landuse labelling</tooltip>
-								<description>Landuse labelling</description>
-							</documentation>
-						</annotation>
-					</element>-->
 					<element name="idealLandUsePeriodLink" type="par:IdealLandUseAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
@@ -276,22 +245,6 @@
 					<!--
 (typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
 -->
-					<!--ist in name schon drin!!!-->
-					<!--					<element name="typchar" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Bodenartschlüssel</label>
-								<tooltip>Bodeartschlüssel</tooltip>
-								<description>Bodenartschlüssel auf den der Link aus der Bodentyppdatei bezogen ist</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Soiltype key</label>
-								<tooltip>Soiltype key</tooltip>
-								<description>Soiltype key to which the Link for soiltype data is related </description>
-							</documentation>
-						</annotation>
-					</element>
--->
 					<element name="typkap" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -306,7 +259,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!--TODO: Link prüfen-->
 					<element name="typwp" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -401,12 +353,12 @@
 							<documentation xml:lang="de">
 								<label>Nutzungsparameter</label>
 								<tooltip>Idealisierte Jahresvegetationsperiode der Nutungsparameter </tooltip>
-								<description>Idealisierte Jahresvegetationsperiode mit kc=Verdunstungskorrekturfaktor gegenueber der pot. Verdunstung, wt=Wurzeltiefe und lai=Interzeptionsspeicherinhalt fuer ein Hydrologisches Jahr</description>
+								<description>Idealisierte Jahresvegetationsperiode mit kc=Verdunstungskorrekturfaktor gegenueber der Referenzverdunstung [-], wt=Wurzeltiefe [m] und lai=Interzeptionsspeicherinhalt fuer ein Hydrologisches Jahr [mm]</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Landuse parameter</label>
 								<tooltip>idealiszed annual vegetation cycle for the landuse parameter set</tooltip>
-								<description>idealiszed annual vegetation cycle for the landuse parameter set with kc=correction factor for evaporation vs. potential evaporation, wt=root depth of vegetation and lai=volume of interzeption storage (leaf area index) for a hydrological year</description>
+								<description>idealiszed annual vegetation cycle for the landuse parameter set with kc=correction factor for evaporation vs. reference evaporation [-], wt=root depth of vegetation [m] and lai=volume of interzeption storage (leaf area index) for a hydrological year [mm]</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -470,21 +422,6 @@
 (char3,a8)(xtief,*)_(xret,*)
 			   -->
 					<!--ist in name schon drin!!!-->
-					<!--
-					<element name="text6" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Profilbezeichnung</label>
-								<tooltip>Bodenprofilschlüssel/ Benennung</tooltip>
-								<description>Bodenprofilschlüssel, welcher die Zuordnung zu den Hydrotopen erlaubt</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Profile description</label>
-								<tooltip>Soil profile key/ Name</tooltip>
-								<description>Soil profile key, which allows classification of the Hydrotopes</description>
-							</documentation>
-						</annotation>
-					</element>-->
 					<element name="soilLayerParameterMember" type="par:SoilLayerParameterAssociationType" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
