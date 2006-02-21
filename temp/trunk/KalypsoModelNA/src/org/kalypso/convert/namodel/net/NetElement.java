@@ -312,7 +312,7 @@ public class NetElement
     final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
     final Feature[] Cfeatures = m_workspace.getFeatures( catchemtFT );
 
-    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) nodeFT.getProperty( "entwaesserungsStrangMember" );
+    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchemtFT.getProperty( "entwaesserungsStrangMember" );
     for( int i = 0; i < Cfeatures.length; i++ )
     {
       if( m_channelFE == m_workspace.resolveLink( Cfeatures[i], entwaesserungsStrangMemberRT ) )

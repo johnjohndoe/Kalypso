@@ -496,7 +496,7 @@ public class NaModelInnerCalcJob implements ISimulation
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
       {
-        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( "Ort" );
+        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( "position" );
         if( geom != null && geom.getCoordinateSystem() != null )
           targetCS = geom.getCoordinateSystem();
       }
@@ -730,8 +730,9 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
   {
+    final IFeatureType nodeColFT = workspace.getFeatureType( "NodeCollection" );
     final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
-    final IRelationType nodeMemberRT = (IRelationType) nodeFT.getProperty( "nodeMember" );
+    final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( "nodeMember" );
     final IFeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
 
     final IFeatureType channelColFT = workspace.getFeatureType( "ChannelCollection" );
@@ -755,7 +756,7 @@ public class NaModelInnerCalcJob implements ISimulation
     workspace.setFeatureAsAggregation( newNodeFE2, downStreamChannelMemberRT, newChannelFE1.getId(), true );
     // 1 -> existing
 
-    final IRelationType downStreamNodeMemberRT1 = (IRelationType) nodeFT.getProperty( "downStreamNodeMember" );
+    final IRelationType downStreamNodeMemberRT1 = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
     workspace.setFeatureAsAggregation( newChannelFE1, downStreamNodeMemberRT, existingNode.getId(), true );
     return newNodeFE2;
   }
@@ -779,7 +780,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
-      final IRelationType downStreamNodeMemberRT = (IRelationType) catchmentFT.getProperty( "downStreamNodeMember" );
+      final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
       final Feature newChannelFE = workspace.createFeature( vChannelFT );
       // set new relation: catchment -> new V-channel

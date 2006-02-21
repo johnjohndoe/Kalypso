@@ -130,6 +130,10 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private int m_bestNumber = 0;
 
+  private boolean m_lastSucceeded = false;
+
+  private boolean m_bestSucceeded = false;
+
   public NAOptimizingJob( File tmpDir, final ISimulationDataProvider dataProvider, ISimulationMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
@@ -196,7 +200,7 @@ public class NAOptimizingJob implements IOptimizingJob
         // on exception it is simply not used.
       }
     }
-    final ISimulation calcJob = new NaModelInnerCalcJob();
+    final NaModelInnerCalcJob calcJob = new NaModelInnerCalcJob();
     final OptimizeCalcResultEater optimizeResultEater = new OptimizeCalcResultEater();
     try
     {
@@ -208,6 +212,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
     m_lastOptimizeRunDir = optimizeRunDir;
     m_lastResultEater = optimizeResultEater;
+    m_lastSucceeded = calcJob.isSucceeded();
   }
 
   /**
@@ -222,6 +227,7 @@ public class NAOptimizingJob implements IOptimizingJob
       m_bestResultEater = m_lastResultEater;
       m_bestOptimizedFile = m_lastOptimizedFile;
       m_bestNumber = m_counter;
+      m_bestSucceeded = m_lastSucceeded;
     }
     else
     {
@@ -372,6 +378,11 @@ public class NAOptimizingJob implements IOptimizingJob
   public AutoCalibration getOptimizeConfiguration( )
   {
     return m_autoCalibration;
+  }
+
+  public boolean isSucceeded( )
+  {
+    return m_bestSucceeded;
   }
 
 }

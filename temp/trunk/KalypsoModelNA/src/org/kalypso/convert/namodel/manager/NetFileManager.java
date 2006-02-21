@@ -318,6 +318,7 @@ public class NetFileManager extends AbstractManager
     // to remove yellow thing ;-)
     nodeResultProvider.getClass();
 
+    final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
     // final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
     final IFeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
@@ -367,7 +368,7 @@ public class NetFileManager extends AbstractManager
           final IRelationType rt1 = (IRelationType) branchingFT.getProperty( "branchingNodeMember" );
           final Feature downStreamNodeFE = workspace.resolveLink( branchingFE, rt1 );
 
-          final IRelationType rt3 = (IRelationType) branchingFT.getProperty( "downStreamChannelMember" );
+          final IRelationType rt3 = (IRelationType) nodeFT.getProperty( "downStreamChannelMember" );
           final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt3 );
           if( upStreamChannelFE == downStreamChannelFE )
           {
@@ -526,9 +527,9 @@ public class NetFileManager extends AbstractManager
       final IFeatureType nodeFT = nodeFE.getFeatureType();
       final IRelationType rt = (IRelationType) nodeFT.getProperty( "branchingMember" );
       final Feature branchingFE = workspace.resolveLink( nodeFE, rt );
-      final IRelationType branchingNodeMemberRT = (IRelationType) branchingFE.getFeatureType().getProperty( "branchingNodeMember" );
       if( branchingFE != null )
       {
+        final IRelationType branchingNodeMemberRT = (IRelationType) branchingFE.getFeatureType().getProperty( "branchingNodeMember" );
         final IFeatureType branchingFT = branchingFE.getFeatureType();
         if( branchingFT == kontZuflussFT )
         {

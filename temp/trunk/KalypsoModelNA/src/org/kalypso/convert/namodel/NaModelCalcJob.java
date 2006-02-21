@@ -354,4 +354,14 @@ public class NaModelCalcJob implements ISimulation
   {
     return getClass().getResource( "resources/nacalcjob_spec.xml" );
   }
+
+  public boolean isSucceeded( )
+  {
+    if( m_calcJob instanceof NaModelInnerCalcJob )
+      return ((NaModelInnerCalcJob) m_calcJob).isSucceeded();
+    if( m_calcJob instanceof NAOptimizingJob )
+      return ((NAOptimizingJob) m_calcJob).isSucceeded();
+
+    return false;
+  }
 }
