@@ -8338,7 +8338,7 @@
           <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4433480.0,5701500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
