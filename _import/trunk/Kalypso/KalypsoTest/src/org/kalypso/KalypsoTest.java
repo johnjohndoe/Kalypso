@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
@@ -64,11 +65,11 @@ public class KalypsoTest
 
     // final KalypsoGisPlugin plugin = new KalypsoGisPlugin();
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
-    TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
-    RefactorThis.registerSpecialTypeHandler(registry);
-    
+    final ITypeRegistry marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    // TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
+    // TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
+    // RefactorThis.registerSpecialTypeHandler(registry);
+    KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
     final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA(), new DeegreeUrlCatalog() } );
     final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
     if( !cacheDirectory.exists() )

@@ -47,18 +47,20 @@ import org.kalypso.KalypsoTest;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.Modeldata.Input;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.services.calculation.service.impl.JarCalcDataProvider;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
-import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.util.JarSimulationcDataProvider;
 import org.kalypso.test.util.CalcJobTestUtilis;
 
 /**
@@ -83,27 +85,41 @@ public class ModelNACalcTest extends TestCase
       m_compareDir.mkdirs();
   }
 
+  // public void XtestWE_2006_Feb( ) throws Exception
+  // {
+  // try
+  // {
+  // // calc( "we", "2006_feb", "1", false );
+  // }
+  // catch( Exception e )
+  // {
+  // e.printStackTrace();
+  // throw e;
+  // }
+  //
+  // }
+
   public void testWeisseElster( ) throws Exception
   {
     try
     {
-      calc( "we", "test1", "1" );
-      calc( "we", "test1", "2" );
-      calc( "we", "test1", "3" );
-      calc( "we", "test1", "4" );
-      calc( "we", "test1", "5" );
-      calc( "we", "test1", "6" );
-      calc( "we", "test1", "7" );
-      calc( "we", "test1", "8" );
-      calc( "we", "test1", "9" );
-      calc( "we", "test1", "10" );
-      calc( "we", "test1", "11" );
-      calc( "we", "test1", "12" );
-      calc( "we", "test1", "13" );
-      calc( "we", "test1", "14" );
-      calc( "we", "test1", "15" );
-      calc( "we", "test1", "16" );
-      calc( "we", "test1", "17" );
+      calc( "we", "test1", "1", true );
+      calc( "we", "test1", "2", true );
+      calc( "we", "test1", "3", true );
+      calc( "we", "test1", "4", true );
+      calc( "we", "test1", "5", true );
+      calc( "we", "test1", "6", true );
+      calc( "we", "test1", "7", true );
+      calc( "we", "test1", "8", true );
+      calc( "we", "test1", "9", true );
+      calc( "we", "test1", "10", true );
+      calc( "we", "test1", "11", true );
+      calc( "we", "test1", "12", true );
+      calc( "we", "test1", "13", true );
+      calc( "we", "test1", "14", true );
+      calc( "we", "test1", "15", true );
+      calc( "we", "test1", "16", true );
+      calc( "we", "test1", "17", true );
     }
     catch( Exception e )
     {
@@ -121,7 +137,7 @@ public class ModelNACalcTest extends TestCase
    * @throws JAXBException
    * @throws IOException
    */
-  public void calc( final String modellID, final String folder, String spec ) throws JAXBException, IOException, SimulationException
+  public void calc( final String modellID, final String folder, String spec, boolean doCompare ) throws JAXBException, IOException, SimulationException
   {
     final File tmpDir = CalcJobTestUtilis.getTmpDir();
     final URL resource = getClass().getResource( "testData/" + modellID + "/" + folder + "/input.jar" );
@@ -131,79 +147,98 @@ public class ModelNACalcTest extends TestCase
       spec = "_" + spec;
     final URL modelSpec = getClass().getResource( "testData/" + modellID + "/modelspec" + spec + ".xml" );
     final DataHandler dataHandler = new DataHandler( resource );
-    final SimulationDataPath[] beans = createBeans( modelSpec );
-    final ISimulationDataProvider dataProvider = new JarSimulationcDataProvider( dataHandler, beans )
+    // final CalcJobClientBean[] beans =
+    final CalcJobClientBean[] beans = createBeans( modelSpec );
+    final JarCalcDataProvider jarProvider = new JarCalcDataProvider( dataHandler, beans );
+
+    final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
-      @Override
+
       public boolean hasID( String id )
       {
-        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
+        if( NaModelConstants.IN_PARAMETER_ID.equals( id ) || NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
           return true;
-        return super.hasID( id );
+        return jarProvider.hasID( id );
       }
 
-      /**
-       * @see org.kalypso.services.calculation.service.impl.JarCalcDataProvider#getURLForID(java.lang.String)
-       */
-      @Override
       public URL getURLForID( String id ) throws SimulationException
       {
-        if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
-          return getClass().getResource( "testData/we/hydrotop.gml" );
-        return super.getURLForID( id );
+        try
+        {
+          if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
+            return getClass().getResource( "testData/we/hydrotop.gml" );
+          if( NaModelConstants.IN_PARAMETER_ID.equals( id ) )
+            return getClass().getResource( "testData/we/parameter.gml" );
+          return jarProvider.getURLForID( id );
+        }
+        catch( CalcJobServiceException e )
+        {
+          throw new SimulationException( e.getMessage(), e );
+        }
       }
     };
 
     final ISimulationResultEater resultEater = CalcJobTestUtilis.createResultEater();
     final ISimulationMonitor monitor = CalcJobTestUtilis.createMonitor();
-    final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
+
+    final NaModelCalcJob job = new NaModelCalcJob();
+    // final NaModelInnerCalcJob job = new NaModelInnerCalcJob()
     job.run( tmpDir, dataProvider, resultEater, monitor );
 
-    assertTrue( job.isSucceeded() );
+    boolean succeeded = job.isSucceeded();
+    if( succeeded )
+      System.out.println( "Berechnung erzeugte Ergebnisse!" );
+    else
+      System.out.println( "Fehler: Berechnung erzeugte KEINE Ergebnisse!" );
+    assertTrue( succeeded );
+
     final String identification = modellID + "_" + folder + "_" + spec;
     final File compareResults = new File( m_compareDir, identification + ".zip" );
-    if( !compareResults.exists() )
+    if( doCompare )
     {
-      System.out.println( "no comareable results found, I will archive them here:\n  " + compareResults.getAbsolutePath() );
-      ZipUtilities.zip( compareResults, tmpDir );
-      System.out.println( "next time you can verify changes" );
-    }
-    else
-    {
-      System.out.println( "comare results with archive: " + compareResults.getAbsolutePath() );
-      final File tmpResults = File.createTempFile( identification, "zip" );
-      tmpResults.deleteOnExit();
-      ZipUtilities.zip( tmpResults, tmpDir );
-      final String[] ignore = new String[] {
-      // "inp.dat/we_nat.zft",
-          // "inp.dat/we_nat.ntz",
-          // "*exe",
-          "*err",
-          // "*gml",
-          "*res", "IdMap.txt", "exe.log",
-          // "start/we_nat_start.txt",
-          // "inp.dat/we.hyd",
-          // "out_we.nat/950825.qgs",
-          // "inp.dat/we_nat.ger",
-          "inp.dat/we_nat.geb", "zufluss/*", "klima.dat/*", "infolog.txt" };
-      ILogger logger = new ILogger()
+      if( !compareResults.exists() )
       {
-        /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
-         */
-        public void log( String message )
+        System.out.println( "no comareable results found, I will archive them here:\n  " + compareResults.getAbsolutePath() );
+        ZipUtilities.zip( compareResults, tmpDir );
+        System.out.println( "next time you can verify changes" );
+      }
+      else
+      {
+        System.out.println( "comare results with archive: " + compareResults.getAbsolutePath() );
+        final File tmpResults = File.createTempFile( identification, "zip" );
+        tmpResults.deleteOnExit();
+        ZipUtilities.zip( tmpResults, tmpDir );
+        final String[] ignore = new String[] {
+        // "inp.dat/we_nat.zft",
+            // "inp.dat/we_nat.ntz",
+            // "*exe",
+            "*err",
+            // "*gml",
+            "*res", "IdMap.txt", "exe.log",
+            // "start/we_nat_start.txt",
+            // "inp.dat/we.hyd",
+            // "out_we.nat/950825.qgs",
+            // "inp.dat/we_nat.ger",
+            "inp.dat/we_nat.geb", "zufluss/*", "klima.dat/*", "infolog.txt" };
+        ILogger logger = new ILogger()
         {
-          System.out.println( message );
-        }
-      };
-      assertFalse( DiffUtils.diffZips( logger, compareResults, tmpResults, ignore ) );
+          /**
+           * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
+           */
+          public void log( String message )
+          {
+            System.out.println( message );
+          }
+        };
+        assertFalse( DiffUtils.diffZips( logger, compareResults, tmpResults, ignore ) );
+      }
       System.out.println( "no changes found" );
     }
   }
 
-  private SimulationDataPath[] createBeans( URL modelSpec ) throws JAXBException
+  private CalcJobClientBean[] createBeans( URL modelSpec ) throws JAXBException
   {
-    final List<SimulationDataPath> result = new ArrayList<SimulationDataPath>();
+    final List<CalcJobClientBean> result = new ArrayList<CalcJobClientBean>();
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final Modeldata modeldata = (Modeldata) unmarshaller.unmarshal( modelSpec );
@@ -211,15 +246,13 @@ public class ModelNACalcTest extends TestCase
 
     for( Iterator iter = input.iterator(); iter.hasNext(); )
     {
-
       final Input inputItem = (Input) iter.next();
-
       String inputPath = inputItem.getPath();
       inputPath = inputPath.replaceAll( "project:/", "" );
       if( inputItem.isRelativeToCalcCase() )
         inputPath = ".prognose/Rechenfall/" + inputPath;
-      result.add( new SimulationDataPath( inputItem.getId(), inputPath ) );
+      result.add( new CalcJobClientBean( inputItem.getId(), inputPath ) );
     }
-    return result.toArray( new SimulationDataPath[result.size()] );
+    return result.toArray( new CalcJobClientBean[result.size()] );
   }
 }

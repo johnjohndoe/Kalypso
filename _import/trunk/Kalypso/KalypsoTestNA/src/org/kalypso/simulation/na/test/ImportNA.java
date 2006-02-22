@@ -46,22 +46,21 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * ImportNA
  * <p>
- * 
  * created by
  * 
  * @author doemming (24.05.2005)
@@ -69,17 +68,16 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 public class ImportNA extends TestCase
 {
 
-  public void testImport() throws Exception
+  public void testImport( ) throws Exception
   {
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogNA() } );
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new DiagramTypeHandler() );
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    // final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
+    TypeHandlerUtilities.registerGeometryGML2typeHandler( marshallingRegistry );
+    RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
 
     final File asciiBaseDir = new File( "C:\\TMP\\na" );
     final File gmlBaseDir = new File( "C:\\TMP\\import" );
@@ -94,9 +92,8 @@ public class ImportNA extends TestCase
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
-    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null,
-        " project:/.model/schema/parameter.xsd" );
+    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null, " project:/.model/schema/parameter.xsd" );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
-    System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath());
+    System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );
   }
 }
