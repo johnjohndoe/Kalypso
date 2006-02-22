@@ -113,6 +113,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
 
+  final HashMap m_IDMap = new HashMap();
+
   // static final IFeatureType m_dummyFeatureType = FeatureFactory.createFeatureType( "Gewässer", "wizard.kalypso.na",
   // //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -379,7 +381,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT, true );
-      final IPropertyType flaechPT = hydFT.getProperty( "flaech" );
+      final IPropertyType flaechPT = hydFT.getProperty( "area" );
       final IPropertyType fakVersPT = hydFT.getProperty( "fak_vers" );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
@@ -400,7 +402,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       // TODO: delete if default values in schema!
       // if factor of the sealing rate isn´t set, then the factor will be set as 1.0 (instead of default 0.0)
-      if( !mapping.keySet().contains( "fak_vers" ) ) //$NON-NLS-1$
+      if( !mapping.keySet().contains( "corrSealing" ) ) //$NON-NLS-1$
       {
         final double fak_vers = 1.0;
         targetFeature.setProperty( fakVersPT, new Double( fak_vers ) );
@@ -429,6 +431,40 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     }
   }
 
+  /**
+   * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
+   * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
+   * file).
+   * 
+   * @param idColKey
+   * @param sourceFeature
+   * @param IDText
+   * @return fid
+   */
+  private String getId( final String idColKey, Feature sourceFeature, String IDText )
+  {
+    String fid;
+    if( idColKey != null )
+    {
+      String idKey = (sourceFeature.getProperty( idColKey )).toString();
+      if( !m_IDMap.containsKey( IDText + idKey ) )
+      {
+        fid = IDText + idKey;
+        m_IDMap.put( fid, sourceFeature );
+      }
+      else
+      {
+        System.out.println( "Name des Elementes existiert bereits (Name: " + IDText + idKey + ")." );
+        fid = sourceFeature.getId();
+        m_IDMap.put( fid, sourceFeature );
+        System.out.println( "Die interne ID wurde aus diesem Grund automatisch vergeben (Id: " + fid + ")." );
+      }
+    }
+    else
+      fid = sourceFeature.getId();
+    return fid;
+  }
+
   public void mapCatchment( List sourceFeatureList, HashMap mapping )
   {
 
@@ -448,11 +484,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      final String fid;
-      if( idColKey != null )
-        fid = "Catchment" + (sourceFeature.getProperty( idColKey )).toString(); //$NON-NLS-1$
-      else
-        fid = sourceFeature.getId();
+      final String fid = getId( idColKey, sourceFeature, "TG" );
       final Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
       final IPropertyType flaechPT = modelFT.getProperty( "flaech" );
       final IRelationType bodenkorrekturMemberPT = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" );
@@ -513,11 +545,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      final String fid;
-      if( idColKey != null )
-        fid = "Node" + (sourceFeature.getProperty( idColKey )).toString(); //$NON-NLS-1$
-      else
-        fid = sourceFeature.getId();
+      final String fid = getId( idColKey, sourceFeature, "K" );
       Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
@@ -570,15 +598,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
 
       Feature targetFeature = null;
+      final String fid = getId( idColKey, sourceFeature, "S" );
       switch( channelType )
       {
         case 0:
         {
-          final String fid;
-          if( idColKey != null )
-            fid = "VirtualChannel" + (sourceFeature.getProperty( idColKey )).toString(); //$NON-NLS-1$
-          else
-            fid = sourceFeature.getId();
 
           IFeatureType vFT = getFeatureType( "VirtualChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( fid, vFT, true );
@@ -586,12 +610,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         }
         case 1:
         {
-
-          final String fid;
-          if( idColKey != null )
-            fid = "KMChannel" + (sourceFeature.getProperty( idColKey )).toString(); //$NON-NLS-1$
-          else
-            fid = sourceFeature.getId();
 
           IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
@@ -619,12 +637,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         }
         case 2:
         {
-          final String fid;
-          if( idColKey != null )
-            fid = "StorageChannel" + (sourceFeature.getProperty( idColKey )).toString(); //$NON-NLS-1$
-          else
-            fid = sourceFeature.getId();
-
           IFeatureType storageFT = getFeatureType( "StorageChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( fid, storageFT, true );
           break;
