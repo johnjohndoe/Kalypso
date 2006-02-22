@@ -64,13 +64,21 @@ public class TypeHandlerUtilities
 
   public static void registerXSDSimpleTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
   {
-    registry.registerTypeHandler( new XSDStringTypeHandler() );
-    registry.registerTypeHandler( new XSDIntegerTypeHandler() );
-    registry.registerTypeHandler( new XSDDoubleTypeHandler() );
-    registry.registerTypeHandler( new XSDLongTypeHandler() );
-    registry.registerTypeHandler( new XSDDateTypeHandler() );
-    registry.registerTypeHandler( new XSDBooleanTypeHandler() );
-    
+    try
+    {
+      registry.registerTypeHandler( new XSDStringTypeHandler() );
+      registry.registerTypeHandler( new XSDIntegerTypeHandler() );
+      registry.registerTypeHandler( new XSDDoubleTypeHandler() );
+      registry.registerTypeHandler( new XSDLongTypeHandler() );
+      registry.registerTypeHandler( new XSDDateTypeHandler() );
+      registry.registerTypeHandler( new XSDDateTimeTypeHandler() );
+      registry.registerTypeHandler( new XSDBooleanTypeHandler() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
   }
 
   public static void registerGeometryGML2typeHandler( ITypeRegistry registry ) throws TypeRegistryException

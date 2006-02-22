@@ -78,6 +78,7 @@ public class GmlLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {

@@ -46,6 +46,8 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
@@ -55,6 +57,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.zml.filters.AbstractFilterType;
+import org.kalypso.zml.filters.IntervallFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.xml.sax.InputSource;
 
@@ -72,7 +75,11 @@ public class FilterFactory
   private static FilterFactory m_instance = null;
 
   /** jaxb context for filter stuff */
-  private static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet(
+
+  ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class
+
+  );
 
   /**
    * Constructor. Reads the properties and creates the factory.
@@ -135,7 +142,9 @@ public class FilterFactory
     final IObservation obsFilter;
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) JC_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
+      JAXBElement value= (JAXBElement) JC_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
+      final IntervallFilterType ift = (IntervallFilterType) value.getValue();
+      final AbstractFilterType af = ift;
       sr.close();
       final IFilterCreator creator = getCreatorInstance( af );
       obsFilter = creator.createFilter( af, obs, context );
