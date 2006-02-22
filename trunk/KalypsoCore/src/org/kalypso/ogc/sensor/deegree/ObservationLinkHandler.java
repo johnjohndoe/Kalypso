@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.deegree;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
@@ -55,6 +56,7 @@ import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -122,16 +124,19 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     try
     {
       final Element element = (Element) node;
-      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, getElementName() );
-
+//      String elementTXT = XMLHelper.toString(element);
+      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, "TimeseriesLink");
+//      String childNodesTXT = XMLHelper.toString(childNodes);
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );
+//        String childTXT = XMLHelper.toString(child);
 
         // child namespace may be null
-        if( NAMESPACE.equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
+        if( NAMESPACE.equals( child.getNamespaceURI() ) && "TimeseriesLink".equals( child.getLocalName() ) )
         {
-          return JC.createUnmarshaller().unmarshal( child );
+          final JAXBElement valueElement = (JAXBElement) JC.createUnmarshaller().unmarshal( child );
+          return valueElement.getValue();
         }
       }
       return null;

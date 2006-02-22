@@ -165,7 +165,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           }
         }
         else
-          throw new UnsupportedOperationException();
+        {
+          // unknown element in schema, probably this property is removed from schema and still occurs in the xml
+          // instance document
+          // we just ignore it 
+        }
+
         m_status = START_VALUE_END_PROPERTY;
       }
         break;
@@ -322,11 +327,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       {
         final String locationValue = atts.getValue( i );
         final String[] strings = locationValue.split( "\\s+" );
-        String namespaceURI = strings[0];
-        String locationURI = strings[1];
         GMLSchema schema = null;
         try
         {
+          String namespaceURI = strings[0];
           schema = GMLSchemaCatalog.getSchema( namespaceURI );
         }
         catch( Exception e )
@@ -336,6 +340,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           try
           {
             // TODO use context
+            String locationURI = strings[1];
             schemaLocationURL = new URL( locationURI );
             schema = GMLSchemaCatalog.getSchema( schemaLocationURL );
           }

@@ -62,9 +62,12 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
@@ -179,8 +182,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       e1.printStackTrace();
     }
-
-    registerTypeHandler();
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    registerTypeHandler( marshallingRegistry, guiRegistry );
     registerVirtualFeatureTypeHandler();
   }
 
@@ -564,38 +568,36 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return mySelectionIdProvider;
   }
 
-  private void registerTypeHandler( )
+  public static void registerTypeHandler( ITypeRegistry marshallingRegistry, ITypeRegistry guiRegistry )
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
 
     try
     {
-      TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
-      TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
-      RefactorThis.registerSpecialTypeHandler( registry );
-
-      guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
-      guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-      // register gml-geometry types
-
-      // register inlines
-
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
-      registry.registerTypeHandler( wvqInline );
-      registry.registerTypeHandler( taInline );
-      registry.registerTypeHandler( wtKcLaiInline );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+      if( marshallingRegistry != null )
+      {
+        TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
+        TypeHandlerUtilities.registerGeometryGML2typeHandler( marshallingRegistry );
+        RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
+        marshallingRegistry.registerTypeHandler( wvqInline );
+        marshallingRegistry.registerTypeHandler( taInline );
+        marshallingRegistry.registerTypeHandler( wtKcLaiInline );
+      }
+      if( guiRegistry != null )
+      {
+        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
+        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
+        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+        guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+        guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+      }
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
-
-      MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
     }
   }
 

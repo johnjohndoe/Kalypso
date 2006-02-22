@@ -65,7 +65,5 @@ public class RefactorThis
     registry.registerTypeHandler( new ResourceFileTypeHandler() );
     registry.registerTypeHandler( new ObservationLinkHandler() );
     registry.registerTypeHandler( new DiagramTypeHandler() );
-    
-
   }
 }

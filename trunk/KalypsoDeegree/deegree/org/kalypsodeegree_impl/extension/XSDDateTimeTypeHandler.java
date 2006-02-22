@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.extension;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -56,13 +57,13 @@ import org.w3c.dom.Node;
 /**
  * @author doemming
  */
-public class XSDDateTypeHandler extends AbstractXSDSimpleTypeHandler
+public class XSDDateTimeTypeHandler extends AbstractXSDSimpleTypeHandler
 {
-  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
+  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-  public XSDDateTypeHandler( )
+  public XSDDateTimeTypeHandler( )
   {
-    super( DateWithoutTime.class, new QName[] { new QName( XMLHelper.XMLSCHEMA_NS, "date" ) } );
+    super( Date.class, new QName[] { new QName( XMLHelper.XMLSCHEMA_NS, "dateTime" ) } );
   }
 
   /**
@@ -102,7 +103,7 @@ public class XSDDateTypeHandler extends AbstractXSDSimpleTypeHandler
    */
   public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
   {
-    return ((DateWithoutTime)objectToClone).clone();
+    return ((Date) objectToClone).clone();
   }
 
   /**
