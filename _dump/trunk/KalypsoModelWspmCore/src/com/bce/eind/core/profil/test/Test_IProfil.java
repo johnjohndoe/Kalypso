@@ -37,6 +37,7 @@ public class Test_IProfil extends TestCase
     addMoveDeleteBordvoll( p );
   }
 
+  @SuppressWarnings("boxing")
   public IProfil CreateTestProfil( ) throws Exception
   {
     final IProfil p = ProfilFactory.createProfil();
@@ -90,6 +91,7 @@ public class Test_IProfil extends TestCase
     return p;
   }
 
+  @SuppressWarnings("boxing")
   public void setGetMoveDevider( final IProfil p ) throws Exception
   {
     final IProfilDevider[] deviderTF = p.getDevider( DEVIDER_TYP.TRENNFLAECHE );
@@ -126,6 +128,7 @@ public class Test_IProfil extends TestCase
 
   }
 
+  @SuppressWarnings("boxing")
   public void setGetBuilding( final IProfil p ) throws Exception
   {
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
