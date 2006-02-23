@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="awt.util.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- AWT-Color -->
+	<xs:complexType name="color">
+		<xs:attribute name="red" type="xs:unsignedByte" use="required"/>
+		<xs:attribute name="green" type="xs:unsignedByte" use="required"/>
+		<xs:attribute name="blue" type="xs:unsignedByte" use="required"/>
+		<xs:attribute name="alpha" type="xs:unsignedByte" use="optional" default="255"/>
+	</xs:complexType>
+</xs:schema>

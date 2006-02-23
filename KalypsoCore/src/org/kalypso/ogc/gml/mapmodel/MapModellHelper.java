@@ -137,13 +137,13 @@ public class MapModellHelper
       {
         model.paint( gr, p, bbox, scale, false );
       }
-      catch(Exception e)
+      catch( Exception e )
       {
         e.printStackTrace();
-        System.out.println(e.getMessage());
+        System.out.println( e.getMessage() );
       }
 
-      final HighlightGraphics highlightGraphics = new HighlightGraphics((Graphics2D)gr); 
+      final HighlightGraphics highlightGraphics = new HighlightGraphics( (Graphics2D)gr, model.getHighlightColors() );
       model.paint( highlightGraphics, p, bbox, scale, true );
     }
     finally

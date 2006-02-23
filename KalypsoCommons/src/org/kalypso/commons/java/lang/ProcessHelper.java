@@ -165,7 +165,7 @@ public class ProcessHelper
           m_bProcCtrlActive = true;
           wait( m_lTimeout );
         }
-        catch( InterruptedException ex )
+        catch( final InterruptedException ex )
         {
           // sollte nicht passieren
         }
