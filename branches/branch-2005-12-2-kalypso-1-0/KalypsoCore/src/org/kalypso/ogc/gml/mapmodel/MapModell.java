@@ -46,6 +46,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.kalypso.contribs.java.awt.IHighlightColors;
+import org.kalypso.contribs.java.awt.DefaultHighlightColors;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -75,10 +77,18 @@ public class MapModell implements IMapModell
 
   private IProject m_project;
 
+  private final IHighlightColors m_highlightColors;
+
   public MapModell( final CS_CoordinateSystem crs, final IProject project )
+  {
+    this( crs, project, new DefaultHighlightColors() );
+  }
+
+  public MapModell( final CS_CoordinateSystem crs, final IProject project, final IHighlightColors highlightColors )
   {
     m_coordinatesSystem = crs;
     m_project = project;
+    m_highlightColors = highlightColors;
   }
 
   public void dispose()
@@ -278,5 +288,13 @@ public class MapModell implements IMapModell
   public IProject getProject()
   {
     return m_project;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getHighlightColors()
+   */
+  public IHighlightColors getHighlightColors()
+  {
+    return m_highlightColors;
   }
 }

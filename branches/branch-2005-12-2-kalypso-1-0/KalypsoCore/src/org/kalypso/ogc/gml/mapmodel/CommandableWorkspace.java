@@ -382,16 +382,9 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.contains( feature );
   }
 
-  /**
-   * 
-   * @param parentFeature
-   * @param ftp
-   * @param pos
-   * @return
-   */
   public boolean isBrokenLink( Feature parentFeature, FeatureTypeProperty ftp, int pos )
   {
-    return m_workspace.isBrokenLink(  parentFeature, ftp,  pos );
+    return m_workspace.isBrokenLink( parentFeature, ftp, pos );
   }
 
 }
