@@ -114,7 +114,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private Gistreeview m_gisTreeview;
 
-  private boolean m_disposed=false;
+  private boolean m_disposed = false;
 
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
@@ -134,22 +134,22 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected void handleGlobalSelectionChanged( final IFeatureSelection selection )
   {
-    final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
-    final Feature[] selectedFeatures = filterSelectedFeatures( m_treeViewer.getSelection() );
-    final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
-    if( !isEqual )
+    final TreeViewer treeViewer = m_treeViewer;
+    treeViewer.getControl().getDisplay().syncExec( new Runnable()
     {
-      final TreeViewer treeViewer = m_treeViewer;
-      treeViewer.getControl().getDisplay().syncExec( new Runnable()
+      public void run()
       {
-        public void run()
+        final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
+        final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
+        final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
+        if( !isEqual )
         {
           treeViewer.setSelection( selection, true );
           for( int i = 0; i < globalFeatures.length; i++ )
             m_contentProvider.expandElement( m_contentProvider.getParent( globalFeatures[i] ) );
         }
-      } );
-    }
+      }
+    } );
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )
@@ -183,7 +183,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  private Feature[] filterSelectedFeatures( final ISelection selection )
+  protected Feature[] filterSelectedFeatures( final ISelection selection )
   {
     final Object[] selectedTreeItems = ( (IStructuredSelection)selection ).toArray();
     final List selectedFeatures = new ArrayList();
@@ -263,7 +263,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   public void dispose()
   {
-    m_disposed=true;
+    m_disposed = true;
     m_composite.dispose();
     m_pool.removePoolListener( this );
 
