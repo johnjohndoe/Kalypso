@@ -236,6 +236,10 @@ public class TubigBatchInterpreter
                         }
                         else if( sZeileUpper.startsWith( "BODESTEU" ) )
                         {
+                          // in diesen Zweig sollte das Modell gar nicht mehr kommen...
+                          // hierfür Eintrag in CATALINA.POLICY notwendig
+                          // BodeModell (eigentlich nur: bodesteu.exe ist eine 16 BIT-Applikation)
+                          //permission java.io.FilePermission "<<ALL FILES>>", "execute";
                           sCmd = TubigConst.START_IN_CMD + absolutePath + File.separator + sZeile;
                         }
                         else
