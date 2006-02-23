@@ -49,6 +49,7 @@ public class WehrRule extends AbstractValidatorRule
   {
     final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil,
         DEVIDER_TYP.TRENNFLAECHE );
+
     if( points.size() < 2 )
       return;
     final IProfilPoint firstPoint = points.get( 0 );
