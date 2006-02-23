@@ -7,27 +7,11 @@
       <Title>Einzugsgebiete</Title>
       <IsDefault>1</IsDefault>
       <FeatureTypeStyle>
-        <Name>Einzugsgebiete</Name>
+        <Name>Einzugsgebiete - Pegel</Name>
         <Rule>
-          <Name>Einzugsgebiete</Name>
+          <Name>Einzugsgebiete - Pegel</Name>
           <MinScaleDenominator>0.0</MinScaleDenominator>
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
-          <PolygonSymbolizer>
-            <Geometry>
-              <ogc:PropertyName>GEOM_EZG</ogc:PropertyName>
-            </Geometry>
-            <Fill>
-              <CssParameter name="fill-opacity">0.1</CssParameter>
-              <CssParameter name="fill">#ffff00</CssParameter>
-            </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1.0</CssParameter>
-              <CssParameter name="stroke-linejoin">mitre</CssParameter>
-              <CssParameter name="stroke-opacity">0.1</CssParameter>
-              <CssParameter name="stroke-linecap">butt</CssParameter>
-            </Stroke>
-          </PolygonSymbolizer>
           <PointSymbolizer>
             <Geometry>
               <ogc:PropertyName>Ort</ogc:PropertyName>
@@ -69,6 +53,35 @@
               </PointPlacement>
             </LabelPlacement>
           </TextSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+    <UserStyle>
+      <Name>NA-Modelle-Gebiete</Name>
+      <IsDefault>1</IsDefault>
+      <Title>Einzugsgebiete</Title>
+      <FeatureTypeStyle>
+        <Name>NA-Modelle-Gebiete</Name>
+        <Rule>
+          <Name>NA-Modelle-Gebiete</Name>
+          <MinScaleDenominator>0.0</MinScaleDenominator>
+          <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
+          <PolygonSymbolizer>
+            <Geometry>
+              <ogc:PropertyName>GEOM_EZG</ogc:PropertyName>
+            </Geometry>
+            <Fill>
+              <CssParameter name="fill-opacity">0.1</CssParameter>
+              <CssParameter name="fill">#ffff00</CssParameter>
+            </Fill>
+            <Stroke>
+              <CssParameter name="stroke">#000000</CssParameter>
+              <CssParameter name="stroke-width">1.0</CssParameter>
+              <CssParameter name="stroke-linejoin">mitre</CssParameter>
+              <CssParameter name="stroke-opacity">0.1</CssParameter>
+              <CssParameter name="stroke-linecap">butt</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5638446.210260778" left="5422054.268453749" right="5509579.425396547" srs="EPSG:31469" top="5725847.569244674"/>
+    <extent bottom="5638446.210260778" left="5404028.366442851" right="5527605.327407445" srs="EPSG:31469" top="5725847.569244674"/>
     <layers active="ID_1">
         <layer name="Ombrometer" visible="true" featurePath="OmbrometerCollectionAssociation/OmbrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="NA-Modelle" ns1:actuate="onRequest" ns1:href="project:/.styles/ombrometer.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
@@ -13,6 +13,9 @@
         </layer>
         <layer name="thiesn1" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/Grunddaten/Shapes/thiesn1#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="thiessen" ns7:actuate="onRequest" ns7:href="project:/.styles/thiessen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+        <layer name="NA-Modelle-Gebiete" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="calcCase.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+            <ns10:style linktype="sld" style="NA-Modelle-Gebiete" ns9:actuate="onRequest" ns9:href="project:/.styles/namodelle.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
         </layer>
     </layers>
 </gismapview>

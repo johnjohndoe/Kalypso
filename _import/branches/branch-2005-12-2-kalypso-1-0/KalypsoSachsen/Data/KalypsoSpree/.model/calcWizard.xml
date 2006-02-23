@@ -11,6 +11,7 @@
         <arg name="rightSash" value="50"/>
         <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
         <arg name="maximizeMap" value="true"/>
+        <arg name="mapWidgetID" value="SELECT"/>
     </page>
 
 	<!-- Kontrolle Niederschlag -->
@@ -26,8 +27,8 @@
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
         
-        <arg name="buttonText" value="Ombrometer-Messung übernehmen"/>
-		<arg name="buttonTooltip" value="Ombrometer mittels Gebietsniederschlagsmodell übernehmen"/>
+        <arg name="buttonText" value="Neuberechnung Gebietsniederschlag"/>
+		<arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen"/>
 		<arg name="buttonLaunch" value="gebietsniederschlag"/>
     </page>
 

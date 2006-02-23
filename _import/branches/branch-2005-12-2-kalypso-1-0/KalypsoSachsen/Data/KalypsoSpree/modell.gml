@@ -307,25 +307,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_HOLTEND.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_HOLTD.zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QX_HOLTEND.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QX_HOLTD.zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD.zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_unten.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_oben.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.0</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>999.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_HOLTEND.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_HOLTD.zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31468">

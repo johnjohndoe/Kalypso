@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
     <extent bottom="5613408.439793806" left="5398879.253585345" right="5543156.711594422" srs="EPSG:31469" top="5757048.911233307"/>
+    <highlightColors>
+    	<fillColor red="255" green="255" blue="0" alpha="100"/>
+    </highlightColors>
     <layers active="ID_1">
         <layer name="Ombrometer" visible="true" featurePath="OmbrometerCollectionAssociation/OmbrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="NA-Modelle" ns1:actuate="onRequest" ns1:href="project:/.styles/ombrometer.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
