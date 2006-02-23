@@ -65,32 +65,17 @@ import java.util.Map;
  */
 public class HighlightGraphics extends Graphics2D
 {
-  private final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 255 );
-
-  private final Color COLOR_TEXT = ColorUtilities.createTransparent( Color.RED, 255 );
-
-  private final Color COLOR_LINE = ColorUtilities.createTransparent( Color.YELLOW, 255 );
-
-  private final Color COLOR_BORDER = ColorUtilities.createTransparent( Color.RED, 255 );
-
-  private static final Color COLOR_BACKGROUND = ColorUtilities.createTransparent( Color.lightGray, 5 );
-
-//  private static final Stroke STROKE_NORMAL = new BasicStroke( 4f );
-
-//  private static final Stroke STROKE_DASHED = new BasicStroke( 4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 15,
-//      new float[]
-//      {
-//          14,
-//          14 }, 0 );
-
   private final Graphics2D m_graphics;
+  private final IHighlightColors m_colors;
 
-  public HighlightGraphics( Graphics2D graphics )
+  public HighlightGraphics( final Graphics2D graphics, final IHighlightColors colors )
   {
+    m_colors = colors;
+
     m_graphics = graphics;
-    m_graphics.setColor( Color.YELLOW );
-    m_graphics.setBackground( COLOR_BACKGROUND );
-//    m_graphics.setStroke( STROKE_DASHED );
+    //    m_graphics.setColor( Color.YELLOW );
+    //    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    //    m_graphics.setStroke( STROKE_DASHED );
   }
 
   public void setColor( Color c )
@@ -110,12 +95,12 @@ public class HighlightGraphics extends Graphics2D
 
   public void drawLine( int x1, int y1, int x2, int y2 )
   {
-//    m_graphics.setStroke( STROKE_NORMAL );
-    m_graphics.setColor( COLOR_BORDER );
+    //    m_graphics.setStroke( STROKE_NORMAL );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawLine( x1, y1, x2, y2 );
 
-//    m_graphics.setStroke( STROKE_DASHED );
-    m_graphics.setColor( COLOR_LINE );
+    //    m_graphics.setStroke( STROKE_DASHED );
+    m_graphics.setColor( m_colors.getLineColor() );
     m_graphics.drawLine( x1, y1, x2, y2 );
 
   }
@@ -164,7 +149,7 @@ public class HighlightGraphics extends Graphics2D
    */
   public Graphics create()
   {
-    return new HighlightGraphics( (Graphics2D)m_graphics.create() );
+    return new HighlightGraphics( (Graphics2D)m_graphics.create(), m_colors );
   }
 
   /**
@@ -172,7 +157,7 @@ public class HighlightGraphics extends Graphics2D
    */
   public Graphics create( int x, int y, int width, int height )
   {
-    return new HighlightGraphics( (Graphics2D)m_graphics.create( x, y, width, height ) );
+    return new HighlightGraphics( (Graphics2D)m_graphics.create( x, y, width, height ), m_colors );
   }
 
   public void dispose()
@@ -182,7 +167,7 @@ public class HighlightGraphics extends Graphics2D
 
   public void draw( Shape s )
   {
-    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.draw( s );
   }
 
@@ -191,13 +176,13 @@ public class HighlightGraphics extends Graphics2D
    */
   public void draw3DRect( int x, int y, int width, int height, boolean raised )
   {
-    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.draw3DRect( x, y, width, height, raised );
   }
 
   public void drawArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
-    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawArc( x, y, width, height, startAngle, arcAngle );
   }
 
@@ -206,7 +191,7 @@ public class HighlightGraphics extends Graphics2D
    */
   public void drawBytes( byte[] data, int offset, int length, int x, int y )
   {
-    //    m_graphics.setColor(COLOR_BORDER);
+    //    m_graphics.setColor(m_colors.getBorderColor());
     m_graphics.drawBytes( data, offset, length, x, y );
   }
 
@@ -215,14 +200,14 @@ public class HighlightGraphics extends Graphics2D
    */
   public void drawChars( char[] data, int offset, int length, int x, int y )
   {
-    m_graphics.setColor( COLOR_TEXT );
+    m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawChars( data, offset, length, x, y );
   }
 
   public void drawGlyphVector( GlyphVector g, float x, float y )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawGlyphVector( g, x, y );
   }
 
@@ -265,15 +250,15 @@ public class HighlightGraphics extends Graphics2D
 
   public void drawOval( int x, int y, int width, int height )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawOval( x, y, width, height );
   }
 
   public void drawPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawPolygon( xPoints, yPoints, nPoints );
   }
 
@@ -282,15 +267,15 @@ public class HighlightGraphics extends Graphics2D
    */
   public void drawPolygon( Polygon p )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawPolygon( p );
   }
 
   public void drawPolyline( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawPolyline( xPoints, yPoints, nPoints );
   }
 
@@ -299,51 +284,51 @@ public class HighlightGraphics extends Graphics2D
    */
   public void drawRect( int x, int y, int width, int height )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawRect( x, y, width, height );
   }
 
   public void drawRenderableImage( RenderableImage img, AffineTransform xform )
   {
-    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawRenderableImage( img, xform );
   }
 
   public void drawRenderedImage( RenderedImage img, AffineTransform xform )
   {
-    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawRenderedImage( img, xform );
   }
 
   public void drawRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
-    m_graphics.setColor( COLOR_BORDER );
-    m_graphics.setBackground( COLOR_BACKGROUND );
+    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setBackground( m_colors.getBackgroundColor() );
     m_graphics.drawRoundRect( x, y, width, height, arcWidth, arcHeight );
   }
 
   public void drawString( String s, float x, float y )
   {
-    m_graphics.setColor( COLOR_TEXT );
+    m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( s, x, y );
   }
 
   public void drawString( String str, int x, int y )
   {
-    m_graphics.setColor( COLOR_TEXT );
+    m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( str, x, y );
   }
 
   public void drawString( AttributedCharacterIterator iterator, float x, float y )
   {
-    m_graphics.setColor( COLOR_TEXT );
+    m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( iterator, x, y );
   }
 
   public void drawString( AttributedCharacterIterator iterator, int x, int y )
   {
-    m_graphics.setColor( COLOR_TEXT );
+    m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( iterator, x, y );
   }
 
@@ -357,7 +342,7 @@ public class HighlightGraphics extends Graphics2D
 
   public void fill( Shape s )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fill( s );
   }
 
@@ -366,25 +351,25 @@ public class HighlightGraphics extends Graphics2D
    */
   public void fill3DRect( int x, int y, int width, int height, boolean raised )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fill3DRect( x, y, width, height, raised );
   }
 
   public void fillArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillArc( x, y, width, height, startAngle, arcAngle );
   }
 
   public void fillOval( int x, int y, int width, int height )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillOval( x, y, width, height );
   }
 
   public void fillPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillPolygon( xPoints, yPoints, nPoints );
   }
 
@@ -393,19 +378,19 @@ public class HighlightGraphics extends Graphics2D
    */
   public void fillPolygon( Polygon p )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillPolygon( p );
   }
 
   public void fillRect( int x, int y, int width, int height )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillRect( x, y, width, height );
   }
 
   public void fillRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
-    m_graphics.setColor( COLOR_FILL );
+    m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillRoundRect( x, y, width, height, arcWidth, arcHeight );
   }
 
@@ -432,14 +417,14 @@ public class HighlightGraphics extends Graphics2D
     return m_graphics.getClipBounds( r );
   }
 
-//  /**
-//   * 
-//   * @see java.awt.Graphics#getClipRect()
-//   */
-//  public Rectangle getClipRect()
-//  {
-//    return m_graphics.getClipRect();
-//  }
+  //  /**
+  //   *
+  //   * @see java.awt.Graphics#getClipRect()
+  //   */
+  //  public Rectangle getClipRect()
+  //  {
+  //    return m_graphics.getClipRect();
+  //  }
 
   public Composite getComposite()
   {

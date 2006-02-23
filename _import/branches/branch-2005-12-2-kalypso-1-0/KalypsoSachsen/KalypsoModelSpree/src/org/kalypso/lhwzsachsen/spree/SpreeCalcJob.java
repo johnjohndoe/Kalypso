@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -23,11 +22,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -190,6 +188,16 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "QV_TSQUITZ", false, null, true ),
       new TSDesc( "QP_TSQUITZ", true, "QV_TSQUITZ", false ),
       new TSDesc( "V_TSQUITZ", true, "QV_TSQUITZ", false ),
+      new TSDesc( "S_HOLTD" ),
+      new TSDesc( "W_HOLTD", false, null, true ),
+      new TSDesc( "Q_HOLTD" ),
+      new TSDesc( "QX_HOLTD", true, "W_HOLTD", false ),
+      new TSDesc( "WV_HOLTD" ),
+      new TSDesc( "QV_HOLTD", true, "W_HOLTD", false ),
+      new TSDesc( "QP_HOLTD", true, "W_HOLTD", false ),
+      new TSDesc( "PG_HOLTD" ),
+      new TSDesc( "PP_HOLTD" ),
+      new TSDesc( "PA_HOLTD", false, null, true ),
       new TSDesc( "S_SAERI" ),
       new TSDesc( "W_SAERI", false, null, true ),
       new TSDesc( "Q_SAERI" ),
@@ -245,14 +253,14 @@ public class SpreeCalcJob implements ICalcJob
 
   private static final String[] OTHER_FILES = new String[]
   {
-      "Flusspar.dbf",
-      "Flutung.dbf",
+      "FLUSSPAR.DBF",
+      "FLUTUNG.DBF",
       "Hw_wq.dbf",
-      "Na_para.dbf",
-      "Ts_bautz.dbf",
-      "Ts_para.dbf",
-      "Ts_quitz.dbf",
-      "Zwipar.dbf",
+      "NA_PARA.DBF",
+      "TS_BAUTZ.DBF",
+      "TS_PARA.DBF",
+      "TS_QUITZ.DBF",
+      "ZWIPAR.DBF",
       "xHWKERNEL.DLL" };
 
   /**
@@ -434,75 +442,55 @@ public class SpreeCalcJob implements ICalcJob
   private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter,
       final ICalcMonitor monitor ) throws CalcJobServiceException
   {
-    InputStreamReader inStream = null;
-    InputStreamReader errStream = null;
+    final Date startTime = (Date)m_data.get( DATA_STARTFORECAST_DATE );
+    final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
+
+    final File tsFile = (File)m_data.get( DATA_TSFILE );
+
+    final File exefile = new File( exedir, EXE_FILE );
+
+    final String commandString = exefile + " " + timeString + " " + tsFile.getName();
+
+    logwriter.println( commandString );
+
+    final StringWriter outWriter = new StringWriter();
+    final StringWriter errWriter = new StringWriter();
 
     try
     {
-      final Date startTime = (Date)m_data.get( DATA_STARTFORECAST_DATE );
-      final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
-
-      final File tsFile = (File)m_data.get( DATA_TSFILE );
-
-      final File exefile = new File( exedir, EXE_FILE );
-
-      final String commandString = exefile + " " + timeString + " " + tsFile.getName();
-
-      logwriter.println( commandString );
-      logwriter.println( "Ausgabe des Rechenkerns" );
-      logwriter.println( "#######################" );
-      logwriter.println( "#########START#########" );
-      logwriter.println( "#######################" );
-      logwriter.println();
-
-      final Process process = Runtime.getRuntime().exec( commandString, null, exedir );
-
-      inStream = new InputStreamReader( process.getInputStream() );
-      errStream = new InputStreamReader( process.getErrorStream() );
-      final OutputStream nul_dev = new NullOutputStream();
-      while( true )
-      {
-        CopyUtils.copy( inStream, logwriter );
-        CopyUtils.copy( errStream, nul_dev );
-
-        try
-        {
-          process.exitValue();
-          return;
-        }
-        catch( final IllegalThreadStateException e )
-        {
-          // noch nicht fertig
-        }
-
-        if( monitor.isCanceled() )
-        {
-          process.destroy();
-          return;
-        }
-
-        Thread.sleep( 100 );
-      }
+      ProcessHelper.startProcess( commandString, null, exedir, monitor, 1000, outWriter, errWriter );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
     }
-    catch( final InterruptedException e )
+    catch( final ProcessTimeoutException e )
     {
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Ausführen der hw.exe", e );
     }
     finally
     {
-      IOUtils.closeQuietly( inStream );
-      IOUtils.closeQuietly( errStream );
-
-      logwriter.println( "#######################" );
-      logwriter.println( "#########ENDE#########" );
-      logwriter.println( "#######################" );
+      final String processOut = outWriter.toString();
+      final String processErr = errWriter.toString();
+      
+      logwriter.println( "Ausgaben des Rechenkerns" );
+      logwriter.println( "========================" );
+      logwriter.println( "=   Standard-Ausgabe   =" );
+      logwriter.println( "========================" );
+      logwriter.println( processOut );
+      logwriter.println( "========================" );
+      logwriter.println( "=    Fehler-Ausgabe   =" );
+      logwriter.println( "========================" );
+      logwriter.println( processErr );
+      logwriter.println( "========================" );
       logwriter.println();
+      
+      if( processOut.endsWith( "Berechnung erfolgreich beendet" ) )
+        logwriter.println( "Rechnung erfolgreich beendet" );
+      else
+        logwriter.println( "Rechnung nicht erfolgreich beendet" );
     }
   }
 
@@ -703,26 +691,28 @@ public class SpreeCalcJob implements ICalcJob
   /**
    * Schreibt eine Vorhersagezeitreihe und ihre umhüllenden
    */
-  private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy, final boolean writeUmhuellende ) throws Exception
+  private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy,
+      final boolean writeUmhuellende ) throws Exception
   {
     ZmlFactory.writeToFile( obs, outFile );
 
     final InputSource is = new InputSource( outFile.getAbsolutePath() );
     final IObservation observation = ZmlFactory.parseXML( is, "", null );
-    
+
     if( !writeUmhuellende )
       return;
 
     // get first and last date of observation
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
-    final ITuppleModel values = observation.getValues(null);
+    final IAxis dateAxis = ObservationUtilities
+        .findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+    final ITuppleModel values = observation.getValues( null );
     final int valueCount = values.getCount();
     if( valueCount < 2 )
       return;
-    
+
     final Date startPrediction = (Date)values.getElement( 0, dateAxis );
     final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
-    
+
     final Calendar calBegin = Calendar.getInstance();
     calBegin.setTime( startPrediction );
 
@@ -735,11 +725,13 @@ public class SpreeCalcJob implements ICalcJob
         * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
 
     final String baseName = FileUtilities.nameWithoutExtension( outFile.getName() );
-    
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "-", TimeserieConstants.TYPE_WATERLEVEL,
-        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_unten.zml" ), "- Spur Unten" );
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "+", TimeserieConstants.TYPE_WATERLEVEL,
-        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_oben.zml" ), "- Spur Oben" );
+
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "-",
+        TimeserieConstants.TYPE_WATERLEVEL, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
+            + "_unten.zml" ), "- Spur Unten" );
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "+",
+        TimeserieConstants.TYPE_WATERLEVEL, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
+            + "_oben.zml" ), "- Spur Oben" );
   }
 
   /**
