@@ -17,6 +17,8 @@
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/JWSDPInstallation/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoGMLSchema/build/deploy" includes="**/*.jar"/>
 	</path>
   
   	<target name="fake" />
