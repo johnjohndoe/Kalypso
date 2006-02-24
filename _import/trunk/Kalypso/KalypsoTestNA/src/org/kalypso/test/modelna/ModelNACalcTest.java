@@ -53,14 +53,12 @@ import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.Modeldata.Input;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.services.calculation.service.impl.JarCalcDataProvider;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.JarSimulationcDataProvider;
 import org.kalypso.test.util.CalcJobTestUtilis;
 
 /**
@@ -148,8 +146,8 @@ public class ModelNACalcTest extends TestCase
     final URL modelSpec = getClass().getResource( "testData/" + modellID + "/modelspec" + spec + ".xml" );
     final DataHandler dataHandler = new DataHandler( resource );
     // final CalcJobClientBean[] beans =
-    final CalcJobClientBean[] beans = createBeans( modelSpec );
-    final JarCalcDataProvider jarProvider = new JarCalcDataProvider( dataHandler, beans );
+    final SimulationDataPath[] beans = createBeans( modelSpec );
+    final JarSimulationcDataProvider jarProvider = new JarSimulationcDataProvider( dataHandler, beans );
 
     final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
@@ -171,7 +169,7 @@ public class ModelNACalcTest extends TestCase
             return getClass().getResource( "testData/we/parameter.gml" );
           return jarProvider.getURLForID( id );
         }
-        catch( CalcJobServiceException e )
+        catch( SimulationException e )
         {
           throw new SimulationException( e.getMessage(), e );
         }
@@ -236,9 +234,9 @@ public class ModelNACalcTest extends TestCase
     }
   }
 
-  private CalcJobClientBean[] createBeans( URL modelSpec ) throws JAXBException
+  private SimulationDataPath[] createBeans( URL modelSpec ) throws JAXBException
   {
-    final List<CalcJobClientBean> result = new ArrayList<CalcJobClientBean>();
+    final List<SimulationDataPath> result = new ArrayList<SimulationDataPath>();
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final Modeldata modeldata = (Modeldata) unmarshaller.unmarshal( modelSpec );
@@ -251,8 +249,8 @@ public class ModelNACalcTest extends TestCase
       inputPath = inputPath.replaceAll( "project:/", "" );
       if( inputItem.isRelativeToCalcCase() )
         inputPath = ".prognose/Rechenfall/" + inputPath;
-      result.add( new CalcJobClientBean( inputItem.getId(), inputPath ) );
+      result.add( new SimulationDataPath( inputItem.getId(), inputPath ) );
     }
-    return result.toArray( new CalcJobClientBean[result.size()] );
+    return result.toArray( new SimulationDataPath[result.size()] );
   }
 }
