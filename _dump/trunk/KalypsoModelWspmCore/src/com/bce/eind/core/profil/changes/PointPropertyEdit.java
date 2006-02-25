@@ -4,7 +4,6 @@ import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.PlainProfil;
 
 public final class PointPropertyEdit implements IProfilChange
 {

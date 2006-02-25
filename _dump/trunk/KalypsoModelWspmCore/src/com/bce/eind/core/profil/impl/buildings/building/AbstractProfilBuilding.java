@@ -48,6 +48,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   /**
    * @return Returns the buildingTyp.
    */
+  @Override
   public BUILDING_TYP getTyp( )
   {
     return m_buildingTyp;
@@ -64,6 +65,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   /**
    * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.BUILDING_PROPERTY)
    */
+  @Override
   public boolean hasProperty( BUILDING_PROPERTY profilBuildingProperty )
   {
     return m_buildingValues.containsKey( profilBuildingProperty );
@@ -72,6 +74,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   /**
    * @see com.bce.eind.core.profil.IProfilBuilding#getBuildingProperties()
    */
+  @Override
   public Collection<BUILDING_PROPERTY> getBuildingProperties( )
   {
     return Collections.unmodifiableCollection( m_buildingValues.keySet() );

@@ -3,9 +3,7 @@ package com.bce.eind.core.profil.changes;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
-import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class DeviderRemove implements IProfilChange
 {

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 public final class PointPropertyAdd implements IProfilChange

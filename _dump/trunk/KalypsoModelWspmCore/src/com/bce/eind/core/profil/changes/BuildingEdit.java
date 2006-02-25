@@ -5,7 +5,6 @@ import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class BuildingEdit implements IProfilChange
 {

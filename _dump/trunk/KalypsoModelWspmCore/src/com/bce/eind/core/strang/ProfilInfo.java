@@ -36,6 +36,7 @@ public class ProfilInfo
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString( )
   {
     return m_name;

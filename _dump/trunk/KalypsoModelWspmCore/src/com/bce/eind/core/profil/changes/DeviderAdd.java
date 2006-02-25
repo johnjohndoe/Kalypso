@@ -4,11 +4,9 @@ import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilDeviderFactory;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class DeviderAdd implements IProfilChange
 {

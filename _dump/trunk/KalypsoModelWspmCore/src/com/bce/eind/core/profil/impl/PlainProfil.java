@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;

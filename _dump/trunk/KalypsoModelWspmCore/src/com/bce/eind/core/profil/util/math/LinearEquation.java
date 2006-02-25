@@ -144,6 +144,7 @@ public class LinearEquation
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString(  )
     {
         return "Y = " + String.valueOf( m_a ) + "*X + " + String.valueOf( m_b );
