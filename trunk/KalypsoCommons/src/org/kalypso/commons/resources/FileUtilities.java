@@ -71,6 +71,7 @@ public class FileUtilities
   {
     final SetContentHelper helper = new SetContentHelper()
     {
+      @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );

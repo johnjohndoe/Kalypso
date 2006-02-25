@@ -30,6 +30,7 @@
 package org.kalypso.commons.diff;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class DiffComparatorRegistry
 
   private static DiffComparatorRegistry m_instance = null;
 
-  private final HashMap m_comparators = new HashMap();
+  private final Map<String, IDiffComparator> m_comparators = new HashMap<String, IDiffComparator>();
 
   private DiffComparatorRegistry()
   {
@@ -66,6 +67,6 @@ public class DiffComparatorRegistry
 
   public IDiffComparator getDiffComparator( final String suffix )
   {
-    return (IDiffComparator)m_comparators.get( suffix );
+    return m_comparators.get( suffix );
   }
 }

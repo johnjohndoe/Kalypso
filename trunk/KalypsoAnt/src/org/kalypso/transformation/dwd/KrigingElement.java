@@ -48,7 +48,7 @@ public class KrigingElement
 {
   final GM_Point m_centerPoint;
 
-  final Vector m_relations = new Vector();
+  final Vector<KrigingRelation> m_relations = new Vector<KrigingRelation>();
 
   public KrigingElement( GM_Point centerpoint )
   {
@@ -62,7 +62,7 @@ public class KrigingElement
 
   public KrigingRelation[] getRelations()
   {
-    return (KrigingRelation[])m_relations.toArray( new KrigingRelation[m_relations.size()] );
+    return m_relations.toArray( new KrigingRelation[m_relations.size()] );
   }
 
   public GM_Point getCenterPoint()

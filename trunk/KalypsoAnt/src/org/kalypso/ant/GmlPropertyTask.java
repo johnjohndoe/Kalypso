@@ -72,7 +72,7 @@ public class GmlPropertyTask extends Task
 {
   private final PropertyAdder m_propertyAdder = new PropertyAdder( this );
   
-  private final List m_properties = new LinkedList();
+  private final List<Property> m_properties = new LinkedList<Property>();
 
   /** URL from where to read the gml */
   private URL m_gmlURL;
@@ -97,6 +97,7 @@ public class GmlPropertyTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
+  @Override
   public void execute() throws BuildException
   {
     // validieren

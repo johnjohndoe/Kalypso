@@ -105,6 +105,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
+  @Override
   public String toStringInternal( Object obj )
   {
     return obj.toString();

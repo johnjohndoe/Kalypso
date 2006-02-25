@@ -25,9 +25,9 @@ public class FileCacheTest extends TestCase
   public void testGetObject()
   {
     final StringKeyFactory fact = new StringKeyFactory();
-    final Comparator kc = new StringComparator();
+    final Comparator<String> kc = new StringComparator();
     final ISerializer ser = new StringSerializer();
-    final FileCache cache = new FileCache( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    final FileCache<String> cache = new FileCache<String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
 
     cache.addObject( "A", "A" );
     cache.addObject( "B", "B" );
@@ -49,27 +49,24 @@ public class FileCacheTest extends TestCase
     assertTrue( cache.getObject( "B" ) == null );
   }
 
-  private static class StringComparator implements Comparator
+  private static class StringComparator implements Comparator<String>
   {
-    public int compare( Object o1, Object o2 )
+    public int compare( String s1, String s2 )
     {
-      final String s1 = (String)o1;
-      final String s2 = (String)o2;
-
       return s1.compareTo( s2 );
     }
   }
 
-  private static class StringKeyFactory implements IKeyFactory
+  private static class StringKeyFactory implements IKeyFactory<String>
   {
-    public Object createKey( String string )
+    public String createKey( final String string )
     {
       return string;
     }
 
-    public String toString( Object key )
+    public String toString( final String key )
     {
-      return (String)key;
+      return key;
     }
   }
 

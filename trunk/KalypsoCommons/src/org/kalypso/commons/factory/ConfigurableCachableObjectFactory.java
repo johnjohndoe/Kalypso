@@ -73,7 +73,7 @@ public class ConfigurableCachableObjectFactory
   private final Properties m_props = new Properties();
 
   /** type -> objectinstance */
-  private final Map m_objects = new Hashtable();
+  private final Map<String, Object> m_objects = new Hashtable<String, Object>();
 
   private final boolean m_cache;
 

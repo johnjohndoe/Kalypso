@@ -30,18 +30,15 @@ public class StringValidityKey
     return m_string;
   }
 
-  public static Comparator createComparatorForStringCompareOnly()
+  public static Comparator<StringValidityKey> createComparatorForStringCompareOnly()
   {
     return new StringComparator();
   }
 
-  private static class StringComparator implements Comparator
+  private static class StringComparator implements Comparator<StringValidityKey>
   {
-    public int compare( final Object o1, final Object o2 )
+    public int compare( final StringValidityKey k1, final StringValidityKey k2 )
     {
-      final StringValidityKey k1 = (StringValidityKey)o1;
-      final StringValidityKey k2 = (StringValidityKey)o2;
-
       return k1.getString().compareTo( k2.getString() );
     }
   }
