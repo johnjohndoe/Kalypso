@@ -53,7 +53,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.NOperationFilterType;
@@ -85,7 +84,7 @@ public class KrigingReader
   // example: 4485832.000 5603328.000 0.420 4234
   private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?(" + doublePattern + ") +(.+?) *" );
 
-  private final List m_krigingElements;
+  private final List<KrigingElement> m_krigingElements;
 
   private int m_min = 9999999;
 
@@ -120,7 +119,7 @@ public class KrigingReader
       m_min = krigingElements.size();
     m_logger.info( krigingElements.size() + " rasterpoints are withing geometry. (min is" + m_min + ")" );
     // calculate dependency
-    final HashMap map = new HashMap();
+    final HashMap<String, KrigingRelation> map = new HashMap<String, KrigingRelation>();
     final double n = krigingElements.size();
     // loop elements
     for( Iterator iter = krigingElements.iterator(); iter.hasNext(); )
@@ -137,7 +136,7 @@ public class KrigingReader
           map.put( id, new KrigingRelation( factor, id ) );
         else
         {
-          KrigingRelation rel = (KrigingRelation) map.get( id );
+          KrigingRelation rel = map.get( id );
           rel.setFactor( rel.getFactor() + factor );
         }
       }
@@ -167,21 +166,21 @@ public class KrigingReader
     return nOperationFilter;
   }
 
-  private List getKrigingElementsFor( GM_Object geom )
+  private List<KrigingElement> getKrigingElementsFor( final GM_Object geom )
   {
-    List result = new ArrayList();
-    for( Iterator iter = m_krigingElements.iterator(); iter.hasNext(); )
+    final List<KrigingElement> result = new ArrayList<KrigingElement>();
+    for( final Iterator iter = m_krigingElements.iterator(); iter.hasNext(); )
     {
-      KrigingElement ke = (KrigingElement) iter.next();
+      final KrigingElement ke = (KrigingElement) iter.next();
       if( geom.contains( ke.getCenterPoint() ) )
         result.add( ke );
     }
     return result;
   }
 
-  public List parse( Reader reader )
+  public List<KrigingElement> parse( Reader reader )
   {
-    final List result = new ArrayList();
+    final List<KrigingElement> result = new ArrayList<KrigingElement>();
     try
     {
       // // TODO check coordinates system
@@ -222,7 +221,7 @@ public class KrigingReader
     return result;
   }
 
-  public VirtualRepositoryType createRepositoryConf( Feature[] features, String geoPropName ) throws JAXBException
+  public VirtualRepositoryType createRepositoryConf( Feature[] features, String geoPropName )
   {
     final VirtualRepositoryType repository = vRepFac.createVirtualRepositoryType();
     final LevelType level = vRepFac.createLevelType();

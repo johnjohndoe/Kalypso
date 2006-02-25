@@ -30,6 +30,7 @@ public class KalypsoUser implements IKalypsoUser
     return m_userName;
   }
 
+  @Override
   public String toString()
   {
     return m_userName;

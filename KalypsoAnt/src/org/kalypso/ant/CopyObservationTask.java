@@ -102,7 +102,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
-  private List m_sources = new LinkedList();
+  private List<CopyObservationFeatureVisitor.Source> m_sources = new LinkedList<CopyObservationFeatureVisitor.Source>();
 
   /**
    * List of metadata-properties and values to set to the target observation
@@ -117,6 +117,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter, final IProgressMonitor monitor )
   {
     Date forecastFrom = null;
@@ -127,7 +128,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     if( m_forecastTo != -1 )
       forecastTo = new Date( m_forecastTo );
 
-    final CopyObservationFeatureVisitor.Source[] srcs = (CopyObservationFeatureVisitor.Source[])m_sources
+    final CopyObservationFeatureVisitor.Source[] srcs = m_sources
         .toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
     
     return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
@@ -290,6 +291,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
+  @Override
   protected void validateInput()
   {
     // nothing to do

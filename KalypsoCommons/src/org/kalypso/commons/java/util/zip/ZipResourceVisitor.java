@@ -66,7 +66,7 @@ public class ZipResourceVisitor implements IResourceVisitor
 {
   private final ZipOutputStream m_zos;
 
-  private final Set m_entries = new HashSet();
+  private final Set<String> m_entries = new HashSet<String>();
 
   public ZipResourceVisitor( final File zipfile ) throws FileNotFoundException
   {

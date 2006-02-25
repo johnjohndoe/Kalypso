@@ -34,8 +34,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * 
- * 
  * @author doemming
  */
 public class DiffVisitor implements IDiffVisitor
@@ -43,7 +41,7 @@ public class DiffVisitor implements IDiffVisitor
 
   private final IDiffObject m_base;
 
-  private Hashtable m_log = new Hashtable();
+  private Hashtable<Integer, List<String>> m_log = new Hashtable<Integer, List<String>>();
 
   /**
    *  
@@ -53,15 +51,15 @@ public class DiffVisitor implements IDiffVisitor
     m_base = base;
   }
 
-  public void addLog( Integer status, String path )
+  public void addLog( final Integer status, final String path )
   {
     if( !m_log.containsKey( status ) )
-      m_log.put( status, new ArrayList() );
-    ( (List)m_log.get( status ) ).add( path );
+      m_log.put( status, new ArrayList<String>() );
+
+    m_log.get( status ).add( path );
   }
 
   /**
-   * 
    * @see org.kalypso.commons.diff.IDiffVisitor#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.String,
    *      org.kalypso.commons.diff.IDiffObject)
    */

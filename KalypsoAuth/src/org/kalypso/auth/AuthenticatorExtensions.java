@@ -37,7 +37,7 @@ public class AuthenticatorExtensions
 
     final IExtension[] extensions = extensionPoint.getExtensions();
 
-    final ArrayList items = new ArrayList( extensions.length + 1 );
+    final ArrayList<IAuthenticator> items = new ArrayList<IAuthenticator>( extensions.length + 1 );
 
     for( int i = 0; i < extensions.length; i++ )
     {
@@ -54,6 +54,6 @@ public class AuthenticatorExtensions
       }
     }
     
-    return (IAuthenticator[])items.toArray( new IAuthenticator[items.size()] );
+    return items.toArray( new IAuthenticator[items.size()] );
   }
 }

@@ -28,20 +28,20 @@ import org.kalypso.commons.serializer.ISerializer;
  * 
  * @author schlienger
  */
-public class FileCache
+public class FileCache<K>
 {
   private final static String INDEX_FILE = ".filecache";
 
-  private final Comparator m_kc;
+  private final Comparator<? super K> m_kc;
 
   private final ISerializer m_ser;
 
   private final File m_directory;
 
   /** maps the keys to files */
-  private final Map m_index;
+  private final Map<K, File> m_index;
 
-  private final IKeyFactory m_keyFactory;
+  private final IKeyFactory<K> m_keyFactory;
 
   /**
    * Constructor
@@ -55,7 +55,7 @@ public class FileCache
    * @param directory
    *          location of the index file and of all other files used for caching
    */
-  public FileCache( final IKeyFactory kFact, final Comparator kc, final ISerializer ser, final File directory )
+  public FileCache( final IKeyFactory<K> kFact, final Comparator<? super K> kc, final ISerializer ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
       throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
@@ -65,11 +65,12 @@ public class FileCache
     m_ser = ser;
     m_directory = directory;
 
-    m_index = new TreeMap( m_kc );
+    m_index = new TreeMap<K, File>( m_kc );
 
     readIndexFile();
   }
 
+  @Override
   protected void finalize() throws Throwable
   {
     m_index.clear();
@@ -97,7 +98,7 @@ public class FileCache
           final String keySpec = items[0];
           final String fileName = items[1];
 
-          final Object key = m_keyFactory.createKey( keySpec );
+          final K key = m_keyFactory.createKey( keySpec );
           final File file = new File( m_directory, fileName );
 
           m_index.put( key, file );
@@ -126,11 +127,11 @@ public class FileCache
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( indexFile ) ) );
 
-      for( final Iterator it = m_index.entrySet().iterator(); it.hasNext(); )
+      for( final Iterator<Entry<K,File>> it = m_index.entrySet().iterator(); it.hasNext(); )
       {
-        final Map.Entry entry = (Entry)it.next();
+        final Map.Entry<K,File> entry = it.next();
         final String keySpec = m_keyFactory.toString( entry.getKey() );
-        final String fileName = ( (File)entry.getValue() ).getName();
+        final String fileName = entry.getValue().getName();
 
         writer.write( keySpec );
         writer.write( ";" );
@@ -149,7 +150,7 @@ public class FileCache
     }
   }
 
-  public void addObject( final Object key, final Object object )
+  public void addObject( final K key, final Object object )
   {
     final File file;
     OutputStream os = null;
@@ -157,7 +158,7 @@ public class FileCache
     try
     {
       if( m_index.containsKey( key ) )
-        file = (File)m_index.get( key );
+        file = m_index.get( key );
       else
         file = File.createTempFile( "cache", ".item", m_directory );
 
@@ -181,7 +182,7 @@ public class FileCache
 
   public Object getObject( final Object key )
   {
-    final File file = (File)m_index.get( key );
+    final File file = m_index.get( key );
     if( file == null )
       return null;
 
@@ -213,7 +214,7 @@ public class FileCache
   {
     if( m_index.containsKey( key ) )
     {
-      final File file = (File)m_index.get( key );
+      final File file = m_index.get( key );
       file.delete();
 
       m_index.remove( key );
@@ -245,11 +246,13 @@ public class FileCache
    * @param key
    * @return null if not found
    */
-  public Object getRealKey( final Object key )
+  @SuppressWarnings("unchecked")
+  public Object getRealKey( final K key )
   {
     if( m_index.containsKey( key ) )
     {
-      final Object[] keys = m_index.keySet().toArray();
+      final K[] keys = m_index.keySet().toArray( (K[])java.lang.reflect.Array
+        .newInstance(key.getClass().getComponentType(), m_index.size()) );
       final int ix = Arrays.binarySearch( keys, key, m_kc );
       return keys[ix];
     }

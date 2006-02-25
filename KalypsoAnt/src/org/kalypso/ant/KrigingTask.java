@@ -205,6 +205,7 @@ public class KrigingTask extends Task
     m_sourceGMLObservationLinkProperty = sourceGMLObservationLinkProperty;
   }
 
+  @Override
   public void execute() throws BuildException
   {
     try
@@ -275,7 +276,6 @@ public class KrigingTask extends Task
 
       final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
 
-      final ObjectFactory o = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Marshaller marshaller = jc.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );

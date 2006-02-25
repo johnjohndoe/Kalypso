@@ -72,6 +72,7 @@ public class RegexCSV extends AbstractCSV
   /**
    * @see org.kalypso.commons.io.AbstractCSV#handleCurrentLine(java.lang.String)
    */
+  @Override
   protected void handleCurrentLine( final String line )
   {
     Matcher m = m_pattern.matcher( line );

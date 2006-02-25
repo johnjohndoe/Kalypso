@@ -117,6 +117,7 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
+  @Override
   public String toStringInternal( Object obj )
   {
     return m_df.format( obj );

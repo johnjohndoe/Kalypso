@@ -108,6 +108,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -204,6 +205,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
+  @Override
   protected void okPressed()
   {
     m_userName = m_txtName == null ? null : m_txtName.getText();
@@ -212,6 +214,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     super.okPressed();
   }
 
+  @Override
   public boolean close()
   {
     if( m_listener != null && m_sceViewer != null )
