@@ -16,9 +16,8 @@ public class BuildingWehr extends AbstractProfilBuilding
 
   public BuildingWehr( )
   {
-    super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART,BUILDING_PROPERTY.FORMBEIWERT ), new POINT_PROPERTY[]
-    { POINT_PROPERTY.OBERKANTEWEHR } );
-    m_buildingValues.put(BUILDING_PROPERTY.WEHRART, IProfil.WEHR_TYP.Beiwert);
+    super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART, BUILDING_PROPERTY.FORMBEIWERT ), new POINT_PROPERTY[] { POINT_PROPERTY.OBERKANTEWEHR } );
+    m_buildingValues.put( BUILDING_PROPERTY.WEHRART, IProfil.WEHR_TYP.Beiwert );
   }
 
   @Override
@@ -33,15 +32,6 @@ public class BuildingWehr extends AbstractProfilBuilding
       pt.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, h );
 
     }
-//    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-//    final IProfilDevider leftDev = profil.addDevider( points.getFirst(), DEVIDER_TYP.WEHR );
-//    final IProfilDevider rightDev = profil.addDevider( points.getLast(), DEVIDER_TYP.WEHR );
-//    if( (devider != null) && (devider.length > 0) )
-//      profil.moveDevider( leftDev, devider[0].getPoint() );
-//    if( (devider != null) && (devider.length > 1) )
-//      profil.moveDevider( rightDev, devider[1].getPoint() );
-//    leftDev.setValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT, 0.0 );
-//    rightDev.setValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT, 0.0 );
   }
 
   @Override
@@ -49,15 +39,11 @@ public class BuildingWehr extends AbstractProfilBuilding
   {
     super.removeProfilProperties( profil );
     final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.WEHR );
-    if( devider.length < 1 )
+    final int deviderCount = devider == null ? 0 : devider.length;
+    for( int i = 0; i < deviderCount; i++ )
     {
-      return;
+      profil.removeDevider( devider[i] );
     }
-    for( IProfilDevider dev : devider )
-    {
-      profil.removeDevider( dev );
-    }
-
   }
 
 }
