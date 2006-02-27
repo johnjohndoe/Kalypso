@@ -73,10 +73,10 @@ public class OperationDefines
 {
 
   // used to associate names with the OperationInfos
-  private static Map names = null;
+  private static Map<String, OperationInfo> names = null;
 
   // used to associate ids (Integers) with the OperationInfos
-  private static Map ids = null;
+  private static Map<Integer, OperationInfo> ids = null;
 
   // different types of operations
   public static final int TYPE_SPATIAL = 0;
@@ -150,7 +150,7 @@ public class OperationDefines
    */
   public static int getTypeByName( String name )
   {
-    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
+    OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
     return operationInfo.type;
@@ -163,7 +163,7 @@ public class OperationDefines
    */
   public static int getIdByName( String name )
   {
-    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
+    OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return UNKNOWN;
     return operationInfo.id;
@@ -176,7 +176,7 @@ public class OperationDefines
    */
   public static int getTypeById( int id )
   {
-    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
+    OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
     return operationInfo.type;
@@ -190,7 +190,7 @@ public class OperationDefines
   public static String getNameById( int id )
   {
 
-    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
+    OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return null;
     return operationInfo.name;
@@ -198,7 +198,7 @@ public class OperationDefines
 
   private static void addOperationInfo( int id, String name, int type )
   {
-    OperationInfo operationInfo = new OperationInfo( id, type, name );
+    final OperationInfo operationInfo = new OperationInfo( id, type, name );
     names.put( name, operationInfo );
     names.put( name.toLowerCase(), operationInfo );
     names.put( name.toUpperCase(), operationInfo );
@@ -207,8 +207,8 @@ public class OperationDefines
 
   private static void buildHashMaps()
   {
-    names = new HashMap( 25 );
-    ids = new HashMap( 25 );
+    names = new HashMap<String, OperationInfo>( 25 );
+    ids = new HashMap<Integer, OperationInfo>( 25 );
 
     addOperationInfo( BBOX, "BBOX", TYPE_SPATIAL );
     addOperationInfo( EQUALS, "Equals", TYPE_SPATIAL );

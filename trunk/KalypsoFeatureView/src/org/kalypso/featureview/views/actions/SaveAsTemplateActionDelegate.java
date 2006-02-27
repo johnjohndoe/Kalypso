@@ -47,7 +47,6 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Validator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -160,10 +159,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
           viewList.add( view.getCurrentViewTemplates() );
 
-          final Marshaller marshaller = templateJC.createMarshaller();
-          marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-          final Validator validator = templateJC.createValidator();
-          validator.validate( template );
+          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC );
           final SetContentHelper helper = new SetContentHelper()
           {
             @Override

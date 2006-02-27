@@ -105,7 +105,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
 
   public void setOperatorId( int operatorId )
   {
-    super.operatorId = operatorId;
+    m_operatorId = operatorId;
   }
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -

@@ -74,9 +74,9 @@ import org.w3c.dom.Element;
  */
 public class ElementList
 {
-  ArrayList elements = new ArrayList( 100 );
+  private final ArrayList<Element> elements = new ArrayList<Element>( 100 );
 
-  public void addElement( Element element )
+  public void addElement( final Element element )
   {
     elements.add( element );
   }
@@ -90,6 +90,6 @@ public class ElementList
   {
     if( i < 0 || i > elements.size() - 1 )
       return null;
-    return (Element)elements.get( i );
+    return elements.get( i );
   }
 }

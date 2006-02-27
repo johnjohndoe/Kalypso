@@ -73,14 +73,13 @@ import org.w3c.dom.Element;
  */
 public class FeatureId
 {
-
   /** The FeatureId's value. */
-  private String value;
+  private String m_value;
 
   /** Constructs a new FeatureId. */
   public FeatureId( String value )
   {
-    this.value = value;
+    m_value = value;
   }
 
   /**
@@ -111,7 +110,7 @@ public class FeatureId
    */
   public String getValue()
   {
-    return value;
+    return m_value;
   }
 
   /**
@@ -119,14 +118,14 @@ public class FeatureId
    */
   public void setValue( String value )
   {
-    this.value = value;
+    this.m_value = value;
   }
 
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer();
-    sb.append( "<ogc:FeatureId fid=\"" ).append( value ).append( "\"/>" );
+    sb.append( "<ogc:FeatureId fid=\"" ).append( m_value ).append( "\"/>" );
     return sb;
   }
 }

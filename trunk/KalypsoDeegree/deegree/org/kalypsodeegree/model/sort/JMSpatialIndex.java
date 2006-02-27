@@ -7,21 +7,21 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-public interface JMSpatialIndex
+public interface JMSpatialIndex<T>
 {
-  public boolean add( Object object );
+  public boolean add( final T object );
 
-  public List query( GM_Envelope env, List result );
+  public List<T> query( final GM_Envelope env, final List<T> result );
 
-  public List query( GM_Position env, List result );
+  public List<T> query( final GM_Position env, final List<T> result );
 
-  public List queryAll( List result );
+  public List<T> queryAll( final List<T> result );
 
-  public boolean remove( Object object );
+  public boolean remove( final Object object );
 
   public void resort();
 
-  public void paint( Graphics g, GeoTransform geoTransform );
+  public void paint( final Graphics g, final GeoTransform geoTransform );
 
   /** TODO: Was bedeutet das??? */
   public int rsize();

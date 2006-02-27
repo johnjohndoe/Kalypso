@@ -74,17 +74,17 @@ package org.kalypsodeegree.gml;
 
 public class GMLException extends Exception
 {
+  private String m_message = "org.kalypsodeegree.gml.GMLException";
 
-  private String message = "org.kalypsodeegree.gml.GMLException";
-
-  public GMLException( String message )
+  public GMLException( final String message )
   {
-    this.message = message;
+    m_message = message;
   }
 
+  @Override
   public String toString()
   {
-    return message + "\n" + getLocalizedMessage();
+    return m_message + "\n" + getLocalizedMessage();
   }
 
 }
@@ -93,6 +93,9 @@ public class GMLException extends Exception
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2006/02/27 12:43:10  devgernot
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/06/20 14:07:44  belger
  * Formatierung
  * Revision 1.5 2005/03/08 11:01:10 doemming *** empty log message ***

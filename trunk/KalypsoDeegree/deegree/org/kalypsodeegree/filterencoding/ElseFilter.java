@@ -45,7 +45,7 @@ import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 
 public class ElseFilter extends AbstractFilter
 {
-
+  @Override
   public StringBuffer toXML()
   {
     return null;

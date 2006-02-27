@@ -56,6 +56,7 @@ public class Resources extends ResourceBundle
   /**
    * Returns the name of the logger to use, which is <code>javax.units</code>.
    */
+  @Override
   protected String getLoggerName()
   {
     return "javax.units";

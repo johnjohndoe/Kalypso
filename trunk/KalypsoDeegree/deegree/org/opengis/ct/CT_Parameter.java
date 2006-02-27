@@ -60,6 +60,7 @@ public class CT_Parameter implements Cloneable, Serializable
    * Returns a hash value for this parameter. This value need not remain consistent between different implementations of
    * the same class.
    */
+  @Override
   public int hashCode()
   {
     final long longCode = Double.doubleToLongBits( value );
@@ -72,6 +73,7 @@ public class CT_Parameter implements Cloneable, Serializable
   /**
    * Returns a copy of this parameter.
    */
+  @Override
   public Object clone()
   {
     try
@@ -88,6 +90,7 @@ public class CT_Parameter implements Cloneable, Serializable
   /**
    * Compares the specified object with this parameter for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -104,6 +107,7 @@ public class CT_Parameter implements Cloneable, Serializable
    * Returns a string représentation of this parameter. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CT_Parameter" );

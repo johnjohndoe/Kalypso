@@ -2,18 +2,19 @@ package org.kalypsodeegree.model.table;
 
 public class TableException extends Exception
 {
+  private String m_message = "org.kalypsodeegree.model.table.TableException: ";
 
-  private String message = "org.kalypsodeegree.model.table.TableException: ";
-
-  public TableException( String message )
+  public TableException( final String message )
   {
     super( message );
-    this.message = this.message + message;
+    
+    m_message = m_message + message;
   }
 
+  @Override
   public String toString()
   {
-    return message;
+    return m_message;
   }
 
 }

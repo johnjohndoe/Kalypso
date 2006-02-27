@@ -123,10 +123,11 @@ public interface DeegreeFeature
    */
   GM_Object getDefaultGeometryProperty();
 
-  /**
+   /**
    * sets the value for the submitted property. if no property with the submitted exists the property will be added
    * @deprecated use setProperty(IPropertyType pt, Object value);
    */
+  @Deprecated
   void setProperty( FeatureProperty property );
 
   /**

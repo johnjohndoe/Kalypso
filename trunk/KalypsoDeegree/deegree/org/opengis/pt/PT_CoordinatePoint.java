@@ -66,6 +66,7 @@ public class PT_CoordinatePoint implements Cloneable, Serializable
    * Returns a hash value for this coordinate. This value need not remain consistent between different implementations
    * of the same class.
    */
+  @Override
   public int hashCode()
   {
     long code = 326145729;
@@ -80,6 +81,7 @@ public class PT_CoordinatePoint implements Cloneable, Serializable
   /**
    * Compares the specified object with this coordinate for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -112,6 +114,7 @@ public class PT_CoordinatePoint implements Cloneable, Serializable
   /**
    * Returns a deep copy of this coordinate.
    */
+  @Override
   public Object clone()
   {
     try
@@ -129,6 +132,7 @@ public class PT_CoordinatePoint implements Cloneable, Serializable
    * Returns a string representation of this coordinate. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "PT_CoordinatePoint" );

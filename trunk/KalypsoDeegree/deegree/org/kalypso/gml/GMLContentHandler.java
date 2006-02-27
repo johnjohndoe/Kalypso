@@ -45,7 +45,6 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -58,7 +57,6 @@ import org.kalypsodeegree_impl.tools.FeatureUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -77,8 +75,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   private PropertyParser m_propParser;
 
   private int m_status = 0;
-
-  private Locator m_locator;
 
   private int m_indent = 0;
 
@@ -108,7 +104,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#startDocument()
    */
-  public void startDocument( ) throws SAXException
+  public void startDocument( )
   {
     // GML allways starts with features
     m_status = FIRST_FEATURE;
@@ -118,7 +114,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( String uri, String localName, String qName, Attributes atts )
   {
     m_indent++;
     indent();
@@ -137,7 +133,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     switch( m_status )
     {
       case FIRST_FEATURE:
-        m_featureParser.createFeature( uri, localName, qName, atts );
+        m_featureParser.createFeature( uri, localName, atts );
         m_rootFeature = m_featureParser.getCurrentFeature();
         m_status = START_PROPERTY_END_FEATURE;
         break;
@@ -180,7 +176,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final Feature parentFE = m_featureParser.getCurrentFeature();
         if( pt instanceof IRelationType )
         {
-          m_featureParser.createFeature( uri, localName, qName, atts );
+          m_featureParser.createFeature( uri, localName, atts );
           final Feature childFE = m_featureParser.getCurrentFeature();
           FeatureUtils.addChild( parentFE, (IRelationType) pt, childFE );
           m_status = START_PROPERTY_END_FEATURE;
@@ -199,7 +195,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
-  public void endElement( String uri, String localName, String qName ) throws SAXException
+  public void endElement( String uri, String localName, String qName )
   {
     indent();
     // System.out.println( "</" + uri + ":" + localName + ">" );
@@ -230,7 +226,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
    */
-  public void ignorableWhitespace( char[] ch, int start, int length ) throws SAXException
+  public void ignorableWhitespace( char[] ch, int start, int length )
   {
     // System.out.println( "debug" );
     // nothing
@@ -239,7 +235,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#characters(char[], int, int)
    */
-  public void characters( char[] ch, int start, int length ) throws SAXException
+  public void characters( char[] ch, int start, int length )
   {
     // System.out.println( "debug" );
     final Feature feature = m_featureParser.getCurrentFeature();
@@ -266,7 +262,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
    */
-  public void startPrefixMapping( String prefix, String uri ) throws SAXException
+  public void startPrefixMapping( String prefix, String uri )
   {
     // System.out.println( "debug" );
     // nothing
@@ -275,7 +271,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#endDocument()
    */
-  public void endDocument( ) throws SAXException
+  public void endDocument( )
   {
     // System.out.println( "debug" );
     // TODO finish
@@ -284,7 +280,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
    */
-  public void endPrefixMapping( String prefix ) throws SAXException
+  public void endPrefixMapping( String prefix )
   {
     // nothing
   }
@@ -292,7 +288,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   /**
    * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
    */
-  public void processingInstruction( String target, String data ) throws SAXException
+  public void processingInstruction( String target, String data )
   {
     // nothing
   }
@@ -302,13 +298,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void setDocumentLocator( Locator locator )
   {
-    m_locator = locator;
   }
 
   /**
    * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
    */
-  public void skippedEntity( String name ) throws SAXException
+  public void skippedEntity( String name )
   {
 
     // System.out.println( "debug" );

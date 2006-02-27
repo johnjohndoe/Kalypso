@@ -86,6 +86,7 @@ public interface FeatureProperty
    * @deprecated
    * returns the name of the property
    */
+  @Deprecated
   public String getName();
 
   /**
@@ -99,6 +100,9 @@ public interface FeatureProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.9  2006/02/27 12:43:10  devgernot
+ * *** empty log message ***
+ *
  * Revision 1.8  2006/02/09 18:16:23  doemming
  * *** empty log message ***
  *

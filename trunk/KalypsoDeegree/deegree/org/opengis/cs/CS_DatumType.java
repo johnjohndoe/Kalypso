@@ -146,6 +146,7 @@ public class CS_DatumType implements Serializable
   /**
    * Returns the enum value.
    */
+  @Override
   public int hashCode()
   {
     return value;
@@ -154,6 +155,7 @@ public class CS_DatumType implements Serializable
   /**
    * Compares the specified object with this enum for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -168,6 +170,7 @@ public class CS_DatumType implements Serializable
    * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CS_DatumType" );

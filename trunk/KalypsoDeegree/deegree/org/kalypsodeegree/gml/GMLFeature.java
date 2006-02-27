@@ -107,6 +107,7 @@ public interface GMLFeature
   /**
    * @deprecated
    */
+  @Deprecated
   public String getName( );
 
   public QName getQName( );
@@ -114,11 +115,13 @@ public interface GMLFeature
   /**
    * @deprecated
    */
+  @Deprecated
   public String getLocalName( );
 
   /**
    * @deprecated
    */
+  @Deprecated
   public String getNamespaceURI( );
 
   /**
@@ -166,6 +169,9 @@ public interface GMLFeature
 }
 /*
  * Changes to this class. What the people haven been up to: $Log$
+ * Changes to this class. What the people haven been up to: Revision 1.9  2006/02/27 12:43:09  devgernot
+ * Changes to this class. What the people haven been up to: *** empty log message ***
+ * Changes to this class. What the people haven been up to:
  * Changes to this class. What the people haven been up to: Revision 1.8  2006/02/09 18:16:25  doemming
  * Changes to this class. What the people haven been up to: *** empty log message ***
  * Changes to this class. What the people haven been up to: Revision 1.7 2005/06/20 14:07:44

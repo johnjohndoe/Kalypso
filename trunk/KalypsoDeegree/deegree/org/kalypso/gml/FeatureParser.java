@@ -46,13 +46,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
 
 /**
  * @author doemming
@@ -68,7 +63,7 @@ public class FeatureParser
     m_provider = provider;
   }
 
-  public void createFeature( String uri, String localName, String name, Attributes atts )
+  public void createFeature( String uri, String localName, Attributes atts )
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );

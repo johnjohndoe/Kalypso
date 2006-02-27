@@ -1,7 +1,5 @@
 package org.kalypsodeegree.model.feature;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -39,11 +37,13 @@ public interface Feature extends DeegreeFeature
   /**
    * @deprecated use getPropery(PropertyType)
    */
+  @Deprecated
   public Object getProperty( String propLocalName );
 
   /**
    * @deprecated
    */
+  @Deprecated
   public void setProperty( final String propLocalName, final Object value );
 
   public Object getProperty( QName propQName );

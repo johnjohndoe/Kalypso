@@ -62,7 +62,7 @@ public class TypeHandlerUtilities
   // final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
   // final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
 
-  public static void registerXSDSimpleTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
+  public static void registerXSDSimpleTypeHandler( ITypeRegistry registry )
   {
     try
     {

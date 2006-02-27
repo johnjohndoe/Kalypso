@@ -94,6 +94,7 @@ public class FeatureException extends java.lang.Exception
     st = StringExtend.stackTraceToString( e.getStackTrace() );
   }
 
+  @Override
   public String toString()
   {
     return super.toString() + "\n" + st;

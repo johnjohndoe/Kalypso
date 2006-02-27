@@ -66,7 +66,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.w3c.dom.Element;
 
 /**
@@ -134,6 +133,7 @@ public class PropertyName extends Expression_Impl
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 200 );

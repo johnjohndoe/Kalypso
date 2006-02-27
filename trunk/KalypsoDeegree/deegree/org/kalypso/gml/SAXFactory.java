@@ -69,8 +69,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-
 /**
  * @author doemming
  */
@@ -167,7 +165,7 @@ public class SAXFactory
       final Iterator iterator = list.iterator();
       while( iterator.hasNext() )
       {
-        final Object next = iterator.next();
+        /*final Object next = */iterator.next();
         // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
         m_handler.startElement( uri, localPart, getQName( qName ), null );
         // TODO parse content

@@ -73,12 +73,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureFilter extends AbstractFilter
 {
-
   /** FeatureIds the FeatureFilter is based on */
-  ArrayList featureIds = new ArrayList();
+  private ArrayList<FeatureId> featureIds = new ArrayList<FeatureId>();
 
   /** Adds a FeatureId constraint. */
-  public void addFeatureId( FeatureId featureId )
+  public void addFeatureId( final FeatureId featureId )
   {
     featureIds.add( featureId );
   }
