@@ -64,7 +64,7 @@
 				<!-- amount of time for the step -->
 				<attribute type="int" name="amount"/>
                 <!-- startvalue of calendar field -->
-                <attribute type="int" name="startCalendarvalue" use="optional"/>
+                <attribute type="int" name="startCalendarvalue" use="optional" default="0"/>
                 <attribute type="string" name="startCalendarfield" use="optional"/>
                 
                 <!-- default values are used, when rangeset request is greater than base timeseries -->
