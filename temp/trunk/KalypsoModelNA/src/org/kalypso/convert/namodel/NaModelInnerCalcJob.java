@@ -1075,7 +1075,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // modellWorkspace, logger, outputDir, 1.0d , idManager);
   }
 
-  private void loadTSResults( final String suffix, final IFeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
+private void loadTSResults( final String suffix, final IFeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
   {
     final IDManager idManager = conf.getIdManager();
     // ASCII-Files
@@ -1148,8 +1148,9 @@ public class NaModelInnerCalcJob implements ISimulation
         final MetadataList metadataList = new MetadataList();
 
         // if pegel exists, copy metadata (inclusive wq-function)
-
-        final TimeseriesLinkType pegelLink = (TimeseriesLinkType) feature.getProperty( metadataTSLink );
+        TimeseriesLinkType pegelLink = null;
+        if( metadataTSLink != null )
+         pegelLink = (TimeseriesLinkType) feature.getProperty( metadataTSLink );
         if( pegelLink != null )
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
@@ -1245,12 +1246,10 @@ public class NaModelInnerCalcJob implements ISimulation
         }
       }
     }
-  }
-
-  /**
-   * @param suffix
-   * @return AxisTitle
-   */
+  }  /**
+       * @param suffix
+       * @return AxisTitle
+       */
   private String getAxisTitleForSuffix( String suffix )
   {
     // j Temperatur .tmp
