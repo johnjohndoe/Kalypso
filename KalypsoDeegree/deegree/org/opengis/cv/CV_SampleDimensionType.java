@@ -28,7 +28,7 @@ public final class CV_SampleDimensionType implements Serializable
   /**
    * The enum value.
    */
-  public final int value;
+  public final int m_value;
 
   /** 1 bits integers. */
   public static final int CV_1BIT = 0;
@@ -68,25 +68,27 @@ public final class CV_SampleDimensionType implements Serializable
    */
   public CV_SampleDimensionType( final int value )
   {
-    this.value = value;
+    m_value = value;
   }
 
   /**
    * Returns the enum value.
    */
-  public int hashCode()
+  @Override
+  public int hashCode( )
   {
-    return value;
+    return m_value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (CV_SampleDimensionType)object ).value == value;
+      return ((CV_SampleDimensionType) object).m_value == m_value;
     }
 
     return false;
@@ -96,11 +98,12 @@ public final class CV_SampleDimensionType implements Serializable
    * Returns a string representation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     final StringBuffer buffer = new StringBuffer( "CV_SampleDimensionType" );
     buffer.append( '[' );
-    buffer.append( value );
+    buffer.append( m_value );
     buffer.append( ']' );
     return buffer.toString();
   }

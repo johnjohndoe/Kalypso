@@ -171,5 +171,6 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * @deprecated use getFeatureType(QName)
    */
+  @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart);
 }

@@ -30,7 +30,7 @@ public final class GC_ParameterType implements Serializable
   /**
    * The enum value.
    */
-  public final int value;
+  public final int m_value;
 
   /**
    * Integer parameter.
@@ -87,25 +87,27 @@ public final class GC_ParameterType implements Serializable
    */
   public GC_ParameterType( final int value )
   {
-    this.value = value;
+    m_value = value;
   }
 
   /**
    * Returns the enum value.
    */
+  @Override
   public int hashCode()
   {
-    return value;
+    return m_value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (GC_ParameterType)object ).value == value;
+      return ( (GC_ParameterType)object ).m_value == m_value;
     }
 
     return false;
@@ -115,11 +117,12 @@ public final class GC_ParameterType implements Serializable
    * Returns a string representation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "GC_ParameterType" );
     buffer.append( '[' );
-    buffer.append( value );
+    buffer.append( m_value );
     buffer.append( ']' );
     return buffer.toString();
   }

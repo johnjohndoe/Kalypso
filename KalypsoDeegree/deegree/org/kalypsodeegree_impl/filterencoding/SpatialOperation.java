@@ -73,7 +73,6 @@ import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Element;
 
@@ -300,6 +299,7 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @deprecated replaced by {@link #getGeometry()}
    */
+  @Deprecated
   public GM_Envelope getBoundingBox()
   {
     GM_Envelope box = GMLAdapter.createGM_Envelope( (GMLBox)gmlGeometry );
@@ -351,7 +351,7 @@ public class SpatialOperation extends AbstractOperation
     if( geom == null )
       return false;
 
-    switch( operatorId )
+    switch( m_operatorId )
     {
     case OperationDefines.EQUALS:
       value = getGeometryProperty( feature ).equals( getGeometryLiteral() );
@@ -387,9 +387,9 @@ public class SpatialOperation extends AbstractOperation
     case OperationDefines.OVERLAPS:
     case OperationDefines.TOUCHES:
       throw new FilterEvaluationException( "Evaluation for spatial " + "operation '"
-          + OperationDefines.getNameById( operatorId ) + "' is not implemented yet!" );
+          + OperationDefines.getNameById( m_operatorId ) + "' is not implemented yet!" );
     default:
-      throw new FilterEvaluationException( "Encountered unexpected " + "operatorId: " + operatorId
+      throw new FilterEvaluationException( "Encountered unexpected " + "operatorId: " + m_operatorId
           + " in SpatialOperation.evaluate ()!" );
     }
 
@@ -414,7 +414,6 @@ public class SpatialOperation extends AbstractOperation
 
   public void setOperatorId( int opearationId )
   {
-    this.operatorId = opearationId;
-
+    m_operatorId = opearationId;
   }
 }

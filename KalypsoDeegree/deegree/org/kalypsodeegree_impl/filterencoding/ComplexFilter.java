@@ -80,14 +80,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ComplexFilter extends AbstractFilter
 {
-
   /** Operation the ComplexFilter is based on */
-  private Operation operation;
+  private Operation m_operation;
 
   /** Constructs a new ComplexFilter based on the given operation. */
-  public ComplexFilter( Operation operation )
+  public ComplexFilter( final Operation operation )
   {
-    this.operation = operation;
+    this.m_operation = operation;
   }
 
   /**
@@ -99,7 +98,7 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( int operatorId )
   {
-    operation = new LogicalOperation( operatorId, new ArrayList() );
+    m_operation = new LogicalOperation( operatorId, new ArrayList() );
   }
 
   /**
@@ -114,26 +113,25 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( ComplexFilter filter1, ComplexFilter filter2, int operatorId )
   {
-
     // extract the Operations from the Filters
-    ArrayList arguments = new ArrayList();
+    final ArrayList<Operation> arguments = new ArrayList<Operation>();
     arguments.add( filter1.getOperation() );
     if( filter2 != null )
       arguments.add( filter2.getOperation() );
 
-    operation = new LogicalOperation( operatorId, arguments );
+    m_operation = new LogicalOperation( operatorId, arguments );
   }
 
   /** Returns the contained Operation. */
   public Operation getOperation()
   {
-    return operation;
+    return m_operation;
   }
 
   /** Returns the contained Operation. */
   public void setOperation( Operation operation)
   {
-    this.operation =operation; 
+    this.m_operation =operation; 
   }
   
   /**
@@ -147,15 +145,16 @@ public class ComplexFilter extends AbstractFilter
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
-    return operation.evaluate( feature );
+    return m_operation.evaluate( feature );
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
-    sb.append( operation.toXML() );
+    sb.append( m_operation.toXML() );
     sb.append( "</ogc:Filter>\n" );
     return sb;
   }

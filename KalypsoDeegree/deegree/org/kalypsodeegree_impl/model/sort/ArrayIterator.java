@@ -9,14 +9,13 @@ import java.util.ListIterator;
  * 
  * @author belger
  */
-public class ArrayIterator implements ListIterator
+public class ArrayIterator<T> implements ListIterator<T>
 {
-
   private int m_index;
 
-  private final Object[] m_objects;
+  private final T[] m_objects;
 
-  public ArrayIterator( final int index, final Object[] objects )
+  public ArrayIterator( final int index, final T[] objects )
   {
     m_index = index;
     m_objects = objects;
@@ -65,7 +64,7 @@ public class ArrayIterator implements ListIterator
   /**
    * @see java.util.Iterator#next()
    */
-  public Object next()
+  public T next()
   {
     return m_objects[m_index++];
   }
@@ -73,7 +72,7 @@ public class ArrayIterator implements ListIterator
   /**
    * @see java.util.ListIterator#previous()
    */
-  public Object previous()
+  public T previous()
   {
     m_index--;
     return m_objects[m_index];

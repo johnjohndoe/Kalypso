@@ -62,6 +62,7 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
    * Returns a hash value for this object. This value need not remain consistent between different implementations of
    * the same class.
    */
+  @Override
   public int hashCode()
   {
     final long code = ( Double.doubleToLongBits( dx ) << 0 ) ^ ( Double.doubleToLongBits( dy ) << 1 )
@@ -74,6 +75,7 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
   /**
    * Returns a copy of this object.
    */
+  @Override
   public Object clone()
   {
     try
@@ -88,8 +90,10 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
   }
 
   /**
-   * Compares the specified object with this object for equality.
+   * Compares the specified object with this object for equalit@Override
+  y.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object instanceof CS_WGS84ConversionInfo )
@@ -112,6 +116,7 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
    * Returns a string représentation of this object. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CS_WGS84ConversionInfo" );

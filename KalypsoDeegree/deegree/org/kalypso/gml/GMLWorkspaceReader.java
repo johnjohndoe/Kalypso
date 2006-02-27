@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,12 +52,8 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author doemming
@@ -106,7 +101,7 @@ public class GMLWorkspaceReader implements XMLReader
 
   }
 
-  public boolean getFeature( String name ) throws SAXNotRecognizedException, SAXNotSupportedException
+  public boolean getFeature( String name )
   {
     return m_enabledFeatures.contains( name );
   }
@@ -114,7 +109,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setFeature(java.lang.String, boolean)
    */
-  public void setFeature( String name, boolean value ) throws SAXNotRecognizedException, SAXNotSupportedException
+  public void setFeature( String name, boolean value )
   {
     if( value )
       m_enabledFeatures.add( name );
@@ -125,7 +120,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#getProperty(java.lang.String)
    */
-  public Object getProperty( String name ) throws SAXNotRecognizedException, SAXNotSupportedException
+  public Object getProperty( String name )
   {
     return m_propMap.get( name );
   }
@@ -133,7 +128,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#setProperty(java.lang.String, java.lang.Object)
    */
-  public void setProperty( String name, Object value ) throws SAXNotRecognizedException, SAXNotSupportedException
+  public void setProperty( String name, Object value )
   {
     // if("http://xml.org/sax/properties/lexical-handler".equals(name))
     // throw new SAXNotRecognizedException("not supported");
@@ -207,7 +202,7 @@ public class GMLWorkspaceReader implements XMLReader
   /**
    * @see org.xml.sax.XMLReader#parse(java.lang.String)
    */
-  public void parse( String systemId ) throws IOException, SAXException
+  public void parse( String systemId ) throws SAXException
   {
     parse( new InputSource( systemId ) );
   }

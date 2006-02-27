@@ -18,6 +18,7 @@ public class BoundaryExpression extends Expression_Impl implements Expression
     this.value = m_value;
   }
 
+  @Override
   public StringBuffer toXML()
   {
     return new StringBuffer( value.toString() );

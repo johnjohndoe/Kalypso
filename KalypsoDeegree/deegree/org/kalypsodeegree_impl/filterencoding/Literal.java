@@ -119,6 +119,7 @@ public class Literal extends Expression_Impl
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 200 );

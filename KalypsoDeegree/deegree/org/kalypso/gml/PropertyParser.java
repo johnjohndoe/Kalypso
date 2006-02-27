@@ -54,7 +54,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
@@ -135,7 +134,7 @@ public class PropertyParser
           }
           if( pt.isList() )
           {
-            final List list = (List) parentFE.getProperty( pt );
+            final List<Object> list = (List<Object>) parentFE.getProperty( pt );
             list.add( value );
           }
           else
@@ -166,16 +165,8 @@ public class PropertyParser
 
     final DOMConstructor con = new DOMConstructor( doc, runnable );
     xmlReader.setContentHandler( con );
-    try
-    {
-      // simulate startElement
-      con.startElement( uri, localName, qName, atts );
-    }
-    catch( SAXException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    // simulate startElement
+    con.startElement( uri, localName, qName, atts );
   }
 
   public interface Itest

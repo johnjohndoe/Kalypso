@@ -117,7 +117,7 @@ public class Function extends Expression_Impl
     if( children.getLength() < 1 )
       throw new FilterConstructionException( "'" + name + "' requires at least 1 element!" );
 
-    ArrayList args = new ArrayList( children.getLength() );
+    ArrayList<Expression> args = new ArrayList<Expression>( children.getLength() );
     for( int i = 0; i < children.getLength(); i++ )
     {
       args.add( Expression_Impl.buildFromDOM( children.item( i ) ) );
@@ -151,6 +151,7 @@ public class Function extends Expression_Impl
   }
 
   /** Produces an indented XML representation of this object. */
+  @Override
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 1000 );

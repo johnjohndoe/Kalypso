@@ -255,7 +255,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
           final IFeatureType featureType = feature.getFeatureType();
           final Annotation annotation = AnnotationUtilities.getAnnotation( featureType );
-          final String label = annotation == null ? featureType.getName() : annotation.getLabel();
+          final String label = annotation == null ? featureType.getQName().getLocalPart() : annotation.getLabel();
           groupLabel = label + " - " + feature.getId();
         }
         else

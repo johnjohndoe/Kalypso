@@ -69,7 +69,7 @@ public class XSDDateTypeHandler extends AbstractXSDSimpleTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
-  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context )
   {
     if( object == null )
       return;
@@ -100,7 +100,7 @@ public class XSDDateTypeHandler extends AbstractXSDSimpleTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( Object objectToClone )
   {
     return ((DateWithoutTime)objectToClone).clone();
   }

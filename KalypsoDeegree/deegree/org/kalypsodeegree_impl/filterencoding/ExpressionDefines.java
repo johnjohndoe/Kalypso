@@ -93,10 +93,10 @@ public class ExpressionDefines
   public static final int UNKNOWN = -1;
 
   /** used to associate names with the expressions */
-  private static HashMap names = new HashMap();
+  private static HashMap<String, ExpressionInfo> names = new HashMap<String, ExpressionInfo>();
 
   /** used to associate ids (Integers) with the expressions */
-  private static HashMap ids = new HashMap();
+  private static HashMap<Integer, ExpressionInfo> ids = new HashMap<Integer, ExpressionInfo>();
 
   public ExpressionDefines()
   {
@@ -124,7 +124,7 @@ public class ExpressionDefines
    */
   public int getIdByName( final String name )
   {
-    final ExpressionInfo expression = (ExpressionInfo)names.get( name.toLowerCase() );
+    final ExpressionInfo expression = names.get( name.toLowerCase() );
     if( expression == null )
       return UNKNOWN;
     return expression.id;
@@ -137,7 +137,7 @@ public class ExpressionDefines
    */
   public String getNameById( int id )
   {
-    final ExpressionInfo expression = (ExpressionInfo)ids.get( new Integer( id ) );
+    final ExpressionInfo expression = ids.get( new Integer( id ) );
     if( expression == null )
       return null;
     return expression.name;

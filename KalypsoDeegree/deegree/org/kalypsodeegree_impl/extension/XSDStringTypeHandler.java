@@ -41,12 +41,10 @@
 package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Node;
@@ -66,7 +64,7 @@ public class XSDStringTypeHandler extends AbstractXSDSimpleTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
-  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context )
   {
     if( object == null )
       return;
@@ -79,7 +77,7 @@ public class XSDStringTypeHandler extends AbstractXSDSimpleTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
-  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
     return node.getTextContent();
   }
@@ -87,7 +85,7 @@ public class XSDStringTypeHandler extends AbstractXSDSimpleTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( Object objectToClone )
   {
     return objectToClone;
   }
@@ -95,7 +93,7 @@ public class XSDStringTypeHandler extends AbstractXSDSimpleTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( String text ) throws ParseException
+  public Object parseType( String text )
   {
     if( text == null )
       return null;

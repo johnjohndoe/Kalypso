@@ -78,32 +78,31 @@ import org.w3c.dom.Element;
  */
 public class LogicalOperation extends AbstractOperation
 {
-
   /** Arguments of the Operation. */
-  ArrayList arguments = new ArrayList();
+  ArrayList<Operation> m_arguments = new ArrayList<Operation>();
 
   /**
    * Constructs a new LogicalOperation.
    * 
    * @see OperationDefines
    */
-  public LogicalOperation( int operatorId, ArrayList arguments )
+  public LogicalOperation( int operatorId, ArrayList<Operation> arguments )
   {
     super( operatorId );
-    this.arguments = arguments;
+    this.m_arguments = arguments;
   }
 
   /**
    * Returns the arguments of the operation. These are <tt>Operations</tt> as well.
    */
-  public ArrayList getArguments()
+  public ArrayList<Operation> getArguments()
   {
-    return arguments;
+    return m_arguments;
   }
 
-  public void setArguments( ArrayList arguments )
+  public void setArguments( ArrayList<Operation> arguments )
   {
-    this.arguments = arguments;
+    m_arguments = arguments;
   }
 
   /**
@@ -119,7 +118,7 @@ public class LogicalOperation extends AbstractOperation
     // check if root element's name is a known operator
     String name = element.getLocalName();
     int operatorId = OperationDefines.getIdByName( name );
-    ArrayList arguments = new ArrayList();
+    final ArrayList<Operation> arguments = new ArrayList<Operation>();
 
     switch( operatorId )
     {
@@ -161,9 +160,9 @@ public class LogicalOperation extends AbstractOperation
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
 
-    for( int i = 0; i < arguments.size(); i++ )
+    for( int i = 0; i < m_arguments.size(); i++ )
     {
-      Operation operation = (Operation)arguments.get( i );
+      final Operation operation = m_arguments.get( i );
       sb.append( operation.toXML() );
     }
 
@@ -187,9 +186,9 @@ public class LogicalOperation extends AbstractOperation
     {
     case OperationDefines.AND:
     {
-      for( int i = 0; i < arguments.size(); i++ )
+      for( int i = 0; i < m_arguments.size(); i++ )
       {
-        Operation operation = (Operation)arguments.get( i );
+        Operation operation = m_arguments.get( i );
         if( !operation.evaluate( feature ) )
           return false;
       }
@@ -197,9 +196,9 @@ public class LogicalOperation extends AbstractOperation
     }
     case OperationDefines.OR:
     {
-      for( int i = 0; i < arguments.size(); i++ )
+      for( int i = 0; i < m_arguments.size(); i++ )
       {
-        Operation operation = (Operation)arguments.get( i );
+        Operation operation = m_arguments.get( i );
         if( operation.evaluate( feature ) )
           return true;
       }
@@ -207,7 +206,7 @@ public class LogicalOperation extends AbstractOperation
     }
     case OperationDefines.NOT:
     {
-      Operation operation = (Operation)arguments.get( 0 );
+      Operation operation = m_arguments.get( 0 );
       return !operation.evaluate( feature );
     }
     default:

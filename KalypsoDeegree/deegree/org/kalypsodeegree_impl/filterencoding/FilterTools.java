@@ -99,13 +99,13 @@ public class FilterTools
     }
 
     // used as LIFO-queue
-    Stack operations = new Stack();
+    final Stack<Operation> operations = new Stack<Operation>();
     operations.push( filter.getOperation() );
 
     while( !operations.isEmpty() )
     {
       // get the first element of the queue
-      Operation operation = (Operation)operations.pop();
+      Operation operation = operations.pop();
 
       switch( operation.getOperatorId() )
       {
@@ -117,7 +117,7 @@ public class FilterTools
       }
       case OperationDefines.AND:
       {
-        ArrayList arguments = ( (LogicalOperation)operation ).getArguments();
+        ArrayList<Operation> arguments = ( (LogicalOperation)operation ).getArguments();
 
         for( int i = 0; i < arguments.size(); i++ )
         {

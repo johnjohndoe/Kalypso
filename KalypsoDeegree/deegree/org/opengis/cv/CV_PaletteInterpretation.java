@@ -28,7 +28,7 @@ public final class CV_PaletteInterpretation implements Serializable
   /**
    * The enum value.
    */
-  public final int value;
+  public final int m_value;
 
   /**
    * Gray Scale color palette.
@@ -55,25 +55,27 @@ public final class CV_PaletteInterpretation implements Serializable
    */
   public CV_PaletteInterpretation( final int value )
   {
-    this.value = value;
+    this.m_value = value;
   }
 
   /**
    * Returns the enum value.
    */
+  @Override
   public int hashCode()
   {
-    return value;
+    return m_value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (CV_PaletteInterpretation)object ).value == value;
+      return ( (CV_PaletteInterpretation)object ).m_value == m_value;
     }
 
     return false;
@@ -83,11 +85,12 @@ public final class CV_PaletteInterpretation implements Serializable
    * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CV_PaletteInterpretation" );
     buffer.append( '[' );
-    buffer.append( value );
+    buffer.append( m_value );
     buffer.append( ']' );
     return buffer.toString();
   }

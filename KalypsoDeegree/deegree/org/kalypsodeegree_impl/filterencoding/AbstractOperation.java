@@ -73,17 +73,16 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractOperation implements Operation
 {
-
   /**
    * The underlying operator's id.
    * 
    * @see OperationDefines
    */
-  protected int operatorId;
+  protected int m_operatorId;
 
   AbstractOperation( int operatorId )
   {
-    this.operatorId = operatorId;
+    m_operatorId = operatorId;
   }
 
   /**
@@ -129,7 +128,7 @@ public abstract class AbstractOperation implements Operation
   /** Returns the name of the operator. */
   public String getOperatorName()
   {
-    return OperationDefines.getNameById( operatorId );
+    return OperationDefines.getNameById( m_operatorId );
   }
 
   /**
@@ -139,7 +138,7 @@ public abstract class AbstractOperation implements Operation
    */
   public int getOperatorId()
   {
-    return operatorId;
+    return m_operatorId;
   }
 
 }

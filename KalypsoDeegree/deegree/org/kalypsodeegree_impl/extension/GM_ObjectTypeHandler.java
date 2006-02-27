@@ -51,7 +51,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
- * TODO: insert type comment here
  * 
  * @author kuepfer
  */

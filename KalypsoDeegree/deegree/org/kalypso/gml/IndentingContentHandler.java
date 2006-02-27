@@ -41,7 +41,6 @@
 package org.kalypso.gml;
 
 import java.util.Arrays;
-import java.util.Stack;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -54,12 +53,9 @@ import org.xml.sax.SAXException;
 
 public class IndentingContentHandler implements ContentHandler
 {
-
   private final char[] m_newLine = new char[] { '\n' };
 
   private final char[] m_spaces;
-
-  private final Stack<Boolean> m_stack = new Stack<Boolean>();
 
   private final ContentHandler m_handler;
 
