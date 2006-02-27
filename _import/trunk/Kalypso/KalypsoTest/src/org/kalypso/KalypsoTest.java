@@ -32,20 +32,17 @@ package org.kalypso;
 import java.io.File;
 import java.io.IOException;
 
-import javax.naming.RefAddr;
-
-import org.apache.commons.io.FileUtils;
+import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /**
@@ -147,7 +144,7 @@ public class KalypsoTest
     //
     // GMLSchemaCatalog.init( theCatalog, cacheDir );
     //
-    // DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
+    DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
     //
   }
 }
