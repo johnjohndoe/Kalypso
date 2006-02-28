@@ -82,7 +82,7 @@ public class PropertyName extends Expression_Impl
   /** Constructs a new PropertyName. */
   public PropertyName( String value )
   {
-    id = ExpressionDefines.PROPERTYNAME;
+    m_id = ExpressionDefines.PROPERTYNAME;
     setValue( value );
   }
 
@@ -106,7 +106,7 @@ public class PropertyName extends Expression_Impl
   /**
    * Returns the last two parts of the XPATH-Expression in the format TABLENAME.VALUE.
    */
-  public String getSQLFieldQualifier()
+  public String getSQLFieldQualifier( )
   {
     return m_value;
   }
@@ -114,7 +114,7 @@ public class PropertyName extends Expression_Impl
   /**
    * Returns the PropertyName's value.
    */
-  public String getValue()
+  public String getValue( )
   {
     return m_value;
   }
@@ -134,7 +134,7 @@ public class PropertyName extends Expression_Impl
 
   /** Produces an indented XML representation of this object. */
   @Override
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 200 );
     sb.append( "<ogc:PropertyName>" ).append( m_value ).append( "</ogc:PropertyName>" );
@@ -155,15 +155,15 @@ public class PropertyName extends Expression_Impl
    */
   public Object evaluate( Feature feature )
   {
-    //        IPropertyType[] ftp = feature.getFeatureType().getProperties();
+    // IPropertyType[] ftp = feature.getFeatureType().getProperties();
     final Object object = getProperty( feature, m_value );
 
-    //        if (feature.getFeatureType ().getProperty (value) == null) {
-    //            throw new FilterEvaluationException (
-    //                "IFeatureType '" + feature.getFeatureType ().getName () +
-    //                "' has no property with name '" + value + "'!");
-    //        }
-    //        Object object = feature.getProperty (value);
+    // if (feature.getFeatureType ().getProperty (value) == null) {
+    // throw new FilterEvaluationException (
+    // "IFeatureType '" + feature.getFeatureType ().getName () +
+    // "' has no property with name '" + value + "'!");
+    // }
+    // Object object = feature.getProperty (value);
     if( object == null )
       return null;
 
@@ -182,22 +182,21 @@ public class PropertyName extends Expression_Impl
    *          a Feature
    * @param value
    *          a String
-   * 
    * @return an Object
    */
   private Object getProperty( Feature feature, String value )
   {
     if( feature.getFeatureType().getProperty( value ) != null )
     {
-      return feature.getProperty(value);
+      return feature.getProperty( value );
     }
-    final VirtualFeatureTypeProperty vpt= VirtualPropertyUtilities.getPropertyType(feature.getFeatureType(), value);
-    if(vpt!=null )
+    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( feature.getFeatureType(), value );
+    if( vpt != null )
     {
-      return vpt.getVirtuelValue(feature, null);
+      return vpt.getVirtuelValue( feature, null );
     }
     return null;
-    //    throw new FilterEvaluationException( "IFeatureType '" + feature.getFeatureType().getName()
-    //        + "' has no property with name '" + value + "'!" );
+    // throw new FilterEvaluationException( "IFeatureType '" + feature.getFeatureType().getName()
+    // + "' has no property with name '" + value + "'!" );
   }
 }

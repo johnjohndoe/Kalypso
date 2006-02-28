@@ -73,17 +73,18 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureFilter extends AbstractFilter
 {
+
   /** FeatureIds the FeatureFilter is based on */
-  private ArrayList<FeatureId> featureIds = new ArrayList<FeatureId>();
+  ArrayList<FeatureId> featureIds = new ArrayList<FeatureId>();
 
   /** Adds a FeatureId constraint. */
-  public void addFeatureId( final FeatureId featureId )
+  public void addFeatureId( FeatureId featureId )
   {
     featureIds.add( featureId );
   }
 
   /** Returns the contained FeatureIds. */
-  public ArrayList getFeatureIds()
+  public ArrayList<FeatureId> getFeatureIds( )
   {
     return featureIds;
   }
@@ -101,7 +102,7 @@ public class FeatureFilter extends AbstractFilter
     String id = feature.getId();
     for( int i = 0; i < featureIds.size(); i++ )
     {
-      FeatureId featureId = (FeatureId)featureIds.get( i );
+      FeatureId featureId = featureIds.get( i );
       if( id.equals( featureId.getValue() ) )
         return true;
     }
@@ -109,13 +110,14 @@ public class FeatureFilter extends AbstractFilter
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML()
+  @Override
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
     for( int i = 0; i < featureIds.size(); i++ )
     {
-      FeatureId fid = (FeatureId)featureIds.get( i );
+      FeatureId fid = featureIds.get( i );
       sb.append( fid.toXML() );
     }
     sb.append( "</ogc:Filter>" );

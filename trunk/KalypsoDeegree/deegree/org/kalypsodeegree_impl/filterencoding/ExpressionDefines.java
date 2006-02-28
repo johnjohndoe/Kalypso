@@ -64,9 +64,8 @@ import java.util.HashMap;
 
 /**
  * Defines codes and constants for easy coping with the different kinds of Expressions (both XML-Entities &
- * JavaObjects).
- * 
- * Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non static way
+ * JavaObjects). Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non
+ * static way
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -98,7 +97,7 @@ public class ExpressionDefines
   /** used to associate ids (Integers) with the expressions */
   private static HashMap<Integer, ExpressionInfo> ids = new HashMap<Integer, ExpressionInfo>();
 
-  public ExpressionDefines()
+  public ExpressionDefines( )
   {
     addExpression( EXPRESSION, "Expression" );
     addExpression( PROPERTYNAME, "PropertyName" );
@@ -127,7 +126,7 @@ public class ExpressionDefines
     final ExpressionInfo expression = names.get( name.toLowerCase() );
     if( expression == null )
       return UNKNOWN;
-    return expression.id;
+    return expression.m_id;
   }
 
   /**
@@ -140,19 +139,19 @@ public class ExpressionDefines
     final ExpressionInfo expression = ids.get( new Integer( id ) );
     if( expression == null )
       return null;
-    return expression.name;
+    return expression.m_name;
   }
 
   private static final class ExpressionInfo
   {
-    public final int id;
+    public final int m_id;
 
-    public final String name;
+    public final String m_name;
 
     public ExpressionInfo( final int id, final String name )
     {
-      this.id = id;
-      this.name = name;
+      m_id = id;
+      m_name = name;
     }
   }
 }

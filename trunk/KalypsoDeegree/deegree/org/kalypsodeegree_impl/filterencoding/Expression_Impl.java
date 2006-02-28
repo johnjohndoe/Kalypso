@@ -79,7 +79,7 @@ abstract public class Expression_Impl implements Expression
    * 
    * @see ExpressionDefines
    */
-  int id;
+  int m_id;
 
   /**
    * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
@@ -135,7 +135,7 @@ abstract public class Expression_Impl implements Expression
   /** Returns the name of the expression. */
   public String getExpressionName()
   {
-    return EXPRESSION_DEFINES.getNameById( id );
+    return EXPRESSION_DEFINES.getNameById( m_id );
   }
 
   /**
@@ -145,7 +145,7 @@ abstract public class Expression_Impl implements Expression
    */
   public int getExpressionId()
   {
-    return id;
+    return m_id;
   }
 
   /** Produces an indented XML representation of this object. */

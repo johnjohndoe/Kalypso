@@ -80,13 +80,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ComplexFilter extends AbstractFilter
 {
+
   /** Operation the ComplexFilter is based on */
   private Operation m_operation;
 
   /** Constructs a new ComplexFilter based on the given operation. */
-  public ComplexFilter( final Operation operation )
+  public ComplexFilter( Operation operation )
   {
-    this.m_operation = operation;
+    m_operation = operation;
   }
 
   /**
@@ -98,7 +99,7 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( int operatorId )
   {
-    m_operation = new LogicalOperation( operatorId, new ArrayList() );
+    m_operation = new LogicalOperation( operatorId, new ArrayList<Operation>() );
   }
 
   /**
@@ -113,8 +114,9 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( ComplexFilter filter1, ComplexFilter filter2, int operatorId )
   {
+
     // extract the Operations from the Filters
-    final ArrayList<Operation> arguments = new ArrayList<Operation>();
+    ArrayList<Operation> arguments = new ArrayList<Operation>();
     arguments.add( filter1.getOperation() );
     if( filter2 != null )
       arguments.add( filter2.getOperation() );
@@ -123,17 +125,17 @@ public class ComplexFilter extends AbstractFilter
   }
 
   /** Returns the contained Operation. */
-  public Operation getOperation()
+  public Operation getOperation( )
   {
     return m_operation;
   }
 
-  /** Returns the contained Operation. */
-  public void setOperation( Operation operation)
+  /** Sets the Operation. */
+  public void setOperation( Operation operation )
   {
-    this.m_operation =operation; 
+    m_operation = operation;
   }
-  
+
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
@@ -150,7 +152,7 @@ public class ComplexFilter extends AbstractFilter
 
   /** Produces an indented XML representation of this object. */
   @Override
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );

@@ -108,7 +108,7 @@ public class OperationDefines
 
   public static final int BBOX = 9;
 
-  //calvin added on 10/21/2003
+  // calvin added on 10/21/2003
   public static final int DWITHIN = 10;
 
   // comparison operations
@@ -153,7 +153,7 @@ public class OperationDefines
     OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.type;
+    return operationInfo.m_type;
   }
 
   /**
@@ -166,7 +166,7 @@ public class OperationDefines
     OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return UNKNOWN;
-    return operationInfo.id;
+    return operationInfo.m_id;
   }
 
   /**
@@ -179,7 +179,7 @@ public class OperationDefines
     OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.type;
+    return operationInfo.m_type;
   }
 
   /**
@@ -193,19 +193,19 @@ public class OperationDefines
     OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return null;
-    return operationInfo.name;
+    return operationInfo.m_name;
   }
 
   private static void addOperationInfo( int id, String name, int type )
   {
-    final OperationInfo operationInfo = new OperationInfo( id, type, name );
+    OperationInfo operationInfo = new OperationInfo( id, type, name );
     names.put( name, operationInfo );
     names.put( name.toLowerCase(), operationInfo );
     names.put( name.toUpperCase(), operationInfo );
     ids.put( new Integer( id ), operationInfo );
   }
 
-  private static void buildHashMaps()
+  private static void buildHashMaps( )
   {
     names = new HashMap<String, OperationInfo>( 25 );
     ids = new HashMap<Integer, OperationInfo>( 25 );
@@ -239,16 +239,16 @@ public class OperationDefines
 
 class OperationInfo
 {
-  int id;
+  int m_id;
 
-  int type;
+  int m_type;
 
-  String name;
+  String m_name;
 
   OperationInfo( int id, int type, String name )
   {
-    this.id = id;
-    this.type = type;
-    this.name = name;
+    m_id = id;
+    m_type = type;
+    m_name = name;
   }
 }
