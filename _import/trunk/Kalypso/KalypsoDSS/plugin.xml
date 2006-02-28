@@ -11,9 +11,11 @@
             id="org.kalypso.dss.urlcatalog"/>
    </extension>
    <extension
+         id="org.kalypso.dss.actionSets"
+         name="org.kalypso.dss.actionSets"
          point="org.eclipse.ui.actionSets">
       <actionSet
-            id="KalypsoDSSPlanerClient.actionSet"
+            id="org.kalypso.dss.config.actionSet"
             label="Kalypso Config"
             visible="true">
          <menu
@@ -42,7 +44,7 @@
    </extension>
    <extension
    		 id="org.kalypso.dss.planerclient.perspectives"
-         name="Kalypso Planer-Client"
+         name="Kalypso Planer-Client Perspectiven"
          point="org.eclipse.ui.perspectives">
        <perspective
             class="org.kalypso.dss.planerclient.perspectives.KalypsoDssPlanerClientPhaseOnePerspectiveFactory"
@@ -58,6 +60,8 @@
             name="Kalypso Planer-Client Phase 2"/>  
    </extension>
    <extension
+         id="org.kalypso.dss.views"
+         name="Kalypso Dss Views"
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
