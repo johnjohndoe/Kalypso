@@ -76,13 +76,13 @@ public class Literal extends Expression_Impl
 {
 
   /** The literal's value. */
-  String value;
+  String m_value;
 
   /** Constructs a new Literal. */
   public Literal( String value )
   {
-    id = ExpressionDefines.LITERAL;
-    this.value = value;
+    m_id = ExpressionDefines.LITERAL;
+    m_value = value;
   }
 
   /**
@@ -105,9 +105,9 @@ public class Literal extends Expression_Impl
   /**
    * Returns the literal's value (as String).
    */
-  public String getValue()
+  public String getValue( )
   {
-    return value;
+    return m_value;
   }
 
   /**
@@ -115,15 +115,15 @@ public class Literal extends Expression_Impl
    */
   public void setValue( String value )
   {
-    this.value = value;
+    this.m_value = value;
   }
 
   /** Produces an indented XML representation of this object. */
   @Override
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 200 );
-    sb.append( "<ogc:Literal>" ).append( value ).append( "</ogc:Literal>" );
+    sb.append( "<ogc:Literal>" ).append( m_value ).append( "</ogc:Literal>" );
     return sb;
   }
 
@@ -140,12 +140,12 @@ public class Literal extends Expression_Impl
   {
     try
     {
-      return new Double( value );
+      return new Double( m_value );
     }
     catch( NumberFormatException e )
     {
       //  
     }
-    return value;
+    return m_value;
   }
 }

@@ -80,17 +80,17 @@ public class Function extends Expression_Impl
 {
 
   /** The Function's name (as specified in it's name attribute). */
-  String name;
+  String m_name;
 
   /** The Function's arguments. */
-  ArrayList args = new ArrayList();
+  ArrayList<Expression> m_args = new ArrayList<Expression>();
 
   /** Constructs a new Function. */
-  public Function( String name, ArrayList args )
+  public Function( String name, ArrayList<Expression> args )
   {
-    id = ExpressionDefines.FUNCTION;
-    this.name = name;
-    this.args = args;
+    m_id = ExpressionDefines.FUNCTION;
+    m_name = name;
+    m_args = args;
   }
 
   /**
@@ -129,9 +129,9 @@ public class Function extends Expression_Impl
   /**
    * Returns the Function's name.
    */
-  public String getName()
+  public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -139,26 +139,26 @@ public class Function extends Expression_Impl
    */
   public void setName( String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
    * returns the arguments of the function
    */
-  public ArrayList getArguments()
+  public ArrayList getArguments( )
   {
-    return args;
+    return m_args;
   }
 
   /** Produces an indented XML representation of this object. */
   @Override
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<ogc:Function name=\"" ).append( name ).append( "\">" );
-    for( int i = 0; i < args.size(); i++ )
+    sb.append( "<ogc:Function name=\"" ).append( m_name ).append( "\">" );
+    for( int i = 0; i < m_args.size(); i++ )
     {
-      Expression expr = (Expression)args.get( i );
+      Expression expr = m_args.get( i );
       sb.append( expr.toXML() );
     }
     sb.append( "</ogc:Function>" );

@@ -81,23 +81,24 @@ public class PropertyIsNullOperation extends ComparisonOperation
   private static ExpressionDefines EXPRESSION_DEFINES = new ExpressionDefines();
 
   // PropertyName / Literal
-  private Expression expression;
+  private Expression m_expression;
 
   public PropertyIsNullOperation( Expression expression )
   {
     super( OperationDefines.PROPERTYISNULL );
-    this.expression = expression;
+    m_expression = expression;
   }
 
-  public Expression getExpression()
+  public Expression getExpression( )
   {
-    return expression;
+    return m_expression;
   }
 
   public void setExpression( Expression expr )
   {
-    expression = expr;
+    m_expression = expr;
   }
+
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.
@@ -121,31 +122,31 @@ public class PropertyIsNullOperation extends ComparisonOperation
 
     switch( EXPRESSION_DEFINES.getIdByName( child.getLocalName() ) )
     {
-    case ExpressionDefines.PROPERTYNAME:
-    {
-      expr = PropertyName.buildFromDOM( child );
-      break;
-    }
-    case ExpressionDefines.LITERAL:
-    {
-      expr = Literal.buildFromDOM( child );
-      break;
-    }
-    default:
-    {
-      throw new FilterConstructionException( "Name of element does not equal 'PropertyIsNull'!" );
-    }
+      case ExpressionDefines.PROPERTYNAME:
+      {
+        expr = PropertyName.buildFromDOM( child );
+        break;
+      }
+      case ExpressionDefines.LITERAL:
+      {
+        expr = Literal.buildFromDOM( child );
+        break;
+      }
+      default:
+      {
+        throw new FilterConstructionException( "Name of element does not equal 'PropertyIsNull'!" );
+      }
     }
 
     return new PropertyIsNullOperation( expr );
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
-    sb.append( expression.toXML() );
+    sb.append( m_expression.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
@@ -162,7 +163,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
-    Object value = expression.evaluate( feature );
+    Object value = m_expression.evaluate( feature );
     if( value == null )
       return true;
     return false;

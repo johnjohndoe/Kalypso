@@ -73,6 +73,7 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractOperation implements Operation
 {
+
   /**
    * The underlying operator's id.
    * 
@@ -102,31 +103,31 @@ public abstract class AbstractOperation implements Operation
 
     switch( type )
     {
-    case OperationDefines.TYPE_SPATIAL:
-    {
-      operation = SpatialOperation.buildFromDOM( element );
-      break;
-    }
-    case OperationDefines.TYPE_COMPARISON:
-    {
-      operation = ComparisonOperation.buildFromDOM( element );
-      break;
-    }
-    case OperationDefines.TYPE_LOGICAL:
-    {
-      operation = LogicalOperation.buildFromDOM( element );
-      break;
-    }
-    default:
-    {
-      throw new FilterConstructionException( "Unknown operator '" + name + "'!" );
-    }
+      case OperationDefines.TYPE_SPATIAL:
+      {
+        operation = SpatialOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.TYPE_COMPARISON:
+      {
+        operation = ComparisonOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.TYPE_LOGICAL:
+      {
+        operation = LogicalOperation.buildFromDOM( element );
+        break;
+      }
+      default:
+      {
+        throw new FilterConstructionException( "Unknown operator '" + name + "'!" );
+      }
     }
     return operation;
   }
 
   /** Returns the name of the operator. */
-  public String getOperatorName()
+  public String getOperatorName( )
   {
     return OperationDefines.getNameById( m_operatorId );
   }
@@ -136,7 +137,7 @@ public abstract class AbstractOperation implements Operation
    * 
    * @see OperationDefines
    */
-  public int getOperatorId()
+  public int getOperatorId( )
   {
     return m_operatorId;
   }

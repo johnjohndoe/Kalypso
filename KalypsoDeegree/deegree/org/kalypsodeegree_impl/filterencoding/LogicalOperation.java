@@ -78,6 +78,7 @@ import org.w3c.dom.Element;
  */
 public class LogicalOperation extends AbstractOperation
 {
+
   /** Arguments of the Operation. */
   ArrayList<Operation> m_arguments = new ArrayList<Operation>();
 
@@ -89,13 +90,13 @@ public class LogicalOperation extends AbstractOperation
   public LogicalOperation( int operatorId, ArrayList<Operation> arguments )
   {
     super( operatorId );
-    this.m_arguments = arguments;
+    m_arguments = arguments;
   }
 
   /**
    * Returns the arguments of the operation. These are <tt>Operations</tt> as well.
    */
-  public ArrayList<Operation> getArguments()
+  public ArrayList<Operation> getArguments( )
   {
     return m_arguments;
   }
@@ -118,51 +119,51 @@ public class LogicalOperation extends AbstractOperation
     // check if root element's name is a known operator
     String name = element.getLocalName();
     int operatorId = OperationDefines.getIdByName( name );
-    final ArrayList<Operation> arguments = new ArrayList<Operation>();
+    ArrayList<Operation> arguments = new ArrayList<Operation>();
 
     switch( operatorId )
     {
-    case OperationDefines.AND:
-    case OperationDefines.OR:
-    {
-      ElementList children = XMLTools.getChildElements( element );
-      if( children.getLength() < 2 )
-        throw new FilterConstructionException( "'" + name + "' requires at least 2 elements!" );
-      for( int i = 0; i < children.getLength(); i++ )
+      case OperationDefines.AND:
+      case OperationDefines.OR:
       {
-        Element child = children.item( i );
+        ElementList children = XMLTools.getChildElements( element );
+        if( children.getLength() < 2 )
+          throw new FilterConstructionException( "'" + name + "' requires at least 2 elements!" );
+        for( int i = 0; i < children.getLength(); i++ )
+        {
+          Element child = children.item( i );
+          Operation childOperation = AbstractOperation.buildFromDOM( child );
+          arguments.add( childOperation );
+        }
+        break;
+      }
+      case OperationDefines.NOT:
+      {
+        ElementList children = XMLTools.getChildElements( element );
+        if( children.getLength() != 1 )
+          throw new FilterConstructionException( "'" + name + "' requires exactly 1 element!" );
+        Element child = children.item( 0 );
         Operation childOperation = AbstractOperation.buildFromDOM( child );
         arguments.add( childOperation );
+        break;
       }
-      break;
-    }
-    case OperationDefines.NOT:
-    {
-      ElementList children = XMLTools.getChildElements( element );
-      if( children.getLength() != 1 )
-        throw new FilterConstructionException( "'" + name + "' requires exactly 1 element!" );
-      Element child = children.item( 0 );
-      Operation childOperation = AbstractOperation.buildFromDOM( child );
-      arguments.add( childOperation );
-      break;
-    }
-    default:
-    {
-      throw new FilterConstructionException( "'" + name + "' is not a logical operator!" );
-    }
+      default:
+      {
+        throw new FilterConstructionException( "'" + name + "' is not a logical operator!" );
+      }
     }
     return new LogicalOperation( operatorId, arguments );
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
 
     for( int i = 0; i < m_arguments.size(); i++ )
     {
-      final Operation operation = m_arguments.get( i );
+      Operation operation = m_arguments.get( i );
       sb.append( operation.toXML() );
     }
 
@@ -184,35 +185,35 @@ public class LogicalOperation extends AbstractOperation
   {
     switch( getOperatorId() )
     {
-    case OperationDefines.AND:
-    {
-      for( int i = 0; i < m_arguments.size(); i++ )
+      case OperationDefines.AND:
       {
-        Operation operation = m_arguments.get( i );
-        if( !operation.evaluate( feature ) )
-          return false;
+        for( int i = 0; i < m_arguments.size(); i++ )
+        {
+          Operation operation = m_arguments.get( i );
+          if( !operation.evaluate( feature ) )
+            return false;
+        }
+        return true;
       }
-      return true;
-    }
-    case OperationDefines.OR:
-    {
-      for( int i = 0; i < m_arguments.size(); i++ )
+      case OperationDefines.OR:
       {
-        Operation operation = m_arguments.get( i );
-        if( operation.evaluate( feature ) )
-          return true;
+        for( int i = 0; i < m_arguments.size(); i++ )
+        {
+          Operation operation = m_arguments.get( i );
+          if( operation.evaluate( feature ) )
+            return true;
+        }
+        return false;
       }
-      return false;
-    }
-    case OperationDefines.NOT:
-    {
-      Operation operation = m_arguments.get( 0 );
-      return !operation.evaluate( feature );
-    }
-    default:
-    {
-      throw new FilterEvaluationException( "Unknown LogicalOperation encountered: '" + getOperatorName() + "'" );
-    }
+      case OperationDefines.NOT:
+      {
+        Operation operation = m_arguments.get( 0 );
+        return !operation.evaluate( feature );
+      }
+      default:
+      {
+        throw new FilterEvaluationException( "Unknown LogicalOperation encountered: '" + getOperatorName() + "'" );
+      }
     }
   }
 }
