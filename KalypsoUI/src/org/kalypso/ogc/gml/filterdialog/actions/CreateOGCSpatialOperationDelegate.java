@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -47,6 +48,7 @@ public class CreateOGCSpatialOperationDelegate extends AbstractCreateOperationAc
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
@@ -57,18 +59,18 @@ public class CreateOGCSpatialOperationDelegate extends AbstractCreateOperationAc
         SpatialOperation operation = new SpatialOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
         {
-          ( (ComplexFilter)firstElement ).setOperation( operation );
+          ((ComplexFilter) firstElement).setOperation( operation );
 
         }
         else if( firstElement instanceof LogicalOperation )
         {
-          ArrayList arguments = ( (LogicalOperation)firstElement ).getArguments();
+          ArrayList<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
           if( arguments == null )
-            arguments = new ArrayList();
+            arguments = new ArrayList<Operation>();
           arguments.add( operation );
-          ( (LogicalOperation)firstElement ).setArguments( arguments );
+          ((LogicalOperation) firstElement).setArguments( arguments );
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
   }

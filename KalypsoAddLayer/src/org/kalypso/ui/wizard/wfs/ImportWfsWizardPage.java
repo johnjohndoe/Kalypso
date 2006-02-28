@@ -91,9 +91,9 @@ public class ImportWfsWizardPage extends WizardPage
 {
   private Combo m_url = null;
 
-  private Text m_pass = null;
+  Text m_pass = null;
 
-  private Text m_user = null;
+  Text m_user = null;
 
   protected Button getDefault;
 
@@ -107,7 +107,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected static final String bufferDefault = "10";
 
-  private HashMap m_featureTypes = new HashMap();
+  private HashMap<String, IFeatureType> m_featureTypes = new HashMap<String, IFeatureType>();
 
   private List m_listLeftSide;
 
@@ -121,11 +121,11 @@ public class ImportWfsWizardPage extends WizardPage
 
   // private Composite m_buttonComposite;
 
-  private Label m_labelUser;
+  Label m_labelUser;
 
-  private Label m_labelPass;
+  Label m_labelPass;
 
-  private Button m_authentification;
+  Button m_authentification;
 
   private Label m_labelUrl;
 
@@ -139,7 +139,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Button m_addFilterButton;
 
-  private HashMap m_filter = new HashMap();
+  private HashMap<Object, Filter> m_filter = new HashMap<Object, Filter>();
 
   private final SelectionListener m_urlSelectionListener = new SelectionListener()
   {
@@ -320,11 +320,11 @@ public class ImportWfsWizardPage extends WizardPage
     m_labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
 
     // initialize availabel Servers
-    ArrayList catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
+    ArrayList<String> catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
     if( catalog == null )
-      catalog = new ArrayList();
+      catalog = new ArrayList<String>();
     m_url = new Combo( fieldGroup, SWT.BORDER );
-    m_url.setItems( (String[]) catalog.toArray( new String[catalog.size()] ) );
+    m_url.setItems( catalog.toArray( new String[catalog.size()] ) );
     m_url.setVisibleItemCount( 15 );
 
     final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -576,13 +576,13 @@ public class ImportWfsWizardPage extends WizardPage
   {
     if( m_wfsCapabilites != null )
     {
-      TreeSet list = new TreeSet();
+      TreeSet<String> list = new TreeSet<String>();
       org.deegree.services.wfs.capabilities.FeatureType[] featureTypes = m_wfsCapabilites.getFeatureTypeList().getFeatureTypes();
       for( int i = 0; i < featureTypes.length; i++ )
       {
         list.add( featureTypes[i].getName() );
       }
-      return (String[]) list.toArray( new String[list.size()] );
+      return list.toArray( new String[list.size()] );
     }
     return new String[0];
   }
@@ -613,7 +613,7 @@ public class ImportWfsWizardPage extends WizardPage
   private IFeatureType[] getFeatureTypes( String[] layer )
 
   {
-    HashSet res = new HashSet();
+    HashSet<IFeatureType> res = new HashSet<IFeatureType>();
     GMLSchema featureTypeSchema = null;
     for( int i = 0; i < layer.length; i++ )
     {
@@ -624,7 +624,7 @@ public class ImportWfsWizardPage extends WizardPage
         {
           final URL url = new URL( getUrl().toString().trim() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
           // featureTypeSchema = GMLSchemaCatalog.getSchema( url );
-          // HACK
+          // TODO HACK
           featureTypeSchema = GMLSchemaCatalog.getSchema( "http://bsu.hamburg.de/huis" );
           final IFeatureType featureType = featureTypeSchema.getFeatureType( l );
           if( featureType != null )
@@ -641,10 +641,10 @@ public class ImportWfsWizardPage extends WizardPage
           setPageComplete( false );
         }
       }
-      final IFeatureType featureType = (IFeatureType) m_featureTypes.get( l );
+      final IFeatureType featureType = m_featureTypes.get( l );
       res.add( featureType );
     }
-    return (IFeatureType[]) res.toArray( new IFeatureType[res.size()] );
+    return res.toArray( new IFeatureType[res.size()] );
   }
 
   /**
@@ -660,7 +660,7 @@ public class ImportWfsWizardPage extends WizardPage
     final GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     if( featureTypes.length == 1 )
-      return featureTypes[0].getName();
+      return featureTypes[0].getQName().getLocalPart();
     for( int i = 0; i < featureTypes.length; i++ )
     {
       IFeatureType ft = featureTypes[i];
@@ -670,7 +670,7 @@ public class ImportWfsWizardPage extends WizardPage
         IPropertyType property = properties[j];
         if( property instanceof IRelationType )
         {
-          return property.getName();
+          return property.getQName().getLocalPart();
         }
 
       }
@@ -689,7 +689,7 @@ public class ImportWfsWizardPage extends WizardPage
   public Filter getFilter( String layerName )
   {
     IFeatureType featureType = getFeatureType( layerName );
-    return (Filter) m_filter.get( featureType );
+    return m_filter.get( featureType );
   }
 
   protected void reloadServer( )
@@ -759,8 +759,8 @@ public class ImportWfsWizardPage extends WizardPage
   {
     // the add filter button is only enabled if the selection size == 1
     IFeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
-    Filter filter = (Filter) m_filter.get( ft );
-    final FilterDialog dialog = new FilterDialog( getShell(), ft, filter, m_mapModel );
+    Filter filter = m_filter.get( ft );
+    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, filter, null, false );
     int open = dialog.open();
     if( open == Window.OK )
     {
@@ -774,7 +774,7 @@ public class ImportWfsWizardPage extends WizardPage
     setPageComplete( m_listRightSide.getItemCount() > 0 );
   }
 
-  private void updateButtons( )
+  void updateButtons( )
   {
     m_addFilterButton.setEnabled( m_listRightSide.getSelectionCount() == 1 );
     m_removeLayer.setEnabled( m_listRightSide.getSelectionCount() > 0 );

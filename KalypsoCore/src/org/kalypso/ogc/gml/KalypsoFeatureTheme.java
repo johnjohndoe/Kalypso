@@ -449,4 +449,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       addDisplayElements( feature );
     }
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
+   */
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
+  }
 }

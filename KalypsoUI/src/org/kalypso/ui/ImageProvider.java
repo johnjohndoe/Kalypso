@@ -57,7 +57,6 @@ public class ImageProvider
   {
     return id( "org.kalypso.ui", location );
   }
-
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = id( "icons/full/elcl16/remove.gif" );
@@ -108,6 +107,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
   public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = id("icons/filterdialog/filter_ps.gif");
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_ERROR = id("icons/filterdialog/error_obj.gif");
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_WARNING = id("icons/filterdialog/warning_obj.gif");
   
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );

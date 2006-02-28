@@ -66,28 +66,44 @@ import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 public class FilterLabelProvider extends LabelProvider
 {
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
+  @Override
   public Image getImage( Object element )
   {
+//    ImageDescriptor imageDesc = null;
+//    if( element != null )
+//    {
+//      if( element instanceof Operation )
+//      {
+//        Operation operation = (Operation) element;
+//        int id = operation.getOperatorId();
+//        int type = OperationDefines.getTypeById( id );
+//        if( operation instanceof SpatialOperation )
+//        {
+//          if( type == OperationDefines.UNKNOWN )
+//            imageDesc = ImageProvider.IMAGE_FILTERDIALOG_WARNING;
+//        }
+//      }
+//      if( imageDesc != null )
+//        return imageDesc.createImage();
+//    }
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
+
+  @Override
   public String getText( Object element )
   {
     if( element != null )
     {
       if( element instanceof FilterRootElement )
       {
-        return ( (FilterRootElement)( element ) ).getName();
+        return ((FilterRootElement) (element)).getName();
       }
       else if( element instanceof ComplexFilter )
       {
@@ -107,10 +123,10 @@ public class FilterLabelProvider extends LabelProvider
       }
       else if( element instanceof Operation )
       {
-        Operation operation = (Operation)element;
+        Operation operation = (Operation) element;
         int id = operation.getOperatorId();
         int type = OperationDefines.getTypeById( id );
-        //Spatial
+        // Spatial
         if( element instanceof SpatialOperation )
         {
           if( type == OperationDefines.UNKNOWN )
@@ -118,74 +134,74 @@ public class FilterLabelProvider extends LabelProvider
 
           return operation.getOperatorName();
         }
-        //Logical
+        // Logical
         if( type == OperationDefines.TYPE_LOGICAL )
         {
           String label = operation.getOperatorName().toUpperCase();
-          ArrayList args = ( (LogicalOperation)element ).getArguments();
+          ArrayList args = ((LogicalOperation) element).getArguments();
           if( id == OperationDefines.AND || id == OperationDefines.OR )
           {
             if( args == null || args.size() < 2 )
               label = label + " *";
           }
-          if( id == OperationDefines.NOT && ( args == null || args.size() == 0 ) )
+          if( id == OperationDefines.NOT && (args == null || args.size() == 0) )
             label = label + " *";
           return label;
         }
-        //Comparision
+        // Comparision
         if( operation instanceof PropertyIsCOMPOperation )
         {
-          Expression firstExpression = ( (PropertyIsCOMPOperation)operation ).getFirstExpression();
-          Expression secondExpression = ( (PropertyIsCOMPOperation)operation ).getSecondExpression();
+          Expression firstExpression = ((PropertyIsCOMPOperation) operation).getFirstExpression();
+          Expression secondExpression = ((PropertyIsCOMPOperation) operation).getSecondExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( firstExpression == null || secondExpression == null )
-            return OperationDefines.getNameById( id ) + " *";//"X = VALUE";
+            return OperationDefines.getNameById( id ) + " *";// "X = VALUE";
           return OperationDefines.getNameById( id );
 
-          //          if( id == OperationDefines.PROPERTYISEQUALTO )
-          //          {}
-          //          if( id == OperationDefines.PROPERTYISGREATERTHAN )
-          //            return OperationDefines.getNameById( id );//"X > VALUE";
+          // if( id == OperationDefines.PROPERTYISEQUALTO )
+          // {}
+          // if( id == OperationDefines.PROPERTYISGREATERTHAN )
+          // return OperationDefines.getNameById( id );//"X > VALUE";
           //
-          //          if( id == OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
-          //            return OperationDefines.getNameById( id );//"X >= VALUE";
+          // if( id == OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
+          // return OperationDefines.getNameById( id );//"X >= VALUE";
           //
-          //          if( id == OperationDefines.PROPERTYISLESSTHAN )
-          //            return OperationDefines.getNameById( id );//"X < VALUE";
+          // if( id == OperationDefines.PROPERTYISLESSTHAN )
+          // return OperationDefines.getNameById( id );//"X < VALUE";
           //
-          //          if( id == OperationDefines.PROPERTYISLESSTHANOREQUALTO )
-          //            return OperationDefines.getNameById( id );//"X <= VALUE";
+          // if( id == OperationDefines.PROPERTYISLESSTHANOREQUALTO )
+          // return OperationDefines.getNameById( id );//"X <= VALUE";
 
         }
         if( operation instanceof PropertyIsLikeOperation )
         {
-          Literal literal = ( (PropertyIsLikeOperation)operation ).getLiteral();
+          Literal literal = ((PropertyIsLikeOperation) operation).getLiteral();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( literal == null )
-            return OperationDefines.getNameById( id ) + " *";//"TEXT isLike";
+            return OperationDefines.getNameById( id ) + " *";// "TEXT isLike";
           return OperationDefines.getNameById( id );
         }
 
         if( operation instanceof PropertyIsNullOperation )
         {
-          Expression expression = ( (PropertyIsNullOperation)operation ).getExpression();
+          Expression expression = ((PropertyIsNullOperation) operation).getExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( expression == null )
-            return OperationDefines.getNameById( id ) + " *";//"X = NULL";
+            return OperationDefines.getNameById( id ) + " *";// "X = NULL";
           return OperationDefines.getNameById( id );
         }
         if( operation instanceof PropertyIsBetweenOperation )
         {
-          Expression upperBoundary = ( (PropertyIsBetweenOperation)operation ).getUpperBoundary();
-          Expression lowerBoundary = ( (PropertyIsBetweenOperation)operation ).getLowerBoundary();
+          Expression upperBoundary = ((PropertyIsBetweenOperation) operation).getUpperBoundary();
+          Expression lowerBoundary = ((PropertyIsBetweenOperation) operation).getLowerBoundary();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( upperBoundary == null || lowerBoundary == null )
             return OperationDefines.getNameById( id ) + " *";
-          return OperationDefines.getNameById( id );//"VALUE1 < X < VALUE2";
+          return OperationDefines.getNameById( id );// "VALUE1 < X < VALUE2";
         }
       }
       else

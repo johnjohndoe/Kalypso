@@ -36,6 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
@@ -52,42 +53,31 @@ public class FilterRootElement implements Filter
 
   private Filter m_filter = null;
 
-  public static final String FILTER_ADDED = "FILTER_ADD";
-
-  public static final String FILTER_REMOVED = "FILTER_REMOVE";
-
-  public static final String ELEMENT_REMOVED = "REMOVE_ELEMENT";
-
-  public static final String OPERATION_ADDED = "OPERATION_ADDED";
-
-  public static final String REFRESH = "REFRESH";
-
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean evaluate( Feature feature )
+  public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
-    return false;
+    return m_filter.evaluate( feature );
   }
 
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#toXML()
    */
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     return m_filter.toXML();
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
 
-  public Object[] getChildren()
+  public Object[] getChildren( )
   {
     if( m_filter != null )
-      return new Object[]
-      { m_filter };
+      return new Object[] { m_filter };
 
     return new Object[0];
   }
@@ -95,7 +85,7 @@ public class FilterRootElement implements Filter
   public void addChild( Object child )
   {
     if( child instanceof Filter )
-      m_filter = (Filter)child;
+      m_filter = (Filter) child;
   }
 
   public void addPropertyChangeListener( IPropertyChangeListener listener )
@@ -114,12 +104,12 @@ public class FilterRootElement implements Filter
     Object[] propetyChangedListeners = getPropetyChangedListeners().getListeners();
     for( int i = 0; i < propetyChangedListeners.length; i++ )
     {
-      ( (IPropertyChangeListener)propetyChangedListeners[i] ).propertyChange( event );
+      ((IPropertyChangeListener) propetyChangedListeners[i]).propertyChange( event );
 
     }
   }
 
-  public ListenerList getPropetyChangedListeners()
+  public ListenerList getPropetyChangedListeners( )
   {
     if( m_listeners == null )
       m_listeners = new ListenerList();
@@ -132,7 +122,7 @@ public class FilterRootElement implements Filter
       m_filter = null;
     if( m_filter instanceof ComplexFilter )
     {
-      ComplexFilter root = (ComplexFilter)m_filter;
+      ComplexFilter root = (ComplexFilter) m_filter;
       Operation operation = root.getOperation();
       if( operation != null )
       {
@@ -143,7 +133,7 @@ public class FilterRootElement implements Filter
         }
         if( operation instanceof LogicalOperation )
         {
-          ArrayList arguments = ( (LogicalOperation)operation ).getArguments();
+          ArrayList arguments = ((LogicalOperation) operation).getArguments();
           remove( arguments, child, operation );
         }
       }
@@ -159,7 +149,7 @@ public class FilterRootElement implements Filter
       {
         if( parent instanceof LogicalOperation )
         {
-          LogicalOperation parentCast = (LogicalOperation)parent;
+          LogicalOperation parentCast = (LogicalOperation) parent;
           ArrayList oldArgs = parentCast.getArguments();
           oldArgs.remove( childToRemove );
           if( oldArgs.size() == 0 )
@@ -169,7 +159,7 @@ public class FilterRootElement implements Filter
       }
       if( element instanceof LogicalOperation )
       {
-        LogicalOperation test = (LogicalOperation)element;
+        LogicalOperation test = (LogicalOperation) element;
         ArrayList newArgs = test.getArguments();
         if( newArgs != null && newArgs.size() > 0 )
           remove( newArgs, childToRemove, test );
@@ -177,7 +167,7 @@ public class FilterRootElement implements Filter
     }
   }
 
-  public Filter getFilter()
+  public Filter getFilter( )
   {
     return m_filter;
   }

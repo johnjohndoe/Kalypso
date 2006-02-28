@@ -53,7 +53,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -73,40 +72,39 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
 
   private final IKalypsoFeatureTheme m_scrabLayerTheme;
 
+  private final IFeatureSelectionManager m_selectionManager;
+
   public ScrabLayerFeatureTheme( IFeatureSelectionManager selectionManager )
   {
+    m_selectionManager = selectionManager;
     final URL scrabLayerURL = getClass().getResource( "../../core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
     {
-      final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL);
-      workspace = new CommandableWorkspace( createGMLWorkspace ) ;
+      final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL );
+      workspace = new CommandableWorkspace( createGMLWorkspace );
     }
     catch( Exception e )
     {
-      //TODO what is to be done??
+      // TODO what is to be done??
       e.printStackTrace();
     }
-    //    IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+    // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager );
     // add styles for visualisation
-    ArrayList symbolizers = new ArrayList();
-    symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ),
-        POINT_GEOM_PROP_NAME ) );
+    ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
+    symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), POINT_GEOM_PROP_NAME ) );
     symbolizers.add( StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), LINESTRING_GEOM_PROP_NAME ) );
-    symbolizers.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(
-        Color.GRAY, 0.5d ), POLYGON_GEOM_PROP_NAME ) );
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( STYLE_NAME, (Symbolizer[])symbolizers
-        .toArray( new Symbolizer[symbolizers.size()] ) );
-    UserStyle style = (UserStyle_Impl)StyleFactory.createStyle( STYLE_NAME, STYLE_NAME, "empty Abstract",
-        featureTypeStyle );
+    symbolizers.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), POLYGON_GEOM_PROP_NAME ) );
+    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
+    UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( STYLE_NAME, STYLE_NAME, "empty Abstract", featureTypeStyle );
     m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName() ) );
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getWorkspace()
    */
-  public CommandableWorkspace getWorkspace()
+  public CommandableWorkspace getWorkspace( )
   {
     return m_scrabLayerTheme.getWorkspace();
 
@@ -115,7 +113,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
    */
-  public ISchedulingRule getSchedulingRule()
+  public ISchedulingRule getSchedulingRule( )
   {
     return m_scrabLayerTheme.getSchedulingRule();
   }
@@ -123,7 +121,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
    */
-  public IFeatureType getFeatureType()
+  public IFeatureType getFeatureType( )
   {
     return m_scrabLayerTheme.getFeatureType();
   }
@@ -148,7 +146,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getStyles()
    */
-  public UserStyle[] getStyles()
+  public UserStyle[] getStyles( )
   {
     return m_scrabLayerTheme.getStyles();
   }
@@ -156,7 +154,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureList()
    */
-  public FeatureList getFeatureList()
+  public FeatureList getFeatureList( )
   {
     return m_scrabLayerTheme.getFeatureList();
   }
@@ -172,7 +170,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_scrabLayerTheme.dispose();
   }
@@ -191,7 +189,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_scrabLayerTheme.getName();
   }
@@ -199,7 +197,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
-  public String getType()
+  public String getType( )
   {
     return "";
   }
@@ -215,7 +213,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox()
+  public GM_Envelope getBoundingBox( )
   {
     return m_scrabLayerTheme.getBoundingBox();
   }
@@ -261,4 +259,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     m_scrabLayerTheme.postCommand( command, runnable );
   }
 
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
+  }
 }

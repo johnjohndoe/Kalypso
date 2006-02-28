@@ -436,11 +436,20 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.CreatePoint"/>
          <action
-               label="Neues Feature erzeugen"
-               icon="icons/feature/gis_feature_neu.gif"
                class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
+               icon="icons/feature/gis_feature_neu.gif"
+               id="org.kalypso.ui.editor.mapeditor.action.newfeature"
+               label="Neues Feature erzeugen"
+               style="push"/>
+         <action
+               class="org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate"
+               disabledIcon="icons/map/geoInfo_gray.gif"
+               icon="icons/filterdialog/filter_ps.gif"
+               id="org.kalypso.ogc.filterdialog.actions.openfilterdialog"
+               label="Feature selektieren.."
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                style="push"
-               id="org.kalypso.ui.editor.mapeditor.action.newfeature"/>
+               tooltip="Auswahl von Elementen aus der Karte mit einem Filter"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"

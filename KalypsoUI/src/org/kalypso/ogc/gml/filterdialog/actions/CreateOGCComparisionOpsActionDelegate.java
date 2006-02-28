@@ -47,6 +47,7 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
@@ -56,10 +57,10 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
         Object firstElement = m_selection.getFirstElement();
         PropertyIsCOMPOperation compOps = new PropertyIsCOMPOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
-          ( (ComplexFilter)firstElement ).setOperation( compOps );
+          ((ComplexFilter) firstElement).setOperation( compOps );
         if( firstElement instanceof LogicalOperation )
         {
-          LogicalOperation logicalOps = (LogicalOperation)firstElement;
+          LogicalOperation logicalOps = (LogicalOperation) firstElement;
           ArrayList arguments = logicalOps.getArguments();
           if( arguments == null )
             arguments = new ArrayList();
@@ -67,7 +68,7 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
           logicalOps.setArguments( arguments );
 
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
   }
