@@ -50,13 +50,14 @@ import org.eclipse.swt.widgets.Composite;
  *  ---------------------------------------------------------------------------*/
 
 /**
+ * @deprecated TODO replace with ComboViewer
  * this class extends a combo box to work with objects
  */
 public class ComboForObjects
 {
   private final Combo m_combo;
 
-  private final List m_objectItems = new ArrayList();
+  private final List<Object> m_objectItems = new ArrayList<Object>();
 
   /*
    * @author doemming
@@ -82,7 +83,7 @@ public class ComboForObjects
   public void setItems( String[] items )
   {
     removeAll();
-    m_objectItems.addAll( new ArrayList( m_objectItems ) );
+    m_objectItems.addAll( new ArrayList<Object>( m_objectItems ) );
     m_combo.setItems( items );
   }
 
@@ -121,7 +122,7 @@ public class ComboForObjects
    */
   public void remove( int start, int end )
   {
-    List toRemove = new ArrayList();
+    List<Object> toRemove = new ArrayList<Object>();
     for( int i = start; i < end; i++ )
     {
       toRemove.add( m_objectItems.get( i ) );

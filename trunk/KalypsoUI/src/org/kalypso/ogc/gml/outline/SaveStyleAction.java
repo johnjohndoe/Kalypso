@@ -84,8 +84,7 @@ public class SaveStyleAction extends AbstractOutlineAction
 {
   private final Shell shell;
 
-  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer outlineViewer )
+  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
     shell = outlineViewer.getControl().getShell();
@@ -95,15 +94,15 @@ public class SaveStyleAction extends AbstractOutlineAction
    * @see org.eclipse.jface.action.Action#run()
    */
 
-  public void run()
+  public void run( )
   {
-    Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
+    Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
     if( o instanceof ThemeStyleTreeObject )
     {
-      final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
+      final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
+        KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
         saveUserStyle( kalypsoStyle, shell );
       }
     }
@@ -114,26 +113,25 @@ public class SaveStyleAction extends AbstractOutlineAction
     File knownFilename = null;
     if( userStyle instanceof GisTemplateUserStyle )
     {
-      GisTemplateUserStyle tus = (GisTemplateUserStyle)userStyle;
-      final PoolableObjectType poolKey = tus.getPoolKey();
-      final URL context = poolKey.getContext();
-      String location = poolKey.getLocation();
-      final UrlResolver resolver = new UrlResolver();
       try
       {
+        GisTemplateUserStyle tus = (GisTemplateUserStyle) userStyle;
+        final PoolableObjectType poolKey = tus.getPoolKey();
+        final URL context = poolKey.getContext();
+        String location = poolKey.getLocation();
+        final UrlResolver resolver = new UrlResolver();
         final URL url = resolver.resolveURL( context, location );
         final IFile file = ResourceUtilities.findFileFromURL( url );
         knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
       }
-      catch( MalformedURLException e1 )
+      catch( Exception e1 )
       {
         // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     }
 
-    final String[] filterExtension =
-    { "*.sld" };
+    final String[] filterExtension = { "*.sld" };
     FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
 
@@ -149,7 +147,7 @@ public class SaveStyleAction extends AbstractOutlineAction
       final String filename = saveDialog.open();
       if( filename != null )
       {
-        Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
+        Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
         final Source source = new DOMSource( doc );
         File file = null;
         if( filename.indexOf( "." ) == -1 )
@@ -197,11 +195,11 @@ public class SaveStyleAction extends AbstractOutlineAction
     }
   }
 
-  protected final void refresh()
+  protected final void refresh( )
   {
     boolean bEnable = false;
 
-    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof ThemeStyleTreeObject )
       bEnable = true;

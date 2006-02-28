@@ -431,4 +431,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     return m_disposed;
   }
+
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
+  }
 }

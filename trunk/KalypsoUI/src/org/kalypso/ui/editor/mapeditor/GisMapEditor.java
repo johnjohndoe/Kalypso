@@ -98,11 +98,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * <p>
  * Eclipse-Editor zum editieren der GML-Gis-Templates.
  * </p>
- * 
  * <p>
  * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
- * 
  * <p>
  * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
  * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
@@ -122,7 +120,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private boolean m_disposed = false;
 
-  public GisMapEditor()
+  public GisMapEditor( )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
@@ -204,8 +202,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       System.out.println( e.getLocalizedMessage() );
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
     }
     finally
     {
@@ -257,21 +254,20 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
 
-    //  add drag and drop support
-    //    int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    //    Transfer[] transfers = new Transfer[]
-    //    {
-    //        LocalSelectionTransfer.getInstance(),
-    //        PluginTransfer.getInstance() };
-    //    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
-    //    transfers = new Transfer[]
-    //    { LocalSelectionTransfer.getInstance() };
-    //    m_dropAdapter = new GmlTreeDropAdapter( this );
-    //    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
+    // add drag and drop support
+    // int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+    // Transfer[] transfers = new Transfer[]
+    // {
+    // LocalSelectionTransfer.getInstance(),
+    // PluginTransfer.getInstance() };
+    // m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+    // transfers = new Transfer[]
+    // { LocalSelectionTransfer.getInstance() };
+    // m_dropAdapter = new GmlTreeDropAdapter( this );
+    // m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
-      throws Exception, CoreException
+  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_disposed )
       return;
@@ -289,7 +285,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IProject project;
     if( input instanceof IFileEditorInput )
     {
-      final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
+      final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
       context = ResourceUtilities.createURL( inputFile );
       project = inputFile.getProject();
     }
@@ -301,8 +297,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( !m_disposed )
     {
-      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem(), project, m_selectionManager );
+      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
       setMapModell( mapModell );
 
       GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
@@ -328,15 +323,14 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void showProperties( final Layer layer )
   {
     // TODO
-    MessageDialog
-        .openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
+    MessageDialog.openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
     layer.getClass();
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
    */
-  public MapPanel getMapPanel()
+  public MapPanel getMapPanel( )
   {
     return m_mapPanel;
   }
@@ -346,7 +340,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     m_mapModell.saveTheme( theme, monitor );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_disposed = true;
 
@@ -360,14 +354,17 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     super.dispose();
   }
 
+  public IContentOutlinePage getOutlineView( )
+  {
+    return m_outlinePage;
+  }
+
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[]
-    { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt(
-        ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
+    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
   }
 
   /**
@@ -376,11 +373,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
-        "icons/util/img_props.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
     final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc );
 
-    return new IWizardPage[]
-    { page };
+    return new IWizardPage[] { page };
   }
 }

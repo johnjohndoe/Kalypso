@@ -56,7 +56,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    * setExpandedElements doesn't work, which
    * will lead to an unusable gui.
    */
-  private Map m_parentHash = new HashMap();
+  private Map<Object,Object> m_parentHash = new HashMap<Object,Object>();
 
   private TreeViewer m_viewer;
 
@@ -77,7 +77,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   private Object[] getChildrenInternal( final Object parentElement )
   {
-    final List result = new ArrayList();
+    final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof GMLWorkspace )
     {
       return new Object[]
@@ -199,7 +199,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     if( parent == null )
       return null;
     
-    return parent.getAssociationTypeProperty().getName();
+    return parent.getAssociationTypeProperty().getQName().getLocalPart();
   }
 
   

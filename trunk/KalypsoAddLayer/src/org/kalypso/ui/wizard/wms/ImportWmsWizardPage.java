@@ -364,10 +364,8 @@ public class ImportWmsWizardPage extends WizardPage
 
       public void keyReleased( KeyEvent e )
       {
-        // TODO use constant for 13 KeyCode
-        if( e.keyCode == 13 )
+        if( e.character == SWT.CR )
         {
-          System.out.println( "keycode CR" );
           final String urlText = m_urlCombo.getText();
           updateAllFromURLText( urlText );
         }

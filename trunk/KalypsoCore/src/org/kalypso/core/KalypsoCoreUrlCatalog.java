@@ -29,12 +29,12 @@
  */
 package org.kalypso.core;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -45,10 +45,10 @@ public class KalypsoCoreUrlCatalog extends AbstractUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
-  protected void fillCatalog( Class myClass, Map catalog )
+  @Override
+  protected void fillCatalog( Class myClass, Map<String, URL> catalog )
   {
-    catalog
-        .put( "http://www.tuhh.de/kalypsoScrabLayer", getClass().getResource( "resources/scrablayer.xsd" ) );
+    catalog.put( "http://www.tuhh.de/kalypsoScrabLayer", getClass().getResource( "resources/scrablayer.xsd" ) );
 
   }
 

@@ -76,15 +76,15 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
-  public String getFilename()
+  public String getFilename( )
   {
-    return "<Standard Kartenansicht>.gmv";
+    return "<Standard Kartenansicht>.gmt";
   }
 
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
-  public IEditorDescriptor getEditor()
+  public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -98,12 +98,12 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   {
     final org.kalypso.template.gismapview.ObjectFactory gisMapFactory = new org.kalypso.template.gismapview.ObjectFactory();
     final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gismapview.ObjectFactory.class );
-    
+
     try
     {
       if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) )
-          throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
-      
+        throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
+
       final StyledLayerType layer = new ObjectFactory().createStyledLayerType();
       LayerTypeUtilities.initLayerType( layer, file );
       layer.setVisible( true );
@@ -127,7 +127,8 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       final Validator validator = jc.createValidator();
       validator.validate( gismapview );
 
-      final Marshaller marshaller = jc.createMarshaller();
+      // final Marshaller marshaller = jc.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
@@ -137,9 +138,8 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file
-          .getFullPath() ) );
-      
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file.getFullPath() ) );
+
       return input;
     }
     catch( final JAXBException e )
