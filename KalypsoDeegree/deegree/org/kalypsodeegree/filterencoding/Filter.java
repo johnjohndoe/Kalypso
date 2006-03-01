@@ -87,6 +87,8 @@ public interface Filter
   boolean evaluate( Feature feature ) throws FilterEvaluationException;
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML();
+  public StringBuffer toXML( );
+
+  public Filter clone( Filter filter ) throws FilterConstructionException;
 
 }

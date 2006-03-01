@@ -60,8 +60,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.io.ByteArrayInputStream;
+
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -99,7 +103,7 @@ public abstract class AbstractFilter implements Filter
     {
       if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
       {
-        firstElement = (Element)children.item( i );
+        firstElement = (Element) children.item( i );
       }
     }
     if( firstElement == null )
@@ -114,7 +118,7 @@ public abstract class AbstractFilter implements Filter
       {
         if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
         {
-          Element fid = (Element)children.item( i );
+          Element fid = (Element) children.item( i );
           if( !fid.getLocalName().equals( "FeatureId" ) )
             throw new FilterConstructionException( "Unexpected Element encountered: " + fid.getLocalName() );
           fFilter.addFeatureId( FeatureId.buildFromDOM( fid ) );
@@ -131,7 +135,7 @@ public abstract class AbstractFilter implements Filter
       {
         if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
         {
-          Element operator = (Element)children.item( i );
+          Element operator = (Element) children.item( i );
           if( justOne )
             throw new FilterConstructionException( "Unexpected element encountered: " + operator.getLocalName() );
           ComplexFilter cFilter = new ComplexFilter( AbstractOperation.buildFromDOM( operator ) );
@@ -144,5 +148,23 @@ public abstract class AbstractFilter implements Filter
   }
 
   /** Produces an indented XML representation of this object. */
-  public abstract StringBuffer toXML();
+  public abstract StringBuffer toXML( );
+
+  public Filter clone( Filter filter ) throws FilterConstructionException
+  {
+    StringBuffer buffer = filter.toXML();
+    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
+    Document asDOM = null;
+    try
+    {
+      asDOM = XMLHelper.getAsDOM( input, true );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    Element element = asDOM.getDocumentElement();
+
+    return AbstractFilter.buildFromDOM( element );
+  }
 }

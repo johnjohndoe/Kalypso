@@ -62,6 +62,8 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
 
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -159,5 +161,11 @@ public class ComplexFilter extends AbstractFilter
     sb.append( m_operation.toXML() );
     sb.append( "</ogc:Filter>\n" );
     return sb;
+  }
+
+  @Override
+  public Filter clone( Filter filter ) throws FilterConstructionException
+  {
+    return super.clone( filter );
   }
 }

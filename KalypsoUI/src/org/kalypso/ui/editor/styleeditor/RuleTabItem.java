@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
@@ -64,6 +65,7 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
 import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -318,21 +320,21 @@ public class RuleTabItem
     buttonComposite.setLayout( new GridLayout( 1, true ) );
     Button button = new Button( buttonComposite, SWT.NULL );
     button.setText( MessageBundle.STYLE_EDITOR_EDIT_FILTER );
-    // final FilterDialog filterDialog = new FilterDialog( composite.getShell(), m_featureType, rule );
-    // filterDialog.addFilterDialogListener( new FilterDialogListener()
-    // {
-    // public void filterUpdated( FilterDialogEvent event )
-    // {
-    // getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
-    // }
-    // } );
     button.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
         Filter oldFilter = rule.getFilter();
-        final org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog dialog = new org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, false );
-        // filterDialog.open();
+        Filter clone = null;
+        try
+        {
+          clone = oldFilter.clone( oldFilter );
+        }
+        catch( FilterConstructionException ex )
+        {
+          ex.printStackTrace();
+        }
+        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, false );
         int open = dialog.open();
         if( open == Window.OK )
         {
@@ -342,7 +344,8 @@ public class RuleTabItem
         }
         if( open == Window.CANCEL )
         {
-          rule.setFilter( oldFilter );
+          rule.setFilter( clone );
+          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
       }
 
