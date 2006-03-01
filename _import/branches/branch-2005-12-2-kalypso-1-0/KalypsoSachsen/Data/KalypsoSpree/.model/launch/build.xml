@@ -70,7 +70,7 @@
 			<property name="startsimN" featurepath="" featureProperty="startsimulation"/>
 			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
 			<!-- stopsim = startforecast + 48h -->
-			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="72" dateoffsetfield="11"/>
+			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
 
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
 		</kalypso.gmlProperty>
