@@ -85,8 +85,13 @@ public class SpreeInputWorker
       final String tsFilename = writeNonTs( props, logwriter, workspace );
 
       final Date startDate = (Date)props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
-      setAnfangsstauvolumen( "V_TSQUITZ", startDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
-      setAnfangsstauvolumen( "V_TSBAUTZ", startDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTime( startDate );
+      calendar.add( Calendar.HOUR_OF_DAY , -3 );
+      final Date volDate = calendar.getTime();
+      
+      setAnfangsstauvolumen( "V_TSQUITZ", volDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
+      setAnfangsstauvolumen( "V_TSBAUTZ", volDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
 
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( inputProvider, tsmap );
@@ -191,6 +196,9 @@ public class SpreeInputWorker
   private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace )
       throws IOException, FileNotFoundException, CalcJobServiceException
   {
+    // TODO: die Reihenfolge der Zeilen im DBF ist wichtig!
+    // zur Zeit ist es nur Zufall, dass das GML in der richtigen Reihenfolge ist
+    
     final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
     final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
     final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
@@ -223,7 +231,7 @@ public class SpreeInputWorker
     try
     {
       final FieldDescriptor[] fds = new FieldDescriptor[SpreeCalcJob.TS_DESCRIPTOR.length + 5];
-      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)6, (byte)2 );
+      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)7, (byte)2 );
       fds[1] = new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 );
       fds[2] = new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 );
       fds[3] = new FieldDescriptor( "VON", "N", (byte)2, (byte)0 );
@@ -296,7 +304,21 @@ public class SpreeInputWorker
           Double outVal = null;
 
           if( datesToValuesMap != null )
-            outVal = ( (Double)datesToValuesMap.get( date ) );
+          {
+            final Double value = ( (Double)datesToValuesMap.get( date ) );
+            
+            // HACK: THE DBF Writer does not round double, when
+            // written without decimals, it just prints out the integer part
+            // so we round ourselfs
+            final FieldDescriptor fd = fds[j + 5];
+            final byte[] fddata = fd.getFieldDescriptor();
+            final char type = (char)fddata[11]; 
+            final int decimalcount = fddata[17];
+            if( value != null && type == 'N' && decimalcount == 0 )
+              outVal = new Double( Math.round( value.doubleValue() ) );
+            else
+              outVal = value;
+          }
 
           // die Erste Zeile darf keine Talsperrenabgabe enthalten
           if( id.startsWith( "QV_TS" ) && i == 0 )
@@ -367,7 +389,7 @@ public class SpreeInputWorker
           LOGGER.log( Level.INFO, "ZML wurde nicht geladen: " + obsURL, se );
       }
     }
-
+    
     return tsmap;
   }
 

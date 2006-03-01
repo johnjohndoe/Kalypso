@@ -10,8 +10,31 @@
     <property name="szenario_EchtDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt" />
     <property name="szenario_EchtDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_normal.txt" />
 
+	
+    <!-- define the requests -->
+    <property name="requestN"
+              value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
+    <property name="requestQ"
+              value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
+    <property name="requestW"
+              value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W&lt;/axes&gt;&lt;statusAxes&gt;W&lt;/statusAxes&gt;&lt;/request&gt;" />
+
+
+	<!-- Zeitschritt der Berechnung: 3h-->
+	<property name="interval.field" value="HOUR_OF_DAY"/>
+	<property name="interval.amount" value="3"/>
+	
 	<!-- Vordefinierte Filter -->
-	<property name="filterN" value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+    <property name="filterN"
+              value="${requestN}&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+    <!-- Q/W: interpolation-filter -->
+    <property name="filterW"
+              value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+    <property name="filterQ"
+              value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+
+	<!--property name="filterN" 
+			  value="${requestN}&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" /-->
 	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
@@ -43,10 +66,11 @@
          - - - - - - - - - - - - - - - - - -->
     <target name="calculationProperties">
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
-			<property name="startsim" featurepath="" featureProperty="startsimulation" />
+			<property name="startsimQ" featurepath="" featureProperty="startsimulation"/>
+			<property name="startsimN" featurepath="" featureProperty="startsimulation"/>
 			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
 			<!-- stopsim = startforecast + 48h -->
-			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
+			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="72" dateoffsetfield="11"/>
 
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
 		</kalypso.gmlProperty>
@@ -97,32 +121,25 @@
 		<!-- TODO: überall mit requests arbeiten -->
 		<!-- Omrbometer -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${ombrometerLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;intervallFilter amount=&quot;180&quot; calendarField=&quot;MINUTE&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${ombrometerLink}" from="${startsimN}" to="${startforecast}" filter="${filterN}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Pegel -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterN}"/>
+			<source property="${pegelMessungLink}" from="${startsimQ}" to="${startforecast}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<!-- Niederschlag -->
-		<!--kalypso.copyObservation gml="${project.url}/.model/observationConf/NiederschlagMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${niederschlagMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
-			<source property="${niederschlagVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
-			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation-->
-
 		<!-- Talsperren -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${talsperreLink}" from="${startsim}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${talsperreLink}" from="${startsimQ}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Vorgaben: Zufluss und Abfluss -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${vorgabeLink}" from="${startsim}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${vorgabeLink}" from="${startsimQ}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
@@ -203,7 +220,7 @@
 			proprelationsourcefeature="ombrometerMember" 
 			propzmlsource="precipitation" 
 			targetcontext="${calc.url}" 
-			from="${startsim}" 
+			from="${startsimN}" 
 			forecastfrom="${startforecast}" 
 			to="${stopsim}" />
 	</target>
@@ -214,7 +231,7 @@
                          obsrasterurl="${dwdRasterLocalURL}"
                          targetcontext="${calc.dir}"
                          description="raster zu zml"
-                         from="${startsim}"
+                         from="${startsimN}"
                          forecastfrom="${startforecast}"
                          to="${stopsim}"
                          zmlfilter="${filterN}">

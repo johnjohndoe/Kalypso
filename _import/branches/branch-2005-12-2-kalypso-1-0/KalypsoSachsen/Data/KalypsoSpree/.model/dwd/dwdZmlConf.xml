@@ -211,7 +211,7 @@
         </map>
     </target>
     <target>
-        <targetZR>Zeitreihen/PA_HOLTEND.zml</targetZR>
+        <targetZR>Zeitreihen/PA_HOLTD.zml</targetZR>
         <map>
             <cellPos>2759</cellPos>
             <factor>0.55</factor>

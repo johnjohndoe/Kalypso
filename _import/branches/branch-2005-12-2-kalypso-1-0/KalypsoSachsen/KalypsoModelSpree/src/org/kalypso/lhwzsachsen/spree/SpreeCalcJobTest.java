@@ -41,10 +41,17 @@
 
 package org.kalypso.lhwzsachsen.spree;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
@@ -54,7 +61,6 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.impl.ResourceCalcDataProvider;
 import org.kalypso.services.calculation.job.impl.SimpleCalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -87,7 +93,7 @@ public class SpreeCalcJobTest extends TestCase
         .getMultiPolygonClass() ) );
   }
 
-  public void testCalcJob() throws CalcJobServiceException
+  public void testCalcJob() throws IOException
   {
     final File tmpDir = FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
 
@@ -117,8 +123,58 @@ public class SpreeCalcJobTest extends TestCase
     final File jobTmpDir = new File( tmpDir, "jobTmp" );
     job.run( jobTmpDir, inputProvider, resultEater, monitor );
 
-//    writeResults( new File( tmpDir, "jobResults" ), job.getSpezifikation(), resultEater );
+    compareResults( resultEater );
+    FileUtilities.deleteRecursive( tmpDir );
+  }
 
-    //    FileUtilities.deleteRecursive( tmpDir );
+  private void compareResults( final SimpleCalcResultEater resultEater ) throws IOException
+  {
+    // nur die Zeitreihen vergleichen
+    final File resultDir = resultEater.getResult( "ERGEBNISSE" );
+    final URL resultURL = getClass().getResource( "resources/test/TestvarianteHoltendorf/Ergebnisse/" );
+
+    final File zmlDir = new File( resultDir, "Zeitreihen" );
+    final URL zmlURL = new URL( resultURL, "Zeitreihen/" );
+
+    final String[] zmls = zmlDir.list();
+    for( int i = 0; i < zmls.length; i++ )
+    {
+      final String name = zmls[i];
+      final File zmlFile = new File( zmlDir, name );
+      final URL resourceURL = new URL( zmlURL, name );
+      assertFileUrlEquals( zmlFile, resourceURL );
+    }
+
+    // auch die Optimierung
+    final File gmlFile = new File( resultDir, "calcCase.gml" );
+    final URL gmlURL = new URL( resultURL, "calcCase.gml" );
+    assertFileUrlEquals( gmlFile, gmlURL );
+  }
+
+  private void assertFileUrlEquals( final File file, final URL resource ) throws FileNotFoundException, IOException
+  {
+    System.out.print( "Checking file: " + file.getName() );
+    
+    BufferedReader fileReader = null;
+    BufferedReader urlReader = null;
+
+    try
+    {
+      fileReader = new BufferedReader( new FileReader( file ) );
+      urlReader = new BufferedReader( new InputStreamReader( resource.openStream() ) );
+
+      final String fileContent = IOUtils.toString( fileReader );
+      final String urlContent = IOUtils.toString( urlReader );
+
+      assertEquals( "File is not equal to test date: " + file.getName(), urlContent, fileContent );
+      
+      
+      System.out.println( "\t\tOK" );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( fileReader );
+      IOUtils.closeQuietly( urlReader );
+    }
   }
 }

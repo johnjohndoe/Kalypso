@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MappingCollection fid="ID1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://org.kalypso.updateObservationMapping" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://org.kalypso.updateObservationMapping">
+<MappingCollection fid="ID1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://org.kalypso.updateObservationMapping" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://org.kalypso.updateObservationMapping ">
   <mappingMember>
     <MappingObservation fid="MappingObservation1">
       <gml:name>Schirgiswalde</gml:name>
@@ -150,7 +150,7 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583280" ns1:type="simple" linktype="zml"/>
       </in1ObservationLink>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_HOLTEND.zml" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_HOLTD.zml"/>
       </outObservationLink>
     </MappingObservation>
   </mappingMember>

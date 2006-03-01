@@ -255,7 +255,7 @@ public class SpreeCalcJob implements ICalcJob
   {
       "FLUSSPAR.DBF",
       "FLUTUNG.DBF",
-      "Hw_wq.dbf",
+      "HW_WQ.DBF",
       "NA_PARA.DBF",
       "TS_BAUTZ.DBF",
       "TS_PARA.DBF",
@@ -473,24 +473,26 @@ public class SpreeCalcJob implements ICalcJob
     finally
     {
       final String processOut = outWriter.toString();
-      final String processErr = errWriter.toString();
-      
       logwriter.println( "Ausgaben des Rechenkerns" );
       logwriter.println( "========================" );
       logwriter.println( "=   Standard-Ausgabe   =" );
       logwriter.println( "========================" );
       logwriter.println( processOut );
-      logwriter.println( "========================" );
-      logwriter.println( "=    Fehler-Ausgabe   =" );
-      logwriter.println( "========================" );
-      logwriter.println( processErr );
+
+      // spree.exe erzeugt keinen error stream
+//      final String processErr = errWriter.toString();
+//      logwriter.println( "========================" );
+//      logwriter.println( "=    Fehler-Ausgabe   =" );
+//      logwriter.println( "========================" );
+//      logwriter.println( processErr );
+      
       logwriter.println( "========================" );
       logwriter.println();
       
-      if( processOut.endsWith( "Berechnung erfolgreich beendet" ) )
-        logwriter.println( "Rechnung erfolgreich beendet" );
+      if( processOut.endsWith( "Berechnung erfolgreich beendet\r\n" ) )
+        logwriter.println( "Rechnung mit spree.exe erfolgreich beendet." );
       else
-        logwriter.println( "Rechnung nicht erfolgreich beendet" );
+        logwriter.println( "Rechnung mit spree.exe nicht erfolgreich beendet." );
     }
   }
 
