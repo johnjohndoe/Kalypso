@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.lhwzsachsen.spree;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -52,7 +53,8 @@ public class SpreeUrlCatalog extends AbstractUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
-  protected void fillCatalog( final Class myClass, final Map catalog )
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
     catalog.put( "org.kalypso.spree.modell", myClass.getResource( "schemata/modell.xsd" ) );
     catalog.put( "org.kalypso.spree.control", myClass.getResource( "schemata/control.xsd" ) );
