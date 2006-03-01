@@ -41,7 +41,6 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class KalypsoCoreUrlCatalog extends AbstractUrlCatalog
 {
-
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */

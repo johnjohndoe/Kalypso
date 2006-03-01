@@ -125,6 +125,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       // TODO create GMLParserxception !
       if( schema == null )
         schema = GMLSchemaCatalog.getSchema( uri );
+      
+      // TODO: maybe schema is unknown, so better throw an exception with a better error message
       if( schema == null )
         throw new UnsupportedOperationException( "could not load schema" );
       m_gmlSchema = schema;

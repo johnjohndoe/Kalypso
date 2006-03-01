@@ -837,11 +837,6 @@
       </viewer>
    </extension>
    <extension
-         id="org.kalypso.ui.catalog"
-         name="UrlCatalog"
-         point="org.kalypso.contribs.java.urlCatalog">
-   </extension>
-   <extension
          id="org.kalypso.ui.mapview.action"
          name="mapviewoutline"
          point="org.kalypso.ui.mapviewaction">
