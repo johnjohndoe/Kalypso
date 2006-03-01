@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.configuration.BaseConfiguration;
@@ -68,11 +69,18 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
+import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.gmlschema.feature.FeatureType;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
@@ -88,6 +96,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -157,7 +166,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       }
 
       // get a map out of the metadata extensions
-      final Map<Object,Object> exMap = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( confEx );
+      final Map<Object, Object> exMap = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( confEx );
       final Set<Entry<Object, Object>> exMapEntries = exMap.entrySet();
 
       final MetadataExtensions mdEx = new MetadataExtensions();
@@ -211,7 +220,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       {
         super.applyFeatureChange( fc );
 
-        final Map<Object,Object> metadata = (Map<Object,Object>) configuration.getProperty( CONF_METADATA );
+        final Map<Object, Object> metadata = (Map<Object, Object>) configuration.getProperty( CONF_METADATA );
 
         final Object newValue = org.kalypso.gmlschema.Mapper.mapJavaValueToXml( fc.getNewValue() );
         metadata.put( fc.getProperty(), newValue );
@@ -239,16 +248,16 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
     }
 
-    final Map<Object,Object> map = new HashMap<Object,Object>();
+    final Map<Object, Object> map = new HashMap<Object, Object>();
     configuration.setProperty( CONF_METADATA, map );
-    
+
     final org.kalypso.services.metadoc.impl.PrepareBean.Metadata metadata = pBean.getMetadata();
     final List<org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry> entries = metadata.getEntry();
 
     final Configuration targetProps = getProperties();
 
     // create featuretype from bean
-    final Collection<FeatureTypeProperty> ftpColl = new ArrayList<FeatureTypeProperty>();
+    final Collection<IValuePropertyType> ftpColl = new ArrayList<IValuePropertyType>();
     final Collection<FeatureProperty> fpColl = new ArrayList<FeatureProperty>();
     final int[] ints = new int[map.size()];
     int count = 0;
@@ -273,26 +282,39 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         map.put( name, value );
       }
 
-      String typename = null;
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      QName valueQName = new QName( NS.NS_XSD, xmltype );
+      IMarshallingTypeHandler handler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
+      if( handler == null )
+      {
+        valueQName = new QName( NS.NS_XSD, "string" );
+        handler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
+      }
+      // String typename = null;
       Object realValue = null;
       try
       {
-        typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
-        realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
+        realValue = value == null ? null : handler.parseType( value );
+        // typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
+        // realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
       {
+
         e.printStackTrace();
-        typename = "java.lang.String";
+        // typename = "java.lang.String";
       }
-      ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
-      fpColl.add( FeatureFactory.createFeatureProperty( name, realValue ) );
+      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), valueQName, handler, 0, 1 );
+      ftpColl.add( vpt );
+      fpColl.add( FeatureFactory.createFeatureProperty( vpt, realValue ) );
 
       ints[count++] = 1;
     }
 
-    final FeatureTypeProperty[] ftps = ftpColl.toArray( new FeatureTypeProperty[ftpColl.size()] );
-    final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap() );
+    final IValuePropertyType[] ftps = ftpColl.toArray( new IValuePropertyType[ftpColl.size()] );
+    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "unknown", "docbean" ), ftps );
+    // final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap()
+    // );
 
     return FeatureFactory.createFeature( "0", ft, fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
   }
