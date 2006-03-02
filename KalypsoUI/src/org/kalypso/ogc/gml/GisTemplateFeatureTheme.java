@@ -135,7 +135,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       for( int i = 0; i < stylesList.size(); i++ )
       {
         final Style styleType = stylesList.get( i );
-        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( new PoolableObjectType( styleType.getLinktype(), styleType.getHref(), context ), styleType.getStyle() );
+        final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( styleType.getLinktype(), styleType.getHref(), context );
+        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, styleType.getStyle() );
         m_gisTemplateUserStyles.add( gisTemplateUserStyle );
       }
     }
