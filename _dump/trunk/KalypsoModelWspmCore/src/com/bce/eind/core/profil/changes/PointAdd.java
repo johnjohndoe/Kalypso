@@ -35,7 +35,7 @@ public class PointAdd implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setPointsChanged();
+    if (hint!=null) hint.setPointsChanged();
     final IProfilPoints points = m_profil.getProfilPoints();
     if( m_point == null )
     {

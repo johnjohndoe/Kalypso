@@ -24,8 +24,8 @@ public class BuildingSet implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setBuildingChanged();
-    hint.setPointPropertiesChanged();
+    if (hint!=null) hint.setBuildingChanged();
+    if (hint!=null) hint.setPointPropertiesChanged();
     
     final IProfilBuilding oldBuilding = m_profil.getBuilding();
     m_profil.setBuilding( m_building );

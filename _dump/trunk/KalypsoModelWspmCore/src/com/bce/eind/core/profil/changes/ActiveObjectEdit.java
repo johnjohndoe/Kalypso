@@ -25,7 +25,7 @@ public class ActiveObjectEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setActivePointChanged();
+    if (hint!=null) hint.setActivePointChanged();
     
     final IProfilPoint oldPoint = m_profil.getActivePoint();
     final POINT_PROPERTY oldProperty = m_profil.getActiveProperty();

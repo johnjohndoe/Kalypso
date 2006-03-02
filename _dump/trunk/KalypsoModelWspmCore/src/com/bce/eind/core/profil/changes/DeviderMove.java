@@ -23,7 +23,7 @@ public class DeviderMove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setDeviderMoved();
+    if (hint!=null) hint.setDeviderMoved();
 
     final IProfilPoint oldPosition = m_devider.setPoint( m_newPosition );
 

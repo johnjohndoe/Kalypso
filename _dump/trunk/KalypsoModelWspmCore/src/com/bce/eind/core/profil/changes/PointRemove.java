@@ -32,7 +32,7 @@ public class PointRemove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setPointsChanged();
+    if (hint!=null) hint.setPointsChanged();
     
     m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
     

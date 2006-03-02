@@ -37,7 +37,7 @@ public final class PointPropertyAdd implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointPropertiesChanged();
+    if (hint!=null) hint.setPointPropertiesChanged();
     
     m_profil.getProfilPoints().addProperty( m_property );
     final LinkedList<IProfilPoint> points = m_profil.getPoints();

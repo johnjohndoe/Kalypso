@@ -27,7 +27,7 @@ public class DeviderEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setDeviderDataChanged();
+    if (hint!=null) hint.setDeviderDataChanged();
     
     final Object oldValue = m_devider.getValueFor( m_property );
     m_devider.setValueFor( m_property, m_newValue );

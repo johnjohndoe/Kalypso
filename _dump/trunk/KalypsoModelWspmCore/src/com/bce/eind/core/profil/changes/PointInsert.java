@@ -23,7 +23,7 @@ public class PointInsert implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setPointsChanged();
+    if (hint!=null) hint.setPointsChanged();
 
     final IProfilPoint thePointAfter = ProfilUtil.getPointAfter( m_profil, m_thePointBefore );
     if( thePointAfter == null )

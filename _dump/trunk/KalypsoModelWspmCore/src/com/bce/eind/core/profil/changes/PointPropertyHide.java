@@ -19,7 +19,7 @@ public final class PointPropertyHide implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointPropertiesChanged();
+    if (hint!=null) hint.setPointPropertiesChanged();
 
     final boolean oldValue = (Boolean)m_property.getParameter(PARAMETER.VISIBLE );
     m_property.setVisible(  m_visible);

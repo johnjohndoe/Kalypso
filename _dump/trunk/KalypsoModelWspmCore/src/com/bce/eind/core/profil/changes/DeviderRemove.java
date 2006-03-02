@@ -25,7 +25,7 @@ public class DeviderRemove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setDeviderMoved();
+    if (hint!=null) hint.setDeviderMoved();
     
     m_profil.removeDevider(m_devider);
     return new DeviderAdd(m_profil, m_devider);

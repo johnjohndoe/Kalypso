@@ -26,7 +26,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setPointValuesChanged();
+    if (hint!=null) hint.setPointValuesChanged();
     
     final Double oldValue = m_point.getValueFor( m_property );
     m_point.setValueFor( m_property, m_newValue );

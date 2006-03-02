@@ -28,7 +28,7 @@ public class BuildingEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setBuildingDataChanged();
+    if (hint!=null) hint.setBuildingDataChanged();
     
     final Object oldValue = m_building.getValueFor( m_property );
     m_building.setValue( m_property, m_newValue );

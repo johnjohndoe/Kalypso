@@ -32,7 +32,7 @@ public class DeviderAdd implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setDeviderMoved();
+    if (hint!=null) hint.setDeviderMoved();
 
     m_profil.addDevider( m_devider );
     return new DeviderRemove( m_profil, m_devider );

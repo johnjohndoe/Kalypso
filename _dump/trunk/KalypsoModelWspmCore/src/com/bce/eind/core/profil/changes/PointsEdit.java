@@ -29,7 +29,7 @@ public final class PointsEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointValuesChanged();
+    if (hint!=null) hint.setPointValuesChanged();
     final Object[] reverseValues = m_operation.doOperation( m_points, m_values );
 
     return new PointsEdit( m_points, m_operation, reverseValues );

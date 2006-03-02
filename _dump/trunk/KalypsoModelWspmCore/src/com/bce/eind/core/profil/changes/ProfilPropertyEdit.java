@@ -25,7 +25,7 @@ public final class ProfilPropertyEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    hint.setProfilPropertyChanged(true);
+    if (hint!=null) hint.setProfilPropertyChanged(true);
     
     final Object oldValue = m_profil.getProperty(m_property);
     m_profil.setProperty( m_property, m_newValue );

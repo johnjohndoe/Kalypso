@@ -25,7 +25,7 @@ public class VisibleDeviderEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint)
   {
-    hint.setProfilPropertyChanged(true);
+    if (hint!=null) hint.setProfilPropertyChanged(true);
     
     final boolean oldVisible = m_profil.getDeviderVisibility(m_typ );
     m_profil.setDeviderVisibility(m_typ, m_visible );
