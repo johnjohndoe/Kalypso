@@ -89,6 +89,6 @@ public interface Filter
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( );
 
-  public Filter clone( Filter filter ) throws FilterConstructionException;
+  public Filter clone( ) throws CloneNotSupportedException;
 
 }

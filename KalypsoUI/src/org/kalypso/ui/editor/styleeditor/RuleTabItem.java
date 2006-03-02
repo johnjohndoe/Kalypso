@@ -328,9 +328,9 @@ public class RuleTabItem
         Filter clone = null;
         try
         {
-          clone = oldFilter.clone( oldFilter );
+          clone = oldFilter.clone();
         }
-        catch( FilterConstructionException ex )
+        catch( CloneNotSupportedException ex )
         {
           ex.printStackTrace();
         }

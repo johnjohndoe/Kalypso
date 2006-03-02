@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import org.kalypsodeegree.filterencoding.Filter;
@@ -67,6 +68,9 @@ import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Filter>element that contains an Operation (only) (as defined in the Filter DTD).
@@ -164,8 +168,21 @@ public class ComplexFilter extends AbstractFilter
   }
 
   @Override
-  public Filter clone( Filter filter ) throws FilterConstructionException
+  public Filter clone( ) throws CloneNotSupportedException
   {
-    return super.clone( filter );
+    StringBuffer buffer = toXML();
+    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
+    Document asDOM = null;
+    try
+    {
+      asDOM = XMLHelper.getAsDOM( input, true );
+      Element element = asDOM.getDocumentElement();
+      return AbstractFilter.buildFromDOM( element );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    throw new CloneNotSupportedException();
   }
 }

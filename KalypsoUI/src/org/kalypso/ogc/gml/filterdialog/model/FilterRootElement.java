@@ -173,12 +173,13 @@ public class FilterRootElement implements Filter
     return m_filter;
   }
 
-  public Filter clone( Filter filter ) throws FilterConstructionException
+  @Override
+  public Filter clone( ) throws CloneNotSupportedException
   {
     if( m_filter != null )
     {
-      return m_filter.clone( m_filter );
+      return m_filter.clone();
     }
-    return null;
+    throw new CloneNotSupportedException();
   }
 }

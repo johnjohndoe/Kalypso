@@ -60,9 +60,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Filter>element that consists of a number of FeatureId constraints (only) (as
@@ -122,5 +127,27 @@ public class FeatureFilter extends AbstractFilter
     }
     sb.append( "</ogc:Filter>" );
     return sb;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#clone()
+   */
+  @Override
+  public Filter clone( ) throws CloneNotSupportedException
+  {
+    StringBuffer buffer = toXML();
+    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
+    Document asDOM = null;
+    try
+    {
+      asDOM = XMLHelper.getAsDOM( input, true );
+      Element element = asDOM.getDocumentElement();
+      return AbstractFilter.buildFromDOM( element );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    throw new CloneNotSupportedException();
   }
 }

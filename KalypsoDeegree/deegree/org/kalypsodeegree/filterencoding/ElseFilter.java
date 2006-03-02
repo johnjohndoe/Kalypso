@@ -46,7 +46,7 @@ import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 public class ElseFilter extends AbstractFilter
 {
   @Override
-  public StringBuffer toXML()
+  public StringBuffer toXML( )
   {
     return null;
   }
@@ -54,6 +54,15 @@ public class ElseFilter extends AbstractFilter
   public boolean evaluate( Feature feature )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.filterencoding.AbstractFilter#clone()
+   */
+  @Override
+  public Filter clone( ) throws CloneNotSupportedException
+  {
+    throw new CloneNotSupportedException();
   }
 
 }

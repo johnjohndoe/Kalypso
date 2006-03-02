@@ -167,4 +167,7 @@ public abstract class AbstractFilter implements Filter
 
     return AbstractFilter.buildFromDOM( element );
   }
+
+  @Override
+  public abstract Filter clone( ) throws CloneNotSupportedException;
 }

@@ -63,7 +63,6 @@ package org.kalypsodeegree_impl.filterencoding;
 import java.io.ByteArrayInputStream;
 
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
@@ -108,7 +107,8 @@ public class FalseFilter implements Filter
    * @see org.kalypsodeegree.filterencoding.Filter#clone(org.kalypsodeegree.filterencoding.Filter)
    */
 
-  public Filter clone( Filter filter ) throws FilterConstructionException
+  @Override
+  public Filter clone( ) throws CloneNotSupportedException
   {
     StringBuffer buffer = toXML();
     ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
@@ -116,13 +116,13 @@ public class FalseFilter implements Filter
     try
     {
       asDOM = XMLHelper.getAsDOM( input, true );
+      Element element = asDOM.getDocumentElement();
+      return AbstractFilter.buildFromDOM( element );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
-    Element element = asDOM.getDocumentElement();
-
-    return AbstractFilter.buildFromDOM( element );
+    throw new CloneNotSupportedException();
   }
 }
