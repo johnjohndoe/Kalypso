@@ -65,7 +65,6 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -85,7 +84,7 @@ public class RuleTabItem
 
   private KalypsoUserStyle m_userStyle;
 
-  private final IFeatureType m_featureType;
+  final IFeatureType m_featureType;
 
   public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, IFeatureType featureType )
   {
