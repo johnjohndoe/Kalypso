@@ -35,7 +35,7 @@ import com.bce.eind.core.profil.util.ProfilUtil;
 /**
  * @author kimwerner
  */
-public class Test_IProfil extends TestCase
+public class ProfilChangesTest extends TestCase
 {
   public void testRunTest( ) throws Exception
   {
