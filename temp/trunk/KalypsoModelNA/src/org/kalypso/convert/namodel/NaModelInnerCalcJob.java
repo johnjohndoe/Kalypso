@@ -141,6 +141,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_03beta = "start/kalypso_2.0.3beta.exe";
 
+  private final String EXE_FILE_2_04beta = "start/kalypso_2.0.4beta.exe";
+
   private boolean m_succeeded = false;
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
@@ -820,6 +822,8 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_03beta;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
       m_kalypsoKernelPath = EXE_FILE_2_03beta;
+    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4beta" ))
+      m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
   }
@@ -1075,7 +1079,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // modellWorkspace, logger, outputDir, 1.0d , idManager);
   }
 
-private void loadTSResults( final String suffix, final IFeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
+  private void loadTSResults( final String suffix, final IFeatureType resultFT, final String titlePropName, final String resultType, final String metadataTSLink, final String targetTSLink, final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final double resultFactor, final NAConfiguration conf ) throws Exception
   {
     final IDManager idManager = conf.getIdManager();
     // ASCII-Files
@@ -1150,7 +1154,7 @@ private void loadTSResults( final String suffix, final IFeatureType resultFT, fi
         // if pegel exists, copy metadata (inclusive wq-function)
         TimeseriesLinkType pegelLink = null;
         if( metadataTSLink != null )
-         pegelLink = (TimeseriesLinkType) feature.getProperty( metadataTSLink );
+          pegelLink = (TimeseriesLinkType) feature.getProperty( metadataTSLink );
         if( pegelLink != null )
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
@@ -1246,10 +1250,12 @@ private void loadTSResults( final String suffix, final IFeatureType resultFT, fi
         }
       }
     }
-  }  /**
-       * @param suffix
-       * @return AxisTitle
-       */
+  }
+
+  /**
+   * @param suffix
+   * @return AxisTitle
+   */
   private String getAxisTitleForSuffix( String suffix )
   {
     // j Temperatur .tmp
