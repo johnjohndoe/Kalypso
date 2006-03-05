@@ -31,7 +31,10 @@ public interface Feature extends DeegreeFeature
 
   public void setProperty( final IPropertyType propertyType, final Object value );
 
-  /** Uses the visitor on each property of this feature. */
+  /** Uses the visitor on each property of this feature. 
+   * 
+   * @TODO: REMARK Gernot: this is never used (i used it once, but no more) so maybe we delete it for simplicity? -> if we keep it, we should move ti to a utility class
+   * */
   public void accept( final IFeaturePropertyVisitor visitor );
 
   /**
@@ -47,5 +50,4 @@ public interface Feature extends DeegreeFeature
   public void setProperty( final String propLocalName, final Object value );
 
   public Object getProperty( QName propQName );
-
 }
