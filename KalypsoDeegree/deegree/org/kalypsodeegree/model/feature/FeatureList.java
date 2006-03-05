@@ -2,7 +2,6 @@ package org.kalypsodeegree.model.feature;
 
 import java.util.List;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
