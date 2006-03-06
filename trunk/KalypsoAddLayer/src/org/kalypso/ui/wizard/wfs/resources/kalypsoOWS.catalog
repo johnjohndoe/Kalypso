@@ -4,6 +4,7 @@ wfs=http://134.28.87.71:8080/deegreewms/wfs
 wfs=http://www.refractions.net:8080/geoserver/wfs
 wfs=http://134.28.87.75:8000/deegreewms/wfs
 wfs=http://bsu-uio:8081/deegreewfs/wfs
+wfs=http://212.23.140.234/xplanung/ogcwebservice
 wms=http://localhost:8080/deegreewms/wms
 wms=http://134.28.87.71:8080/deegreewms/wms
 wms=http://134.28.87.75:8000/deegreewms/wms

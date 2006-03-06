@@ -20,7 +20,6 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 
 /**
@@ -43,7 +42,7 @@ public class FeatureHelper
 
   public static boolean booleanIsTrue( Feature feature, String propName, boolean defaultStatus )
   {
-    final Object property = feature.getProperty( propName ) ;
+    final Object property = feature.getProperty( propName );
     if( property != null && property instanceof Boolean )
       return ((Boolean) property).booleanValue();
     return defaultStatus;
@@ -51,7 +50,7 @@ public class FeatureHelper
 
   public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern, String defaultValue )
   {
-    final Object property = feature.getProperty(  propName  );
+    final Object property = feature.getProperty( propName );
     if( property != null && property instanceof Date )
     {
       DateFormat dateFormat = new SimpleDateFormat( simpleDateFormatPattern );
@@ -63,7 +62,7 @@ public class FeatureHelper
 
   public static double getAsDouble( Feature feature, String propName, double defaultValue )
   {
-    final Object value = feature.getProperty(  propName ) ;
+    final Object value = feature.getProperty( propName );
     if( value == null )
       return defaultValue;
     if( value instanceof String )
@@ -74,7 +73,7 @@ public class FeatureHelper
 
   public static String getAsString( Feature feature, String propName )
   {
-    final Object value = feature.getProperty( propName ) ;
+    final Object value = feature.getProperty( propName );
     // TODO use numberformat
     if( value == null )
       return null;
@@ -186,7 +185,7 @@ public class FeatureHelper
    */
   public static int getPositionOfAssoziation( Feature srcFE, IRelationType linkProp, Feature destFE )
   {
-    if( !(linkProp.isList() ))
+    if( !(linkProp.isList()) )
       return 0;
 
     final List list = (List) srcFE.getProperty( linkProp );
@@ -278,7 +277,7 @@ public class FeatureHelper
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType property = properties[i];
-      if( property.isList())
+      if( property.isList() )
         return true;
     }
     return false;
@@ -292,7 +291,7 @@ public class FeatureHelper
 
     IFeatureType[] afT = null;
     if( property instanceof IRelationType )
-      afT = ((IRelationType) property).getTargetFeatureTypes(null,false);
+      afT = ((IRelationType) property).getTargetFeatureTypes( null, false );
     return afT;
   }
 
@@ -309,8 +308,8 @@ public class FeatureHelper
     for( int i = 0; i < strings.length; i++ )
     {
       final String[] splits = strings[i].split( "-" );
-      
-      String value = (String) f.getProperty(splits[1]);
+
+      String value = (String) f.getProperty( splits[1] );
       if( value == null )
         value = splits[1];
 
@@ -356,10 +355,12 @@ public class FeatureHelper
   {
     if( property instanceof IValuePropertyType )
     {
-      final IValuePropertyType pt=(IValuePropertyType) property;
-      final Object valueOriginal = srcFE.getProperty( property);
-      final Object cloneValue = cloneData( valueOriginal, pt.getValueClass());
+      final IValuePropertyType pt = (IValuePropertyType) property;
+      final Object valueOriginal = srcFE.getProperty( property );
+      final Object cloneValue = cloneData( valueOriginal, pt.getValueClass() );
       targetFE.setProperty( pt, cloneValue );
     }
   }
+
+ 
 }
