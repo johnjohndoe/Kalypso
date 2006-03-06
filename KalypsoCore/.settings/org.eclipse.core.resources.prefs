@@ -1,7 +1,8 @@
-#Thu Feb 23 13:35:32 CET 2006
+#Fri Mar 03 15:26:04 CET 2006
 encoding//schema/nativeObsAdapter.exsd=UTF-8
 encoding//etc/schemas/zml/beispiel-metadata.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/convert/resources=UTF-8
+encoding//src/org/kalypso/ogc/sensor/impl/test/test.zml=UTF-8
 encoding//src/org/kalypso/ogc/sensor/timeseries/wq/test/wq-test4.zml=UTF-8
 encoding//src/org/kalypso/ogc/sensor/timeseries/wq/test/wq-test3.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/test/spreemodell/modell.gml=UTF-8

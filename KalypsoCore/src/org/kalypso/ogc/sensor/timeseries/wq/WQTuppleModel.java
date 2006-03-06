@@ -87,6 +87,10 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   private final IWQConverter m_converter;
 
+  private final int m_destAxisPos;
+
+  private final int m_destStatusAxisPos;
+
   /**
    * Creates a <code>WQTuppleModel</code> that can generate either W or Q on the fly. It needs an existing model from
    * whitch the values of the given type are fetched.
@@ -105,15 +109,25 @@ public class WQTuppleModel extends AbstractTuppleModel
    *          destination axis for which values are computed
    * @param destStatusAxis
    *          status axis for the destAxis (destination axis)
+   * @param destStatusAxisPos
+   *          position of the axis in the array
+   * @param destAxisPos
+   *          position of the axis in the array
    */
   public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis,
-      final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
+      final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter,
+      int destAxisPos, int destStatusAxisPos )
   {
     super( axes );
 
     if( converter == null )
       throw new IllegalArgumentException( "WQ-Converter darf nicht null sein" );
 
+    m_destAxisPos = destAxisPos;
+    m_destStatusAxisPos = destStatusAxisPos;
+    mapAxisToPos( destAxis, destAxisPos );
+    mapAxisToPos( destStatusAxis, destStatusAxisPos );
+    
     m_model = model;
     m_converter = converter;
 
@@ -197,9 +211,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     }
 
     return new Number[]
-    {
-        value,
-        status };
+    { value, status };
   }
 
   /**
@@ -243,10 +255,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       if( m_srcStatusAxis != null )
         m_model.setElement( index, status, m_srcStatusAxis );
     }
-    // TODO: besser wäre eigentlich equals, aber das klappt bei status achsen nicht
-    else if( axis == m_destStatusAxis )
+    // TODO: ich glaube Gernot hatte geschrieben:
+    // "besser wäre eigentlich equals, aber das klappt bei status achsen nicht" und hatte == statt equals() benutzt. Ich
+    // bin der Meinung es sollte doch mit equals() klappen.
+    else if( axis.equals( m_destStatusAxis ) )
     {
-      // maybe just ignore??
+      // einfach ignorieren
+
+      // Alte Kommentare:
       // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
       // man versucht, die destStatusAxis zu beschreiben
       // Was soll man tun?
@@ -325,11 +341,19 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   /**
    * @return the base model
-   *  
    */
   public ITuppleModel getBaseModel()
   {
     return m_model;
   }
 
+  public int getDestAxisPos()
+  {
+    return m_destAxisPos;
+  }
+  
+  public int getDestStatusAxisPos()
+  {
+    return m_destStatusAxisPos;
+  }
 }

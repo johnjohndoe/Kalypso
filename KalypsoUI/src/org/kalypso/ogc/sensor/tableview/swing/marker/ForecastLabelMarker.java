@@ -131,6 +131,6 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public int hashCode()
   {
-    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();
+    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).toHashCode();
   }
 }

@@ -189,7 +189,6 @@ public class DateRange implements Comparable
    */
   public int hashCode()
   {
-    final HashCodeBuilder hcb = new HashCodeBuilder();
-    return hcb.append( m_from ).append( m_to ).hashCode();
+    return new HashCodeBuilder().append( m_from ).append( m_to ).toHashCode();
   }
 }

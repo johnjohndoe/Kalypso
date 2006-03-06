@@ -158,14 +158,14 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
           outerSourceCount );
-      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd, sourceIndexBegin,
-          outerSourceCount );
-      
+      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd,
+          sourceIndexBegin, outerSourceCount );
+
       if( sourceIndexEnd > outerSourceCount - 1 )
       {
-        System.out.println("bloed");
+        System.out.println( "bloed" );
       }
-      
+
       int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
 
       final long distTime = dateEnd.getTime() - dateBegin.getTime();
@@ -216,7 +216,7 @@ public class TranProLinFilter extends AbstractObservationFilter
         final WQTuppleModel wqTuppleModel = (WQTuppleModel)outerSource;
         outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel
             .getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel
-            .getConverter() );
+            .getConverter(), wqTuppleModel.getDestAxisPos(), wqTuppleModel.getDestStatusAxisPos() );
       }
       else
         outerTarget = innerTarget;
@@ -251,7 +251,8 @@ public class TranProLinFilter extends AbstractObservationFilter
         {
           final IAxis axis = axesStatus[t];
           final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
-          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
+          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(),
+              m_statusToMerge ) );
           outerTarget.setElement( targetRow, newValue, axis );
         }
 
@@ -261,9 +262,7 @@ public class TranProLinFilter extends AbstractObservationFilter
           final IAxis axis = axesTransform[t];
           Number value = (Number)outerSource.getElement( sourceRow, axis );
           value = new Double( m_operation.calculate( new double[]
-          {
-              value.doubleValue(),
-              hereCoeff } ) );
+          { value.doubleValue(), hereCoeff } ) );
           // important to set transformed last, as there may
           // be dependencies to other axes
           // (e.g. WQ-Transformation)
@@ -277,7 +276,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     {
       // TODO: allways gets here, even if only one value cannot be computed
       // better catch exceptions individually?
-      
+
       e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
       logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );
