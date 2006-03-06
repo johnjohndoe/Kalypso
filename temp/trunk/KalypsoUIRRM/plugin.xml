@@ -17,7 +17,7 @@
                enablesFor="1"
                icon="icons/kmStrang.gif"
                id="KalypsoUIRRM.updateKMParameter"
-               label="updateKMParameter"
+               label="UpdateKMParameter"
                menubarPath="KalypsoUIRRM.menu1"
                style="push"
                tooltip="tooltip"/>
