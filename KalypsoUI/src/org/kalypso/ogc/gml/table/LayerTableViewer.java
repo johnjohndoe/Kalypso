@@ -106,8 +106,6 @@ import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -518,6 +516,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     final TableColumn[] columns = table.getColumns();
     boolean changed = false;
+
     for( int i = 0; i < columns.length; i++ )
     {
       final TableColumn column = columns[i];
@@ -531,6 +530,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         }
       }
     }
+
     if( changed )
     {
       refreshCellEditors();
@@ -553,6 +553,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.eclipse.jface.viewers.StructuredViewer#refresh()
    */
+  @Override
   public void refresh( )
   {
     if( isDisposed() )

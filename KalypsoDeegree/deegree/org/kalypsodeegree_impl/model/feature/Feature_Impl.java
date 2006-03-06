@@ -383,6 +383,7 @@ public class Feature_Impl implements Feature
    * @deprecated use getProperty(IPropertyType)
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
+  @Deprecated
   public Object getProperty( String propNameLocalPart )
   {
     if( propNameLocalPart.indexOf( ':' ) > 0 )
