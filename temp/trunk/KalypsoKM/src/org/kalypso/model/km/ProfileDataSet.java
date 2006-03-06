@@ -15,7 +15,7 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 
 public class ProfileDataSet
 {
-	final SortedSet<ProfileData> m_profileSort = new TreeSet<ProfileData>(
+	private final SortedSet<ProfileData> m_profileSort = new TreeSet<ProfileData>(
 			new Comparator<ProfileData>()
 			{
 				public int compare(ProfileData p1, ProfileData p2)
@@ -30,7 +30,7 @@ public class ProfileDataSet
 
 	public ProfileDataSet(final File[] profileFiles)
 	{
-		init(profileFiles);
+		init(profileFiles, false);
 		m_startPosition = m_profileSort.first().getPosition();
 		m_endPosition = m_profileSort.last().getPosition();
 	}
@@ -39,7 +39,7 @@ public class ProfileDataSet
 	{
 		m_startPosition = min;
 		m_endPosition = max;
-		init(profileFiles);
+		init(profileFiles, true);
 	}
 
 	public double getStartPosition()
@@ -52,7 +52,7 @@ public class ProfileDataSet
 		return m_endPosition;
 	}
 
-	private void init(final File[] profileFiles)
+	private void init(final File[] profileFiles, boolean validatePosition)
 	{
 		for (int i = 0; i < profileFiles.length; i++)
 		{
@@ -62,10 +62,15 @@ public class ProfileDataSet
 			{
 				qwProfile = ProfileFactory.createQWProfile(file,
 						m_startPosition, m_endPosition);
-				final double profilePos = qwProfile.getPosition();
-				if (m_startPosition <= profilePos
-						&& profilePos <= m_endPosition)
+				if (validatePosition)
+				{
+					final double profilePos = qwProfile.getPosition();
+					if (m_startPosition <= profilePos
+							&& profilePos <= m_endPosition)
+						m_profileSort.add(qwProfile);
+				} else
 					m_profileSort.add(qwProfile);
+
 			} catch (IOException e)
 			{
 				Logger.getAnonymousLogger().log(
@@ -119,7 +124,8 @@ public class ProfileDataSet
 		}
 
 		final AbstractKMValue[] kmMerged = (AbstractKMValue[]) kmMergedForIndexOverProfiles
-				.toArray(new AbstractKMValue[kmMergedForIndexOverProfiles.size()]);
+				.toArray(new AbstractKMValue[kmMergedForIndexOverProfiles
+						.size()]);
 
 		final SortedSet<AbstractKMValue> sort = new TreeSet<AbstractKMValue>(
 				new Comparator<AbstractKMValue>()
@@ -156,7 +162,8 @@ public class ProfileDataSet
 		double dq2 = (qLast - qbankfull) / (numberOfDischarges / 2);
 		for (double q = qbankfull + dq2; q <= qLast; q += dq2)
 			result.add(getKM(sort, q));
-		return (AbstractKMValue[]) result.toArray(new AbstractKMValue[result.size()]);
+		return (AbstractKMValue[]) result.toArray(new AbstractKMValue[result
+				.size()]);
 	}
 
 	private AbstractKMValue getKM(SortedSet<AbstractKMValue> sort, double q)
@@ -174,7 +181,8 @@ public class ProfileDataSet
 		return new KMValueFromQinterpolation(q, km1, km2);
 	}
 
-	private AbstractKMValue getBankFull(final AbstractKMValue[] kmValues) throws Exception
+	private AbstractKMValue getBankFull(final AbstractKMValue[] kmValues)
+			throws Exception
 	{
 		for (int i = 0; i < kmValues.length; i++)
 		{

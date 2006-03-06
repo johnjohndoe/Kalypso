@@ -28,6 +28,13 @@ public class ProfileFactory
 			+ _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D
 			+ ".*?");
 
+	public static ProfileDataSet createProfileSet(final File[] profileFiles,
+			double minKM, double maxKM)
+	{
+		return new ProfileDataSet(profileFiles, 1000d * minKM, 1000d * maxKM);
+
+	}
+
 	public static ProfileDataSet createProfileSet(final File profileDir,
 			double minKM, double maxKM)
 	{
@@ -39,8 +46,21 @@ public class ProfileFactory
 			}
 		};
 		final File[] profileFiles = profileDir.listFiles(filter);
+		return createProfileSet(profileFiles, minKM, maxKM);
+	}
 
-		return new ProfileDataSet(profileFiles, 1000d * minKM, 1000d * maxKM);
+	public static ProfileDataSet createProfileSet(final File profileDir)
+	{
+		final FileFilter filter = new FileFilter()
+		{
+			public boolean accept(final File file)
+			{
+				return file.getName().endsWith("km");
+			}
+		};
+		final File[] profileFiles = profileDir.listFiles(filter);
+
+		return new ProfileDataSet(profileFiles);
 	}
 
 	public static ProfileData createQWProfile(final File file, double min,
@@ -58,7 +78,7 @@ public class ProfileFactory
 			{
 				final double meter = 1000d * Double.parseDouble(kmMatcher
 						.group(1));
-				wqProfile = new ProfileData(min, max, meter);
+				wqProfile = new ProfileData(file, min, max, meter);
 				continue;
 			}
 			final Matcher tableMatcher = PATTERN_TABLE.matcher(line);
