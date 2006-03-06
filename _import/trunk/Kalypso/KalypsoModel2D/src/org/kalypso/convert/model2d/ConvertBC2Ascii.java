@@ -87,7 +87,7 @@ public class ConvertBC2Ascii {
 	public void convertBC2Ascii(URL gmlURL, URL schemaUrl, URL modelGML, URL modelSchema ){
         try{
 	        System.out.println(gmlURL+", "+ schemaUrl);
-	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL);
 	        
 	        final Feature rootFeature = ws.getRootFeature();
 	        

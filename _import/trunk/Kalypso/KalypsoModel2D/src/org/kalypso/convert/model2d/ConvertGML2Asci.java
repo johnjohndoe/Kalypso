@@ -133,8 +133,7 @@ public class ConvertGML2Asci {
 		try {
 			System.out.println("gml: " + gmlURL);
 			System.out.println("gmlSchema: " + schemaUrl);
-			GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL,
-					schemaUrl);
+			GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL);
 
 			final Feature rootFeature = ws.getRootFeature();
 
@@ -170,8 +169,7 @@ public class ConvertGML2Asci {
 		try {
 			System.out.println("gml: " + gmlURL);
 			System.out.println("gmlSchema: " + schemaUrl);
-			GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL,
-					schemaUrl);
+			GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL);
 
 			final Feature rootFeature = ws.getRootFeature();
 

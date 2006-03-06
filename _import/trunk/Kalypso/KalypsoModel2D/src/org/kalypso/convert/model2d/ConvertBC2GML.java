@@ -578,7 +578,7 @@ public class ConvertBC2GML {
 //	        URL schemaUrl = new URL(gml2dSchema);
 	        URL schemaUrl = new File(gml2dSchema).toURL();
 
-	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL);
 	        final Feature rootFeature = ws.getRootFeature();
 	        
 	        for (int a = 0; a < fifthsList.size(); a++){
