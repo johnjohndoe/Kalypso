@@ -105,7 +105,7 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = ODT_JC.createMarshaller();
+      final Marshaller m =  JaxbUtilities.createMarshaller(ODT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -122,7 +122,7 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = ODT_JC.createMarshaller();
+      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( tpl, writer );
     }

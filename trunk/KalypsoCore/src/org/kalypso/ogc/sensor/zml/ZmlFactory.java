@@ -611,7 +611,7 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller() throws JAXBException
   {
-    final Marshaller marshaller = JC.createMarshaller();
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     return marshaller;

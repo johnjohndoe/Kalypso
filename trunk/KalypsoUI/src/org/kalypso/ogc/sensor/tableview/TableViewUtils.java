@@ -153,7 +153,7 @@ public final class TableViewUtils
   {
     try
     {
-      final Marshaller m = OTT_JC.createMarshaller();
+      final Marshaller m = JaxbUtilities.createMarshaller(OTT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -170,7 +170,7 @@ public final class TableViewUtils
   {
     try
     {
-      final Marshaller m = OTT_JC.createMarshaller();
+      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, writer );
     }

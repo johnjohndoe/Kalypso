@@ -153,7 +153,8 @@ public class RequestFactory
     try
     {
       writer = new StringWriter();
-      final Marshaller marshaller = JC.createMarshaller();
+      
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
       marshaller.marshal( requestType, writer );
       writer.close();

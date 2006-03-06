@@ -155,7 +155,7 @@ public class GisTemplateHelper
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream ) throws JAXBException
   {
-    final Marshaller marshaller = JC_GISMAP.createMarshaller();
+    final Marshaller marshaller =JaxbUtilities.createMarshaller( JC_GISMAP);
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.marshal( modellTemplate, outStream );
   }

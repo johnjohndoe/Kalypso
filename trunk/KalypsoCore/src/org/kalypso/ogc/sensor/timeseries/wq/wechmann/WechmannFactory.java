@@ -188,7 +188,7 @@ public class WechmannFactory
         }
         sets.add( wechmannSet );
       }
-      final Marshaller marshaller = JC_WECHMANN.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC_WECHMANN);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final StringWriter writer = new StringWriter();
       marshaller.marshal( wt, writer );

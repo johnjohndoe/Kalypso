@@ -141,7 +141,7 @@ public class WQTableFactory implements ISerializer
         xmlTables.getTable().add( xmlTable );
       }
 
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter writer = new StringWriter();

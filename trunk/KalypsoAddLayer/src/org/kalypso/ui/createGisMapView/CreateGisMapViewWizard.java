@@ -153,8 +153,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     final Gismapview gismapview = GisTemplateHelper.emptyGisView();
 
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-    final Marshaller marshaller = jc.createMarshaller();
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     StringWriter stringWriter = new StringWriter();
     marshaller.marshal( gismapview, stringWriter );

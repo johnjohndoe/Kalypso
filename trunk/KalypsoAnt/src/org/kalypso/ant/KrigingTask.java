@@ -277,7 +277,7 @@ public class KrigingTask extends Task
       final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
 
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = jc.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       for( int i = 0; i < modelFeatures.length; i++ )
       {
