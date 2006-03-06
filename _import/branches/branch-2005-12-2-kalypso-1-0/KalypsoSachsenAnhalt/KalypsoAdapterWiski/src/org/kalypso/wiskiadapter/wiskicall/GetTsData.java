@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.DateRange;
 
@@ -21,6 +22,8 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
  */
 public class GetTsData implements IWiskiCall
 {
+  private final static Logger LOG = Logger.getLogger( GetTsData.class.getName() );
+  
   private final DateRange m_dr;
 
   private final Long m_id;
@@ -53,10 +56,15 @@ public class GetTsData implements IWiskiCall
     if( serie != null )
     {
       data = (LinkedList)serie.get( KiWWDataProviderInterface.KEY_TSDATA );
+      
+      if( data.size() == 0 )
+        LOG.warning( "WDP liefert eine leere Zeitreihe, TSDATA von TIMESERIES(" + m_id + ")" );
 
       // utc offset in seconds
       utcOffset = (Integer)( (HashMap)serie.get( KiWWDataProviderInterface.KEY_TSINFO ) ).get( "utcoffset" );
     }
+    else
+      LOG.warning( "WDP liefert null, TSDATA von TIMESERIES(" + m_id + ")" );
   }
 
   public LinkedList getData()

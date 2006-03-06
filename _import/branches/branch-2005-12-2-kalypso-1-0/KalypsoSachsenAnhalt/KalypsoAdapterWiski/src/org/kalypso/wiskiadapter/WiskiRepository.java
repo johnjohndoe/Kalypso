@@ -1,5 +1,6 @@
 package org.kalypso.wiskiadapter;
 
+import java.io.File;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.RepositoryUtils;
+import org.kalypso.wiskiadapter.debug.WDPDebuger;
 import org.kalypso.wiskiadapter.wiskicall.GetSuperGroupList;
 import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
@@ -35,14 +37,15 @@ public class WiskiRepository extends AbstractRepository
   private HashMap m_userData = null;
 
   private final String m_url;
-
   private final String m_domain;
-
   private final String m_logonName;
-
   private final String m_password;
+  private boolean m_debugMode;
+  private String m_debugDir;
+  private boolean m_simulate;
 
   private Map m_children = null;
+
 
   /**
    * @param conf
@@ -61,6 +64,9 @@ public class WiskiRepository extends AbstractRepository
     m_domain = validator.getDomain();
     m_logonName = validator.getLogonName();
     m_password = validator.getPassword();
+    m_debugMode = validator.isDebugMode();
+    m_debugDir = validator.getDebugDir();
+    m_simulate = validator.isSimulateMode();
 
     try
     {
@@ -84,8 +90,32 @@ public class WiskiRepository extends AbstractRepository
 
     try
     {
-      //create a server object
-      final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf)Naming.lookup( m_url );
+      final KiWWDataProviderRMIf myServerObject;
+
+      if( m_debugMode )
+      {
+        KiWWDataProviderRMIf wraped = null;
+        if( !m_simulate )
+        {
+          try
+          {
+            wraped = (KiWWDataProviderRMIf)Naming.lookup( m_url );
+          }
+          catch( final Exception e )
+          {
+            LOG.warning( "Could not wrap wiski, cause: " + e.getLocalizedMessage() );
+          }
+        }
+
+        LOG.info( "Using WDP-Debuger" + (m_simulate ? " simulate mode activated!" : "" ) );
+        
+        myServerObject = new WDPDebuger( new File( m_debugDir ), m_simulate, wraped );
+      }
+      else
+      {
+        myServerObject = (KiWWDataProviderRMIf)Naming.lookup( m_url );
+      }
+
       LOG.info( "Wiski About()=" + myServerObject.about() );
 
       // optional params (used for timeout, entry in seconds)

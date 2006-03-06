@@ -99,7 +99,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @param amountOfBefore Anzahl an Zeit vor dem Originalzeitraum
    * @param amoutOfAfter Anzahl an Zeit nach dem Originalzeitraum
    * @param calendarField Zeiteinheit worauf amountOf* sich beziehen
-   *  
    */
   public static PSICompactTuppleModel copyModelWithOverwrite( final ITuppleModel values, final IValueConverter vc,
       final int amountOfBefore, final int amoutOfAfter, final int calendarField )

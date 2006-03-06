@@ -44,6 +44,14 @@ package org.kalypso.wiskiadapter;
 import org.eclipse.jface.dialogs.IInputValidator;
 
 /**
+ * Die Wiski Configuration String ist wie folgt aufgebaut: <br>
+ * <code>url#domain#login#password#language</code> <br>
+ * oder optional mit DEBUG Information: <br>
+ * <code>url#domain#login#password#language{DEBUG#[SIMULATE]#filepath}</code> <br>
+ * Im Debugmodus werden die Ergebnisse der WDP-Aufrufe in Dateien (in filepath zu finden) serialisiert, vorausgesetzt
+ * SIMULATE ist nicht angegeben. Ist SIMULATE angegeben, so werden die WDP-Aufrufe simuliert und nicht dem echten WDP
+ * weitergeleitet, sondern die in die Dateien (unter filepath liegend) gespeicherte Ergebnisse werden benutzt.
+ * 
  * @author schlienger
  */
 public class WiskiConfigValidator implements IInputValidator
@@ -64,19 +72,50 @@ public class WiskiConfigValidator implements IInputValidator
 
   private String m_language;
 
+  private boolean m_debugMode;
+
+  private String m_debugDir;
+
+  private boolean m_simulateMode;
+
   /**
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
    */
   public String isValid( final String confString )
   {
-    if( confString == null )
+    String conf = confString;
+
+    if( conf == null )
       return "Die Wiski-Verbindungsinformation ist null";
 
-    final String[] items = confString.split( CONF_SEP );
+    // first check if DEBUG mode is set
+    final int ixDbg = conf.indexOf( "{DEBUG#" );
+    if( ixDbg != -1 )
+    {
+      m_debugMode = true;
+
+      final int ixDbgEnd = conf.indexOf( '}', ixDbg );
+      if( ixDbgEnd == -1 )
+        return "Eingabe überprüfen, Syntax: URL#Domain#Benutzername#Passwort#Sprache{DEBUG#[SIMULATE]#Pfad}";
+      
+      final String confDebug = conf.substring( ixDbg + 1, ixDbgEnd );
+      final String[] confDebugItems = confDebug.split( "#" );
+      // confDebugItems[0] beinhaltet immer DEBUG
+      m_simulateMode = confDebugItems[1].equalsIgnoreCase( "SIMULATE" );
+      m_debugDir = m_simulateMode ? confDebugItems[2] : confDebugItems[1];
+      
+      if( confDebugItems.length < 2 || confDebugItems.length > 3 )
+        return "Eingabe überprüfen, Syntax: URL#Domain#Benutzername#Passwort#Sprache{DEBUG#[SIMULATE]#Pfad}";
+      
+      conf = conf.replaceAll( "\\{DEBUG.*\\}", "" );
+    }
+    else
+      m_debugMode = false;
+
+    final String[] items = conf.split( CONF_SEP );
 
     if( items.length != CONF_NB_ITEMS )
-      return "Die Wiski-Verbindungsinformation muss " + CONF_NB_ITEMS + " Elemente haben, die mit dem Zeichen "
-          + CONF_SEP + " getrennt sind. Syntax: URL#Domain#Benutzername#Passwort#Sprache";
+      return "Eingabe überprüfen, Syntax: URL#Domain#Benutzername#Passwort#Sprache{DEBUG#[SIMULATE]#Pfad}";
 
     parse( items );
 
@@ -115,5 +154,20 @@ public class WiskiConfigValidator implements IInputValidator
   public String getUrl()
   {
     return m_url;
+  }
+
+  public boolean isDebugMode()
+  {
+    return m_debugMode;
+  }
+
+  public String getDebugDir()
+  {
+    return m_debugDir;
+  }
+
+  public boolean isSimulateMode()
+  {
+    return m_simulateMode;
   }
 }
