@@ -325,14 +325,15 @@ public class RuleTabItem
       {
         Filter oldFilter = rule.getFilter();
         Filter clone = null;
-        try
-        {
-          clone = oldFilter.clone();
-        }
-        catch( CloneNotSupportedException ex )
-        {
-          ex.printStackTrace();
-        }
+        if( oldFilter != null )
+          try
+          {
+            clone = oldFilter.clone();
+          }
+          catch( CloneNotSupportedException ex )
+          {
+            ex.printStackTrace();
+          }
         final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, false );
         int open = dialog.open();
         if( open == Window.OK )

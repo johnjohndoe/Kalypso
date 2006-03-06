@@ -32,7 +32,6 @@ package org.kalypso.ogc.gml.filterdialog.dialog;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.apache.tools.ant.filters.StringInputStream;
@@ -90,7 +89,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite;
 import org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
