@@ -2,7 +2,17 @@
 <bookinfo>
   <title>KALYPSO - Grafik Anwenderhandbuch</title>
 
-  <subtitle>Installation Hochwasserzentrale Sachsen-Anhalt</subtitle>
+  <subtitle>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="img/bookinfo/kalypso.png"
+						format="PNG" scale="85"/>
+				</imageobject>
+			</mediaobject>
+			
+  	&bookinfo.subtitle;
+  </subtitle>
 
   <author>
     <surname>Björnsen Beratende Ingenieure GmbH</surname>

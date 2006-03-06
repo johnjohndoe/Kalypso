@@ -218,6 +218,11 @@
 		<exec executable="pdflatex.exe" dir="${tex.dir}">
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
+    
+		  <!-- three times! needed for correct toc numbering -->
+		<exec executable="pdflatex.exe" dir="${tex.dir}">
+			<arg value="${pdfproc.out.name}.tex" />
+		</exec>
 
 		<copy todir="${pdfproc.out.dir}" file="${tex.dir}/${pdfproc.out.name}.pdf" />
 	</target>

@@ -375,16 +375,16 @@
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
 
-          <mediaobject vendor="sachsen-anhalt">
-            <imageobject>
-              <imagedata align="center" fileref="img/gui/gis_karte2.png"
-                         format="PNG" scale="45" vendor="sachsen-anhalt" />
-            </imageobject>
-          </mediaobject>
-          <mediaobject vendor="hh_ingenieurbueros">
+        <mediaobject vendor="sachsen-anhalt">
           <imageobject>
-            <imagedata align="center"
-                       fileref="img/gui/navi_karte.png"
+            <imagedata align="center" fileref="img/gui/gis_karte2.png"
+                       format="PNG" scale="45" vendor="sachsen-anhalt" />
+          </imageobject>
+        </mediaobject>
+
+        <mediaobject vendor="hh_ingenieurbueros">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/navi_karte.png"
                        format="PNG" scale="45" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
@@ -427,13 +427,15 @@
           <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/style_editor.png"
-                         format="PNG" scale="45"  vendor="sachsen-anhalt" />
+                         format="PNG" scale="45" vendor="sachsen-anhalt" />
             </imageobject>
           </mediaobject>
-           <mediaobject vendor="hh_ingenieurbueros">
+
+          <mediaobject vendor="hh_ingenieurbueros">
             <imageobject>
-              <imagedata align="center" fileref="img/gui/style_editor_tuhh.png"
-                         format="PNG" scale="45"  vendor="hh_ingenieurbueros"/>
+              <imagedata align="center"
+                         fileref="img/gui/style_editor_tuhh.png" format="PNG"
+                         scale="45" vendor="hh_ingenieurbueros" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -633,14 +635,13 @@
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/tabelle2.png"
-                       scale="45" vendor="sachsen-anhalt"  />
+                       scale="45" vendor="sachsen-anhalt" />
           </imageobject>
         </mediaobject>
-        
+
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
-            <imagedata align="center"
-                       fileref="img/gui/navi_tabelle.png"
+            <imagedata align="center" fileref="img/gui/navi_tabelle.png"
                        scale="45" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
@@ -698,10 +699,11 @@
 
       <para vendor="sachsen-anhalt"><note>
           <para>Tabellen-Ansichten von Zeitreihen, die im sog.
-          <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
-          markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
-          eine gesonderte Überschrift und sind somit gut von Zeitreihen des
-          <quote>Normalbetriebs</quote> zu unterscheiden.</para>
+          <quote>Simulationsbetrieb</quote> erstellt wurden und
+          dementsprechend markiert sind (vergl. <xref
+          linkend="kalypso_testbetrieb" />), haben eine gesonderte Überschrift
+          und sind somit gut von Zeitreihen des <quote>Regelbetriebs</quote>
+          zu unterscheiden.</para>
         </note></para>
 
       <figure id="navigation_ansichtsauswahl">
@@ -959,8 +961,8 @@
                 <entry><graphic fileref="img/gui/icon_conflict.png"
                 valign="middle" /></entry>
 
-                <entry>Wert nicht ableitbar (z.B.
-                W/Q-Umwandungsfehler)</entry>
+                <entry>Wert nicht ableitbar (W/Q,
+                W/V-Umwandlungsfehler)</entry>
 
                 <entry></entry>
               </row>
@@ -974,11 +976,11 @@
       <section>
         <title>W/Q-Umrechnung</title>
 
-        <para>Zeitreihen deren Metadaten eine W/Q-Beziehung beinhalten, werden
-        automatisch in der Ansicht mit jeweils zwei Spalten angezeigt. Besitzt
-        zum Beispiel eine Wasserstandsganglinie eine W/Q-Beziehung, so wird in
-        der Ansicht sowohl W als auch Q dargestellt. Die generierte Spalte
-        (hier Q) ist dabei gelb hinterlegt.</para>
+        <para>Zeitreihen, deren Metadaten eine W/Q-Beziehung beinhalten,
+        werden automatisch in der Ansicht mit jeweils zwei Spalten angezeigt.
+        Besitzt zum Beispiel eine Wasserstandsganglinie eine W/Q-Beziehung, so
+        wird in der Ansicht sowohl W als auch Q dargestellt. Die generierte
+        Spalte (hier Q) ist dabei gelb hinterlegt.</para>
 
         <para>Das gleiche gilt darüber hinaus auch für andere Wert-Beziehungen
         wie z.B. Wasserstand-Volumen (W/V).</para>
@@ -1001,11 +1003,11 @@
 
       <note vendor="sachsen-anhalt">
         <para>Diagramm-Ansichten von Zeitreihen, die im sog.
-        <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
+        <quote>Simulationsbetrieb</quote> erstellt wurden und dementsprechend
         markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
         ein Wasserzeichen. außerdem ist der Verlauf der Rahmenfarbe anders.
         Diese Zeitreihen sind somit gut von Zeitreihen des
-        <quote>Normalbetriebs</quote> zu unterscheiden.</para>
+        <quote>Regelbetriebs</quote> zu unterscheiden.</para>
       </note>
 
       <para>Die Diagramm-Ansicht dient ausschließlich der schnellen Übersicht

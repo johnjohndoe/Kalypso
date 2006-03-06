@@ -11,7 +11,7 @@
   werden können. Diese Berechnungen bauen z.T. auf einander auf bzw. stehen
   teilweise nebeneinander. Diese Modell-Besonderheit bleibt selbstverständlich
   in KALYPSO erhalten und ihr wird durch den Aufbau des Assistenten besonders
-  Rechnung getragen. Hier erweist sich die Möglichkeit, mithilfe der
+  Rechnung getragen. Hier erweist sich die Möglichkeit, mit Hilfe der
   Navigation leicht zwischen den einzelnen Seiten des Assistenten wechseln zu
   können, als besonders hilfreich.</para>
 
@@ -27,7 +27,7 @@
       <secondary>Bode</secondary>
     </indexterm>
 
-    <para>Auf der nächsten Seite des Assistenten (<xref
+    <para>Auf der nächsten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Bode_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
     Rechenvarianten generiert. Bei fortgeführten oder kopierten
@@ -47,10 +47,11 @@
           </mediaobject>
         </screenshot>
       </figure>Der Eintrag zum <guilabel>Szenario</guilabel>
-    (<quote>Normalbetrieb</quote> oder <quote>Testbetrieb</quote>) dient zur
-    Information darüber, welchem Szenario die Rechenvariante zugeordnet ist
-    (vergl. <xref linkend="SA_Assi_allg_00_Start" />). Dieser Eintrag ist
-    unveränderlich.</para>
+    (<quote>Regelbetrieb</quote> oder <quote>Simulationsbetrieb</quote>) dient
+    zur Information darüber, welchem Szenario die Rechenvariante zugeordnet
+    ist (siehe <xref linkend="kalypso_testbetrieb" />). Dieser Eintrag ist
+    unveränderlich und spiegelt den bei der Erstellung gewählten Betriebsmodus
+    wider.</para>
 
     <para>Der <guilabel>Start der Simulation</guilabel> gibt den Beginn der
     Simulationsrechnung an. Ab diesem Zeitpunkt werden ggf. die Messwerte aus
@@ -85,13 +86,13 @@
     Pegeln, Volumen und W/V-Beziehung der Speicher, Speicherabgaben). Außerdem
     werden leere Zeitreihen für den Gebietsniederschlag generiert.
     Gleichzeitig wird der Gebietsniederschlag entsprechend des
-    Gebietsniederschlagsmodells berechnet (vergl. <xref
+    Gebietsniederschlagsmodells berechnet (siehe <xref
     linkend="SA_Assi_Bode_02_Niederschlagsstationen" />). Ist das
     Kontrollkästchen nicht aktiviert, werden die Zeitreihen nicht geholt bzw.
     nicht aktualisiert. Nur beim Anlegen einer neuen Rechenvariante ist dieses
     Kästchen standardmäßig aktiviert.</para>
 
-    <para>Es folgenden nun Seiten für die Kontrolle und Eingabe der
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
     Eingangsdaten.</para>
   </section>
 
@@ -122,7 +123,7 @@
     tabellarisch dargestellt. Für die in der Karte markierte
     Niederschlagsstation wird die Zeitreihe im Diagramm dargestellt.
     Korrekturen und Ergänzungen der Eingangswerte sind in der Tabelle möglich
-    (vergl. <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
+    (siehe <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
     den Niederschlagswerten auch im Modell auswirken, muss der Knopf
     <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt werden. Die
     Gebietsniederschläge ergeben sich aus einer linearen Gewichtung der
@@ -265,7 +266,7 @@
     Drücken des Knopfes <guilabel>Q-Prognose uh. Wendefurth</guilabel> unten
     rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
     Vorhersage-Rechnung um die Vorhersagezeitreihe zu Abfluss bzw.
-    Wasserstand. Die Darstellung kann mithilfe der Optionsköpfe
+    Wasserstand. Die Darstellung kann mit Hilfe der Optionsknöpfe
     <guilabel>Abfluss</guilabel> und <guilabel>Wasserstand</guilabel>
     unterhalb des Diagramms umgeschaltet werden. Das Diagramm bietet nun eine
     umfassende Information zu dem in der Karte gewählten Pegel: neben dem
@@ -347,7 +348,7 @@
     durch Drücken des Knopfes <guilabel>Q-Prognose oh. Speicher</guilabel>
     unten rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
     Vorhersage-Rechnung um die Vorhersagezeitreihe zu Abfluss bzw.
-    Wasserstand. Die Darstellung kann mithilfe der Optionsköpfe
+    Wasserstand. Die Darstellung kann mit Hilfe der Optionsknöpfe
     <guilabel>Abfluss</guilabel> und <guilabel>Wasserstand</guilabel>
     unterhalb des Diagramms umgeschaltet werden. Das Diagramm bietet nun eine
     umfassende Information zu dem in der Karte gewählten Pegel: neben dem
@@ -406,8 +407,8 @@
       </figure></para>
 
     <para>In Vorbereitung auf die Speicherrechnungen bzw. Rechnungen zur
-    Talsperrensteuerung werden nun die gemessenen Speicherabgaben zur
-    Kontrolle und weiteren Eingabe angezeigt (siehe <xref
+    Talsperrensteuerung werden die gemessenen Speicherabgaben zur Kontrolle
+    und weiteren Eingabe angezeigt (siehe <xref
     linkend="pic_SA_Assi_Bode_09_Abfluss_Speicher" />). Insbesondere können
     nun die zukünftigen Abgaben für die Talsperre Königshütte festgelegt
     werden. Die Darstellung im Diagramm richtet sich wie gewohnt nach der
@@ -443,7 +444,7 @@
     Knopfes <guilabel>Speicherrechnung</guilabel> unten rechts angestoßen
     (siehe <xref linkend="pic_SA_Assi_Bode_10a_Speicherrechnung" />). Die
     Darstellung im Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung
-    um die Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine
+    um die Vorhersagezeitreihe zum Volumen. Das Diagramm bietet nun eine
     umfassende Information zu dem in der Karte gewählten Speicher: neben dem
     Volumen (Beobachtung und Vorhersage) werden die Abgabe und die
     Zufluss-Vorhersage dargestellt.</para>
@@ -453,7 +454,8 @@
     Optimierung) durchgeführt werden soll, so sind die Eingabedaten den
     Modellanforderungen entsprechend anzupassen, bzw. es ist eine
     <guilabel>Q-Prognose uh. Wendefurth</guilabel> mit Null-Abgabe im Vorfeld
-    zu rechnen.</para>
+    zu rechnen. Siehe hierzu auch die Dokumentation zum
+    Bewirtschaftungsalgorithmus von Thiele + Büttner IG.</para>
 
     <section id="SA_Assi_Bode_10b_TS_ohne_Opt">
       <title>Talsperrensteuerung ohne Optimierung</title>
@@ -477,7 +479,7 @@
       rechts angestoßen (siehe <xref
       linkend="pic_SA_Assi_Bode_10b_TS_ohne_Opt" />). Die Darstellung im
       Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung um die
-      Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine umfassende
+      Vorhersagezeitreihe zum Volumen. Das Diagramm bietet nun eine umfassende
       Information zu dem in der Karte gewählten Speicher: neben dem Volumen
       (Beobachtung und Vorhersage) werden die Abgabe und die
       Zufluss-Vorhersage dargestellt.</para>
@@ -505,7 +507,7 @@
       rechts angestoßen (siehe <xref
       linkend="pic_SA_Assi_Bode_10c_TS_mit_Opt" />). Die Darstellung im
       Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung um die
-      Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine umfassende
+      Vorhersagezeitreihe zum Volumen. Das Diagramm bietet nun eine umfassende
       Information zu dem in der Karte gewählten Speicher: neben dem Volumen
       (Beobachtung und Vorhersage) werden die Abgabe und die
       Zufluss-Vorhersage dargestellt.</para>
@@ -563,7 +565,7 @@
       </listitem>
 
       <listitem>
-        <para>die Zeitreihen mithilfe des Grafikprogramms bearbeitet
+        <para>die Zeitreihen mit Hilfe des Grafikprogramms bearbeitet
         werden.</para>
       </listitem>
     </itemizedlist>
@@ -601,7 +603,7 @@
       Zeitreihenablage erfolgt über den Knopf <guilabel>Vorhersagen
       exportieren</guilabel>. In einem nächsten Schritt wählt der Benutzer
       aus, für welche Pegel dieser Export erfolgen soll. Entsprechend dem zu
-      Beginn gewählten Szenario (vergl. <xref
+      Beginn gewählten Szenario (siehe <xref
       linkend="SA_Assi_allg_00_Start" />) werden die Zeitreihen (Wasserstand
       und Abfluss) in die dafür vorgesehenen Container der Zeitreihenablage
       exportiert und stehen dort für weitere Analysen und Auswertungen zu
@@ -639,8 +641,8 @@
           <guilabel>Abflussgrafik</guilabel>, eine
           <guilabel>Wasserstandsgrafik</guilabel> und eine
           <guilabel>Übersichtstabelle (Q / W / P)</guilabel> abgelegt werden.
-          Die Abflussgrafik und Wasserstandsgrafik entsprechen der jeweiligen
-          Diagrammdarstellung. Die Übersichtstabelle ist eine tabellarische
+          Die Abflussgrafik und Wasserstandsgrafik entsprechen den jeweiligen
+          Diagrammdarstellungen. Die Übersichtstabelle ist eine tabellarische
           Zeitreihendarstellung von Abfluss, Wasserstand und
           Gebietsniederschlag.</para>
         </listitem>
@@ -679,8 +681,8 @@
       </indexterm>
 
       <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
-      (vergl. <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie
-      mithilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
+      (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit
+      Hilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
       Server abgelegt werden. Der Name der lokalen Rechenvariante wird dabei
       übernommen.</para>
     </section>
@@ -700,7 +702,7 @@
       durch Drücken des Knopfes <guilabel>Zeitreihe(n) bearbeiten</guilabel>
       das im Programmumfang enthaltene Grafikprogramm geöffnet. Dieses
       Programm ermöglicht zum Einen eine Korrektur von Daten zum Anderen
-      bietet es auch komfortable Möglichkeiten zu weitergehenden Analysen. Im
+      bietet es auch komfortable Möglichkeiten für weitergehende Analysen. Im
       Korrekturmodus des Grafikprogramms vorgenommene Änderungen an den Werten
       werden wieder nach KALYPSO übernommen. Die Bedienung des Grafikprogramms
       wird in einem eigenen Handbuch beschrieben.</para>
@@ -759,7 +761,7 @@
       </listitem>
 
       <listitem>
-        <para>die Zeitreihen mithilfe des Grafikprogramms bearbeitet
+        <para>die Zeitreihen mit Hilfe des Grafikprogramms bearbeitet
         werden.</para>
       </listitem>
     </itemizedlist>
@@ -797,7 +799,7 @@
       Zeitreihenablage erfolgt über den Knopf <guilabel>Vorhersagen
       exportieren</guilabel>. In einem nächsten Schritt wählt der Benutzer
       aus, für welche Speicher dieser Export erfolgen soll. Entsprechend dem
-      zu Beginn gewählten Szenario (vergl. <xref
+      zu Beginn gewählten Szenario (siehe <xref
       linkend="SA_Assi_allg_00_Start" />) werden die Zeitreihen (Volumen) in
       die dafür vorgesehenen Container der Zeitreihenablage exportiert und
       stehen dort für weitere Analysen und Auswertungen zu Verfügung.</para>
@@ -846,7 +848,7 @@
           <guilabel>Eingangsdaten Wasserstand</guilabel>,
           <guilabel>Ergebnisdaten Wasserstand</guilabel>,
           <guilabel>Eingangsdaten Volumen</guilabel>, <guilabel>Ergebnisdaten
-          Volumen, </guilabel><guilabel>Ergebnisdaten Zufluss</guilabel> und
+          Volumen</guilabel>, <guilabel>Ergebnisdaten Zufluss</guilabel> und
           <guilabel>Speicherabgaben</guilabel> für die Speicher.</para>
         </listitem>
 
@@ -874,8 +876,8 @@
       </indexterm>
 
       <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
-      (vergl. <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie
-      mithilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
+      (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit
+      Hilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
       Server abgelegt werden. Der Name der lokalen Rechenvariante wird dabei
       übernommen. Es besteht kein funktionaler Unterschied zu <xref
       linkend="SA_Assi_Bode_12_Berichtsablage_Pegel_VarianteArchivieren" />
@@ -897,7 +899,7 @@
       durch Drücken des Knopfes <guilabel>Zeitreihe(n) bearbeiten</guilabel>
       das im Programmumfang enthaltene Grafikprogramm geöffnet. Dieses
       Programm ermöglicht zum Einen eine Korrektur von Daten zum Anderen
-      bietet es auch komfortable Möglichkeiten zu weitergehenden Analysen. Im
+      bietet es auch komfortable Möglichkeiten für weitergehenden Analyse. Im
       Korrekturmodus des Grafikprogramms vorgenommene Änderungen an den Werten
       werden wieder nach KALYPSO übernommen. Die Bedienung des Grafikprogramms
       wird in einem eigenen Handbuch beschrieben.</para>

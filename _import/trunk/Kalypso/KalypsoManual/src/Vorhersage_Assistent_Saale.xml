@@ -15,7 +15,7 @@
       <secondary>Saale</secondary>
     </indexterm>
 
-    <para>Auf der nächsten Seite des Assistenten (<xref
+    <para>Auf der nächsten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Saale_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
     Rechenvarianten generiert. Bei fortgeführten oder kopierten
@@ -35,18 +35,19 @@
       </figure></para>
 
     <para>Der Eintrag zum <guilabel>Szenario</guilabel>
-    (<quote>Normalbetrieb</quote> oder <quote>Testbetrieb</quote>) dient zur
-    Information darüber, welchem Szenario die Rechenvariante zugeordnet ist
-    (vergl. <xref linkend="SA_Assi_allg_00_Start" />). Dieser Eintrag ist
-    unveränderlich.</para>
+    (<quote>Regelbetrieb</quote> oder <quote>Simulationsbetrieb</quote>) dient
+    zur Information darüber, welchem Szenario die Rechenvariante zugeordnet
+    ist (siehe <xref linkend="kalypso_testbetrieb" />). Dieser Eintrag ist
+    unveränderlich und spiegelt den bei der Erstellung gewählten Betriebsmodus
+    wider.</para>
 
     <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
     einer neuen Rechenvariante automatisch auf die letzte volle Stunde der
     aktuellen Uhrzeit gesetzt. Bis zu diesem Zeitpunkt werden ggf. die
     Messwerte aus der Zeitreihenablage geholt. Dieser Eintrag kann vom
     Benutzer angepasst werden. Der Startzeitpunkt der Simulationsrechnung wird
-    duch das Modell bestimmt und liegt 120 Stunden vor dem <guilabel>Start der
-    Vorhersage</guilabel>. Der Endzeitpunkt der Vorhersage wird ebenfalls
+    durch das Modell bestimmt und liegt 120 Stunden vor dem <guilabel>Start
+    der Vorhersage</guilabel>. Der Endzeitpunkt der Vorhersage wird ebenfalls
     durch das Modell bestimmt und liegt 148 Stunden nach dem <guilabel>Start
     der Vorhersage</guilabel>.</para>
 
@@ -67,12 +68,12 @@
     usw.). Außerdem werden die aktuell vorliegenden DWD Rasterdaten des
     Lokalmodells des DWD vom Server bezogen und zusammen mit den
     Stationswerten der Vergangenheit als Gebietsniederschlag umgerechnet
-    (vergl. <xref linkend="pic_SA_Assi_Saale_02_Ombrometer" />). Ist das
+    (siehe <xref linkend="pic_SA_Assi_Saale_02_Ombrometer" />). Ist das
     Kontrollkästchen nicht aktiviert, werden die Zeitreihen nicht geholt bzw.
     nicht aktualisiert. Nur beim Anlegen einer neuen Rechenvariante ist dieses
     Kästchen standardmäßig aktiviert.</para>
 
-    <para>Es folgenden nun Seiten für die Kontrolle und Eingabe der
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
     Eingangsdaten.</para>
   </section>
 
@@ -102,7 +103,7 @@
     Ombrometern gemessenen Niederschläge grafisch und tabellarisch
     dargestellt. Für die in der Karte markierte Niederschlagsstation wird die
     Zeitreihe im Diagramm dargestellt. Korrekturen und Ergänzungen der
-    Eingangswerte sind in der Tabelle möglich (vergl. <xref
+    Eingangswerte sind in der Tabelle möglich (siehe <xref
     linkend="tabellen_bearbeiten" />). Damit sich Änderungen an den
     Niederschlagswerten auch im Modell auswirken, muss der Knopf
     <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt werden. Die
@@ -142,14 +143,14 @@
     der Gebiete erfolgt nach den im Modell definierten Regionen.</para>
 
     <para>Auf diesen Seiten des Assistenten werden die ermittelten
-    Gebietsniederschläge dargestellt. Die Zeitreihenbearbeitungn wird deutlich
+    Gebietsniederschläge dargestellt. Die Zeitreihenbearbeitung wird deutlich
     erleichtert durch die in <xref linkend="tabellen_bearbeiten" />
     beschriebenen Funktionen zur Tabellenbearbeitung. Im Diagramm wird jeweils
     die Ganglinie zu dem Pegel angezeigt, der in der Karte ausgewählt
     ist.</para>
 
-    <para>Eventuelle manuelle durchgeführte Änderungen in den
-    Gebietsniederschlägen werden im Falle eines erneuten Rechnens des
+    <para>Eventuell manuell durchgeführte Änderungen in den
+    Gebietsniederschlägen werden im Falle einer erneuten Berechnung des
     Gebietsniederschlagmodells auf der vorhergehenden Seite wieder
     überschrieben.</para>
   </section>
@@ -214,25 +215,27 @@
       </figure></para>
 
     <para>Aufgrund der großen Anzahl von Eingabepegeln sowie der vorgegebenen
-    Modellstruktur des Saale-Modells wurde die Eingabe und Kontrolle der
+    Modellstruktur des Saale-Modells ist die Eingabe und Kontrolle der
     Abflüsse bzw. Wasserstände der Eingabepegel in die jeweils vor einer
     Talsperre liegenden Pegel aufgeteilt. Nach jeder dieser Seiten folgt eine
     weitere Seite zur Eingabe der Steuerungsart der betreffenden
     Talsperre.</para>
 
-    <para>Die Kontrolle der Abflüsse bzw. Wasserstände findet auf Seiten
-    dieser Art statt. Beim Import der Zeitreihen aus der Zeitreihenablage
-    werden Wasserstände und W/Q-Beziehungen abgeholt. Somit können auf dieser
-    Seite Wasserstände und die daraus berechneten Abflüsse dargestellt werden.
-    Sie werden tabellarisch und grafisch dargestellt und können ggf.
-    korrigiert werden. Korrekturen können sowohl in der Tabelle zum
-    Wasserstand als auch in der Tabelle zum Abfluss vorgenommen werden. Es
-    erfolgt jeweils automatisch eine Umrechnung über die W/Q-Beziehung, die
-    Daten bleiben damit konsistent. Mithilfe der Optionsknöpfe
-    <guilabel>Abfluss</guilabel> und <guilabel>Wasserstand</guilabel>
-    unterhalb des Diagramms kann die Darstellung zwischen Abfluss und
-    Wasserstand umgeschaltet werden. Im Diagramm wird jeweils die Ganglinie zu
-    dem Pegel angezeigt, der in der Karte ausgewählt ist.</para>
+    <para>Die Kontrolle der Abflüsse bzw. Wasserstände findet auf jeweils
+    ähnlich aufgebauten Seiten statt (siehe <xref
+    linkend="pic_SA_Assi_Saale_05_Abfluss" />). Beim Import der Zeitreihen aus
+    der Zeitreihenablage werden Wasserstände und W/Q-Beziehungen abgeholt.
+    Somit können auf dieser Seite Wasserstände und die daraus berechneten
+    Abflüsse dargestellt werden. Sie werden tabellarisch und grafisch
+    dargestellt und können ggf. korrigiert werden. Korrekturen können sowohl
+    in der Tabelle zum Wasserstand als auch in der Tabelle zum Abfluss
+    vorgenommen werden. Es erfolgt jeweils automatisch eine Umrechnung über
+    die W/Q-Beziehung, die Daten bleiben damit konsistent. Mithilfe der
+    Optionsknöpfe <guilabel>Abfluss</guilabel> und
+    <guilabel>Wasserstand</guilabel> unterhalb des Diagramms kann die
+    Darstellung zwischen Abfluss und Wasserstand umgeschaltet werden. Im
+    Diagramm wird jeweils die Ganglinie zu dem Pegel angezeigt, der in der
+    Karte ausgewählt ist.</para>
   </section>
 
   <section id="SA_Assi_Saale_06_Steuerung_TS">
@@ -257,7 +260,8 @@
           </mediaobject>
         </screenshot>
       </figure>Die Eingabe der Steuerungsart der im jeweiligen Abschnitt
-    behandelten Talsperre findet auf dieser Art von Seiten statt (siehe <xref
+    behandelten Talsperre findet auf jeweils ähnlich aufgebauten Seiten statt
+    (siehe <xref
     linkend="pic_SA_Assi_Saale_06_Steuerung_Talsperre" />).</para>
 
     <para>Die Eingabe der Vorgabewerte für die Steuerung findet bereits auf
@@ -287,8 +291,8 @@
             </imageobject>
           </mediaobject>
         </screenshot>
-      </figure>Eine Besonderheit bilden die beiden Seiten zur Steuerung der
-    Schwarze und der Weißen Elster (siehe <xref
+      </figure>Eine Besonderheit bilden die beiden Seiten zur Steuerung von
+    Schwarze und Weiße Elster (siehe <xref
     linkend="pic_SA_Assi_Saale_07_SteuerungSW" />). Das Saale-Modell bietet
     die Auswahl, ob eine Berechnung des Abschnittes gewünscht wird, oder ob
     der Abgabepegel vorgegeben ist. Die Auswahl der Option erfolgt analog zur
@@ -326,7 +330,7 @@
     Drücken des Knopfes <guilabel>Vorhersage durchfüheren</guilabel> unten
     rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
     Vorhersage-Rechnung um die Vorhersagezeitreihe zu Abfluss bzw.
-    Wasserstand. Die Darstellung kann mithilfe der Optionsköpfe
+    Wasserstand. Die Darstellung kann mit Hilfe der Optionsknöpfe
     <guilabel>Abfluss</guilabel> und <guilabel>Wasserstand</guilabel>
     unterhalb des Diagramms umgeschaltet werden. Das Diagramm bietet nun eine
     umfassende Information zu dem in der Karte gewählten Pegel: neben dem
@@ -418,7 +422,7 @@
       </listitem>
 
       <listitem>
-        <para>die Zeitreihen mithilfe des Grafikprogramms bearbeitet
+        <para>die Zeitreihen mit Hilfe des Grafikprogramms bearbeitet
         werden.</para>
       </listitem>
     </itemizedlist>
@@ -453,7 +457,7 @@
       Zeitreihenablage erfolgt über den Knopf <guilabel>Vorhersagen
       exportieren</guilabel>. In einem nächsten Schritt wählt der Benutzer
       aus, für welche Pegel dieser Export erfolgen soll. Entsprechend dem zu
-      Beginn gewählten Szenario (vergl. <xref
+      Beginn gewählten Szenario (siehe <xref
       linkend="SA_Assi_allg_00_Start" />) werden die Zeitreihen (Wasserstand
       und Abfluss) in die dafür vorgesehenen Container der Zeitreihenablage
       exportiert und stehen dort für weitere Analysen und Auswertungen zu
@@ -489,8 +493,8 @@
           <guilabel>Abflussgrafik</guilabel>, eine
           <guilabel>Wasserstandsgrafik</guilabel> und eine
           <guilabel>Übersichtstabelle (Q / W / P)</guilabel> abgelegt werden.
-          Die Abflussgrafik und Wassserstandgrafik entsprechen der jeweiligen
-          Diagrammdarstellung. Die Übersichtstabelle ist eine tabellarische
+          Die Abflussgrafik und Wasserstandsgrafik entsprechen den jeweiligen
+          Diagrammdarstellungen. Die Übersichtstabelle ist eine tabellarische
           Zeitreihendarstellung von Abfluss, Wasserstand und
           Gebietsniederschlag.</para>
         </listitem>
@@ -503,7 +507,7 @@
           <guilabel>Ergebnisdaten Wasserstand</guilabel>,
           <guilabel>Eingangsdaten Abfluss</guilabel>, <guilabel>Ergebnisdaten
           Abfluss</guilabel> und <guilabel>Niederschlag</guilabel> für die
-          beiden Vorhersagepegel.</para>
+          Vorhersagepegel.</para>
         </listitem>
 
         <listitem>
@@ -527,8 +531,8 @@
       </indexterm>
 
       <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
-      (vergl. <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie
-      mithilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
+      (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit
+      Hilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
       Server abgelegt werden. Der Name der lokalen Rechenvariante wird dabei
       übernommen.</para>
     </section>
@@ -546,7 +550,7 @@
       durch Drücken des Knopfes <guilabel>Zeitreihe(n) bearbeiten</guilabel>
       das im Programmumfang enthaltene Grafikprogramm geöffnet. Dieses
       Programm ermöglicht zum Einen eine Korrektur von Daten zum Anderen
-      bietet es auch komfortable Möglichkeiten zu weitergehenden Analysen. Im
+      bietet es auch komfortable Möglichkeiten für weitergehenden Analyse. Im
       Korrekturmodus des Grafikprogramms vorgenommene Änderungen an den Werten
       werden wieder nach KALYPSO übernommen. Die Bedienung des Grafikprogramms
       wird in einem eigenen Handbuch beschrieben.</para>
@@ -579,7 +583,7 @@
     <para>Diese Seite ist analog zu der vorhergehenden Seite augebaut (siehe
     <xref linkend="pic_SA_Assi_Saale_11_BerichtsablageSpeicher" />). Im
     Gegensatz zu den Ergebnispegeln werden hier die berechneten
-    Volumenganglinien der Talsperren dargestellt. Ebenso beziehen Sich alle
+    Volumenganglinien der Talsperren dargestellt. Ebenso beziehen sich alle
     Möglichkeiten der Datenbearbeitung und Ablage auf die
     Volumenganglinien.</para>
   </section>

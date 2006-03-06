@@ -15,7 +15,7 @@
       <secondary>Ilse</secondary>
     </indexterm>
 
-    <para>Auf der nächsten Seite des Assistenten (<xref
+    <para>Auf der nächsten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Ilse_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
     Rechenvarianten generiert. Bei fortgeführten oder kopierten
@@ -35,10 +35,11 @@
       </figure></para>
 
     <para>Der Eintrag zum <guilabel>Szenario</guilabel>
-    (<quote>Normalbetrieb</quote> oder <quote>Testbetrieb</quote>) dient zur
-    Information darüber, welchem Szenario die Rechenvariante zugeordnet ist
-    (vergl. <xref linkend="SA_Assi_allg_00_Start" />). Dieser Eintrag ist
-    unveränderlich.</para>
+    (<quote>Regelbetrieb</quote> oder <quote>Simulationsbetrieb</quote>) dient
+    zur Information darüber, welchem Szenario die Rechenvariante zugeordnet
+    ist (siehe <xref linkend="kalypso_testbetrieb" />). Dieser Eintrag ist
+    unveränderlich und spiegelt den bei der Erstellung gewählten Betriebsmodus
+    wider.</para>
 
     <para>Der <guilabel>Start der Simulation</guilabel> gibt den Beginn der
     Simulationsrechnung an. Ab diesem Zeitpunkt werden ggf. die Messwerte aus
@@ -72,13 +73,13 @@
     an den Niederschlagsstationen, Wasserstand und W/Q-Beziehung an den
     Pegeln). Außerdem werden leere Zeitreihen für den Gebietsniederschlag
     generiert. Gleichzeitig wird der Gebietsniederschlag entsprechend des
-    Gebietsniederschlagsmodells berechnet (vergl. <xref
+    Gebietsniederschlagsmodells berechnet (siehe <xref
     linkend="SA_Assi_Ilse_02_Niederschlagsstationen" />). Ist das
     Kontrollkästchen nicht aktiviert, werden die Zeitreihen nicht geholt bzw.
     nicht aktualisiert. Nur beim Anlegen einer neuen Rechenvariante ist dieses
     Kästchen standardmäßig aktiviert.</para>
 
-    <para>Es folgenden nun Seiten für die Kontrolle und Eingabe der
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
     Eingangsdaten.</para>
   </section>
 
@@ -109,7 +110,7 @@
     tabellarisch dargestellt. Für die in der Karte markierte
     Niederschlagsstation wird die Zeitreihe im Diagramm dargestellt.
     Korrekturen und Ergänzungen der Eingangswerte sind in der Tabelle möglich
-    (vergl. <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
+    (siehe <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
     den Niederschlagswerten auch im Modell auswirken, muss der Knopf
     <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt werden. Die
     Gebietsniederschläge ergeben sich aus einer linearen Gewichtung der
@@ -217,7 +218,7 @@
     des Knopfes <guilabel>Q-Prognose Ilse</guilabel> unten rechts. Die
     Darstellung im Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung
     um die Vorhersagezeitreihe zu Abfluss bzw. Wasserstand. Die Darstellung
-    kann mithilfe der Optionsköpfe <guilabel>Abfluss</guilabel> und
+    kann mit Hilfe der Optionsknöpfe <guilabel>Abfluss</guilabel> und
     <guilabel>Wasserstand</guilabel> unterhalb des Diagramms umgeschaltet
     werden. Das Diagramm bietet nun eine umfassende Information zu dem in der
     Karte gewählten Pegel: neben dem Abfluss bzw. Wasserstand (Beobachtung und
@@ -273,7 +274,7 @@
       </listitem>
 
       <listitem>
-        <para>die Zeitreihen mithilfe des Grafikprogramms bearbeitet
+        <para>die Zeitreihen mit Hilfe des Grafikprogramms bearbeitet
         werden.</para>
       </listitem>
     </itemizedlist>
@@ -307,7 +308,7 @@
       Zeitreihenablage erfolgt über den Knopf <guilabel>Vorhersagen
       exportieren</guilabel>. In einem nächsten Schritt wählt der Benutzer
       aus, für welche Pegel dieser Export erfolgen soll. Entsprechend dem zu
-      Beginn gewählten Szenario (vergl. <xref
+      Beginn gewählten Szenario (siehe <xref
       linkend="SA_Assi_allg_00_Start" />) werden die Zeitreihen (Wasserstand
       und Abfluss) in die dafür vorgesehenen Container der Zeitreihenablage
       exportiert und stehen dort für weitere Analysen und Auswertungen zu
@@ -343,8 +344,8 @@
           <guilabel>Abflussgrafik</guilabel>, eine
           <guilabel>Wasserstandsgrafik</guilabel> und eine
           <guilabel>Übersichtstabelle (Q / W / P)</guilabel> abgelegt werden.
-          Die Abflussgrafik und Wasserstandsgrafik entsprechen der jeweiligen
-          Diagrammdarstellung. Die Übersichtstabelle ist eine tabellarische
+          Die Abflussgrafik und Wasserstandsgrafik entsprechen den jeweiligen
+          Diagrammdarstellungen. Die Übersichtstabelle ist eine tabellarische
           Zeitreihendarstellung von Abfluss, Wasserstand und
           Gebietsniederschlag.</para>
         </listitem>
@@ -381,8 +382,8 @@
       </indexterm>
 
       <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
-      (vergl. <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie
-      mithilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
+      (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit
+      Hilfe des Knopfes <guilabel>Variante archivieren</guilabel> auf dem
       Server abgelegt werden. Der Name der lokalen Rechenvariante wird dabei
       übernommen.</para>
     </section>
@@ -400,7 +401,7 @@
       durch Drücken des Knopfes <guilabel>Zeitreihe(n) bearbeiten</guilabel>
       das im Programmumfang enthaltene Grafikprogramm geöffnet. Dieses
       Programm ermöglicht zum Einen eine Korrektur von Daten zum Anderen
-      bietet es auch komfortable Möglichkeiten zu weitergehenden Analysen. Im
+      bietet es auch komfortable Möglichkeiten für weitergehende Analysen. Im
       Korrekturmodus des Grafikprogramms vorgenommene Änderungen an den Werten
       werden wieder nach KALYPSO übernommen. Die Bedienung des Grafikprogramms
       wird in einem eigenen Handbuch beschrieben.</para>
