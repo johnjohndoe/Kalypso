@@ -62,4 +62,7 @@ public interface KMUpdateConstants
   public static QName QNAME_rkv = new QName( "http://www.tuhh.de/kalypsoNA", "rkv" );
 
   public static QName QNAME_rnv = new QName( "http://www.tuhh.de/kalypsoNA", "rnv" );
+
+  public static QName QNAME_c = new QName( "http://www.tuhh.de/kalypsoNA", "c" );
+
 }

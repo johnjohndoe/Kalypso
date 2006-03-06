@@ -366,7 +366,7 @@ public class KMUpdateWizardPage extends WizardPage
     FileWriter writer = null;
     try
     {
-      final Marshaller marshaller = m_context.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( m_context );
       final File file = new File( path );
       final JAXBElement<KalininMiljukovGroupType> element = m_factory.createKalininMiljukovGroup( m_kmGroup );
       writer = new FileWriter( file );
@@ -449,6 +449,7 @@ public class KMUpdateWizardPage extends WizardPage
     final IPropertyType rkvT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rkv );
     final IPropertyType rnfPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rnf );
     final IPropertyType rnvPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rnv );
+    final IPropertyType cPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_c );
 
     if( km == null )
       return result;
@@ -472,6 +473,7 @@ public class KMUpdateWizardPage extends WizardPage
     int max = 5;
     final AbstractKMValue[] values = profileSet.getKMValues( max );
     final Feature[] kmParameter = m_workspace.resolveLinks( feature, kmRT );
+
     if( kmParameter.length < max )
     {
       // TODO add new features
@@ -487,7 +489,8 @@ public class KMUpdateWizardPage extends WizardPage
         result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
         result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
         result.add( new FeatureChange( kmParameterFE, rnvPT, value.getNForeland() ) );
-        result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQForeland() ) ); // ??
+        result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQSum() ) );
+        result.add( new FeatureChange( kmParameterFE, cPT, value.getAlpha() ) );
       }
     }
     return result;
