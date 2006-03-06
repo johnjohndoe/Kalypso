@@ -124,7 +124,7 @@ public class KMUpdateWizardPage extends WizardPage
   public KMUpdateWizardPage( final CommandableWorkspace workspace, IFeatureSelection selection )
   {
     super( "Kalinin-Miljukov-Parameter aktualisieren ",// 
-        "Berechnung der Kalinin-Miljukov(KM) Parameter aus 1D-Simulationsergebnissen und import in die Modelldaten", null );
+        "Berechnung und Export der Kalinin-Miljukov(KM) Parameter aus 1D-Simulationsergebnissen in die NA-Modelldaten", null );
     m_workspace = workspace;
     final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
     m_selection = new Feature[allFeatures.length];

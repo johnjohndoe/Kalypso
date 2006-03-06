@@ -15,6 +15,7 @@
          <action
                class="org.kalypso.ui.rrm.action.KMUpdateAction"
                enablesFor="1"
+               icon="icons/kmStrang.gif"
                id="KalypsoUIRRM.updateKMParameter"
                label="updateKMParameter"
                menubarPath="KalypsoUIRRM.menu1"
