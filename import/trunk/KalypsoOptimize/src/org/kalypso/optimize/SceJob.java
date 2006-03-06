@@ -68,6 +68,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -142,7 +143,7 @@ public class SceJob
     // werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der
     // Umstellung auf jwsdp-2.0)
     final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
-    final Marshaller marshaller = context.createMarshaller();
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(context);
     // marshaller.setProperty( "jaxb.encoding", "UTF-8" );
 
     final Document xmlDOM = docuBuilder.newDocument();
