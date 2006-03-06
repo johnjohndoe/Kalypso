@@ -16,6 +16,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
@@ -37,8 +38,8 @@ public class PlainProfil implements IProfilConstants, IProfil
   private final HashMap<Object, Object> m_profilMetaData;
 
   /**
-   * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im
-   * Diagramm der zuletzt angeklickte. Die sichtbaren Trenner werden auch hier verwaltet
+   * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im Diagramm der zuletzt
+   * angeklickte. Die sichtbaren Trenner werden auch hier verwaltet
    */
   private IProfilPoint m_activePoint;
 
@@ -68,8 +69,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     return pd;
   }
 
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp,
-      final boolean visible )
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
   {
     if( visible )
     {
@@ -126,9 +126,28 @@ public class PlainProfil implements IProfilConstants, IProfil
       try
       {
         IProfilPoint p = ptIt.next();
-        if( Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p
-            .getValueFor( POINT_PROPERTY.BREITE )
-            - breite ) )
+        if( Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p.getValueFor( POINT_PROPERTY.BREITE ) - breite ) )
+          pkt = p;
+      }
+      catch( ProfilDataException e )
+      {
+        // sollte nie passieren da Breite immer vorhanden ist
+      }
+    }
+    return pkt;
+  }
+
+  public IProfilPoint findNearestPoint( final double breite, final double hoehe,final POINT_PROPERTY property )
+  {
+    IProfilPoint pkt = m_points.getFirst();
+
+    for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
+    {
+      try
+      {
+        IProfilPoint p = ptIt.next();
+        if( (Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p.getValueFor( POINT_PROPERTY.BREITE ) - breite ))
+        || (Math.abs( pkt.getValueFor( property ) - hoehe ) > Math.abs( p.getValueFor( property ) - hoehe )) )
           pkt = p;
       }
       catch( ProfilDataException e )
@@ -149,6 +168,29 @@ public class PlainProfil implements IProfilConstants, IProfil
     {
       final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
       return (Math.abs( xpos - breite ) <= delta) ? pkt : null;
+    }
+    catch( ProfilDataException e1 )
+    {
+      // sollte nie passieren da Breite immer vorhanden ist
+      return null;
+    }
+  }
+
+  public IProfilPoint findPoint( final double breite, final double hoehe, final POINT_PROPERTY property )
+  {
+    final IProfilPoint pkt = findNearestPoint( breite, hoehe,property );
+    final Double delta = (Double)property.getParameter(PARAMETER.PRECISION);
+    try
+    {
+      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
+      final double ypos = pkt.getValueFor( property );
+      if( (Math.abs( xpos - breite ) <= delta) && (Math.abs( ypos - hoehe ) <= delta) )
+      {
+        return pkt;
+      }
+      else
+        return null;
+
     }
     catch( ProfilDataException e1 )
     {
@@ -206,14 +248,12 @@ public class PlainProfil implements IProfilConstants, IProfil
 
     }
     Collections.sort( deviderList, new DeviderComparator() );
-    return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList
-        .size()] );
+    return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList.size()] );
   }
 
   public IProfilDevider[] getDevider( DEVIDER_TYP deviderTyp )
   {
-    return getDevider( new DEVIDER_TYP[]
-    { deviderTyp } );
+    return getDevider( new DEVIDER_TYP[] { deviderTyp } );
   }
 
   /**
@@ -276,11 +316,9 @@ public class PlainProfil implements IProfilConstants, IProfil
   }
 
   /**
-   * @see com.bce.eind.core.profilinterface.IProfil#addPoint(com.bce.eind.core.profilinterface.IPoint,
-   *      double, double)
+   * @see com.bce.eind.core.profilinterface.IProfil#addPoint(com.bce.eind.core.profilinterface.IPoint, double, double)
    */
-  public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
-      final double hoehe )
+  public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite, final double hoehe )
   {
     final IProfilPoint point = m_points.addPoint( thePointBefore );
     point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
@@ -293,8 +331,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    * @see com.bce.eind.core.profil.IProfil#insertPoint(com.bce.eind.core.profil.IProfilPoint,
    *      com.bce.eind.core.profil.IProfilPoint)
    */
-  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
-      throws ProfilDataException
+  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException
   {
     final Collection<POINT_PROPERTY> newPP = point.getProperties();
     final Collection<POINT_PROPERTY> existingPP = point.getProperties();
@@ -315,7 +352,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public IProfilPoint moveDevider( IProfilDevider devider, IProfilPoint newPosition )
   {
-    final IProfilPoint oldPkt = ((ProfilDevider)devider).setPoint( newPosition );
+    final IProfilPoint oldPkt = ((ProfilDevider) devider).setPoint( newPosition );
 
     return oldPkt;
   }
@@ -329,7 +366,7 @@ public class PlainProfil implements IProfilConstants, IProfil
 
     final IProfilBuilding oldBuilding = m_building;
     if( m_building instanceof AbstractProfilBuilding )
-      ((AbstractProfilBuilding)m_building).removeProfilProperties( this );
+      ((AbstractProfilBuilding) m_building).removeProfilProperties( this );
 
     return oldBuilding;
   }
@@ -393,7 +430,7 @@ public class PlainProfil implements IProfilConstants, IProfil
       removeBuilding();
     m_building = building;
     if( m_building instanceof AbstractProfilBuilding )
-      ((AbstractProfilBuilding)m_building).addProfilProperties( this );
+      ((AbstractProfilBuilding) m_building).addProfilProperties( this );
   }
 
   /**
@@ -434,7 +471,5 @@ public class PlainProfil implements IProfilConstants, IProfil
   {
     return m_activePoint;
   }
-
- 
 
 }

@@ -35,8 +35,7 @@ public class DeviderMove implements IProfilChange
    */
   public Object getObject( )
   {
-    // TODO Auto-generated method stub
-    return null;
+        return m_devider;
   }
 
   /**
@@ -44,8 +43,7 @@ public class DeviderMove implements IProfilChange
    */
   public POINT_PROPERTY getPointProperty( )
   {
-    // TODO Auto-generated method stub
-    return null;
+        return null;
   }
 
   /**
@@ -53,8 +51,7 @@ public class DeviderMove implements IProfilChange
    */
   public Double getValue( )
   {
-    // TODO Auto-generated method stub
-    return null;
+       return null;
   }
 
   

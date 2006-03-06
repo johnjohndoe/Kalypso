@@ -63,7 +63,7 @@ public interface IProfil
    * @return
    */
   public IProfilPoint findPoint( final double breite, final double delta );
-
+  public IProfilPoint findPoint( final double breite, final double hoehe,final POINT_PROPERTY property );
   /**
    * @param index
    * @param breite

@@ -49,8 +49,7 @@ public class PointInsert implements IProfilChange
    */
   public POINT_PROPERTY getPointProperty( )
   {
-    // TODO Auto-generated method stub
-    return null;
+        return null;
   }
 
   /**
@@ -58,8 +57,7 @@ public class PointInsert implements IProfilChange
    */
   public Double getValue( )
   {
-    // TODO Auto-generated method stub
-    return null;
+       return null;
   }
 
 }

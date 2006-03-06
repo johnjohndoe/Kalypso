@@ -46,8 +46,7 @@ public class PointRemove implements IProfilChange
    */
   public Object getObject( )
   {
-    // TODO Auto-generated method stub
-    return null;
+        return m_point;
   }
 
   /**
@@ -55,8 +54,7 @@ public class PointRemove implements IProfilChange
    */
   public POINT_PROPERTY getPointProperty( )
   {
-    // TODO Auto-generated method stub
-    return null;
+       return null;
   }
 
   /**
@@ -64,8 +62,7 @@ public class PointRemove implements IProfilChange
    */
   public Double getValue( )
   {
-    // TODO Auto-generated method stub
-    return null;
+        return null;
   }
 
   
