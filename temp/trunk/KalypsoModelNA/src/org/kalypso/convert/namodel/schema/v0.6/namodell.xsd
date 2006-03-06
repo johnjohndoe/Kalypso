@@ -1304,7 +1304,8 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="qfmax" type="double">
+				<!-- 
+				<element name="qfmax" type="double">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Q-Bordvoll</label>
@@ -1318,6 +1319,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
+					-->
 					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
 						<annotation>
 							<documentation xml:lang="de">

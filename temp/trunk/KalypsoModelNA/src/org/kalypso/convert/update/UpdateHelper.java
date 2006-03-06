@@ -82,7 +82,7 @@ public class UpdateHelper
       interpolationFilter.setDefaultValue( defaultValue );
       interpolationFilter.setDefaultStatus( KalypsoStati.BIT_CHECK );
       interpolationFilter.setForceFill( forceFill );
-      Marshaller marshaller = JC.createMarshaller();
+      Marshaller marshaller =  JaxbUtilities.createMarshaller(JC);
       writer = new StringWriter( 0 );
       marshaller.marshal( interpolationFilter, writer );
       final String result = writer.toString();
@@ -104,7 +104,7 @@ public class UpdateHelper
       intervallFilter.setCalendarField( calendarField );
       intervallFilter.setMode( mode );
       writer = new StringWriter();
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
       marshaller.marshal( intervallFilter, writer );
 
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );

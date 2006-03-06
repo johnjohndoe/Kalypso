@@ -148,7 +148,7 @@ public class ChannelManager extends AbstractManager
         System.out.println( 2 + ": " + line );
         createProperties( propCollector, line, 2 );
         // parse kalinin-miljukov-parameter
-        HashMap<String,String> kmPropCollector = new HashMap<String, String>();
+        HashMap<String, String> kmPropCollector = new HashMap<String, String>();
 
         for( int i = 0; i < 5; i++ )
         {
@@ -156,8 +156,8 @@ public class ChannelManager extends AbstractManager
           line = reader.readLine();
           System.out.println( " km(" + i + "): " + line );
           createProperties( kmPropCollector, line, 3 );
-//          final Collection collection = kmPropCollector.values();
-          setParsedProperties( kmParameterFeature, kmPropCollector,null);
+          // final Collection collection = kmPropCollector.values();
+          setParsedProperties( kmParameterFeature, kmPropCollector, null );
           final IPropertyType pt = feature.getFeatureType().getProperty( KMParameterpropName );
           final FeatureProperty kmProp = FeatureFactory.createFeatureProperty( pt, kmParameterFeature );
           feature.addProperty( kmProp );
@@ -169,8 +169,8 @@ public class ChannelManager extends AbstractManager
       default:
         throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
     }
-//    Collection collection = propCollector.values();
-    setParsedProperties( feature,propCollector,null);
+    // Collection collection = propCollector.values();
+    setParsedProperties( feature, propCollector, null );
     return feature;
   }
 
@@ -200,9 +200,13 @@ public class ChannelManager extends AbstractManager
     else if( "KMChannel".equals( ft.getName() ) )
     {
       asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
+      List kmFeatures = (List) feature.getProperty( KMParameterpropName );
 
       asciiBuffer.getChannelBuffer().append( toAscci( feature, 2 ) + "\n" );
-      List kmFeatures = (List) feature.getProperty( KMParameterpropName );
+      final Feature km3FE = (Feature) kmFeatures.get( 2 );
+      final Double qbordvoll = (Double) km3FE.getProperty( "qrk" );
+      asciiBuffer.getChannelBuffer().append( FortranFormatHelper.printf( qbordvoll, "*" ) ).append( "\n" );
+
       for( int i = 0; i < kmFeatures.size(); i++ )
       {
         Feature kmFE = (Feature) kmFeatures.get( i );
@@ -219,7 +223,7 @@ public class ChannelManager extends AbstractManager
       asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
       // Ueberlaufknoten optional
       final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( "iknotNodeMember" );
-      Feature nodeFE = workspace.resolveLink( feature, rt2);
+      Feature nodeFE = workspace.resolveLink( feature, rt2 );
       if( nodeFE == null )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
@@ -233,7 +237,7 @@ public class ChannelManager extends AbstractManager
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
       final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "downStreamNodeMember" );
-      final Feature dnodeFE = workspace.resolveLink( feature,rt);
+      final Feature dnodeFE = workspace.resolveLink( feature, rt );
       asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
