@@ -81,7 +81,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
     final int open = gridDialog.open();
     if( open == Window.OK )
     {
-      //System.out.println("Window.OK");
+      // System.out.println("Window.OK");
     }
     return open;
   }
@@ -91,20 +91,20 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
    */
   public void collectChanges( Collection c )
   {
-  //no changes
+    // no changes
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel()
+  public String getLabel( )
   {
     return "...";
   }
 
-  public RectifiedGridDomain getRectifiedGridDomain()
+  public RectifiedGridDomain getRectifiedGridDomain( )
   {
-    return (RectifiedGridDomain)m_feature.getProperty( m_ftp.getName() );
+    return (RectifiedGridDomain) m_feature.getProperty( m_ftp);
   }
 
   class GridDialog extends Dialog
@@ -116,12 +116,12 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       setShellStyle( getShellStyle() | SWT.RESIZE );
     }
 
+    @Override
     protected Control createDialogArea( final Composite parent )
     {
       getShell().setText( "RectifiedGridDomain properties" );
 
-      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL
-          | SWT.BORDER );
+      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
       // don't forget this line!
       scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );

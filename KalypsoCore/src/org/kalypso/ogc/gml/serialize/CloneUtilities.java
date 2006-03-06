@@ -42,6 +42,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -72,7 +73,8 @@ public class CloneUtilities
   public static Object clone( final Object value, final JAXBContext jc ) throws JAXBException
   {
     // marshall it
-    final Marshaller marshaller = jc.createMarshaller();
+    
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
     final StringWriter tmpBuffer = new StringWriter();
     marshaller.marshal( value, tmpBuffer );
 

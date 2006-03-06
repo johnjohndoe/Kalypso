@@ -92,11 +92,6 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     return TYPE_NAME;
   }
 
-  private String getElementName( )
-  {
-    return ClassUtilities.getOnlyClassName( TimeseriesLinkType.class );
-  }
-
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
@@ -105,9 +100,11 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   {
     try
     {
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( object, node );
+      final JAXBElement<TimeseriesLinkType> value = m_factory.createTimeseriesLink( (TimeseriesLinkType) object );
+      String debugNode = XMLHelper.toString( node );
+      marshaller.marshal( value, node );
     }
     catch( JAXBException e )
     {
@@ -124,13 +121,13 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     try
     {
       final Element element = (Element) node;
-//      String elementTXT = XMLHelper.toString(element);
-      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, "TimeseriesLink");
-//      String childNodesTXT = XMLHelper.toString(childNodes);
+      // String elementTXT = XMLHelper.toString(element);
+      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, "TimeseriesLink" );
+      // String childNodesTXT = XMLHelper.toString(childNodes);
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );
-//        String childTXT = XMLHelper.toString(child);
+        // String childTXT = XMLHelper.toString(child);
 
         // child namespace may be null
         if( NAMESPACE.equals( child.getNamespaceURI() ) && "TimeseriesLink".equals( child.getLocalName() ) )

@@ -120,7 +120,8 @@ public class GMLWeightingTask extends Task
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
       final JAXBContext filterJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = filterJC.createMarshaller();
+      
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(filterJC);
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 

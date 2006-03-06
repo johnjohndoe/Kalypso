@@ -104,7 +104,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
 
-      final Marshaller marshaller = jc.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();

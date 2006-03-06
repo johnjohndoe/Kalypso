@@ -160,7 +160,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     {
       final ObjectFactory fac = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = jc.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
       // marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
       // );
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();

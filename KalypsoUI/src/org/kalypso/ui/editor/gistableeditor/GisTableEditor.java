@@ -175,7 +175,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
       bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller =JaxbUtilities.createMarshaller( JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( tableTemplate, osw );
       bos.close();

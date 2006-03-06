@@ -431,7 +431,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final Validator validator = JC.createValidator();
       validator.validate( m_gisTreeview );
 
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       marshaller.marshal( m_gisTreeview, writer );

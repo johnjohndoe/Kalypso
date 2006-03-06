@@ -93,7 +93,7 @@ public class IntervallFilterTest extends TestCase
       intervallFilter.setDefaultValue( 12.9 );
       intervallFilter.setFilter( fac.createZmlFilter(zmlFilter) );
       writer = new StringWriter();
-      final Marshaller marshaller = jc.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
       marshaller.marshal( intervallFilter, writer );
       writer.close();
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );

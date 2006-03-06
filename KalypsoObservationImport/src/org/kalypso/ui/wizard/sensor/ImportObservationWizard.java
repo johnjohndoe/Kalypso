@@ -228,7 +228,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final Observation type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 
-      final Marshaller marshaller = zmlJC.createMarshaller();
+      final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
       // use IResource
       final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
       OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );

@@ -62,9 +62,10 @@ public class NSPrefixProvider
     {
       THE_NS_MAPPER = new NSPrefixProvider();
       THE_NS_MAPPER.getPreferredPrefix( NS.XLINK, "xlink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.XSD, "xlink" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.XSD, "xs" );
       THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_RRM, "rrm" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
       // TODO add here all the well known namespaces...
     }
     return THE_NS_MAPPER;
@@ -105,14 +106,14 @@ public class NSPrefixProvider
     // TODO better methodes to generate prefix
     switch( tryIndex )
     {
-      case 0:
-      {
-        final String ns = StringUtils.abbreviate( namespaceUri, 5 );
-        if( isValidPrefix( ns ) )
-          return ns;
-        else
-          return generatePrefix( namespaceUri, ++tryIndex );
-      }
+      // case 0:
+      // {
+      // final String ns = StringUtils.abbreviate( namespaceUri, 5 );
+      // if( isValidPrefix( ns ) )
+      // return ns;
+      // else
+      // return generatePrefix( namespaceUri, ++tryIndex );
+      // }
       default:
       {
         int index = 0;

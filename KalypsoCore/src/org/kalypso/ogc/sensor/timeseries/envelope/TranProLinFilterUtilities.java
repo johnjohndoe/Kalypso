@@ -76,7 +76,8 @@ public class TranProLinFilterUtilities
     filter.setStatusToMerge( statusToMerge );
     filter.setAxisTypes( axisTypes );
     final StringWriter stringWriter = new StringWriter();
-    final Marshaller marshaller = jc.createMarshaller();
+    
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
     marshaller.marshal( filter, stringWriter );
     final String string = XMLUtilities.removeXMLHeader( stringWriter.toString() );
     final String filterInline = XMLUtilities.prepareInLine( string );
