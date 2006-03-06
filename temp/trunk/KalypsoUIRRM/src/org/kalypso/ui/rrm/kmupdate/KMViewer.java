@@ -111,12 +111,20 @@ public class KMViewer
           km.setPath( value );
           final File path = new File( value );
           final ProfileDataSet set = ProfileFactory.createProfileSet( path );
-          double startPosition = set.getStartPosition() / 1000d;
-          double endPosition = set.getEndPosition() / 1000d;
-          km.setKmStart( startPosition );
-          km.setKmEnd( endPosition );
-          m_textKm1.setText( Double.toString( startPosition ) );
-          m_textKm2.setText( Double.toString( endPosition ) );
+          final Double oldKmStart = km.getKmStart();
+          if( oldKmStart == null )
+          {
+            double startPosition = set.getStartPosition() / 1000d;
+            km.setKmStart( startPosition );
+          }
+          final Double oldKmEnd = km.getKmEnd();
+          if( oldKmEnd == null )
+          {
+            double endPosition = set.getEndPosition() / 1000d;
+            km.setKmEnd( endPosition );
+          }
+          m_textKm1.setText( km.getKmStart().toString() );
+          m_textKm2.setText( km.getKmEnd().toString() );
         }
       }
     } );
@@ -252,13 +260,19 @@ public class KMViewer
     if( m_profileListViewer != null && kmType != null )
     {
       m_profileListViewer.setInput( kmType );
-      final double kmStart = kmType.getKmStart();
-      final double kmEnd = kmType.getKmEnd();
-//      final String id = kmType.getId();
-//      final String riverName = kmType.getRiverName();
+      final Double kmStart = kmType.getKmStart();
+      final Double kmEnd = kmType.getKmEnd();
+      // final String id = kmType.getId();
+      // final String riverName = kmType.getRiverName();
       final String path = kmType.getPath();
-      m_textKm1.setText( Double.toString( kmStart ) );
-      m_textKm2.setText( Double.toString( kmEnd ) );
+      if( kmStart != null )
+        m_textKm1.setText( kmStart.toString() );
+      else
+        m_textKm1.setText( "" );
+      if( kmEnd != null )
+        m_textKm2.setText( kmEnd.toString() );
+      else
+        m_textKm2.setText( "" );
       m_dirField.setSelection( new StructuredSelection( path ) );
       final List<Profile> profiles = kmType.getProfile();
       for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
@@ -402,7 +416,8 @@ public class KMViewer
           Profile profileData = fac.createKalininMiljukovTypeProfile();
           profileData.setFile( file.toString() );
           profileData.setPositionKM( position );
-          profileData.setEnabled( true );
+
+          profileData.setEnabled( pd.isValidForKalypso() );
           profileList.add( profileData );
           // m_profileListViewer.setChecked( profileData, true );
         }

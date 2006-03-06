@@ -16,10 +16,10 @@
 			<element name="riverName" type="string" minOccurs="0"/>
 	
 			<!-- start km -->
-			<element name="kmStart" type="double"/>
+			<element name="kmStart" type="double" minOccurs="0"/>
 
 			<!-- end km --> 
-			<element name="kmEnd" type="double"/>
+			<element name="kmEnd" type="double" minOccurs="0"/>
 			
 			<!-- path used for dialog -->
 			<element name="path" type="string"/>

@@ -86,4 +86,14 @@ public class Row
 		return m_af;
 	}
 
+	public double getAlpha()
+	{
+		return m_q / getQfull();
+	}
+
+	private double getQfull()
+	{
+		return m_q + m_qforeland;
+	}
+
 }

@@ -65,4 +65,8 @@ public interface KMUpdateConstants
 
   public static QName QNAME_c = new QName( "http://www.tuhh.de/kalypsoNA", "c" );
 
+  public static QName QNAME_KMSTART = new QName( "http://www.tuhh.de/kalypsoNA", "startkm" );
+
+  public static QName QNAME_KMEND= new QName( "http://www.tuhh.de/kalypsoNA", "endkm" );
+
 }

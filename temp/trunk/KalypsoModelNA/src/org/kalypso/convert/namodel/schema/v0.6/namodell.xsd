@@ -1304,23 +1304,35 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-				<!-- 
-				<element name="qfmax" type="double">
+<element name="startkm" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Q-Bordvoll</label>
-								<tooltip>bordvoller Abfluss [m^3/s]</tooltip>
-								<description>maximaler Abfluss innerhalb des Flussschlauches</description>
+								<label>km Unterwasser</label>
+								<tooltip>Kilometrierung Unterwasser</tooltip>
+								<description>Kilometrierung Unterwasser</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Q-Bankfull</label>
-								<tooltip>Bankfull discharge [m^3/s]</tooltip>
-								<description>Maximun discharge within the stream channel</description>
+								<label>km downstream</label>
+								<tooltip>km downstream</tooltip>
+								<description>km downstream</description>
 							</documentation>
 						</annotation>
 					</element>
-					-->
-					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
+	<element name="endkm" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>km Oberwasser</label>
+								<tooltip>Kilometrierung Oberwasser</tooltip>
+								<description>Kilometrierung Oberwasser</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>km upstream</label>
+								<tooltip>km upstream</tooltip>
+								<description>km upstream</description>
+							</documentation>
+						</annotation>
+					</element>
+						<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Ref. KM-Parameter</label>

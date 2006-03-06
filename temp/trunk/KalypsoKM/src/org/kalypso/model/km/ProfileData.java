@@ -102,4 +102,13 @@ public class ProfileData
 		return new KMValue(getRange(m_min, m_max), m_rows[index],
 				m_rows[index + 1]);
 	}
+
+	public boolean isValidForKalypso()
+	{
+		if (m_rows[1].getAlpha() < 1) // q is allways > q-bordfull
+			return false;
+		if (m_rows.length < 4) // not enough values for calculation
+			return false;
+		return true;
+	}
 }

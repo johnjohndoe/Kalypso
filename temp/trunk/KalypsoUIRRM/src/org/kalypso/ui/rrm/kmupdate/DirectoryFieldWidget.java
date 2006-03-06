@@ -106,23 +106,31 @@ public class DirectoryFieldWidget implements ISelectionProvider
     button.setLayoutData( data3 );
     button.addSelectionListener( new SelectionAdapter()
     {
+      private String m_lastPath = null;
+
       @Override
       public void widgetSelected( SelectionEvent e )
       {
         if( m_dirOnly )
         {
           final DirectoryDialog dialog = new DirectoryDialog( parent.getShell() );
-          dialog.setText( "text" );
+          if( m_lastPath != null )
+            dialog.setFilterPath( m_lastPath );
+          // dialog.setText( );
           String filePath = dialog.open();
           m_text.setText( filePath );
+          m_lastPath = filePath;
           fireSelectionChangeEvent();
         }
         else
         {
           FileDialog dialog = new FileDialog( parent.getShell() );
-          dialog.setText( "text" );
+          if( m_lastPath != null )
+            dialog.setFilterPath( m_lastPath );
+          // dialog.setText( "text" );
           String filePath = dialog.open();
           m_text.setText( filePath );
+          m_lastPath = filePath;
           fireSelectionChangeEvent();
         }
       }

@@ -138,10 +138,8 @@ public class ProfileDataSet
 
 				});
 		for (int i = 0; i < kmMerged.length; i++)
-		{
 			sort.add(kmMerged[i]);
 
-		}
 		final AbstractKMValue kmFirst = kmMerged[0];
 		final AbstractKMValue kmLast = kmMerged[kmMerged.length - 1];
 		double qFirst = kmFirst.getQSum();
@@ -156,12 +154,24 @@ public class ProfileDataSet
 		{
 			qbankfull = (qLast + qFirst) / 2;
 		}
-		double dq1 = (qbankfull - qFirst) / (numberOfDischarges / 2);
-		for (double q = qFirst; q <= qbankfull; q += dq1)
+		 
+//		double dq1 = (qbankfull - qFirst) / (numberOfDischarges / 2);
+		int max1=numberOfDischarges/2;
+		for(int i=0;i<max1;i++)
+		{
+			double q=qFirst+i*(qbankfull - qFirst)/max1; 
 			result.add(getKM(sort, q));
-		double dq2 = (qLast - qbankfull) / (numberOfDischarges / 2);
-		for (double q = qbankfull + dq2; q <= qLast; q += dq2)
+		}
+		for(int i=max1;i<numberOfDischarges;i++)
+		{
+			double q=qbankfull+(i-(max1))*(qLast - qbankfull)/(numberOfDischarges-(max1+1)); 
 			result.add(getKM(sort, q));
+		}
+//		for (double q = qFirst; q <= qbankfull; q += dq1)
+//			result.add(getKM(sort, q));
+//		double dq2 = (qLast - qbankfull) / ((double)numberOfDischarges / 2d);
+//		for (double q = qbankfull + dq2; q <= qLast; q += dq2)
+//			result.add(getKM(sort, q));
 		return (AbstractKMValue[]) result.toArray(new AbstractKMValue[result
 				.size()]);
 	}
@@ -188,11 +198,11 @@ public class ProfileDataSet
 		{
 			final AbstractKMValue km = kmValues[i];
 			if (km.getAlpha() < 1 && i == 0)
-				throw new Exception("no bankfull");
+				throw new Exception("no bankfull, min q is more than q bankfull");
 			else if (km.getAlpha() < 1 && i > 0)
 				return kmValues[i - 1];
 		}
-		throw new Exception("no bankfull");
+		throw new Exception("no bankfull, check boundary conditions or max q is less than q bankfull");
 	}
 
 	private class DummyKMValue extends AbstractKMValue

@@ -1,5 +1,12 @@
 package org.kalypso.model.km;
 
+/**
+ * 
+ * interpolates KM for some profiles at same discharge
+ * 
+ * @author doemming
+ * 
+ */
 public class MulitKMValue extends AbstractKMValue
 {
 	private final double m_alpha;

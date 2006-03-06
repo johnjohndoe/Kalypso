@@ -1,5 +1,11 @@
 package org.kalypso.model.km;
 
+/**
+ * calculates KM values from 2 rows of 1D-simulation results (QW-table)
+ * 
+ * @author doemming
+ * 
+ */
 public class KMValue extends AbstractKMValue
 {
 	private final double m_k;
@@ -40,8 +46,7 @@ public class KMValue extends AbstractKMValue
 		{
 			m_kForeland = 0;
 			m_nForeland = 0;
-		}
-		else
+		} else
 		{
 			final double kiForeland = (liForeland * dAForeland / dqForeland) / 3600d;
 			final double nForeland = length / liForeland;

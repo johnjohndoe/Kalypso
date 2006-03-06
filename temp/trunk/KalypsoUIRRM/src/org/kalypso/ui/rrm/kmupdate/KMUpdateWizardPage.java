@@ -211,7 +211,8 @@ public class KMUpdateWizardPage extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final FileDialog dialog = new FileDialog( parent.getShell() );
+        final FileDialog dialog = new FileDialog( parent.getShell(), SWT.OPEN );
+        dialog.setFilterExtensions( new String[] { "*.km_xml" } );
         final String path = dialog.open();
         if( path != null && path.length() > 0 )
         {
@@ -231,7 +232,8 @@ public class KMUpdateWizardPage extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final FileDialog dialog = new FileDialog( parent.getShell() );
+        final FileDialog dialog = new FileDialog( parent.getShell(), SWT.SAVE );
+        dialog.setFilterExtensions( new String[] { "*.km_xml" } );
         final String path = dialog.open();
         if( path != null && path.length() > 0 )
         {
@@ -243,7 +245,7 @@ public class KMUpdateWizardPage extends WizardPage
     } );
 
     final String path = m_plugin.getDialogSettings().get( KM_CONFIG_PATH );
-
+    m_configPath = path;
     if( path == null )
       createNewKMGroup();
     else
@@ -268,6 +270,15 @@ public class KMUpdateWizardPage extends WizardPage
       km.setId( feature.getId() );
       km.setFilePattern( "*km" );
       km.setPath( "" );
+
+      final Object propStart = feature.getProperty( KMUpdateConstants.QNAME_KMSTART );
+      final Object propEnd = feature.getProperty( KMUpdateConstants.QNAME_KMEND );
+
+      if( propStart != null )
+        km.setKmStart( (Double) propStart );
+      if( propEnd != null )
+        km.setKmEnd( (Double) propEnd );
+
       kalininMiljukovList.add( km );
     }
     setKMGroup( kmGroup );
@@ -363,6 +374,8 @@ public class KMUpdateWizardPage extends WizardPage
 
   void saveAs( String path )
   {
+    if( path == null )
+      return;
     FileWriter writer = null;
     try
     {
@@ -398,10 +411,12 @@ public class KMUpdateWizardPage extends WizardPage
         {
           updateFeature( (Feature) object, changes );
         }
-        catch( SameXValuesException e )
+        catch( Exception e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
+          MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", "");
+          
+          return false;
         }
     }
     final FeatureChange[] change = changes.toArray( new FeatureChange[changes.size()] );
@@ -430,7 +445,7 @@ public class KMUpdateWizardPage extends WizardPage
     return null;
   }
 
-  private List<FeatureChange> updateFeature( final Feature feature, final List<FeatureChange> changeList ) throws SameXValuesException
+  private List<FeatureChange> updateFeature( final Feature feature, final List<FeatureChange> changeList ) throws Exception
   {
     final List<FeatureChange> result;
     if( changeList == null )
@@ -444,6 +459,9 @@ public class KMUpdateWizardPage extends WizardPage
 
     final IRelationType kmRT = (IRelationType) kmFT.getProperty( KMUpdateConstants.QNAME_KMParameterMember );
 
+    final IPropertyType kmKMStartPT = kmFT.getProperty( KMUpdateConstants.QNAME_KMSTART );
+    final IPropertyType kmKMEndPT = kmFT.getProperty( KMUpdateConstants.QNAME_KMEND );
+
     final IPropertyType qrkPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_qrk );
     final IPropertyType rkfPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rkf );
     final IPropertyType rkvT = kmPaFT.getProperty( KMUpdateConstants.QNAME_rkv );
@@ -453,8 +471,10 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( km == null )
       return result;
-    double kmStart = km.getKmStart();
-    double kmEnd = km.getKmEnd();
+    Double kmStart = km.getKmStart();
+    Double kmEnd = km.getKmEnd();
+    if( kmStart == null || kmEnd == null )
+      return result;
     final List<File> list = new ArrayList<File>();
     final List<Profile> profiles = km.getProfile();
     for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
@@ -473,6 +493,9 @@ public class KMUpdateWizardPage extends WizardPage
     int max = 5;
     final AbstractKMValue[] values = profileSet.getKMValues( max );
     final Feature[] kmParameter = m_workspace.resolveLinks( feature, kmRT );
+
+    result.add( new FeatureChange( feature, kmKMStartPT, km.getKmStart() ) );
+    result.add( new FeatureChange( feature, kmKMEndPT, km.getKmEnd() ) );
 
     if( kmParameter.length < max )
     {
