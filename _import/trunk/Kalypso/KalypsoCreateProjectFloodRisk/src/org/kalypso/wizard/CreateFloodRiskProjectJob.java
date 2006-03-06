@@ -292,7 +292,7 @@ public class CreateFloodRiskProjectJob extends Job
       gismapview.setExtent( extent );
       gismapview.setLayers( layers );
 
-      final Marshaller marshaller = JC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       FileWriter fw = new FileWriter( path );
       marshaller.marshal( gismapview, fw );

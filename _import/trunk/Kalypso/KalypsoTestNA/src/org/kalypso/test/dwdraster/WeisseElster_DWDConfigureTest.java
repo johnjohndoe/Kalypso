@@ -207,7 +207,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
         System.out.println( "A(cell)=  " + fullCellArea + " deltaA=" + ( modellArea - fullCellArea ) + " faktor="
             + modellArea / fullCellArea );
       }
-      final Marshaller marshaller = dwdJC.createMarshaller();
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( dwdJC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( conf, writer );
     }
