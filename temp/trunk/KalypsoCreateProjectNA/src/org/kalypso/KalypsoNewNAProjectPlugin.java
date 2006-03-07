@@ -45,34 +45,32 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * @author kuepfer
- * 
- * The main plugin class to be used in the desktop.
+ * @author kuepfer The main plugin class to be used in the desktop.
  */
 public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
 {
-  //The shared instance.
+  // The shared instance.
   private static KalypsoNewNAProjectPlugin plugin;
 
-  //Resource bundle.
+  // Resource bundle.
   private ResourceBundle resourceBundle;
 
   /**
    * The constructor.
    */
-  public KalypsoNewNAProjectPlugin()
+  public KalypsoNewNAProjectPlugin( )
   {
     super();
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle
-          .getBundle( "org.kalypso.wizard.WizardMessages" ); //$NON-NLS-1$
-//      resourceBundle = ResourceBundle
-//          .getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" ); //$NON-NLS-1$
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.wizard.WizardMessages" ); //$NON-NLS-1$
+      // resourceBundle = ResourceBundle
+      // .getBundle( "org.kalypso.wizard.resources.KalypsoNewProjectPluginResources" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {
@@ -87,6 +85,10 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    // tricky, the kalypsoGisPlugin initializes the GMLSchemaCatalog, and we need this !
+    // do not remove next line until better solution is found
+    // TODO
+    KalypsoGisPlugin default1 = KalypsoGisPlugin.getDefault();
   }
 
   /**
@@ -100,21 +102,20 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoNewNAProjectPlugin getDefault()
+  public static KalypsoNewNAProjectPlugin getDefault( )
   {
     return plugin;
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString( String key )
   {
     ResourceBundle bundle = KalypsoNewNAProjectPlugin.getDefault().getResourceBundle();
     try
     {
-      return ( bundle != null ) ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -126,7 +127,7 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle()
+  public ResourceBundle getResourceBundle( )
   {
     return resourceBundle;
   }

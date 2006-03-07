@@ -49,7 +49,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,10 +133,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   // //$NON-NLS-2$
   // null ),
 
-  static final IFeatureType m_dummyFeatureType;
+  // static final IFeatureType m_dummyFeatureType;
 
-  static
+  private IFeatureType createGewaesserFT( )
   {
+
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final ITypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
@@ -152,8 +152,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName()[0], integerTH, 0, 1 );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
-    m_dummyFeatureType = GMLSchemaFactory.createFeatureType( new QName( "wizard.kalypso.na", "Gewässer" ), pts );
-
+    return GMLSchemaFactory.createFeatureType( new QName( "wizard.kalypso.na", "Gewässer" ), pts );
   }
 
   private KalypsoNAProjectWizardPage m_createMappingCatchmentPage;
@@ -168,7 +167,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private WizardNewProjectCreationPage m_createProjectPage;
 
-  private GMLSchema m_modelSchema;
+  private final GMLSchema m_modelSchema;
 
   private GMLWorkspace m_modelWS;
 
@@ -188,10 +187,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   public KalypsoNAProjectWizard( )
   {
-
+    GMLSchema schema = null;
     try
     {
-      m_modelSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA" ); //$NON-NLS-1$
+      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA" ); //$NON-NLS-1$
       m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop" ); //$NON-NLS-1$
       setNeedsProgressMonitor( true );
     }
@@ -199,6 +198,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       e1.printStackTrace();
     }
+    m_modelSchema = schema;
 
   }
 
@@ -225,9 +225,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
     addPage( m_createMappingCatchmentPage );
-
+    final IFeatureType gewaesserFT = createGewaesserFT();
     m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_dummyFeatureType );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
     addPage( m_createMappingRiverPage );
 
     m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
@@ -374,15 +374,14 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     Feature rootFeature = m_hydWS.getRootFeature();
     IFeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
-    Feature hydCollectionFE = (Feature) rootFeature.getProperty( "HydrotopCollectionMember" ); //$NON-NLS-1$
-    List hydList = (List) hydCollectionFE.getProperty( "HydrotopMember" ); //$NON-NLS-1$
+    List hydList = (List) rootFeature.getProperty( "hydrotopMember" ); //$NON-NLS-1$
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT, true );
       final IPropertyType flaechPT = hydFT.getProperty( "area" );
-      final IPropertyType fakVersPT = hydFT.getProperty( "fak_vers" );
+      final IPropertyType fakVersPT = hydFT.getProperty( "corrSealing" );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -487,7 +486,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       final String fid = getId( idColKey, sourceFeature, "TG" );
       final Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
       final IPropertyType flaechPT = modelFT.getProperty( "flaech" );
-      final IRelationType bodenkorrekturMemberPT = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" );
+      final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -503,7 +502,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         targetFeature.setProperty( targetPT, so );
       }
       // Bodenkorrekturparameter erstellen
-      List list = new ArrayList();
+      final List list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
       targetFeature.setProperty( "bodenkorrekturmember", list ); //$NON-NLS-1$
       int soilLayerNo = Integer.parseInt( m_createPreferencePage.getSoilLayerNo() );
       for( int j = 0; j < soilLayerNo; j++ )
@@ -514,7 +513,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         try
         {
 
-          m_modelWS.addFeatureAsComposition( targetFeature, bodenkorrekturMemberPT, j, newFeature ); //$NON-NLS-1$
+          m_modelWS.addFeatureAsComposition( targetFeature, bodenkorrekturMemberRT, j, newFeature ); //$NON-NLS-1$
         }
         catch( Exception e )
         {
@@ -578,7 +577,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       idColKey = null;
 
     // StrangArt is defined in dummyFeatureType (member variable)
-    String typeKey = (String) mapping.get( WizardMessages.getString( "KalypsoNAProjectWizard.ChannelFeatureTypeProperty" ) ); //$NON-NLS-1$
+    String typeKey = (String) mapping.get( "StrangArt" ); //$NON-NLS-1$
     // remove the channel type mapping (just needed once)
     mapping.remove( typeKey );
 
@@ -614,18 +613,17 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
           targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
 
-          List list = new ArrayList();
-          targetFeature.setProperty( "KMParameterMember", list ); //$NON-NLS-1$
+          IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( "KMParameterMember" );
+          final List list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
+          targetFeature.setProperty( parameterMemberRT, list ); //$NON-NLS-1$
           int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
-          final IRelationType kmParameterPT = (IRelationType) targetFeature.getFeatureType().getProperty( "KMParameterMember" );
           for( int j = 0; j < channelNo; j++ )
           {
-            final IRelationType kmFtProp = (IRelationType) kmFT.getProperty( "KMParameterMember" ); //$NON-NLS-1$
-            final IFeatureType kmParameterFT = kmFtProp.getTargetFeatureTypes( null, false )[0];
+            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureTypes( null, false )[0];
             final Feature newFeature = m_modelWS.createFeature( kmParameterFT );
             try
             {
-              m_modelWS.addFeatureAsComposition( targetFeature, kmParameterPT, j, newFeature ); //$NON-NLS-1$
+              m_modelWS.addFeatureAsComposition( targetFeature, parameterMemberRT, j, newFeature ); //$NON-NLS-1$
             }
             catch( Exception e )
             {
@@ -655,6 +653,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
         final String targetkey = (String) it.next();
         final String sourcekey = (String) mapping.get( targetkey );
+        if( "StrangArt".equals( targetkey ) )
+          continue;
         final Object so = sourceFeature.getProperty( sourcekey );
         targetFeature.setProperty( targetkey, so );
 
