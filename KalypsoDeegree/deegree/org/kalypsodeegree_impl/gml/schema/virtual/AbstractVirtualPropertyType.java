@@ -42,6 +42,8 @@ package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -52,7 +54,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 /**
  * @author doemming
  */
-public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeProperty
+public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeProperty, IAdaptable
 {
 
   private final QName m_name;
@@ -222,4 +224,11 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
     // nothing to do
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    return Platform.getAdapterManager().getAdapter( this, adapter );
+  }
 }

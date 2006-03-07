@@ -83,8 +83,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
@@ -486,7 +486,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final IFeatureType featureType = theme.getFeatureType();
       final IPropertyType property = featureType.getProperty( propertyName );
 
-      final Annotation annotation = AnnotationUtilities.getAnnotation( property );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( property );
       text = annotation.getLabel();
       tooltip = annotation.getTooltip();
     }

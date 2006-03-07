@@ -32,7 +32,7 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
@@ -97,12 +97,12 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
-      final Annotation annotation =  AnnotationUtilities.getAnnotation(feature.getFeatureType());
+      final IAnnotation annotation =  AnnotationUtilities.getAnnotation(feature.getFeatureType());
       return annotation.getLabel() + " #" + feature.getId();
     }
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final Annotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty());
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty());
       return annotation.getLabel();
     }
     if( element instanceof LinkedFeatureElement2 )

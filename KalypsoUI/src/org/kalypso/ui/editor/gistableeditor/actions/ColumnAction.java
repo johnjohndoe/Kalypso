@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.property.Annotation;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
 
@@ -59,7 +59,7 @@ public final class ColumnAction extends Action
   private final String m_format;
 
   public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final String propertyName,
-      final Annotation annotation )
+      final IAnnotation annotation )
   {
     super( propertyName );
 

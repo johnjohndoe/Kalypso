@@ -29,8 +29,8 @@
  */
 package org.kalypso.ogc.gml;
 
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -120,7 +120,7 @@ public class KalypsoLegendUtilities
       final String type = vpt.getValueClass().getName();
       if( type.startsWith( "java.lang." ) )
       {
-        final Annotation annotation = AnnotationUtilities.getAnnotation( ftp );
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
         if( annotation != null )
           return annotation.getLabel();
         return ftp.getName();

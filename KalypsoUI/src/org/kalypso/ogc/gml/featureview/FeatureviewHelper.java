@@ -47,8 +47,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Validator;
 
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -186,7 +186,7 @@ public class FeatureviewHelper
         groupdata.setVerticalAlignment( "GridData.FILL" );
         groupdata.setHorizontalSpan( 3 );
 
-        final Annotation annotation = AnnotationUtilities.getAnnotation(ftp);
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
         final String text = annotation == null ? name : annotation.getLabel();
         final String tooltip = annotation == null ? null : annotation.getTooltip();
 
@@ -219,7 +219,7 @@ public class FeatureviewHelper
       type = button;
     }
 
-    final Annotation annotation = AnnotationUtilities.getAnnotation(ftp);
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
     final String text = annotation == null ? name : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
