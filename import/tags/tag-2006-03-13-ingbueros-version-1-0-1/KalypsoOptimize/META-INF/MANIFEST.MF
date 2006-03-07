@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoOptimizePlugin
+Bundle-SymbolicName: org.kalypso.optimize
+Bundle-Version: 1.0.0
+Bundle-ClassPath: kalypsoOptimize.jar
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.optimize,
+ org.kalypso.optimize.errorfunctions,
+ org.kalypso.optimize.resource,
+ org.kalypso.optimize.transform,
+ org.kalypso.optimizer
+Require-Bundle: org.kalypso.core;visibility:=reexport,
+ org.kalypso.jwsdp;visibility:=reexport,
+ org.kalypso.simulation.core
