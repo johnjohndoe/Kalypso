@@ -16,7 +16,7 @@
          </menu>
          <action
                class="org.kalypso.ui.rrm.action.KMUpdateAction"
-               enablesFor="1"
+               enablesFor="multiple"
                icon="icons/kmStrang.gif"
                id="KalypsoUIRRM.updateKMParameter"
                label="UpdateKMParameter"
