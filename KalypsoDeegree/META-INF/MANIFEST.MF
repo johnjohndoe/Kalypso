@@ -308,4 +308,3 @@ Export-Package: Acme,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper,
  org.w3c.dom.xpath
-Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
