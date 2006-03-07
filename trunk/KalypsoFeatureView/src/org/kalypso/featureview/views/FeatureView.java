@@ -25,8 +25,8 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -254,7 +254,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
           final IFeatureType featureType = feature.getFeatureType();
-          final Annotation annotation = AnnotationUtilities.getAnnotation( featureType );
+          final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
           final String label = annotation == null ? featureType.getQName().getLocalPart() : annotation.getLabel();
           groupLabel = label + " - " + feature.getId();
         }

@@ -64,8 +64,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -509,7 +509,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     else
     {
       final IFeatureType ft = m_srcFE.getFeatureType();
-      final Annotation annotation = AnnotationUtilities.getAnnotation(ft);
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation(ft);
       labelBuffer.append( annotation.getLabel() + "#" + m_srcFE.getId() );
       tipBuffer.append( ft.getQName()+ "#" + m_srcFE.getId() );
     }
@@ -523,7 +523,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     else
     {
       final IFeatureType ft = m_targetFE.getFeatureType();
-      final Annotation annotation = AnnotationUtilities.getAnnotation(ft);
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation(ft);
       labelBuffer.append( annotation.getLabel() + "#" + m_targetFE.getId() );
       tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() );
     }

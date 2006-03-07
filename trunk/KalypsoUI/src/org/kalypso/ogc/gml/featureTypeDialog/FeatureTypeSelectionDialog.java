@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 
 /**
@@ -86,7 +86,7 @@ public class FeatureTypeSelectionDialog extends Dialog
     for( int i = 0; i < m_ft.length; i++ )
     {
       final IFeatureType ft = m_ft[i];
-      final Annotation annotation = AnnotationUtilities.getAnnotation( ft );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
       list.add( annotation.getLabel() );
     }
     final GridData data = new GridData();

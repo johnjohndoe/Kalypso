@@ -4,8 +4,8 @@ import java.net.URL;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
@@ -99,12 +99,12 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     }
     if( element instanceof IFeatureType )
     {
-      final Annotation annotation = AnnotationUtilities.getAnnotation((IFeatureType)element );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation((IFeatureType)element );
       return annotation.getLabel();
     }
     if( element instanceof IPropertyType )
     {
-      final Annotation annotation = AnnotationUtilities.getAnnotation((IPropertyType)element );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation((IPropertyType)element );
       return annotation.getLabel();
     }
     if( element instanceof HeavyRelationType )

@@ -64,8 +64,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -520,7 +520,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
       if( ftp != null )
       {
-        final Annotation annotation = AnnotationUtilities.getAnnotation(ftp);
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
 
         if( annotation != null )
         {
