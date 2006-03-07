@@ -121,7 +121,7 @@ public class DBaseFile
 
   // representing the name of the dBase file
   // only needed for writing the dBase file
-  private String fname = null;
+  private final String fname;
 
   final private QName m_ftName = null;
 
@@ -157,6 +157,8 @@ public class DBaseFile
 
   final int m_defaultFileShapeType;
 
+  private String m_prefix;
+
   /**
    * constructor <BR>
    * only for reading a dBase file <BR>
@@ -164,6 +166,7 @@ public class DBaseFile
   public DBaseFile( String url, int defaultFileShapeType ) throws IOException
   {
     fname = url;
+    m_prefix=fname.replaceAll(".+[/|\\\\]","");
     m_defaultFileShapeType = defaultFileShapeType;
     // creates rafDbf
     rafDbf = new RandomAccessFile( url + _dbf, "r" );
@@ -740,8 +743,9 @@ public class DBaseFile
         fp[i] = allowNull ? null : "";
       }
     }
-    final String prefix = featureType.getQName().getLocalPart();
-    return FeatureFactory.createFeature( prefix + rowNo, featureType, fp );
+//    final String prefix = featureType.getQName().getLocalPart();
+   
+    return FeatureFactory.createFeature( m_prefix + rowNo, featureType, fp );
   }
 
   /**
