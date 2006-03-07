@@ -42,8 +42,6 @@ package org.kalypso.commons.xml;
 
 import java.util.HashMap;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * The NSPrefixProvider is a singelton to ensures that namespaces are allways prefixed the same way. This is not
  * neccesary, but very nice.
