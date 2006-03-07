@@ -1304,7 +1304,7 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-<element name="startkm" type="double">
+					<element name="startkm" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>km Unterwasser</label>
@@ -1318,7 +1318,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-	<element name="endkm" type="double">
+					<element name="endkm" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>km Oberwasser</label>
@@ -1332,7 +1332,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-						<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
+					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Ref. KM-Parameter</label>
