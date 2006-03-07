@@ -46,8 +46,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -90,7 +90,7 @@ public class KMUpdateLabelProvider implements ILabelProvider
       final Feature feature = (Feature) element;
 
       final IFeatureType ft = feature.getFeatureType();
-      final Annotation annotation = AnnotationUtilities.getAnnotation( ft );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
       buffer.append( annotation.getLabel() );
 
       final Object name = feature.getProperty( m_gmlName );

@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -96,7 +96,7 @@ public class ImportShapeFile
       registry.registerTypeHandler( new ObservationLinkHandler() );
       GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( schemaURL );
       final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
-      final Annotation annotation = AnnotationUtilities.getAnnotation( targetFT );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( targetFT );
       String label = annotation.getLabel();
       String tooltip = annotation.getTooltip();
       System.out.println( label + "/t" + tooltip );

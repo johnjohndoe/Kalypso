@@ -79,8 +79,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.Annotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -690,7 +690,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    */
   public String getAnnotation( IPropertyType ftp, int type )
   {
-    final Annotation annotation = AnnotationUtilities.getAnnotation(ftp);
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
     if( annotation != null )
     {
       if( type == TOOL_TIP )
