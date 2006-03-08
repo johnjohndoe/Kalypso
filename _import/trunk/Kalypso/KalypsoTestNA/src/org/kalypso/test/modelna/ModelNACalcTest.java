@@ -211,10 +211,10 @@ public class ModelNACalcTest extends TestCase
             // "inp.dat/we_nat.ntz",
             // "*exe",
             "*err",
-            // "*gml",
+             "*gml",
             "*res", "IdMap.txt", "exe.log",
             // "start/we_nat_start.txt",
-            // "inp.dat/we.hyd",
+             "inp.dat/we.hyd",
             // "out_we.nat/950825.qgs",
             // "inp.dat/we_nat.ger",
             "inp.dat/we_nat.geb", "zufluss/*", "klima.dat/*", "infolog.txt" };
