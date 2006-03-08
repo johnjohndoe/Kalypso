@@ -7,25 +7,24 @@
          name="Kalypso Enterprise"
          point="org.eclipse.core.runtime.products">
       <product
-            name="Kalypso Enterprise"
             application="org.kalypso.product.application"
-            description="Kalypso Enterprise Client for numerical modelling">
+            description="Kalypso Enterprise Client for numerical modelling"
+            name="Kalypso Enterprise">
          <property
                name="aboutText"
-               value="%productBlurb">
-         </property>
+               value="%productBlurb"/>
          <property
                name="aboutImage"
-               value="etc/aboutKalypso.gif">
-         </property>
+               value="etc/aboutKalypso.gif"/>
          <property
                name="featureImage"
-               value="etc/kalypso32.gif">
-         </property>
+               value="etc/kalypso32.gif"/>
          <property
                name="windowImage"
-               value="etc/kalypso16.gif">
-         </property>
+               value="etc/kalypso16.gif"/>
+         <property
+               name="windowImages"
+               value="etc/kalypso16.gif"/>
       </product>
    </extension>
 
