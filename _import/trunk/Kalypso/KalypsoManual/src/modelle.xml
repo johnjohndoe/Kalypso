@@ -193,13 +193,22 @@
 
         <listitem>
           <para>Modellparameter setzen (einfache Parameter,
-          Korrekturparameter, Zeit-Flächen-Funktion, WQV-Rückhaltebecken,usw.,
-          siehe <xref linkend="kalypso_na-parameter_editieren" />)</para>
+          Korrekturparameter, Zeit-Flächen-Funktion,
+          WQV-Rückhaltebecken,Kalinin-Miljukov Parameter, usw., siehe <xref
+          linkend="kalypso_na-parameter_editieren" />)</para>
         </listitem>
 
         <listitem>
-          <para>Natürliche Parameter setzen (Boden-, Nutzungs- und
-          Schneedaten)</para>
+          <para>Natürliche Parameter setzen, Parameterkatalog anlegen (Boden-,
+          Nutzungs- und Schneedaten)</para>
+        </listitem>
+
+        <listitem>
+          <para>Zeitreihen aus dem Repository anbinden
+          (Datenrepositoryverknüpfung der Niederschlag-, Verdunstung-,
+          Temperatur-, Pegel- und Zuflussganglinien), Datenbank oder lokale
+          Originalzeitreihe (siehe <xref
+          linkend="Zeitreihenverknuepfung" />)</para>
         </listitem>
 
         <listitem>
@@ -208,9 +217,8 @@
         </listitem>
 
         <listitem>
-          <para>Zeitreihen anbinden (Datenrepository- und Modellverknüpfung
-          der Niederschlag-, Verdunstung-, Temperatur-, Pegel- und
-          Zuflussganglinien)</para>
+          <para>Modellzeitreihen verknüpfen (Modellzeitreihenverknüpfung im
+          Rechenfall) (siehe <xref linkend="Zeitreihenverknuepfung" />)</para>
         </listitem>
 
         <listitem>
@@ -469,7 +477,8 @@
                 <entry>Kürzel des Bodenaufbaus. (Zuordnung zu den global
                 definierten Bodenparametern)</entry>
               </row>
-<row>
+
+              <row>
                 <entry>VersiegKor</entry>
 
                 <entry>Korrekturfaktor Versiegelung</entry>
@@ -486,6 +495,7 @@
                 <entry>Unterscheidung in besielte und unbesielte
                 Flächen</entry>
               </row>
+
               <row>
                 <entry>MaxPerRate</entry>
 
@@ -505,11 +515,18 @@
                 Grundwasserleiter verbleibt. Der Differenzanteil wird in den
                 Tiefengrundwasserleiter abgeschlagen.</entry>
               </row>
-
-              
             </tbody>
           </tgroup>
         </table>
+
+        <para>
+          <note>
+            <para>Nutzungs- und Bodenschlüssel dienen der Zuordnung der
+            Landnutzung und des Bodentypes zu den Attributen im
+            Parameterkatalog. Es ist daher auf eine korrekte Schreibweise zu
+            achten.</para>
+          </note>
+        </para>
       </section>
 
       <section id="kalypso_na-allgemeine_projektstruktur">
@@ -563,120 +580,170 @@
           </mediaobject>
         </figure>
 
-        <para><emphasis role="bold">Verzeichnis
-        (Basis)Tabellen</emphasis></para>
+        <para>
+          <emphasis role="bold">Verzeichnis (Basis)Tabellen</emphasis>
+        </para>
 
         <para>Die Eingabe bzw. Änderung von Modellparametern erfolgt in
         Tabellen. Die Editiermöglichkeiten von Tabellen werden in <xref
         linkend="menu_tabelle" /> beschrieben. Die in den Tabellen enthaltenen
         Modellparameter werden in <xref
         linkend="kalypso_na_modellparameter" /> erläutert. Folgende Tabellen
-        sind im Projekt zur Bearbeitung der Modellparameter enthalten:</para>
+        sind im Projekt zur Bearbeitung der Modellparameter und der
+        Hydrotopparameter enthalten:</para>
 
         <itemizedlist>
           <listitem>
-            <para><filename>Teilgebiete.gtt</filename></para>
+            <para>
+              <filename>Teilgebiete.gtt</filename>
+            </para>
 
             <para>Parameter, die den einzelnen Teilgebieten zugeordnet
             werden.</para>
           </listitem>
 
           <listitem>
-            <para><filename>Knoten.gtt</filename></para>
+            <para>
+              <filename>Knoten.gtt</filename>
+            </para>
 
             <para>Parameter für die Modellknoten (z.B. Pegel)</para>
           </listitem>
 
           <listitem>
-            <para><filename>KMStraenge.gtt</filename></para>
+            <para>
+              <filename>KMStraenge.gtt</filename>
+            </para>
 
             <para>Parameter für die Realen (Kalinin-Miljukov) -Gerinnestränge
             (Berechnung der Gerinneretention).</para>
           </listitem>
 
           <listitem>
-            <para><filename>VirtStraenge.gtt</filename></para>
+            <para>
+              <filename>VirtStraenge.gtt</filename>
+            </para>
 
             <para>Übersicht der Stränge ohne Retention (virtuelle
             Modellierungsstränge)</para>
           </listitem>
 
           <listitem>
-            <para><filename>RHBStraenge.gtt</filename></para>
+            <para>
+              <filename>RHBStraenge.gtt</filename>
+            </para>
 
             <para>Parameter der Speicherstränge</para>
           </listitem>
 
           <listitem>
-            <para><filename>Hydrotope.gtt</filename></para>
+            <para>
+              <filename>Hydrotope.gtt</filename>
+            </para>
 
             <para>Parameter der Hydrotope</para>
           </listitem>
         </itemizedlist>
 
         <para>Zusätzlich zu den Tabellen der Modellparameter sind folgende
-        Tabellen zur Bearbeitung der statischen Parameter im Unterverzeichnis
+        Tabellen zur Bearbeitung des Parameterkataloges im Unterverzeichnis
         Parameter vorhanden:</para>
 
-        <para><itemizedlist>
+        <para>
+          <itemizedlist>
             <listitem>
-              <para><filename>Nutzung.gtt</filename></para>
+              <para>
+                <filename>Landnutzungsgruppen.gtt</filename>
+              </para>
 
               <para>Parameter der Landnutzung, welche den Hydrotopen
               zugeordnet sind.</para>
             </listitem>
 
             <listitem>
-              <para><filename>Schnee.gtt</filename></para>
+              <para>
+                <filename>Jahresgaenge.gtt</filename>
+              </para>
+
+              <para>Idealisierte Jahresgänge, welche den Landnutzungen
+              zugeordnet sind.</para>
+            </listitem>
+
+            <listitem>
+              <para>
+                <filename>Versiegelungsklassen.gtt</filename>
+              </para>
+
+              <para>Versiegelungsklassen, welche den Landnutzungen zugeordnet
+              sind.</para>
+            </listitem>
+
+            <listitem>
+              <para>
+                <filename>Schneetypen.gtt</filename>
+              </para>
 
               <para>Parameter der Schneetypen, welche den Teilgebieten
               zugeordnet sind.</para>
             </listitem>
 
             <listitem>
-              <para><filename>BodenProfil.gtt</filename></para>
+              <para>
+                <filename>BodenProfilliste.gtt</filename>
+              </para>
 
               <para>Bodenprofile welche den Hydrotopen zugeordnet sind.</para>
             </listitem>
 
             <listitem>
-              <para><filename>BodenArt.gtt</filename></para>
+              <para>
+                <filename>Bodenhorizontliste.gtt</filename>
+              </para>
 
               <para>Parameter der Bodenhorizonte, welche den definierten
               Profiltypen zugrunde liegen.</para>
             </listitem>
-          </itemizedlist></para>
+          </itemizedlist>
+        </para>
 
-        <para><emphasis role="bold">Verzeichnis
-        (Basis)Karten</emphasis></para>
+        <para>
+          <emphasis role="bold">Verzeichnis (Basis)Karten</emphasis>
+        </para>
 
         <para>Zur Visualisierung der Geometriedaten sind standardmäßig drei
         Kartenvorlagen enthalten:</para>
 
         <itemizedlist>
           <listitem>
-            <para><filename>Übersicht.gmt</filename></para>
+            <para>
+              <filename>Übersicht.gmt</filename>
+            </para>
 
             <para>Übersicht der Modellelemente (Teilgebiete, Knoten,
             Stränge)</para>
           </listitem>
 
           <listitem>
-            <para><filename>Hydrotope.gmt</filename></para>
+            <para>
+              <filename>Hydrotope.gmt</filename>
+            </para>
 
             <para>Übersichtskarte mit der Erweiterung Hydrotopdaten</para>
           </listitem>
 
           <listitem>
-            <para><filename>Modellvernetzung.gmt</filename></para>
+            <para>
+              <filename>Modellvernetzung.gmt</filename>
+            </para>
 
             <para>Systemelemente als Vernetzungselemente (dient der
             Modellvernetzung mit dem Relationseditor)</para>
           </listitem>
         </itemizedlist>
 
-        <para><emphasis role="bold">Verzeichnis
-        ZeitreihenControl</emphasis></para>
+        <para>
+          <emphasis role="bold">Verzeichnis ZeitreihenManagement</emphasis>
+        </para>
 
         <para>Zur Anbindung der Zeitreihen aus verschiedenen Datenquellen
         (Dateisystem, Datenbank) sind zu jedem Zeitreihentyp Verknüfungen mit
@@ -686,29 +753,50 @@
 
         <itemizedlist>
           <listitem>
-            <para><filename>Niederschlag.gtt</filename></para>
+            <para>
+              <filename>Niederschlag.gtt</filename>
+            </para>
           </listitem>
 
           <listitem>
-            <para><filename>Pegel.gtt</filename></para>
+            <para>
+              <filename>Pegel.gtt</filename>
+            </para>
           </listitem>
 
           <listitem>
-            <para><filename>Temperatur.gtt</filename></para>
+            <para>
+              <filename>Temperatur.gtt</filename>
+            </para>
           </listitem>
 
           <listitem>
-            <para><filename>Verdunstung.gtt</filename></para>
+            <para>
+              <filename>Verdunstung.gtt</filename>
+            </para>
           </listitem>
 
           <listitem>
-            <para><filename>Zufluss.gtt</filename></para>
+            <para>
+              <filename>Zufluss.gtt</filename>
+            </para>
           </listitem>
         </itemizedlist>
 
         <para>Die Kartenansichten und die dargestellten Elemente können
         beliebig geändert werden (siehe <xref
         linkend="ansichtssteuerung" />).</para>
+
+        <para>
+          <note>
+            <para>Alle Ansichten (Karten, Tabellen, Feature View,
+            Baumansicht,...) stellen lediglich die Daten in der vorgegebenen
+            Art und Weise dar. Die Daten selbst werden in den Datendateien
+            (*.gml) vorgehalten! Bei der Editierung ist daher strikt zwischen
+            dem Speichern der Ansicht und dem Speichern der Daten zu
+            unterscheiden!</para>
+          </note>
+        </para>
       </section>
 
       <section id="kalypso_na-systemvernetzung">
@@ -801,12 +889,14 @@
         <para>Die Parameter können in den Karten,Tabellen sowie in der Feature
         (Element)- und Baumansicht geändert werden. Prinzipiell können alle
         einfachen Datentypen direkt in den entsprechenden Feldern editiert
-        werden. Bei komplizierteren Datentypen, wie z.B.
-        Zeitreihenverknüpfungen und Diagrammelementen erfolgt die Bearbeitung
-        in einem Zusatzdialog.</para>
+        werden. Bei komplexen Datentypen, wie z.B. Zeitreihenverknüpfungen und
+        Diagrammelementen erfolgt die Bearbeitung in einem
+        Zusatzdialog.</para>
 
-        <para><emphasis role="bold">Bearbeiten von
-        Zeitreihenverknüpfungen</emphasis></para>
+        <para>
+          <emphasis id="Zeitreihenverknuepfung" role="bold">Bearbeiten von
+          Zeitreihenverknüpfungen</emphasis>
+        </para>
 
         <para>Die Bearbeitung von Zeitreihenverknüpfungen kommt zum einen beim
         Verknüpfen von Originalzeitreihen aus dem Repository
@@ -851,16 +941,26 @@
           </mediaobject>
         </figure>
 
-        <para><emphasis role="bold">Bearbeiten von
-        Diagrammelementen</emphasis></para>
+        <note>
+          <para>Zum Editieren der Zeitreihenverknüfungen aus dem Repository in
+          den Rechenfall dienen die im Verzeichnis Zeitreihenmanagement
+          abgelegten Tabellen zu den jeweiligen Zeitreihentypen.</para>
+        </note>
 
-        <para>Diagrammelemente, wie z.B. die Zeitflächenfunktion und die
+        <para>
+          <emphasis role="bold">Bearbeiten von Diagrammelementen</emphasis>
+        </para>
+
+        <para>Diagrammelemente, wie z.B. die Zeitflächenfunktion, die
+        idealisierten Jahresgänge und die
         Wasserstands-Abfluss-Volumenbeziehung eines Rückhaltebeckens, werden
         in der Kalypso-Oberfläche ähnlich zum Zeitreihenformat aufgefasst und
         auch mit dem Zeitreihenlink-Editor bearbeitet. Hierbei können die
         Diagrammdaten direkt in der Oberfläche bearbeitet werden oder in
         externen Programmen vorgehalten und durch die Zwischenablage
-        importiert werden.</para>
+        importiert werden. Die Bearbeitung der Daten kann direkt in der
+        Tabelle erfolgen. Zur Ansicht ist eine Diagrammansicht
+        integriert.</para>
 
         <figure>
           <title>Bearbeitung von Diagrammdatentypen</title>
@@ -935,9 +1035,126 @@
                 </imageobject>
               </mediaobject>
             </figure>
+
+            <para>
+              <note>
+                <para>Erfolgt der Im- oder Export über ein
+                Tabellenkalkulationsprogramm, so ist im externen Programm die
+                Formatierung der Tabellenzellen als Zahl (mit entsprechendeer
+                Anzahl Nachkommastellen) sicherzustellen! Ein Import ist nur
+                bei bereits vorhandener Zeitreihe möglich. Ist noch keine
+                Zeitreihe vorhanden, so kann diese über den Button
+                <guibutton>neu</guibutton> erzeugt werden.</para>
+              </note>
+            </para>
           </listitem>
         </itemizedlist>
       </section>
+
+      <para>
+        <emphasis role="bold">Berechnung und Export von Kalinin-Miljukov
+        Parametern</emphasis>
+      </para>
+
+      <para>Für die realen Stränge des NA Modells ist eine Ermittlung der
+      Kalinin-Miljukov Parameter zur Berechnung der Wellenverformung
+      erforderlich. Die Parameter können per Hand ermittelt werden und dann in
+      den Gerinnedaten eingefügt werden.</para>
+
+      <para>Kommt bei der hydraulischen Berechnung des untersuchten Gewässers
+      das eindimensionale Spiegellinienmodell Kalypso-1D zur Anwendung, so
+      können die Parameter komfortabel anhand der durch die
+      Hydraulikberechnung vorgehaltenen WQ Kurven für jedes Profil (Dateien
+      prof/*.km) ermittelt werden. Hierzu wird der Kalinin-Miljukov Parameter
+      Dialog aus der KMStrang Tabelle oder aus einer Kartenansicht geöffnet.
+      Im Kontextmenü der rechten Maustaste wird bei einer Selektion eines
+      realen Stranges die Funktion
+      <guimenuitem>UpdateKMParameter</guimenuitem> verfügbar, durch welche der
+      Dialog gestartet wird.</para>
+
+      <para>Der Dialog bietet die Möglichkeit zu jedem realen Strang des NA
+      Modells die Start- und Endkilometrierung vorzugeben und mittels dieser
+      automatisch die vorgehaltenen Ergebnisse der zur Stationierung passenden
+      Profile des Hydraulikmodells bereitzustellen. Hierauf basierend wird
+      dann die Berechnung der Kalinin-Miljukov Parameter für die gewählten
+      Modellstränge durchgeführt und ins NA-Modell übertragen. Die
+      Vorgehensweise zur Durchführung der Berechnung gliedert sich in folgende
+      Teilschritte:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Selektion der Stränge zur Berechnung der Kalinin-Miljukov
+          Parameter in der Tabelle oder in einer Karte.</para>
+        </listitem>
+
+        <listitem>
+          <para>Öffnen des Kalinin-Miljukov Dialoges mittels Kontextmenü der
+          rechten Maustaste
+          (<guimenuitem>UpdateKMParameter</guimenuitem>).</para>
+        </listitem>
+
+        <listitem>
+          <para>Ggf. Laden einer bereits vorhandenen
+          Konfigurationsdatei.</para>
+        </listitem>
+
+        <listitem>
+          <para>Angabe der Berechnungsrandbedingungen zu jedem Strang mittels
+          Selektion des Stranges im Fensterbereich Kalinin-Miljukov Stränge
+          und Angabe der Daten im Fensterbereich Kalinin-Miljukov
+          Details.</para>
+
+          <para>- Ordner der hydraulischen Berechnungsergebnisse (.../prof)
+          auswählen.</para>
+
+          <para>- Strangstationierung (Startkilometer, Endkilometer)
+          angeben.</para>
+
+          <para>- Update der im Berechnungsverzeichnis vorliegenden und der
+          Stationierung entsprechenden Profilergebnisse
+          (<guimenuitem>aktualisieren</guimenuitem>).</para>
+
+          <para>- Ggf. Ausschluss kritischer Profile aus der Kalinin-Miljukov
+          Berechnung.</para>
+        </listitem>
+
+        <listitem>
+          <para>Evtl. Speichern der Konfigurationsdatei
+          (<guibutton>Speichern...</guibutton>).</para>
+        </listitem>
+
+        <listitem>
+          <para>Start der Berechnung (<guibutton>Finish</guibutton>).</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Kalinin-Miljukov Berechnungsdialog</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/modelle/kalypso_na/kalinin-dialog-na.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Bei erfolgreich durchgeführter Berechnung der Kalinin Miljukov
+      Parameter wird der Dialog automatisch geschlossen und die berechneten
+      Ergebnisse in das Modell übernommen. Nach Prüfung der Ergebnisse müssen
+      diese zur endgültigen Übernahme in das Modell in der Karte oder der
+      Tabelle gespeichert werden (Daten speichern). Sind die Ergebnisse nicht
+      zufriedenstellend, so kann die Überführung der Ergebnisse durch Undo
+      wiederrufen werden.</para>
+
+      <note>
+        <para>Die Integration von Durchlassprofilen bei der Berechnung der
+        Parameter ist fraglich, da die Theorie der Kalinin-Miljukov Methode
+        für offene Gerinne aufgestellt wurde. Trotzdem können diese Profile
+        potentiell in die Berechnung integriert werden, da auch für
+        Durchlassprofile die Ergebnisse des Hydraulikmodells vorliegen.</para>
+      </note>
 
       <section id="kalypso_na-rechanvariante">
         <title>Rechenvarianten</title>
@@ -2189,15 +2406,29 @@
             </row>
 
             <row>
-              <entry>qfmax</entry>
+              <entry>startkm</entry>
 
-              <entry>Q-Bordvoll</entry>
+              <entry>km Unterwasser</entry>
 
-              <entry>[m^3/s]</entry>
+              <entry>[km]</entry>
 
               <entry></entry>
 
-              <entry>bordvoller Abfluss eines Gerinneabschnittes</entry>
+              <entry>Kilometrierung Unterwasser</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>endkm</entry>
+
+              <entry>km Oberwasser</entry>
+
+              <entry>[km]</entry>
+
+              <entry></entry>
+
+              <entry>Kilometrierung Oberwasser</entry>
 
               <entry>double</entry>
             </row>
@@ -2632,7 +2863,7 @@
       </table>
 
       <table>
-        <title>"natürliche" Parameter</title>
+        <title>Parameterkatalog "natürliche" Parameter</title>
 
         <tgroup cols="6">
           <tbody>
@@ -2931,16 +3162,16 @@
             <row>
               <entry>xret</entry>
 
-              <entry>Flag Interflow</entry>
-
-              <entry>[-]</entry>
+              <entry>Interflow</entry>
 
               <entry></entry>
 
-              <entry>Auswahl, ob Interflow in diesem Horizont zugelassen wird
-              [-] (0= nein, 1= ja)</entry>
+              <entry></entry>
 
-              <entry>double</entry>
+              <entry>Auswahl, ob Interflow in diesem Horizont zugelassen
+              wird.</entry>
+
+              <entry>boolean</entry>
             </row>
 
             <row>
