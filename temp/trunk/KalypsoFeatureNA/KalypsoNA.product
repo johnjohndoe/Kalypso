@@ -13,7 +13,10 @@
    <configIni use="default"/>
 
    <launcherArgs>
-      <vmArgs>-Xmx250m</vmArgs>
+      <vmArgs>-Xmx250m
+-Xdebug
+-Xnoagent
+-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8888</vmArgs>
    </launcherArgs>
 
    <windowImages small="etc/kalypso16.gif"/>
