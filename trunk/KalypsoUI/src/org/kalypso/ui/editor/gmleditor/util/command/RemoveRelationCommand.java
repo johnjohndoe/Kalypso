@@ -99,7 +99,8 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
@@ -120,7 +121,8 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
     else
       m_workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 

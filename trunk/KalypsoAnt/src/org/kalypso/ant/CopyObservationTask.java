@@ -163,7 +163,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final Date fromDate = new Date( from );
     final Date toDate = new Date( to );
     final String filter = source.getFilter();
-    getProject().log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
+    final Project project2 = getProject();
+    if(project2!=null)
+      project2.log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
 
     m_sources.add( new CopyObservationFeatureVisitor.Source( property, fromDate, toDate, filter ) );
   }

@@ -101,7 +101,8 @@ public class AddHeavyRelationshipCommand implements ICommand
     m_workspace.addFeatureAsComposition( m_srcFE, m_linkFT1, 0, m_newFeature );
     // create second link
     m_workspace.addFeatureAsAggregation( m_newFeature, m_linkFT2, 0, m_targetFE.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -124,7 +125,8 @@ public class AddHeavyRelationshipCommand implements ICommand
       m_newFeature.setProperty( m_linkFT2, null );
     // remove relation feature and also first link
     m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**

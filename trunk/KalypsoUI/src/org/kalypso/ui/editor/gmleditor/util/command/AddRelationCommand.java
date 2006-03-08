@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 public class AddRelationCommand implements ICommand
 {
 
-  private final Feature m_parentFeature;
+  private final Feature m_srcFE;
 
   private int m_pos = 0;
 
@@ -63,7 +63,7 @@ public class AddRelationCommand implements ICommand
   public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType propertyName, int pos, Feature destFE )
   {
     m_workspace = workspace;
-    m_parentFeature = srcFE;
+    m_srcFE = srcFE;
     m_propName = propertyName;
     m_pos = pos;
     m_linkFeature = destFE;
@@ -82,8 +82,9 @@ public class AddRelationCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_workspace.addFeatureAsAggregation( m_parentFeature, m_propName, m_pos, m_linkFeature.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+    m_workspace.addFeatureAsAggregation( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
@@ -103,9 +104,9 @@ public class AddRelationCommand implements ICommand
     if( m_linkFeature == null )
       return;
 
-    m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_propName, m_linkFeature.getId() );
-
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+    m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_propName, m_linkFeature.getId() );
+    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 

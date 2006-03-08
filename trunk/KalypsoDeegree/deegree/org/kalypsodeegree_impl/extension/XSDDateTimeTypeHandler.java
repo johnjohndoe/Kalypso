@@ -74,7 +74,7 @@ public class XSDDateTimeTypeHandler extends AbstractXSDSimpleTypeHandler
   {
     if( object == null )
       return;
-    final DateWithoutTime value = (DateWithoutTime) object;
+    final Date value =  (Date) object;
     final CDATASection section = node.getOwnerDocument().createCDATASection( XML_DATE_FORMAT.format( value ) );
     node.appendChild( section );
   }
@@ -86,7 +86,8 @@ public class XSDDateTimeTypeHandler extends AbstractXSDSimpleTypeHandler
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     final String result = node.getTextContent();
-    if( result == null )
+    
+    if( result == null || result.length()<1)
       return null;
     try
     {

@@ -74,8 +74,8 @@ public class PropertyAdder
       msg += ( "(id=" + id + ")" );
 
     final Project project = m_task.getProject();
-
-    m_task.log( msg, Project.MSG_DEBUG );
+    if(project!=null)
+      project.log( msg, Project.MSG_DEBUG );
 
     if( m_addedAttributes.containsKey( name ) )
     {

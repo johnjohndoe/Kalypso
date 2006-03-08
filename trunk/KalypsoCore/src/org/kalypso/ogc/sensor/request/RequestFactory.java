@@ -35,9 +35,11 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -79,13 +81,18 @@ public class RequestFactory
   {
     if( href == null || href.length() == 0 )
       return null;
-    final int i1 = href.indexOf( ZmlURLConstants.TAG_REQUEST1 );
-    if( i1 == -1 )
+
+    // final int i1 = href.indexOf( ZmlURLConstants.TAG_REQUEST1 );
+    // if( i1 == -1 )
+    // return null;
+    // final int i2 = href.indexOf( ZmlURLConstants.TAG_REQUEST2, i1 );
+    // if( i2 == -1 )
+    String strRequestXml = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
+    if( strRequestXml == null )
       return null;
-    final int i2 = href.indexOf( ZmlURLConstants.TAG_REQUEST2, i1 );
-    if( i2 == -1 )
-      throw new SensorException( "URL-fragment does not contain a valid request definition. URL: " + href );
-    final String strRequestXml = href.substring( i1, i2 + ZmlURLConstants.TAG_REQUEST2.length() );
+
+    // throw new SensorException( "URL-fragment does not contain a valid request definition. URL: " + href );
+    // final String strRequestXml = href.substring( i1, i2 + ZmlURLConstants.TAG_REQUEST2.length() );
     StringReader sr = null;
     try
     {
@@ -153,8 +160,8 @@ public class RequestFactory
     try
     {
       writer = new StringWriter();
-      
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
       marshaller.marshal( requestType, writer );
       writer.close();

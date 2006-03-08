@@ -117,7 +117,8 @@ public class SAXFactory
   {
     final AttributesImpl atts = new AttributesImpl();
     final String id = feature.getId();
-    atts.addAttribute( "", "fid", "fid", "CDATA", id );
+    if(id!=null && id.length()>0)
+      atts.addAttribute( "", "fid", "fid", "CDATA", id );
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
 
