@@ -156,7 +156,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     // column 1 tree-group
     final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( "Kalinin-Miljukov Straenge" );
+    treeGroup.setText( "Kalinin-Miljukov Stränge" );
     final GridData data2 = new GridData( GridData.FILL_BOTH );
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
@@ -186,7 +186,7 @@ public class KMUpdateWizardPage extends WizardPage
     parent.setLayout( new GridLayout( 3, false ) );
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "config" );
+    label.setText( "Konfiguration" );
     label.setLayoutData( new GridData() );
 
     final Text text = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
@@ -195,7 +195,7 @@ public class KMUpdateWizardPage extends WizardPage
     text.setLayoutData( gridData );
 
     final Button loadButton = new Button( parent, SWT.PUSH );
-    loadButton.setText( "load ..." );
+    loadButton.setText( "Laden...      " );
 
     final Label space = new Label( parent, SWT.NONE );
     final GridData data = new GridData();
@@ -203,7 +203,7 @@ public class KMUpdateWizardPage extends WizardPage
     space.setLayoutData( data );
 
     final Button saveButton = new Button( parent, SWT.PUSH );
-    saveButton.setText( "save..." );
+    saveButton.setText( "Speichern..." );
 
     loadButton.addSelectionListener( new SelectionAdapter()
     {
