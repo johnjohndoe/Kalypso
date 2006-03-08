@@ -74,9 +74,10 @@ public class FeatureParser
     if( index >= 0 )
       fid = atts.getValue( index );
     else
-      fid = null;
+      fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
+                  // conflict with other ids
     final Feature feature = new Feature_Impl( featureType, fid, false );
-//    System.out.println( "          | created Feature " + fid + " " + featureType.getQName() );
+    // System.out.println( " | created Feature " + fid + " " + featureType.getQName() );
     m_stackFE.push( feature );
   }
 

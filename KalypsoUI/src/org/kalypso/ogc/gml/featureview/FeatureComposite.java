@@ -221,10 +221,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( control.getToolTipText() == null )
       control.setToolTipText( controlType.getTooltip() );
 
-    final LayoutDataType layoutData = controlType.getLayoutData().getValue();
-    if( layoutData != null )
+    final JAXBElement< ? extends LayoutDataType> jaxLayoutData = controlType.getLayoutData();
+    if( jaxLayoutData != null )
+    {
+      final LayoutDataType layoutData = jaxLayoutData.getValue();
       control.setLayoutData( createLayoutData( layoutData ) );
-
+    }
+    else
+      control.setLayoutData( new GridData() );
     return control;
   }
 
@@ -246,8 +250,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Iterator<JAXBElement< ? extends ControlType>> iter = compositeType.getControl().iterator();
       while( iter.hasNext() )
       {
-        Object object=iter.next();
-        final JAXBElement< ? extends ControlType> element =(JAXBElement< ? extends ControlType>) object; 
+        Object object = iter.next();
+        final JAXBElement< ? extends ControlType> element = (JAXBElement< ? extends ControlType>) object;
         final ControlType control = element.getValue();
         createControl( composite, SWT.NONE, control );
       }
@@ -461,7 +465,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     try
     {
-      final Object unmarshal = FeatureviewHelper.JC.createUnmarshaller().unmarshal( url );
+      Object unmarshal = FeatureviewHelper.JC.createUnmarshaller().unmarshal( url );
+      if( unmarshal instanceof JAXBElement )
+        unmarshal = ((JAXBElement) unmarshal).getValue();
+
       if( unmarshal instanceof FeatureviewType )
         addView( (FeatureviewType) unmarshal );
       else if( unmarshal instanceof Featuretemplate )
@@ -520,7 +527,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
       if( ftp != null )
       {
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
 
         if( annotation != null )
         {

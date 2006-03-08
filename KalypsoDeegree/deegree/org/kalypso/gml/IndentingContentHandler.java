@@ -42,6 +42,7 @@ package org.kalypso.gml;
 
 import java.util.Arrays;
 
+import org.kalypso.commons.xml.NSPrefixProvider;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -63,6 +64,8 @@ public class IndentingContentHandler implements ContentHandler
 
   private boolean m_doNewLine = true;
 
+  private final NSPrefixProvider m_prefixProvider = NSPrefixProvider.getInstance();
+
   public IndentingContentHandler( ContentHandler handler, int number )
   {
     m_handler = handler;
@@ -79,7 +82,7 @@ public class IndentingContentHandler implements ContentHandler
     for( int i = 0; i < m_indent; i++ )
       m_handler.ignorableWhitespace( m_spaces, 0, m_spaces.length );
     m_handler.startElement( uri, localName, qName, atts );
-    m_doNewLine=false;
+    m_doNewLine = false;
   }
 
   public void endElement( String uri, String localName, String qName ) throws SAXException
@@ -92,7 +95,7 @@ public class IndentingContentHandler implements ContentHandler
     }
     m_indent--;
     m_handler.endElement( uri, localName, qName );
-    m_doNewLine=true;
+    m_doNewLine = true;
   }
 
   // implement all the other methods to delegate to "handler"
@@ -166,6 +169,7 @@ public class IndentingContentHandler implements ContentHandler
    */
   public void startPrefixMapping( String prefix, String uri ) throws SAXException
   {
+    // m_handler.startPrefixMapping( m_prefixProvider.getPreferredPrefix(uri, prefix), uri );
     m_handler.startPrefixMapping( prefix, uri );
   }
 }

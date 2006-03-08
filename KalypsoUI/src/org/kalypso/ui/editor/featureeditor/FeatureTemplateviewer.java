@@ -47,7 +47,9 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,6 +72,7 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
+import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
@@ -175,12 +178,18 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       final InputSource is = new InputSource( reader );
 
-      final Featuretemplate m_template = (Featuretemplate) JC.createUnmarshaller().unmarshal( is );
+      final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      final List views = m_template.getView();
-      for( final Iterator iter = views.iterator(); iter.hasNext(); )
-        m_featureComposite.addView( (FeatureviewType) iter.next() );
-
+//      final Object object1 = unmarshaller.unmarshal( is );
+//      final JAXBElement element = (JAXBElement) object1;
+      // final Featuretemplate m_template = (Featuretemplate) element.getValue();
+      final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
+      List<FeatureviewType> view = m_template.getView();
+      // final List views = m_template.getView();
+      for( final Iterator<FeatureviewType> iter = view.iterator(); iter.hasNext(); )
+      {
+        m_featureComposite.addView( iter.next() );
+      }
       final Layer layer = m_template.getLayer();
       final String href;
       final String linktype;

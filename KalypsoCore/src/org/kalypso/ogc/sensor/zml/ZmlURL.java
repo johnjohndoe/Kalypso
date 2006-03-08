@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
+import org.kalypso.ogc.sensor.request.XMLStringUtilities;
 import org.kalypso.zml.request.Request;
 
 /**
@@ -48,9 +49,9 @@ import org.kalypso.zml.request.Request;
  */
 public final class ZmlURL
 {
-  private ZmlURL()
+  private ZmlURL( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
@@ -178,14 +179,11 @@ public final class ZmlURL
       newHref = insertFilter( newHref, filter );
     }
 
-    final int rp1 = queryPart.indexOf( ZmlURLConstants.TAG_REQUEST1 );
-    final int rp2 = queryPart.indexOf( ZmlURLConstants.TAG_REQUEST2 );
-    if( rp1 != -1 && rp2 != -1 )
+    final String request = XMLStringUtilities.getXMLPart( queryPart, ZmlURLConstants.TAG_REQUEST );
+    if( request != null )
     {
-      final String request = queryPart.substring( rp1, rp2 + ZmlURLConstants.TAG_REQUEST2.length() );
       newHref = insertRequest( newHref, request );
     }
-
     return newHref;
   }
 
@@ -280,7 +278,12 @@ public final class ZmlURL
   public static String insertRequest( final String href, final String request )
   {
     // first remove the existing request (does nothing if not present)
-    String tmpUrl = href.replaceFirst( ZmlURLConstants.TAG_REQUEST1 + ".*" + ZmlURLConstants.TAG_REQUEST2, "" );
+    String requestPart = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
+    String tmpUrl;
+    if( requestPart != null )
+      tmpUrl = href.replace( requestPart, "" );
+    else
+      tmpUrl = href;
 
     final String[] strs = tmpUrl.split( "\\?", 2 );
     if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )

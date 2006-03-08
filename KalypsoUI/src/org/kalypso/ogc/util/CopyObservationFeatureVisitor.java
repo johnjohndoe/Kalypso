@@ -226,6 +226,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
           file.getParentFile().mkdirs();
         stream = new FileOutputStream( file );
         final Observation type = ZmlFactory.createXML( resultObs, null );
+//        final Observation type = ZmlFactory.createXML( resultObs, new ObservationRequest(m_forecastFrom, m_forecastTo) );
         ZmlFactory.getMarshaller().marshal( type, stream );
       }
       finally

@@ -69,8 +69,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
- * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -89,7 +87,7 @@ class LinearIntersects
 
     for( int i = 0; i < p1.length; i++ )
     {
-      d += ( ( p1[i] - p2[i] ) * ( p1[i] - p2[i] ) );
+      d += ((p1[i] - p2[i]) * (p1[i] - p2[i]));
     }
 
     return Math.sqrt( d ) < mute;
@@ -105,19 +103,12 @@ class LinearIntersects
 
     GM_Position[] points = curve.getPositions();
 
-    for( int i = 0; i < ( points.length - 1 ); i++ )
+    for( int i = 0; i < (points.length - 1); i++ )
     {
-      if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX()
-          - mute, point.getY() - mute, point.getX() + mute, point.getY() - mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
-              .getX()
-              + mute, point.getY() - mute, point.getX() + mute, point.getY() + mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
-              .getX()
-              + mute, point.getY() + mute, point.getX() - mute, point.getY() + mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
-              .getX()
-              - mute, point.getY() + mute, point.getX() - mute, point.getY() - mute ) )
+      if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() - mute, point.getY() - mute, point.getX() + mute, point.getY() - mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() + mute, point.getY() - mute, point.getX() + mute, point.getY() + mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() + mute, point.getY() + mute, point.getX() - mute, point.getY() + mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() - mute, point.getY() + mute, point.getX() - mute, point.getY() - mute ) )
       {
         inter = true;
         break;
@@ -144,12 +135,11 @@ class LinearIntersects
     GM_Position[] other = curve2.getPositions();
     boolean inter = false;
 
-    for( int i = 0; i < ( points.length - 1 ); i++ )
+    for( int i = 0; i < (points.length - 1); i++ )
     {
-      for( int j = 0; j < ( other.length - 1 ); j++ )
+      for( int j = 0; j < (other.length - 1); j++ )
       {
-        if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), other[j]
-            .getX(), other[j].getY(), other[j + 1].getX(), other[j + 1].getY() ) )
+        if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), other[j].getX(), other[j].getY(), other[j + 1].getX(), other[j + 1].getY() ) )
         {
           inter = true;
           break;
@@ -189,17 +179,17 @@ class LinearIntersects
     if( !inter )
     {
       GM_Position[][] interior = surface.getInteriorRings();
-
-      for( int i = 0; i < interior.length; i++ )
-      {
-        GM_CurveSegment cs = new GM_LineString_Impl( interior[i], surface.getCoordinateSystem() );
-
-        if( intersects( curve, cs ) )
+      if( interior != null )
+        for( int i = 0; i < interior.length; i++ )
         {
-          inter = true;
-          break;
+          GM_CurveSegment cs = new GM_LineString_Impl( interior[i], surface.getCoordinateSystem() );
+
+          if( intersects( curve, cs ) )
+          {
+            inter = true;
+            break;
+          }
         }
-      }
     }
 
     return inter;
@@ -248,7 +238,7 @@ class LinearIntersects
       }
 
       // intersects the interior rings of the first surface patch with one
-      //of the interior rings of the second surface patch
+      // of the interior rings of the second surface patch
       if( !inter )
       {
         GM_Position[][] interior1 = surface1.getInteriorRings();
@@ -339,7 +329,7 @@ class LinearIntersects
     int cnt1 = curve1.getNumberOfCurveSegments();
     int cnt2 = curve2.getNumberOfCurveSegments();
 
-    for( int i = 0; ( i < cnt1 ) && !inter; i++ )
+    for( int i = 0; (i < cnt1) && !inter; i++ )
     {
       for( int j = 0; j < cnt2; j++ )
       {
@@ -420,17 +410,17 @@ class LinearIntersects
     PX -= X1;
     PY -= Y1;
 
-    double ccw = ( PX * Y2 ) - ( PY * X2 );
+    double ccw = (PX * Y2) - (PY * X2);
 
     if( ccw == 0.0 )
     {
-      ccw = ( PX * X2 ) + ( PY * Y2 );
+      ccw = (PX * X2) + (PY * Y2);
 
       if( ccw > 0.0 )
       {
         PX -= X2;
         PY -= Y2;
-        ccw = ( PX * X2 ) + ( PY * Y2 );
+        ccw = (PX * X2) + (PY * Y2);
 
         if( ccw < 0.0 )
         {
@@ -439,7 +429,7 @@ class LinearIntersects
       }
     }
 
-    return ( ccw < 0.0 ) ? ( -1 ) : ( ( ccw > 0.0 ) ? 1 : 0 );
+    return (ccw < 0.0) ? (-1) : ((ccw > 0.0) ? 1 : 0);
   }
 
   /**
@@ -449,11 +439,8 @@ class LinearIntersects
    * @return <code>true</code> if the first specified line segment and the second specified line segment intersect
    *         each other; <code>false</code> otherwise.
    */
-  protected static boolean linesIntersect( double x1, double y1, double x2, double y2, double x3, double y3, double x4,
-      double y4 )
+  protected static boolean linesIntersect( double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4 )
   {
-    return ( ( relativeCCW( x1, y1, x2, y2, x3, y3 ) * relativeCCW( x1, y1, x2, y2, x4, y4 ) <= 0 ) && ( relativeCCW(
-        x3, y3, x4, y4, x1, y1 )
-        * relativeCCW( x3, y3, x4, y4, x2, y2 ) <= 0 ) );
+    return ((relativeCCW( x1, y1, x2, y2, x3, y3 ) * relativeCCW( x1, y1, x2, y2, x4, y4 ) <= 0) && (relativeCCW( x3, y3, x4, y4, x1, y1 ) * relativeCCW( x3, y3, x4, y4, x2, y2 ) <= 0));
   }
 }
