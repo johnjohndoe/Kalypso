@@ -399,6 +399,8 @@ public class KMUpdateWizardPage extends WizardPage
 
   public boolean finish( )
   {
+    // next line forces the dialog setting into the xml-binding objects
+    m_kmViewer.setInput( null );
     m_plugin.getDialogSettings().put( KM_CONFIG_PATH, m_configPath );
     saveAs( m_configPath );
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
@@ -414,8 +416,8 @@ public class KMUpdateWizardPage extends WizardPage
         catch( Exception e )
         {
           e.printStackTrace();
-          MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", "");
-          
+          MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", "" );
+
           return false;
         }
     }

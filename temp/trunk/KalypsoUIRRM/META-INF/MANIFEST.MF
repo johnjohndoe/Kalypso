@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoUIRRM Plug-in
-Bundle-SymbolicName: KalypsoUIRRM; singleton:=true
+Bundle-SymbolicName: org.kalypso.ui.rrm; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: kalypsoUIRRM.KalypsoUIRRMPlugin
 Bundle-Vendor: org.kalypso
@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.rrm.kalininmiljukov,
  org.kalypso.ui
 Eclipse-AutoStart: true
+Bundle-ClassPath: kalypsoUI_RRM.jar
