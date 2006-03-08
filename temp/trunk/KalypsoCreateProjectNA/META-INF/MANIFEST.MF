@@ -18,4 +18,3 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ui;visibility:=reexport,
  org.kalypso.jwsdp
 Eclipse-AutoStart: true
-

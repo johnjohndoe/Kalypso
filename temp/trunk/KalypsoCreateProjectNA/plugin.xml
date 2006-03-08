@@ -14,5 +14,5 @@
             name="%NewWizard.name"
             id="org.kalypso.wizard.KalypsoNAProjectWizard"/>
    </extension>
-   
+
 </plugin>
