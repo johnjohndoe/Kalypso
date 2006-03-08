@@ -12,7 +12,7 @@ Export-Package: org.kalypso.auth,
  org.kalypso.auth.scenario,
  org.kalypso.auth.ui,
  org.kalypso.auth.user
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.ui;visibility:=reexport,
+ org.eclipse.core.runtime;visibility:=reexport,
  org.kalypso.commons
 Eclipse-AutoStart: true

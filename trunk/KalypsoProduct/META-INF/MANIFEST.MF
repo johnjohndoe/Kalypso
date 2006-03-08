@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.ui,
  org.kalypso.jwsdp,
- org.eclipse.ui.forms,
  org.kalypso.simulation.ui,
  org.kalypso.auth
 Eclipse-AutoStart: true
