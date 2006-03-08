@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="sst">
-	<title>Schnittstellen</title>
-	
-	<para>Allgemeines zu Schnittstellen...</para>	
-</section>
+
+<para vendor="sachsen-anhalt">
+	In diesem Kapitel werden die Schnittstellen zwischen KALYPSO und den anderen Systemkomponenten des Hochwasservorhersagezentrums beschrieben. Dies sind:
+</para>
+<itemizedlist vendor="sachsen-anhalt">
+	<listitem>
+		<para>WISKI Zeitreihenverwaltung</para>
+	</listitem>
+
+	<listitem>
+    	<para>LDAP Benutzervewaltung</para>
+	</listitem>
+
+	<listitem>
+    	<para>IMS Dokumentenverwaltung</para>
+	</listitem>
+</itemizedlist>
+
+<para vendor="sachsen">
+	In diesem Kapitel werden die Schnittstellen zwischen KALYPSO und den anderen Systemkomponenten des Hochwasservorhersagezentrums beschrieben.
+</para>

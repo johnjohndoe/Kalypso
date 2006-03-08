@@ -14,7 +14,7 @@
 			<title>Modellprojekt Weiße Elster:</title>
 			
 			<para>Beschreibung der Dateien und Verzeichnisse (im folgenden bezeichnet
-				ein führendes "/" in Pfadangaben das Projektverzeichnis.).</para>
+				ein führendes '/' in Pfadangaben das Projektverzeichnis.).</para>
 			
 			<formalpara>
 				<title><filename>/modell.gml:</filename></title>
@@ -306,7 +306,7 @@
 			
 			<para>Die Programmierung zur Modellintegration findet sich im
 				Quellcodeprojekt KalypsoNA. Dort befindet sich ebenfalls der Rechenkern
-				(fortran-win32-exe) des NA-Modells "Kalypso.exe". Er wird zur
+				(fortran-win32-exe) des NA-Modells 'Kalypso.exe'. Er wird zur
 				Berechnung ins Arbeitsverzeichnis kopiert.</para>
 			
 			<para>Die Programmierung beinhaltet:
@@ -331,7 +331,7 @@
 			<para>Die Integration zur Optimierung ist im Quellcodeprojekt
 				KalypsoOptimizePlugin enthalten und wird von KalypsoNA benutzt. Dort
 				befindet sich die Implementierung des Optimierungsalgorithmus als
-				fortran-win32-exe "sce.exe_". Zur Durchführung der Optimierung wird sie
+				fortran-win32-exe 'sce.exe_'. Zur Durchführung der Optimierung wird sie
 				ebenfalls ins Arbeitsverzeichnis kopiert.</para>
 			
 			<section>

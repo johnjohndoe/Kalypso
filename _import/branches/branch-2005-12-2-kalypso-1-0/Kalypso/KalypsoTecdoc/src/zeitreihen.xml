@@ -59,8 +59,10 @@
     Verwaltung aller Dateitypen möglich, da das FileRepository nicht
     spezifisch für ZML (Zeitreihen Markup Language, der für KALYPSO speziell
     entwickelten XML <quote>Serialisierung von Observations</quote>)
-    implementiert ist. Auf Basis von ZmlObservationItem stehen folgende
-    Factories zur Verfügung:</para>
+    implementiert ist. </para>
+
+    <para>Für das FileRepository stehen die folgenden Factories (siehe Oben)
+    zur Verfügung:</para>
 
     <orderedlist>
       <listitem>
@@ -79,15 +81,16 @@
   <!--PROFILING ANFANG sachsen-anhalt-->
 
   <section vendor="sachsen-anhalt">
-    <title>Die Ablage von WISKI</title>
+    <title>WISKI-Zeitreihenablage</title>
 
     <para>Zeitreihen aus WISKI werden ebenfalls über den
-    IRepository-Mechanismus geliefert. Die hierarchische Struktur ist in WISKI
-    anhand des Gruppensystems vorgegeben. Diese Struktur wird Eins zu Eins als
-    Repository in KALYPSO dem Benutzer zur Verfügung gestellt. Die
-    <quote>kinderlosen</quote> Knoten dieser Struktur sind Zeitreihen.</para>
+    IRepository-Mechanismus geliefert und zurückgeschrieben. Die hierarchische
+    Struktur ist in WISKI anhand des Gruppensystems vorgegeben. Diese Struktur
+    wird Eins zu Eins als Repository in KALYPSO dem Benutzer zur Verfügung
+    gestellt. Die <quote>kinderlosen</quote> Knoten dieser Struktur sind
+    Zeitreihen.</para>
 
-    <para>Mehr Informationen finden Sie im <xref linkend="wiski" />.</para>
+    <para>Mehr Informationen finden Sie unter <xref linkend="wiski" />.</para>
   </section>
 
   <!--PROFILING ENDE sachsen-anhalt-->
@@ -95,18 +98,23 @@
   <section>
     <title>Virtuelle Ablage</title>
 
-    <para>Diese Art von Repository bietet fortgeschrittene Möglichkeiten. Eine
-    XML-Konfigurationsdatei definiert dabei den Inhalt der Ablage. Anhand von
-    Filtern und bestehenden Repositories (wie z.B. Datei-basiert oder aus der
-    Zeitreihendatenbank) werden synthetische Zeitreihen generiert. Die
-    hierarchische Struktur ist frei definierbar. Diese Art von Ablage wird
-    z.Z. nicht eingesetzt.</para>
+    <para>Diese Art von Repository (VirtualRepository) bietet fortgeschrittene
+    Möglichkeiten, um synthetische Zeitreihen anhand anderer Zeitreihenablagen
+    zu erzeugen. Eine XML - Konfigurationsdatei definiert den Inhalt der
+    Ablage. Das Format der XML - Datei ergibt sich aus der XML -
+    Schemadefinition
+    <filename>etc/schemas/repository/virtualRepository.xsd</filename> im
+    Projekt <code><filename>KalypsoCore</filename></code>.</para>
 
-    <para>Die Gebietsniederschlags-Ablage ist eine virtuelle Ablage, die mit
-    Filtern und Zeitreihen aus beliebiger Quelle arbeitet. Die Struktur ist
-    durch Schachtelung in &lt;level/&gt; und &lt;item/&gt; Elemente frei
-    definierbar. Mehr Informationen zum Thema Filter finden Sie weiter unten
-    in diesem Kapitel.</para>
+    <para>Anhand von Filtern und bestehenden Repositories (wie z.B.
+    Datei-basiert oder aus der Zeitreihendatenbank) werden die synthetische
+    Zeitreihen generiert. Die hierarchische Struktur ist frei definierbar.
+    </para>
+
+    <!--PROFILING ANFANG sachsen-anhalt,sachsen-->
+
+    <para vendor="sachsen-anhalt,sachsen">Diese Art von Ablage wird im
+    Hochwasserzentrum zur Zeit. nicht eingesetzt.<!--PROFILING ENDE sachsen-anhalt, sachsen--></para>
   </section>
 
   <section>
@@ -125,13 +133,13 @@
     <filename>webdav/srvconf/IobservationService/repconf_server.xml</filename>)
     definiert. Das Schema dieser XML-Datei finden Sie unter
     <filename>etc/xmlbinding/repository/repconf.xsd</filename> im
-    KalypsoRepository Projekt.</para>
+    <code><filename>KalypsoRepository</filename></code> Projekt.</para>
 
-    <para>Der KALYPSO Zeitreihendienst kapselt die Zugriffe über WebDienst
-    zwischen KALYPSO-Client und Server. Er liefert die serverseitigen
-    Repositories (deren Anzahl ist unbegrenzt) in Form eines einzigen
-    Repositories, welches in die KALYPSO Oberfläche eingebunden werden
-    kann.</para>
+    <para>Der KALYPSO Zeitreihendienst kapselt die Zugriffe über einen
+    WebDienst zwischen KALYPSO-Client und Server. Er liefert die
+    serverseitigen Repositories (deren Anzahl ist unbegrenzt) in Form eines
+    einzigen Repositories, welches in die KALYPSO Oberfläche eingebunden
+    werden kann.</para>
 
     <para>Theoretisch können alle Repositories lokal eingebunden werden, die
     den Extension Point
@@ -157,7 +165,7 @@
     <title>Filter</title>
 
     <para>Um die Zeitreihen an die Anforderungen der Modelle anzupassen, wird
-    ein sog. Filter-Mechanismus in KALYPSO benutzt.</para>
+    ein sogenannter Filter-Mechanismus in KALYPSO benutzt.</para>
 
     <para>Die Liste der zu Verfügung stehenden Filter ergibt sich aus der
     XML-Schema-Datei, die unter

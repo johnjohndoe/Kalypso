@@ -458,7 +458,7 @@
       DWD-Vorhersage für die KALYPSO-Clients zur Verfügung.</para>
     </section>
 
-    <section>
+    <section id="install-server_services_config">
       <title>Konfiguration der KALYPSO-Server bzw. -Dienste</title>
 
       <para>Der Server wird zusätzlich über folgende System-Properties

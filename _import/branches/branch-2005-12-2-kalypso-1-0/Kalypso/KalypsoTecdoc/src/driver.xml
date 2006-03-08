@@ -13,7 +13,8 @@
 
 	<!ENTITY file_sst_allg SYSTEM "sst_allg.xml">
 	<!ENTITY file_sst_wiski SYSTEM "sst_wiski.xml">
-	<!ENTITY file_sst_robotron SYSTEM "sst_robotron.xml">
+	<!ENTITY file_sst_robotron_ldap SYSTEM "sst_robotron_ldap.xml">
+	<!ENTITY file_sst_robotron_ims SYSTEM "sst_robotron_ims.xml">
 	
 	<!ENTITY file_integr_allg SYSTEM "modellintegration_allg.xml">
 	<!ENTITY file_integr_spree SYSTEM "modellintegration_spree.xml">
@@ -54,13 +55,15 @@
 	<chapter vendor="sachsen-anhalt" id="sst">
 		<title>Schnittstellen</title>
 		<indexterm><primary>Schnittstellen</primary></indexterm>
-		
+
+		<!-- SACHSEN -->		
 		&file_sst_allg;
-	
 		<!-- TODO PSICompact -->
-			
+
+		<!-- SACHSEN-ANHALT -->			
 		&file_sst_wiski;
-		&file_sst_robotron;
+		&file_sst_robotron_ldap;
+		&file_sst_robotron_ims;
 	</chapter>	
 	
 	<lot/>
