@@ -77,10 +77,11 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
   public ScrabLayerFeatureTheme( IFeatureSelectionManager selectionManager )
   {
     m_selectionManager = selectionManager;
-    final URL scrabLayerURL = getClass().getResource( "../../core/resources/basicScrabLayer.gml" );
+    final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
     {
+      
       final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL );
       workspace = new CommandableWorkspace( createGMLWorkspace );
     }
