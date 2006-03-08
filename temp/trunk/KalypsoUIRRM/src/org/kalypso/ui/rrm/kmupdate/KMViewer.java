@@ -132,7 +132,7 @@ public class KMViewer
     // 1/1
     final Label labelKm1 = new Label( parent, SWT.NONE );
     labelKm1.setLayoutData( new GridData() );
-    labelKm1.setText( "start [km]" );
+    labelKm1.setText( "Start [km]" );
 
     // 1/2
     m_textKm1 = new Text( parent, SWT.NONE );
@@ -144,7 +144,7 @@ public class KMViewer
     // 2/1
     final Label labelKm2 = new Label( parent, SWT.NONE );
     labelKm2.setLayoutData( new GridData() );
-    labelKm2.setText( "end [km]" );
+    labelKm2.setText( "End [km]" );
 
     // 2/2
     m_textKm2 = new Text( parent, SWT.NONE );
@@ -183,7 +183,7 @@ public class KMViewer
 
     // row 6 /3
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( "update Profil-Dateien" );
+    button.setText( "aktualisieren..." );
     GridData data5 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
     button.setLayoutData( data5 );
 
