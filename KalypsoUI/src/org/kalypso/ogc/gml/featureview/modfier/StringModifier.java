@@ -41,6 +41,8 @@
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -68,7 +71,7 @@ public class StringModifier implements IFeatureModifier
 {
   private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
 
-  private final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
+  private final NumberFormat NUMBER_FORMAT;
 
   private final IValuePropertyType m_ftp;
 
@@ -78,6 +81,7 @@ public class StringModifier implements IFeatureModifier
 
   public StringModifier( final IValuePropertyType ftp )
   {
+    NUMBER_FORMAT = getNumberFormat( (PropertyType)ftp );
     m_ftp = ftp;
 
     // wen need both registered type handler types
@@ -86,6 +90,27 @@ public class StringModifier implements IFeatureModifier
 
     final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+  }
+
+  public NumberFormat getNumberFormat( PropertyType ftp )
+  {
+    // HACK
+    final String namespace = ftp.getNamespace();
+    final String name = ftp.getName();
+    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
+//    ##0.000E0
+    final NumberFormat normalFormat = NumberFormat.getInstance();
+    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
+    {
+      if( "flaech".equals( name ) )
+        return expFormat;
+    }
+    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
+    {
+      if( "m_perkm".equals( name )|| "area".equals( name ))
+        return expFormat;
+    }
+    return normalFormat;
   }
 
   /**
