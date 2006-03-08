@@ -202,7 +202,7 @@ public class ChannelManager extends AbstractManager
       asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
       List kmFeatures = (List) feature.getProperty( KMParameterpropName );
 
-      asciiBuffer.getChannelBuffer().append( toAscci( feature, 2 ) + "\n" );
+//      asciiBuffer.getChannelBuffer().append( toAscci( feature, 2 ) + "\n" );
       final Feature km3FE = (Feature) kmFeatures.get( 2 );
       final Double qbordvoll = (Double) km3FE.getProperty( "qrk" );
       asciiBuffer.getChannelBuffer().append( FortranFormatHelper.printf( qbordvoll, "*" ) ).append( "\n" );

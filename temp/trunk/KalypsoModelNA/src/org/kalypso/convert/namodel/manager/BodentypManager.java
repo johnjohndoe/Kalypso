@@ -202,8 +202,17 @@ public class BodentypManager extends AbstractManager
       Feature BodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( "soilLayerLink" ) );
       if( BodArtLink != null )
       {
-        asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
-            + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xret" ), "*" ) + "\n" );
+        Boolean xretProp = (Boolean) fe.getProperty("xret");
+        if( xretProp )
+        {
+          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
+              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "1.0" + "\n" );
+        }
+        else
+        {
+          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
+              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "0.0" + "\n" );
+        }
       }
       else
       {
