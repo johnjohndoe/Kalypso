@@ -530,11 +530,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_resourceBundle;
   }
 
-  public String getLang( )
-  {
-    return getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
-  }
-
   public CS_CoordinateSystem getCoordinatesSystem( )
   {
     if( myCoordinateSystem == null )

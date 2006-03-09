@@ -91,15 +91,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
 
     addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:",
         getFieldEditorParent() ) );
-    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1, new String[][]
-    {
-        {
-            "&Deutsch",
-            "de" },
-        {
-            "&English",
 
-            "en" } }, getFieldEditorParent() ) );
 
     //
     //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
