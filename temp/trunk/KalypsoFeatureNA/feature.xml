@@ -7,7 +7,7 @@
       plugin="org.kalypso.ui"
       os="linux,win32"
       ws="win32"
-      nl="de,en,sh_YU,sh"
+      nl="de_DE,de,en"
       arch="x86"
       image="kalypso32.gif">
    <install-handler/>

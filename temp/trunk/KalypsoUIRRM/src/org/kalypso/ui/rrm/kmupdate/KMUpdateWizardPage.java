@@ -54,6 +54,7 @@ import javax.xml.bind.Unmarshaller;
 import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -73,7 +74,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.contribs.eclipse.jface.dialog.ScrolledTextInformationDialog;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -120,6 +122,8 @@ public class KMUpdateWizardPage extends WizardPage
   final KalypsoUIRRMPlugin m_plugin = KalypsoUIRRMPlugin.getDefault();
 
   String m_configPath = null;
+
+  private KMUpdateLabelProvider m_KMUpdateLabelProvider = new KMUpdateLabelProvider();
 
   public KMUpdateWizardPage( final CommandableWorkspace workspace, IFeatureSelection selection )
   {
@@ -305,7 +309,8 @@ public class KMUpdateWizardPage extends WizardPage
     m_channelListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL );
 
     m_channelListViewer.setContentProvider( new KMUpdateContentProvider() );
-    m_channelListViewer.setLabelProvider( new KMUpdateLabelProvider() );
+
+    m_channelListViewer.setLabelProvider( m_KMUpdateLabelProvider );
 
     // viewer.setSelection( m_selection ); TODO
     m_channelListViewer.setInput( m_workspace );
@@ -372,10 +377,10 @@ public class KMUpdateWizardPage extends WizardPage
     }
   }
 
-  void saveAs( String path )
+  boolean saveAs( String path )
   {
     if( path == null )
-      return;
+      return false;
     FileWriter writer = null;
     try
     {
@@ -384,11 +389,13 @@ public class KMUpdateWizardPage extends WizardPage
       final JAXBElement<KalininMiljukovGroupType> element = m_factory.createKalininMiljukovGroup( m_kmGroup );
       writer = new FileWriter( file );
       marshaller.marshal( element, writer );
+      return true;
     }
     catch( Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return false;
     }
     finally
     {
@@ -400,27 +407,77 @@ public class KMUpdateWizardPage extends WizardPage
   public boolean finish( )
   {
     // next line forces the dialog setting into the xml-binding objects
+    final StringBuffer detailBuffer = new StringBuffer();
+    final StringBuffer errorBuffer = new StringBuffer();
+    final StringBuffer monitorBuffer = new StringBuffer();
+
+    final ILogger detailedLogger = new ILogger()
+    {
+      public void log( String message )
+      {
+        detailBuffer.append( message );
+      }
+    };
+
+    final ILogger errorLogger = new ILogger()
+    {
+      public void log( String message )
+      {
+        errorBuffer.append( message );
+      }
+    };
+    final ILogger monitorLogger = new ILogger()
+    {
+
+      public void log( String message )
+      {
+        monitorBuffer.append( message );
+      }
+
+    };
+
     m_kmViewer.setInput( null );
     m_plugin.getDialogSettings().put( KM_CONFIG_PATH, m_configPath );
-    saveAs( m_configPath );
+
+    if( saveAs( m_configPath ) )
+      monitorLogger.log( "Dialogeinstellungen wurden gespeichert in " + m_configPath + "\n" );
+    else
+    {
+      errorLogger.log( "Dialogeinstellungen konnten nicht gespeichert werden" );
+      if( m_configPath == null )
+        errorLogger.log( ", da keine Datei angegeben ist war.\n" );
+      else
+        errorLogger.log( " in: " + m_configPath + ".\n" );
+    }
+
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
     final Object[] checkedElements = m_channelListViewer.getCheckedElements();
+    boolean susccess = true;
     for( int i = 0; i < checkedElements.length; i++ )
     {
-      Object object = checkedElements[i];
+      final Object object = checkedElements[i];
       if( object instanceof Feature )
+      {
+        final Feature feature = (Feature) object;
         try
         {
-          updateFeature( (Feature) object, changes );
+          updateFeature( errorLogger, detailedLogger, monitorLogger, feature, changes );
+          monitorLogger.log( "Berechnung erfolgte fuer: " + m_KMUpdateLabelProvider.getText( feature ) + "\n" );
         }
         catch( Exception e )
         {
+          errorLogger.log( "Fehler bei " + m_KMUpdateLabelProvider.getText( feature ) + "\n" );
           e.printStackTrace();
-          MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", "" );
-
-          return false;
+          susccess = false;
         }
+      }
     }
+    if( !susccess )
+    {
+      MessageDialog.openError( getShell(), "Fehler bei Berechnung/Einlesen der KM-Parameter", errorBuffer.toString() );
+      return false;
+    }
+
     final FeatureChange[] change = changes.toArray( new FeatureChange[changes.size()] );
     final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, change );
     try
@@ -432,6 +489,17 @@ public class KMUpdateWizardPage extends WizardPage
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    final String separator = "\n-------------------------------------\n";
+    final String message = // 
+    "Monitor:\n" + monitorBuffer.toString()// 
+        + separator//
+        + "Fehler:\n" + errorBuffer.toString() // 
+        + separator //  
+        + "Details\n" + detailBuffer.toString();
+//    MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
+    Dialog dialog = new ScrolledTextInformationDialog( getShell(), "Erfolg der Berechnungen", "Log", message );
+    dialog.open();
+    // StatusUtilities..
     return true;
   }
 
@@ -447,8 +515,9 @@ public class KMUpdateWizardPage extends WizardPage
     return null;
   }
 
-  private List<FeatureChange> updateFeature( final Feature feature, final List<FeatureChange> changeList ) throws Exception
+  private List<FeatureChange> updateFeature( ILogger errorLogger, ILogger detailedLogger, ILogger monitorLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
   {
+    final String log = "Bearbeitung " + m_KMUpdateLabelProvider.getText( feature ) + ":";
     final List<FeatureChange> result;
     if( changeList == null )
       result = new ArrayList<FeatureChange>();
@@ -472,11 +541,22 @@ public class KMUpdateWizardPage extends WizardPage
     final IPropertyType cPT = kmPaFT.getProperty( KMUpdateConstants.QNAME_c );
 
     if( km == null )
+    {
+      errorLogger.log( log + " keine Parametersatz gefunden\n" );
       return result;
-    Double kmStart = km.getKmStart();
-    Double kmEnd = km.getKmEnd();
+    }
+    final Double kmStart = km.getKmStart();
+    final Double kmEnd = km.getKmEnd();
     if( kmStart == null || kmEnd == null )
+    {
+      errorLogger.log( log + " Kilometrierung (start oder ende) nicht vollstaendig\n" );
       return result;
+    }
+    if( kmStart.compareTo( kmEnd ) > 0 )
+    {
+      errorLogger.log( log + " bei Kilometrierung wird die Regel 'start[km] < ende[km]' verletzt\n" );
+      return result;
+    }
     final List<File> list = new ArrayList<File>();
     final List<Profile> profiles = km.getProfile();
     for( Iterator<Profile> iter = profiles.iterator(); iter.hasNext(); )
@@ -490,7 +570,13 @@ public class KMUpdateWizardPage extends WizardPage
           list.add( file );
       }
     }
+    if( list.isEmpty() )
+    {
+      errorLogger.log( log + " es wurden keine Profildateien zugewiesen\n" );
+      return result;
+    }
     final File[] files = list.toArray( new File[list.size()] );
+
     final ProfileDataSet profileSet = ProfileFactory.createProfileSet( files, kmStart, kmEnd );
     int max = 5;
     final AbstractKMValue[] values = profileSet.getKMValues( max );
@@ -501,15 +587,17 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( kmParameter.length < max )
     {
+      errorLogger.log( log + " bestehenden Objekt hat noch keine KM_Parameter-Eintraege. (Genau 5 sind gefordert). Abhilfe: Parameter in Tabelle hinzufuegen.\n" );
       // TODO add new features
     }
     else
     {
+      detailedLogger.log( log + " Berechnete Parameter\n" );
       for( int i = 0; i < kmParameter.length; i++ )
       {
         final Feature kmParameterFE = kmParameter[i];
         final AbstractKMValue value = values[i];
-
+        detailedLogger.log( (i + 1) + ". " + value.toString() + "\n" );
         result.add( new FeatureChange( kmParameterFE, rkfPT, value.getK() ) );
         result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
         result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
