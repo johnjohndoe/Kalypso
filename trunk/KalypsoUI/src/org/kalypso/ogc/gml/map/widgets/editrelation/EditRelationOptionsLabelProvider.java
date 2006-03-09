@@ -86,12 +86,11 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
+  @Override
   public String getText( Object element )
   {
     if( element == null )
       return "null";
-    final String lang = KalypsoGisPlugin.getDefault().getLang();
-    //    final String lang = "de";
     if( element instanceof GMLWorkspace )
     {
       final URL context = ( (GMLWorkspace)element ).getContext();

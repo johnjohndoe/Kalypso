@@ -59,8 +59,6 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS,
         "http://SERVER_NAME:8080/webdav/kalypso-client.ini" );
 
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31469" );
-
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.LANGUAGE, "de" );
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31467" );
   }
 }
