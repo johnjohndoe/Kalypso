@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.enterprise.na"
       label="Kalypso Enterprise-NA"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       os="linux,win32"
