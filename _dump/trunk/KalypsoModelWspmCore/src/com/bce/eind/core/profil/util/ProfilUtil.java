@@ -30,6 +30,15 @@ public class ProfilUtil
     return (leftPos < rightPos)?points.subList(leftPos,rightPos):null;
 
   }
+  public static final List<IProfilPoint> getInnerPoints(final IProfil profil,final IProfilDevider leftDevider,final IProfilDevider rightDevider)
+  {
+    
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final int leftPos = (leftDevider !=null)? points.indexOf(leftDevider.getPoint()):0;
+    final int rightPos = (rightDevider !=null)? points.indexOf(rightDevider.getPoint())+1:0;
+    return (leftPos < rightPos)?points.subList(leftPos,rightPos):null;
+
+  }
   /**
    * return true if all selected properties are equal
    * 
