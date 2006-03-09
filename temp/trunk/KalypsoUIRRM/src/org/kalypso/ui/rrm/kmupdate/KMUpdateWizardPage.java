@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.kmupdate;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +90,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
@@ -100,8 +102,6 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
  */
 public class KMUpdateWizardPage extends WizardPage
 {
-
-  private static final String KM_CONFIG_PATH = "kalypsoRRM.kmUpdate.configPath";
 
   private Composite m_top = null;
 
@@ -248,7 +248,7 @@ public class KMUpdateWizardPage extends WizardPage
       }
     } );
 
-    final String path = m_plugin.getDialogSettings().get( KM_CONFIG_PATH );
+    final String path = m_plugin.getDialogSettings().get( getResourceKey() );
     m_configPath = path;
     if( path == null )
       createNewKMGroup();
@@ -270,22 +270,30 @@ public class KMUpdateWizardPage extends WizardPage
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      final KalininMiljukovType km = m_factory.createKalininMiljukovType();
-      km.setId( feature.getId() );
-      km.setFilePattern( "*km" );
-      km.setPath( "" );
 
-      final Object propStart = feature.getProperty( KMUpdateConstants.QNAME_KMSTART );
-      final Object propEnd = feature.getProperty( KMUpdateConstants.QNAME_KMEND );
-
-      if( propStart != null )
-        km.setKmStart( (Double) propStart );
-      if( propEnd != null )
-        km.setKmEnd( (Double) propEnd );
-
+      final KalininMiljukovType km = createKMForFeature( feature );
       kalininMiljukovList.add( km );
     }
     setKMGroup( kmGroup );
+  }
+
+  private KalininMiljukovType createKMForFeature( final Feature feature )
+  {
+    final KalininMiljukovType km =
+
+    m_factory.createKalininMiljukovType();
+    km.setId( feature.getId() );
+    km.setFilePattern( "*km" );
+    km.setPath( "" );
+
+    final Object propStart = feature.getProperty( KMUpdateConstants.QNAME_KMSTART );
+    final Object propEnd = feature.getProperty( KMUpdateConstants.QNAME_KMEND );
+
+    if( propStart != null )
+      km.setKmStart( (Double) propStart );
+    if( propEnd != null )
+      km.setKmEnd( (Double) propEnd );
+    return km;
   }
 
   protected void setKMGroup( KalininMiljukovGroupType kmGroup )
@@ -332,7 +340,9 @@ public class KMUpdateWizardPage extends WizardPage
         {
           final Feature feature = (Feature) firstElement;
           final String fid = feature.getId();
-          final KalininMiljukovType km = getForID( fid );
+          KalininMiljukovType km = getForID( fid );
+          if( km == null )
+            km = createKMForFeature( feature );
           m_kmViewer.setInput( km );
         }
         else
@@ -340,20 +350,6 @@ public class KMUpdateWizardPage extends WizardPage
       }
 
     } );
-  }
-
-  protected KalininMiljukovType getForID( String fid )
-  {
-    if( m_kmGroup == null )
-      return null;
-    final List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
-    for( Iterator iter = kalininMiljukov.iterator(); iter.hasNext(); )
-    {
-      final KalininMiljukovType km = (KalininMiljukovType) iter.next();
-      if( fid.equals( km.getId() ) )
-        return km;
-    }
-    return null;
   }
 
   void loadAs( String path )
@@ -437,7 +433,7 @@ public class KMUpdateWizardPage extends WizardPage
     };
 
     m_kmViewer.setInput( null );
-    m_plugin.getDialogSettings().put( KM_CONFIG_PATH, m_configPath );
+    m_plugin.getDialogSettings().put( getResourceKey(), m_configPath );
 
     if( saveAs( m_configPath ) )
       monitorLogger.log( "Dialogeinstellungen wurden gespeichert in " + m_configPath + "\n" );
@@ -496,20 +492,22 @@ public class KMUpdateWizardPage extends WizardPage
         + "Fehler:\n" + errorBuffer.toString() // 
         + separator //  
         + "Details\n" + detailBuffer.toString();
-//    MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
+    // MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
     Dialog dialog = new ScrolledTextInformationDialog( getShell(), "Erfolg der Berechnungen", "Log", message );
     dialog.open();
     // StatusUtilities..
     return true;
   }
 
-  private KalininMiljukovType getKMForID( String id )
+  protected KalininMiljukovType getForID( String fid )
   {
+    if( m_kmGroup == null )
+      return null;
     final List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
-    for( Iterator<KalininMiljukovType> iter = kalininMiljukov.iterator(); iter.hasNext(); )
+    for( Iterator iter = kalininMiljukov.iterator(); iter.hasNext(); )
     {
-      KalininMiljukovType km = iter.next();
-      if( id.equals( km.getId() ) )
+      final KalininMiljukovType km = (KalininMiljukovType) iter.next();
+      if( fid.equals( km.getId() ) )
         return km;
     }
     return null;
@@ -524,7 +522,7 @@ public class KMUpdateWizardPage extends WizardPage
     else
       result = changeList;
 
-    final KalininMiljukovType km = getKMForID( feature.getId() );
+    final KalininMiljukovType km = getForID( feature.getId() );
     final IFeatureType kmFT = m_workspace.getFeatureType( KMUpdateConstants.QNAME_KMCHANNEL );
     final IFeatureType kmPaFT = m_workspace.getFeatureType( KMUpdateConstants.QNAME_KMParameter );
 
@@ -616,5 +614,15 @@ public class KMUpdateWizardPage extends WizardPage
   public boolean isPageComplete( )
   {
     return m_channelListViewer.getCheckedElements().length > 0;
+  }
+
+  private String getResourceKey( )
+  {
+    final String base = "kalypsoRRM.kmUpdate.configPath";
+    final URL context = m_workspace.getContext();
+    if( context != null )
+      return base + context.toString();
+    else
+      return base;
   }
 }
