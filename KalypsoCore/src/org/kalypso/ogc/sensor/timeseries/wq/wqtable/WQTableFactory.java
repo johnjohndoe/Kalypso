@@ -118,7 +118,9 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
+      
       final RatingTableList xmlTables = OF.createRatingTableList();
+      
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
@@ -143,9 +145,10 @@ public class WQTableFactory implements ISerializer
 
       final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
+      
       final StringWriter writer = new StringWriter();
-      marshaller.marshal( xmlTables, writer );
+      final JAXBElement<RatingTableList> ratingTable = OF.createTables(xmlTables);
+      marshaller.marshal(ratingTable, writer );
 
       return writer.toString();
     }
