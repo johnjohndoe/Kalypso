@@ -8,8 +8,7 @@
       os="win32"
       ws="win32"
       nl="de_DE"
-      arch="x86"
-      primary="true">
+      arch="x86">
 
    <install-handler/>
 

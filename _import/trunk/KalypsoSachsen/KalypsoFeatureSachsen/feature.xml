@@ -5,7 +5,7 @@
       version="1.0.0"
       provider-name="kalypso.org"
       plugin="org.kalypso.product"
-      primary="true">
+      >
 
    <install-handler/>
 

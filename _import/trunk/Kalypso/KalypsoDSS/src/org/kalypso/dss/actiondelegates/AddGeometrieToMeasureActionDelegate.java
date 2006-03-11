@@ -113,7 +113,7 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
 
           final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
           final IRelationType rPT = (IRelationType) measureRootFeature.getFeatureType().getProperty( KalypsoDSSPlugin.MEASUER_MEMBER );
-          final AddFeatureCommand command = new AddFeatureCommand( measures, ft, measureRootFeature, rPT, 0, null, selectionManager );
+          final AddFeatureCommand command = new AddFeatureCommand( measures, ft, measureRootFeature, rPT, 0, null );
           measures.postCommand( command );
 
         }
