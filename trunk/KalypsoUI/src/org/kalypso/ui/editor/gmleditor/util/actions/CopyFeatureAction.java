@@ -68,7 +68,8 @@ public final class CopyFeatureAction extends Action
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  public void run()
+  @Override
+  public void run( )
   {
     CopyFeatureCommand command = new CopyFeatureCommand( m_originalFeature, m_clipboard );
     try

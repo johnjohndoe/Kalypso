@@ -58,7 +58,7 @@ public interface IAxis
   /**
    * @return the class of the data in this axis
    */
-  public Class getDataClass();
+  public Class<?> getDataClass();
 
   /**
    * @return the application dependent type of this axis

@@ -58,7 +58,8 @@ public class FeatureIDData extends AbstractData
     this.featureId = m_featureId;
   }
 
-  public boolean verify()
+  @Override
+  public boolean verify( )
   {
     if( featureId != null )
       return true;

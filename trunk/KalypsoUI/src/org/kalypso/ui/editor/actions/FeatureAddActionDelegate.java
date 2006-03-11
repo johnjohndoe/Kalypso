@@ -37,8 +37,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -47,7 +46,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -58,12 +56,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureAddActionDelegate implements IEditorActionDelegate
+public class FeatureAddActionDelegate implements IActionDelegate
 {
-
   private IFeatureSelection m_selection = null;
-
-  private GisMapEditor m_editor;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -82,11 +77,10 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate
       // TODO change featurelist and remove cast
       // TODO ask for IFeatureType (substitutiongroup)
 
-      final String parentFeatureProperty = m_selection.getParentFeatureProperty( firstFeature );
-      final IRelationType ftp = (IRelationType) parentFeature.getFeatureType().getProperty( parentFeatureProperty );
+      final IRelationType ftp = m_selection.getParentFeatureProperty( firstFeature );
 
       int pos = 0; // TODO get pos from somewhere
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureTypes( null, false )[0], parentFeature, ftp, pos, null, m_selection.getSelectionManager() );
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureTypes( null, false )[0], parentFeature, ftp, pos, null );
       try
       {
         workspace.postCommand( command );
@@ -161,14 +155,4 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate
 
     return true;
   }
-
-  /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
-   */
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
-  {
-    m_editor = (GisMapEditor) targetEditor;
-  }
-
 }

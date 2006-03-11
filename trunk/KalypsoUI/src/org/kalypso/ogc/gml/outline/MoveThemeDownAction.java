@@ -59,12 +59,14 @@ public class MoveThemeDownAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
+  @Override
   public void run()
   {
     getListManipulator()
         .moveElementDown( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
+  @Override
   protected final void refresh()
   {
     boolean bEnable = false;

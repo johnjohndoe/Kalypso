@@ -59,6 +59,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -102,7 +103,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final List m_selectionListeners = new ArrayList( 5 );
+  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
@@ -218,6 +219,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    * 
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
+  @Override
   public synchronized void paint( final Graphics g )
   {
     paintMap( g );
@@ -291,6 +293,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     g.setPaintMode();
   }
 
+  @Override
   public void update( Graphics g )
   {
     paint( g );
@@ -600,7 +603,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
             .getFeatureListVisible( null ), false );
 
-        final List listFe = new ArrayList();
+        final List<Feature> listFe = new ArrayList<Feature>();
         if( fe != null )
           listFe.add( fe );
 
@@ -625,13 +628,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
+          final List<Feature> features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
               .getFeatureListVisible( null ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
             // delete all but first if we shall only the first selected
-            final Object object = features.get( 0 );
+            final Feature object = features.get( 0 );
             features.clear();
             features.add( object );
           }
@@ -656,7 +659,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // TODO: maybe only visible??
     final FeatureList featureList = theme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
-    final String parentProperty = featureList.getParentFeatureTypeProperty().getName();
+    final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
 
     // add all selectied features
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
@@ -699,8 +702,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final void fireSelectionChanged()
   {
-    final ISelectionChangedListener[] listenersArray = (ISelectionChangedListener[])m_selectionListeners
-        .toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
+    final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
     for( int i = 0; i < listenersArray.length; i++ )

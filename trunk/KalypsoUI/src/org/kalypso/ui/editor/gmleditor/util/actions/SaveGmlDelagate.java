@@ -80,6 +80,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
+        @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
           treeViewer.saveData( monitor );
@@ -106,6 +107,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 
   }
 
+  @Override
   protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;

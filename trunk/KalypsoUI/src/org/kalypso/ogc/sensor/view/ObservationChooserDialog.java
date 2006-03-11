@@ -51,6 +51,7 @@ public class ObservationChooserDialog extends ResizableDialog
     super( parent, null );
   }
 
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite)super.createDialogArea( parent );
@@ -66,7 +67,8 @@ public class ObservationChooserDialog extends ResizableDialog
    * 
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  protected void okPressed()
+  @Override
+  protected void okPressed( )
   {
     if( getSelectedObservation() == null )
       return;

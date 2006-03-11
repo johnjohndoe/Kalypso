@@ -46,29 +46,24 @@ import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.ImageProvider;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class GisMapOutlinePageExtension
 {
+  // private final static String GIS_MAP_OUTLINE_EXTENSION_POINT = "org.kalypso.ui.mapviewaction";
 
-  private final static String GIS_MAP_OUTLINE_EXTENSION_POINT = "org.kalypso.ui.mapviewaction";
-
-  public static List getRegisteredMapOutlineActions( final GisMapOutlineViewer gisMapOutlineViewer,
-      final IListManipulator listManip )
+  public static List<PluginMapOutlineActionDelegate> getRegisteredMapOutlineActions( final GisMapOutlineViewer gisMapOutlineViewer, final IListManipulator listManip )
   {
-    ArrayList actions = new ArrayList();
+    final ArrayList<PluginMapOutlineActionDelegate> actions = new ArrayList<PluginMapOutlineActionDelegate>();
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
     IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
-    //check if extention point is registered on start up
+    // check if extention point is registered on start up
     if( extensionPoint == null )
-      return new ArrayList();
+      return new ArrayList<PluginMapOutlineActionDelegate>();
     IExtension[] extensions = extensionPoint.getExtensions();
     // no mapview extensions have been registered
     if( extensions == null )
-      return new ArrayList();
+      return new ArrayList<PluginMapOutlineActionDelegate>();
     for( int i = 0; i < extensions.length; i++ )
     {
       IExtension extension = extensions[i];
@@ -78,9 +73,9 @@ public class GisMapOutlinePageExtension
         IConfigurationElement configurationElement = configurationElements[j];
         String title = configurationElement.getAttribute( "title" );
         String resource = configurationElement.getAttribute( "icon" );
-        //gets the parent of this element (the plugin which implements this extension)
-        IExtension parent = (IExtension)configurationElement.getParent();
-        //gets the plugin id of the parent plugin
+        // gets the parent of this element (the plugin which implements this extension)
+        IExtension parent = (IExtension) configurationElement.getParent();
+        // gets the plugin id of the parent plugin
         String pluginID = parent.getNamespace();
         ImageDescriptor icon = ImageProvider.id( pluginID, resource );
         String enabled = configurationElement.getAttribute( "enabled" );
@@ -88,14 +83,12 @@ public class GisMapOutlinePageExtension
         if( enabled != null && enabled.equals( "true" ) )
           visible = true;
         String tooltip = configurationElement.getAttribute( "tooltip" );
-        //create action delegate
+        // create action delegate
         PluginMapOutlineActionDelegate actionDelegate;
         try
         {
-          PluginMapOutlineAction action = (PluginMapOutlineAction)configurationElement
-              .createExecutableExtension( "class" );
-          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, gisMapOutlineViewer, action,
-              listManip );
+          PluginMapOutlineAction action = (PluginMapOutlineAction) configurationElement.createExecutableExtension( "class" );
+          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, gisMapOutlineViewer, action, listManip );
           actionDelegate.setEnabled( visible );
           actions.add( actionDelegate );
         }

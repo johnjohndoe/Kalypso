@@ -39,11 +39,11 @@ public class SubFeatureControl extends AbstractFeatureControl
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = getWorkspace();
-    final Object property = feature.getProperty( getFeatureTypeProperty().getName() );
+    final Object property = feature.getProperty( getFeatureTypeProperty() );
     if( property instanceof Feature )
-      m_fc = new FeatureComposite( workspace, (Feature)property, m_selectionManager, m_views );
+      m_fc = new FeatureComposite( workspace, (Feature) property, m_selectionManager, m_views );
     else
-      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty(), m_selectionManager );
+      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty() );
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {
@@ -65,7 +65,8 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  public void dispose()
+  @Override
+  public void dispose( )
   {
     m_fc.dispose();
   }
@@ -73,7 +74,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl()
+  public void updateControl( )
   {
     m_fc.updateControl();
   }
@@ -81,7 +82,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid()
+  public boolean isValid( )
   {
     return m_fc.isValid();
   }

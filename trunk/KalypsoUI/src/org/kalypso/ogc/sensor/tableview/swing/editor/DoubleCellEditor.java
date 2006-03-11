@@ -104,6 +104,7 @@ public class DoubleCellEditor extends DefaultCellEditor
     ( (JTextField)getComponent() ).setHorizontalAlignment( SwingConstants.RIGHT );
   }
 
+  @Override
   public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column )
   {
     m_value = null;
@@ -121,6 +122,7 @@ public class DoubleCellEditor extends DefaultCellEditor
     return super.getTableCellEditorComponent( table, value, isSelected, row, column );
   }
 
+  @Override
   public boolean stopCellEditing()
   {
     String s = (String)super.getCellEditorValue();
@@ -155,6 +157,7 @@ public class DoubleCellEditor extends DefaultCellEditor
    * 
    * @see javax.swing.DefaultCellEditor#cancelCellEditing()
    */
+  @Override
   public void cancelCellEditing()
   {
     super.cancelCellEditing();
@@ -162,7 +165,8 @@ public class DoubleCellEditor extends DefaultCellEditor
     m_value = null;
   }
 
-  public Object getCellEditorValue()
+  @Override
+  public Object getCellEditorValue( )
   {
     return m_value;
   }

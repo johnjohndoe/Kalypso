@@ -72,6 +72,7 @@ public class OcsExportWizardResourcesPage extends WizardExportResourcesPage
   /**
    * @see org.eclipse.ui.dialogs.WizardExportResourcesPage#createDestinationGroup(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected void createDestinationGroup( Composite parent )
   {
   // empty
@@ -80,6 +81,7 @@ public class OcsExportWizardResourcesPage extends WizardExportResourcesPage
   /**
    * @see org.eclipse.ui.dialogs.WizardDataTransferPage#createOptionsGroupButtons(org.eclipse.swt.widgets.Group)
    */
+  @Override
   protected void createOptionsGroupButtons( Group optionsGroup )
   {
     m_guessIdentifiersCheckBox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
@@ -99,7 +101,8 @@ public class OcsExportWizardResourcesPage extends WizardExportResourcesPage
   /**
    * @see org.eclipse.ui.dialogs.WizardExportResourcesPage#getSelectedResources()
    */
-  public List getSelectedResources()
+  @Override
+  public List getSelectedResources( )
   {
     return super.getSelectedResources();
   }

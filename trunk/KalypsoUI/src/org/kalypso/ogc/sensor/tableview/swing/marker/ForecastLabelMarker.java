@@ -121,6 +121,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals( Object obj )
   {
     return compareTo( obj ) == 0;
@@ -129,6 +130,7 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode()
   {
     return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();

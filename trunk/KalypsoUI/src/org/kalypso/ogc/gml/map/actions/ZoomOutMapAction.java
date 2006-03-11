@@ -60,7 +60,8 @@ public class ZoomOutMapAction extends AbstractCommandAction
   /**
    * @see org.kalypso.ogc.gml.map.actions.AbstractCommandAction#runInternal()
    */
-  public ICommand runInternal()
+  @Override
+  public ICommand runInternal( )
   {
     final MapPanel mapPanel = getMapPanel();
 

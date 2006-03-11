@@ -27,7 +27,8 @@ public class WQTableTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception
+  @Override
+  protected void setUp( ) throws Exception
   {
     wqt = new WQTable( new Date(), 0, new double[][]
     {

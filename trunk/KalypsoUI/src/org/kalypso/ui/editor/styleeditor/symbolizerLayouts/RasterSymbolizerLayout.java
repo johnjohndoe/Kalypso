@@ -68,7 +68,8 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     super( m_composite, m_symbolizer, m_userStyle );
   }
 
-  public void draw()
+  @Override
+  public void draw( )
   {
     final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer)symbolizer;
 

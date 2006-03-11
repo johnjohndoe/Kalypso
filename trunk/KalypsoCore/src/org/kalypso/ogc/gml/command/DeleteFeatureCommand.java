@@ -59,7 +59,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
@@ -74,9 +73,9 @@ public class DeleteFeatureCommand implements ICommand
 
   private final Set<GMLWorkspace> m_touchedWorkspaces = new HashSet<GMLWorkspace>();
 
-  public DeleteFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final String propName, final Feature featureToDelete )
+  public DeleteFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentProp, final Feature featureToDelete )
   {
-    this( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, featureToDelete, parentFeature, propName ) } );
+    this( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, featureToDelete, parentFeature, parentProp ) } );
   }
 
   public DeleteFeatureCommand( final EasyFeatureWrapper[] wrappers )
@@ -121,7 +120,7 @@ public class DeleteFeatureCommand implements ICommand
 
       final CommandableWorkspace workspace = wrapper.getWorkspace();
       final Feature parentFeature = wrapper.getParentFeature();
-      final String propName = wrapper.getParentFeatureProperty();
+      final IRelationType rt = wrapper.getParentFeatureProperty();
       final Feature featureToAdd = wrapper.getFeature();
 
       if( workspace.contains( featureToAdd ) )
@@ -131,7 +130,6 @@ public class DeleteFeatureCommand implements ICommand
       // for( ; propIndex < properties.length; propIndex++ )
       // if( properties[propIndex] == prop )
       // break;
-      final IRelationType rt = (IRelationType) FeatureHelper.getPT( parentFeature, propName );
 
       // final Object prop = parentFeature.getProperty( propName );
       if( rt.isList() )
@@ -188,13 +186,11 @@ public class DeleteFeatureCommand implements ICommand
       final CommandableWorkspace workspace = wrapper.getWorkspace();
       m_touchedWorkspaces.add( workspace );
       final Feature parentFeature = wrapper.getParentFeature();
-      final String propName = wrapper.getParentFeatureProperty();
+      final IRelationType rt = wrapper.getParentFeatureProperty();
       final Feature featureToRemove = wrapper.getFeature();
       if( !workspace.contains( featureToRemove ) )
         continue; // is allready remved
 
-      // remember position for undo
-      final IRelationType rt = (IRelationType) FeatureHelper.getPT( parentFeature, propName );
 
       if( rt.isList() )
       {

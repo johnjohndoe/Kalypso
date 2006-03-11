@@ -132,14 +132,14 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     m_axes[m_axes.length - 1] = m_destStatusAxis;
 
     if( name.length() == 0 )
-      throw new IllegalArgumentException( "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: "
-          + m_proxyAxisType );
+      throw new IllegalArgumentException( "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: " + m_proxyAxisType );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
-  public IAxis[] getAxisList()
+  @Override
+  public IAxis[] getAxisList( )
   {
     return m_axes;
   }
@@ -147,21 +147,20 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
+  @Override
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
-    if( m_cachedModel != null
-        && ( m_cachedArgs == null && args == null || ( m_cachedArgs != null && m_cachedArgs.equals( args ) ) ) )
+    if( m_cachedModel != null && (m_cachedArgs == null && args == null || (m_cachedArgs != null && m_cachedArgs.equals( args ))) )
       return m_cachedModel;
 
-    m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis,
-        m_destAxis, m_destStatusAxis, getWQConverter() );
+    m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter() );
 
     m_cachedArgs = args;
 
     return m_cachedModel;
   }
 
-  private IWQConverter getWQConverter() throws SensorException
+  private IWQConverter getWQConverter( ) throws SensorException
   {
     if( m_conv == null )
       m_conv = WQFactory.createWQConverter( this );
@@ -172,22 +171,23 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
+  @Override
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }
 
-  public IAxis getDateAxis()
+  public IAxis getDateAxis( )
   {
     return m_dateAxis;
   }
 
-  public IAxis getDestAxis()
+  public IAxis getDestAxis( )
   {
     return m_destAxis;
   }
 
-  public IAxis getSrcAxis()
+  public IAxis getSrcAxis( )
   {
     return m_srcAxis;
   }

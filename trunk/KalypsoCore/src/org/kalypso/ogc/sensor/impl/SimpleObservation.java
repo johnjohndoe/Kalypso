@@ -81,24 +81,22 @@ public class SimpleObservation implements IObservation
 
   private String m_href;
 
-  public SimpleObservation()
+  public SimpleObservation( )
   {
     this( "", "", "", false, null, new MetadataList(), new IAxis[0] );
   }
-  
+
   public SimpleObservation( final IAxis[] axes )
   {
     this( "", "", "", false, null, new MetadataList(), axes );
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
-      final Object target, final MetadataList metadata, final IAxis[] axes )
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes )
   {
     this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
-      final Object target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
     m_identifier = identifier;
@@ -113,7 +111,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -121,7 +119,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#isEditable()
    */
-  public boolean isEditable()
+  public boolean isEditable( )
   {
     return m_editable;
   }
@@ -129,7 +127,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public Object getTarget()
+  public Object getTarget( )
   {
     return m_target;
   }
@@ -137,7 +135,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList()
+  public MetadataList getMetadataList( )
   {
     return m_metadata;
   }
@@ -145,7 +143,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
     return m_axes;
   }
@@ -185,7 +183,7 @@ public class SimpleObservation implements IObservation
     }
 
     final IAxis[] otherAxes = values.getAxisList();
-    final Map map = new HashMap( m_axes.length );
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( m_axes.length );
 
     for( int i = 0; i < m_axes.length; i++ )
     {
@@ -212,7 +210,7 @@ public class SimpleObservation implements IObservation
 
       for( int j = 0; j < keys.length; j++ )
       {
-        final Object obj = values.getElement( i, (IAxis)map.get( keys[j] ) );
+        final Object obj = values.getElement( i, map.get( keys[j] ) );
         final int ix = m_tupples.indexOf( obj, keys[j] );
 
         if( ix >= 0 && ixPresent != -1 )
@@ -231,8 +229,8 @@ public class SimpleObservation implements IObservation
 
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
-          final IAxis myA = (IAxis)it.next();
-          final IAxis oA = (IAxis)map.get( myA );
+          final IAxis myA = (IAxis) it.next();
+          final IAxis oA = map.get( myA );
 
           final Object obj = values.getElement( i, oA );
           m_tupples.setElement( ixPresent, obj, myA );
@@ -248,9 +246,9 @@ public class SimpleObservation implements IObservation
 
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
-          final IAxis myA = (IAxis)it.next();
+          final IAxis myA = (IAxis) it.next();
 
-          final Object obj = values.getElement( i, (IAxis)map.get( myA ) );
+          final Object obj = values.getElement( i, map.get( myA ) );
           tupple[stm.getPositionFor( myA )] = obj;
         }
 
@@ -266,22 +264,21 @@ public class SimpleObservation implements IObservation
    * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
    * 
    * @return a SimpleTuppleModel
-   * 
    * @throws SensorException
    */
-  private SimpleTuppleModel prepareForAdding() throws SensorException
+  private SimpleTuppleModel prepareForAdding( ) throws SensorException
   {
     // since we are adding
-    if( !( m_tupples instanceof SimpleTuppleModel ) )
+    if( !(m_tupples instanceof SimpleTuppleModel) )
       m_tupples = new SimpleTuppleModel( m_tupples );
 
-    return (SimpleTuppleModel)m_tupples;
+    return (SimpleTuppleModel) m_tupples;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifier;
   }
@@ -305,11 +302,11 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
-  public void clearListeners()
+  public void clearListeners( )
   {
     m_evtPrv.clearListeners();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
    */
@@ -321,7 +318,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()
    */
-  public String getHref()
+  public String getHref( )
   {
     return m_href;
   }
@@ -340,7 +337,8 @@ public class SimpleObservation implements IObservation
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return "Obs: " + m_name + " - Id:" + m_identifier + " - Href:" + m_href;
   }

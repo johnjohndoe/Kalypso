@@ -158,7 +158,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     public void selectionChanged( final IFeatureSelection selection )
     {
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
-      final List globalFeatureList = new ArrayList( Arrays.asList( features ) );
+      final List<Feature> globalFeatureList = new ArrayList<Feature>( Arrays.asList( features ) );
 
       // filter ths which are in my list
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
@@ -167,7 +167,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final FeatureList featureList = theme.getFeatureList();
       final List themeFeatures = featureList == null ? new ArrayList() : (List) featureList;
       globalFeatureList.retainAll( themeFeatures );
-      final Feature[] globalFeatures = (Feature[]) globalFeatureList.toArray( new Feature[globalFeatureList.size()] );
+      final Feature[] globalFeatures = globalFeatureList.toArray( new Feature[globalFeatureList.size()] );
 
       final Control control = getControl();
       if( control.isDisposed() )
@@ -209,6 +209,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
      * If the column has not been selected previously, it will set the sorter of that column to be the current tasklist
      * sorter. Repeated presses on the same column header will toggle sorting order (ascending/descending/original).
      */
+    @Override
     public void widgetSelected( final SelectionEvent e )
     {
       // column selected - need to sort
@@ -223,6 +224,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     /**
      * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
      */
+    @Override
     public void controlResized( final ControlEvent e )
     {
       if( m_isApplyTemplate == true )
@@ -251,7 +253,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private Feature m_focusedFeature;
 
-  private String m_focusedProperty;
+  private IPropertyType m_focusedProperty;
 
   /**
    * @param parent
@@ -286,6 +288,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final OpenStrategy strategy = new OpenStrategy( tc );
     strategy.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         handleTableCursorSelected();
@@ -297,6 +300,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleTableCursorPostSelected();
@@ -305,6 +309,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   }
 
+  @Override
   protected void hookControl( final Control control )
   {
     // unhook the mouseDownEvent because we do not want to start editing
@@ -322,6 +327,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // copy hooking from super-classes
     control.addDisposeListener( new DisposeListener()
     {
+      @SuppressWarnings("synthetic-access")
+      // suppressed, because we can't change super-class
       public void widgetDisposed( DisposeEvent event )
       {
         handleDispose( event );
@@ -331,11 +338,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     OpenStrategy handler = new OpenStrategy( control );
     handler.addSelectionListener( new SelectionListener()
     {
+      @SuppressWarnings("synthetic-access")
+      // suppressed, because we can't change super-class
       public void widgetSelected( SelectionEvent e )
       {
         handleSelect( e );
       }
 
+      @SuppressWarnings("synthetic-access")
+      // suppressed, because we can't change super-class
       public void widgetDefaultSelected( SelectionEvent e )
       {
         handleDoubleSelect( e );
@@ -343,6 +354,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     } );
     handler.addPostSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
+      // suppressed, because we can't change super-class
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handlePostSelect( e );
@@ -377,8 +391,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     m_focusedFeature = row == null ? null : (Feature) row.getData();
 
-    final IPropertyType focusedProperty = (column < 0 || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
-    m_focusedProperty = focusedProperty == null ? null : focusedProperty.getName();
+    m_focusedProperty = (column < 0 || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
   }
 
   public void dispose( )
@@ -1037,7 +1050,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public void setFocusedFeature( final Feature f, final IPropertyType ftp )
   {
     m_focusedFeature = f;
-    m_focusedProperty = ftp == null ? null : ftp.getName();
+    m_focusedProperty = ftp;
 
     firePostSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }

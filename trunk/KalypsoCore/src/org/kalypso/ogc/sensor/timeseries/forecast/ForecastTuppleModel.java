@@ -80,24 +80,23 @@ public class ForecastTuppleModel extends AbstractTuppleModel
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
     // let them sort, so order does not matter (TODO siehe Klassenkommentar)
-    Arrays.sort( models, new Comparator()
+    Arrays.sort( models, new Comparator<ITuppleModel>()
     {
+      @Override
       public boolean equals( Object obj )
       {
         return false;
       }
 
-      public int compare( Object o1, Object o2 )
+      public int compare( ITuppleModel t1, ITuppleModel t2 )
       {
-        ITuppleModel t1 = (ITuppleModel)o1;
-        ITuppleModel t2 = (ITuppleModel)o2;
-        IAxis t1axis = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
-        IAxis t2axis = ObservationUtilities.findAxisByClass( t2.getAxisList(), Date.class );
+        final IAxis t1axis = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
+        final IAxis t2axis = ObservationUtilities.findAxisByClass( t2.getAxisList(), Date.class );
         Date d1 = null, d2 = null;
         boolean statusD1 = false, statusD2 = false;
         try
         {
-          d1 = (Date)t1.getElement( 0, t1axis );
+          d1 = (Date) t1.getElement( 0, t1axis );
           if( d1 != null )
             statusD1 = true;
         }
@@ -107,7 +106,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
         }
         try
         {
-          d2 = (Date)t2.getElement( 0, t2axis );
+          d2 = (Date) t2.getElement( 0, t2axis );
           if( d2 != null )
             statusD2 = true;
         }
@@ -135,7 +134,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
       final int[] map = ObservationUtilities.getAxisMapping( targetAxes, modelAxes );
       for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {
-        final Date date = (Date)models[i].getElement( rowIx, modelDateAxis );
+        final Date date = (Date) models[i].getElement( rowIx, modelDateAxis );
         if( date.after( lastDate ) )
         {
           final Object[] targetTupple = new Object[modelAxes.length];
@@ -145,7 +144,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
             if( map[colIx] > -1 )
               targetTupple[colIx] = models[i].getElement( rowIx, modelAxes[map[colIx]] );
           }
-          //            tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
+          // tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
           m_model.addTupple( targetTupple );
           lastDate = date;
         }
@@ -156,7 +155,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount()
+  public int getCount( )
   {
     return m_model.getCount();
   }

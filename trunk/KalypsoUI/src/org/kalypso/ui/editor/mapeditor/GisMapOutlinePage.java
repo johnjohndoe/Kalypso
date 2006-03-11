@@ -62,8 +62,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -83,8 +83,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  * 
  * @author gernot
  */
-public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView, IListManipulator,
-    ISelectionChangedListener
+public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView, IListManipulator, ISelectionChangedListener
 {
   private final JobExclusiveCommandTarget m_commandTarget;
 
@@ -92,7 +91,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private List m_actionDelegates = null;
 
-  public GisMapOutlineViewer getModellView()
+  public GisMapOutlineViewer getModellView( )
   {
     return m_modellView;
   }
@@ -124,7 +123,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.ui.part.IPage#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     if( m_modellView != null )
     {
@@ -135,7 +134,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     /** add registered PluginMapOutlineAction */
     for( final Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
     {
-      final AbstractOutlineAction action = (AbstractOutlineAction)iter.next();
+      final AbstractOutlineAction action = (AbstractOutlineAction) iter.next();
       action.dispose();
     }
   }
@@ -143,7 +142,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.ui.part.IPage#getControl()
    */
-  public Control getControl()
+  public Control getControl( )
   {
     return m_modellView.getControl();
   }
@@ -159,7 +158,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     for( final Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
     {
-      AbstractOutlineAction action = (AbstractOutlineAction)iter.next();
+      AbstractOutlineAction action = (AbstractOutlineAction) iter.next();
       toolBarManager.add( action );
     }
 
@@ -179,11 +178,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );
 
-    final IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-    //    final IViewPart outlineView = page.findView( IPageLayout.ID_OUTLINE );
-    //    if( outlineView != null )
-    //        outlineView.getSite().registerContextMenu(
-    //            menuMgr, m_modellView );
+    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    // final IViewPart outlineView = page.findView( IPageLayout.ID_OUTLINE );
+    // if( outlineView != null )
+    // outlineView.getSite().registerContextMenu(
+    // menuMgr, m_modellView );
 
     // TODO: das nimmt nicht die outline view sondern irgendeine aktive
     // besser wäre wie im kommentar oben, aber die outline-view ist noch gar nicht da
@@ -199,12 +198,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.ui.part.IPage#setFocus()
    */
-  public void setFocus()
+  public void setFocus( )
   {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
-    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
-    StyleEditorViewPart part = (StyleEditorViewPart)window.getActivePage().findView(
-        "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
     if( part != null )
       part.setSelectionChangedProvider( this );
@@ -221,7 +219,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return m_modellView.getSelection();
   }
@@ -247,16 +245,16 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void doubleClick( final DoubleClickEvent event )
   {
-  /*
-   * final IStructuredSelection sel = (IStructuredSelection)event.getSelection(); if( !sel.isEmpty() )
-   * m_gisEditor.postCommand( new EditPropertiesCommand( getControl().getShell(), (LayerType)sel.getFirstElement() ) );
-   */
+    /*
+     * final IStructuredSelection sel = (IStructuredSelection)event.getSelection(); if( !sel.isEmpty() )
+     * m_gisEditor.postCommand( new EditPropertiesCommand( getControl().getShell(), (LayerType)sel.getFirstElement() ) );
+     */
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell()
+  public IMapModell getMapModell( )
   {
     return m_modellView.getMapModell();
   }
@@ -270,13 +268,12 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   }
 
   /**
-   * 
    * @see org.kalypso.commons.list.IListManipulator#moveElementDown(java.lang.Object)
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(), (IKalypsoTheme)element );
-    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(), (IKalypsoTheme) element );
+    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -284,8 +281,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ),
-        new SelectThemeRunner( (IKalypsoTheme)element ) );
+    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -293,8 +289,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme)element ),
-        new SelectThemeRunner( (IKalypsoTheme)element ) );
+    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme) element ), new SelectThemeRunner( (IKalypsoTheme) element ) );
   }
 
   /**
@@ -302,9 +297,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void addElement( final Object element )
   {
-  //    m_commandTarget.postCommand( new AddThemeCommand( getMapModell(),
-  // (IKalypsoTheme)element ),
-  //        new SelectThemeRunner( (IKalypsoTheme)element ) );
+    // m_commandTarget.postCommand( new AddThemeCommand( getMapModell(),
+    // (IKalypsoTheme)element ),
+    // new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   private final class SelectThemeRunner implements Runnable
@@ -319,11 +314,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     /**
      * @see java.lang.Runnable#run()
      */
-    public void run()
+    public void run( )
     {
       getControl().getDisplay().asyncExec( new Runnable()
       {
-        public void run()
+        public void run( )
         {
           setSelection( new StructuredSelection( m_theme ) );
         }
@@ -336,7 +331,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-  // nix tun
+    // nix tun
   }
 
   /**
@@ -344,6 +339,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-  // 
+    // 
   }
 }

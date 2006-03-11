@@ -56,9 +56,9 @@ import org.kalypso.contribs.java.util.DateUtilities;
  */
 public class WechmannSet
 {
-  private final SortedMap m_mapW;
+  private final SortedMap<Double, WechmannParams> m_mapW;
 
-  private final SortedMap m_mapQ;
+  private final SortedMap<Double, WechmannParams> m_mapQ;
 
   private final Date m_validity;
 
@@ -83,8 +83,8 @@ public class WechmannSet
   {
     m_validity = validity;
 
-    m_mapW = new TreeMap();
-    m_mapQ = new TreeMap();
+    m_mapW = new TreeMap<Double, WechmannParams>();
+    m_mapQ = new TreeMap<Double, WechmannParams>();
 
     for( int i = 0; i < wps.length; i++ )
     {
@@ -99,7 +99,7 @@ public class WechmannSet
    * 
    * @return iterator over WechmannParams objects
    */
-  public Iterator iterator()
+  public Iterator iterator( )
   {
     return m_mapW.values().iterator();
   }
@@ -107,7 +107,7 @@ public class WechmannSet
   /**
    * @return the validity of this set of WechmannParams.
    */
-  public Date getValidity()
+  public Date getValidity( )
   {
     return m_validity;
   }
@@ -118,15 +118,15 @@ public class WechmannSet
    */
   public WechmannParams getForW( final double W )
   {
-    final Double[] ds = (Double[])m_mapW.keySet().toArray( new Double[0] );
+    final Double[] ds = m_mapW.keySet().toArray( new Double[0] );
     int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
 
     if( i < 0 )
       i = -i - 1;
 
     // TODO: produces ArrayIndexOutOfBoundsException, if W gets to big
-    
-    return (WechmannParams)m_mapW.get( ds[i] );
+
+    return m_mapW.get( ds[i] );
   }
 
   /**
@@ -135,7 +135,7 @@ public class WechmannSet
    */
   public WechmannParams getForQ( final double Q )
   {
-    final Double[] ds = (Double[])m_mapQ.keySet().toArray( new Double[0] );
+    final Double[] ds = m_mapQ.keySet().toArray( new Double[0] );
     int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), Q );
 
     if( i < 0 )
@@ -144,6 +144,6 @@ public class WechmannSet
     if( i >= ds.length )
       i = ds.length - 1;
 
-    return (WechmannParams)m_mapQ.get( ds[i] );
+    return m_mapQ.get( ds[i] );
   }
 }

@@ -75,6 +75,7 @@ public class AbstractObservationDecorator implements IObservation
     m_obs.addListener( listener );
   }
 
+  @Override
   public boolean equals( Object obj )
   {
     return m_obs.equals( obj );
@@ -110,7 +111,8 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.getValues( args );
   }
 
-  public int hashCode()
+  @Override
+  public int hashCode( )
   {
     return m_obs.hashCode();
   }
@@ -135,6 +137,7 @@ public class AbstractObservationDecorator implements IObservation
     m_obs.setValues( values );
   }
 
+  @Override
   public String toString()
   {
     return m_obs.toString();

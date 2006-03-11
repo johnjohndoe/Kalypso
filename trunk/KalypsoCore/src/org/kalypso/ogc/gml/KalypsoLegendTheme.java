@@ -160,7 +160,6 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    // TODO ??
     if( modellEvent != null && modellEvent.isType( ModellEvent.LEGEND_UPDATED ) )
       return;
     m_Image = null;
@@ -169,7 +168,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   private void updateLegend()
   {
-    List stylesCol = new ArrayList();
+    final List<Image> stylesCol = new ArrayList<Image>();
 
     int max = m_mapModell.getThemeSize();
     for( int i = 0; i < max; i++ )
@@ -218,7 +217,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
     for( int i = 0; i < stylesCol.size(); i++ )
     {
-      final Image styleImage = (Image)stylesCol.get( i );
+      final Image styleImage = stylesCol.get( i );
       int pos = i;
       g.drawImage( styleImage, 0, m_styleHeight * pos, m_styleWidth - 1, m_styleHeight - 1, null );
       g.setColor( Color.black );

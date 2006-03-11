@@ -33,12 +33,12 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -49,7 +49,8 @@ public class CreateOGCIsLikeOperationActionDelegate extends AbstractCreateOperat
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  @Override
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
@@ -58,19 +59,19 @@ public class CreateOGCIsLikeOperationActionDelegate extends AbstractCreateOperat
         Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          ComplexFilter filter = (ComplexFilter)firstElement;
+          ComplexFilter filter = (ComplexFilter) firstElement;
           filter.setOperation( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          LogicalOperation operation = (LogicalOperation)firstElement;
-          //add new Logical Operation
-          ArrayList arguments = operation.getArguments();
+          LogicalOperation operation = (LogicalOperation) firstElement;
+          // add new Logical Operation
+          ArrayList<Operation> arguments = operation.getArguments();
           if( arguments == null )
-            arguments = new ArrayList();
+            arguments = new ArrayList<Operation>();
           arguments.add( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
 

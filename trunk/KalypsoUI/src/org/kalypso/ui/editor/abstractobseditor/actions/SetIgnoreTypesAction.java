@@ -73,7 +73,8 @@ public class SetIgnoreTypesAction extends FullAction
     m_page = page;
   }
 
-  public void run()
+  @Override
+  public void run( )
   {
     final ObsView obsView = m_page.getView();
     final Set types = ObsViewUtils.retrieveAxisTypes( obsView.getItems(), true );

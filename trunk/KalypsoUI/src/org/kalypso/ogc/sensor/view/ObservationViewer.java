@@ -41,7 +41,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -266,7 +265,6 @@ public class ObservationViewer extends Composite
         }
         catch( Exception e2 )
         {
-          // TODO Auto-generated catch block
           e2.printStackTrace();
         }
       }
@@ -429,6 +427,7 @@ public class ObservationViewer extends Composite
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
+  @Override
   public void dispose( )
   {
     m_diagView.dispose();
@@ -512,7 +511,6 @@ public class ObservationViewer extends Composite
         }
         catch( SensorException e1 )
         {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
           return;
         }

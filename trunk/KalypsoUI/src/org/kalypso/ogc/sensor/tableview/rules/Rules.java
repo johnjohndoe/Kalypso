@@ -55,13 +55,13 @@ import java.util.NoSuchElementException;
  */
 public class Rules implements ITableViewRules
 {
-  private final List m_rules = new ArrayList();
+  private final List<RenderingRule> m_rules = new ArrayList<RenderingRule>();
 
-  private final Map m_map = new HashMap();
+  private final Map<Number, RenderingRule[]> m_map = new HashMap<Number, RenderingRule[]>();
 
-  public Rules()
+  public Rules( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -97,22 +97,22 @@ public class Rules implements ITableViewRules
    */
   public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
   {
-    RenderingRule[] r = (RenderingRule[])m_map.get( mask );
+    RenderingRule[] r = m_map.get( mask );
 
     if( r != null )
       return r;
 
-    List lrules = new ArrayList();
+    final List<RenderingRule> lrules = new ArrayList<RenderingRule>();
 
     for( Iterator it = m_rules.iterator(); it.hasNext(); )
     {
-      RenderingRule rule = (RenderingRule)it.next();
+      final RenderingRule rule = (RenderingRule) it.next();
 
       if( rule.contains( mask.intValue() ) )
         lrules.add( rule );
     }
 
-    r = (RenderingRule[])lrules.toArray( new RenderingRule[0] );
+    r = lrules.toArray( new RenderingRule[0] );
     m_map.put( mask, r );
 
     return r;
@@ -121,7 +121,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#isEmpty()
    */
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_rules.size() == 0;
   }
@@ -129,7 +129,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#getRules()
    */
-  public List getRules()
+  public List getRules( )
   {
     return m_rules;
   }
@@ -137,15 +137,16 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#removeAllRules()
    */
-  public void removeAllRules()
+  public void removeAllRules( )
   {
     m_rules.clear();
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return "Rules (Amount= " + m_rules.size() + ")";
   }

@@ -1,8 +1,3 @@
-package org.kalypso.ogc.gml.typehandler;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,19 +38,21 @@ import java.util.List;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.typehandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author huebsch
+ */
 public class DiagramProperty
 {
-  private final List xValues = new ArrayList();
+  private final List<Double> xValues = new ArrayList<Double>();
 
-  private final List yValues = new ArrayList();
+  private final List<Double> yValues = new ArrayList<Double>();
 
-  private final List zValues = new ArrayList();
-
-  /*
-   * 
-   * @author huebsch
-   */
+  private final List<Double> zValues = new ArrayList<Double>();
 
   public void addValue( Double x, Double y, Double z )
   {
@@ -64,34 +61,32 @@ public class DiagramProperty
     zValues.add( z );
   }
 
-  public int size()
+  public int size( )
   {
     return xValues.size();
   }
 
   public Double getXValue( int index )
   {
-    return (Double)xValues.get( index );
+    return xValues.get( index );
   }
 
   public Double getYValue( int index )
   {
-    return (Double)yValues.get( index );
+    return yValues.get( index );
   }
 
   public Double getZValue( int index )
   {
-    return (Double)zValues.get( index );
+    return zValues.get( index );
   }
 
-  public Object clone()
+  @Override
+  public Object clone( )
   {
-    DiagramProperty clone = new DiagramProperty();
+    final DiagramProperty clone = new DiagramProperty();
     for( int i = 0; i < size(); i++ )
-    {
-      clone.addValue( new Double( getXValue( i ).doubleValue() ), new Double( getYValue( i ).doubleValue() ),
-          new Double( getZValue( i ).doubleValue() ) );
-    }
+      clone.addValue( new Double( getXValue( i ).doubleValue() ), new Double( getYValue( i ).doubleValue() ), new Double( getZValue( i ).doubleValue() ) );
     return clone;
   }
 }

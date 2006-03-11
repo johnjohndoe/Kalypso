@@ -46,7 +46,6 @@ import org.kalypso.ogc.sensor.IAxis;
  * Default implementation of <code>IAxisMapping</code>.
  * 
  * @author schlienger
- *  
  */
 public class AxisMapping
 {
@@ -60,12 +59,12 @@ public class AxisMapping
     m_dAxis = dAxis;
   }
 
-  public IAxis getObservationAxis()
+  public IAxis getObservationAxis( )
   {
     return m_oAxis;
   }
 
-  public DiagramAxis getDiagramAxis()
+  public DiagramAxis getDiagramAxis( )
   {
     return m_dAxis;
   }
@@ -73,7 +72,8 @@ public class AxisMapping
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return m_oAxis + " - " + m_dAxis;
   }

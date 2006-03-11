@@ -47,15 +47,10 @@ import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * 
  * @author von Dömming
  */
 public class ZoomInWidget extends AbstractWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public ZoomInWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -66,7 +61,8 @@ public class ZoomInWidget extends AbstractWidget
 
   private Point startPoint = null;
 
-  public void dragged( Point p )
+  @Override
+  public void dragged( final Point p )
   {
     if( startPoint == null )
       startPoint = p;
@@ -75,19 +71,22 @@ public class ZoomInWidget extends AbstractWidget
     }
   }
 
-  public void leftPressed( Point p )
+  @Override
+  public void leftPressed( final Point p )
   {
     startPoint = p;
     endPoint = null;
   }
 
-  public void leftReleased( Point p )
+  @Override
+  public void leftReleased( final Point p )
   {
     endPoint = p;
     perform();
   }
 
-  public void paint( Graphics g )
+  @Override
+  public void paint( final Graphics g )
   {
     if( startPoint != null && endPoint != null )
     {
@@ -104,14 +103,14 @@ public class ZoomInWidget extends AbstractWidget
       else
         dx = dy / ratio;
 
-      final int x1 = (int)( startPoint.getX() - dx );
-      final int y1 = (int)( startPoint.getY() - dy );
+      final int x1 = (int) (startPoint.getX() - dx);
+      final int y1 = (int) (startPoint.getY() - dy);
 
-      g.drawRect( x1, y1, (int)dx * 2, (int)dy * 2 );
+      g.drawRect( x1, y1, (int) dx * 2, (int) dy * 2 );
     }
   }
 
-  public void perform()
+  public void perform( )
   {
     if( startPoint != null && endPoint != null )
     {
@@ -128,7 +127,7 @@ public class ZoomInWidget extends AbstractWidget
       else
         dx = dy / ratio;
 
-      GM_Envelope zoomBox = getDragbox( (int)startPoint.getX(), (int)startPoint.getY(), (int)dx );
+      GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
 
       startPoint = null;
       endPoint = null;

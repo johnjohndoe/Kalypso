@@ -67,29 +67,32 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 public class MetadocExtensions
 {
   private static final String TARGETS_EXTENSION_POINT = "org.kalypso.metadoc.exportTarget";
+
   private static final String EXPORTERS_EXTENSION_POINT = "org.kalypso.metadoc.exporter";
-  
+
   private static Map m_exporters = null;
+
   private static Map m_targets = null;
 
-  private MetadocExtensions()
-  {}
+  private MetadocExtensions( )
+  {
+  }
 
   /**
    * Retrieve the {@link IExportTarget} extensions
    */
-  public static IExportTarget[] retrieveTargets() throws CoreException
+  public static IExportTarget[] retrieveTargets( ) throws CoreException
   {
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( TARGETS_EXTENSION_POINT );
-    final Vector items = new Vector();
-    final List stati = new ArrayList();
+    final Vector<IExportTarget> items = new Vector<IExportTarget>();
+    final List<IStatus> stati = new ArrayList<IStatus>();
     for( int i = 0; i < elements.length; i++ )
     {
       IConfigurationElement element = elements[i];
 
       try
       {
-        final IExportTarget target = (IExportTarget)element.createExecutableExtension( "class" );
+        final IExportTarget target = (IExportTarget) element.createExecutableExtension( "class" );
         items.add( target );
       }
       catch( final CoreException e )
@@ -100,10 +103,9 @@ public class MetadocExtensions
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, (IStatus[])stati
-          .toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) );
+      throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) );
 
-    return (IExportTarget[])items.toArray( new IExportTarget[items.size()] );
+    return items.toArray( new IExportTarget[items.size()] );
   }
 
   /**
@@ -114,8 +116,8 @@ public class MetadocExtensions
     if( m_exporters == null )
       m_exporters = retrieveExporterInHash( EXPORTERS_EXTENSION_POINT );
 
-    final IConfigurationElement element = (IConfigurationElement)m_exporters.get( id );
-    return (IExporter)element.createExecutableExtension( "class" );
+    final IConfigurationElement element = (IConfigurationElement) m_exporters.get( id );
+    return (IExporter) element.createExecutableExtension( "class" );
   }
 
   /**
@@ -123,16 +125,16 @@ public class MetadocExtensions
    */
   private static Map retrieveExporterInHash( final String extensionPointId )
   {
-    final HashMap map = new HashMap();
-    
+    final HashMap<String, IConfigurationElement> map = new HashMap<String, IConfigurationElement>();
+
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( extensionPointId );
     for( int i = 0; i < elements.length; i++ )
     {
       final IConfigurationElement element = elements[i];
-      
+
       map.put( element.getAttribute( "id" ), element );
     }
-    
+
     return map;
   }
 
@@ -150,7 +152,7 @@ public class MetadocExtensions
 
     final IExtension[] extensions = extensionPoint.getExtensions();
 
-    final Vector items = new Vector();
+    final Vector<IConfigurationElement> items = new Vector<IConfigurationElement>();
 
     for( int i = 0; i < extensions.length; i++ )
     {
@@ -161,7 +163,7 @@ public class MetadocExtensions
         items.add( elements[j] );
     }
 
-    return (IConfigurationElement[])items.toArray( new IConfigurationElement[items.size()] );
+    return items.toArray( new IConfigurationElement[items.size()] );
   }
 
   /**
@@ -172,7 +174,7 @@ public class MetadocExtensions
     if( m_targets == null )
       m_targets = retrieveExporterInHash( TARGETS_EXTENSION_POINT );
 
-    final IConfigurationElement element = (IConfigurationElement)m_targets.get( id );
-    return (IExportTarget)element.createExecutableExtension( "class" );
+    final IConfigurationElement element = (IConfigurationElement) m_targets.get( id );
+    return (IExportTarget) element.createExecutableExtension( "class" );
   }
 }

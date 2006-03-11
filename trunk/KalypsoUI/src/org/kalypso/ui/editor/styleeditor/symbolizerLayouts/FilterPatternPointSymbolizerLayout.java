@@ -91,7 +91,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
     this.symbolizerIndex = m_symbolizerIndex;
   }
 
-  public void draw() throws FilterEvaluationException
+  @Override
+  public void draw( ) throws FilterEvaluationException
   {
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;

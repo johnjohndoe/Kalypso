@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
@@ -44,7 +45,6 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
  */
 public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOperationActionDelegate
 {
-
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
@@ -55,15 +55,15 @@ public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOpera
     {
       if( m_selection instanceof TreeSelection )
       {
-        Object firstElement = m_selection.getFirstElement();
-        PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
+        final Object firstElement = m_selection.getFirstElement();
+        final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
         if( firstElement instanceof ComplexFilter )
           ((ComplexFilter) firstElement).setOperation( operation );
         else if( firstElement instanceof LogicalOperation )
         {
-          ArrayList arguments = ((LogicalOperation) firstElement).getArguments();
+          ArrayList<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
           if( arguments == null )
-            arguments = new ArrayList();
+            arguments = new ArrayList<Operation>();
           arguments.add( operation );
           ((LogicalOperation) firstElement).setArguments( arguments );
         }

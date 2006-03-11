@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -64,22 +64,21 @@ public class RemoveRuleAction2 implements IActionDelegate
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate)action;
+      PluginMapOutlineActionDelegate outlineaction = (PluginMapOutlineActionDelegate) action;
       GisMapOutlineViewer viewer = outlineaction.getOutlineviewer();
-      Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
+      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof RuleTreeObject )
       {
-        RuleTreeObject obj = (RuleTreeObject)o;
+        RuleTreeObject obj = (RuleTreeObject) o;
         KalypsoUserStyle userStyle = obj.getStyle();
         userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
 
-        IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         StyleEditorViewPart part;
         try
         {
-          part = (StyleEditorViewPart)window.getActivePage().showView(
-              "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+          part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
           if( part != null )
           {
             part.setSelectionChangedProvider( viewer );
@@ -104,7 +103,7 @@ public class RemoveRuleAction2 implements IActionDelegate
 
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection s = (IStructuredSelection)selection;
+      final IStructuredSelection s = (IStructuredSelection) selection;
 
       if( s.getFirstElement() instanceof RuleTreeObject )
         bEnable = true;

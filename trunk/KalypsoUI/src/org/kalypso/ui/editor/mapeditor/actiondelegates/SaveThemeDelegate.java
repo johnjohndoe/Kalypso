@@ -90,6 +90,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
 
         final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
         {
+          @Override
           protected void execute( final IProgressMonitor monitor ) throws CoreException
           {
             editor.saveTheme( theme, monitor );
@@ -118,6 +119,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
     refreshAction( null );
   }
 
+  @Override
   protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;

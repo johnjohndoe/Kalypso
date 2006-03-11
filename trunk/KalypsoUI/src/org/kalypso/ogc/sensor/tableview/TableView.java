@@ -49,9 +49,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -63,22 +63,24 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 public class TableView extends ObsView
 {
   private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
+
   private boolean m_alphaSort;
 
   /**
    * @see org.kalypso.ogc.sensor.template.ObsView#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return "Tabelle";
   }
 
-  public ITableViewRules getRules()
+  public ITableViewRules getRules( )
   {
     return m_rules;
   }
 
-  public boolean isAlphaSort()
+  public boolean isAlphaSort( )
   {
     return m_alphaSort;
   }
@@ -97,6 +99,7 @@ public class TableView extends ObsView
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
    *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
+  @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
     final List ignoreTypeList = getIgnoreTypesAsList();
@@ -127,9 +130,7 @@ public class TableView extends ObsView
 
           if( !ignoreTypeList.contains( valueAxis.getType() ) )
           {
-            final TableViewColumn col = new TableViewColumn( this, provider.copy(), ObsViewUtils.replaceTokens(
-                tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils
-                .getDefaultFormatString( valueAxis.getType() ) );
+            final TableViewColumn col = new TableViewColumn( this, provider.copy(), ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
 
             addItem( col );
           }

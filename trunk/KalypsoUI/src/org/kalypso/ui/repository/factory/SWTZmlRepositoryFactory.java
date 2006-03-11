@@ -59,7 +59,8 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository()
+  @Override
+  public boolean configureRepository( )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 

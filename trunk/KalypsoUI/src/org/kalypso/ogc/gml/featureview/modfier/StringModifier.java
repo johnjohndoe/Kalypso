@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,14 +91,16 @@ public class StringModifier implements IFeatureModifier
     m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
   }
 
-  public NumberFormat getNumberFormat( PropertyType ftp )
+  public NumberFormat getNumberFormat( final PropertyType ftp )
   {
-    // HACK
+    // HACK: TODO: either put this into the IGuiTypeHandler or
+    // maybe even in the appinfo of the schema
     final String namespace = ftp.getNamespace();
     final String name = ftp.getName();
     final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
 //    ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
+    
     if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
     {
       if( "flaech".equals( name ) )

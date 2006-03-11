@@ -58,7 +58,8 @@ public class BinaryComparisonData extends AbstractComparisonData
     this.literal = m_literal;
   }
 
-  public boolean verify()
+  @Override
+  public boolean verify( )
   {
     if( literal != null && propertyName != null )
       return true;

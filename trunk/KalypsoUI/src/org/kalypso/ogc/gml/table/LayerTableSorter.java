@@ -87,6 +87,7 @@ public class LayerTableSorter extends ViewerSorter
     m_propertyName = propertyName;
   }
 
+  @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
     final Feature kf1 = (Feature) e1;
@@ -132,6 +133,7 @@ public class LayerTableSorter extends ViewerSorter
     return 0;
   }
 
+  @Override
   public boolean isSorterProperty( Object element, String property )
   {
     return property.equals( m_propertyName );

@@ -82,12 +82,14 @@ public class NOperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
+  @Override
   public void initFilter( Object conf, IObservation baseObs, URL context ) throws SensorException
   {
     super.initFilter( null, baseObs, context );
     m_innerObservations = (IObservation[])conf;
   }
 
+  @Override
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
@@ -96,6 +98,7 @@ public class NOperationFilter extends AbstractObservationFilter
     return new NOperationTupplemodel( models, m_operation );
   }
 
+  @Override
   public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );

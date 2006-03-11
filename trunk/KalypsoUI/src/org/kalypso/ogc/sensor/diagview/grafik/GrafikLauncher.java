@@ -127,9 +127,9 @@ public class GrafikLauncher
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
 
-  private GrafikLauncher()
+  private GrafikLauncher( )
   {
-  // no instanciation
+    // no instanciation
   }
 
   /**
@@ -137,11 +137,9 @@ public class GrafikLauncher
    * WorkspaceModifyOperation.
    * 
    * @return the created tpl file
-   * 
    * @throws SensorException
    */
-  public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor )
-      throws SensorException
+  public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
   {
     final Obsdiagview odt;
     try
@@ -160,8 +158,7 @@ public class GrafikLauncher
   /**
    * Open the grafik tool using a zml file.
    */
-  public static IStatus startGrafikZML( final IFile zmlFile, final IFolder dest, final IProgressMonitor monitor )
-      throws SensorException
+  public static IStatus startGrafikZML( final IFile zmlFile, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
   {
     final DiagView diag = new DiagView( zmlFile.getName(), "Legende", true );
 
@@ -192,13 +189,11 @@ public class GrafikLauncher
    *          the filename to use for the grafik template file
    * @param odt
    *          the xml binding object
-   * 
    * @throws SensorException
    */
-  public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest,
-      final IProgressMonitor monitor ) throws SensorException
+  public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
   {
-    List sync = new Vector();
+    final List<RememberForSync> sync = new Vector<RememberForSync>();
     StringWriter strWriter = null;
     try
     {
@@ -223,6 +218,7 @@ public class GrafikLauncher
       // which uses it when reading...
       final SetContentHelper sch = new SetContentHelper( "Datei Konvertierung - Grafik öffnen" )
       {
+        @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           writer.write( schWriter.toString() );
@@ -253,7 +249,6 @@ public class GrafikLauncher
    * 
    * @param tplFile
    *          the Grafik-Vorlage
-   * 
    * @throws SensorException
    */
   public static IStatus startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
@@ -272,29 +267,29 @@ public class GrafikLauncher
     {
       final File grafikExe = getGrafikProgramPath();
 
-      final Process proc = Runtime.getRuntime().exec(
-          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
+      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
 
-      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Grafik kann nicht gestartet werden" );
+      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Grafik kann nicht gestartet werden" );
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
-        public void processCanceled()
+        @Override
+        public void processCanceled( )
         {
-        // empty
+          // empty
         }
 
+        @Override
         public void processTerminated( final int returnCode )
         {
           synchroniseZml();
         }
 
-        private void synchroniseZml()
+        private void synchroniseZml( )
         {
           for( final Iterator it = sync.iterator(); it.hasNext(); )
           {
-            final RememberForSync rfs = (RememberForSync)it.next();
+            final RememberForSync rfs = (RememberForSync) it.next();
 
             try
             {
@@ -304,8 +299,7 @@ public class GrafikLauncher
             {
               e.printStackTrace();
 
-              ms.addMessage( "Synchronisation von " + rfs.getDatFile().getName() + " in " + rfs.getZmlFile().getName(),
-                  e );
+              ms.addMessage( "Synchronisation von " + rfs.getDatFile().getName() + " in " + rfs.getZmlFile().getName(), e );
             }
           }
         }
@@ -326,22 +320,18 @@ public class GrafikLauncher
    * Return the file representing the Grafik Program. Since the Grafik.exe is located in the resources of this plugin,
    * it must first be extracted into a temp file in the local file system.
    */
-  public static File getGrafikProgramPath() throws IOException
+  public static File getGrafikProgramPath( ) throws IOException
   {
     // create the grafik exe
-    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class
-        .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
+    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
-    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe
-        .getName() )
-        + ".hlp" );
+    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" );
     grafikHelp.deleteOnExit();
     if( !grafikHelp.exists() )
     {
-      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class
-          .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
+      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
 
       // the help must have the same name as the exe (except file-extension)
       FileUtils.copyFile( tmp, grafikHelp );
@@ -359,8 +349,7 @@ public class GrafikLauncher
    * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
    * explicitely specified in the xml.
    */
-  private static IStatus odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer,
-      final IProgressMonitor monitor, final List sync ) throws CoreException, IOException
+  private static IStatus odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer, final IProgressMonitor monitor, final List<RememberForSync> sync ) throws CoreException, IOException
   {
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );
@@ -373,16 +362,15 @@ public class GrafikLauncher
     Date xUpper = null;
     Number yLower = new Double( Double.MAX_VALUE );
     Number yUpper = new Double( Double.MIN_VALUE );
-    final Set xLines = new TreeSet();
-    final Map yLines = new HashMap();
+    final Set<XLine> xLines = new TreeSet<XLine>();
+    final Map<Double, ValueAndColor> yLines = new HashMap<Double, ValueAndColor>();
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
 
-    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-        "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
-    
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
+
     int cc = 1;
-    final TypeObservation[] tobs = (TypeObservation[])odt.getObservation().toArray( new TypeObservation[0] );
+    final TypeObservation[] tobs = odt.getObservation().toArray( new TypeObservation[0] );
     for( int i = 0; i < tobs.length; i++ )
     {
       if( monitor.isCanceled() )
@@ -396,8 +384,7 @@ public class GrafikLauncher
       // maybe make a better test later?
       if( zmlFile == null )
       {
-        final String msg = "Konvertierung nicht möglich, Zml-Datei ist möglicherweise keine lokale Datei: "
-            + url.toExternalForm();
+        final String msg = "Konvertierung nicht möglich, Zml-Datei ist möglicherweise keine lokale Datei: " + url.toExternalForm();
         logger.warning( msg );
         multiStatus.addMessage( msg );
         continue;
@@ -416,8 +403,7 @@ public class GrafikLauncher
       }
       catch( final Exception e )
       {
-        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: " + zmlFile.getName() + " Grund: "
-            + e.getLocalizedMessage();
+        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: " + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
         logger.warning( msg );
         multiStatus.addMessage( msg, e );
         continue;
@@ -432,16 +418,15 @@ public class GrafikLauncher
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
       final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes, Number.class, true );
 
-      final List displayedAxes = new ArrayList( numberAxes.length );
+      final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
 
       final List curves = tobs[i].getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
-        final TypeCurve tc = (TypeCurve)itc.next();
+        final TypeCurve tc = (TypeCurve) itc.next();
 
         // create a corresponding dat-File for the current observation file
-        final IFile datFile = dest
-            .getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
+        final IFile datFile = dest.getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -462,9 +447,9 @@ public class GrafikLauncher
 
           final DoubleComparator dc = new DoubleComparator( 0.001 );
           if( dc.compare( range.getLower(), yLower ) < 0 )
-            yLower = (Number)range.getLower();
+            yLower = (Number) range.getLower();
           if( dc.compare( range.getUpper(), yUpper ) > 0 )
-            yUpper = (Number)range.getUpper();
+            yUpper = (Number) range.getUpper();
         }
         catch( final SensorException e )
         {
@@ -476,8 +461,8 @@ public class GrafikLauncher
       {
         // fetch X axis range for placing possible scenario text item
         final IAxisRange range = values.getRangeFor( dateAxis );
-        final Date d1 = (Date)range.getLower();
-        final Date d2 = (Date)range.getUpper();
+        final Date d1 = (Date) range.getLower();
+        final Date d2 = (Date) range.getUpper();
 
         if( xLower == null || d1.before( xLower ) )
           xLower = d1;
@@ -515,16 +500,14 @@ public class GrafikLauncher
       // W-axis
       try
       {
-        ObservationUtilities.findAxisByType( (IAxis[])displayedAxes.toArray( new IAxis[displayedAxes.size()] ),
-            TimeserieConstants.TYPE_WATERLEVEL );
+        ObservationUtilities.findAxisByType( displayedAxes.toArray( new IAxis[displayedAxes.size()] ), TimeserieConstants.TYPE_WATERLEVEL );
 
         final MetadataList mdl = obs.getMetadataList();
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( int j = 0; j < mds.length; j++ )
         {
           final Double value = new Double( mdl.getProperty( mds[j] ) );
-          yLines.put( value, new ValueAndColor( mds[j] + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(),
-              null ) );
+          yLines.put( value, new ValueAndColor( mds[j] + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
         }
       }
       catch( NoSuchElementException e )
@@ -545,10 +528,11 @@ public class GrafikLauncher
     // Scenario stuff as free text items
     if( scenarioName != null )
     {
-      final double xPos = ( xUpper.getTime() - xLower.getTime() ) / 60000 / 2;
-      final double yPos = ( yUpper.doubleValue() - yLower.doubleValue() ) / 2;
+      final double xPos = (xUpper.getTime() - xLower.getTime()) / 60000 / 2;
+      final double yPos = (yUpper.doubleValue() - yLower.doubleValue()) / 2;
       writer.write( "Text1: " + xPos + " " + yPos + " 0 " + scenarioName + "\n" );
-      writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text items
+      writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text
+      // items
     }
 
     // constant vertical lines...
@@ -562,7 +546,7 @@ public class GrafikLauncher
     // constant horizontal lines...
     for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
     {
-      final ValueAndColor vac = (ValueAndColor)yLines.get( it.next() );
+      final ValueAndColor vac = yLines.get( it.next() );
       writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
     }
     yLines.clear();
@@ -573,11 +557,11 @@ public class GrafikLauncher
   /**
    * Converts a zml file to a dat file that the grafik tool can load.
    */
-  private static IStatus zml2dat( final ITuppleModel values, final IFile datFile, final IAxis dateAxis,
-      final IAxis axis, final IProgressMonitor monitor ) throws CoreException
+  private static IStatus zml2dat( final ITuppleModel values, final IFile datFile, final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper( ".zml --> .dat Konvertierung" )
     {
+      @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         for( int i = 0; i < values.getCount(); i++ )
@@ -626,6 +610,7 @@ public class GrafikLauncher
   private final static class XLine implements Comparable
   {
     public final String label;
+
     public final String strDate;
 
     public XLine( final String lbl, final String strdate )
@@ -634,14 +619,15 @@ public class GrafikLauncher
       strDate = strdate;
     }
 
-    public String toString()
+    @Override
+    public String toString( )
     {
       return strDate;
     }
 
     public int compareTo( Object o )
     {
-      return strDate.compareTo( ( (XLine)o ).strDate );
+      return strDate.compareTo( ((XLine) o).strDate );
     }
   }
 }

@@ -66,11 +66,15 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 public class InterpolationFilterTest extends TestCase
 {
   private final static SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+
   private IObservation m_obs;
+
   private IAxis m_dateAxis;
+
   private IAxis m_valueAxis;
 
-  protected void setUp() throws Exception
+  @Override
+  protected void setUp( ) throws Exception
   {
     super.setUp();
 
@@ -84,15 +88,14 @@ public class InterpolationFilterTest extends TestCase
     assertNotNull( m_valueAxis );
   }
 
-  public void testGetValues() throws SensorException, ParseException
+  public void testGetValues( ) throws SensorException, ParseException
   {
     final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0, true );
     filter.initFilter( null, m_obs, null );
 
     // test with same date-range
     final ITuppleModel m1 = filter.getValues( null );
-    verifyTuppleModel( m1, sdf.parse( "2004-11-23 13:00:00" ), sdf.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ),
-        new Double( 37.0 ) );
+    verifyTuppleModel( m1, sdf.parse( "2004-11-23 13:00:00" ), sdf.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ), new Double( 37.0 ) );
 
     // test with bigger date-range
     final Date from2 = sdf.parse( "2004-11-23 10:00:00" );
@@ -107,24 +110,23 @@ public class InterpolationFilterTest extends TestCase
     verifyTuppleModel( m3, from3, to3, new Double( 55 ), new Double( 37.0 ) );
   }
 
-  private void verifyTuppleModel( final ITuppleModel m, final Date from, final Date to, final Double firstValue,
-      final Double lastValue ) throws SensorException
+  private void verifyTuppleModel( final ITuppleModel m, final Date from, final Date to, final Double firstValue, final Double lastValue ) throws SensorException
   {
     final Calendar cal = Calendar.getInstance();
     cal.setTime( from );
-    int i=0;
+    int i = 0;
     while( cal.getTime().before( to ) )
     {
       i++;
       cal.add( Calendar.HOUR_OF_DAY, 1 );
     }
     i++;
-    
+
     assertEquals( i, m.getCount() );
-    
+
     assertEquals( from, m.getElement( 0, m_dateAxis ) );
-    assertEquals( firstValue.doubleValue(), ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( firstValue.doubleValue(), ((Number) m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
     assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
-    assertEquals( lastValue.doubleValue(), ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( lastValue.doubleValue(), ((Number) m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
   }
 }

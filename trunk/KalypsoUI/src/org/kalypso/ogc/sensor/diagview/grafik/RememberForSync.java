@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -76,6 +75,7 @@ final class RememberForSync
     return m_modificationStamp == m_datFile.getModificationStamp();
   }
 
+  @Override
   public String toString()
   {
     return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-" + m_zmlFile.getName() + " Axis:" + m_numberAxis;
@@ -115,7 +115,7 @@ final class RememberForSync
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      final List axisList = Arrays.copyAsList( axes );
+      final List axisList = java.util.Arrays.asList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
 
@@ -160,6 +160,7 @@ final class RememberForSync
 
       SetContentHelper helper = new SetContentHelper()
       {
+        @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           ZmlFactory.getMarshaller().marshal( xml, writer );

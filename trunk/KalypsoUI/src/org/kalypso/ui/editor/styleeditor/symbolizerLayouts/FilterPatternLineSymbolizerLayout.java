@@ -65,12 +65,9 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
- *  
  */
-
 public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
   private int selectionIndex = 0;
 
   private RuleCollection ruleCollection = null;
@@ -79,15 +76,15 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
 
   ColorPalettePanel colorPalettePanel = null;
 
-  public FilterPatternLineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle, RuleCollection m_ruleCollection, int m_symbolizerIndex )
+  public FilterPatternLineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle, RuleCollection m_ruleCollection, int m_symbolizerIndex )
   {
     super( m_composite, m_symbolizer, m_userStyle );
     this.ruleCollection = m_ruleCollection;
     this.symbolizerIndex = m_symbolizerIndex;
   }
 
-  public void draw() throws FilterEvaluationException
+  @Override
+  public void draw( ) throws FilterEvaluationException
   {
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
@@ -100,30 +97,29 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     group.setLayout( compositeLayout );
     group.layout();
 
-    final LineSymbolizer lineSymbolizer = (LineSymbolizer)symbolizer;
+    final LineSymbolizer lineSymbolizer = (LineSymbolizer) symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();
 
-    SliderPanel strokeWidthPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
-        SliderPanel.INTEGER, stroke.getWidth( null ) );
+    SliderPanel strokeWidthPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1, SliderPanel.INTEGER, stroke.getWidth( null ) );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
       if( symb instanceof LineSymbolizer )
       {
-        ( (LineSymbolizer)symb ).getStroke().setWidth( stroke.getWidth( null ) );
+        ((LineSymbolizer) symb).getStroke().setWidth( stroke.getWidth( null ) );
       }
     }
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double width = ( (SliderPanel)event.getSource() ).getSelection();
+        double width = ((SliderPanel) event.getSource()).getSelection();
         for( int i = 0; i < getRuleCollection().size(); i++ )
         {
           Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
           if( symb instanceof LineSymbolizer )
           {
-            ( (LineSymbolizer)symb ).getStroke().setWidth( width );
+            ((LineSymbolizer) symb).getStroke().setWidth( width );
           }
         }
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -137,7 +133,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
       if( symb instanceof LineSymbolizer )
       {
-        java.awt.Color color = ( (LineSymbolizer)symb ).getStroke().getStroke( null );
+        java.awt.Color color = ((LineSymbolizer) symb).getStroke().getStroke( null );
         colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
       }
     }
@@ -152,8 +148,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
         Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof LineSymbolizer )
         {
-          ( (LineSymbolizer)symb ).getStroke().setStroke(
-              new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
+          ((LineSymbolizer) symb).getStroke().setStroke( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
         }
       }
 
@@ -168,8 +163,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
             Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof LineSymbolizer )
             {
-              ( (LineSymbolizer)symb ).getStroke().setStroke(
-                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
+              ((LineSymbolizer) symb).getStroke().setStroke( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -180,7 +174,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
       colorPalettePanel.draw( composite );
   }
 
-  public int getSelectionIndex()
+  public int getSelectionIndex( )
   {
     return selectionIndex;
   }
@@ -190,7 +184,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     this.selectionIndex = m_selectionIndex;
   }
 
-  public int getSymbolizerIndex()
+  public int getSymbolizerIndex( )
   {
     return symbolizerIndex;
   }
@@ -200,7 +194,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     this.symbolizerIndex = m_symbolizerIndex;
   }
 
-  public RuleCollection getRuleCollection()
+  public RuleCollection getRuleCollection( )
   {
     return ruleCollection;
   }

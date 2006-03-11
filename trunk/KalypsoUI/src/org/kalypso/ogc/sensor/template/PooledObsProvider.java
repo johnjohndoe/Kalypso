@@ -60,7 +60,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 {
   private boolean m_isDisposed = false;
 
-  private final List m_listeners = new ArrayList();
+  private final List<IObsProviderListener> m_listeners = new ArrayList<IObsProviderListener>();
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
@@ -78,14 +78,14 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     m_pool.addPoolListener( this, key );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_isDisposed = true;
-    
+
     m_pool.removePoolListener( this );
   }
 
-  public IObservation getObservation()
+  public IObservation getObservation( )
   {
     return m_observation;
   }
@@ -110,7 +110,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( !m_isDisposed )
-      setObservation( (IObservation)newValue );
+      setObservation( (IObservation) newValue );
   }
 
   private void setObservation( final IObservation obs )
@@ -122,13 +122,13 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     }
   }
 
-  public void fireChanged()
+  public void fireChanged( )
   {
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
       for( int i = 0; i < listeners.length; i++ )
-        ( (IObsProviderListener)listeners[i] ).obsProviderChanged();
+        ((IObsProviderListener) listeners[i]).obsProviderChanged();
     }
   }
 
@@ -151,7 +151,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
-  public IRequest getArguments()
+  public IRequest getArguments( )
   {
     return m_args;
   }
@@ -159,7 +159,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
-  public IObsProvider copy()
+  public IObsProvider copy( )
   {
     return new PooledObsProvider( m_key, m_args );
   }
@@ -167,7 +167,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
-  public boolean isDisposed()
+  public boolean isDisposed( )
   {
     return m_isDisposed;
   }

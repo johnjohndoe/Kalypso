@@ -16,6 +16,7 @@ public class SetBottomAction extends AbstractObservationTableAction
     super( table, "Werte unterhalb setzen", "Führt den selektierten Wert für alle nachfolgenden fort" );
   }
 
+  @Override
   public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();

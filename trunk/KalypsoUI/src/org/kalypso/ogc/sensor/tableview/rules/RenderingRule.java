@@ -66,8 +66,7 @@ public class RenderingRule
 
   private final Icon m_icon;
 
-  public RenderingRule( final int mask, final Color fg, final Color bg, final Font font, final String tt,
-      final Icon icon )
+  public RenderingRule( final int mask, final Color fg, final Color bg, final Font font, final String tt, final Icon icon )
   {
     m_mask = mask;
     m_fg = fg;
@@ -77,32 +76,32 @@ public class RenderingRule
     m_icon = icon;
   }
 
-  public Color getForegroundColor()
+  public Color getForegroundColor( )
   {
     return m_fg;
   }
 
-  public Color getBackgroundColor()
+  public Color getBackgroundColor( )
   {
     return m_bg;
   }
 
-  public String getTooltipText()
+  public String getTooltipText( )
   {
     return m_tt;
   }
 
-  public Font getFont()
+  public Font getFont( )
   {
     return m_ft;
   }
 
-  public int getMask()
+  public int getMask( )
   {
     return m_mask;
   }
 
-  public Icon getIcon()
+  public Icon getIcon( )
   {
     return m_icon;
   }
@@ -118,14 +117,15 @@ public class RenderingRule
   {
     if( m_mask == 0 || mask == 0 )
       return mask == m_mask;
-    
-    return ( m_mask & mask ) == mask;
+
+    return (m_mask & mask) == mask;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return m_mask + " - " + m_tt == null ? "" : m_tt;
   }

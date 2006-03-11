@@ -50,11 +50,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -108,6 +105,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private final String m_tokens;
 
   private final File m_targetobservationDir;
+
+  private static final ObjectFactory OF = new ObjectFactory();
 
   /**
    * @param context
@@ -246,14 +245,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   }
 
   /**
-   * 
    * @param f
    */
-  private TimeseriesLinkType getTargetLink( Feature f )
+  private TimeseriesLinkType getTargetLink( final Feature f )
   {
     if( m_targetobservationDir != null )
     {
-      final ObjectFactory factory = new ObjectFactory();
       String name = (String)f.getProperty( "name" );
       if( name == null || name.length() < 1 )
         name = f.getId();
@@ -261,7 +258,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         name = "generated";
       final File file = getValidFile( name, 0 );
       final TimeseriesLinkType link;
-      link = factory.createTimeseriesLinkType();
+      link = OF.createTimeseriesLinkType();
       final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
       final File contextFile = contextIFile.getLocation().toFile();
       final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
@@ -293,7 +290,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private IObservation[] getObservations( final Feature f ) throws SensorException
   {
-    List result = new ArrayList();
+    final List<IObservation> result = new ArrayList<IObservation>();
     //    final IObservation[] obses = new IObservation[m_sources.length];
     for( int i = 0; i < m_sources.length; i++ )
     {
@@ -314,7 +311,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       }
     }
 
-    return (IObservation[])result.toArray( new IObservation[result.size()] );
+    return result.toArray( new IObservation[result.size()] );
   }
 
   private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from,

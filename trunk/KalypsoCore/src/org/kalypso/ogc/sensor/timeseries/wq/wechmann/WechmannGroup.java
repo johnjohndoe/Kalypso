@@ -57,14 +57,13 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
  */
 public class WechmannGroup implements IWQConverter
 {
-  private final SortedMap m_map;
+  private final SortedMap<Date, WechmannSet> m_map = new TreeMap<Date, WechmannSet>();
 
   /**
    * @param wsets
    */
   public WechmannGroup( final WechmannSet[] wsets )
   {
-    m_map = new TreeMap();
     for( int i = 0; i < wsets.length; i++ )
       m_map.put( wsets[i].getValidity(), wsets[i] );
   }
@@ -72,27 +71,28 @@ public class WechmannGroup implements IWQConverter
   /**
    * @return Iterator on the WechmannSet objects
    */
-  public Iterator iterator()
+  public Iterator iterator( )
   {
     return m_map.values().iterator();
   }
 
   /**
    * Returns the WechmannSet that is valid for the given date.
+   * 
    * @throws WQException
    */
   public WechmannSet getFor( final Date d ) throws WQException
   {
-    final Date[] dates = (Date[])m_map.keySet().toArray( new Date[0] );
+    final Date[] dates = m_map.keySet().toArray( new Date[0] );
     int i = Arrays.binarySearch( dates, d );
 
     if( i < 0 )
       i = -i - 2;
 
     if( i < 0 )
-      throw new WQException("Fuer diesen Zeitpunkt ist keine WQ-Beziehung definiert");
+      throw new WQException( "Fuer diesen Zeitpunkt ist keine WQ-Beziehung definiert" );
 
-    return (WechmannSet)m_map.get( dates[i] );
+    return m_map.get( dates[i] );
   }
 
   /**

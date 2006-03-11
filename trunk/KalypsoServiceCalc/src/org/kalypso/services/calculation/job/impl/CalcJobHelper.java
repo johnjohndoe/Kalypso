@@ -64,10 +64,10 @@ public class CalcJobHelper
 
   public static CalcJobClientBean[] getMergedBeans( CalcJobClientBean[] initialBeans, CalcJobClientBean[] beansToAdd )
   {
-    final Hashtable result = new Hashtable();
+    final Hashtable<String, CalcJobClientBean> result = new Hashtable<String, CalcJobClientBean>();
     for( int i = 0; i < initialBeans.length; i++ )
     {
-      CalcJobClientBean bean = initialBeans[i];
+      final CalcJobClientBean bean = initialBeans[i];
       result.put( bean.getId(), bean );
     }
     for( int i = 0; i < beansToAdd.length; i++ )
@@ -75,7 +75,7 @@ public class CalcJobHelper
       CalcJobClientBean bean = beansToAdd[i];
       result.put( bean.getId(), bean );
     }
-    return (CalcJobClientBean[])result.values().toArray( new CalcJobClientBean[result.size()] );
+    return result.values().toArray( new CalcJobClientBean[result.size()] );
   }
 
   public static CalcJobClientBean[] createBeansForNewBaseDir( CalcJobClientBean[] beans, File baseDirOrg,

@@ -85,6 +85,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
    * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
    *      java.lang.Object)
    */
+  @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
     final IObservation obs = (IObservation)newValue;
@@ -99,7 +100,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       final TypeCurve tcurve = (TypeCurve)it.next();
 
       final List tmaps = tcurve.getMapping();
-      final List mappings = new ArrayList( tmaps.size() );
+      final List<AxisMapping> mappings = new ArrayList<AxisMapping>( tmaps.size() );
 
       boolean useThisCurve = true;
 
@@ -150,7 +151,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
         if( color == null )
         {
-          final IAxis axis = DiagViewUtils.getValueAxis( (AxisMapping[])mappings.toArray( new AxisMapping[mappings
+          final IAxis axis = DiagViewUtils.getValueAxis( mappings.toArray( new AxisMapping[mappings
               .size()] ) );
           if( axis != null )
             color = TimeserieUtils.getColorFor( axis.getType() );
@@ -164,8 +165,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
             : new PooledObsProvider( key, null );
 
-        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
-            .toArray( new AxisMapping[0] ) );
+        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );
 
         view.addItem( curve );

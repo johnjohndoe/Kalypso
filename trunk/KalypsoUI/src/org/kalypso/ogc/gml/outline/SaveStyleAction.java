@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.outline;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.transform.OutputKeys;
@@ -94,6 +93,7 @@ public class SaveStyleAction extends AbstractOutlineAction
    * @see org.eclipse.jface.action.Action#run()
    */
 
+  @Override
   public void run( )
   {
     Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
@@ -126,7 +126,6 @@ public class SaveStyleAction extends AbstractOutlineAction
       }
       catch( Exception e1 )
       {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     }
@@ -161,6 +160,7 @@ public class SaveStyleAction extends AbstractOutlineAction
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
           final SetContentHelper thread = new SetContentHelper()
           {
+            @Override
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
 
@@ -190,11 +190,11 @@ public class SaveStyleAction extends AbstractOutlineAction
     }
     catch( Exception e )
     {
-      // TODO error handling
       e.printStackTrace();
     }
   }
 
+  @Override
   protected final void refresh( )
   {
     boolean bEnable = false;

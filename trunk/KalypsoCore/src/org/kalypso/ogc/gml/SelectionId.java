@@ -60,7 +60,8 @@ public class SelectionId
     return myId;
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
     return myName;
   }

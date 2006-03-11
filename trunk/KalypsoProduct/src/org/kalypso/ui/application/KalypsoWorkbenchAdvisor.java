@@ -111,6 +111,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getInitialWindowPerspectiveId()
    */
+  @Override
   public String getInitialWindowPerspectiveId()
   {
     return IKalypsoSimulationUIConstants.PROGNOSE_PERSPECTIVE;
@@ -120,6 +121,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#fillActionBars(org.eclipse.ui.IWorkbenchWindow,
    *      org.eclipse.ui.application.IActionBarConfigurer, int)
    */
+  @Override
   public void fillActionBars( final IWorkbenchWindow window, final IActionBarConfigurer actionConfigurer,
       final int flags )
   {
@@ -173,6 +175,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#preWindowOpen(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
    */
+  @Override
   public void preWindowOpen( final IWorkbenchWindowConfigurer windowConfigurer )
   {
     super.preWindowOpen( windowConfigurer );
@@ -198,6 +201,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#postWindowOpen(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
    */
+  @Override
   public void postWindowOpen( final IWorkbenchWindowConfigurer configurer )
   {
     super.postWindowOpen( configurer );
@@ -225,6 +229,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
    */
+  @Override
   public void postStartup()
   {
     super.postStartup();

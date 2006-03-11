@@ -59,7 +59,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 {
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
 
-  private final Collection m_listeners = Collections.synchronizedSet( new HashSet() );
+  private final Collection<IPoolListener> m_listeners = Collections.synchronizedSet( new HashSet<IPoolListener>() );
 
   private Object m_object = null;
 
@@ -144,7 +144,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     if( oldObject != null )
     {
-      final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+      final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
 
       // TRICKY: objectInvalid may add/remove PoolListener for this key,
       // so we cannot iterate over m_listeners
@@ -156,6 +156,7 @@ public final class KeyInfo extends Job implements ILoaderListener
   /**
    * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
     Object o = null;
@@ -166,7 +167,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       o = m_object;
     }
 
-    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
     // TRICKY: objectLoaded may add a new PoolListener for this key,
     // so we cannot iterate over m_listeners
     for( int i = 0; i < ls.length; i++ )
@@ -216,6 +217,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     }
   }
 
+  @Override
   public String toString()
   {
     final StringBuffer b = new StringBuffer();
@@ -237,7 +239,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public IPoolListener[] getListeners()
   {
-    return (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    return m_listeners.toArray( new IPoolListener[m_listeners.size()] );
   }
 
   public Object getObject()

@@ -53,7 +53,7 @@ public class DefaultAxis implements IAxis
 
   private final String m_unit;
 
-  private final Class m_dataClass;
+  private final Class<?> m_dataClass;
 
   private final String m_type;
 
@@ -127,7 +127,7 @@ public class DefaultAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
    */
-  public Class getDataClass()
+  public Class<?> getDataClass()
   {
     return m_dataClass;
   }
@@ -135,6 +135,7 @@ public class DefaultAxis implements IAxis
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     if( getUnit().length() == 0 )
@@ -146,6 +147,7 @@ public class DefaultAxis implements IAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IAxis ) )
@@ -163,7 +165,8 @@ public class DefaultAxis implements IAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode()
+  @Override
+  public int hashCode( )
   {
     final StringBuffer bf = new StringBuffer();
 

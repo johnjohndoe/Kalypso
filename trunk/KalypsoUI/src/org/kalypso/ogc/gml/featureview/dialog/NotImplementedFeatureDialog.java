@@ -45,6 +45,7 @@ import java.util.Collection;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 
 /**
  * @author belger
@@ -81,7 +82,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection c )
+  public void collectChanges( final Collection<FeatureChange> c )
   {
   //
   }

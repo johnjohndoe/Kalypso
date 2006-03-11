@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -46,6 +47,7 @@ public class CreateOGCLogicalNOTOpsActionDelegate extends AbstractCreateOperatio
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
+  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
@@ -55,19 +57,19 @@ public class CreateOGCLogicalNOTOpsActionDelegate extends AbstractCreateOperatio
         Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          ComplexFilter filter = (ComplexFilter)firstElement;
-          filter.setOperation( new LogicalOperation( OperationDefines.NOT, new ArrayList() ) );
+          ComplexFilter filter = (ComplexFilter) firstElement;
+          filter.setOperation( new LogicalOperation( OperationDefines.NOT, new ArrayList<Operation>() ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          LogicalOperation operation = (LogicalOperation)firstElement;
-          //add new Logical Operation
-          ArrayList arguments = operation.getArguments();
+          LogicalOperation operation = (LogicalOperation) firstElement;
+          // add new Logical Operation
+          ArrayList<Operation> arguments = operation.getArguments();
           if( arguments == null )
-            arguments = new ArrayList();
-          arguments.add( new LogicalOperation( OperationDefines.NOT, new ArrayList() ) );
+            arguments = new ArrayList<Operation>();
+          arguments.add( new LogicalOperation( OperationDefines.NOT, new ArrayList<Operation>() ) );
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
   }

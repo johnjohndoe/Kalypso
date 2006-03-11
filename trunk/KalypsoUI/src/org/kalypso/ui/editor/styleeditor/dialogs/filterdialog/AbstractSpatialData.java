@@ -34,8 +34,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public abstract class AbstractSpatialData extends AbstractData
@@ -69,5 +67,6 @@ public abstract class AbstractSpatialData extends AbstractData
   /**
    * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
    */
-  abstract public boolean verify() throws FilterDialogException;
+  @Override
+  abstract public boolean verify( ) throws FilterDialogException;
 }

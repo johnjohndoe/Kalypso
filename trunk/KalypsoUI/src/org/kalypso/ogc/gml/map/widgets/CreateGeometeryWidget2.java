@@ -33,14 +33,12 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -72,7 +70,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class CreateGeometeryWidget2 extends AbstractWidget
 {
   // points in pixel coordinates
-  private final List m_points = new ArrayList();
+  private final List<Point> m_points = new ArrayList<Point>();
 
   // this is the point currently under the mouse
   private Point m_currentPoint = null;
@@ -122,7 +120,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    * @throws GM_Exception
    * @throws NotEnoughPointsExeption
    */
-  private GM_Object createGeometry( final List pixelArray ) throws GM_Exception, NotEnoughPointsExeption
+  private GM_Object createGeometry( final List<Point> pixelArray ) throws GM_Exception, NotEnoughPointsExeption
   {
     final Class geoClass = m_geometryProperty.getValueClass();
     if( geoClass == GeometryUtilities.getPolygonClass() && pixelArray.size() < 3 )
@@ -130,7 +128,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     if( geoClass == GeometryUtilities.getLineStringClass() && pixelArray.size() < 2 )
       throw new NotEnoughPointsExeption();
 
-    final List posArray = getPositionArray( pixelArray );
+    final List<GM_Position> posArray = getPositionArray( pixelArray );
     GM_Object result = null;
     if( geoClass == GeometryUtilities.getPolygonClass() )
       result = getPolygon( posArray );
@@ -147,17 +145,17 @@ public class CreateGeometeryWidget2 extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     if( !isValid() )
       return;
 
-    if( !m_points.isEmpty() && ((Point) m_points.get( m_points.size() - 1 )).equals( p ) )
+    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).equals( p ) )
       return;
     // first test if vaild...
-    final List testList = new ArrayList();
-    for( Iterator iter = m_points.iterator(); iter.hasNext(); )
-      testList.add( iter.next() );
+    final List<Point> testList = new ArrayList<Point>();
+    for( final Point point : m_points )
+      testList.add( point );
     testList.add( p );
 
     try
@@ -195,7 +193,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
   public void dragged( Point p )
   {
 
-    if( m_points.isEmpty() || ((Point) m_points.get( m_points.size() - 1 )).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
+    if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
       leftClicked( p );
   }
 
@@ -264,7 +262,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     final List<Integer> yArray = new ArrayList<Integer>();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      Point p = (Point) m_points.get( i );
+      Point p = m_points.get( i );
       yArray.add( new Integer( (int) p.getY() ) );
     }
     if( m_currentPoint != null )
@@ -280,7 +278,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     final List<Integer> xArray = new ArrayList<Integer>();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      final Point p = (Point) m_points.get( i );
+      final Point p = m_points.get( i );
       xArray.add( new Integer( (int) p.getX() ) );
     }
     if( m_currentPoint != null )
@@ -302,7 +300,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
         return;
       final Map<IPropertyType, Object> valueMap = new HashMap<IPropertyType, Object>();
       valueMap.put( m_geometryProperty, m_validGeometryValue );
-      final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_linkFTP, 0, valueMap, KalypsoCorePlugin.getDefault().getSelectionManager() );
+      final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_linkFTP, 0, valueMap );
       m_workspace.postCommand( command );
     }
     catch( Exception e )
@@ -313,12 +311,12 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     clear();
   }
 
-  private List getPositionArray( final List listPoints )
+  private List<GM_Position> getPositionArray( final List<Point> listPoints )
   {
-    final List positions = new ArrayList();
+    final List<GM_Position> positions = new ArrayList<GM_Position>();
     for( int i = 0; i < listPoints.size(); i++ )
     {
-      final Point p = (Point) listPoints.get( i );
+      final Point p = listPoints.get( i );
       int x = (int) p.getX();
       int y = (int) p.getY();
       final GM_Position pos = GeometryFactory.createGM_Position( m_projection.getSourceX( x ), m_projection.getSourceY( y ) );
@@ -327,18 +325,17 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     return positions;
   }
 
-  private GM_Surface getPolygon( final List posArray ) throws GM_Exception
+  private GM_Surface getPolygon( final List<GM_Position> posArray ) throws GM_Exception
   {
-
     // close the ring
     posArray.add( posArray.get( 0 ) );
-    final GM_Position[] positions = (GM_Position[]) posArray.toArray( new GM_Position[posArray.size()] );
+    final GM_Position[] positions = posArray.toArray( new GM_Position[posArray.size()] );
     return GeometryFactory.createGM_Surface( positions, null, null, m_coordinatesSystem );
   }
 
-  private GM_Curve getLineString( final List posArray ) throws GM_Exception
+  private GM_Curve getLineString( final List<GM_Position> posArray ) throws GM_Exception
   {
-    return GeometryFactory.createGM_Curve( (GM_Position[]) posArray.toArray( new GM_Position[posArray.size()] ), m_coordinatesSystem );
+    return GeometryFactory.createGM_Curve( posArray.toArray( new GM_Position[posArray.size()] ), m_coordinatesSystem );
   }
 
   /**
@@ -414,7 +411,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
         m_linkFTP = featureList.getParentFeatureTypeProperty();
         // find geometryproperty
         final IValuePropertyType[] allGeomteryProperties = m_featureType.getAllGeomteryProperties();
-        final List validGeometryFTPList = new ArrayList();
+        final List<IValuePropertyType> validGeometryFTPList = new ArrayList<IValuePropertyType>();
         for( int i = 0; i < allGeomteryProperties.length; i++ )
         {
           final IValuePropertyType property = allGeomteryProperties[i];
@@ -422,7 +419,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
             validGeometryFTPList.add( property );
         }
         if( !validGeometryFTPList.isEmpty() ) // TODO ask if .size()> 1
-          m_geometryProperty = (IValuePropertyType) validGeometryFTPList.get( 0 );
+          m_geometryProperty = validGeometryFTPList.get( 0 );
         else
           m_geometryProperty = null;
         m_valid = m_geometryProperty != null;

@@ -29,37 +29,25 @@
  */
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.awt.Graphics;
 import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class EditGeometryWidget extends AbstractWidget implements IWidget
 {
-
-  private GM_Object m_existingGeometryType;
-
   private GM_Object m_Geometry;
 
   /**
    * @param geometryClass
-   *  
    */
-
   public EditGeometryWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -98,37 +86,36 @@ public class EditGeometryWidget extends AbstractWidget implements IWidget
   public void perform()
   {
   // TODO Auto-generated method stub
-
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
+  @Override
   public void moved( Point p )
   {
-
   // TODO Auto-generated method stub
-
   }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
+  @Override
   public void dragged( Point p )
   {
     moved( p );
   }
 
-  private void drawGeometry( final Graphics g )
-  {
-    if( m_Geometry != null )
-    {
-      if( m_Geometry.equals( GeometryUtilities.getPolygonClass() ) )
-      {
-        MapPanel mapPanel = getMapPanel();
-        GeoTransform projection = mapPanel.getProjection();
-        GM_Surface geom = (GM_Surface)m_Geometry;
-      }
-    }
-  }
+//  private void drawGeometry( final Graphics g )
+//  {
+//    if( m_Geometry != null )
+//    {
+//      if( m_Geometry.equals( GeometryUtilities.getPolygonClass() ) )
+//      {
+//        MapPanel mapPanel = getMapPanel();
+//        GeoTransform projection = mapPanel.getProjection();
+//        GM_Surface geom = (GM_Surface)m_Geometry;
+//      }
+//    }
+//  }
 }

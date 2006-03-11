@@ -44,7 +44,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -63,16 +63,15 @@ public class OpenStyleDialogAction2 implements PluginMapOutlineAction
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      PluginMapOutlineActionDelegate actionDelegate = (PluginMapOutlineActionDelegate)action;
+      PluginMapOutlineActionDelegate actionDelegate = (PluginMapOutlineActionDelegate) action;
       GisMapOutlineViewer viewer = actionDelegate.getOutlineviewer();
       StyleEditorViewPart part = null;
-      IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
-      Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
+      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
       try
       {
-        part = (StyleEditorViewPart)window.getActivePage().showView(
-            "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+        part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
         if( part != null )
           part.setSelectionChangedProvider( viewer );
@@ -80,12 +79,12 @@ public class OpenStyleDialogAction2 implements PluginMapOutlineAction
         // if UserStyle selected path that on to styleeditor
         if( o instanceof ThemeStyleTreeObject )
         {
-          final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
+          final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
 
           if( part != null && theme instanceof IKalypsoFeatureTheme )
           {
-            KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-            part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
+            KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+            part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme) theme );
           }
           else
             part.initStyleEditor( null, null );
@@ -109,7 +108,7 @@ public class OpenStyleDialogAction2 implements PluginMapOutlineAction
     boolean bEnable = false;
     if( selection instanceof IStructuredSelection )
     {
-      IStructuredSelection s = (IStructuredSelection)selection;
+      IStructuredSelection s = (IStructuredSelection) selection;
       if( s.getFirstElement() instanceof ThemeStyleTreeObject )
         bEnable = true;
       action.setEnabled( bEnable );

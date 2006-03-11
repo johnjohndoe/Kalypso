@@ -78,7 +78,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class AddSymbolizerPanel
 {
@@ -141,7 +140,7 @@ public class AddSymbolizerPanel
     m_listenerList.add( PanelListener.class, pl );
   }
 
-  private void init()
+  private void init( )
   {
     // Symbolizer Combo
     m_symbolizerCombo = new Combo( m_composite, SWT.NULL );
@@ -173,11 +172,11 @@ public class AddSymbolizerPanel
       }
     } );
 
-    List geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
-    geometryItems = queryGeometriesPropertyNames( VirtualPropertyUtilities.getVirtualProperties(m_featureType) , geometryItems );
+    List<String> geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
+    geometryItems = queryGeometriesPropertyNames( VirtualPropertyUtilities.getVirtualProperties( m_featureType ), geometryItems );
     if( geometryItems != null && geometryItems.size() > 0 )
     {
-      m_geometryCombo.setItems( (String[]) geometryItems.toArray( new String[geometryItems.size()] ) );
+      m_geometryCombo.setItems( geometryItems.toArray( new String[geometryItems.size()] ) );
       m_geometryCombo.select( 0 );
     }
 
@@ -205,7 +204,7 @@ public class AddSymbolizerPanel
 
       public void mouseUp( MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
@@ -223,7 +222,7 @@ public class AddSymbolizerPanel
     updateSymbolizerCombo();
   }
 
-  protected void updateSymbolizerCombo()
+  protected void updateSymbolizerCombo( )
   {
     final int selectionIndex = m_geometryCombo.getSelectionIndex();
     if( selectionIndex == -1 )
@@ -237,12 +236,12 @@ public class AddSymbolizerPanel
     }
   }
 
-  public Symbolizer getSelection()
+  public Symbolizer getSelection( )
   {
     String geometryPropertyName = m_geometryCombo.getItem( m_geometryCombo.getSelectionIndex() );
     int selectionIndex = m_symbolizerCombo.getSelectionIndex();
     String symbolizerString = m_symbolizerCombo.getItem( selectionIndex );
-    //    String symbolizerString =
+    // String symbolizerString =
     // getSymbolizerTypesByFeatureProperty()[m_selectionIndex];
     return getSymbolizer( geometryPropertyName, symbolizerString, m_featureType );
   }
@@ -263,7 +262,7 @@ public class AddSymbolizerPanel
     }
     else if( symbolizerString.equals( "Text" ) )
     {
-      
+
       TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
@@ -279,12 +278,11 @@ public class AddSymbolizerPanel
       return textSymbolizer;
     }
     else if( symbolizerString.equals( "Polygon" ) )
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(),
-          geometryPropertyName );
+      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(), geometryPropertyName );
     return null;
   }
 
-  protected void fire()
+  protected void fire( )
   {
     final Object[] listeners = m_listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -292,19 +290,19 @@ public class AddSymbolizerPanel
       if( listeners[i] == PanelListener.class )
       {
         PanelEvent event = new PanelEvent( this );
-        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
+        ((PanelListener) listeners[i + 1]).valueChanged( event );
       }
     }
   }
 
-  public static List queryGeometriesPropertyNames( IPropertyType[] ftp, List list )
+  public static List<String> queryGeometriesPropertyNames( IPropertyType[] ftp, List<String> list )
   {
     if( list == null )
-      list = new ArrayList();
+      list = new ArrayList<String>();
 
     for( int i = 0; i < ftp.length; i++ )
     {
-      if(  GeometryUtilities.isGeometry(ftp[i])  )
+      if( GeometryUtilities.isGeometry( ftp[i] ) )
         list.add( ftp[i].getName() );
     }
     return list;
@@ -320,8 +318,7 @@ public class AddSymbolizerPanel
     // textsymbolizer
 
     final int featureTypeGeometryType = TextSymbolizerLayout.getFeatureTypeGeometryType( ftp );
-    if( featureTypeGeometryType == TextSymbolizerLayout.GM_POINT
-        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOINT )
+    if( featureTypeGeometryType == TextSymbolizerLayout.GM_POINT || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOINT )
     {
       if( m_isSimpleRule )
       {
@@ -335,8 +332,7 @@ public class AddSymbolizerPanel
         items[0] = "Point";
       }
     }
-    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_LINESTRING
-        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTILINESTRING )
+    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_LINESTRING || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTILINESTRING )
     {
       if( m_isSimpleRule )
       {
@@ -352,8 +348,7 @@ public class AddSymbolizerPanel
         items[1] = "Point";
       }
     }
-    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_POLYGON
-        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOLYGON )
+    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_POLYGON || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOLYGON )
     {
       if( m_isSimpleRule )
       {
@@ -390,7 +385,7 @@ public class AddSymbolizerPanel
     return items;
   }
 
-  public Combo getSymbolizerCombo()
+  public Combo getSymbolizerCombo( )
   {
     return m_symbolizerCombo;
   }

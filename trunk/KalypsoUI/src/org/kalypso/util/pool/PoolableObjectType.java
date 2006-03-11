@@ -122,6 +122,7 @@ public class PoolableObjectType implements IPoolableObjectType
     return m_ignoreExceptions;
   }
 
+  @Override
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IPoolableObjectType ) )
@@ -142,6 +143,7 @@ public class PoolableObjectType implements IPoolableObjectType
     return true;
   }
 
+  @Override
   public int hashCode()
   {
     return toString().hashCode();
@@ -150,7 +152,8 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= " + getContext();
   }

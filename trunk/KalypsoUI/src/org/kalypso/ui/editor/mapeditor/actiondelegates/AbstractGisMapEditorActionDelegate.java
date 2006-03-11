@@ -57,17 +57,18 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   {
     m_widget = widget;
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
+  @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     super.setActiveEditor( action, targetEditor );
     if( action.getStyle() == IAction.AS_RADIO_BUTTON )
     {
-      final GisMapEditor editor = (GisMapEditor)targetEditor;
+      final GisMapEditor editor = (GisMapEditor) targetEditor;
       if( editor != null && action != null )
       {
         if( action.isChecked() )
@@ -75,7 +76,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
           // da der event evt vom AWT-Thread kommt
           getEditor().getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
           {
-            public void run()
+            public void run( )
             {
               editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
             }
@@ -85,27 +86,27 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
     }
   }
 
-  protected final IWidget getWidget()
+  protected final IWidget getWidget( )
   {
     return m_widget;
   }
-  
+
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public final void run( final IAction action )
   {
     // activate my widget
-    final GisMapEditor editor = (GisMapEditor)getEditor();
+    final GisMapEditor editor = (GisMapEditor) getEditor();
     editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
   }
 
-  
   /**
    * The default implementation does nothing
    * 
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
+  @Override
   protected void refreshAction( final IAction action )
   {
     // does nothing

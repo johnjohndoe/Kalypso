@@ -42,7 +42,6 @@
 package org.kalypso.ogc.gml.selection;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -71,19 +70,17 @@ public class FeatureSelectionHelper
   public static Feature[] getFeatures( final IFeatureSelection selection, final GMLWorkspace filterWorkspace )
   {
     final List list = selection.toList();
-    final ArrayList features = new ArrayList( list.size() );
-    for( final Iterator iter = list.iterator(); iter.hasNext(); )
+    final ArrayList<Feature> features = new ArrayList<Feature>( list.size() );
+    for( final Object element : list )
     {
-      final Object element = iter.next();
       if( element instanceof Feature )
       {
-        if( filterWorkspace == null
-            || ( filterWorkspace != null && selection.getWorkspace( (Feature)element ) == filterWorkspace ) )
-          features.add( element );
+        if( filterWorkspace == null || (filterWorkspace != null && selection.getWorkspace( (Feature) element ) == filterWorkspace) )
+          features.add( (Feature) element );
       }
     }
 
-    return (Feature[])features.toArray( new Feature[features.size()] );
+    return features.toArray( new Feature[features.size()] );
   }
 
   /** Return the amount of features contained in the given selection. */
@@ -99,8 +96,7 @@ public class FeatureSelectionHelper
     for( int i = 0; i < wrappers.length; i++ )
     {
       final Feature f = features[i];
-      wrappers[i] = new EasyFeatureWrapper( selection.getWorkspace( f ), f, selection.getParentFeature( f ), selection
-          .getParentFeatureProperty( f ) );
+      wrappers[i] = new EasyFeatureWrapper( selection.getWorkspace( f ), f, selection.getParentFeature( f ), selection.getParentFeatureProperty( f ) );
     }
 
     return wrappers;
@@ -113,19 +109,19 @@ public class FeatureSelectionHelper
       return null;
 
     return features[0];
-  };
+  }
 
   public static Feature[] getAllFeaturesWithGeometry( IFeatureSelection selection )
   {
-    Feature[] features = getFeatures( selection );
-    ArrayList result = new ArrayList();
+    final Feature[] features = getFeatures( selection );
+    final ArrayList<Feature> result = new ArrayList<Feature>();
     for( int i = 0; i < features.length; i++ )
     {
-      Feature feature = features[i];
-      GM_Object[] geometryProperties = feature.getGeometryProperties();
+      final Feature feature = features[i];
+      final GM_Object[] geometryProperties = feature.getGeometryProperties();
       if( geometryProperties.length > 0 )
         result.add( feature );
     }
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 }

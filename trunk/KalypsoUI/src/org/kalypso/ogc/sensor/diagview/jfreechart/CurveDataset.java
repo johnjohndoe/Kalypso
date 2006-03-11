@@ -99,7 +99,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * well-implemented, causing different curves to be equal.
    * </p>
    */
-  private final List m_curves = Collections.synchronizedList( new ArrayList() );
+  private final List<RendererInfo> m_curves = Collections.synchronizedList( new ArrayList<RendererInfo>() );
 
   public CurveDataset()
   {
@@ -133,6 +133,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.general.SeriesDataset#getSeriesCount()
    */
+  @Override
   public int getSeriesCount()
   {
     return m_curves.size();
@@ -141,6 +142,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.general.SeriesDataset#getSeriesName(int)
    */
+  @Override
   public String getSeriesName( int series )
   {
     final RendererInfo[] curveArray = getCurveArray();
@@ -167,6 +169,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getXValue(int, int)
    */
+  @Override
   public double getXValue( int series, int item )
   {
     final Number x = getX( series, item );
@@ -195,6 +198,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getYValue(int, int)
    */
+  @Override
   public double getYValue( int series, int item )
   {
     final Number y = getY( series, item );
@@ -223,6 +227,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartXValue(int, int)
    */
+  @Override
   public double getStartXValue( int series, int item )
   {
     if( item > 0 )
@@ -234,6 +239,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndXValue(int, int)
    */
+  @Override
   public double getEndXValue( int series, int item )
   {
     return getXValue( series, item );
@@ -242,6 +248,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartYValue(int, int)
    */
+  @Override
   public double getStartYValue( int series, int item )
   {
     if( item > 0 )
@@ -253,6 +260,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndYValue(int, int)
    */
+  @Override
   public double getEndYValue( int series, int item )
   {
     return getYValue( series, item );
@@ -334,7 +342,7 @@ class CurveDataset extends AbstractIntervalXYDataset
 
   private RendererInfo[] getCurveArray()
   {
-    return (RendererInfo[])m_curves.toArray( new RendererInfo[m_curves.size()] );
+    return m_curves.toArray( new RendererInfo[m_curves.size()] );
   }
 
 }

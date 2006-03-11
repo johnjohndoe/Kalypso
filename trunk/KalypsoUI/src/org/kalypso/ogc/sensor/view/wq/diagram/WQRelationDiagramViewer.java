@@ -145,6 +145,7 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
   /**
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
+  @Override
   public Control getControl()
   {
     return m_control;

@@ -384,7 +384,7 @@ public class RulePatternTabItem
           // first create new rules
           BoundaryExpression upperBoundary = null;
           BoundaryExpression lowerBoundary = null;
-          ArrayList ruleList = new ArrayList();
+          final ArrayList<Rule> ruleList = new ArrayList<Rule>();
           PropertyName propertyName = new PropertyName( addFilterPropertyPanel.getSelection() );
           PropertyIsBetweenOperation operation = null;
 
@@ -450,8 +450,8 @@ public class RulePatternTabItem
           // add new ones
           for( int j = 0; j < ruleList.size(); j++ )
           {
-            getRulePatternCollection().addRule( (Rule)ruleList.get( j ) );
-            getUserStyle().getFeatureTypeStyles()[0].addRule( (Rule)ruleList.get( j ) );
+            getRulePatternCollection().addRule( ruleList.get( j ) );
+            getUserStyle().getFeatureTypeStyles()[0].addRule( ruleList.get( j ) );
           }
           // update
           drawSymbolizerTabItems( tmpRule, symbolizerTabFolder, ruleCollection );
