@@ -55,7 +55,6 @@ public class ZoomInByRectWidget extends AbstractWidget
 {
 
   /*
-   * 
    * @author doemming
    */
   public ZoomInByRectWidget( String name, String toolTip )
@@ -70,7 +69,8 @@ public class ZoomInByRectWidget extends AbstractWidget
 
   private static final double MIN_PIXEL_ZOOM_BOX = 20;
 
-  public void dragged( Point p )
+  @Override
+  public void dragged( final Point p )
   {
     if( m_startPoint == null )
       m_startPoint = p;
@@ -79,34 +79,37 @@ public class ZoomInByRectWidget extends AbstractWidget
     }
   }
 
-  public void leftPressed( Point p )
+  @Override
+  public void leftPressed( final Point p )
   {
     m_startPoint = p;
     m_endPoint = null;
   }
 
-  public void leftReleased( Point p )
+  @Override
+  public void leftReleased( final Point p )
   {
     m_endPoint = p;
     perform();
   }
 
-  /*
+  /**
    * paints the dragged rectangle defined by the start and end point of the drag box
    */
-  public void paint( Graphics g )
+  @Override
+  public void paint( final Graphics g )
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      final int x1 = (int)m_startPoint.getX();
-      final int y1 = (int)m_startPoint.getY();
-      final int x2 = (int)m_endPoint.getX();
-      final int y2 = (int)m_endPoint.getY();
+      final int x1 = (int) m_startPoint.getX();
+      final int y1 = (int) m_startPoint.getY();
+      final int x2 = (int) m_endPoint.getX();
+      final int y2 = (int) m_endPoint.getY();
       g.drawRect( x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2, Math.abs( x2 - x1 ), Math.abs( y2 - y1 ) );
     }
   }
 
-  public void perform()
+  public void perform( )
   {
     if( m_startPoint != null && m_endPoint != null )
     {
@@ -114,7 +117,7 @@ public class ZoomInByRectWidget extends AbstractWidget
       double y1 = m_startPoint.getY();
       double x2 = m_endPoint.getX();
       double y2 = m_endPoint.getY();
-      //performs zoomin by point
+      // performs zoomin by point
       m_startPoint = null;
       m_endPoint = null;
       if( Math.abs( x1 - x2 ) > MIN_PIXEL_ZOOM_BOX && Math.abs( y1 - y2 ) > MIN_PIXEL_ZOOM_BOX )

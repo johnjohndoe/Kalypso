@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
  */
 public class SWTUtilities
 {
-  static final HashMap m_gridDataMap = new HashMap();
+  static final HashMap<String, Integer> m_gridDataMap = new HashMap<String, Integer>();
   static
   {
     putGridData( "GridData.BEGINNING", GridData.BEGINNING );
@@ -72,7 +72,7 @@ public class SWTUtilities
     putGridData( "GridData.VERTICAL_ALIGN_FILL", GridData.VERTICAL_ALIGN_FILL );
   }
 
-  static final HashMap m_swtMap = new HashMap();
+  static final HashMap<String, Integer> m_swtMap = new HashMap<String, Integer>();
   static
   {
     putSWT( "SWT.BEGINNING", SWT.BEGINNING );
@@ -126,7 +126,7 @@ public class SWTUtilities
       for( int i = 0; i < keys.length; i++ )
       {
         final String key = keys[i].trim();
-        final Integer value = (Integer)map.get( key );
+        final Integer value = (Integer) map.get( key );
         if( value != null )
           result |= value.intValue();
         else

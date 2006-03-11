@@ -68,11 +68,9 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * @author N. Peiler
- *  
  */
 public class ColorMapEntry_Impl implements ColorMapEntry
 {
-
   private Color m_color = null;
 
   private double m_opacity = 1;
@@ -80,6 +78,8 @@ public class ColorMapEntry_Impl implements ColorMapEntry
   private double m_quantity = -9999;
 
   private String m_label = " ";
+
+  private static final ObjectFactory OF = new ObjectFactory();
 
   /**
    * @param color
@@ -96,7 +96,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_label = label;
   }
 
-  public Color getColor()
+  public Color getColor( )
   {
     return m_color;
   }
@@ -106,7 +106,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_color = color;
   }
 
-  public String getLabel()
+  public String getLabel( )
   {
     return m_label;
   }
@@ -116,7 +116,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_label = label;
   }
 
-  public double getOpacity()
+  public double getOpacity( )
   {
     return m_opacity;
   }
@@ -126,7 +126,7 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_opacity = opacity;
   }
 
-  public double getQuantity()
+  public double getQuantity( )
   {
     return m_quantity;
   }
@@ -136,10 +136,9 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_quantity = quantity;
   }
 
-  public net.opengis.sld.ColorMapEntry exportAsXML() throws Exception
+  public net.opengis.sld.ColorMapEntry exportAsXML( )
   {
-    ObjectFactory fac = new ObjectFactory();
-    net.opengis.sld.ColorMapEntry colorMapEntry = fac.createColorMapEntry();
+    net.opengis.sld.ColorMapEntry colorMapEntry = OF.createColorMapEntry();
     colorMapEntry.setColor( StyleFactory.getColorAsHex( getColor() ) );
     colorMapEntry.setLabel( getLabel() );
     colorMapEntry.setOpacity( getOpacity() );
@@ -148,7 +147,8 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     return colorMapEntry;
   }
 
-  public Object clone()
+  @Override
+  public ColorMapEntry clone( )
   {
     return new ColorMapEntry_Impl( m_color, m_opacity, m_quantity, m_label );
   }

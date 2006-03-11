@@ -87,6 +87,7 @@ public class ExportDocumentsWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#dispose()
    */
+  @Override
   public void dispose()
   {
     m_disposer.dispose();
@@ -97,6 +98,7 @@ public class ExportDocumentsWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
+  @Override
   public void addPages()
   {
     final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
@@ -135,6 +137,7 @@ public class ExportDocumentsWizard extends Wizard
       /**
        * @see org.eclipse.jface.wizard.WizardSelectionPage#setSelectedNode(org.eclipse.jface.wizard.IWizardNode)
        */
+      @Override
       protected void setSelectedNode( final IWizardNode node )
       {
         super.setSelectedNode( node );
@@ -155,6 +158,7 @@ public class ExportDocumentsWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     return true;
@@ -163,11 +167,12 @@ public class ExportDocumentsWizard extends Wizard
   private static final class ExporterWizardNodeLabelProvider extends LabelProvider
   {
     /** key -> image */
-    private final Map m_images = new HashMap();
+    private final Map<ExportWizardNode, Image> m_images = new HashMap<ExportWizardNode, Image>();
 
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#dispose()
      */
+    @Override
     public void dispose()
     {
       new DisposeHelper( m_images.values() ).dispose();
@@ -175,12 +180,14 @@ public class ExportDocumentsWizard extends Wizard
       super.dispose();
     }
 
+    @Override
     public String getText( final Object element )
     {
       final ExportWizardNode node = (ExportWizardNode)element;
       return node.getExporter().getName();
     }
 
+    @Override
     public Image getImage( final Object element )
     {
       final ExportWizardNode node = (ExportWizardNode)element;
@@ -192,7 +199,7 @@ public class ExportDocumentsWizard extends Wizard
         m_images.put( node, imageDescriptor.createImage( true ) );
       }
       
-      return (Image)m_images.get( node );
+      return m_images.get( node );
     }
   }
 }

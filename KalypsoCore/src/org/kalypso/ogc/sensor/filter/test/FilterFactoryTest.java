@@ -58,6 +58,7 @@ public class FilterFactoryTest extends TestCase
 {
   private InputStream m_ins;
 
+  @Override
   protected void setUp() throws Exception
   {
     super.setUp();
@@ -65,7 +66,8 @@ public class FilterFactoryTest extends TestCase
     m_ins = getClass().getResourceAsStream( "filter.xml" );
   }
 
-  protected void tearDown() throws Exception
+  @Override
+  protected void tearDown( ) throws Exception
   {
     super.tearDown();
     m_ins.close();

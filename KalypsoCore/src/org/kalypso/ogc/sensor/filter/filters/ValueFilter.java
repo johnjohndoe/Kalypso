@@ -62,18 +62,19 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public class ValueFilter extends AbstractObservationFilter
 {
-  private final Map m_axisMap = new Hashtable();
+  private final Map<IAxis, IValueComp> m_axisMap = new Hashtable<IAxis, IValueComp>();
 
+  @Override
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     super.initFilter( conf, obs, context );
 
     m_axisMap.clear();
 
-    final Iterator it = ( (List)conf ).iterator();
+    final Iterator it = ((List) conf).iterator();
     while( it.hasNext() )
     {
-      final IValueComp vc = (IValueComp)it.next();
+      final IValueComp vc = (IValueComp) it.next();
 
       m_axisMap.put( vc.getAxis(), vc );
     }
@@ -82,6 +83,7 @@ public class ValueFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
+  @Override
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
@@ -91,13 +93,13 @@ public class ValueFilter extends AbstractObservationFilter
 
     for( int i = 0; i < values.getCount(); i++ )
     {
-      final Vector tupple = new Vector( axes.length );
+      final Vector<Object> tupple = new Vector<Object>( axes.length );
 
       boolean add = true;
 
       for( int j = 0; j < axes.length; j++ )
       {
-        final IValueComp comp = (IValueComp)m_axisMap.get( axes[j] );
+        final IValueComp comp = m_axisMap.get( axes[j] );
 
         final Object elt = values.getElement( i, axes[j] );
 

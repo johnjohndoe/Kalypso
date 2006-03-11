@@ -152,6 +152,7 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return toFullString();
@@ -160,6 +161,7 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals( final Object obj )
   {
     if( !( obj instanceof DiagramAxis ) )
@@ -173,7 +175,8 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode()
+  @Override
+  public int hashCode( )
   {
     return m_id.hashCode();
   }

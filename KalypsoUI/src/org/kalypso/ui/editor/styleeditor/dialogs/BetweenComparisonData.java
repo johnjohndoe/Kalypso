@@ -70,7 +70,8 @@ public class BetweenComparisonData extends AbstractComparisonData
     this.upper = m_upper;
   }
 
-  public boolean verify()
+  @Override
+  public boolean verify( )
   {
     if( lower != null && upper != null && propertyName != null )
       return true;

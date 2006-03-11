@@ -83,6 +83,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     try
@@ -109,6 +110,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
+  @Override
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
@@ -124,7 +126,8 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus()
+  @Override
+  public void setFocus( )
   {
   // noch nix
   }

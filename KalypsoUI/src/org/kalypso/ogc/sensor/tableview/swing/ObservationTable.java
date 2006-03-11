@@ -173,6 +173,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   /**
    * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
    */
+  @Override
   public void columnAdded( TableColumnModelEvent e )
   {
     super.columnAdded( e );
@@ -184,6 +185,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   /**
    * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
    */
+  @Override
   public void columnRemoved( TableColumnModelEvent e )
   {
     super.columnRemoved( e );
@@ -216,6 +218,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     final CatchRunnable runnable = new CatchRunnable()
     {
+      @Override
       protected void runIntern() throws Throwable
       {
         final int evenType = evt.getType();
@@ -295,6 +298,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   /**
    * @see javax.swing.JTable#getCellRenderer(int, int)
    */
+  @Override
   public TableCellRenderer getCellRenderer( int row, int column )
   {
     final TableCellRenderer renderer = super.getCellRenderer( row, column );
@@ -376,6 +380,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   /**
    * @see java.awt.Component#processMouseEvent(java.awt.event.MouseEvent)
    */
+  @Override
   protected void processMouseEvent( MouseEvent e )
   {
     if( e.isPopupTrigger() && m_popup != null )

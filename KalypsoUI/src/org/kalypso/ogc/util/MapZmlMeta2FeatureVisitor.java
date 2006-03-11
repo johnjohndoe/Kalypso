@@ -57,14 +57,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
- * TODO: insert type comment here
- * 
  * @author belger
  */
 public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
@@ -90,7 +86,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
     private String m_format;
 
-    private List m_metadataEntries = new ArrayList( 2 );
+    private List<Metadata> m_metadataEntries = new ArrayList<Metadata>( 2 );
 
     /** This FeatureProperty will be created */
     public void setTargetProperty( final String targetProperty )
@@ -111,7 +107,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
     public Metadata[] getMetadataNames( )
     {
-      return (Metadata[]) m_metadataEntries.toArray( new Metadata[m_metadataEntries.size()] );
+      return m_metadataEntries.toArray( new Metadata[m_metadataEntries.size()] );
     }
 
     /** Optional format string, how to parse the values */

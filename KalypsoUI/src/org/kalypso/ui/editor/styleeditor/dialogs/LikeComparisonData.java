@@ -64,6 +64,7 @@ public class LikeComparisonData extends AbstractComparisonData
     this.literal = m_literal;
   }
 
+  @Override
   public boolean verify()
   {
     if( literal != null && propertyName != null )

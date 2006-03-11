@@ -61,6 +61,7 @@ import org.kalypso.contribs.java.lang.CatchThread;
  * @deprecated use ant task instead in your model-configuration
  * @author belger
  */
+@Deprecated
 public class CalculationTransformation extends AbstractTransformation
 {
   /** Dateiname für das Ergebnis */

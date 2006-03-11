@@ -69,14 +69,13 @@ public class ObsViewUtils
 
   public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%";
 
-  private ObsViewUtils()
+  private ObsViewUtils( )
   {
-  // utility class
+    // utility class
   }
 
   /**
    * Replace tokens in Format-String
-   * 
    * <dl>
    * <dt>%obsname%</dt>
    * <dd>Name der Observation: obs.getName()</dd>
@@ -120,8 +119,7 @@ public class ObsViewUtils
           final String metaname = result.substring( start + "%metadata-".length(), stop );
           final StringBuffer sb = new StringBuffer( result );
 
-          final String metaval = obs.getMetadataList().getProperty( metaname,
-              "<Metavalue '" + metaname + "' not found>" );
+          final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
           sb.replace( start, stop + 1, metaval );
 
           result = sb.toString();
@@ -145,9 +143,9 @@ public class ObsViewUtils
 
     for( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Map.Entry)it.next();
+      final Map.Entry entry = (Map.Entry) it.next();
 
-      result = result.replaceAll( (String)entry.getKey(), (String)entry.getValue() );
+      result = result.replaceAll( (String) entry.getKey(), (String) entry.getValue() );
     }
 
     return result;
@@ -175,29 +173,29 @@ public class ObsViewUtils
     return replaceTokens( formatString, properties );
   }
 
-  //  /**
-  //   * Remove the tokens so that name is clean.
-  //   *
-  //   * @param name
-  //   */
-  //  public static String removeTokens( final String name )
-  //  {
-  //    String res = name.replaceAll( TOKEN_AXISNAME, "" );
-  //    res = res.replaceAll( TOKEN_AXISTYPE, "" );
-  //    res = res.replaceAll( TOKEN_AXISUNIT, "" );
-  //    res = res.replaceAll( TOKEN_OBSNAME, "" );
+  // /**
+  // * Remove the tokens so that name is clean.
+  // *
+  // * @param name
+  // */
+  // public static String removeTokens( final String name )
+  // {
+  // String res = name.replaceAll( TOKEN_AXISNAME, "" );
+  // res = res.replaceAll( TOKEN_AXISTYPE, "" );
+  // res = res.replaceAll( TOKEN_AXISUNIT, "" );
+  // res = res.replaceAll( TOKEN_OBSNAME, "" );
   //
-  //    return res;
-  //  }
+  // return res;
+  // }
   //
 
   /**
    * Retrieve all axis-types of the observations associated to the ObsViewItems. Return a set so that there are no
    * duplicates.
    */
-  public static Set retrieveAxisTypes( final ObsViewItem[] items, final boolean onlyValueAxes )
+  public static Set<String> retrieveAxisTypes( final ObsViewItem[] items, final boolean onlyValueAxes )
   {
-    final Set set = new TreeSet();
+    final Set<String> set = new TreeSet<String>();
 
     if( items == null )
       return set;
@@ -208,8 +206,7 @@ public class ObsViewUtils
       for( int j = 0; j < axes.length; j++ )
       {
         final String axisType = axes[j].getType();
-        if( !onlyValueAxes || onlyValueAxes && !KalypsoStatusUtils.isStatusAxis( axes[j] )
-            && !TimeserieConstants.TYPE_DATE.equals( axisType ) )
+        if( !onlyValueAxes || onlyValueAxes && !KalypsoStatusUtils.isStatusAxis( axes[j] ) && !TimeserieConstants.TYPE_DATE.equals( axisType ) )
           set.add( axisType );
       }
     }

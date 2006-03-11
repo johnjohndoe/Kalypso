@@ -107,7 +107,8 @@ public class DateRangeInputWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
    */
-  public IWizardPage getNextPage()
+  @Override
+  public IWizardPage getNextPage( )
   {
     // go to next page only when input is valid
     final String err = m_control.validateInput();

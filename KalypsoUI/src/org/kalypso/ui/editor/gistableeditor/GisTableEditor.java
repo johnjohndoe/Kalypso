@@ -188,8 +188,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     catch( final Exception e )
     {
       e.printStackTrace();
-
-      // TODO error handling
     }
     finally
     {

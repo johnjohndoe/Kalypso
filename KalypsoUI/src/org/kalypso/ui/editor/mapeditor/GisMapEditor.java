@@ -149,6 +149,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
@@ -166,6 +167,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return super.getAdapter( adapter );
   }
 
+  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     if( m_mapModell == null )
@@ -225,6 +227,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
@@ -267,6 +270,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     // m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
   }
 
+  @Override
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_disposed )
@@ -340,6 +344,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     m_mapModell.saveTheme( theme, monitor );
   }
 
+  @Override
   public void dispose( )
   {
     m_disposed = true;

@@ -15,9 +15,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
  */
 public class WQTableSet implements IWQConverter
 {
-  private final HashMap m_tables = new HashMap();
+  private final HashMap<Date, WQTable> m_tables = new HashMap<Date, WQTable>();
 
-  private final SortedSet m_dates;
+  private final SortedSet<Date> m_dates;
 
   private final String m_fromType;
 
@@ -38,7 +38,7 @@ public class WQTableSet implements IWQConverter
     for( int i = 0; i < tables.length; i++ )
       m_tables.put( tables[i].getValidity(), tables[i] );
 
-    m_dates = new TreeSet( m_tables.keySet() );
+    m_dates = new TreeSet<Date>( m_tables.keySet() );
   }
 
   /**
@@ -49,15 +49,15 @@ public class WQTableSet implements IWQConverter
     if( m_tables.size() == 0 )
       throw new IllegalStateException( "Keine WQ-Tabellen vorhanden" );
 
-    final SortedSet headSet = m_dates.headSet( date );
+    final SortedSet<Date> headSet = m_dates.headSet( date );
 
     final Date key;
     if( headSet.isEmpty() )
-      key = (Date)m_dates.first();
+      key = m_dates.first();
     else
-      key = (Date)headSet.last();
+      key = headSet.last();
 
-    return (WQTable)m_tables.get( key );
+    return m_tables.get( key );
   }
 
   /**
@@ -79,6 +79,7 @@ public class WQTableSet implements IWQConverter
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return m_tables.toString();
@@ -89,7 +90,7 @@ public class WQTableSet implements IWQConverter
    */
   public WQTable[] getTables()
   {
-    return (WQTable[])m_tables.values().toArray( new WQTable[m_tables.size()] );
+    return m_tables.values().toArray( new WQTable[m_tables.size()] );
   }
 
   /**

@@ -61,15 +61,15 @@ public class ManipulatorExtensions
 {
   public final static String MANIPULATOR_EXTENSION_POINT = "org.kalypso.core.obsManipulator";
 
-  private ManipulatorExtensions()
+  private ManipulatorExtensions( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
    * @return the first provider found or null if none
    */
-  public static IObservationManipulator[] getManipulators()
+  public static IObservationManipulator[] getManipulators( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -82,7 +82,7 @@ public class ManipulatorExtensions
     if( configurationElements.length == 0 )
       return new IObservationManipulator[0];
 
-    final List manips = new ArrayList( configurationElements.length );
+    final List<IObservationManipulator> manips = new ArrayList<IObservationManipulator>( configurationElements.length );
 
     for( int i = 0; i < configurationElements.length; i++ )
     {
@@ -90,7 +90,7 @@ public class ManipulatorExtensions
 
       try
       {
-        manips.add( element.createExecutableExtension( "class" ) );
+        manips.add( (IObservationManipulator) element.createExecutableExtension( "class" ) );
       }
       catch( final CoreException e )
       {
@@ -98,7 +98,7 @@ public class ManipulatorExtensions
       }
     }
 
-    return (IObservationManipulator[])manips.toArray( new IObservationManipulator[manips.size()] );
+    return manips.toArray( new IObservationManipulator[manips.size()] );
   }
 
   /**

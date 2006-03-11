@@ -53,7 +53,6 @@ import org.kalypso.services.observation.client.KalypsoServiceObsClientPlugin;
 import org.kalypso.services.sensor.impl.ItemBean;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.services.sensor.impl.RepositoryException_Exception;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Repository of the Observation Service.
@@ -67,7 +66,7 @@ public class ObservationServiceRepository extends AbstractRepository
 
   private final KalypsoObservationService m_srv;
 
-  private final Map m_foundItems = new HashMap();
+  private final Map<String, IRepositoryItem> m_foundItems = new HashMap<String, IRepositoryItem>();
 
   /**
    * @throws ServiceException
@@ -168,7 +167,7 @@ public class ObservationServiceRepository extends AbstractRepository
     IRepositoryItem foundItem = null;
 
     // first lookup in the cache
-    foundItem = (IRepositoryItem)m_foundItems.get( id );
+    foundItem = m_foundItems.get( id );
     if( foundItem != null )
       return foundItem;
 

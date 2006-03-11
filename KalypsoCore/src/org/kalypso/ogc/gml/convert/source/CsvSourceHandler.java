@@ -21,7 +21,6 @@ import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author belger

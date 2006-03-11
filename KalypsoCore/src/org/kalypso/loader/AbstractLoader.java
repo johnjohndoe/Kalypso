@@ -61,9 +61,9 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 {
   final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
 
-  private final List m_listener = new ArrayList();
+  private final List<ILoaderListener> m_listener = new ArrayList<ILoaderListener>();
 
-  private final List m_objectList = new ArrayList();
+  private final List<Object> m_objectList = new ArrayList<Object>();
 
   public AbstractLoader()
   {
@@ -114,7 +114,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     beforeObjectInvalid();
 
     // protect against concurrent modification exception and broken listeners
-    final ILoaderListener[] ls = (ILoaderListener[])m_listener.toArray( new ILoaderListener[m_listener.size()] );
+    final ILoaderListener[] ls = m_listener.toArray( new ILoaderListener[m_listener.size()] );
     for( int i = 0; i < ls.length; i++ )
     {
       final ILoaderListener listener = ls[i];

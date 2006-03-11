@@ -55,15 +55,16 @@ public class ToggleSelectWidget extends AbstractSelectWidget
 
   }
 
+  @Override
   protected int getSelectionMode()
   {
     return MapPanel.MODE_TOGGLE;
   }
 
-  /**
+  @Override /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
    */
-  boolean allowOnlyOneSelectedFeature()
+  boolean allowOnlyOneSelectedFeature( )
   {
     return false;
   }

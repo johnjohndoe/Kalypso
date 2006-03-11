@@ -193,13 +193,13 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     return parent.getParentFeature();
   }
 
-  public String getParentFeatureProperty( final Feature feature )
+  public IRelationType getParentFeatureProperty( final Feature feature )
   {
     final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
     if( parent == null )
       return null;
     
-    return parent.getAssociationTypeProperty().getQName().getLocalPart();
+    return parent.getAssociationTypeProperty();
   }
 
   

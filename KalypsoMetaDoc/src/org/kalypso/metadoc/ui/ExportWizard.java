@@ -41,7 +41,6 @@
 
 package org.kalypso.metadoc.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.DisposeHelper;
@@ -93,7 +91,7 @@ public final class ExportWizard extends Wizard
     // one settings-entry per target and factory
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
 
-    final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
+    final IDialogSettings workbenchSettings = KalypsoMetaDocPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( settingsName );//$NON-NLS-1$
     if( section == null )
       section = workbenchSettings.addNewSection( settingsName );//$NON-NLS-1$
@@ -110,10 +108,10 @@ public final class ExportWizard extends Wizard
     // operation which will be called for finish
     m_operation = new WorkspaceModifyOperation()
     {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
+      @Override
+      protected void execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
       {
-        final List stati = new ArrayList();
+        final List<IStatus> stati = new ArrayList<IStatus>();
 
         try
         {
@@ -167,6 +165,7 @@ public final class ExportWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#dispose()
    */
+  @Override
   public void dispose()
   {
     new DisposeHelper( getPages() ).dispose();
@@ -174,7 +173,8 @@ public final class ExportWizard extends Wizard
     super.dispose();
   }
 
-  public boolean performFinish()
+  @Override
+  public boolean performFinish( )
   {
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, m_operation );
     final Throwable exception = status.getException();

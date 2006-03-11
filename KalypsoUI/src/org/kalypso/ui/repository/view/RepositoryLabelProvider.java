@@ -65,6 +65,7 @@ public class RepositoryLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
+  @Override
   public Image getImage( final Object element )
   {
     if( element instanceof IRepositoryItem )

@@ -61,7 +61,8 @@ public class CopyLinkAction extends AbstractObservationChooserAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run()
+  @Override
+  public void run( )
   {
     final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
     if( obs == null )

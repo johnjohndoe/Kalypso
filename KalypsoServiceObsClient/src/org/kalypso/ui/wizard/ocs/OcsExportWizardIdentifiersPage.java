@@ -87,7 +87,7 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
 
   public IdStruct[] getResourcesToExport()
   {
-    return (IdStruct[])Arrays.castArray( ( (IdTableContentProvider)m_tableViewer.getContentProvider() )
+    return Arrays.castArray( ( (IdTableContentProvider)m_tableViewer.getContentProvider() )
         .getElements( m_tableViewer.getInput() ), new IdStruct[0] );
   }
 }

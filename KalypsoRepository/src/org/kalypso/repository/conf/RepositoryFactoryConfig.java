@@ -169,6 +169,7 @@ public class RepositoryFactoryConfig
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     if( m_conf != null && m_conf.length() > 0 )

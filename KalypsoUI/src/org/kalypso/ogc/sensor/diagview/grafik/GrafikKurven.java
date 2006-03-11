@@ -62,7 +62,7 @@ import org.kalypso.template.obsdiagview.TypeCurve;
  */
 public class GrafikKurven
 {
-  private final List m_kurven = new ArrayList();
+  private final List<GrafikKurve> m_kurven = new ArrayList<GrafikKurve>();
 
   private final GrafikAchsen m_achsen;
 
@@ -146,7 +146,8 @@ public class GrafikKurven
    * 
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return toVorlagentext();
   }

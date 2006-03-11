@@ -79,6 +79,7 @@ public class SldLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
@@ -113,6 +114,7 @@ public class SldLoader extends AbstractLoader
     }
   }
 
+  @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
     System.out.print( "SLD-Loader Save method" );

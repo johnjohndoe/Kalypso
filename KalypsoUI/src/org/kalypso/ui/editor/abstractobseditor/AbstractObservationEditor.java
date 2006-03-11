@@ -54,8 +54,8 @@ import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
@@ -80,6 +80,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_view != null )
@@ -102,6 +103,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( Class adapter )
   {
     if( adapter == IContentOutlinePage.class )
@@ -126,6 +128,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
    * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
+  @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {
     monitor.beginTask( "Vorlage laden", IProgressMonitor.UNKNOWN );

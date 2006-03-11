@@ -16,6 +16,7 @@ public class SetSelectedAction extends AbstractObservationTableAction
     super( table, "Selektierte Werte setzen", "Setzt die selektierten Werte auf den aktiven Wert" );
   }
 
+  @Override
   public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();

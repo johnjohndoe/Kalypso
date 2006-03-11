@@ -74,7 +74,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
-  public IStorage getStorage()
+  public IStorage getStorage( )
   {
     return m_storage;
   }
@@ -82,7 +82,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
-  public boolean exists()
+  public boolean exists( )
   {
     return false;
   }
@@ -90,7 +90,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
-  public ImageDescriptor getImageDescriptor()
+  public ImageDescriptor getImageDescriptor( )
   {
     return null;
   }
@@ -98,7 +98,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return "Vorlage für " + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
   }
@@ -106,7 +106,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
-  public IPersistableElement getPersistable()
+  public IPersistableElement getPersistable( )
   {
     return null;
   }
@@ -114,7 +114,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
-  public String getToolTipText()
+  public String getToolTipText( )
   {
     return m_storage.getHref();
   }
@@ -133,6 +133,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals( Object obj )
   {
     return super.equals( obj );

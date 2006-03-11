@@ -279,6 +279,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           /**
            * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
            */
+          @Override
           protected IStatus run( IProgressMonitor monitor )
           {
             try
@@ -318,9 +319,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /**
    * @throws Exception
    */
-  private HashMap createGetMapRequestParameter( ) throws Exception
+  private HashMap<String, String> createGetMapRequestParameter( ) throws Exception
   {
-    final HashMap wmsParameter = new HashMap();
+    final HashMap<String, String> wmsParameter = new HashMap<String, String>();
     wmsParameter.put( "SERVICE", "WMS" );
     wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
@@ -424,7 +425,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       return;
 
     final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + Long.toString( (new Date()).getTime() );
-    final HashMap parameterMap = createGetMapRequestParameter();
+    final HashMap<String, String> parameterMap = createGetMapRequestParameter();
     parameterMap.put( "REQUEST", "GetFeatureInfo" );
     parameterMap.put( "QUERY_LAYERS", m_layers );
     if( format != null && format.length() > 0 )
@@ -437,7 +438,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     for( Iterator iter = set.iterator(); iter.hasNext(); )
     {
       final String key = (String) iter.next();
-      final String value = (String) parameterMap.get( key );
+      final String value = parameterMap.get( key );
       System.out.print( key + "=" + value + "&" );
     }
     System.out.println();
@@ -502,7 +503,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    */
   public synchronized String[] getFeatureInfoRequestFormats( )
   {
-    final List result = new ArrayList();
+    final List<String> result = new ArrayList<String>();
     final Operation operation = m_wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
     final Format[] formats = operation.getFormats();
     for( int i = 0; i < formats.length; i++ )
@@ -511,6 +512,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       if( format.getName() != null )
         result.add( format.getName() );
     }
-    return (String[]) result.toArray( new String[result.size()] );
+    return result.toArray( new String[result.size()] );
   }
 }

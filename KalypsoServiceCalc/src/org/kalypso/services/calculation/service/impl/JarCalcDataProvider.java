@@ -91,7 +91,7 @@ public class JarCalcDataProvider implements ICalcDataProvider
 
   private Map indexInput( final CalcJobClientBean[] input )
   {
-    final Map index = new HashMap( input.length );
+    final Map<String, String> index = new HashMap<String, String>( input.length );
     for( int i = 0; i < input.length; i++ )
     {
       final CalcJobClientBean bean = input[i];

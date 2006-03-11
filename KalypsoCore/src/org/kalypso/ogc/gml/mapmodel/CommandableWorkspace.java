@@ -396,6 +396,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @deprecated
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
+  @Deprecated
   public IFeatureType getFeatureType( String nameLocalPart )
   {
     return m_workspace.getFeatureType( nameLocalPart );

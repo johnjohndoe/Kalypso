@@ -76,7 +76,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     super( m_composite, m_symbolizer, m_userStyle );
   }
 
-  public void draw() throws FilterEvaluationException
+  @Override
+  public void draw( ) throws FilterEvaluationException
   {
     LineSymbolizer lineSymbolizer = (LineSymbolizer)symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();

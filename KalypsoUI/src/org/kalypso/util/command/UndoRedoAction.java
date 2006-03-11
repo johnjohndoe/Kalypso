@@ -84,7 +84,8 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  public void run()
+  @Override
+  public void run( )
   {
     if( ( m_isUndo && m_commandManager.canUndo() ) || ( !m_isUndo && m_commandManager.canRedo() ) )
       new CommandJob( null, m_commandManager, m_rule, null, m_isUndo ? CommandJob.UNDO : CommandJob.REDO );

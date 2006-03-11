@@ -115,7 +115,8 @@ public class FileItem implements IRepositoryItem
     return m_file.isDirectory();
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
     return getName();
   }

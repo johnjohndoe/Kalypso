@@ -68,7 +68,8 @@ public class GisTemplateLoadedThread extends Thread
   /**
    * @see java.lang.Thread#run()
    */
-  public void run()
+  @Override
+  public void run( )
   {
     int maxWait = 10;
     while( true )
@@ -92,20 +93,20 @@ public class GisTemplateLoadedThread extends Thread
     super.run();
   }
 
-  private boolean isLoaded()
+  private boolean isLoaded( )
   {
     if( m_modell == null )
       return false;
-    
+
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
-    
+
     for( int i = 0; i < themes.length; i++ )
     {
       final IKalypsoTheme theme = themes[i];
-      
+
       if( theme instanceof IPooledObject )
       {
-        if( !( (IPooledObject)theme ).isLoaded() )
+        if( !((IPooledObject) theme).isLoaded() )
           return false;
       }
     }

@@ -61,8 +61,7 @@ public class CompBigger extends AbstractValueComp
    * @param modeInclusive
    * @throws ParserException
    */
-  public CompBigger( final IAxis[] axes, final String axisType, final String value, final boolean modeInclusive )
-      throws ParserException
+  public CompBigger( final IAxis[] axes, final String axisType, final String value, final boolean modeInclusive ) throws ParserException
   {
     super( axes, axisType );
 
@@ -73,6 +72,7 @@ public class CompBigger extends AbstractValueComp
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.AbstractValueComp#internalValidates(java.lang.Object)
    */
+  @Override
   public boolean internalValidates( final Object element ) throws ParserException
   {
     if( m_modeInclusive )

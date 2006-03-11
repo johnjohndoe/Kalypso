@@ -53,12 +53,14 @@ public class SingleElementSelectWidget extends AbstractSelectWidget
     super( name, toolTip );
   }
 
+  @Override
   protected int getSelectionMode()
   {
     return MapPanel.MODE_SELECT;
   }
 
-  protected boolean allowOnlyOneSelectedFeature()
+  @Override
+  protected boolean allowOnlyOneSelectedFeature( )
   {
     return true;
   }

@@ -40,17 +40,13 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FilterActionDelegate extends AbstractGisMapEditorActionDelegate
 {
-
-  public FilterActionDelegate()
+  public FilterActionDelegate( )
   {
-    //TODO Widget-Klasse gibt es noch nicht
+    // TODO Widget-Klasse gibt es noch nicht
     super( WidgetHelper.getWidget( null ) );
   }
 
@@ -58,16 +54,16 @@ public class FilterActionDelegate extends AbstractGisMapEditorActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );
     if( selection instanceof KalypsoFeatureThemeSelection )
     {
-      KalypsoFeatureThemeSelection s = (KalypsoFeatureThemeSelection)selection;
-      IEditorPart editor = getEditor();
+      final IEditorPart editor = getEditor();
       if( editor instanceof GisMapEditor )
       {
-        IMapModell mapModell = ( (GisMapEditor)editor ).getMapPanel().getMapModell();
+        IMapModell mapModell = ((GisMapEditor) editor).getMapPanel().getMapModell();
         IKalypsoTheme activeTheme = mapModell.getActiveTheme();
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {

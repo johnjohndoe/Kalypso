@@ -1,28 +1,3 @@
-package org.kalypso.ogc.sensor.adapter;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -63,24 +38,43 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.sensor.adapter;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
- * 
- * @author huebsch
- * 
- * adapter for Timeseries in 'csv' format date format dd MM yyy hh mm value format comma seperator example: 02.06.2002
- * 16:30;0,0010
- *  
+ * @author huebsch adapter for Timeseries in 'csv' format date format dd MM yyy hh mm value format comma seperator
+ *         example: 02.06.2002 16:30;0,0010
  */
 public class NativeObservationCSVAdapter implements INativeObservationAdapter
 {
   private DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
-  //  public static Pattern m_csvPattern = Pattern
-  //      .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9\\.]+)" );
+  // public static Pattern m_csvPattern = Pattern
+  // .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9\\.]+)" );
 
-  public static Pattern m_csvPattern = Pattern
-      .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+)" );
+  public static Pattern m_csvPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+)" );
 
   private String m_title;
 
@@ -102,8 +96,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList,
-        axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
     return observation;
   }
 
@@ -112,10 +105,10 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     StringBuffer errorBuffer = new StringBuffer();
     FileReader fileReader = new FileReader( source );
     LineNumberReader reader = new LineNumberReader( fileReader );
-    final List dateCollector = new ArrayList();
-    final List valueCollector = new ArrayList();
+    final List<Date> dateCollector = new ArrayList<Date>();
+    final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
-    while( ( lineIn = reader.readLine() ) != null )
+    while( (lineIn = reader.readLine()) != null )
     {
       try
       {
@@ -126,8 +119,8 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
           String valueString = matcher.group( 2 );
 
           String formatedvalue = valueString.replaceAll( "\\,", "\\." );
-          Double value = new Double( Double.parseDouble( formatedvalue ) );
-          //          Double value = new Double( matcher.group( 2 ) );
+          final Double value = new Double( Double.parseDouble( formatedvalue ) );
+          // Double value = new Double( matcher.group( 2 ) );
 
           String formatedDate = dateString.replaceAll( "[:;\\.]", " " );
           Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2})" );
@@ -141,8 +134,8 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
                 buffer.append( " " ); // separator
 
               buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); //
-              //      correct
-              //  empty
+              // correct
+              // empty
               // fields
             }
             buffer.append( " 00" );
@@ -161,8 +154,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage()
-            + "\"\n" );
+        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
       }
     }
     Object[][] tupelData = new Object[dateCollector.size()][2];
@@ -176,7 +168,8 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     return new SimpleTuppleModel( axis, tupelData );
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
     return m_title;
   }
@@ -184,16 +177,12 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
   /**
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createAxis()
    */
-  public IAxis[] createAxis()
+  public IAxis[] createAxis( )
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( m_axisTypeValue );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils
-        .getUnit( m_axisTypeValue ), Double.class, false );
-    final IAxis[] axis = new IAxis[]
-    {
-        dateAxis,
-        valueAxis };
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
   }
 }

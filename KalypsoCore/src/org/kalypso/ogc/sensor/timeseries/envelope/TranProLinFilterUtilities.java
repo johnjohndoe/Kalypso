@@ -36,11 +36,11 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -53,7 +53,6 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.TranProLinFilterType;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author doemming

@@ -35,27 +35,18 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
  */
 public class GmlTreeDragListener extends DragSourceAdapter implements DragSourceListener
 {
-  // TODO: not used remove it!
-  private GmlTreeView m_viewer;
-
-  public GmlTreeDragListener( GmlTreeView viewer )
-  {
-    m_viewer = viewer;
-  }
-
   /**
    * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
    */
   public void dragStart( DragSourceEvent event )
   {
-   //do nothing
+    // do nothing
   }
 
   /**
@@ -63,7 +54,7 @@ public class GmlTreeDragListener extends DragSourceAdapter implements DragSource
    */
   public void dragSetData( DragSourceEvent event )
   {
-   //do nothing
+    // do nothing
   }
 
   /**
@@ -71,7 +62,7 @@ public class GmlTreeDragListener extends DragSourceAdapter implements DragSource
    */
   public void dragFinished( DragSourceEvent event )
   {
-   //do nothing
+    // do nothing
   }
 
 }

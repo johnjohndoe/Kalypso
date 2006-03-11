@@ -49,10 +49,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType;
 
 /**
- * 
- * class FindExistingHeavyRelationsFeatureVisitor
- * 
- * created by
+ * class FindExistingHeavyRelationsFeatureVisitor created by
  * 
  * @author doemming (13.05.2005)
  */
@@ -60,7 +57,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
 {
   private final HeavyRelationType m_relation;
 
-  private final List m_results = new ArrayList();
+  private final List<Feature[]> m_results = new ArrayList<Feature[]>();
 
   private final GMLWorkspace m_workspace;
 
@@ -97,11 +94,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
           final Feature feature2 = props2[j];
           if( feature2.getFeatureType() == m_relation.getDestFT() )
           {
-            m_results.add( new Feature[]
-            {
-                srcFE,
-                feature1,
-                feature2 } );
+            m_results.add( new Feature[] { srcFE, feature1, feature2 } );
           }
         }
       }
@@ -111,21 +104,20 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
 
   public Feature[] getBodyFeatureFor( Feature destFE )
   {
-    List result = new ArrayList();
-    for( Iterator iter = m_results.iterator(); iter.hasNext(); )
+    final List<Feature> result = new ArrayList<Feature>();
+    for( final Feature[] f : m_results )
     {
-      Feature[] f = (Feature[])iter.next();
       if( f[2] == destFE )
         result.add( f[1] );
     }
-    return (Feature[])result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   public boolean relationExistsTo( Feature f2 )
   {
     for( Iterator iter = m_results.iterator(); iter.hasNext(); )
     {
-      Feature[] f = (Feature[])iter.next();
+      Feature[] f = (Feature[]) iter.next();
       if( f[2] == f2 )
         return true;
     }

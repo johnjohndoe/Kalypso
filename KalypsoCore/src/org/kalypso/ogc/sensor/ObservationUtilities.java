@@ -70,11 +70,11 @@ public class ObservationUtilities
 {
   private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
 
-  private static final Comparator AXIS_SORT_COMPARATOR = new AxisSortComparator();
+  private static final Comparator<IAxis> AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
-  private ObservationUtilities()
+  private ObservationUtilities( )
   {
-  //  not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
@@ -105,12 +105,10 @@ public class ObservationUtilities
    * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    * @see ObservationUtilities#findAxisByType(IAxis[], String)
-   * 
    * @throws NoSuchElementException
    *           when neither name nor type matched
    */
-  public static IAxis findAxisByNameThenByType( final IAxis[] axes, final String axisNameOrType )
-      throws NoSuchElementException
+  public static IAxis findAxisByNameThenByType( final IAxis[] axes, final String axisNameOrType ) throws NoSuchElementException
   {
     try
     {
@@ -126,7 +124,6 @@ public class ObservationUtilities
    * returns null when no axis found instead of throwing an exception
    * 
    * @return axis or null if not found
-   * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    */
   public static IAxis findAxisByNameNoEx( final IAxis[] axes, final String axisName )
@@ -182,9 +179,9 @@ public class ObservationUtilities
    * 
    * @return all axes which are compatible with desired Classtype
    */
-  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class desired )
+  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class< ? > desired )
   {
-    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
+    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -195,13 +192,13 @@ public class ObservationUtilities
     if( list.size() == 0 )
       throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + desired );
 
-    return (IAxis[])list.toArray( new IAxis[list.size()] );
+    return list.toArray( new IAxis[list.size()] );
   }
 
   /**
    * Returns the first axis that is compatible with the desired Dataclass
    */
-  public static IAxis findAxisByClass( final IAxis[] axes, final Class desired )
+  public static IAxis findAxisByClass( final IAxis[] axes, final Class< ? > desired )
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -216,7 +213,7 @@ public class ObservationUtilities
    * Returns the first axis that is compatible with the desired Dataclass, does not throw an exception if no such axis
    * found. Returns null if no axis found.
    */
-  public static IAxis findAxisByClassNoEx( final IAxis[] axes, final Class desired )
+  public static IAxis findAxisByClassNoEx( final IAxis[] axes, final Class< ? > desired )
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -232,7 +229,7 @@ public class ObservationUtilities
    */
   public static IAxis[] findAxesByKey( final IAxis[] axes )
   {
-    final ArrayList list = new ArrayList( axes.length );
+    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes.length );
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -240,7 +237,7 @@ public class ObservationUtilities
         list.add( axes[i] );
     }
 
-    return (IAxis[])list.toArray( new IAxis[list.size()] );
+    return list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -270,7 +267,7 @@ public class ObservationUtilities
   public static void dump( final ITuppleModel model, final String sep, final Writer writer ) throws SensorException
   {
     // do not use the same array because of the sort
-    final IAxis[] axes = (IAxis[])new ArrayList( Arrays.asList( model.getAxisList() ) ).toArray( new IAxis[0] );
+    final IAxis[] axes = new ArrayList<IAxis>( Arrays.asList( model.getAxisList() ) ).toArray( new IAxis[0] );
 
     // sort axes in order to have a better output
     sortAxes( axes );
@@ -339,8 +336,7 @@ public class ObservationUtilities
    * 
    * @return string representation of the given line (tupple)
    */
-  public static String dump( final ITuppleModel model, final String sep, final int index,
-      final boolean excludeStatusAxes ) throws SensorException
+  public static String dump( final ITuppleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
   {
     IAxis[] axes = model.getAxisList();
 
@@ -405,8 +401,7 @@ public class ObservationUtilities
    * @throws IllegalStateException
    *           when compatibility is wished but could not be guaranteed
    */
-  public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest,
-      final IRequest args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
+  public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest, final IRequest args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();
@@ -415,7 +410,7 @@ public class ObservationUtilities
     if( values == null )
       return null;
 
-    final Map map = new HashMap();
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>();
     for( int i = 0; i < destAxes.length; i++ )
     {
       try
@@ -427,8 +422,7 @@ public class ObservationUtilities
       catch( NoSuchElementException e )
       {
         if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( "Required axis " + destAxes[i] + " from " + dest + " could not be found in "
-              + source );
+          throw new IllegalStateException( "Required axis " + destAxes[i] + " from " + dest + " could not be found in " + source );
 
         // else ignored, try with next one
       }
@@ -445,7 +439,7 @@ public class ObservationUtilities
 
       for( int j = 0; j < destAxes.length; j++ )
       {
-        final IAxis srcAxis = (IAxis)map.get( destAxes[j] );
+        final IAxis srcAxis = map.get( destAxes[j] );
 
         if( srcAxis != null )
           tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i, srcAxis );
@@ -471,8 +465,7 @@ public class ObservationUtilities
    *          columns for which objects will be taken
    * @throws SensorException
    */
-  public static Object[] getElements( final ITuppleModel tuppleModel, final int row, final IAxis[] axisList )
-      throws SensorException
+  public static Object[] getElements( final ITuppleModel tuppleModel, final int row, final IAxis[] axisList ) throws SensorException
   {
     final Object[] result = new Object[axisList.length];
     for( int i = 0; i < axisList.length; i++ )
@@ -496,16 +489,13 @@ public class ObservationUtilities
    * 
    * @author schlienger (02.06.2005)
    */
-  public static class AxisSortComparator implements Comparator
+  public static class AxisSortComparator implements Comparator<IAxis>
   {
     /**
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare( final Object o1, final Object o2 )
+    public int compare( final IAxis a1, final IAxis a2 )
     {
-      final IAxis a1 = (IAxis)o1;
-      final IAxis a2 = (IAxis)o2;
-
       return a1.getType().compareTo( a2.getType() );
     }
   }
@@ -524,7 +514,6 @@ public class ObservationUtilities
   }
 
   /**
-   * 
    * @param compareAxis
    * @param testAxes
    * @return position of best fit, else <code>-1</code> if not fit
@@ -536,8 +525,7 @@ public class ObservationUtilities
     for( int i = 0; i < testAxes.length; i++ )
     {
       int hits = 0;
-      if( !testAxes[i].getType().equals( compareAxis.getType() )
-          && !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
+      if( !testAxes[i].getType().equals( compareAxis.getType() ) && !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
         continue;
       hits++;
       if( testAxes[i].getUnit().equals( compareAxis.getUnit() ) )
@@ -554,7 +542,6 @@ public class ObservationUtilities
   }
 
   /**
-   * 
    * @param tuppleModel
    * @param dateAxis
    *          must be key axis (sorted)
@@ -564,8 +551,7 @@ public class ObservationUtilities
    * @return index next to date
    * @throws SensorException
    */
-  public static int findNextIndexForDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date,
-      int minIndex, int maxIndex ) throws SensorException
+  public static int findNextIndexForDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, int minIndex, int maxIndex ) throws SensorException
   {
     if( minIndex > maxIndex )
     {
@@ -581,7 +567,7 @@ public class ObservationUtilities
       long bestDistance = -1;
       for( int i = minIndex; i < maxIndex; i++ )
       {
-        final Date rowDate = (Date)tuppleModel.getElement( i, dateAxis );
+        final Date rowDate = (Date) tuppleModel.getElement( i, dateAxis );
         final long distance = Math.abs( rowDate.getTime() - targetDate );
         if( i == minIndex || distance < bestDistance )
         {
@@ -592,16 +578,15 @@ public class ObservationUtilities
       return result;
     }
     // do recursion
-    int midIndex = ( minIndex + maxIndex ) / 2;
-    final Date date1 = (Date)tuppleModel.getElement( midIndex - 1, dateAxis );
-    final Date date2 = (Date)tuppleModel.getElement( midIndex, dateAxis );
+    int midIndex = (minIndex + maxIndex) / 2;
+    final Date date1 = (Date) tuppleModel.getElement( midIndex - 1, dateAxis );
+    final Date date2 = (Date) tuppleModel.getElement( midIndex, dateAxis );
     if( Math.abs( date1.getTime() - targetDate ) < Math.abs( date2.getTime() - targetDate ) )
       return findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, midIndex );
     return findNextIndexForDate( tuppleModel, dateAxis, date, midIndex, maxIndex );
   }
 
   /**
-   * 
    * @param tuppleModel
    * @param dateAxis
    *          must be key axis (sorted)
@@ -611,18 +596,16 @@ public class ObservationUtilities
    * @return index before date
    * @throws SensorException
    */
-  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date,
-      int minIndex, int maxIndex ) throws SensorException
+  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, int minIndex, int maxIndex ) throws SensorException
   {
     int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
-    Date rowDate = (Date)tuppleModel.getElement( index, dateAxis );
+    Date rowDate = (Date) tuppleModel.getElement( index, dateAxis );
     if( rowDate.before( rowDate ) )
       return index;
     return index - 1;
   }
 
-  public static double getInterpolatedValueAt( final ITuppleModel tuppelModel, final IAxis dateAxis,
-      final IAxis valueAxis, final Date date ) throws SensorException
+  public static double getInterpolatedValueAt( final ITuppleModel tuppelModel, final IAxis dateAxis, final IAxis valueAxis, final Date date ) throws SensorException
   {
     int index = ObservationUtilities.findIndexBeforeDate( tuppelModel, dateAxis, date, 0, tuppelModel.getCount() );
     // check range
@@ -630,10 +613,10 @@ public class ObservationUtilities
       index = 0;
     if( index + 1 >= tuppelModel.getCount() )
       index = tuppelModel.getCount() - 2;
-    final Date d1 = (Date)tuppelModel.getElement( index, dateAxis );
-    final Date d2 = (Date)tuppelModel.getElement( index + 1, dateAxis );
-    final double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
-    final double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
+    final Date d1 = (Date) tuppelModel.getElement( index, dateAxis );
+    final Date d2 = (Date) tuppelModel.getElement( index + 1, dateAxis );
+    final double v1 = ((Double) tuppelModel.getElement( index, valueAxis )).doubleValue();
+    final double v2 = ((Double) tuppelModel.getElement( index + 1, valueAxis )).doubleValue();
     return MathUtils.interpolate( d1.getTime(), d2.getTime(), v1, v2, date.getTime() );
   }
 

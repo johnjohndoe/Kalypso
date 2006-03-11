@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeaturePage extends WizardPage
 {
-  private final Collection m_changes = new ArrayList();
+  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
 
   private FeatureComposite m_featureComposite;
 
@@ -133,6 +133,7 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_featureComposite != null )
@@ -142,6 +143,7 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
+  @Override
   public boolean isPageComplete()
   {
     return m_featureComposite.isValid();
@@ -150,6 +152,7 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
+  @Override
   public boolean canFlipToNextPage()
   {
     if( m_overrideCanFlipToNextPage )
@@ -158,8 +161,8 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public Collection getChanges()
+  public Collection<FeatureChange> getChanges()
   {
-    return new ArrayList( m_changes );
+    return new ArrayList<FeatureChange>( m_changes );
   }
 }

@@ -88,6 +88,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     return m_name;
   }
 
+  @Override
   public String toString()
   {
     return getName();

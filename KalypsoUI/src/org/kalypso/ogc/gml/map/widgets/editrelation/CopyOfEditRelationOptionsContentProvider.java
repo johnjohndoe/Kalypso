@@ -3,7 +3,6 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -60,11 +59,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class CopyOfEditRelationOptionsContentProvider implements ITreeContentProvider
 {
 
-  private final Hashtable m_childCache = new Hashtable();
+  private final Hashtable<Object, Object[]> m_childCache = new Hashtable<Object, Object[]>();
 
-  private final Hashtable m_parentCache = new Hashtable();
+  private final Hashtable<Object, Object> m_parentCache = new Hashtable<Object, Object>();
 
-  private final HashSet m_checkedElements = new HashSet();
+  private final HashSet<Object> m_checkedElements = new HashSet<Object>();
 
   /*
    * @author doemming
@@ -77,11 +76,11 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( final Object parentElement )
   {
     if( m_childCache.containsKey( parentElement ) )
-      return (Object[]) m_childCache.get( parentElement );
-    final List result = new ArrayList();
+      return m_childCache.get( parentElement );
+    final List<Object> result = new ArrayList<Object>();
     if( parentElement == null )
       return new Object[0];
 
@@ -161,7 +160,7 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
         m_parentCache.put( array[i], parentElement );
     }
     if( m_childCache.containsKey( parentElement ) )
-      return (Object[]) m_childCache.get( parentElement );
+      return m_childCache.get( parentElement );
     return new Object[0];
   }
 
@@ -236,7 +235,7 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
     return m_checkedElements.contains( element );
   }
 
-  public void setChecked( Object element, boolean checked )
+  public void setChecked( final Object element, final boolean checked )
   {
     if( checked )
       m_checkedElements.add( element );
@@ -246,13 +245,12 @@ public class CopyOfEditRelationOptionsContentProvider implements ITreeContentPro
 
   public RelationType[] getCheckedRelations( )
   {
-    final List result = new ArrayList();
-    for( Iterator iter = m_checkedElements.iterator(); iter.hasNext(); )
+    final List<RelationType> result = new ArrayList<RelationType>();
+    for( final Object element : m_checkedElements )
     {
-      Object element = iter.next();
       if( element instanceof RelationType )
-        result.add( element );
+        result.add( (RelationType) element );
     }
-    return (RelationType[]) result.toArray( new RelationType[result.size()] );
+    return result.toArray( new RelationType[result.size()] );
   }
 }

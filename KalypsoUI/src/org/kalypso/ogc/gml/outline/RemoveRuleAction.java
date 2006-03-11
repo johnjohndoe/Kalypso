@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
@@ -56,8 +56,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public class RemoveRuleAction extends AbstractOutlineAction
 {
-  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
+  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
   {
     super( text, image, tooltipText, outlineViewer, listManip );
     refresh();
@@ -66,22 +65,22 @@ public class RemoveRuleAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run()
+  @Override
+  public void run( )
   {
-    Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
+    Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
     if( o instanceof RuleTreeObject )
     {
-      RuleTreeObject obj = (RuleTreeObject)o;
+      RuleTreeObject obj = (RuleTreeObject) o;
       KalypsoUserStyle userStyle = obj.getStyle();
       userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
       userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
 
-      IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       StyleEditorViewPart part;
       try
       {
-        part = (StyleEditorViewPart)window.getActivePage().showView(
-            "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+        part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
         if( part != null )
         {
           part.setSelectionChangedProvider( getOutlineviewer() );
@@ -98,16 +97,18 @@ public class RemoveRuleAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
+  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     refresh();
   }
 
-  protected void refresh()
+  @Override
+  protected void refresh( )
   {
     boolean bEnable = false;
 
-    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof RuleTreeObject )
       bEnable = true;

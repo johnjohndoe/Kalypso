@@ -50,28 +50,25 @@ import java.util.HashMap;
 import org.kalypsodeegree.graphics.sld.Rule;
 
 /**
- * @author F.Lindemann
- *  
- */
-/*
  * This class is fed with rules. It identifies whether it is a normal rule or the rule belongs to a pattern. It collects
  * the rules and returns the number of rule items (-> number of tabitems to be displayed) as a list of Rule and
  * RuleCollection Objects.
+ * 
+ * @author F.Lindemann
  */
-
 public class RuleFilterCollection
 {
-  private HashMap patterns = null;
+  private HashMap<String, RuleCollection> patterns = null;
 
   private ArrayList filteredRuleCollection = null;
 
-  private RuleFilterCollection()
+  private RuleFilterCollection( )
   {
-    patterns = new HashMap();
+    patterns = new HashMap<String, RuleCollection>();
     filteredRuleCollection = new ArrayList();
   }
 
-  public static RuleFilterCollection getInstance()
+  public static RuleFilterCollection getInstance( )
   {
     return new RuleFilterCollection();
   }
@@ -87,12 +84,14 @@ public class RuleFilterCollection
       if( patterns.containsKey( key ) )
       {
         // if yes - add rule to collection
-        ( (RuleCollection)patterns.get( key ) ).addRule( rule );
+        patterns.get( key ).addRule( rule );
       }
       else
       {
-        RuleCollection ruleCollection = RuleCollection.getInstance( rule );
+        final RuleCollection ruleCollection = RuleCollection.getInstance( rule );
         patterns.put( key, ruleCollection );
+        
+        // TODO: dirty and probably a bug: mixed object types in this collection
         filteredRuleCollection.add( ruleCollection );
       }
     }
@@ -113,7 +112,7 @@ public class RuleFilterCollection
       if( patterns.containsKey( key ) )
       {
         // if yes - add rule to collection
-        ( (RuleCollection)patterns.get( key ) ).removeRule( rule );
+        patterns.get( key ).removeRule( rule );
       }
     }
     else
@@ -128,12 +127,12 @@ public class RuleFilterCollection
     patterns.remove( coll.getId() );
   }
 
-  public ArrayList getFilteredRuleCollection()
+  public ArrayList getFilteredRuleCollection( )
   {
     return filteredRuleCollection;
   }
 
-  public int size()
+  public int size( )
   {
     return filteredRuleCollection.size();
   }

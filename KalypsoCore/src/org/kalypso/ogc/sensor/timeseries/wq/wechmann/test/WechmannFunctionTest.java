@@ -63,7 +63,8 @@ public class WechmannFunctionTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception
+  @Override
+  protected void setUp( ) throws Exception
   {
     m_wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
     m_wp2 = new WechmannParams( -43.32, -7.24065, 2.131 );

@@ -58,7 +58,6 @@ public class ForecastFilter extends AbstractObservationFilter
   private IObservation[] m_obsArray = null;
 
   /**
-   * 
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
@@ -70,12 +69,12 @@ public class ForecastFilter extends AbstractObservationFilter
   }
 
   /**
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    * @param args
    *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a
    *          forecastfilter should expect <code>null</code> here.
    */
+  @Override
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     final ITuppleModel models[] = new ITuppleModel[m_obsArray.length];

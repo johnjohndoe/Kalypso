@@ -66,7 +66,8 @@ public class LikeComparisonData extends AbstractComparisonData
     this.literal = m_literal.trim();
   }
 
-  public boolean verify() throws FilterDialogException
+  @Override
+  public boolean verify( ) throws FilterDialogException
   {
     if( literal == null || literal.trim().length() == 0 || propertyName == null )
     {

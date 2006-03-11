@@ -1408,6 +1408,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     for( int i = 0; i < ftp.length; i++ )
     {
       // if only numeric types should be selectable
+      final String name = ftp[i].getName();
       if( subType != FilterDialogTreeNode.COMPARISON_EQUALTO )
       {
         if( ftp[i] instanceof IValuePropertyType )
@@ -1415,28 +1416,28 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
           final Class valueClass = vpt.getValueClass();
           if( valueClass == Double.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == BigInteger.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == Byte.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == BigDecimal.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == Float.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == Integer.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == Long.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
           else if( valueClass == Short.class )
-            labelStringItems.add( ftp[i].getName() );
+            labelStringItems.add( name );
         }
       }
       // any type except for a geometry object
       else
       {
         if( !GeometryUtilities.isGeometry( ftp[i] ) )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
       }
     }
     final String[] items = new String[labelStringItems.size()];
@@ -1651,22 +1652,23 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       {
         final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
         final Class valueClass = vpt.getValueClass();
+        final String name = ftp[i].getName();
         if( valueClass == Double.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == BigInteger.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == Byte.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == BigDecimal.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == Float.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == Integer.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == Long.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
         else if( valueClass == Short.class )
-          labelStringItems.add( ftp[i].getName() );
+          labelStringItems.add( name );
       }
     }
     final String[] items = new String[labelStringItems.size()];

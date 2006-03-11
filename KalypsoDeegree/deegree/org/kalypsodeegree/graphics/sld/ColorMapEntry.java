@@ -64,28 +64,26 @@ import java.awt.Color;
 
 /**
  * @author N. Peiler
- *  
  */
 public interface ColorMapEntry
 {
+  public Color getColor( );
 
-  Color getColor();
+  public void setColor( Color color );
 
-  void setColor( Color color );
+  public double getOpacity( );
 
-  double getOpacity();
+  public void setOpacity( double opacity );
 
-  void setOpacity( double opacity );
+  public double getQuantity( );
 
-  double getQuantity();
+  public void setQuantity( double quantity );
 
-  void setQuantity( double quantity );
+  public String getLabel( );
 
-  String getLabel();
+  public void setLabel( String label );
 
-  void setLabel( String label );
+  public net.opengis.sld.ColorMapEntry exportAsXML( );
 
-  net.opengis.sld.ColorMapEntry exportAsXML() throws Exception;
-
-  Object clone();
+  public ColorMapEntry clone( );
 }

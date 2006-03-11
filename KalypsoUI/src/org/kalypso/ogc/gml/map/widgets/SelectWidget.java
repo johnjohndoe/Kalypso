@@ -54,12 +54,13 @@ public class SelectWidget extends AbstractSelectWidget
 
   }
 
+  @Override
   protected int getSelectionMode()
   {
     return MapPanel.MODE_SELECT;
   }
 
-  /**
+  @Override /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
    */
   boolean allowOnlyOneSelectedFeature()

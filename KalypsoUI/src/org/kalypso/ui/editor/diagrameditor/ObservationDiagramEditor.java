@@ -53,7 +53,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.metadoc.IExportableObject;
@@ -91,6 +92,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_obsChart != null )
@@ -102,6 +104,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
@@ -121,13 +124,14 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     }
 
     // print action
-    
-    WorkbenchHelp.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" );
+    final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+    helpSystem.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" );
   }
 
   /**
    * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
    */
+  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
@@ -140,6 +144,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
+  @Override
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
   {
     final DiagView template = (DiagView)getView();
@@ -171,7 +176,8 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
    */
-  public void setFocus()
+  @Override
+  public void setFocus( )
   {
     if( m_swingContainer != null )
       m_swingContainer.setFocus();

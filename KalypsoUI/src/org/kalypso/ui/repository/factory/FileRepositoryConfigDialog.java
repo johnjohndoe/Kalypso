@@ -127,6 +127,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     setTitle( "ZML-Repository Konfiguration" );
@@ -164,7 +165,8 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  protected void okPressed()
+  @Override
+  protected void okPressed( )
   {
     if( !m_fLocation.isValid() )
     {

@@ -33,8 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class SpatialOperationPanel extends FilterComboPanel
@@ -84,6 +82,7 @@ public class SpatialOperationPanel extends FilterComboPanel
   /**
    * @see org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel#setSelection(int)
    */
+  @Override
   public void setSelection( int index )
   {
     selection_index = index;
@@ -94,7 +93,8 @@ public class SpatialOperationPanel extends FilterComboPanel
   /**
    * @see org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel#getSelection()
    */
-  public int getSelection()
+  @Override
+  public int getSelection( )
   {
     return selection_index;
   }

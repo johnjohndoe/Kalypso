@@ -79,6 +79,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     refreshAction( null );
   }
 
+  @Override
   protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;

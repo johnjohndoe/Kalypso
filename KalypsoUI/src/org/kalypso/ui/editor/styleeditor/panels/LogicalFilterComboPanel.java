@@ -62,17 +62,17 @@ public class LogicalFilterComboPanel extends FilterComboPanel
     init();
   }
 
+  @Override
   public int getSelection()
   {
     return selection_index;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  public void setSelection( int index )
+  @Override
+  public void setSelection( final int index )
   {
     selection_index = index;
     comboBox.select( index );

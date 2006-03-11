@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,9 +60,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureSelectionManager2 implements IFeatureSelectionManager
 {
   /** feature -> easyWrapper */
-  private final Map m_map = new HashMap();
+  private final Map<Feature, EasyFeatureWrapper> m_map = new HashMap<Feature, EasyFeatureWrapper>();
 
-  private List m_listener = new ArrayList( 5 );
+  private List<IFeatureSelectionListener> m_listener = new ArrayList<IFeatureSelectionListener>( 5 );
 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#changeSelection(org.kalypsodeegree.model.feature.Feature[],
@@ -68,8 +70,8 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd )
   {
-    final Set oldState = new HashSet( m_map.keySet() );
-    
+    final Set<Feature> oldState = new HashSet<Feature>( m_map.keySet() );
+
     for( int i = 0; i < featuresToRemove.length; i++ )
     {
       final Feature f = featuresToRemove[i];
@@ -86,10 +88,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
       fireSelectionChanged();
   }
 
-  private void fireSelectionChanged()
+  private void fireSelectionChanged( )
   {
-    final IFeatureSelectionListener[] ls = (IFeatureSelectionListener[])m_listener
-        .toArray( new IFeatureSelectionListener[m_listener.size()] );
+    final IFeatureSelectionListener[] ls = m_listener.toArray( new IFeatureSelectionListener[m_listener.size()] );
     for( int i = 0; i < ls.length; i++ )
     {
       final IFeatureSelectionListener listener = ls[i];
@@ -100,10 +101,10 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#clear()
    */
-  public void clear()
+  public void clear( )
   {
     m_map.clear();
-    
+
     fireSelectionChanged();
   }
 
@@ -137,7 +138,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
 
   private EasyFeatureWrapper getWrapper( final Feature feature )
   {
-    return (EasyFeatureWrapper)m_map.get( feature );
+    return m_map.get( feature );
   }
 
   /**
@@ -155,7 +156,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
    */
-  public String getParentFeatureProperty( final Feature feature )
+  public IRelationType getParentFeatureProperty( final Feature feature )
   {
     final EasyFeatureWrapper wrapper = getWrapper( feature );
     if( wrapper == null )
@@ -167,7 +168,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.eclipse.jface.viewers.IStructuredSelection#getFirstElement()
    */
-  public Object getFirstElement()
+  public Object getFirstElement( )
   {
     return m_map.keySet().iterator().next();
   }
@@ -175,7 +176,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.eclipse.jface.viewers.IStructuredSelection#iterator()
    */
-  public Iterator iterator()
+  public Iterator iterator( )
   {
     return m_map.keySet().iterator();
   }
@@ -183,7 +184,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.eclipse.jface.viewers.IStructuredSelection#size()
    */
-  public int size()
+  public int size( )
   {
     return m_map.size();
   }
@@ -191,7 +192,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.eclipse.jface.viewers.IStructuredSelection#toArray()
    */
-  public Object[] toArray()
+  public Object[] toArray( )
   {
     return m_map.keySet().toArray();
   }
@@ -199,15 +200,15 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
    */
-  public List toList()
+  public List<Feature> toList( )
   {
-    return new ArrayList( m_map.keySet() );
+    return new ArrayList<Feature>( m_map.keySet() );
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelection#isEmpty()
    */
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_map.isEmpty();
   }
@@ -215,15 +216,15 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
    */
-  public EasyFeatureWrapper[] getAllFeatures()
+  public EasyFeatureWrapper[] getAllFeatures( )
   {
-    return (EasyFeatureWrapper[])m_map.values().toArray( new EasyFeatureWrapper[m_map.size()] );
+    return m_map.values().toArray( new EasyFeatureWrapper[m_map.size()] );
   }
 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
    */
-  public IFeatureSelectionManager getSelectionManager()
+  public IFeatureSelectionManager getSelectionManager( )
   {
     return this;
   }
@@ -231,7 +232,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
    */
-  public Feature getFocusedFeature()
+  public Feature getFocusedFeature( )
   {
     // The feature manager doesn't support the focused feature
     return null;
@@ -240,7 +241,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
    */
-  public String getFocusedProperty()
+  public IPropertyType getFocusedProperty( )
   {
     // The feature manager doesn't support the focused feature
     return null;
@@ -249,7 +250,8 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return m_map.toString();
   }

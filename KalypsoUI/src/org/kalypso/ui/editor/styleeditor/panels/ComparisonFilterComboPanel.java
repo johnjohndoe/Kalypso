@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class ComparisonFilterComboPanel extends FilterComboPanel
 {
@@ -65,20 +64,20 @@ public class ComparisonFilterComboPanel extends FilterComboPanel
     items[6] = "LESS_THAN_OR_EQUAL_TO";
     items[7] = "GREATER_THAN_OR_EQUAL_TO";
     // not implemented yet
-    //items[8] = "NOT_EQUAL_TO";
+    // items[8] = "NOT_EQUAL_TO";
     init();
   }
 
-  public int getSelection()
+  @Override
+  public int getSelection( )
   {
     return selection_index;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
+  @Override
   public void setSelection( int index )
   {
     selection_index = index;

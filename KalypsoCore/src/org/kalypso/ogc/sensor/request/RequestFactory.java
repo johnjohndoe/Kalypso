@@ -126,7 +126,7 @@ public class RequestFactory
     final ObservationRequest request = ObservationRequest.createWith( xmlReq );
     final String[] axesTypes = request.getAxisTypes();
     final String[] statusAxes = request.getAxisTypesWithStatus();
-    final List axes = new Vector();
+    final List<IAxis> axes = new Vector<IAxis>();
     for( int i = 0; i < axesTypes.length; i++ )
     {
       final IAxis axis = TimeserieUtils.createDefaulAxis( axesTypes[i] );
@@ -135,7 +135,7 @@ public class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(), (IAxis[]) axes.toArray( new IAxis[axes.size()] ) );
+    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) );
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" );

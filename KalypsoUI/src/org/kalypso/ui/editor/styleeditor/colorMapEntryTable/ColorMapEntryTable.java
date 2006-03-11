@@ -96,12 +96,7 @@ public class ColorMapEntryTable
   private final String OPACITY_COLUMN = "opacity";
 
   // Set column names
-  private String[] columnNames = new String[]
-  {
-      LABEL_COLUMN,
-      QUANTITY_COLUMN,
-      COLOR_COLUMN,
-      OPACITY_COLUMN };
+  private String[] columnNames = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
 
   private static final String fNON_NEGATIVE_INTEGER_FIELD = "(\\d){1,9}";
 
@@ -136,9 +131,9 @@ public class ColorMapEntryTable
     Iterator it = colorMap.keySet().iterator();
     while( it.hasNext() )
     {
-      Double key = (Double)it.next();
-      ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( key );
-      m_colorMapEntryList.addColorMapEntry( (ColorMapEntry_Impl)colorMapEntry.clone() );
+      Double key = (Double) it.next();
+      ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( key );
+      m_colorMapEntryList.addColorMapEntry( colorMapEntry.clone() );
 
     }
 
@@ -200,6 +195,7 @@ public class ColorMapEntryTable
     column.addSelectionListener( new SelectionAdapter()
     {
 
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         tableViewer.setSorter( new QuantitySorter() );
@@ -220,7 +216,7 @@ public class ColorMapEntryTable
   /**
    * Create the TableViewer
    */
-  private void createTableViewer()
+  private void createTableViewer( )
   {
 
     tableViewer = new TableViewer( table );
@@ -233,13 +229,13 @@ public class ColorMapEntryTable
 
     // Column 1 :
     TextCellEditor textEditor = new TextCellEditor( table );
-    ( (Text)textEditor.getControl() ).setTextLimit( 100 );
+    ((Text) textEditor.getControl()).setTextLimit( 100 );
     editors[0] = textEditor;
 
     // Column 2 :
     textEditor = new TextCellEditor( table );
 
-    ( (Text)textEditor.getControl() ).addVerifyListener(
+    ((Text) textEditor.getControl()).addVerifyListener(
 
     new VerifyListener()
     {
@@ -257,7 +253,7 @@ public class ColorMapEntryTable
 
     // Column 4 :
     textEditor = new TextCellEditor( table );
-    ( (Text)textEditor.getControl() ).addVerifyListener(
+    ((Text) textEditor.getControl()).addVerifyListener(
 
     new VerifyListener()
     {
@@ -282,12 +278,12 @@ public class ColorMapEntryTable
     public void inputChanged( Viewer v, Object oldInput, Object newInput )
     {
       if( newInput != null )
-        ( (ColorMapEntryList)newInput ).addChangeListener( this );
+        ((ColorMapEntryList) newInput).addChangeListener( this );
       if( oldInput != null )
-        ( (ColorMapEntryList)oldInput ).removeChangeListener( this );
+        ((ColorMapEntryList) oldInput).removeChangeListener( this );
     }
 
-    public void dispose()
+    public void dispose( )
     {
       m_colorMapEntryList.removeChangeListener( this );
     }
@@ -334,6 +330,7 @@ public class ColorMapEntryTable
     {
 
       // Add a colorMapEntry to the colorMapEntryMap and refresh the table
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" );
@@ -341,7 +338,7 @@ public class ColorMapEntryTable
       }
     } );
 
-    //	Create and configure the "Delete" button
+    // Create and configure the "Delete" button
     Button delete = new Button( parent, SWT.PUSH | SWT.CENTER );
     delete.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
@@ -351,11 +348,11 @@ public class ColorMapEntryTable
     delete.addSelectionListener( new SelectionAdapter()
     {
 
-      //	Remove the selection and refresh the table
+      // Remove the selection and refresh the table
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        ColorMapEntry colorMapEntry = (ColorMapEntry)( (IStructuredSelection)tableViewer.getSelection() )
-            .getFirstElement();
+        ColorMapEntry colorMapEntry = (ColorMapEntry) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
         if( colorMapEntry != null )
         {
           m_colorMapEntryList.removeColorMapEntry( colorMapEntry );
@@ -363,7 +360,7 @@ public class ColorMapEntryTable
       }
     } );
 
-    //  Create and configure the "Refresh Map" button
+    // Create and configure the "Refresh Map" button
     Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
     refresh.setText( "refresh" );
     gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -373,18 +370,18 @@ public class ColorMapEntryTable
     refresh.addSelectionListener( new SelectionAdapter()
     {
 
-      //  refresh the map
+      // refresh the map
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         updateRasterSymbolizer();
       }
     } );
 
-    //  Create and configure the "Analyse" button
+    // Create and configure the "Analyse" button
     /*
      * Button analyse = new Button( parent, SWT.PUSH | SWT.CENTER ); analyse.setText( "analyse" ); gridData = new
      * GridData( GridData.HORIZONTAL_ALIGN_END ); gridData.widthHint = 50; analyse.setLayoutData( gridData );
-     * 
      * analyse.addSelectionListener( new SelectionAdapter() { // analyse the raster data public void widgetSelected(
      * SelectionEvent e ) { System.out.println("Analyse"); } } );
      */
@@ -396,7 +393,7 @@ public class ColorMapEntryTable
    * 
    * @return List containing column names
    */
-  public java.util.List getColumnNames()
+  public java.util.List getColumnNames( )
   {
     return Arrays.asList( columnNames );
   }
@@ -404,7 +401,7 @@ public class ColorMapEntryTable
   /**
    * @return currently selected item
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return tableViewer.getSelection();
   }
@@ -412,7 +409,7 @@ public class ColorMapEntryTable
   /**
    * Return the ColorMapEntryList
    */
-  public ColorMapEntryList getColorMapEntryList()
+  public ColorMapEntryList getColorMapEntryList( )
   {
     return m_colorMapEntryList;
   }
@@ -420,19 +417,17 @@ public class ColorMapEntryTable
   /**
    * update the colorMap of the rasterSymbolizer
    */
-  public void updateRasterSymbolizer()
+  public void updateRasterSymbolizer( )
   {
-    TreeMap new_colorMap = new TreeMap();
-    Vector colorMapEntries = m_colorMapEntryList.getColorMapEntries();
+    final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
+    final Vector colorMapEntries = m_colorMapEntryList.getColorMapEntries();
     try
     {
       for( int i = 0; i < colorMapEntries.size(); i++ )
       {
-        ColorMapEntry colorMapEntry = (ColorMapEntry)colorMapEntries.get( i );
+        final ColorMapEntry colorMapEntry = (ColorMapEntry) colorMapEntries.get( i );
         if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
-        {
           new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
-        }
         else
         {
           throw new Exception();

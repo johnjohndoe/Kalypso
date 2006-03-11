@@ -79,6 +79,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createPartControl( final Composite parent )
   {
     m_table = new ObservationTable( m_tableView, false, false );
@@ -99,6 +100,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
+  @Override
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
@@ -114,7 +116,8 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus()
+  @Override
+  public void setFocus( )
   {
   // noch nix
   }

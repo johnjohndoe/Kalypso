@@ -55,6 +55,7 @@ public class WfsLoader extends AbstractLoader
    * @param context
    *          the URL form the map context (here the path to the associated gmt file)
    */
+  @Override
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     BufferedInputStream inputStream = null;
@@ -96,6 +97,7 @@ public class WfsLoader extends AbstractLoader
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
+  @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
     // TODO implementation of a transactional WFS

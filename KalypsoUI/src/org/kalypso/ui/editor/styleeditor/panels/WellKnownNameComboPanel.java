@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class WellKnownNameComboPanel extends ComboPanel
 {
@@ -71,12 +70,11 @@ public class WellKnownNameComboPanel extends ComboPanel
     setSelection( i );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  public int getSelection()
+  @Override
+  public int getSelection( )
   {
     return selection_index;
   }
@@ -85,28 +83,27 @@ public class WellKnownNameComboPanel extends ComboPanel
   {
     switch( index )
     {
-    case 0:
-      return "square";
-    case 1:
-      return "circle";
-    case 2:
-      return "triangle";
-    case 3:
-      return "star";
-    case 4:
-      return "cross";
-    case 5:
-      return "x";
-    default:
-      return "square";
+      case 0:
+        return "square";
+      case 1:
+        return "circle";
+      case 2:
+        return "triangle";
+      case 3:
+        return "star";
+      case 4:
+        return "cross";
+      case 5:
+        return "x";
+      default:
+        return "square";
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
+  @Override
   public void setSelection( int index )
   {
     comboBox.select( index );

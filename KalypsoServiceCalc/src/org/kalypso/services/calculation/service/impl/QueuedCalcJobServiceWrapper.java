@@ -65,18 +65,14 @@ import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypsodeegree_impl.extension.GM_ObjectTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Exposes the {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}suitable as web-service.
@@ -177,6 +173,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     {
       final AbstractUrlCatalog emptyCatalog = new AbstractUrlCatalog()
       {
+        @Override
         protected void fillCatalog( final Class myClass, final Map katalog )
         {
           // nix, ist leer

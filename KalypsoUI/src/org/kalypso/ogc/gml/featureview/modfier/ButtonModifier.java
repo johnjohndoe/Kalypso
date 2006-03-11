@@ -58,7 +58,6 @@ import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -76,15 +75,12 @@ public class ButtonModifier implements IFeatureModifier
 
   private Feature m_feature;
 
-  private final IFeatureSelectionManager m_selectionManager;
-
   private final IFeatureChangeListener m_fcl;
 
-  public ButtonModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public ButtonModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureChangeListener fcl )
   {
     m_workspace = workspace;
     m_ftp = ftp;
-    m_selectionManager = selectionManager;
     m_fcl = fcl;
   }
 
@@ -111,7 +107,6 @@ public class ButtonModifier implements IFeatureModifier
    */
   public CellEditor createCellEditor( final Composite parent )
   {
-    final IFeatureSelectionManager manager = m_selectionManager;
     final IFeatureChangeListener fcl = m_fcl;
     return new DialogCellEditor( parent )
     {
@@ -120,7 +115,7 @@ public class ButtonModifier implements IFeatureModifier
       @Override
       protected boolean openDialog( final Control parentControl )
       {
-        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(), fcl, manager );
+        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(), fcl );
         return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
 
@@ -131,7 +126,7 @@ public class ButtonModifier implements IFeatureModifier
       protected Object doGetValue( )
       {
         // collect changes from dialog
-        final List col = new ArrayList();
+        final List<FeatureChange> col = new ArrayList<FeatureChange>();
         m_featureDialog.collectChanges( col );
         if( col.size() > 1 ) // TODO support more
           throw new UnsupportedOperationException( "Dialog must provide exactly one change" );

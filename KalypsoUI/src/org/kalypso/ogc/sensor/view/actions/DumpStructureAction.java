@@ -42,7 +42,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
@@ -57,27 +57,27 @@ public class DumpStructureAction extends AbstractObservationChooserAction implem
 {
   public DumpStructureAction( final ObservationChooser explorer )
   {
-    super( explorer, "Struktur exportieren", ImageProvider.IMAGE_ZML_REPOSITORY,
-        "Exportiert die Gesamtstruktur in der Zwischenablage" );
+    super( explorer, "Struktur exportieren", ImageProvider.IMAGE_ZML_REPOSITORY, "Exportiert die Gesamtstruktur in der Zwischenablage" );
 
     explorer.addSelectionChangedListener( this );
 
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     getExplorer().removeSelectionChangedListener( this );
   }
 
-  public void run()
+  @Override
+  public void run( )
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
     final StringWriter writer = new StringWriter();
-    
+
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
@@ -100,7 +100,7 @@ public class DumpStructureAction extends AbstractObservationChooserAction implem
         finally
         {
           IOUtils.closeQuietly( writer );
-          
+
           monitor.done();
         }
       }
@@ -108,18 +108,16 @@ public class DumpStructureAction extends AbstractObservationChooserAction implem
 
     try
     {
-      Workbench.getInstance().getProgressService().busyCursorWhile( runnable );
-      
+      PlatformUI.getWorkbench().getProgressService().busyCursorWhile( runnable );
+
       final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-      clipboard.setContents( new Object[]
-      { writer.toString() }, new Transfer[]
-      { TextTransfer.getInstance() } );
+      clipboard.setContents( new Object[] { writer.toString() }, new Transfer[] { TextTransfer.getInstance() } );
       clipboard.dispose();
     }
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      
+
       MessageDialog.openWarning( getShell(), "Struktur exportieren", e.getLocalizedMessage() );
     }
     catch( final InterruptedException ignored )

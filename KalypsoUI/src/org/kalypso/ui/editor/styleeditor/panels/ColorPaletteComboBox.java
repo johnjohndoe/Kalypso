@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class ColorPaletteComboBox extends FilterComboPanel
 {
@@ -63,16 +62,16 @@ public class ColorPaletteComboBox extends FilterComboPanel
     init();
   }
 
-  public int getSelection()
+  @Override
+  public int getSelection( )
   {
     return selection_index;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
+  @Override
   public void setSelection( int index )
   {
     selection_index = index;

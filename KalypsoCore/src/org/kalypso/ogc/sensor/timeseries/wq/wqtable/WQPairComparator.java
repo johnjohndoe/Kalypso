@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 
  * @author schlienger
  */
-public class WQPairComparator implements Comparator
+public class WQPairComparator implements Comparator<WQPair>
 {
   public static final int W = 0;
 
@@ -27,11 +27,8 @@ public class WQPairComparator implements Comparator
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object o1, Object o2 )
+  public int compare( final WQPair p1, final WQPair p2 )
   {
-    final WQPair p1 = (WQPair)o1;
-    final WQPair p2 = (WQPair)o2;
-
     if( m_field == W )
       return Double.compare( p1.getW(), p2.getW() );
 

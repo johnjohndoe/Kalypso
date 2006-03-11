@@ -79,7 +79,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     {
       final String href = (String) dialog.getInput();
       if( href == null )
-        fChange = new FeatureChange( m_feature, m_ftp,null );
+        fChange = new FeatureChange( m_feature, m_ftp, null );
       else if( href != null && href.length() > 0 )
       {
         final ObjectFactory linkFactory = new ObjectFactory();
@@ -95,7 +95,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection c )
+  public void collectChanges( final Collection<FeatureChange> c )
   {
     if( m_change != null )
       c.add( m_change );

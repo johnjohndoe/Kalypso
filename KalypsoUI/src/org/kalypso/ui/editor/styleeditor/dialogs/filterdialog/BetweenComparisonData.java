@@ -72,7 +72,8 @@ public class BetweenComparisonData extends AbstractComparisonData
     this.upper = m_upper.trim();
   }
 
-  public boolean verify() throws FilterDialogException
+  @Override
+  public boolean verify( ) throws FilterDialogException
   {
     if( lower == null || lower.trim().length() == 0 || upper == null || upper.trim().length() == 0
         || propertyName == null )

@@ -51,10 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class PanToWidget extends AbstractWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public PanToWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -64,6 +60,7 @@ public class PanToWidget extends AbstractWidget
 
   private Point startPoint = null;
 
+  @Override
   public void dragged( Point p )
   {
     if( startPoint != null )
@@ -76,11 +73,13 @@ public class PanToWidget extends AbstractWidget
     }
   }
 
+  @Override
   public void finish()
   {
     getMapPanel().clearOffset();
   }
 
+  @Override
   public void leftPressed( Point p )
   {
     startPoint = p;
@@ -88,6 +87,7 @@ public class PanToWidget extends AbstractWidget
     getMapPanel().clearOffset();
   }
 
+  @Override
   public void leftReleased( Point p )
   {
     endPoint = p;

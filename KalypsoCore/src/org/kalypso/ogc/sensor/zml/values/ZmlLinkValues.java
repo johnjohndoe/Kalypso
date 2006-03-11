@@ -49,6 +49,7 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import org.kalypso.commons.io.AbstractCSV;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.io.RegexCSV;
@@ -72,7 +73,7 @@ public class ZmlLinkValues implements IZmlValues
 
   private final IParser m_parser;
 
-  private Map m_helper = new Hashtable();
+  private Map<Object, Integer> m_helper = new Hashtable<Object, Integer>();
 
   private final int m_column;
 
@@ -166,7 +167,7 @@ public class ZmlLinkValues implements IZmlValues
    */
   public int indexOf( final Object obj ) throws SensorException
   {
-    Integer iobj = (Integer) m_helper.get( obj );
+    Integer iobj = m_helper.get( obj );
     if( iobj == null )
     {
       // tricky: go through the items serially to find it

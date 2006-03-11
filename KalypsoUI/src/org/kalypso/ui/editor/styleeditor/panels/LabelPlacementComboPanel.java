@@ -49,7 +49,6 @@ import org.kalypsodeegree.graphics.sld.LinePlacement;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class LabelPlacementComboPanel extends ComboPanel
 {
@@ -66,51 +65,49 @@ public class LabelPlacementComboPanel extends ComboPanel
     setSelection( value );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  public int getSelection()
+  @Override
+  public int getSelection( )
   {
     switch( selection_index )
     {
-    case 0:
-      return LinePlacement.TYPE_ABOVE;
-    case 1:
-      return LinePlacement.TYPE_BELOW;
-    case 2:
-      return LinePlacement.TYPE_CENTER;
-    case 3:
-      return LinePlacement.TYPE_AUTO;
-    default:
-      return LinePlacement.TYPE_AUTO;
+      case 0:
+        return LinePlacement.TYPE_ABOVE;
+      case 1:
+        return LinePlacement.TYPE_BELOW;
+      case 2:
+        return LinePlacement.TYPE_CENTER;
+      case 3:
+        return LinePlacement.TYPE_AUTO;
+      default:
+        return LinePlacement.TYPE_AUTO;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
+  @Override
   public void setSelection( int index )
   {
     switch( index )
     {
-    case LinePlacement.TYPE_ABOVE:
-      comboBox.select( 0 );
-      break;
-    case LinePlacement.TYPE_BELOW:
-      comboBox.select( 1 );
-      break;
-    case LinePlacement.TYPE_CENTER:
-      comboBox.select( 2 );
-      break;
-    case LinePlacement.TYPE_AUTO:
-      comboBox.select( 3 );
-      break;
-    default:
-      comboBox.select( 3 );
+      case LinePlacement.TYPE_ABOVE:
+        comboBox.select( 0 );
+        break;
+      case LinePlacement.TYPE_BELOW:
+        comboBox.select( 1 );
+        break;
+      case LinePlacement.TYPE_CENTER:
+        comboBox.select( 2 );
+        break;
+      case LinePlacement.TYPE_AUTO:
+        comboBox.select( 3 );
+        break;
+      default:
+        comboBox.select( 3 );
     }
   }
 }

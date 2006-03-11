@@ -51,5 +51,5 @@ public interface IFeatureSelectionManager extends IFeatureSelection
    * 
    * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
    */
-  public List toList();
+  public List<Feature> toList();
 }

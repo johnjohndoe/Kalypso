@@ -70,13 +70,12 @@ import org.kalypso.zml.filters.valuecomp.SmallerValueCompType;
  */
 public class ValueFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
-      throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
-    if( !( aft instanceof ValueFilterType ) )
+    if( !(aft instanceof ValueFilterType) )
       throw new IllegalArgumentException( "Not a " + ValueFilterType.class.getName() );
 
-    final ValueFilterType ft = (ValueFilterType)aft;
+    final ValueFilterType ft = (ValueFilterType) aft;
 
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
 
@@ -97,13 +96,13 @@ public class ValueFilterCreator implements IFilterCreator
   /**
    * Creates the comparators
    */
-  private final static List createComparators( final List comps, final IAxis[] axes ) throws ParserException
+  private final static List<IValueComp> createComparators( final List comps, final IAxis[] axes ) throws ParserException
   {
-    final List fc = new ArrayList( comps.size() );
+    final List<IValueComp> fc = new ArrayList<IValueComp>( comps.size() );
 
     for( final Iterator it = comps.iterator(); it.hasNext(); )
     {
-      final AbstractValueCompType vc = (AbstractValueCompType)it.next();
+      final AbstractValueCompType vc = (AbstractValueCompType) it.next();
 
       fc.add( createComp( vc, axes ) );
     }
@@ -122,20 +121,19 @@ public class ValueFilterCreator implements IFilterCreator
   {
     if( avc instanceof SmallerValueCompType )
     {
-      final SmallerValueCompType comp = (SmallerValueCompType)avc;
+      final SmallerValueCompType comp = (SmallerValueCompType) avc;
       return new CompSmaller( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
     }
 
     if( avc instanceof BetweenValueCompType )
     {
-      final BetweenValueCompType comp = (BetweenValueCompType)avc;
-      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp.isModeInclFrom(), comp.getTo(), comp
-          .isModeInclTo() );
+      final BetweenValueCompType comp = (BetweenValueCompType) avc;
+      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp.isModeInclFrom(), comp.getTo(), comp.isModeInclTo() );
     }
 
     if( avc instanceof BiggerValueCompType )
     {
-      final BiggerValueCompType comp = (BiggerValueCompType)avc;
+      final BiggerValueCompType comp = (BiggerValueCompType) avc;
       return new CompBigger( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
     }
 

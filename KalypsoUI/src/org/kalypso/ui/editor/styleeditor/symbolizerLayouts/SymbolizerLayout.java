@@ -64,7 +64,8 @@ public class SymbolizerLayout extends AbstractSymbolizerLayout
     super( parent );
   }
 
-  public void draw()
+  @Override
+  public void draw( )
   {
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;

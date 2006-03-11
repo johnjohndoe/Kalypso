@@ -108,6 +108,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
           final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {
+            @Override
             protected IStatus run( IProgressMonitor monitor )
             {
               try

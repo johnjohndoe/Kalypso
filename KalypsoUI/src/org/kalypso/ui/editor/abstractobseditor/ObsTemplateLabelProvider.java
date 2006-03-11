@@ -21,6 +21,7 @@ public class ObsTemplateLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#dispose()
    */
+  @Override
   public void dispose()
   {
     if( m_themeImage != null )
@@ -35,6 +36,7 @@ public class ObsTemplateLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
+  @Override
   public Image getImage( Object element )
   {
     if( element instanceof PlainObsProvider )

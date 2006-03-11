@@ -71,8 +71,7 @@ public class MoveFeatureCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, IRelationType propName, Object moveItem,
-      int type )
+  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, IRelationType propName, Object moveItem, int type )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -84,7 +83,7 @@ public class MoveFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -92,7 +91,7 @@ public class MoveFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     move();
   }
@@ -100,7 +99,7 @@ public class MoveFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     move();
   }
@@ -108,47 +107,46 @@ public class MoveFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
+    final Object prop = m_parentFeature.getProperty( m_propName );
+    final Object properties[] = m_parentFeature.getProperties();
     int propIndex = 0;
     for( ; propIndex < properties.length; propIndex++ )
       if( properties[propIndex] == prop )
         break;
 
-    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties(propIndex);
+    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
 
-    if( pt.isList())
+    if( pt.isList() )
     {
-      final List list = (List)prop;
+      final List<Object> list = (List<Object>) prop;
       index = list.indexOf( m_moveItem );
-      if( m_type == UP && ( ( index - 1 ) >= 0 ) )
+      if( m_type == UP && ((index - 1) >= 0) )
       {
         list.remove( m_moveItem );
-        list.add( ( index + 1 ), m_moveItem );
+        list.add( (index + 1), m_moveItem );
       }
-      else if( m_type == DOWN && ( ( index + 1 ) < list.size() ) )
+      else if( m_type == DOWN && ((index + 1) < list.size()) )
       {
         list.remove( m_moveItem );
-        list.add( ( index - 1 ), m_moveItem );
+        list.add( (index - 1), m_moveItem );
       }
-      final List feList = new ArrayList();
+      final List<Feature> feList = new ArrayList<Feature>();
       feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
-          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Feature löschen";
   }
 
-  private void move()
+  private void move( )
   {
     Object prop = m_parentFeature.getProperty( m_propName );
     Object properties[] = m_parentFeature.getProperties();
@@ -157,27 +155,26 @@ public class MoveFeatureCommand implements ICommand
       if( properties[propIndex] == prop )
         break;
 
-    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties(propIndex);
+    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
 
-    if( pt.isList())
+    if( pt.isList() )
     {
-      List list = (List)prop;
+      final List<Object> list = (List<Object>) prop;
       index = list.indexOf( m_moveItem );
-      if( m_type == UP && ( ( index - 1 ) >= 0 ) )
+      if( m_type == UP && ((index - 1) >= 0) )
       {
         list.remove( m_moveItem );
-        list.add( ( index - 1 ), m_moveItem );
+        list.add( (index - 1), m_moveItem );
       }
-      else if( m_type == DOWN && ( ( index + 1 ) < list.size() ) )
+      else if( m_type == DOWN && ((index + 1) < list.size()) )
       {
         list.remove( m_moveItem );
-        list.add( ( index + 1 ), m_moveItem );
+        list.add( (index + 1), m_moveItem );
       }
 
-      final List feList = new ArrayList();
+      final List<Feature> feList = new ArrayList<Feature>();
       feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
-          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 }

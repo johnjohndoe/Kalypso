@@ -59,8 +59,11 @@ import org.kalypso.metadoc.IExporter;
 public abstract class AbstractExporter implements IExporter
 {
   private String m_name;
+
   private String m_desc;
+
   private ImageDescriptor m_imageDescriptor;
+
   protected ISupplier m_supplier;
 
   /**
@@ -68,7 +71,6 @@ public abstract class AbstractExporter implements IExporter
    *      java.lang.String, java.lang.Object)
    */
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
-      throws CoreException
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
@@ -81,7 +83,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#getName()
    */
-  public final String getName()
+  public final String getName( )
   {
     return m_name;
   }
@@ -93,15 +95,15 @@ public abstract class AbstractExporter implements IExporter
   {
     m_name = name;
   }
-  
+
   /**
    * @see org.kalypso.metadoc.IExporter#getDescription()
    */
-  public final String getDescription()
+  public final String getDescription( )
   {
     return m_desc;
   }
-  
+
   /** Overwrite the internal description */
   public void setDescription( final String desc )
   {
@@ -111,11 +113,11 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
-  public ImageDescriptor getImageDescriptor()
+  public ImageDescriptor getImageDescriptor( )
   {
     return m_imageDescriptor;
   }
-  
+
   /**
    * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
@@ -125,8 +127,7 @@ public abstract class AbstractExporter implements IExporter
   }
 
   /**
-   * Convenience method for subclasses which want to retrieve objects from the supplier
-   * set in the init() method.
+   * Convenience method for subclasses which want to retrieve objects from the supplier set in the init() method.
    * <p>
    * Wraps the InvocationTargetException into a CoreException.
    */
@@ -145,7 +146,8 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return getName();
   }

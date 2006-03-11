@@ -66,7 +66,7 @@ public class ZmlLoader extends AbstractLoader
 {
   private final UrlResolver m_urlResolver;
 
-  public ZmlLoader()
+  public ZmlLoader( )
   {
     m_urlResolver = new UrlResolver();
   }
@@ -75,6 +75,7 @@ public class ZmlLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   protected Object loadIntern( final String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     try
@@ -107,6 +108,7 @@ public class ZmlLoader extends AbstractLoader
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
+  @Override
   public void save( final String source, URL context, IProgressMonitor monitor, Object data ) throws LoaderException
   {
     try
@@ -121,7 +123,7 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( "Datei konnte nicht gefunden werden: " + url );
 
-      final Observation xmlObs = ZmlFactory.createXML( (IObservation)data, null );
+      final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
 
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper()
@@ -150,7 +152,7 @@ public class ZmlLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "ZML";
   }

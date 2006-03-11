@@ -70,8 +70,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   private AbstractFilterType m_filterType = null;
 
-  public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId,
-      final VirtualRepositoryItem parent )
+  public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId, final VirtualRepositoryItem parent )
   {
     m_repository = rep;
     m_name = name;
@@ -82,7 +81,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -90,11 +89,13 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * Returns
    * 
-   * <pre>vrep://<item_id></pre>.
+   * <pre>
+   * vrep://&lt;item_id&gt;
+   * </pre>.
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return getRepository().getIdentifier() + m_itemId;
   }
@@ -102,7 +103,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -110,7 +111,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return m_children != null && m_children.length > 0;
   }
@@ -118,20 +119,20 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     return m_children;
   }
 
-  public void setChildren( final List children )
+  public void setChildren( final List<IRepositoryItem> children )
   {
-    m_children = (IRepositoryItem[])children.toArray( new IRepositoryItem[children.size()] );
+    m_children = children.toArray( new IRepositoryItem[children.size()] );
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     return m_repository;
   }

@@ -44,13 +44,14 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
-import org.kalypso.wechmann.Wechmann;
 import org.kalypso.wechmann.Wechmann;
 import org.kalypso.wechmann.XMLWechmannParams;
 import org.kalypso.wechmann.XMLWechmannSet;
@@ -62,23 +63,23 @@ import org.xml.sax.InputSource;
  * of the XML is as follows:
  * 
  * <pre>
- *        &lt;set&gt;
- *         &lt;validity&gt;15.10.2004 17:53:17&lt;/validity&gt;
- *         &lt;params&gt;
- *           &lt;w1&gt;-38,12000&lt;/w1&gt;
- *           &lt;lnk1&gt;-7,87274&lt;/lnk1&gt;
- *           &lt;k2&gt;2,25925&lt;/k2&gt;
- *           &lt;wgr&gt;170,00000&lt;/wgr&gt;
- *         &lt;/params&gt;
- *         &lt;params&gt;
- *           &lt;w1&gt;-43,32000&lt;/w1&gt;
- *           &lt;lnk1&gt;-7,24065&lt;/lnk1&gt;
- *           &lt;k2&gt;2,13100&lt;/k2&gt;
- *         &lt;/params&gt;
- *        &lt;/set&gt;
- *   		&lt;set&gt;
- *   			...
- *   		&lt;/set&gt;
+ *         &lt;set&gt;
+ *          &lt;validity&gt;15.10.2004 17:53:17&lt;/validity&gt;
+ *          &lt;params&gt;
+ *            &lt;w1&gt;-38,12000&lt;/w1&gt;
+ *            &lt;lnk1&gt;-7,87274&lt;/lnk1&gt;
+ *            &lt;k2&gt;2,25925&lt;/k2&gt;
+ *            &lt;wgr&gt;170,00000&lt;/wgr&gt;
+ *          &lt;/params&gt;
+ *          &lt;params&gt;
+ *            &lt;w1&gt;-43,32000&lt;/w1&gt;
+ *            &lt;lnk1&gt;-7,24065&lt;/lnk1&gt;
+ *            &lt;k2&gt;2,13100&lt;/k2&gt;
+ *          &lt;/params&gt;
+ *         &lt;/set&gt;
+ *    		&lt;set&gt;
+ *    			...
+ *    		&lt;/set&gt;
  * </pre>
  * 
  * <p>
@@ -163,7 +164,7 @@ public class WechmannFactory
     try
     {
       final Wechmann wt = OF_WECHMANN.createWechmann();
-      final List sets = wt.getSet();
+      final List<XMLWechmannSet> sets = wt.getSet();
       final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
       for( final Iterator it = wg.iterator(); it.hasNext(); )
       {
@@ -188,7 +189,7 @@ public class WechmannFactory
         }
         sets.add( wechmannSet );
       }
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC_WECHMANN);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_WECHMANN );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final StringWriter writer = new StringWriter();
       marshaller.marshal( wt, writer );

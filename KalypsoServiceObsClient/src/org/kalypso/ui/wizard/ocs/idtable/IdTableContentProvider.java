@@ -55,7 +55,7 @@ public class IdTableContentProvider implements IStructuredContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    final ArrayList ids = new ArrayList();
+    final ArrayList<IdStruct> ids = new ArrayList<IdStruct>();
 
     if( inputElement instanceof List )
     {
