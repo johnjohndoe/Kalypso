@@ -72,7 +72,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -87,7 +86,6 @@ import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
 import org.kalypsodeegree_impl.io.rtree.HyperPoint;
 import org.kalypsodeegree_impl.io.rtree.RTree;
 import org.kalypsodeegree_impl.io.rtree.RTreeException;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -111,19 +109,19 @@ public class ShapeFile
 
   private SHP2WKS shpwks = new SHP2WKS();
 
-  /*
+  /**
    * contains the dBase indexes
    */
-  private Hashtable dBaseIndexes = new Hashtable();
+  private Hashtable<String, DBaseIndex> dBaseIndexes = new Hashtable<String, DBaseIndex>();
 
-  /*
+  /**
    * aggregated Instance-variables
    */
   private MainFile shp = null;
 
   private RTree rti = null;
 
-  private String url = null;
+  private String m_url = null;
 
   /*
    * indicates if a dBase-file is associated to the shape-file
@@ -141,7 +139,7 @@ public class ShapeFile
    */
   public ShapeFile( String url ) throws IOException
   {
-    this.url = url;
+    this.m_url = url;
 
     /*
      * initialize the MainFile
@@ -205,14 +203,13 @@ public class ShapeFile
    */
   public ShapeFile( String url, String rwflag ) throws IOException
   {
-    this.url = url;
+    m_url = url;
 
     shp = new MainFile( url, rwflag );
 
     // TODO: initialize dbf, rti
     hasDBaseFile = false;
     hasRTreeIndex = false;
-
   }
 
   /**
@@ -261,7 +258,7 @@ public class ShapeFile
    */
   public boolean hasDBaseIndex( String column )
   {
-    DBaseIndex index = (DBaseIndex) dBaseIndexes.get( column );
+    final DBaseIndex index = dBaseIndexes.get( column );
     return index != null;
   }
 
@@ -342,9 +339,7 @@ public class ShapeFile
     final Feature feature = dbf.getFRow( RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
     final IPropertyType pt = feature.getFeatureType().getProperty( "GEOM" );
-    final FeatureProperty fp = FeatureFactory.createFeatureProperty( pt, geo );
-
-    feature.setProperty( fp );
+    feature.setProperty( pt, geo );
 
     return feature;
   }
@@ -442,7 +437,7 @@ public class ShapeFile
    */
   public int[] getGeoNumbersByAttribute( String column, Comparable value ) throws IOException, DBaseIndexException
   {
-    DBaseIndex index = (DBaseIndex) dBaseIndexes.get( column );
+    DBaseIndex index = dBaseIndexes.get( column );
 
     if( index == null )
     {
@@ -462,7 +457,7 @@ public class ShapeFile
     SHPPoint geom = null;
     int[] num = null;
     int numRecs = getRecordNum();
-    ArrayList numbers = new ArrayList();
+    final ArrayList<Integer> numbers = new ArrayList<Integer>();
 
     GM_Envelope mbr = getFileMBR();
 
@@ -536,9 +531,7 @@ public class ShapeFile
 
       // put all numbers within numbers to an array
       for( int i = 0; i < numbers.size(); i++ )
-      {
-        num[i] = ((Integer) numbers.get( i )).intValue();
-      }
+        num[i] = numbers.get( i ).intValue();
     }
 
     return num;
@@ -549,12 +542,10 @@ public class ShapeFile
    */
   public boolean isUnique( String property )
   {
-    DBaseIndex index = (DBaseIndex) dBaseIndexes.get( property );
+    final DBaseIndex index = dBaseIndexes.get( property );
 
     if( index == null )
-    {
       return false;
-    }
 
     return index.isUnique();
   }
@@ -689,17 +680,17 @@ public class ShapeFile
 
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
-    final List fieldList = new ArrayList();
+    final List<FieldDescriptor> fieldList = new ArrayList<FieldDescriptor>();
     for( int i = 0; i < ftp.length; i++ )
     {
-      int pos = ftp[i].getName().lastIndexOf( '.' );
+      final String ftpName = ftp[i].getQName().getLocalPart();
+      int pos = ftpName.lastIndexOf( '.' );
       if( pos < 0 )
-      {
         pos = -1;
-      }
-      String s = ftp[i].getName().substring( pos + 1 );
+      final String s = ftpName.substring( pos + 1 );
       if( !(ftp[i] instanceof IValuePropertyType) )
-        ;
+      {// TODO: this ssems to be a bug;
+      }
       IValuePropertyType vpt = (IValuePropertyType) ftp[i];
       Class clazz = vpt.getValueClass();
       if( clazz == Integer.class )
@@ -745,8 +736,8 @@ public class ShapeFile
     }
 
     // allocate memory for fielddescriptors
-    final FieldDescriptor[] fieldDesc = (FieldDescriptor[]) fieldList.toArray( new FieldDescriptor[fieldList.size()] );
-    dbf = new DBaseFile( url, fieldDesc );
+    final FieldDescriptor[] fieldDesc = fieldList.toArray( new FieldDescriptor[fieldList.size()] );
+    dbf = new DBaseFile( m_url, fieldDesc );
   }
 
   public void writeShape( final Feature[] features ) throws Exception
@@ -781,7 +772,7 @@ public class ShapeFile
       // pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
-      ArrayList vec = new ArrayList();
+      final ArrayList<Object> vec = new ArrayList<Object>();
       IPropertyType[] ftp = features[0].getFeatureType().getProperties();
       for( int j = 0; j < ftp.length; j++ )
       {
