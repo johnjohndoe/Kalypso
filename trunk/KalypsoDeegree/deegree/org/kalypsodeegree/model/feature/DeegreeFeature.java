@@ -83,7 +83,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface DeegreeFeature
 {
-
   /**
    * returns the id of the Feature. the id has to be a name space that must be unique for each feature. use the adress
    * of the datasource in addition to a number for example .

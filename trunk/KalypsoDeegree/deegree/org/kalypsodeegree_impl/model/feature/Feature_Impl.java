@@ -285,7 +285,7 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
-  public void addProperty( FeatureProperty property )
+  public void addProperty( final FeatureProperty property )
   {
     // to handle boundingbox if geometryproperty
     int pos = m_featureType.getPropertyPosition( property.getPropertyType() );
@@ -405,6 +405,7 @@ public class Feature_Impl implements Feature
    * @deprecated
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
+  @Deprecated
   public void setProperty( String propLocalName, Object value )
   {
     final IPropertyType pt = FeatureHelper.getPT( this, propLocalName );
