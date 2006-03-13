@@ -49,8 +49,6 @@ import org.deegree.services.wfs.capabilities.GetFeature;
 import org.deegree.services.wfs.capabilities.Request;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -60,7 +58,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * @author doemming
  */
 public class WFSUtilities
@@ -75,11 +72,10 @@ public class WFSUtilities
     return WFSCapabilitiesFactory.createCapabilities( reader );
   }
 
-  public static String buildGetFeatureRequestPOST( final String featureTypeToLoad, final String filter,
-      final String maxFeatureAsString )
+  public static String buildGetFeatureRequestPOST( final String featureTypeToLoad, final String filter, final String maxFeatureAsString )
   {
     final StringBuffer sb = new StringBuffer();
-    //    final int maxFeatures = 5000;
+    // final int maxFeatures = 5000;
 
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );// iso-8859-1
     sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" );
@@ -93,12 +89,12 @@ public class WFSUtilities
     if( filter != null && filter.length() > 0 )
     {
       sb.append( filter ).append( "\n" );
-      //      sb.append( "<ogc:Filter>\n" );
-      //      sb.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
-      //      sb.append( "<ogc:PropertyName>VERSKLASSE</ogc:PropertyName>\n" );
-      //      sb.append( "<ogc:Literal>3</ogc:Literal>\n" );
-      //      sb.append( "</ogc:PropertyIsEqualTo>\n" );
-      //      sb.append( "</ogc:Filter>\n" );
+      // sb.append( "<ogc:Filter>\n" );
+      // sb.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
+      // sb.append( "<ogc:PropertyName>VERSKLASSE</ogc:PropertyName>\n" );
+      // sb.append( "<ogc:Literal>3</ogc:Literal>\n" );
+      // sb.append( "</ogc:PropertyIsEqualTo>\n" );
+      // sb.append( "</ogc:Filter>\n" );
     }
     sb.append( "</wfs:Query>\n" );
     sb.append( "</wfs:GetFeature>" );
@@ -106,7 +102,6 @@ public class WFSUtilities
   }
 
   /**
-   * 
    * @param baseURL
    * @param featureTypeToLoad
    * @param targetCRS
@@ -116,20 +111,19 @@ public class WFSUtilities
    * @return gmlworkspace
    * @throws Exception
    */
-  public static GMLWorkspace createGMLWorkspaceFromGetFeature( final URL baseURL, final String featureTypeToLoad,
-      final CS_CoordinateSystem targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
+  public static GMLWorkspace createGMLWorkspaceFromGetFeature( final URL baseURL, final String featureTypeToLoad, final CS_CoordinateSystem targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;
 
     try
     {
-      //      URL[] getOnlineResources = null;
+      // URL[] getOnlineResources = null;
       URL[] postOnlineResources = null;
 
-      //      URL m_schemaURL = new URL( baseURL + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
-      //          + featureTypeToLoad );
-      //       get wfs capabiliets to check which protocol types are supported by the service
+      // URL m_schemaURL = new URL( baseURL + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
+      // + featureTypeToLoad );
+      // get wfs capabiliets to check which protocol types are supported by the service
       final WFSCapabilities wfsCaps = WFSUtilities.getCapabilites( baseURL );
 
       final Capability capability = wfsCaps.getCapability();
@@ -142,12 +136,12 @@ public class WFSUtilities
         final Protocol protocol = dcpt.getProtocol();
         if( protocol instanceof HTTP )
         {
-          //          getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
-          postOnlineResources = ( (HTTP)protocol ).getPostOnlineResources();
-          //          if( getOnlineResources.length > 0 )
-          //            getProtocol = true;
-          //          if( postOnlineResources.length > 0 )
-          //            postProtocol = true;
+          // getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
+          postOnlineResources = ((HTTP) protocol).getPostOnlineResources();
+          // if( getOnlineResources.length > 0 )
+          // getProtocol = true;
+          // if( postOnlineResources.length > 0 )
+          // postProtocol = true;
         }
       }
       if( postOnlineResources.length > 0 )
@@ -160,29 +154,28 @@ public class WFSUtilities
         OutputStream connectionOutputStream = con.getOutputStream();
         postWriter = new PrintStream( connectionOutputStream );
 
-        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( featureTypeToLoad, filter,
-            maxFeatureAsString );
+        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( featureTypeToLoad, filter, maxFeatureAsString );
         postWriter.print( getFeaturePost );
 
-        //read response from the WFS server and create a GMLWorkspace
+        // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
 
         // Hack for testing
-        //                final File tmpFile = new File( "C:\\TMP\\test.txt" );
-        //                final OutputStream outStream = new FileOutputStream( tmpFile );
-        //                StreamUtilities.streamCopy( inputStream, outStream );
-        //                IOUtils.closeQuietly( inputStream );
-        //                IOUtils.closeQuietly( outStream );
+        // final File tmpFile = new File( "C:\\TMP\\test.txt" );
+        // final OutputStream outStream = new FileOutputStream( tmpFile );
+        // StreamUtilities.streamCopy( inputStream, outStream );
+        // IOUtils.closeQuietly( inputStream );
+        // IOUtils.closeQuietly( outStream );
 
-        final URL schemaURL = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
-        final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
-        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, gmlSchema );
+        final URL schemaURLHint = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
+        // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
+
+        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false );
         inputStream.close();
         IOUtils.closeQuietly( inputStream );
 
         if( targetCRS != null )
-          workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
-              FeatureVisitor.DEPTH_INFINITE );
+          workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
         workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
         return workspace;
@@ -201,8 +194,7 @@ public class WFSUtilities
    * @return url to describefeaturetyperequest
    * @throws MalformedURLException
    */
-  private static URL createDescribeFeatureTypeRequestURL( final URL baseURL, final String featureType )
-      throws MalformedURLException
+  public static URL createDescribeFeatureTypeRequestURL( final URL baseURL, final String featureType ) throws MalformedURLException
   {
     final StringBuffer result = new StringBuffer( baseURL.toString() );
     result.append( "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType" );
