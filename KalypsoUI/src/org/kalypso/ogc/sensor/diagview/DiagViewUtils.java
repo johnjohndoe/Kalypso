@@ -105,7 +105,7 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
+      final Marshaller m =  JaxbUtilities.createMarshaller(ODT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -122,7 +122,7 @@ public class DiagViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
+      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC);
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( tpl, writer );
     }
@@ -194,7 +194,7 @@ public class DiagViewUtils
     xmlTemplate.setLegend( xmlLegend );
     xmlTemplate.setTitle( view.getTitle() );
 
-    final List<TypeAxis> xmlAxes = xmlTemplate.getAxis();
+    final List xmlAxes = xmlTemplate.getAxis();
 
     final DiagramAxis[] diagramAxes = view.getDiagramAxes();
     for( int i = 0; i < diagramAxes.length; i++ )
@@ -217,7 +217,7 @@ public class DiagViewUtils
 
     int ixCurve = 1;
 
-    final List<TypeObservation> xmlThemes = xmlTemplate.getObservation();
+    final List xmlThemes = xmlTemplate.getObservation();
     final Map map = ObsView.mapItems( view.getItems() );
     for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
@@ -230,7 +230,7 @@ public class DiagViewUtils
       xmlTheme.setLinktype( "zml" );
       xmlTheme.setHref( obs.getHref() );
 
-      final List<TypeCurve> xmlCurves = xmlTheme.getCurve();
+      final List xmlCurves = xmlTheme.getCurve();
 
       final Iterator itCurves = ((List) entry.getValue()).iterator();
       while( itCurves.hasNext() )
@@ -243,7 +243,7 @@ public class DiagViewUtils
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
 
-        final List<TypeAxisMapping> xmlMappings = xmlCurve.getMapping();
+        final List xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
         for( int i = 0; i < mappings.length; i++ )

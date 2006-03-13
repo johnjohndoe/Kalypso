@@ -44,7 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -66,11 +66,10 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     StyleEditorViewPart part = null;
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
     Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
 
     try
@@ -105,13 +104,11 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     refresh();
   }
 
-  @Override
   protected void refresh()
   {
     boolean bEnable = false;

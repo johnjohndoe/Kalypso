@@ -92,7 +92,7 @@ public class AddEmptyLinkAction extends Action
     }
     else
       ft = featureTypes[0];
-    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp, 0, null );
+    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp, 0, null, m_selectionManager );
     try
     {
       m_workspace.postCommand( command );

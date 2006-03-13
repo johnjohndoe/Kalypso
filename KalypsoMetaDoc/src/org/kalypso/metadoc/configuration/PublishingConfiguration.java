@@ -58,18 +58,17 @@ import org.apache.commons.configuration.Configuration;
 public class PublishingConfiguration implements IPublishingConfiguration
 {
   private final Configuration m_conf;
-
-  private final List<IConfigurationListener> m_listeners;
+  private final List m_listeners;
 
   public PublishingConfiguration( final Configuration conf )
   {
     m_conf = conf;
-    m_listeners = new ArrayList<IConfigurationListener>( 10 );
+    m_listeners = new ArrayList( 10 );
   }
 
   private void fireConfigurationChanged( final String key )
   {
-    final IConfigurationListener[] listeners = m_listeners.toArray( new IConfigurationListener[m_listeners.size()] );
+    final IConfigurationListener[] listeners = (IConfigurationListener[])m_listeners.toArray( new IConfigurationListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       try
@@ -102,21 +101,21 @@ public class PublishingConfiguration implements IPublishingConfiguration
   public void addProperty( final String key, Object arg1 )
   {
     m_conf.addProperty( key, arg1 );
-
+    
     fireConfigurationChanged( key );
   }
 
-  public void clear( )
+  public void clear()
   {
     m_conf.clear();
-
+    
     fireConfigurationChanged( null );
   }
 
   public void clearProperty( final String key )
   {
     m_conf.clearProperty( key );
-
+    
     fireConfigurationChanged( key );
   }
 
@@ -125,7 +124,6 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.containsKey( arg0 );
   }
 
-  @Override
   public boolean equals( Object obj )
   {
     return m_conf.equals( obj );
@@ -226,7 +224,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.getInteger( arg0, arg1 );
   }
 
-  public Iterator getKeys( )
+  public Iterator getKeys()
   {
     return m_conf.getKeys();
   }
@@ -301,13 +299,12 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.getStringArray( arg0 );
   }
 
-  @Override
-  public int hashCode( )
+  public int hashCode()
   {
     return m_conf.hashCode();
   }
 
-  public boolean isEmpty( )
+  public boolean isEmpty()
   {
     return m_conf.isEmpty();
   }
@@ -324,8 +321,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.subset( prefix );
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_conf.toString();
   }

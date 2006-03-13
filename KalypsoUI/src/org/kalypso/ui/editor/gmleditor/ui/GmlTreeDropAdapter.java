@@ -38,6 +38,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,19 +67,21 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   public boolean performDrop( Object data )
   {
     System.out.print( "performDrop - " );
+    final CommandableWorkspace workspace = m_viewer.getWorkspace();
+
     final Object currentTargetObject = getCurrentTarget();
     if( currentTargetObject instanceof FeatureAssociationTypeElement )
     {
-//      IRelationType fatp = ((FeatureAssociationTypeElement) currentTargetObject).getAssociationTypeProperty();
-//      Feature parentFeature = ((FeatureAssociationTypeElement) currentTargetObject).getParentFeature();
-//      Object proptery = parentFeature.getProperty( fatp );
-//      final int pos;
-//      if( fatp.isList() )
-//      {
-//        pos = ((List) proptery).size();
-//      }
-//      else
-//        pos = 0;
+      IRelationType fatp = ((FeatureAssociationTypeElement) currentTargetObject).getAssociationTypeProperty();
+      Feature parentFeature = ((FeatureAssociationTypeElement) currentTargetObject).getParentFeature();
+      Object proptery = parentFeature.getProperty( fatp );
+      final int pos;
+      if( fatp.isList() )
+      {
+        pos = ((List) proptery).size();
+      }
+      else
+        pos = 0;
       // boolean b = workspace.isAggrigatedLink( parentFeature, fatp.getName(), pos );
 
     }
@@ -172,13 +175,13 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     if( !LocalSelectionTransfer.getInstance().isSupportedType( transferType ) )
       return false;
 
-    System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() );
+    System.out.println( "matchingFT = " + matchingFt.getName() );
     if( matchingFt != null )
     {
       if( selectedFeatures.length > 1 )
       {
         IFeatureType property = targetFeature.getFeatureType();
-        System.out.println( "\tmatchingFt != null  and selectedFeaturs.length > 1 -> targetFeature(FT name) " + property.getQName().getLocalPart() );
+        System.out.println( "\tmatchingFt != null  and selectedFeaturs.length > 1 -> targetFeature(FT name) " + property.getName() );
         // TODO Christoph was passiert hier
         // int maxOccurs = property.getMaxOccurs( matchingFt.getName() );
         // // TODO add the already existing number of feature and compare to maxOccurs

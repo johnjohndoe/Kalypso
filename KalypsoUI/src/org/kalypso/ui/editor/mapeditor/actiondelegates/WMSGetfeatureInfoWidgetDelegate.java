@@ -58,7 +58,6 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
-  @Override
   protected void refreshAction( IAction action )
   {
     super.refreshAction( action );

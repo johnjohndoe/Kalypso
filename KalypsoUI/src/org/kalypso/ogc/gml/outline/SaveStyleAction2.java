@@ -131,7 +131,6 @@ public class SaveStyleAction2 implements IActionDelegate
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
           final SetContentHelper thread = new SetContentHelper()
           {
-            @Override
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
 

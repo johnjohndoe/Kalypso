@@ -16,7 +16,6 @@ public class SetAllAction extends AbstractObservationTableAction
     super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
   }
 
-  @Override
   public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();

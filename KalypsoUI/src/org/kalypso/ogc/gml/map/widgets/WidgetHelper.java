@@ -1,3 +1,11 @@
+package org.kalypso.ogc.gml.map.widgets;
+
+import java.util.HashMap;
+
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,68 +46,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets;
 
-import java.util.HashMap;
-
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-/**
- * @author doemming
- */
 public class WidgetHelper
 {
-  private final static HashMap<String, IWidget> m_widget = new HashMap<String, IWidget>();
 
-  public WidgetHelper( )
+  private final static HashMap m_widget = new HashMap();
+
+  /*
+   * 
+   * @author doemming
+   */
+  public WidgetHelper()
   {
-    // not to instantiate
+  // not to instantiate
   }
 
-  public static IWidget getWidget( final String widgetID )
+  public static IWidget getWidget( String widgetID )
   {
     if( !m_widget.containsKey( widgetID ) )
     {
-      final IWidget newWidget = createWidget( widgetID );
+      IWidget newWidget = createWidget( widgetID );
       if( newWidget != null )
         m_widget.put( widgetID, newWidget );
     }
-    return m_widget.get( widgetID );
+    return (IWidget)m_widget.get( widgetID );
   }
 
   public static IWidget createWidget( String widgetID )
   {
     if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
-      return (new ZoomInWidget( "zoom in", "" ));
+      return ( new ZoomInWidget( "zoom in", "" ) );
     if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
-      return (new ZoomInByRectWidget( "zoom in", "" ));
+      return ( new ZoomInByRectWidget( "zoom in", "" ) );
     if( MapPanel.WIDGET_PAN.equals( widgetID ) )
-      return (new PanToWidget( "pan to", "" ));
+      return ( new PanToWidget( "pan to", "" ) );
 
-    // if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
-    // return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
+    //    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
+    //      return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
     // the geometry feature creators:
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ));
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ) );
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ));
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ) );
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ));
+      return ( new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ) );
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", null ));
+      return ( new CreateGeometeryWidget2( "create Geometry", "", null ) );
     if( widgetID.equals( MapPanel.WIDGET_EDIT_FEATURE_WITH_GEOMETRY ) )
-      return (new EditGeometryWidget( "edit Geometry", "" ));
+      return ( new EditGeometryWidget( "edit Geometry", "") );
     //
     if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
-      return (new SelectWidget( "select", "" ));
+      return ( new SelectWidget( "select", "" ) );
     if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
-      return (new UnSelectWidget( "unselect", "" ));
+      return ( new UnSelectWidget( "unselect", "" ) );
     if( MapPanel.WIDGET_TOGGLE_SELECT.equals( widgetID ) )
-      return (new ToggleSelectWidget( "toggle selection", "" ));
+      return ( new ToggleSelectWidget( "toggle selection", "" ) );
     if( MapPanel.WIDGET_SINGLE_SELECT.equals( widgetID ) )
-      return (new SingleElementSelectWidget( "single select", "" ));
+      return ( new SingleElementSelectWidget( "single select", "" ) );
     return null;
   }
 }

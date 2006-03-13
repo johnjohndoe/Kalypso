@@ -48,7 +48,7 @@ import javax.swing.JOptionPane;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.SwingInvokeHelper;
 
@@ -83,7 +83,7 @@ public class SwingEclipseUtilities
     {
       Logger.getLogger( SwingEclipseUtilities.class.getName() ).warning( t.getLocalizedMessage() );
 
-      final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
       final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
         MessageDialog.openError( shell, "Fehler", t.toString() );

@@ -41,7 +41,6 @@
 
 package org.kalypso.ogc.gml.selection;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -60,9 +59,9 @@ public final class EasyFeatureWrapper
 
   private final Feature m_parentFeature;
 
-  private final IRelationType m_parentFeatureProperty;
+  private final String m_parentFeatureProperty;
 
-  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature, final IRelationType parentFeatureProperty )
+  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature, final String parentFeatureProperty )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -80,7 +79,7 @@ public final class EasyFeatureWrapper
     return m_parentFeature;
   }
 
-  public IRelationType getParentFeatureProperty( )
+  public String getParentFeatureProperty( )
   {
     return m_parentFeatureProperty;
   }

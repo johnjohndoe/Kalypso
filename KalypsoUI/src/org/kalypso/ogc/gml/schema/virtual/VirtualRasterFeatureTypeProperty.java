@@ -71,7 +71,7 @@ public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyTyp
 
   public VirtualRasterFeatureTypeProperty( IPropertyType ftp )
   {
-    super( new QName( "virtual", "RasterBoundary_" + ftp.getQName().getLocalPart() ), 0, 1, GeometryUtilities.getPolygonClass() );
+    super( new QName( "virtual", "RasterBoundary_" + ftp.getName() ), 0, 1, GeometryUtilities.getPolygonClass() );
   }
 
   /**

@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.gmlschema.DateWithoutTime;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -68,6 +69,7 @@ import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -87,9 +89,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private IFeatureDialog m_dialog = null;
 
-  private Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
+  private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureSelectionManager selectionManager )
   {
     super( workspace, feature, ftp );
 
@@ -107,10 +109,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       }
     };
 
-    m_dialog = chooseDialog( workspace, feature, ftp, listener );
+    m_dialog = chooseDialog( workspace, feature, ftp, listener, selectionManager );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener, final IFeatureSelectionManager selectionManager )
   {
     // final String typename = ftp.getType();
     if( ftp instanceof IValuePropertyType )
@@ -135,7 +137,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
     if( ftp instanceof IRelationType )
     {
-      if( ftp.isList() )
+      if(ftp.isList())
       {
         // it is a list of features or links to features or mixed
         // return new FeatureDialog( workspace, feature, ftp, selectionManager );
@@ -164,7 +166,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  @Override
   public void dispose( )
   {
     if( !(m_button.isDisposed()) )
@@ -182,7 +183,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
         buttonPressed();
@@ -198,7 +198,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     if( m_dialog.open( m_button.getShell() ) == Window.OK )
     {
-      final Collection<FeatureChange> c = new LinkedList<FeatureChange>();
+      final Collection c = new LinkedList();
       m_dialog.collectChanges( c );
       for( final Iterator iter = c.iterator(); iter.hasNext(); )
         fireFeatureChange( (FeatureChange) iter.next() );

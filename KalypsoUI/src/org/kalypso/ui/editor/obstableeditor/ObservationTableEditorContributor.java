@@ -57,7 +57,6 @@ public class ObservationTableEditorContributor extends EditorActionBarContributo
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
    */
-  @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
     super.setActiveEditor( targetEditor );

@@ -70,8 +70,7 @@ public class ConfigurePreviewAction extends AbstractObservationChooserAction imp
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
-  @Override
-  public void run( )
+  public void run()
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )

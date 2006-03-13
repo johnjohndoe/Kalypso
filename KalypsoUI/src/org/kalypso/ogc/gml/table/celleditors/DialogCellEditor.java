@@ -56,7 +56,7 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    *  
    */
-  public DialogCellEditor( )
+  public DialogCellEditor()
   {
     super();
   }
@@ -80,7 +80,6 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    * @see org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createControl( final Composite parent )
   {
     final Text text = new Text( parent, SWT.CENTER );
@@ -92,8 +91,7 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
    */
-  @Override
-  protected Object doGetValue( )
+  protected Object doGetValue()
   {
     return m_value;
   }
@@ -101,8 +99,7 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
    */
-  @Override
-  protected void doSetFocus( )
+  protected void doSetFocus()
   {
     if( openDialog( getControl() ) )
     {
@@ -118,7 +115,6 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
    */
-  @Override
   protected void doSetValue( final Object value )
   {
     m_value = value;
@@ -127,8 +123,7 @@ public abstract class DialogCellEditor extends CellEditor
   /**
    * @see org.eclipse.jface.viewers.CellEditor#activate()
    */
-  @Override
-  public void activate( )
+  public void activate()
   {
     super.activate();
   }

@@ -75,31 +75,33 @@ import org.kalypso.metadoc.impl.FileExportTarget;
 public class ImageExportPage extends WizardPage implements IConfigurationListener
 {
   public final static String CONF_IMAGE_FORMAT = ImageExportPage.class.getName() + ".IMAGE_FORMAT"; //$NON-NLS-1$
-
   public final static String CONF_IMAGE_WIDTH = ImageExportPage.class.getName() + ".IMAGE_WIDTH"; //$NON-NLS-1$
-
   public final static String CONF_IMAGE_HEIGHT = ImageExportPage.class.getName() + ".IMAGE_HEIGHT"; //$NON-NLS-1$
 
   private final static String STORE_FORMAT_ID = CONF_IMAGE_FORMAT;
-
   private final static String STORE_WIDTH_ID = CONF_IMAGE_WIDTH;
-
   private final static String STORE_HEIGHT_ID = CONF_IMAGE_HEIGHT;
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 100;
 
-  private final static String[] FORMATS = { "gif", "jpeg", "png" };
+  private final static String[] FORMATS =
+  {
+      "gif",
+      "jpeg",
+      "png" };
 
-  private final static String[] EXTENSIONS = { ".gif", ".jpg", ".png" };
+  private final static String[] EXTENSIONS =
+  {
+      ".gif",
+      ".jpg",
+      ".png" };
 
   private final IPublishingConfiguration m_conf;
 
   private Text m_widthtext;
 
   private Text m_heighttext;
-
   private ComboViewer m_combo;
-
   private ISelectionChangedListener m_formatSelListener = new ISelectionChangedListener()
   {
     public void selectionChanged( final SelectionChangedEvent event )
@@ -108,7 +110,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
   };
 
-  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage )
+  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title,
+      final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -119,8 +122,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_conf.removeListener( this );
 
@@ -197,14 +199,14 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     m_combo.setContentProvider( new ArrayContentProvider() );
     m_combo.setInput( FORMATS );
     m_combo.addSelectionChangedListener( m_formatSelListener );
-    // m_combo.setSelection( new StructuredSelection( FORMATS[0] ) );
+//    m_combo.setSelection( new StructuredSelection( FORMATS[0] ) );
 
     final GridData combodata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     combodata.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_combo.getControl().setLayoutData( combodata );
   }
 
-  protected void updateConf( )
+  protected void updateConf()
   {
     String msg = "";
 
@@ -216,11 +218,11 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     final Integer height = NumberUtils.parseQuietInteger( m_heighttext.getText() );
     if( height == null || height.intValue() <= 0 )
-      msg += (msg.length() != 0 ? "\n " : "") + "Ungültige Höhe";
+      msg += ( msg.length() != 0 ? "\n " : "" ) + "Ungültige Höhe";
     else
       m_conf.setProperty( CONF_IMAGE_HEIGHT, height );
 
-    final String format = (String) ((IStructuredSelection) m_combo.getSelection()).getFirstElement();
+    final String format = (String)( (IStructuredSelection)m_combo.getSelection() ).getFirstElement();
     m_conf.setProperty( CONF_IMAGE_FORMAT, format );
     final int indexOf = ArrayUtils.indexOf( FORMATS, format );
     if( indexOf != -1 )
@@ -232,7 +234,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     saveWidgetValues();
   }
 
-  protected void updateControls( final String key )
+  private void updateControls( final String key )
   {
     if( key.equals( CONF_IMAGE_WIDTH ) || key == null )
     {
@@ -252,7 +254,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     {
       final String format = m_conf.getString( CONF_IMAGE_FORMAT, FORMATS[0] );
 
-      final String oldFormat = (String) ((IStructuredSelection) m_combo.getSelection()).getFirstElement();
+      final String oldFormat = (String)( (IStructuredSelection)m_combo.getSelection() ).getFirstElement();
       if( !format.equals( oldFormat ) )
         m_combo.setSelection( new StructuredSelection( format ) );
     }
@@ -261,7 +263,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   /**
    * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
-  protected void restoreWidgetValues( )
+  protected void restoreWidgetValues()
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -284,7 +286,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
   }
 
-  public void saveWidgetValues( )
+  public void saveWidgetValues()
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -310,7 +312,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     display.asyncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
         updateControls( key );
       }

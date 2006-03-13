@@ -49,6 +49,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class StrokeLinejoinComboPanel extends ComboPanel
 {
@@ -64,44 +65,46 @@ public class StrokeLinejoinComboPanel extends ComboPanel
     setSelection( value );
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  @Override
-  public int getSelection( )
+  public int getSelection()
   {
     switch( selection_index )
     {
-      case 0:
-        return Stroke.LJ_MITRE;
-      case 1:
-        return Stroke.LJ_ROUND;
-      case 2:
-        return Stroke.LJ_BEVEL;
-      default:
-        return Stroke.LJ_DEFAULT;
+    case 0:
+      return Stroke.LJ_MITRE;
+    case 1:
+      return Stroke.LJ_ROUND;
+    case 2:
+      return Stroke.LJ_BEVEL;
+    default:
+      return Stroke.LJ_DEFAULT;
     }
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
   public void setSelection( int index )
   {
     switch( index )
     {
-      case Stroke.LJ_MITRE:
-        comboBox.select( 0 );
-        break;
-      case Stroke.LJ_ROUND:
-        comboBox.select( 1 );
-        break;
-      case Stroke.LJ_BEVEL:
-        comboBox.select( 2 );
-        break;
-      default:
-        comboBox.select( 0 );
+    case Stroke.LJ_MITRE:
+      comboBox.select( 0 );
+      break;
+    case Stroke.LJ_ROUND:
+      comboBox.select( 1 );
+      break;
+    case Stroke.LJ_BEVEL:
+      comboBox.select( 2 );
+      break;
+    default:
+      comboBox.select( 0 );
     }
   }
 }

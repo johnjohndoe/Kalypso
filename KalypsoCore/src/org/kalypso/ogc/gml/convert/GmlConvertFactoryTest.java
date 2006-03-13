@@ -29,7 +29,7 @@ public class GmlConvertFactoryTest extends TestCase
 {
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
-  public GmlConvertFactoryTest( ) throws TypeRegistryException
+  public GmlConvertFactoryTest() throws TypeRegistryException, JAXBException
   {
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
@@ -39,7 +39,7 @@ public class GmlConvertFactoryTest extends TestCase
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
   }
 
-  public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
+  public void testConvertXml() throws IOException, JAXBException, GmlConvertException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );
 

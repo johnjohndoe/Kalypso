@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -47,8 +48,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -61,8 +60,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.XMLReader;
 
 /**
- * to parse gml from xmlReader,
- * 
  * @author doemming
  */
 public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
@@ -89,28 +86,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   private Feature m_rootFeature = null;
 
-  private final URL m_schemaLocationHint;
-
-  // 
-  private final boolean m_useSchemaCatalog;
-
-  /**
-   * uses GMLSchemaCatalog
-   */
   public GMLContentHandler( XMLReader xmlReader )
   {
     m_xmlReader = xmlReader;
-    m_featureParser = new FeatureParser( this );
-    m_propParser = new PropertyParser();
-    m_schemaLocationHint = null;
-    m_useSchemaCatalog = true;
-  }
-
-  public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog )
-  {
-    m_xmlReader = xmlReader;
-    m_schemaLocationHint = schemaLocationHint;
-    m_useSchemaCatalog = useGMLSchemaCatalog;
     m_featureParser = new FeatureParser( this );
     m_propParser = new PropertyParser();
   }
@@ -143,28 +121,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     // System.out.println( "<" + uri + ":" + localName + ">" );
     if( m_gmlSchema == null )
     {
-      GMLSchema schema = null;
-      // 1. try : use hint
-      if( m_schemaLocationHint != null )
-        try
-        {
-          if( m_useSchemaCatalog )
-            schema = GMLSchemaCatalog.getSchema( m_schemaLocationHint );
-          else
-            schema = GMLSchemaFactory.createGMLSchema( m_schemaLocationHint );
-        }
-        catch( GMLSchemaException e )
-        {
-          // TODO Auto-generated catch block
-        }
-      // 2. try : from schemalocation attributes
+      GMLSchema schema = getSchema( atts );
+      // TODO create GMLParserxception !
       if( schema == null )
-        schema = getSchema( atts );
-
-      // 3. try : from namespace of root element
-      if( schema == null && m_useSchemaCatalog )
         schema = GMLSchemaCatalog.getSchema( uri );
-
+      
       // TODO: maybe schema is unknown, so better throw an exception with a better error message
       if( schema == null )
         throw new UnsupportedOperationException( "could not load schema" );
@@ -203,10 +164,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else
         {
-//          System.out.println( "unknown: " + uri + " " + localName );
           // unknown element in schema, probably this property is removed from schema and still occurs in the xml
           // instance document
-          // we just ignore it
+          // we just ignore it 
         }
 
         m_status = START_VALUE_END_PROPERTY;
@@ -365,36 +325,28 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final String locationValue = atts.getValue( i );
         final String[] strings = locationValue.split( "\\s+" );
         GMLSchema schema = null;
-        if( m_useSchemaCatalog )
-          try
-          {
-            String namespaceURI = strings[0];
-            schema = GMLSchemaCatalog.getSchema( namespaceURI );
-            if( schema != null )
-              return schema;
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
-
-        final URL schemaLocationURL;
         try
         {
-          // TODO use context
-          final String locationURI = strings[1];
-          schemaLocationURL = new URL( locationURI );
-          if( m_useSchemaCatalog )
-            schema = GMLSchemaCatalog.getSchema( schemaLocationURL );
-          else
-            schema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
+          String namespaceURI = strings[0];
+          schema = GMLSchemaCatalog.getSchema( namespaceURI );
         }
         catch( Exception e )
         {
-          // TODO produce error message
           e.printStackTrace();
+          final URL schemaLocationURL;
+          try
+          {
+            // TODO use context
+            String locationURI = strings[1];
+            schemaLocationURL = new URL( locationURI );
+            schema = GMLSchemaCatalog.getSchema( schemaLocationURL );
+          }
+          catch( MalformedURLException e1 )
+          {
+            // TODO produce error message
+            e1.printStackTrace();
+          }
         }
-
         return schema;
       }
     }

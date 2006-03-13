@@ -27,8 +27,7 @@ public final class WQPair
     return m_w;
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return "W= " + m_w + " Q= " + m_q;
   }

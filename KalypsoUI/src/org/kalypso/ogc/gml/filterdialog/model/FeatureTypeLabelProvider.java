@@ -56,6 +56,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class FeatureTypeLabelProvider extends LabelProvider
 {
+
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
@@ -96,13 +97,13 @@ public class FeatureTypeLabelProvider extends LabelProvider
   {
     if( element instanceof IFeatureType )
     {
-      IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      IAnnotation annotation = AnnotationUtilities.getAnnotation( (IFeatureType) element );
       return annotation.getLabel();
 
     }
     else if( element instanceof IPropertyType )
     {
-      IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      IAnnotation annotation = AnnotationUtilities.getAnnotation( (IPropertyType) element );
       return annotation.getLabel();
     }
     return "";

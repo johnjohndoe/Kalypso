@@ -53,8 +53,7 @@ public class WQTableFactory implements ISerializer
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
-      final Object unmarshal = unm.unmarshal( ins );
-      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unmarshal;
+      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unm.unmarshal( ins );
       final RatingTableList xmlTableList = element.getValue();
 
       return xmlTableList;

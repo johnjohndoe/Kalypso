@@ -70,7 +70,6 @@ public class WQRelationDialog extends ResizableDialog
     m_wqs = wqs;
   }
 
-  @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite)super.createDialogArea( parent );

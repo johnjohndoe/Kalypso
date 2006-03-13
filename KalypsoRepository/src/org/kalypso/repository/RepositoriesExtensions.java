@@ -47,7 +47,7 @@ public class RepositoriesExtensions
 
     final IExtension[] extensions = extensionPoint.getExtensions();
 
-    final Vector<RepositoryFactoryConfig> items = new Vector<RepositoryFactoryConfig>();
+    final Vector items = new Vector();
 
     for( int i = 0; i < extensions.length; i++ )
     {
@@ -68,7 +68,7 @@ public class RepositoriesExtensions
       }
     }
 
-    return items.toArray( new RepositoryFactoryConfig[items.size()] );
+    return (RepositoryFactoryConfig[])items.toArray( new RepositoryFactoryConfig[items.size()] );
   }
 
   /**

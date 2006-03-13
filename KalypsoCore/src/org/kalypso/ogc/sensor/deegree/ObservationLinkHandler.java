@@ -103,7 +103,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
       final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final JAXBElement<TimeseriesLinkType> value = m_factory.createTimeseriesLink( (TimeseriesLinkType) object );
-      /* String debugNode = */XMLHelper.toString( node );
+      String debugNode = XMLHelper.toString( node );
       marshaller.marshal( value, node );
     }
     catch( JAXBException e )

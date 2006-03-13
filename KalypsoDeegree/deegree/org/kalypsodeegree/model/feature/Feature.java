@@ -11,7 +11,21 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
  */
 public interface Feature extends DeegreeFeature
 {
-  public void addProperty( final FeatureProperty prop );
+  public void addProperty( FeatureProperty prop );
+
+  // public boolean isSelected( int selectID );
+  //
+  // public boolean toggle( int selectID );
+  //
+  // public boolean unselect( int selectID );
+  //
+  // public boolean select( int selectID );
+
+  // /** Gibt die gesamte Selektion zurück */
+  // public int getSelection();
+  //
+  // /** setzt die Selektion komplett */
+  // public void setSelection( final int selection );
 
   public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
 
@@ -19,7 +33,7 @@ public interface Feature extends DeegreeFeature
 
   /** Uses the visitor on each property of this feature. 
    * 
-   * @TODO: REMARK Gernot: this is never used (i used it once, but no more) so maybe we delete it for simplicity? -> if we keep it, we should move it to a utility class
+   * @TODO: REMARK Gernot: this is never used (i used it once, but no more) so maybe we delete it for simplicity? -> if we keep it, we should move ti to a utility class
    * */
   public void accept( final IFeaturePropertyVisitor visitor );
 
@@ -35,5 +49,5 @@ public interface Feature extends DeegreeFeature
   @Deprecated
   public void setProperty( final String propLocalName, final Object value );
 
-  public Object getProperty( final QName propQName );
+  public Object getProperty( QName propQName );
 }

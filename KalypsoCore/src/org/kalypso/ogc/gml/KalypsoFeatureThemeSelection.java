@@ -46,8 +46,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -62,15 +60,16 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
 
   private final Feature m_parentFeature;
 
-  private final IRelationType m_parentPropertyName;
+  private final String m_parentPropertyName;
 
   private final IFeatureSelectionManager m_selectionManager;
 
   private final Feature m_focusedFeature;
 
-  private final IPropertyType m_focusedProperty;
+  private final String m_focusedProperty;
 
-  public KalypsoFeatureThemeSelection( final List<Feature> selectedFeatures, final IKalypsoFeatureTheme filterTheme, final IFeatureSelectionManager selectionManager, final Feature focusedFeature, final IPropertyType focusedProperty )
+  public KalypsoFeatureThemeSelection( final List selectedFeatures, final IKalypsoFeatureTheme filterTheme,
+      final IFeatureSelectionManager selectionManager, final Feature focusedFeature, final String focusedProperty )
   {
     super( filter( selectedFeatures, filterTheme ) );
 
@@ -81,7 +80,8 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
     final FeatureList featureList = filterTheme.getFeatureList();
     m_parentFeature = featureList == null ? null : featureList.getParentFeature();
 
-    m_parentPropertyName = featureList == null ? null : featureList.getParentFeatureTypeProperty();
+    m_parentPropertyName = ( featureList == null || featureList.getParentFeatureTypeProperty() == null ) ? null
+        : featureList.getParentFeatureTypeProperty().getName();
   }
 
   /**
@@ -103,20 +103,20 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
    */
-  public IRelationType getParentFeatureProperty( final Feature feature )
+  public String getParentFeatureProperty( final Feature feature )
   {
     return m_parentPropertyName;
   }
 
   /** Return a new selection wich contains all features from the given selection wich are contained in the theme. */
-  public static IStructuredSelection filter( final List<Feature> selection, final IKalypsoFeatureTheme theme )
+  public static IStructuredSelection filter( final List selection, final IKalypsoFeatureTheme theme )
   {
     // TODO: only visible features?
     final FeatureList featureList = theme.getFeatureList();
     if( featureList == null )
       return StructuredSelection.EMPTY;
 
-    final ArrayList<Feature> list = new ArrayList<Feature>( selection );
+    final ArrayList list = new ArrayList( selection );
     list.retainAll( featureList );
     return new StructuredSelection( list );
   }
@@ -124,7 +124,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
    */
-  public EasyFeatureWrapper[] getAllFeatures( )
+  public EasyFeatureWrapper[] getAllFeatures()
   {
     return FeatureSelectionHelper.createEasyWrappers( this );
   }
@@ -132,7 +132,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
    */
-  public IFeatureSelectionManager getSelectionManager( )
+  public IFeatureSelectionManager getSelectionManager()
   {
     return m_selectionManager;
   }
@@ -140,7 +140,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
    */
-  public Feature getFocusedFeature( )
+  public Feature getFocusedFeature()
   {
     return m_focusedFeature;
   }
@@ -148,7 +148,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
    */
-  public IPropertyType getFocusedProperty( )
+  public String getFocusedProperty()
   {
     return m_focusedProperty;
   }

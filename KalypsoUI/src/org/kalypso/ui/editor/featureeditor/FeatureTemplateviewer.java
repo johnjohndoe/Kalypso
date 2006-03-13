@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
@@ -71,6 +72,7 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
+import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
@@ -92,6 +94,8 @@ import org.xml.sax.InputSource;
  */
 public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 {
+  private final static ObjectFactory OF = new ObjectFactory();
+
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
@@ -176,8 +180,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      // final Object object1 = unmarshaller.unmarshal( is );
-      // final JAXBElement element = (JAXBElement) object1;
+//      final Object object1 = unmarshaller.unmarshal( is );
+//      final JAXBElement element = (JAXBElement) object1;
       // final Featuretemplate m_template = (Featuretemplate) element.getValue();
       final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
       List<FeatureviewType> view = m_template.getView();
@@ -273,7 +277,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     m_creator = new ScrolledCompositeCreator( null )
     {
-      @Override
       protected Control createContents( final Composite scrollParent, final int contentStyle )
       {
         final Composite panel = new Composite( scrollParent, contentStyle );

@@ -73,7 +73,6 @@ public class CompSmaller extends AbstractValueComp
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.AbstractValueComp#internalValidates(java.lang.Object)
    */
-  @Override
   public boolean internalValidates( final Object element ) throws ParserException
   {
     if( m_modeInclusive )

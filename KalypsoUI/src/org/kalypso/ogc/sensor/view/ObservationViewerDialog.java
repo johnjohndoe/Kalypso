@@ -263,8 +263,8 @@ public class ObservationViewerDialog extends Dialog
           Object content = clipboard.getContents( TextTransfer.getInstance() );
           if( content != null && content instanceof String )
             setInput( ZmlFactory.createZMLFromClipboardString( ((IObservation) m_input).getName(), (String) content, axis ) );
-          // else
-          // TODO messagebox
+          else
+            ; // TODO messagebox
           clipboard.dispose();
         }
 

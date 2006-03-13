@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
@@ -76,7 +75,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
     GridDialog gridDialog = new GridDialog( shell );
     final int open = gridDialog.open();
@@ -90,7 +89,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
     // no changes
   }

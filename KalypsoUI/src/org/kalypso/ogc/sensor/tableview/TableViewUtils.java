@@ -196,7 +196,7 @@ public final class TableViewUtils
     // rendering rules
     final Rules xmlRulesType = OTT_OF.createObstableviewRules();
     xmlTemplate.setRules( xmlRulesType );
-    final List<TypeRenderingRule> xmlRules = xmlRulesType.getRenderingrule();
+    final List xmlRules = xmlRulesType.getRenderingrule();
 
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
@@ -217,7 +217,7 @@ public final class TableViewUtils
     }
 
     // themes
-    final List<TypeObservation> xmlObsList = xmlTemplate.getObservation();
+    final List xmlObsList = xmlTemplate.getObservation();
 
     int colCount = 0;
 
@@ -237,7 +237,7 @@ public final class TableViewUtils
       xmlObsList.add( xmlObs );
 
       // columns
-      final List<TypeColumn> xmlColumns = xmlObs.getColumn();
+      final List xmlColumns = xmlObs.getColumn();
 
       final List columns = (List)entry.getValue();
       for( Iterator itCol = columns.iterator(); itCol.hasNext(); )

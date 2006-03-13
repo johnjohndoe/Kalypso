@@ -5,6 +5,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public final class CsvFeatureReader
   }
 
   /** featureTypeProperty -> cvsinfo */
-  private Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
+  private Map m_infos = new LinkedHashMap();
 
   public final void addInfo( final IPropertyType ftp, final CSVInfo info )
   {
@@ -59,13 +60,13 @@ public final class CsvFeatureReader
 
   public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final List<Feature> list = new ArrayList<Feature>();
+    final List list = new ArrayList();
     final IFeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
 
     // featurelist erzeugen
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
-    // final List flist = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    // flist.addAll( list );
+    final List flist = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    flist.addAll( list );
 
     final GMLSchema schema = null;
     final URL context = null;
@@ -73,9 +74,9 @@ public final class CsvFeatureReader
     return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation );
   }
 
-  private IFeatureType loadCSVIntoList( final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  private IFeatureType loadCSVIntoList( final List list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
+    final IPropertyType[] props = (IPropertyType[]) m_infos.keySet().toArray( new IPropertyType[0] );
     // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
     // HashMap() );
     final IFeatureType featureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
@@ -112,14 +113,14 @@ public final class CsvFeatureReader
       if( !(ftp instanceof IValuePropertyType) )
         continue;
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final CSVInfo info = m_infos.get( ftp );
+      final CSVInfo info = (CSVInfo) m_infos.get( ftp );
 
       // check column numbers
       for( int j = 0; j < info.columns.length; j++ )
       {
         final int colNumber = info.columns[j];
         if( colNumber >= tokens.length )
-          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getQName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
+          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
       }
 
       data[i] = parseColumns( vpt.getValueClass(), info.format, info.columns, tokens, info.ignoreFormatExceptions );

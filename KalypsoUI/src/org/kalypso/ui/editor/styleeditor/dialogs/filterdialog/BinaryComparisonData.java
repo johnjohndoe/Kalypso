@@ -60,8 +60,7 @@ public class BinaryComparisonData extends AbstractComparisonData
     this.literal = m_literal.trim();
   }
 
-  @Override
-  public boolean verify( ) throws FilterDialogException
+  public boolean verify() throws FilterDialogException
   {
     if( literal == null || literal.trim().length() == 0 || propertyName == null )
     {

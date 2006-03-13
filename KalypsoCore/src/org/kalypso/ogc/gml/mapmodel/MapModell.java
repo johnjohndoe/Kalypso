@@ -67,9 +67,9 @@ public class MapModell implements IMapModell
 
   private final static Boolean THEME_DISABLED = Boolean.valueOf( false );
 
-  private final Vector<IKalypsoTheme> m_themes = new Vector<IKalypsoTheme>();
+  private final Vector m_themes = new Vector();
 
-  private final Map<IKalypsoTheme, Boolean> m_enabledThemeStatus = new HashMap<IKalypsoTheme, Boolean>();
+  private final Map m_enabledThemeStatus = new HashMap();
 
   private final CS_CoordinateSystem m_coordinatesSystem;
 
@@ -85,7 +85,7 @@ public class MapModell implements IMapModell
 
   public void dispose()
   {
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     m_themes.clear();
     for( int i = 0; i < themes.length; i++ )
       themes[i].dispose();
@@ -137,7 +137,7 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme[] getAllThemes()
   {
-    return m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    return (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
   }
 
   public CS_CoordinateSystem getCoordinatesSystem()
@@ -149,7 +149,7 @@ public class MapModell implements IMapModell
       final boolean selected )
   {
     // directly access themes in order to avoid synchronization problems
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     // paint themes in reverse order
     for( int i = themes.length; i > 0; i-- )
     {
@@ -161,7 +161,7 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme getTheme( final int pos )
   {
-    return m_themes.elementAt( pos );
+    return (IKalypsoTheme)m_themes.elementAt( pos );
   }
 
   public int getThemeSize()
@@ -195,7 +195,7 @@ public class MapModell implements IMapModell
 
   public void removeTheme( int pos )
   {
-    removeTheme( m_themes.elementAt( pos ) );
+    removeTheme( (IKalypsoTheme)m_themes.elementAt( pos ) );
   }
 
   public void removeTheme( IKalypsoTheme theme )

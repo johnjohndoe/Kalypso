@@ -71,7 +71,7 @@ public class ModelspecData
   {
     try
     {
-      m_modelspec = (Modelspec) unmarshaller.unmarshal( modelspecUrl );
+      m_modelspec = (Modelspec)unmarshaller.unmarshal( modelspecUrl );
 
       m_inputHash = createHash( m_modelspec.getInput() );
       m_outputHash = createHash( m_modelspec.getOutput() );
@@ -82,11 +82,15 @@ public class ModelspecData
     }
   }
 
-  private Map createHash( final List<DataType> list )
+  private Map createHash( final List list )
   {
-    final HashMap<String, DataType> map = new HashMap<String, DataType>( list.size() );
-    for( final DataType data : list )
+    final HashMap map = new HashMap( list.size() );
+    for( Iterator iter = list.iterator(); iter.hasNext(); )
+    {
+      final DataType data = (DataType)iter.next();
+
       map.put( data.getId(), data );
+    }
 
     return map;
   }
@@ -100,20 +104,21 @@ public class ModelspecData
   {
     for( final Iterator iIt = m_inputHash.values().iterator(); iIt.hasNext(); )
     {
-      final DataType input = (DataType) iIt.next();
+      final DataType input = (DataType)iIt.next();
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )
-        throw new CalcJobServiceException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.", null );
+        throw new CalcJobServiceException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.",
+            null );
     }
   }
 
-  public CalcJobServerBean[] getInput( )
+  public CalcJobServerBean[] getInput()
   {
     return toServerBeans( m_inputHash.values() );
   }
 
-  public CalcJobServerBean[] getOutput( )
+  public CalcJobServerBean[] getOutput()
   {
     return toServerBeans( m_outputHash.values() );
   }
@@ -124,7 +129,7 @@ public class ModelspecData
     int count = 0;
     for( final Iterator iter = values.iterator(); iter.hasNext(); )
     {
-      final DataType data = (DataType) iter.next();
+      final DataType data = (DataType)iter.next();
       beans[count++] = new CalcJobServerBean( data.getId(), data.getDescription() );
     }
 

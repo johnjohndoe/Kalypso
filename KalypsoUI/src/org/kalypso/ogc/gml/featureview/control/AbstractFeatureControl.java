@@ -61,7 +61,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
   private final IPropertyType m_ftp;
 
-  private Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
+  private Collection m_changelisteners = new ArrayList();
 
   private GMLWorkspace m_workspace;
 
@@ -130,7 +130,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     if( change == null )
       return;
 
-    final IFeatureChangeListener[] listeners = m_changelisteners
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
         .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
@@ -147,7 +147,8 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
   protected final void fireOpenFeatureRequested( final Feature feature, final IPropertyType ftp )
   {
-    final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
+        .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final IFeatureChangeListener listener = listeners[i];

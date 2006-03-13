@@ -87,7 +87,8 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
 
   private final IPublishingConfiguration m_conf;
 
-  public FileSelectionWizardPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final String groupname )
+  public FileSelectionWizardPage( final IPublishingConfiguration conf, final String pageName, final String title,
+      final ImageDescriptor titleImage, final String groupname )
   {
     super( pageName, title, titleImage );
 
@@ -99,8 +100,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_conf.removeListener( this );
 
@@ -135,26 +135,26 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
    * Must be called in swt-thread
    * </p>
    */
-  protected void updateControl( final String key )
+  private void updateControl( final String key )
   {
     if( m_destinationNameField.isDisposed() )
       return;
 
-    final File destination = (File) m_conf.getProperty( FileExportTarget.CONF_FILEEXPORT_FILE );
-
+    final File destination = (File)m_conf.getProperty( FileExportTarget.CONF_FILEEXPORT_FILE );
+    
     if( destination != null && !m_destinationNameField.getText().equals( destination.getPath() ) )
       m_destinationNameField.setText( destination.getPath() );
-
+    
     if( key == null || key.equals( FileExportTarget.CONF_FILEEXPORT_EXTENSION ) )
     {
       String filename = m_destinationNameField.getText();
       filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION );
-
+      
       m_destinationNameField.setText( filename );
     }
   }
 
-  protected File updatePageCompletion( )
+  protected File updatePageCompletion()
   {
     final File file = determinePageCompletion();
 
@@ -168,7 +168,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     return file;
   }
 
-  private File determinePageCompletion( )
+  private File determinePageCompletion()
   {
     final String destinationValue = getDestinationValue();
     if( destinationValue.length() == 0 )
@@ -215,23 +215,21 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
    *          the path of the directory to check.
    * @return the conflicting container name or <code>null</code>
    */
-  protected boolean isContainerConflicting( final String targetDirectory )
+  protected boolean isContainerConflicting( String targetDirectory )
   {
-    targetDirectory.getClass();
-
-    // IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    // IPath testPath = new Path( targetDirectory );
+    //    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    //    IPath testPath = new Path( targetDirectory );
     //
-    // if( root.getLocation().isPrefixOf( testPath ) )
-    // return true;
+    //    if( root.getLocation().isPrefixOf( testPath ) )
+    //      return true;
     //
-    // IProject[] projects = root.getProjects();
+    //    IProject[] projects = root.getProjects();
     //
-    // for( int i = 0; i < projects.length; i++ )
-    // {
-    // if( projects[i].getLocation().isPrefixOf( testPath ) )
-    // return true;
-    // }
+    //    for( int i = 0; i < projects.length; i++ )
+    //    {
+    //      if( projects[i].getLocation().isPrefixOf( testPath ) )
+    //        return true;
+    //    }
     //
     return false;
   }
@@ -252,13 +250,12 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     filenameLabel.setText( "Dateiname:" );
 
     // destination name entry field
-    final Combo destinationNameField = new Combo( targetGroup, SWT.BORDER );
-    m_destinationNameField = destinationNameField;
+    m_destinationNameField = new Combo( targetGroup, SWT.BORDER );
     m_destinationNameField.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
-        handleDestinationNameChanged();
+        handleDestinationNameChanged( m_destinationNameField.getText() );
       }
     } );
 
@@ -275,7 +272,6 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleDestinationBrowseButtonPressed();
@@ -284,7 +280,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     destinationBrowseButton.setFont( font );
   }
 
-  protected void handleDestinationNameChanged( )
+  protected void handleDestinationNameChanged( final String text )
   {
     final File file = updatePageCompletion();
 
@@ -292,13 +288,15 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     saveWidgetValues();
   }
 
-  protected void handleDestinationBrowseButtonPressed( )
+  protected void handleDestinationBrowseButtonPressed()
   {
     final FileDialog dialog = new FileDialog( getContainer().getShell(), SWT.SAVE );
 
     // TODO: fill in filter names and exts
-    final String[] filterExts = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "*" };
-    final String[] filterNames = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "Alle Dateien" };
+    final String[] filterExts = new String[]
+    { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "*" };
+    final String[] filterNames = new String[]
+    { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "Alle Dateien" };
 
     dialog.setFilterExtensions( filterExts );
     dialog.setFilterNames( filterNames );
@@ -329,7 +327,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     m_destinationNameField.setText( selectedFileName );
   }
 
-  public String getDestinationValue( )
+  public String getDestinationValue()
   {
     return m_destinationNameField.getText().trim();
   }
@@ -337,7 +335,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
   /**
    * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
-  protected void restoreWidgetValues( )
+  protected void restoreWidgetValues()
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -353,13 +351,13 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     }
   }
 
-  public void saveWidgetValues( )
+  public void saveWidgetValues()
   {
     // update directory names history
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
     {
-      final List<String> history = new ArrayList<String>( Arrays.asList( m_destinationNameField.getItems() ) );
+      final List history = new ArrayList( Arrays.asList( m_destinationNameField.getItems() ) );
       history.remove( getDestinationValue() );
       history.add( 0, getDestinationValue() );
 
@@ -368,7 +366,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
       if( history.size() > COMBO_HISTORY_LENGTH )
         history.remove( COMBO_HISTORY_LENGTH );
 
-      settings.put( STORE_DESTINATION_NAMES_ID, history.toArray( new String[history.size()] ) );
+      settings.put( STORE_DESTINATION_NAMES_ID, (String[])history.toArray( new String[history.size()] ) );
     }
   }
 
@@ -381,13 +379,13 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     final Control control = getControl();
     if( control == null )
       return;
-
+    
     final Display display = control.getDisplay();
     if( !display.isDisposed() )
     {
       display.asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           updateControl( key );
         }

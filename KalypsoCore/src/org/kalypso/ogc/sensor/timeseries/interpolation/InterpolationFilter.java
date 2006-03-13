@@ -115,7 +115,6 @@ public class InterpolationFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final ITuppleModel values = super.getValues( request );
@@ -321,7 +320,7 @@ public class InterpolationFilter extends AbstractObservationFilter
     }
     else
     {
-      tupple = masterTupple.clone();
+      tupple = (Object[])masterTupple.clone();
       tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
     }
 

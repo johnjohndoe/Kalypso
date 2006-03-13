@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
@@ -26,7 +25,7 @@ public class FeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
 
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection m_changes = new ArrayList();
 
   private final IPropertyType m_ftp;
 
@@ -92,7 +91,7 @@ public class FeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     c.addAll( m_changes );
   }
@@ -103,6 +102,6 @@ public class FeatureDialog implements IFeatureDialog
   public String getLabel()
   {
     // TODO: use annotations
-    return m_feature.getFeatureType().getQName().getLocalPart();
+    return m_feature.getFeatureType().getName();
   }
 }

@@ -43,7 +43,7 @@ package org.kalypso.ui.repository.view;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.container.IRepositoryContainer;
@@ -62,10 +62,10 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    */
   private IRepositoryItem testArg( Object arg )
   {
-    if( !(arg instanceof IRepositoryItem) )
+    if( !( arg instanceof IRepositoryItem ) )
       throw new IllegalArgumentException();
 
-    return (IRepositoryItem) arg;
+    return (IRepositoryItem)arg;
   }
 
   /**
@@ -82,7 +82,8 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
 
       return new Object[0];
     }
@@ -105,7 +106,8 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
 
       return null;
     }
@@ -125,7 +127,8 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
 
       return false;
     }
@@ -136,7 +139,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    final IRepositoryContainer container = (IRepositoryContainer) inputElement;
+    final IRepositoryContainer container = (IRepositoryContainer)inputElement;
 
     return container.getRepositories().toArray();
   }
@@ -144,9 +147,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // empty
+  // empty
   }
 
   /**

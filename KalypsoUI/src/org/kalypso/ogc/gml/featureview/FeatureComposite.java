@@ -99,7 +99,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
-  // TODO: refactor tu use QName instead, but we must adapt the binding of FeatureviewType as well
   private final Map<String, FeatureviewType> m_viewMap = new HashMap<String, FeatureviewType>();
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
@@ -307,7 +306,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final String propertyName = buttonType.getProperty();
       final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp, m_selectionManager );
 
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 

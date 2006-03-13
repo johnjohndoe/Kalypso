@@ -65,12 +65,11 @@ public class RequestObservationProxy extends AbstractObservationDecorator implem
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  @Override
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     if( args == null )
       args = m_args;
-    // TODO if m_args!=null: they are not used at all, check policy here
+    //  TODO if m_args!=null: they are not used at all, check policy here
     return m_obs.getValues( args );
   }
 }

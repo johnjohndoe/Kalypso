@@ -61,14 +61,12 @@ public class RemoveThemeAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     getListManipulator().removeElement( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
-  @Override
-  protected void refresh( )
+  protected void refresh()
   {
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
     setEnabled( !s.isEmpty()

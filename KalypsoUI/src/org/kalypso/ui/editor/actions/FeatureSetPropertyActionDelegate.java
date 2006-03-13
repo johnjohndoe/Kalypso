@@ -43,6 +43,7 @@ import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -64,14 +65,16 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       return;
 
     final Feature focusedFeature = m_selection.getFocusedFeature();
-    final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+    final String focusedProperty = m_selection.getFocusedProperty();
+    final IPropertyType focusedFTP = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
-    if( focusedProperty != null )
+    if( focusedFTP != null )
     {
       final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
 
       final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-      final IPropertyType[] ftpToCopy = new IPropertyType[] { focusedProperty };
+      final IPropertyType[] ftpToCopy = new IPropertyType[]
+      { focusedFTP };
       final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, focusedFeature, ftpToCopy, fes );
       try
       {
@@ -101,19 +104,21 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     m_selection = null;
     final String text = action.getText();
     String newText = text == null ? "" : text.replaceAll( " \\(.*\\)", "" );
-    if( selection instanceof IFeatureSelection && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection ) > 0 )
+    if( selection instanceof IFeatureSelection
+        && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection)selection ) > 0 )
     {
-      m_selection = (IFeatureSelection) selection;
+      m_selection = (IFeatureSelection)selection;
       final Feature focusedFeature = m_selection.getFocusedFeature();
 
       if( focusedFeature != null )
       {
-        final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+        final String focusedProperty = m_selection.getFocusedProperty();
+        final IPropertyType ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
-        if( focusedProperty != null && m_selection.size() >= 2 )
+        if( ftp != null && m_selection.size() >= 2 )
         {
           action.setEnabled( true );
-          newText += " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")";
+          newText += " (" + AnnotationUtilities.getAnnotation( ftp).getLabel() + ")";
         }
       }
     }

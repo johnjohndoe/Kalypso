@@ -86,7 +86,6 @@ public class FilterPatternDialog extends Dialog
       operation = (PropertyIsBetweenOperation)m_operation;
   }
 
-  @Override
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
@@ -94,7 +93,6 @@ public class FilterPatternDialog extends Dialog
     shell.setSize( 200, 200 );
   }
 
-  @Override
   protected void okPressed()
   {
     // check whether boundaries are set and lowerBoundary<upperBoundary
@@ -140,7 +138,6 @@ public class FilterPatternDialog extends Dialog
     super.okPressed();
   }
 
-  @Override
   protected void cancelPressed()
   {
     fire();
@@ -165,7 +162,6 @@ public class FilterPatternDialog extends Dialog
     }
   }
 
-  @Override
   protected Control createDialogArea( Composite parent )
   {
     Composite composite = (Composite)super.createDialogArea( parent );

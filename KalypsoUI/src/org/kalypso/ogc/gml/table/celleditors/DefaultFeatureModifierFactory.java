@@ -88,7 +88,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       if( Boolean.class == valueClass )
         return new BooleanModifier( vpt );
       if( vpt.isGeometry() )
-        return new ButtonModifier( workspace, vpt, fcl );
+        return new ButtonModifier( workspace, vpt, selectionManager, fcl );
 
       final IGuiTypeHandler typeHandler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( valueClass );
       if( typeHandler != null )
@@ -99,7 +99,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IRelationType )
     {
       IRelationType rpt = (IRelationType) ftp;
-      return new ButtonModifier( workspace, rpt, fcl );
+      return new ButtonModifier( workspace, rpt, selectionManager, fcl );
     }
     throw new UnsupportedOperationException();
   }

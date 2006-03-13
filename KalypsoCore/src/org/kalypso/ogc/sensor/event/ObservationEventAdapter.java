@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
  */
 public class ObservationEventAdapter implements IObservationEventProvider
 {
-  private final List<IObservationListener> m_listeners = new ArrayList<IObservationListener>();
+  private final List m_listeners = new ArrayList();
 
   private final IObservation m_obs;
 
@@ -87,7 +87,7 @@ public class ObservationEventAdapter implements IObservationEventProvider
     final Object[] listeners = m_listeners.toArray();
     for( int i = 0; i < listeners.length; i++ )
     {
-      final IObservationListener listener = (IObservationListener) listeners[i];
+      final IObservationListener listener = (IObservationListener)listeners[i];
       listener.observationChanged( m_obs, source );
     }
   }
@@ -95,7 +95,7 @@ public class ObservationEventAdapter implements IObservationEventProvider
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
-  public void clearListeners( )
+  public void clearListeners()
   {
     m_listeners.clear();
   }

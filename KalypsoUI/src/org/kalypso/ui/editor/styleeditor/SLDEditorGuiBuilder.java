@@ -153,31 +153,30 @@ public class SLDEditorGuiBuilder
 
     // check whether there are featureTypes that have numeric properties to be
     // used by a pattern-filter
-    final ArrayList<IPropertyType> numericFeatureTypePropertylist = new ArrayList<IPropertyType>();
+    final ArrayList numericFeatureTypePropertylist = new ArrayList();
     final IPropertyType[] ftp = getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
-      final IPropertyType propertyType = ftp[i];
-      if( propertyType instanceof IValuePropertyType )
+      if( ftp[i] instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+        final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
         final Class valueClass = vpt.getValueClass();
-        if( valueClass == Double.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == BigInteger.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Byte.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == BigDecimal.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Float.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Integer.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Long.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Short.class )
-          numericFeatureTypePropertylist.add( propertyType );
+        if( valueClass==Double.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==BigInteger.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==Byte.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==BigDecimal.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==Float.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==Integer.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==Long.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
+        else if( valueClass==Short.class )
+          numericFeatureTypePropertylist.add( ftp[i] );
       }
     }
     ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
@@ -230,7 +229,7 @@ public class SLDEditorGuiBuilder
             int index3 = ruleTabItemBuilder.getSelectedRule();
             if( index3 > 0 )
             {
-              final ArrayList<Object> newOrdered = new ArrayList<Object>();
+              ArrayList newOrdered = new ArrayList();
               for( int i = 0; i < getRulePatternCollection().size(); i++ )
               {
                 if( i == index3 )
@@ -256,7 +255,7 @@ public class SLDEditorGuiBuilder
             }
             else
             {
-              final ArrayList<Object> newOrdered = new ArrayList<Object>();
+              ArrayList newOrdered = new ArrayList();
               for( int i = 0; i < getRulePatternCollection().size(); i++ )
               {
                 if( i == index4 )
@@ -278,9 +277,9 @@ public class SLDEditorGuiBuilder
             // create a pattern-filter for this style
             if( numericFeatureTypePropertylist.size() > 0 )
             {
-              final ArrayList<Rule> ruleList = new ArrayList<Rule>();
+              ArrayList ruleList = new ArrayList();
               // set by default first featuretypeproperty
-              IPropertyType prop = numericFeatureTypePropertylist.get( 0 );
+              IPropertyType prop = (IPropertyType) numericFeatureTypePropertylist.get( 0 );
               BoundaryExpression upperBoundary = null;
               BoundaryExpression lowerBoundary = null;
               PropertyName propertyName = new PropertyName( prop.getName() );
@@ -360,22 +359,21 @@ public class SLDEditorGuiBuilder
   void setRules( ArrayList ruleObjects, UserStyle style )
   {
     FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    final ArrayList<Rule> ruleInstances = new ArrayList<Rule>();
+    ArrayList ruleInstances = new ArrayList();
     for( int i = 0; i < ruleObjects.size(); i++ )
     {
-      final Object object = ruleObjects.get( i );
-      if( object instanceof Rule )
-        ruleInstances.add( (Rule) object );
-      else if( object instanceof RuleCollection )
+      if( ruleObjects.get( i ) instanceof Rule )
+        ruleInstances.add( ruleObjects.get( i ) );
+      else if( ruleObjects.get( i ) instanceof RuleCollection )
       {
-        RuleCollection ruleCollection = (RuleCollection) object;
+        RuleCollection ruleCollection = (RuleCollection) ruleObjects.get( i );
         for( int j = 0; j < ruleCollection.size(); j++ )
           ruleInstances.add( ruleCollection.get( j ) );
       }
     }
     Rule[] ruleArray = new Rule[ruleInstances.size()];
     for( int c = 0; c < ruleInstances.size(); c++ )
-      ruleArray[c] = ruleInstances.get( c );
+      ruleArray[c] = (Rule) ruleInstances.get( c );
     fts[0].setRules( ruleArray );
   }
 

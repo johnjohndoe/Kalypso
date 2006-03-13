@@ -101,8 +101,10 @@ import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.AxisType.ValueArray;
 import org.kalypso.zml.AxisType.ValueLink;
+import org.kalypso.zml.request.Request;
 import org.kalypso.zml.request.Request;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
@@ -318,7 +320,7 @@ public class ZmlFactory
 
     // axes and values
     final List tmpList = obs.getAxis();
-    final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( tmpList.size() );
+    final Map valuesMap = new HashMap( tmpList.size() );
 
     final String data = obs.getData(); // data is optional and can be null
 
@@ -471,7 +473,7 @@ public class ZmlFactory
 
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
-      final List<MetadataType> metadataList = metadataListType.getMetadata();
+      final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
         final Map.Entry entry = (Entry)it.next();
@@ -502,7 +504,7 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      final List<AxisType> axisList = obsType.getAxis();
+      final List axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
@@ -673,7 +675,7 @@ public class ZmlFactory
   public static Object createZMLFromClipboardString( final String name, final String content, final IAxis[] axis )
   {
     final String[] rows = content.split( "\\n" );
-    final List<Object[]> collector = new ArrayList<Object[]>();
+    final List collector = new ArrayList();
     for( int i = 0; i < rows.length; i++ )
     {
       final String row = rows[i];
@@ -756,14 +758,14 @@ public class ZmlFactory
     final int count = values.getCount();
     // actually just the first key axis is relevant in our case
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
-    final List<IAxis> list = new ArrayList<IAxis>();
+    List list = new ArrayList();
     list.add( keyAxes[0] );
     for( int i = 0; i < axes.length; i++ )
     {
       if( axes[i] != keyAxes[0] )
         list.add( axes[i] );
     }
-    final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
+    final IAxis[] sortedAxes = (IAxis[])list.toArray( new IAxis[list.size()] );
     for( int row = 0; row < count; row++ )
     {
       for( int col = 0; col < sortedAxes.length; col++ )

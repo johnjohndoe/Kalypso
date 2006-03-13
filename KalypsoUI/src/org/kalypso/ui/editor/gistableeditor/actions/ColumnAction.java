@@ -80,8 +80,7 @@ public final class ColumnAction extends Action
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyName,
         m_alignment, m_format, isChecked() );

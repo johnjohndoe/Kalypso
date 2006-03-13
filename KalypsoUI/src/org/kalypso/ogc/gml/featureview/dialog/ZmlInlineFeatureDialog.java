@@ -66,7 +66,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
     ZmlInlineTypeHandler inlineTypeHandler = null;
     ObservationViewerDialog dialog = null;
@@ -79,7 +79,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
     {
       inlineTypeHandler = (ZmlInlineTypeHandler) m_typeHandler;
       final QName[] typeName = inlineTypeHandler.getTypeName();
-
+      
       if( !(typeName[0].getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) )
         dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
             | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
@@ -90,14 +90,14 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
       }
     }
 
-    final Object o = m_feature.getProperty( m_ftp );
+    final Object o = m_feature.getProperty( m_ftp);
     dialog.setInput( o );
     int open = dialog.open();
     FeatureChange fChange = null;
     if( open == Window.OK )
     {
       final Object newValue = dialog.getInput();
-      fChange = new FeatureChange( m_feature, m_ftp, newValue );
+      fChange = new FeatureChange( m_feature, m_ftp,newValue );
     }
     // TODO: implement real cancel
     m_change = fChange;
@@ -107,7 +107,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
     if( m_change != null )
       c.add( m_change );

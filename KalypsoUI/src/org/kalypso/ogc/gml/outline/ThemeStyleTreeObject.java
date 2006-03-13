@@ -82,8 +82,7 @@ public class ThemeStyleTreeObject
     return myTheme;
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     if( myStyle == null )
       return "<no styles set>";

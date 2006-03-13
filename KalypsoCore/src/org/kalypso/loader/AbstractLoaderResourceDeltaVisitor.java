@@ -54,10 +54,11 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
+ * 
  * <pre>
- *  Changes:
- *  2004-11-09 - schlienger - uses now the path of the resource as key in the map
- *  						     Path should be taken using the pathFor( IResource ) method
+ * Changes:
+ * 2004-11-09 - schlienger - uses now the path of the resource as key in the map
+ * 						     Path should be taken using the pathFor( IResource ) method
  * </pre>
  * 
  * @author belger
@@ -65,14 +66,14 @@ import org.kalypso.core.IKalypsoCoreConstants;
 public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 {
   /** resource -> object */
-  private Map<String, Object> m_resourceMap = new HashMap<String, Object>();
+  private Map m_resourceMap = new HashMap();
 
   /** object -> resource */
-  private final Map<Object, IResource> m_objectMap = new HashMap<Object, IResource>();
+  private final Map m_objectMap = new HashMap();
 
   private final AbstractLoader m_loader;
 
-  private Collection<IResource> m_ignoreOneTimeList = new HashSet<IResource>();
+  private Collection m_ignoreOneTimeList = new HashSet();
 
   public AbstractLoaderResourceDeltaVisitor( final AbstractLoader loader )
   {
@@ -108,7 +109,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   {
     while( m_objectMap.containsKey( o ) )
     {
-      final IResource resource = m_objectMap.get( o );
+      final IResource resource = (IResource)m_objectMap.get( o );
 
       m_resourceMap.remove( pathFor( resource ) );
       m_objectMap.remove( o );
@@ -132,26 +133,27 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
     {
       switch( delta.getKind() )
       {
-        case IResourceDelta.REMOVED:
-          // todo: sollte eigentlich auch behandelt werden
-          // aber so, dass och die chance auf ein add besteht
-          break;
+      case IResourceDelta.REMOVED:
+        // todo: sollte eigentlich auch behandelt werden
+        // aber so, dass och die chance auf ein add besteht
+        break;
 
-        case IResourceDelta.ADDED:
-        case IResourceDelta.CHANGED:
+      case IResourceDelta.ADDED:
+      case IResourceDelta.CHANGED:
+      {
+        try
         {
-          try
-          {
-            m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
-          }
-          catch( final Exception e )
-          {
-            throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0, "Fehler beim Wiederherstellen einer Resource", e ) );
-          }
-
-          // handle changed resource
-          return true;
+          m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
         }
+        catch( final Exception e )
+        {
+          throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0,
+              "Fehler beim Wiederherstellen einer Resource", e ) );
+        }
+
+        // handle changed resource
+        return true;
+      }
       }
     }
 

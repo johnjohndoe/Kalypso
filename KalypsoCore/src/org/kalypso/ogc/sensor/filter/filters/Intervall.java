@@ -1,3 +1,7 @@
+package org.kalypso.ogc.sensor.filter.filters;
+
+import java.util.Calendar;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,36 +42,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters;
-
-import java.util.Calendar;
-
 public class Intervall
 {
   // DO NOT CHANGE NUMBERING
 
-  // |--other--|
-  // |-----this------|
+  //   |--other--|
+  //                   |-----this------|
   final public static int STATUS_INTERSECTION_NONE_BEFORE = 0;
 
-  // |--other--|
-  // |-----this------|
+  //                            |--other--|
+  //      |-----this------|
   final public static int STATUS_INTERSECTION_NONE_AFTER = 15;
 
   // |--other--|
-  // |-----this------|
+  //      |-----this------|
   final public static int STATUS_INTERSECTION_START = 4;
 
-  // |--other--|
-  // |-----this------|
+  //                 |--other--|
+  //      |-----this------|
   final public static int STATUS_INTERSECTION_END = 7;
 
-  // |--other--|
-  // |-----this------|
+  //         |--other--|
+  //      |-----this------|
   final public static int STATUS_INTERSECTION_INSIDE = 5;
 
-  // |--------other---------|
-  // |-----this------|
+  //  |--------other---------|
+  //      |-----this------|
   final public static int STATUS_INTERSECTION_ARROUND = 6;
 
   final Calendar m_start;
@@ -83,24 +83,26 @@ public class Intervall
    */
   public Intervall( Calendar start, Calendar end, final int[] status, final double[] value )
   {
-    m_start = (Calendar) start.clone();
-    m_end = (Calendar) end.clone();
-    m_status = status.clone();
-    m_value = value.clone();
+    m_start = (Calendar)start.clone();
+    m_end = (Calendar)end.clone();
+    m_status = (int[])status.clone();
+    m_value = (double[])value.clone();
   }
 
   /*
+   * 
    * @author doemming
    */
   public Intervall( Calendar start, Calendar end )
   {
-    m_start = (Calendar) start.clone();
-    m_end = (Calendar) end.clone();
+    m_start = (Calendar)start.clone();
+    m_end = (Calendar)end.clone();
     m_status = null;
     m_value = null;
   }
 
   /*
+   * 
    * @author doemming
    */
   public Intervall( Calendar start, Calendar end, Integer[] status, Double[] values )
@@ -115,37 +117,37 @@ public class Intervall
       m_value[i] = values[i].doubleValue();
   }
 
-  public Calendar getEnd( )
+  public Calendar getEnd()
   {
-    return (Calendar) m_end.clone();
+    return (Calendar)m_end.clone();
   }
 
-  public Calendar getStart( )
+  public Calendar getStart()
   {
-    return (Calendar) m_start.clone();
+    return (Calendar)m_start.clone();
   }
 
-  public int[] getStatus( )
+  public int[] getStatus()
   {
-    return m_status.clone();
+    return (int[])m_status.clone();
   }
 
   public void setStatus( final int[] status )
   {
-    m_status = status.clone();
+    m_status = (int[])status.clone();
   }
 
-  public double[] getValue( )
+  public double[] getValue()
   {
-    return m_value.clone();
+    return (double[])m_value.clone();
   }
 
   public void setValue( final double[] value )
   {
-    m_value = value.clone();
+    m_value = (double[])value.clone();
   }
 
-  private long getDurationInMillis( )
+  private long getDurationInMillis()
   {
     return m_end.getTimeInMillis() - m_start.getTimeInMillis();
   }
@@ -167,7 +169,7 @@ public class Intervall
   public boolean intersects( Intervall other )
   {
     final int matrix = calcIntersectionMatrix( other );
-    return !(matrix == STATUS_INTERSECTION_NONE_AFTER || matrix == STATUS_INTERSECTION_NONE_BEFORE);
+    return !( matrix == STATUS_INTERSECTION_NONE_AFTER || matrix == STATUS_INTERSECTION_NONE_BEFORE );
   }
 
   public Intervall getIntersection( Intervall other, int mode )
@@ -176,23 +178,23 @@ public class Intervall
     final int matrix = calcIntersectionMatrix( other );
     switch( matrix )
     {
-      case STATUS_INTERSECTION_START:
-        result = new Intervall( getStart(), other.getEnd() );
-        break;
-      case STATUS_INTERSECTION_END:
-        result = new Intervall( other.getStart(), getEnd() );
-        break;
-      case STATUS_INTERSECTION_INSIDE:
-        result = new Intervall( other.getStart(), other.getEnd() );
-        break;
-      case STATUS_INTERSECTION_ARROUND:
-        result = new Intervall( getStart(), getEnd() );
-        break;
-      case STATUS_INTERSECTION_NONE_BEFORE:
-      case STATUS_INTERSECTION_NONE_AFTER:
-        return null;
-      default:
-        return null;
+    case STATUS_INTERSECTION_START:
+      result = new Intervall( getStart(), other.getEnd() );
+      break;
+    case STATUS_INTERSECTION_END:
+      result = new Intervall( other.getStart(), getEnd() );
+      break;
+    case STATUS_INTERSECTION_INSIDE:
+      result = new Intervall( other.getStart(), other.getEnd() );
+      break;
+    case STATUS_INTERSECTION_ARROUND:
+      result = new Intervall( getStart(), getEnd() );
+      break;
+    case STATUS_INTERSECTION_NONE_BEFORE:
+    case STATUS_INTERSECTION_NONE_AFTER:
+      return null;
+    default:
+      return null;
     }
     // calculate intervalöl values;
     final double[] values = getValue();
@@ -219,11 +221,11 @@ public class Intervall
   {
     switch( mode )
     {
-      case IntervallFilter.MODE_SUM:
-        return (double) other.getDurationInMillis() / (double) getDurationInMillis();
-      case IntervallFilter.MODE_INTENSITY:
-      default:
-        return 1d;
+    case IntervallFilter.MODE_SUM:
+      return (double)other.getDurationInMillis() / (double)getDurationInMillis();
+    case IntervallFilter.MODE_INTENSITY:
+    default:
+      return 1d;
     }
   }
 
@@ -231,16 +233,15 @@ public class Intervall
   {
     switch( mode )
     {
-      case IntervallFilter.MODE_SUM:
-        return 1d;
-      case IntervallFilter.MODE_INTENSITY:
-      default:
-        return (double) other.getDurationInMillis() / (double) getDurationInMillis();
+    case IntervallFilter.MODE_SUM:
+      return 1d;
+    case IntervallFilter.MODE_INTENSITY:
+    default:
+      return (double)other.getDurationInMillis() / (double)getDurationInMillis();
     }
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     final StringBuffer result = new StringBuffer();
     result.append( " from : " + m_start.getTime().toString() + "\n" );

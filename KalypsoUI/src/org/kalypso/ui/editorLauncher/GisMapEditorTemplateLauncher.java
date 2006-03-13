@@ -46,6 +46,7 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -123,6 +124,10 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       gismapview.setLayers( layers );
       gismapview.setExtent( extent );
 
+      final Validator validator = jc.createValidator();
+      validator.validate( gismapview );
+
+      // final Marshaller marshaller = jc.createMarshaller();
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 

@@ -54,7 +54,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
@@ -126,8 +125,7 @@ public class PropertyParser
           return;
         try
         {
-          String test=XMLHelper.toString(node);
-//          System.out.println( test );
+//          String test=XMLHelper.toString(node);
           final Object value = th.unmarshall( node, null, null );
           if( value == null )
           {

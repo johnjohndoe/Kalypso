@@ -47,6 +47,7 @@ import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -97,7 +98,7 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     final TimeseriesLinkType link = m_linkFactory.createTimeseriesLinkType();
     link.setHref( href );
     final IPropertyType pt = FeatureHelper.getPT(f,m_propertyName);
-    f.setProperty( pt, link );
+    f.setProperty( FeatureFactory.createFeatureProperty( pt, link ) );
 
     return true;
   }

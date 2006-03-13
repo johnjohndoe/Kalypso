@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
@@ -73,7 +74,7 @@ public class AddFeatureCommand implements ICommand
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
   private final Map<IPropertyType, Object> m_props;
 
-  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties )
+  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -81,6 +82,7 @@ public class AddFeatureCommand implements ICommand
     m_pos = pos;
     m_props = properties;
     m_type = type;
+    // m_selectionManager = selectionManager;
   }
 
   /**

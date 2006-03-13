@@ -78,8 +78,7 @@ public class DefaultAxisRange implements IAxisRange
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_from.toString() + " -> " + m_to.toString();
   }

@@ -1,3 +1,17 @@
+package org.kalypso.ogc.gml.map.widgets.editrelation;
+
+import java.net.URL;
+
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,22 +52,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.editrelation;
-
-import java.net.URL;
-
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
-import org.kalypso.ui.ImageProvider;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class EditRelationOptionsLabelProvider extends LabelProvider
 {
-  // private final Image m_imageChecked =
+  //  private final Image m_imageChecked =
   // ImageProvider.IMAGE_UTIL_CHECKED.createImage();
   private final Image m_imageChecked = ImageProvider.IMAGE_UTIL_CHECKED.createImage();
 
@@ -62,6 +64,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   private final EditRelationOptionsContentProvider m_contentProvider;
 
   /*
+   * 
    * @author doemming
    */
   public EditRelationOptionsLabelProvider( EditRelationOptionsContentProvider contentProvider )
@@ -73,8 +76,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
-  @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
     if( m_contentProvider.isChecked( element ) )
       return m_imageChecked;
@@ -91,22 +93,22 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
       return "null";
     if( element instanceof GMLWorkspace )
     {
-      final URL context = ((GMLWorkspace) element).getContext();
+      final URL context = ( (GMLWorkspace)element ).getContext();
       return context == null ? "<unbekannt>" : context.toExternalForm();
     }
     if( element instanceof IFeatureType )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation((IFeatureType)element );
       return annotation.getLabel();
     }
     if( element instanceof IPropertyType )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation((IPropertyType)element );
       return annotation.getLabel();
     }
     if( element instanceof HeavyRelationType )
     {
-      final HeavyRelationType relation = (HeavyRelationType) element;
+      final HeavyRelationType relation = (HeavyRelationType)element;
       final StringBuffer buffer = new StringBuffer();
       buffer.append( getText( relation.getSrcFT() ) );
       buffer.append( " > " + getText( relation.getLink1() ) + " > " );
@@ -117,7 +119,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     }
     if( element instanceof RelationType )
     {
-      final RelationType relation = (RelationType) element;
+      final RelationType relation = (RelationType)element;
       final StringBuffer buffer = new StringBuffer();
       buffer.append( getText( relation.getSrcFT() ) );
       buffer.append( " > " + getText( relation.getLink() ) + " > " );
@@ -130,8 +132,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
-  @Override
-  public boolean isLabelProperty( final Object element, final String property )
+  public boolean isLabelProperty( Object element, String property )
   {
     // model will never change
     return false;

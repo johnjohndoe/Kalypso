@@ -1,3 +1,9 @@
+package org.kalypso.ui.editor.styleeditor;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,11 +44,6 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 public class StyleEditorHelper
 {
@@ -50,7 +51,7 @@ public class StyleEditorHelper
   {
     final IPropertyType ftp = ft.getProperty( propName );
     if( ftp == null )
-      return VirtualPropertyUtilities.getPropertyType( ft, propName );
+      return VirtualPropertyUtilities.getPropertyType( ft, propName);
     return ftp;
   }
 }

@@ -100,8 +100,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     super( m_composite, m_symbolizer, m_userStyle );
   }
 
-  @Override
-  public void draw( ) throws FilterEvaluationException
+  public void draw() throws FilterEvaluationException
   {
     final PointSymbolizer pointSymbolizer = (PointSymbolizer)symbolizer;
     final Graphic graphic = pointSymbolizer.getGraphic();

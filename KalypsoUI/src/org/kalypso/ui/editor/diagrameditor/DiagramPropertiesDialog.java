@@ -78,7 +78,6 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( Composite parent )
   {
     setTitle( "Diagramm Eigenschaften" );

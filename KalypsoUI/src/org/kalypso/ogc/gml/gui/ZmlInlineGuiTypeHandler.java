@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -94,7 +95,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( workspace, (IValuePropertyType) ftp, selectionManager, fcl );
   }
 
   /**

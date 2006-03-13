@@ -97,7 +97,6 @@ final class CalcJobThread extends Thread
   /**
    * @see java.lang.Thread#run()
    */
-  @Override
   public void run()
   {
     m_jobBean.setState( ICalcServiceConstants.RUNNING );

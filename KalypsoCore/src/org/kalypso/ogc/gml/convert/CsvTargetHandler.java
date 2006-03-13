@@ -51,10 +51,10 @@ public class CsvTargetHandler implements ITargetHandler
       final boolean writeHeader = m_target.isWriteHeader();
       final String featurePath = m_target.getFeaturePath();
       final List columnList = m_target.getColumn();
-      final Map<String, String> properties = new LinkedHashMap<String, String>();
+      final Map properties = new LinkedHashMap();
       for( final Iterator colIt = columnList.iterator(); colIt.hasNext(); )
       {
-        final Column column = (Column) colIt.next();
+        final Column column = (Column)colIt.next();
         final String property = column.getValue();
         final String def = column.getDefault();
         final String label = column.getLabel() == null ? property : column.getLabel();
@@ -75,7 +75,7 @@ public class CsvTargetHandler implements ITargetHandler
       if( featureFromPath instanceof FeatureList )
       {
         final CsvWriterVisitor visitor = new CsvWriterVisitor( writer, properties, delemiter );
-        ((FeatureList) featureFromPath).accept( visitor );
+        ( (FeatureList)featureFromPath ).accept( visitor );
       }
       else
         throw new GmlConvertException( "FeaturePath zeigt nicht auf eine Feature-Liste: " + featurePath );

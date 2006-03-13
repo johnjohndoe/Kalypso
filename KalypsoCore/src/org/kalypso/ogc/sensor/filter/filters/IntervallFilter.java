@@ -93,14 +93,12 @@ public class IntervallFilter extends AbstractObservationFilter
     m_startCalendarValue = filter.getStartCalendarvalue();
   }
 
-  @Override
   public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs, context );
   }
 
-  @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final Date from;
@@ -121,7 +119,6 @@ public class IntervallFilter extends AbstractObservationFilter
 
   }
 
-  @Override
   public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );

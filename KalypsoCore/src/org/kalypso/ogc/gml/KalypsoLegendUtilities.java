@@ -38,10 +38,13 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * TODO: insert type comment here
+ * 
  * @author doemming
  */
 public class KalypsoLegendUtilities
@@ -96,7 +99,7 @@ public class KalypsoLegendUtilities
     {
       final Object legendValue = getLegendValue( properties[i] );
       if( legendValue != null )
-        legendFeature.setProperty( properties[i], legendValue );
+        legendFeature.setProperty( FeatureFactory.createFeatureProperty( properties[i], legendValue ) );
     }
   }
 
@@ -120,7 +123,7 @@ public class KalypsoLegendUtilities
         final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
         if( annotation != null )
           return annotation.getLabel();
-        return ftp.getQName().getLocalPart();
+        return ftp.getName();
       }
     }
     return null;

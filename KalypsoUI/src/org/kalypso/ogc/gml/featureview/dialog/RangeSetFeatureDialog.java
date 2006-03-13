@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 
@@ -83,7 +82,7 @@ public class RangeSetFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
   //  no changes allowed
   }
@@ -110,7 +109,6 @@ public class RangeSetFeatureDialog implements IFeatureDialog
       setShellStyle( getShellStyle() | SWT.RESIZE );
     }
 
-    @Override
     protected Control createDialogArea( final Composite parent )
     {
       getShell().setText( "RangeSet properties" );

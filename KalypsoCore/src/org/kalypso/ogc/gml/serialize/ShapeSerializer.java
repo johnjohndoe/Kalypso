@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class ShapeSerializer
 {
+  private final String NAMESPACE = "namespace";
+
   public static final QName PROPERTY_FEATURE_MEMBER = new QName( "namespace", "featureMember" );
 
   public static final QName PROPERTY_GEOMETRY = new QName( "namespace", "GEOM" );
@@ -95,12 +98,12 @@ public class ShapeSerializer
   public static void serialize( final GMLWorkspace workspace, final String filenameBase ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
-    final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
+    final List features = (List) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
 
     try
     {
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( features.toArray( new Feature[features.size()] ) );
+      shapeFile.writeShape( (Feature[]) features.toArray( new Feature[features.size()] ) );
       shapeFile.close();
     }
     catch( final Exception e )
@@ -159,7 +162,7 @@ public class ShapeSerializer
 
     try
     {
-      final Collection<Feature> shapeFeatures = new ArrayList<Feature>( features.length );
+      final Collection shapeFeatures = new ArrayList( features.length );
       for( int i = 0; i < features.length; i++ )
       {
         final Feature kalypsoFeature = features[i];
@@ -182,7 +185,7 @@ public class ShapeSerializer
       }
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      shapeFile.writeShape( (Feature[]) shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
       shapeFile.close();
     }
     catch( final Exception e )
@@ -201,7 +204,7 @@ public class ShapeSerializer
       final IFeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
 
       final Feature rootFeature = createShapeRootFeature( featureType );
-      final List<Feature> list = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
+      final List list = (List) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
       // Anpassung hier:
@@ -250,7 +253,7 @@ public class ShapeSerializer
 
   public static Collection readFeaturesFromDbf( final String basename )
   {
-    Collection<Feature> features = null;
+    Collection features = null;
     try
     {
       // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
@@ -258,7 +261,7 @@ public class ShapeSerializer
       final DBaseFile dbf = new DBaseFile( basename, 1 );
 
       final int recordNum = dbf.getRecordNum();
-      features = new ArrayList<Feature>( recordNum );
+      features = new ArrayList( recordNum );
       for( int i = 0; i < recordNum; i++ )
       {
         final Feature feature = dbf.getFRow( i + 1, true );

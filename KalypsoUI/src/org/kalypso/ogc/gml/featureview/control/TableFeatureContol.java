@@ -20,7 +20,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -51,7 +51,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final JobExclusiveCommandTarget m_target;
 
-  protected Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
+  protected Collection m_listeners = new ArrayList();
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -90,7 +90,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       }
     } );
 
-    final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     final IEditorPart activeEditor = activePage.getActiveEditor();
     if( activeEditor != null )
@@ -107,7 +107,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  @Override
   public void dispose()
   {
     if( m_viewer != null )
@@ -126,7 +125,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature)
    */
-  @Override
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     super.setFeature( workspace, feature );
@@ -160,7 +158,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       for( int i = 0; i < properties.length; i++ )
       {
         final IPropertyType ftp = properties[i];
-        m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
+        m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
       }
     }
   }

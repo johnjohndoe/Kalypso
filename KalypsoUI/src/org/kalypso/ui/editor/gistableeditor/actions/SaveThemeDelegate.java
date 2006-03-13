@@ -82,7 +82,6 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
 
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
-        @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
           editor.getLayerTable().saveData( monitor );
@@ -108,7 +107,6 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     refreshAction( null );
   }
 
-  @Override
   protected void refreshAction( IAction action )
   {
     boolean enabled = false;

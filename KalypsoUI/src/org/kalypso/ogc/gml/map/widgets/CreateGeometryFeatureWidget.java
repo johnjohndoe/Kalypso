@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
  * @author von Dömming
  */
 public class CreateGeometryFeatureWidget extends AbstractWidget
@@ -209,45 +210,47 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
     setup();
   }
 
-  private void setup( )
+  private void setup()
   {
     final IKalypsoTheme activeTheme = getActiveTheme();
     myWidget = null;
     if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final IFeatureType ft = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();
+      final IFeatureType ft = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
       final IPropertyType[] ftps = ft.getProperties();
-      final List<IPropertyType> geoFtps = new ArrayList<IPropertyType>();
+      final List geoFtps = new ArrayList();
       // collect available geometry properties
       for( int i = 0; i < ftps.length; i++ )
       {
-        if( GeometryUtilities.isGeometry( ftps[i] ) )
+        if(GeometryUtilities.isGeometry(ftps[i]))
           geoFtps.add( ftps[i] );
       }
 
-      // TODO ask for geometry to create
-      // if( geoFtps.size() > 1 )
-      // ;
+      //    TODO ask for geometry to create
+      //      if( geoFtps.size() > 1 )
+      //        ;
 
       if( geoFtps.size() > 0 )
-        setGeometryWidget( (IKalypsoFeatureTheme) activeTheme, (IValuePropertyType) geoFtps.get( 0 ) );
+        setGeometryWidget( (IKalypsoFeatureTheme)activeTheme, (IValuePropertyType)geoFtps.get( 0 ) );
     }
   }
 
   private void setGeometryWidget( final IKalypsoFeatureTheme theme, final IValuePropertyType ftp )
   {
-    if( GeometryUtilities.isPointGeometry( ftp ) )
-      myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getQName().getLocalPart(), this, theme, ftp );
+    if( GeometryUtilities.isPointGeometry(ftp) )
+      myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getName(), this, theme, ftp );
+    //      myWidget = new CreateMultilinestringFeatureWidget();
   }
 
   /**
+   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  public void perform( )
+  public void perform()
   {
-    // if( myWidget != null )
-    // return myWidget.performIntern();
-    // return null;
+  //    if( myWidget != null )
+  //      return myWidget.performIntern();
+  //    return null;
   }
 
   /**

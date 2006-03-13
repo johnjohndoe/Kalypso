@@ -45,7 +45,6 @@ package org.kalypso.util.transformation;
  * 
  * @author belger
  */
-@Deprecated
 public class TransformationException extends Exception
 {
   public TransformationException()

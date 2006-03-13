@@ -54,11 +54,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
@@ -74,13 +74,13 @@ public class ExportTableWizard extends Wizard
 
   public ExportTableWizard( final LayerTableViewer layerTable )
   {
-    final Map<Object, String> formats = new HashMap<Object, String>();
+    final Map formats = new HashMap();
     formats.put( "Comma Separated Values (CSV)", "csv" );
 
     m_filePage = new SaveFileWizardPage( "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT,
         "Export Ziel", formats );
 
-    final IDialogSettings workbenchSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
+    final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
       section = workbenchSettings.addNewSection( "ExportTableWizard" );//$NON-NLS-1$
@@ -94,7 +94,6 @@ public class ExportTableWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  @Override
   public void addPages()
   {
     super.addPages();
@@ -103,8 +102,7 @@ public class ExportTableWizard extends Wizard
     addPage( m_optionPage );
   }
 
-  @Override
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     final SaveFileWizardPage filePage = m_filePage;
     final ExportTableOptionsPage optionPage = m_optionPage;

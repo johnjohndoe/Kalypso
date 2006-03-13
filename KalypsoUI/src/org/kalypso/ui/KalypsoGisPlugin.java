@@ -65,7 +65,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
@@ -125,6 +125,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /** Manages the list of repositories. */
   private IRepositoryContainer m_tsRepositoryContainer = null;
+
+  private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
 
   /**
    * Configuration of this client. The configuration is build using the system properties as well as remote properties
@@ -554,6 +556,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_tsRepositoryContainer;
   }
 
+  public SelectionIdProvider getSelectionIdProvider( )
+  {
+    return mySelectionIdProvider;
+  }
+
   public static void registerTypeHandler( ITypeRegistry marshallingRegistry, ITypeRegistry guiRegistry )
   {
 
@@ -583,7 +590,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
     }
   }
 

@@ -49,12 +49,22 @@ import javax.swing.table.TableModel;
  */
 public class WQTableModel extends AbstractTableModel implements TableModel
 {
-  private final static String[] COLUMN_NAMES = { "W", "Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9" };
+  private final static String[] COLUMN_NAMES =
+  {
+      "W",
+      "Q0",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q5",
+      "Q6",
+      "Q7",
+      "Q8",
+      "Q9" };
 
   private final Double m_startW;
-
   private final Double[] m_Q;
-
   private final int m_indexOffset;
 
   public WQTableModel( final Double startW, final Double[] Q )
@@ -64,17 +74,17 @@ public class WQTableModel extends AbstractTableModel implements TableModel
 
     final int w;
     if( m_startW.intValue() < 0 )
-      w = -1 * (m_startW.intValue() / 10 + 1) * 10;
+      w = -1 * (m_startW.intValue() / 10 + 1 ) * 10;
     else
       w = m_startW.intValue() / 10 * 10;
-
+    
     m_indexOffset = w - m_startW.intValue();
   }
 
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
-  public int getColumnCount( )
+  public int getColumnCount()
   {
     return COLUMN_NAMES.length;
   }
@@ -82,8 +92,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getColumnClass(int)
    */
-  @Override
-  public Class< ? > getColumnClass( int columnIndex )
+  public Class getColumnClass( int columnIndex )
   {
     if( columnIndex == 0 )
       return Integer.class;
@@ -94,7 +103,6 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getColumnName(int)
    */
-  @Override
   public String getColumnName( int columnIndex )
   {
     return COLUMN_NAMES[columnIndex];
@@ -103,9 +111,9 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
-  public int getRowCount( )
+  public int getRowCount()
   {
-    return m_Q.length / 10 + (m_Q.length % 10 == 0 ? 0 : 1) + (m_startW.intValue() < 0 ? 1 : 0);
+    return m_Q.length / 10 + ( m_Q.length % 10 == 0 ? 0 : 1 ) + (m_startW.intValue() < 0 ? 1 : 0);
   }
 
   /**
@@ -117,7 +125,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
     {
       final int w = m_startW.intValue() + rowIndex * 10;
       if( w < 0 )
-        return new Double( -1 * (w / 10 + 1) * 10 );
+        return new Double( -1 * (w / 10 + 1 ) * 10 );
 
       return new Double( w / 10 * 10 );
     }
@@ -125,7 +133,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
     int ix = rowIndex * 10 + columnIndex - 1;
     if( ix < m_indexOffset )
       return null;
-
+    
     ix += m_indexOffset;
     if( ix < 0 || ix >= m_Q.length )
       return null;

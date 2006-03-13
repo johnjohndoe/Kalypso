@@ -67,7 +67,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   {
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      viewerSelectionChanged( (IStructuredSelection) event.getSelection() );
+      viewerSelectionChanged( (IStructuredSelection)event.getSelection() );
     }
   };
 
@@ -87,12 +87,12 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    final List<Feature> result = new ArrayList<Feature>();
+    final List result = new ArrayList();
     final FeatureList featureList;
     if( inputElement instanceof IKalypsoFeatureTheme )
-      featureList = ((IKalypsoFeatureTheme) inputElement).getFeatureList();
+      featureList = ( (IKalypsoFeatureTheme)inputElement ).getFeatureList();
     else if( inputElement instanceof FeatureList )
-      featureList = (FeatureList) inputElement;
+      featureList = (FeatureList)inputElement;
     else
       return new Object[] {};
 
@@ -100,15 +100,15 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return new Object[] {};
 
     final Object[] objects = featureList.toArray();
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) m_viewer.getInput();
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_viewer.getInput();
     final GMLWorkspace workspace = theme.getWorkspace();
     for( int i = 0, j = objects.length; i < j; i++ )
     {
       if( objects[i] instanceof Feature )
-        result.add( (Feature) objects[i] );
+        result.add( objects[i] );
       else if( objects[i] instanceof String ) // it is a ID
       {
-        final Feature feature = workspace.getFeature( (String) objects[i] );
+        final Feature feature = workspace.getFeature( (String)objects[i] );
         if( feature != null )
           result.add( feature );
       }
@@ -119,7 +119,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_viewer != null )
       m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
@@ -146,13 +146,14 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   protected void viewerSelectionChanged( final IStructuredSelection selection )
   {
     // remove all features in input from manager
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) m_viewer.getInput();
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_viewer.getInput();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null )
       return;
 
     // if viewer selection and tree selection are the same, do nothing
-    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), theme );
+    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(),
+        theme );
     final Object[] managerFeatures = managerSelection.toArray();
     if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
       return;
@@ -161,30 +162,31 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
     // TODO: remove only previously selected
     // collect elements as "Feature"
-    final List<Feature> featureToRemove = new ArrayList<Feature>();
+    final List featureToRemove = new ArrayList();
     for( Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
       final Object element = iter.next();
       if( element instanceof Feature )
-        featureToRemove.add( (Feature) element );
+        featureToRemove.add( element );
       else if( element instanceof String ) // it is the id of a feature
-        featureToRemove.add( workspace.getFeature( (String) element ) );
+        featureToRemove.add( workspace.getFeature( (String)element ) );
     }
 
     // add current selection
-    final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
+    final List wrappers = new ArrayList( selection.size() );
     for( final Iterator sIt = selection.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
       {
-        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature) object, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() );
+        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature)object, featureList
+            .getParentFeature(), featureList.getParentFeatureTypeProperty().getName() );
         wrappers.add( wrapper );
       }
     }
 
-    final EasyFeatureWrapper[] izis = wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
-    final Feature[] featureArray = featureToRemove.toArray( new Feature[featureToRemove.size()] );
+    final EasyFeatureWrapper[] izis = (EasyFeatureWrapper[])wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
+    final Feature[] featureArray = (Feature[])featureToRemove.toArray( new Feature[featureToRemove.size()] );
     m_selectionManager.changeSelection( featureArray, izis );
   }
 

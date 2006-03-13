@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Validator;
 
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -86,7 +87,7 @@ public class FeatureviewHelper
     // wird nicht instantiiert
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp ) throws JAXBException
+  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IFeatureType featureType, final IPropertyType ftp ) throws JAXBException
   {
     ControlType type = null;
     boolean addLabel = true;
@@ -301,7 +302,7 @@ public class FeatureviewHelper
       for( int i = 0; i < properties.length; i++ )
       {
         final IPropertyType ftp = properties[i];
-        addDefaultFeatureControlTypeForProperty( controlList, ftp );
+        addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
       }
 
       // final Validator validator = JC.createValidator();
@@ -343,7 +344,10 @@ public class FeatureviewHelper
 
       final List<JAXBElement< ? extends ControlType>> control = featureview.getControl();
 
-      addDefaultFeatureControlTypeForProperty( control, ftp );
+      addDefaultFeatureControlTypeForProperty( control, type, ftp );
+
+      final Validator validator = JC.createValidator();
+      validator.validate( featureview );
 
       return featureview;
     }

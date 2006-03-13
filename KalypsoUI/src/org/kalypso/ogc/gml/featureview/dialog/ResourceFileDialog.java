@@ -49,6 +49,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ResourceFileDialog implements IFeatureDialog
 {
+
   private GMLWorkspace m_workspace;
 
   private Feature m_feature;
@@ -98,10 +99,7 @@ public class ResourceFileDialog implements IFeatureDialog
     return (IFile) m_feature.getProperty( m_ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
     if( c != null && m_change != null )
       c.add( m_change );

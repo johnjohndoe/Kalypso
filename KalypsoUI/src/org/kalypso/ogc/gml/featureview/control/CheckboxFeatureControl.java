@@ -70,7 +70,12 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final IFeatureModifier m_modifier;
 
-  private Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
+  private Collection m_modlistener = new ArrayList();
+
+  //  public CheckboxFeatureControl( final GMLWorkspace workspace, final IPropertyType ftp )
+  //  {
+  //    this( workspace, null, ftp );
+  //  }
 
   public CheckboxFeatureControl( final GMLWorkspace workspace, final Feature feature, final IValuePropertyType ftp )
   {
@@ -83,7 +88,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
 
@@ -124,7 +129,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
    * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return true;
   }
@@ -137,7 +142,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
     if( m_checkbox == null || m_checkbox.isDisposed() )
       return;
@@ -147,13 +152,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     {
       // compare with old to prevent loop
       final boolean oldValue = m_checkbox.getSelection();
-      final Boolean newvalue = (Boolean) m_modifier.getValue( feature );
+      final Boolean newvalue = (Boolean)m_modifier.getValue( feature );
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }
   }
 
-  protected FeatureChange getChange( )
+  protected FeatureChange getChange()
   {
     final Feature feature = getFeature();
 
@@ -162,10 +167,10 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     final Object newData = m_modifier.parseInput( getFeature(), value );
 
     final IPropertyType pt = getFeatureTypeProperty();
-    final Object oldData = feature.getProperty( pt );
+    final Object oldData = feature.getProperty( pt);
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
+    if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
       return new FeatureChange( feature, pt, newData );
 
     return null;
@@ -195,11 +200,11 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     m_modlistener.remove( l );
   }
 
-  protected void fireModified( )
+  protected void fireModified()
   {
     for( final Iterator modIt = m_modlistener.iterator(); modIt.hasNext(); )
     {
-      final ModifyListener l = (ModifyListener) modIt.next();
+      final ModifyListener l = (ModifyListener)modIt.next();
       l.modifyText( null );
     }
   }

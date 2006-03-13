@@ -81,7 +81,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
     }
   };
 
-  private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
+  private final List m_listeners = new ArrayList( 5 );
 
   private final Object m_valueToSet;
 
@@ -148,7 +148,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
    */
   public void updateControl( )
   {
-    final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty() );
+    final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty());
     final boolean toBeSelected = currentFeatureValue.equals( m_valueToSet );
     if( toBeSelected != m_radio.getSelection() )
     {

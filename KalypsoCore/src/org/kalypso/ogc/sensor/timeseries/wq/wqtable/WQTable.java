@@ -16,9 +16,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
  */
 public class WQTable
 {
-  private final TreeSet<WQPair> m_qSortedPairs;
+  private final TreeSet m_qSortedPairs;
 
-  private final TreeSet<WQPair> m_wSortedPairs;
+  private final TreeSet m_wSortedPairs;
 
   private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( "Kann nicht interpolieren" );
 
@@ -113,8 +113,8 @@ public class WQTable
     m_validity = validity;
     m_offset = offset;
 
-    m_qSortedPairs = new TreeSet<WQPair>( WQPairComparator.Q_COMPARATOR );
-    m_wSortedPairs = new TreeSet<WQPair>( WQPairComparator.W_COMPARATOR );
+    m_qSortedPairs = new TreeSet( WQPairComparator.Q_COMPARATOR );
+    m_wSortedPairs = new TreeSet( WQPairComparator.W_COMPARATOR );
 
     for( int i = 0; i < wqpairs.length; i++ )
     {
@@ -189,7 +189,6 @@ public class WQTable
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString()
   {
     final StringBuffer sb = new StringBuffer();
@@ -203,6 +202,6 @@ public class WQTable
 
   public WQPair[] getPairs()
   {
-    return m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
+    return (WQPair[])m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
   }
 }

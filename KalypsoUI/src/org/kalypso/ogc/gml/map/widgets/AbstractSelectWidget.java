@@ -73,7 +73,6 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
   abstract boolean allowOnlyOneSelectedFeature();
 
-  @Override
   public void dragged( Point p )
   {
     if( m_startPoint == null )
@@ -85,14 +84,12 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       m_endPoint = p;
   }
 
-  @Override
   public void leftPressed( Point p )
   {
     m_startPoint = p;
     m_endPoint = null;
   }
 
-  @Override
   public void leftReleased( Point p )
   {
     if( m_endPoint != null ) // last update of endPoint
@@ -111,7 +108,6 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     }
   }
 
-  @Override
   public void paint( Graphics g )
   {
     if( m_startPoint != null && m_endPoint != null )
@@ -134,8 +130,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
    */
-  @Override
-  public void finish( )
+  public void finish()
   {
     m_startPoint = null;
     m_endPoint = null;

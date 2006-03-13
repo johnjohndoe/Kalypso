@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.zml.values;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.zml.AxisType.ValueArray;
@@ -53,12 +52,12 @@ import org.kalypso.zml.AxisType.ValueArray;
  */
 public class ZmlArrayValues implements IZmlValues
 {
-  private final List<Object> m_values;
+  private final List m_values;
 
   public ZmlArrayValues( final ValueArray va, final IParser parser ) throws ParserException
   {
     final StringTokenizer stok = new StringTokenizer( va.getValue(), va.getSeparator() );
-    m_values = new Vector<Object>( stok.countTokens() );
+    m_values = new Vector( stok.countTokens() );
     while( stok.hasMoreElements() )
     {
       final String token = stok.nextToken();

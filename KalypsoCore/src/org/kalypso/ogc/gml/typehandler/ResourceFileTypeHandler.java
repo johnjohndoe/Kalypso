@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -67,7 +68,7 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
     return QNAME;
   }
 
-  public void marshall( Object object, Node node, URL context )
+  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
     IFile resourceFile = (IFile) object;
     String path = resourceFile.getFullPath().toString();
@@ -75,7 +76,7 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
     node.appendChild( ownerDoc.createTextNode( path ) );
   }
 
-  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
+  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     String value = node.getFirstChild().getNodeValue();
     IPath path = new Path( value );
