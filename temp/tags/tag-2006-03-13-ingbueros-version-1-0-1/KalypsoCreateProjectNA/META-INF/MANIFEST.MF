@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoCreateNAProject
+Bundle-SymbolicName: org.kalypso.wizard; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: KalypsoCreateNAProject.jar
+Bundle-Activator: org.kalypso.KalypsoNewNAProjectPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso,
+ org.kalypso.wizard,
+ org.kalypso.wizard.resources,
+ test
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.kalypso.ui;visibility:=reexport,
+ org.kalypso.jwsdp
+Eclipse-AutoStart: true

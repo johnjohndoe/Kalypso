@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoKM
+Bundle-SymbolicName: org.kalypso.rrm.kalininmiljukov
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Bundle-Vendor: kalypso.org
+Export-Package: org.kalypso.model.km
+Require-Bundle: org.junit
+Bundle-ClassPath: kalypsoRRM_KalininMiljukov.jar

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:na="org.kalypso.na.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control" elementFormDefault="qualified" version="0.2">
+    <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+    <element name="NAControl" type="na:_NAControlType"/>
+    <complexType name="_NAControlBaseType">
+        <complexContent>
+            <restriction base="gml:AbstractFeatureType"/>
+        </complexContent>
+    </complexType>
+    <complexType name="_NAControlType">
+        <complexContent>
+            <extension base="na:_NAControlBaseType">
+                <sequence>
+                    <element name="startsimulation" type="dateTime">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Start der Simulation</label>
+                                <tooltip>Startzeitpunkt der Modellrechung</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>simulation start</label>
+                                <tooltip>Beginning of the model calculation</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="startforecast" type="dateTime">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Start der Vorhersage</label>
+                                <tooltip>Startzeitpunkt der Vorhersagerechnung bzw. Ende der Modellrechnung bei Berechnung ohne Vorhersage</tooltip>
+                                <description>Startzeitpunkt der Vorhersage bei einer Berechnung mit Vorhersage/ Ende der Simulation bei Berechnung ohne Vorhersage</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>forecast start</label>
+                                <tooltip>Beginning of forecast calculation resp. end of the model calculation without forecast</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="hoursforecast" type="integer" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Stundenanzahl Vorhersage</label>
+                                <tooltip>Anzahl der Vorhersagestunden [h]</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>hours forecast</label>
+                                <tooltip>number of hours forecast [h]</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="minutesTimestep" type="integer" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zeitschritt</label>
+                                <tooltip>Berechnungszeitschritt [min]</tooltip>
+                                <description>Zeitschritt in welchem die Berechnung der Ergebnisse erfolgt [min]</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>timestep</label>
+                                <tooltip>calculation time interval [min]</tooltip>
+                                <description>timestep, in which the calculation takes place [min]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="versionKalypsoNA" type="string" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Version Kalypso-NA (optional)</label>
+                                <tooltip>Version des Kalypso-NA Rechenkerns (optionale Angabe)</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>version Kalypso-RRM (optional)</label>
+                                <tooltip>version of Kalypso-RRM calculation kernel</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="editor" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Ersteller</label>
+                                <tooltip>Name des Erstellers</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Originator</label>
+                                <tooltip>Name of the originator</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="description" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Beschreibung</label>
+                                <tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Description</label>
+                                <tooltip>Short description of this calculation</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="comment" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Kommentar</label>
+                                <tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Comment</label>
+                                <tooltip>Detailed description of this calculation</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="calctime" type="dateTime">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>Erstellungszeitpunkt</label>
+                                <tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+                                <description/>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>Starting point of the originator</label>
+                                <tooltip>Starting point of generation of calculation</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

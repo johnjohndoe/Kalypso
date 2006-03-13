@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.tuhh.de/kalypsoDSS" version="0.2" xmlns:dss="http://www.tuhh.de/kalypsoDSS" 
+	xmlns:mr="http://www.tuhh.de/NA/swaletrenchsystem" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.tuhh.de/NA/swaletrenchsystem" schemaLocation="muldenRigole.xsd"/>
+
+	<element name="DSSMeasures" type="dss:DSSMeasuresType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DSSMeasuresType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="measuresMember" type="dss:MeasuresAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="MeasuresAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="dss:Measure"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Measure" type="gml:AbstractFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="MeasureSealing" type="dss:MeasureSealingType" substitutionGroup="dss:Measure"/>
+	<complexType name="MeasureSealingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaOfInterest" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Fläche</label>
+								<tooltip>Fläche der Festsetzung</tooltip>
+								<description>Fläche der Festsetzung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="grz" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GRZ</label>
+								<tooltip>Grundflächenzahl</tooltip>
+								<description>Grundflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxZahlWohnungen" type="integer" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>maxZahlWohnungen</label>
+								<tooltip>maximale Anzahl der zugelassenen Wohneinheiten</tooltip>
+								<description>maximale Anzahl der zugelassenen Wohneinheiten</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="GFZmin" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFZ min</label>
+								<tooltip>minimale Geschossflächenzahl</tooltip>
+								<description>minimale Geschossflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFZmax" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFZ max</label>
+								<tooltip>maximale Geschossflächenzahl</tooltip>
+								<description>maximale Geschossflächenzahl</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFmin" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFmin</label>
+								<tooltip>GFmin</tooltip>
+								<description>GFmin</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GFmax" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GFmax</label>
+								<tooltip>GFmax</tooltip>
+								<description>GFmax</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="BMZ" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>BMZ</label>
+								<tooltip>BMZ</tooltip>
+								<description>BMZ</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="BM" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>BM</label>
+								<tooltip>BM</tooltip>
+								<description>BM</description>
+							</documentation>
+						</annotation>
+					</element>					
+					<element name="GR" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>GR</label>
+								<tooltip>GR</tooltip>
+								<description>GR</description>
+							</documentation>
+						</annotation>
+					</element>					
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="SwaleTrench" type="mr:SwaleTrenchSysType" substitutionGroup="dss:Measure"/>
+	<element name="RetensionBasin" type="dss:RetensionBasinMeasureType" substitutionGroup="dss:Measure"/>
+	<complexType name="RetensionBasinMeasureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="position" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Rueckhaltebeckengeometrie</label>
+								<tooltip>Aussenlinie des Rueckhaltebeckens</tooltip>
+								<description>Flaeche des Rueckhaltebeckens</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>TODO</label>
+								<tooltip>TODO</tooltip>
+								<description>TODO</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="depth" type="double"/>
+					<element name="bankslope" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
