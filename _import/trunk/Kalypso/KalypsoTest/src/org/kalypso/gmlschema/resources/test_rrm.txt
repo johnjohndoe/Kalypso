@@ -9,7 +9,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}CatchmentCollectionMember
@@ -32,7 +32,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}description
@@ -41,7 +41,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}featureMember
@@ -58,7 +58,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -106,7 +106,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}description
@@ -115,7 +115,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}featureMember
@@ -132,7 +132,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -270,7 +270,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}description
@@ -279,7 +279,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}featureMember
@@ -299,7 +299,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -322,7 +322,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -345,7 +345,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -382,7 +382,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
@@ -422,7 +422,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}qrk
@@ -450,7 +450,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}cinh
@@ -487,7 +487,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}ngwzu

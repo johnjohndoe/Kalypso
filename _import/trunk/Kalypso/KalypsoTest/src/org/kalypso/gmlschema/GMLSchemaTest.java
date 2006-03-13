@@ -30,16 +30,24 @@
 package org.kalypso.gmlschema;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.kalypso.KalypsoTest;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
 import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
@@ -52,6 +60,8 @@ public class GMLSchemaTest extends TestCase
 {
   public static final String NS_GML2 = "http://www.opengis.net/gml";
 
+  private Hashtable<URL, URL> m_listToTest = new Hashtable<URL, URL>();
+
   /*
    * @see TestCase#setUp()
    */
@@ -61,12 +71,14 @@ public class GMLSchemaTest extends TestCase
     KalypsoTest.init();
     final Map<String, URL> map;
     map = new HashMap<String, URL>();
-    map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
-    map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell.xsd" ) );
-    map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
-    map.put( "http://www.w3.org/1999/xlink", getClass().getResource( "resources/xlinks.xsd" ) );
+    // map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
+    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell.xsd" ) );
+    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
+    // map.put( "http://www.w3.org/1999/xlink", getClass().getResource( "resources/xlinks.xsd" ) );
     map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
 
+    final File tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
+    tmpFileCache.deleteOnExit();
     GMLSchemaCatalog.init( new IUrlCatalog()
     {
       public Map<String, URL> getCatalog( )
@@ -79,24 +91,25 @@ public class GMLSchemaTest extends TestCase
         return map.get( namespace );
       }
 
-    }, new File( "C:\\TMP" ) );
+    }, tmpFileCache );
+
+    // m_listToTest
   }
 
   public void testSchemas( ) throws Exception
   {
     try
     {
-      loadSchema( // 
+      loadAndTestSchema( // 
           getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
-          "http://www.tuhh.de/kalypsoNA",// namespace
-          "resources/test_rrm.txt" // testresource to compare
-      );
+          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+          , false );
 
-      loadSchema( // 
+      loadAndTestSchema( // 
           getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
-          "http://www.xplanung.de/bplangml",// namespace
-          "resources/xplanung/test_planGML2.txt" // testresource to compare
-      );
+          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
+          , false );
+
     }
     catch( Exception e )
     {
@@ -105,9 +118,9 @@ public class GMLSchemaTest extends TestCase
     }
   }
 
-  public void loadSchema( URL schemaLocationURL, String namespace, String testResource ) throws Exception
+  public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
-    final GMLSchema schema = GMLSchemaFactory.createGMLSchema( namespace, schemaLocationURL );
+    final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
 
     if( schema != null )
     {
@@ -115,12 +128,31 @@ public class GMLSchemaTest extends TestCase
       final ITreeContentProviderVisitor visitor = new PrintVisitor( new GMLSchemaLabelProvider(), buffer );
       final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( schema, true );
       provider.accept( schema, visitor, 0 );
-       System.out.println( buffer.toString() );
-      TestUtilities.compare( "gmlschemaparser", getClass().getResource( testResource ), buffer.toString() );
+      if( writeCompareFile )
+      {
+        File file = null;
+        FileWriter writer = null;
+        try
+        {
+          file = new File( testResource.toURI() );
+          writer = new FileWriter( file );
+          writer.write( buffer.toString() );
+          System.out.println( " wrote schema to " + file.toString() + "\n next run you can compare" );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writer );
+        }
+      }
+      else
+      {
+        // System.out.println( buffer.toString() );
+        TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
+      }
     }
   }
 
-  private class PrintVisitor implements ITreeContentProviderVisitor
+  private static class PrintVisitor implements ITreeContentProviderVisitor
   {
     private final ILabelProvider m_labelProvider;
 

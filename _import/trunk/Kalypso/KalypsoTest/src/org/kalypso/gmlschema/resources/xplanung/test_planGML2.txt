@@ -11,7 +11,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -46,7 +46,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -73,7 +73,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -98,7 +98,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -122,7 +122,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -201,7 +201,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}signaturnummer
@@ -274,7 +274,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}ebene
@@ -368,7 +368,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}gkz
@@ -427,7 +427,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -508,7 +508,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -587,7 +587,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -661,7 +661,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -734,7 +734,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -812,7 +812,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -889,7 +889,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}schluessel
@@ -908,7 +908,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}vermerk
@@ -939,7 +939,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1131,7 +1131,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1262,7 +1262,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1397,7 +1397,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1478,7 +1478,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1558,7 +1558,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1652,7 +1652,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1732,7 +1732,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1815,7 +1815,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1898,7 +1898,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -1998,7 +1998,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2098,7 +2098,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2237,7 +2237,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2328,7 +2328,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2463,7 +2463,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2546,7 +2546,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2676,7 +2676,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2821,7 +2821,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2899,7 +2899,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -2977,7 +2977,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3055,7 +3055,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3138,7 +3138,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3233,7 +3233,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3323,7 +3323,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3413,7 +3413,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3501,7 +3501,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3588,7 +3588,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3678,7 +3678,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3769,7 +3769,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3860,7 +3860,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -3952,7 +3952,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4033,7 +4033,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4133,7 +4133,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4228,7 +4228,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4321,7 +4321,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4414,7 +4414,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4495,7 +4495,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4575,7 +4575,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4658,7 +4658,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4750,7 +4750,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4894,7 +4894,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -4990,7 +4990,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5080,7 +5080,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5169,7 +5169,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5255,7 +5255,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5339,7 +5339,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5420,7 +5420,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5501,7 +5501,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5582,7 +5582,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5663,7 +5663,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5744,7 +5744,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5827,7 +5827,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5910,7 +5910,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -5991,7 +5991,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -6071,7 +6071,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -6161,7 +6161,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -6247,7 +6247,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
@@ -6330,7 +6330,7 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy    [X] GEOMETRY
+.  .  .  .  .  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
 .  .  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}text
