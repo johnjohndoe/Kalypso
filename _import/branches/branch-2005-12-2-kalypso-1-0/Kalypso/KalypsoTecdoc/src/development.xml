@@ -5,11 +5,13 @@
   <para>Die Programmoberfläche und die Serverkomponente von KALYPSO wurden
   vollständig in der Programmiersprache Java entwickelt.</para>
 
+  <!--PROFILING ANFANG sachsen-anhalt-->
+
   <para vendor="sachsen-anhalt">TODO: ein Wort über das TubigModell aus
   Entwickler Sicht</para>
 
   <para vendor="sachsen-anahlt">TODO: ein Wort über das SaaleModell aus
-  Entwickler Sicht</para>
+  Entwickler Sicht<!--PROFILING ENDE--></para>
 
   <section id="ide">
     <title>Umgebung und Werkzeuge</title>
@@ -86,7 +88,7 @@
             </row>
 
             <row>
-              <entry>Miktex und DB2Latex</entry>
+              <entry>Miktex 2.2 und DB2Latex 0.8pre1</entry>
 
               <entry>Konvertierung von DocBook nach LaTeX und anschließend
               nach PDF</entry>
@@ -126,7 +128,7 @@
       <title>KALYPSO-Client</title>
 
       <para>Clientseitig baut KALYPSO auf der Eclipse Platform API auf:
-      KALYPSO besteht aus einem sog. Eclipse-Feature und einer Reihe von sog.
+      KALYPSO besteht aus einem Eclipse-Feature und einer Reihe von
       Eclipse-Plugins (siehe <xref
       linkend="tbl_develop_K_Features_Plugins" />).</para>
 
@@ -335,9 +337,8 @@
     <section id="kalypso-server">
       <title>KALYPSO-Server</title>
 
-      <para>Der KALYPSO-Server besteht aus Web-Diensten, die in einem J2EE
-      Container (Apache Tomcat) laufen. Fünf Dienste stehen den Clients zur
-      Verfügung:</para>
+      <para>Der KALYPSO-Server besteht aus Web-Diensten, die unter Apache
+      Tomcat laufen. Fünf Dienste stehen den Clients zur Verfügung:</para>
 
       <itemizedlist>
         <listitem>
@@ -372,6 +373,8 @@
 
       <para><xref linkend="tbl_devlop_spez_Plugins" /> listet die sog.
       Modellplugins und die Schnittstellenkomponenten auf.</para>
+
+      <!--PROFILING ANFANG-->
 
       <table id="tbl_devlop_spez_Plugins">
         <title>Spezielle Plugins</title>
@@ -434,9 +437,50 @@
               Benutzung, und in Form einer Library für die serverseitige
               Benutzung.</entry>
             </row>
+
+            <row vendor="sachsen">
+              <entry>KalypsoModelSpree</entry>
+
+              <entry>Plugin/Library</entry>
+
+              <entry>Integration des Spreemodells in Form eines Plugins für
+              die lokale Benutzung, und in Form einer Library für die
+              serverseitige Benutzung.</entry>
+            </row>
+
+            <row vendor="sachsen">
+              <entry>KalypsoModelNA</entry>
+
+              <entry>Plugin/Library</entry>
+
+              <entry>Integration des NA Modell der TUHH in Form eines Plugins
+              für die lokale Benutzung, und in Form einer Library für die
+              serverseitige Benutzung.</entry>
+            </row>
+
+            <row vendor="sachsen">
+              <entry>KalypsoOptimize</entry>
+
+              <entry>Plugin/Library</entry>
+
+              <entry>Plugin zur Kapselung des Optimierungsalgorythmus für das
+              Weiße-Elster Modell..</entry>
+            </row>
+
+            <row vendor="sachsen">
+              <entry>KalypsoAdapterPSICompact</entry>
+
+              <entry>Plugin/Library</entry>
+
+              <entry>Implementierung der Schnittstellenfunktionen zu
+              PSICompact in Form eines Plugins für die lokale Benutzung, und
+              in Form einer Library für die serverseitige Benutzung.</entry>
+            </row>
           </tbody>
         </tgroup>
       </table>
+
+      <!--PROFILING ENDE-->
     </section>
 
     <section id="conf">
@@ -499,7 +543,7 @@
                 <entry>Plugin</entry>
 
                 <entry>Optionales Plugin, wenn eingebunden besteht die
-                Möglichkeit des clientseitiges Berechnen</entry>
+                Möglichkeit die Modelle clientseitiges zu berechnen</entry>
               </row>
             </tbody>
           </tgroup>
@@ -511,8 +555,8 @@
     <title>Quellcode-Organisation</title>
 
     <para>Der Java-Quellcode wird mit dem Versionierungssystem CVS verwaltet.
-    Die Dokumentation des Quellcodes wurde mit Hilfe von Javadoc erstellt. Sie
-    können durch diese Dokumentation mit einem Webbrowser navigieren.</para>
+    Die API-Dokumentation des Quellcodes wurde mit Hilfe von Javadoc als HTML
+    erstellt.</para>
 
     <para>Der Quellcode ist in verschiedene Projekte unterteilt. Jedes Projekt
     deckt definierte Anforderungen bzw. Funktionen ab und ist mit einer
@@ -530,7 +574,7 @@
     <para>Der Quellcode wird mit CVS verwaltet. Bei jedem Meilenstein wurde
     der Projektstand mittels eines CVS Tags gekennzeichnet.</para>
 
-    <para>Die allgemeinen Teile des KALYPSO-Quellcodes wurden unter der LGPL
+    <para>Die allgemeinen Teile des KALYPSO-Quellcodes sind unter der LGPL
     (Lesser Gnu Public Licence, siehe <ulink
     url="http://www.gnu.org">http://www.gnu.org</ulink>) freigegeben.</para>
 
@@ -558,8 +602,8 @@
     <para vendor="sachsen-anhalt">Aus der Entwicklungsumgebung ist es möglich,
     die unterschiedlichen Dienste zu deployen. Das
     KalypsoConfSachsenAnhalt-Projekt deckt diese Aspekte ab und stellt
-    unterschiedliche übergeordnete Ant-Skripte zur Automatisierung des Deploy
-    zur Verfügung.</para>
+    unterschiedliche übergeordnete Ant-Skripte zur Automatisierung des
+    Deploy-Prozess zur Verfügung.</para>
 
     <para>Man kann:</para>
 
@@ -570,18 +614,20 @@
       </listitem>
 
       <listitem>
-        <para>die Dienste entweder direkt in den Container deployen oder in
+        <para>die Dienste entweder direkt in den Tomcat deployen oder in
         Dateien archivieren (in diesem Fall wird ein manueller Vorgang
-        benutzt, um die Dienste im Container zu deployen).</para>
+        benutzt, um die Dienste im Container zu installieren).</para>
       </listitem>
     </itemizedlist>
 
-    <para vendor="sachsen-anhalt">Um den KALYPSO-Client deployen zu können
-    wird das KalypsoFeatureSachsenAnhalt benutzt. Ein Eclipse-Export als
-    Feature ist direkt möglich. Somit werden die zahlreichen KALYPSO-Plugins
-    berücksichtigt. Einfaches Kopieren reicht um die Applikation zu
-    aktualisieren. Dies setzt aber voraus, dass eine bestehende KALYPSO-Client
-    Umgebung vorbereitet ist. Mehr dazu im <xref
+    <para vendor="">Um den KALYPSO-Client deployen zu können wird das Eclipse
+    Feature (<filename
+    vendor="sachsen-anhalt">KalypsoFeatureSachsenAnhalt</filename><filename
+    vendor="sachsen">KalypsoFeatureSachsen</filename>) benutzt. Ein
+    Eclipse-Export als Feature ist direkt möglich. Somit werden die
+    zahlreichen KALYPSO-Plugins berücksichtigt. Einfaches Kopieren reicht um
+    die Applikation zu aktualisieren. Dies setzt aber voraus, dass eine
+    bestehende KALYPSO-Client Umgebung vorbereitet ist. Mehr dazu im <xref
     linkend="chapter_3_installation" />.</para>
   </section>
 </chapter>

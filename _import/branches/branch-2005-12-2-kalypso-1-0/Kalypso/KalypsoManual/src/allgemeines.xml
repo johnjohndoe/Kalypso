@@ -109,6 +109,140 @@
     </section>
   </section>
 
+  <section id="kalypso_installation" vendor="sachsen">
+    <title>KALYPSO-Installation LHWZ Sachsen</title>
+
+    <indexterm>
+      <primary>Installation Sachsen</primary>
+    </indexterm>
+
+    <para>Im Landeshochwasserzentrum Sachsen ist KALYPSO als Softwarelösung
+    für die Hochwasservorhersage installiert. Mit Hilfe des Programmsystems
+    können primär Assistenten-geführte Vorhersageberechnungen durchgeführt
+    werden. Komplexe Operationen der Modellpflege werden ebenfalls durch die
+    Oberfläche unterstützt. Dazu ist der sogenannte Expertenmodus
+    vorgesehen.</para>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind in der Landeshochwasserwarnzentrale Sachsen
+    auf dem physisch eigenständigen KALYPSO-Server installiert:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Ablage von Dokumentbausteinen für Hochwasserberichte
+        (Dokumenten-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Im Falle des Landeshochwasserzentrums Sachsen wird die
+    modellrelevante zentrale Datenverwaltung durch zwei Systeme administriert.
+    Die eigentlichen Modelldaten - d.h. Geografische Daten, physikalische
+    Parameter, Steuerparameter der numerischen Berechnung, etc. - werden
+    ausschließlich von KALYPSO verwaltet und abgelegt.</para>
+
+    <para>Zeitreihen und Dokumentbausteine für Hochwasserberichte werden durch
+    KALYPSO gelesen bzw. generiert, die Verwaltung und Ablage geschieht aber
+    innerhalb von PSICompact.</para>
+
+    <figure id="_server_client_architektur">
+      <title>KALYPSO Client-Server-Architektur bei der LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/allgemeines/sachsen/Bausteine.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die im Landeshochwasserzentrum Sachsen installierte und hier
+    beschriebene KALYPSO-Version beinhaltet zwei Modell-Plugins.</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
+        Niederschlag-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
+        bzw. der WASY GmbH für das Einzugsgebiet der Spree.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Weiße Elster</emphasis>: Ein
+        hydrologisches Gebietsmodell des Einzugsgebietes der Weißen Elster mit
+        Abbildung der gesamten landbezogenen Wasserbilanz und integriertem
+        Wellenablauf-Modul, entwickelt und aufgebaut von Björnsen Beratende
+        Ingenieure GmbH.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Beide Modelle werden durch die KALYPSO-Modeler Oberfläche (siehe
+    <xref linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
+    innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
+    zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
+    Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
+    der jeweiligen Modelle leiten (siehe <xref
+    linkend="vorhersage_wizards" />).</para>
+
+    <section>
+      <title>Server-Installation</title>
+
+      <indexterm>
+        <primary>Installation-Server</primary>
+      </indexterm>
+
+      <para>Die Server-Installation bedarf aufgrund der konkreten
+      Systemeigenschaften einer spezifischen Abstimmung und Anpassung. Weitere
+      Informationen sind in der Technischen Dokumentation enthalten bzw. beim
+      Entwickler zu erfragen (siehe <xref
+      linkend="allgemeines_zu_kalypso" />).</para>
+    </section>
+
+    <section id="client-installation">
+      <title>Client-Installation (Windows)</title>
+
+      <indexterm>
+        <primary>Installation-Client</primary>
+      </indexterm>
+
+      <para>Die Installation des KALYPSO-Client erfolgte im Hochwasserzentrum
+      auf einem zentralen Dateiserver, so dass pro Arbeitsplatzrechner
+      lediglich die Verknüpfung aus dem Startmenü bzw. vom Desktop auf das
+      Programm eingerichtet werden muss. Dabei muss zusätzlich noch das lokale
+      Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der Erstellung des
+      Benutzerhandbuches waren die Arbeitsplatzrechner des LHWZ bereits
+      entsprechend eingerichtet.</para>
+
+      <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
+      Einstellung findet sich in der Technischen Dokumentation.</para>
+
+      <para>Nachdem die Installation durchgeführt wurde, kann das Programm
+      durch Doppelklick des Links gestartet werden. Nach dem ersten
+      Programmstart müssen einmalig Voreinstellungen getroffen werden. Diese
+      befinden sich im Menü <guimenuitem>Fenster</guimenuitem> unter
+      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich KALYPSO.
+      Beim Verlassen des Programms werden die Einstellung im aktuellen
+      Arbeitsbereich für die nachfolgenden Arbeitssitzungen
+      gespeichert.</para>
+    </section>
+  </section>
+
   <section id="kalypso_installation" vendor="sachsen-anhalt">
     <title>KALYPSO-Installation HVZ Sachsen-Anhalt</title>
 
@@ -241,13 +375,13 @@
         <primary>Installation-Client</primary>
       </indexterm>
 
-      <para>Die Installation des KALYPSO-Client erfolgte im Hochwasserzentrum
-      auf einem zentralen Dateiserver, so dass pro Arbeitsplatzrechner
-      lediglich die Verknüpfung aus dem Startmenü bzw. vom Desktop auf das
-      Programm eingerichtet werden muss. Dabei muss zusätzlich noch das lokale
-      Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der Erstellung des
-      Benutzerhandbuches waren die Arbeitsplatzrechner der HVZ bereits
-      entsprechend eingerichtet.</para>
+      <para>Die Installation des KALYPSO-Client erfolgte in der
+      Hochwasserzentrale auf einem zentralen Dateiserver, so dass pro
+      Arbeitsplatzrechner lediglich die Verknüpfung aus dem Startmenü bzw. vom
+      Desktop auf das Programm eingerichtet werden muss. Dabei muss zusätzlich
+      noch das lokale Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der
+      Erstellung des Benutzerhandbuches waren die Arbeitsplatzrechner der HVZ
+      bereits entsprechend eingerichtet.</para>
 
       <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
       Einstellung findet sich in der Technischen Dokumentation.</para>
@@ -470,6 +604,21 @@
     linkend="zeitreihen_repository" />) und den Anwendungsbetrieb (siehe <xref
     linkend="vorhersage_wizards" />) ist im vorliegenden Handbuch
     beschrieben.</para>
+  </section>
+
+  <section id="benutzerrechte" vendor="sachsen">
+    <title>Benutzerrechte</title>
+
+    <indexterm>
+      <primary>Benutzerrechte</primary>
+    </indexterm>
+
+    <para>Die Benutzerrechte für KALYPSO werden im LHWZ Sachsen zentral durch
+    PSICompact verwaltet. Hier sind für die KALYPSO-Anwendung die Rollen
+    <emphasis>Experte</emphasis> und <emphasis>Administrator</emphasis>
+    definiert. Anwender mit diesen Benutzerprofilen haben die entsprechenden
+    Rechte innerhalb der Anwendung und können somit die unter <xref
+    linkend="anwendungsfaelle" /> beschriebenen Aufgaben ausführen.</para>
   </section>
 
   <section id="benutzerrechte" vendor="sachsen-anhalt">

@@ -89,7 +89,7 @@
     </tgroup>
   </table>
 
-  <para>Allen Vorlagen ist gemeinsam, dass in ihnen lediglich die Art der
+  <para>Allen Vorlagen ist gemein, dass in ihnen lediglich die Art der
   Darstellung gespeichert ist. Die eigentlichen Daten liegen in separaten
   Datendateien (z.B. .shp, .gml, .zml) und werden aus den Vorlagen über
   URL-Verknüpfungen referenziert. Bei der Referenzierung der Datendateien sind
@@ -97,8 +97,8 @@
   beziehen sich stets auf den Ort der Vorlagendatei.</para>
 
   <para>Neben den üblichen URL-Protokollen wie z.B. file: und http: wurden für
-  die Modellverwaltung eigenen Protokolle definiert. Folgende Protokolle
-  werden unterstützt:</para>
+  die Modellverwaltung eigene Protokolle definiert. Folgende Protokolle werden
+  unterstützt:</para>
 
   <informaltable>
     <tgroup cols="3">

@@ -117,11 +117,32 @@
           </row>
 
           <row>
-            <entry>/.model/schema/</entry>
+            <entry>/.model/dwd</entry>
 
-            <entry>*.xsd</entry>
+            <entry>dwdZmlConf.xml</entry>
 
-            <entry>XML Schemata für GML-Daten</entry>
+            <entry>Konfigurationsdatei DWD Rasterdaten</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.mode/launch</entry>
+
+            <entry>build.xml, *.launch</entry>
+
+            <entry>Ant-Skripte und Eclipse-Launches</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.model/observationConf</entry>
+
+            <entry>*.gml</entry>
+
+            <entry>Zuordnungsdateien zwischen Modelldaten und PSICompact
+            IDs</entry>
 
             <entry>fest</entry>
           </row>
@@ -215,8 +236,6 @@
 
     <!--PROFILING ANFANG sachsen-anhalt-->
 
-    <!--Hier fehlt das Launch-Verzeichnis, das u.a. CalcCaseConfig.xml und modelspec.xml ersetzt hat-->
-
     <table vendor="sachsen-anhalt">
       <title>Tabelle 6: Modellstruktur</title>
 
@@ -278,6 +297,26 @@
             <entry>calcWizard.xml</entry>
 
             <entry>Konfiguration Vorhersage-Assistent</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.model/dwd</entry>
+
+            <entry>dwdZmlConf.xml</entry>
+
+            <entry>Konfigurationsdatei DWD Rasterdaten</entry>
+
+            <entry>fest</entry>
+          </row>
+
+          <row>
+            <entry>/.mode/launch</entry>
+
+            <entry>build.xml, *.launch</entry>
+
+            <entry>Ant-Skripte und Eclipse-Launches</entry>
 
             <entry>fest</entry>
           </row>

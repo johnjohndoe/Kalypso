@@ -21,6 +21,24 @@
       </listitem>
     </itemizedlist><!--PROFILING sachsen-Anhalt ENDE--></para>
 
+  <para vendor="sachsen">Dieses Dokument stellt die Technische Dokumentation
+  des Programmsystems KALYPSO Enterprise dar. Die Dokumentation umfasst sowohl
+  Aspekte der Entwicklung und Konfiguration der Software als auch der
+  Administration und Modellintegration. Die Technische Dokumentation basiert
+  dabei auf den folgenden vorangegangenen Dokumenten:</para>
+
+  <para vendor="sachsen"><itemizedlist>
+      <listitem>
+        <para>Feinkonzept - Softwarelösungen Los 2 Prognosesystem</para>
+      </listitem>
+
+      <listitem>
+        <para>KALYPSO-Anwenderhandbuch</para>
+      </listitem>
+    </itemizedlist></para>
+
+  <!--PROFILING sachsen ENDE-->
+
   <section id="architektur">
     <title>Architektur</title>
 
@@ -32,7 +50,7 @@
     und ist als Sammlung von Eclipse-Plugins realisiert.</para>
 
     <para>Der Server besteht aus einer Anzahl von Webdiensten, die in einem
-    J2EE-Container (Tomcat) installiert sind. Darüber hinaus können
+    J2EE-Container (Apache Tomcat) installiert sind. Darüber hinaus können
     serverseitig noch verschiedene externe Programme installiert sein, welche
     spezielle Datendienste bereitstellen (z.B.: Anbindung an externe
     Zeitreihendatenbank) oder welche für die hydrologischen bzw. hydraulischen
@@ -57,11 +75,11 @@
     im Internet (SOAP-Nachrichten über http).</para>
 
     <para><note>
-        <para>Zur Zeit werden einige Dateien zwischen Client und Server über
-        Windows-Freigaben ausgetauscht. Dies begrenzt den Einsatz auf das
-        Intranet. Für eine zukünftige Version von KALYPSO ist ein
-        Dateitransfer auf WebDAV-Basis geplant, wodurch ein Einsatz über das
-        Internet hinweg ermöglicht wird.</para>
+        <para>Zum Teil findet der Austausch von Dateien zwischen Client und
+        Server über Windows-Freigaben statt (nur Modelldatendienst). Dies
+        begrenzt den Einsatz auf das Intranet. Für eine zukünftige Version von
+        KALYPSO ist ein Dateitransfer auf WebDAV-Basis geplant, wodurch ein
+        Einsatz über das Internet hinweg ermöglicht wird.</para>
       </note></para>
   </section>
 

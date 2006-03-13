@@ -110,6 +110,14 @@
     <para><figure id="pic_kalypso_startseite">
         <title>KALYPSO- Startseite Allgemein</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/Programm-Start/startseite_sachsen.png"
+                       scale="35" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center"

@@ -41,9 +41,11 @@
     <xsl:param name="latex.url.quotation">0</xsl:param>
 	<xsl:param name="latex.hyphenation.tttricks">1</xsl:param>
 
-	<!-- Die nächsten beiden sind schön tun aber leider nix -->
-	<xsl:param name="latex.generate.indexterm">1</xsl:param>
+	<!--xsl:param name="latex.generate.indexterm">1</xsl:param-->
+
+    <!-- Komisch, aber bei den beiden nächsten fängt die Zählung bei 0 an -->
 	<xsl:param name="toc.section.depth">2</xsl:param>
+	<xsl:param name="section.depth">2</xsl:param>
 
 	<!-- Mögliche fonts:
 		helvetic

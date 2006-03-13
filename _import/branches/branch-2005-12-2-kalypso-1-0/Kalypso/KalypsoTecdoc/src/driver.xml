@@ -18,7 +18,7 @@
 	
 	<!ENTITY file_integr_allg SYSTEM "modellintegration_allg.xml">
 	<!ENTITY file_integr_spree SYSTEM "modellintegration_spree.xml">
-	<!ENTITY file_integr_na SYSTEM "modellintegration_na.xml">
+	<!ENTITY file_integr_we SYSTEM "modellintegration_weisseelster.xml">
 	<!ENTITY file_integr_tubig SYSTEM "modellintegration_tubig.xml">
 	<!ENTITY file_integr_saale SYSTEM "modellintegration_saale.xml">
 ]>
@@ -37,7 +37,7 @@
 	&file_extras;
 	&file_grafik;
 	
-	<chapter vendor="sachsen-anhalt" id="modellintegration">
+	<chapter id="modellintegration">
 		<title>Modellintegration</title>
 		<indexterm>
 			<primary>Modellintegration</primary>
@@ -46,13 +46,13 @@
 		&file_integr_allg;
 		
 		&file_integr_spree;
-		&file_integr_na;
+		&file_integr_we;
 		
 		&file_integr_tubig;
 		&file_integr_saale;
 	</chapter>
 	
-	<chapter vendor="sachsen-anhalt" id="sst">
+	<chapter id="sst">
 		<title>Schnittstellen</title>
 		<indexterm><primary>Schnittstellen</primary></indexterm>
 

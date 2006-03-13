@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="spree_view_prognose" vendor="sachsen">
+  <title>Vorhersagemodell Spree</title>
+
+  <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree ist
+  in der KALYPSO-Oberfläche ein Wizard implementiert. Unabhängig von den ihm
+  zugeordneten Rechten wird der Benutzer direkt bei dem Programmstart in den
+  Vorhersagemodus geführt (<xref linkend="spree_startbildschirm" />). Für
+  Benutzer mit erweiterten Rechten ist es jederzeit möglich, aus dem
+  Expertenmodus in den Vorhersagemodus zu wechseln (Menü
+  <guimenu>Modell</guimenu> <guimenu>-&gt; Vorhersage
+  durchführen</guimenu>).</para>
+
+  <figure id="spree_startbildschirm">
+    <title id="dummy">Startbildschirm Vorhersagemodus</title>
+
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/wizard/sachsen/spree_1.png" scale="30" />
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
+
+  <para>Beim Start des Vorhersage-Wizards öffnet sich eine Maske, in der dem
+  Benutzer drei verschiedene Möglichkeiten gegeben werden, Vorhersagen
+  durchzuführen:</para>
+
+  <section id="spree_1">
+    <title>Neue Hochwasservorhersage anlegen</title>
+
+    <para>Mit der Option <guibutton>einen neuen Rechenfall
+    erzeugen</guibutton> wird eine neue Rechenvariante angelegt. Die
+    Bezeichnung der Rechenvariante ist vom Benutzer frei wählbar und wird
+    unter dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit
+    der Bestätigung durch Klick auf <guibutton>Weiter</guibutton> erfolgt die
+    Aufforderung zur Eingabe der Steuerparameter (<xref
+    linkend="spree_steuerparameter" />).</para>
+
+    <section id="spree_2">
+      <title>Steuerparameter</title>
+
+      <figure id="spree_steuerparameter">
+        <title>Eingabe der Steuerparameter</title>
+
+        <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/wizard/sachsen/spree_3.png" scale="30" />
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </figure>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>Start der Simulation</emphasis></para>
+
+          <para>Der Startzeitpunkt der Simulation wird vom Programm
+          standardmäßig auf 2 Tage (48 h) vor Beginn der Vorhersage gesetzt
+          (vom Benutzer editierbar).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Start der Vorhersage</emphasis></para>
+
+          <para>Beschreibt den Zeitpunkt an dem das Modell die Vorhersage
+          startet, dieser wird automatisch vom Programm gesetzt und sollte
+          nicht editiert werden. Der Endzeitpunkt der Vorhersageberechnung
+          wird durch die Dauer des in den Prognosedaten enthaltenen Zeitraums
+          bestimmt. Die Berechnung endet im längsten Fall 48 h nach Beginn der
+          Vorhersage.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Metadaten</emphasis></para>
+
+          <para>Sind vom Anwender optional anzugebende Daten zur Beschreibung
+          und Erläuterung des Rechenfalls. Sie werden beim Speichern des
+          Rechenfalls abgelegt, sind aber nicht notwendig zur Durchführung
+          einer Berechnung.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Zeitreihen aktualisieren</emphasis></para>
+
+          <para>Bei Aktivierung dieser Option werden die zur Berechnung
+          notwendigen Zeitreihen neu in das Programm eingelesen. Dies ist
+          allerdings nur sinnvoll bei Vorführung oder Neuberechnung eines
+          bereits angelegten Hochwassers. Beim Anlegen eines neuen Rechenfalls
+          werden die Zeitreihen immer neu eingelesen (auch bei deaktiviertem
+          Kästchen). Die Bestätigung der getätigten Angaben erfolgt über den
+          Klick auf <guibutton>Weiter</guibutton>.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>Fortführen einer Rechenvariante</title>
+
+    <para>Durch die Wahl der Option <emphasis role="bold">einen bereits
+    vorhandenen Rechenfall fortführen</emphasis> wird dem Benutzer die
+    Möglichkeit gegeben, eine zuvor berechnete und gespeicherte
+    Hochwasserprognose erneut zu laden und die Berechnungen zu aktualisieren
+    bzw. fortzuführen (bspw. bei Vorhandensein aktueller Prognosedaten). Nach
+    Auswahl der Option erscheint ein Auswahlfenster, in dem alle gespeicherten
+    Rechenläufe angezeigt werden. Nach Markieren des entsprechenden
+    Rechenlaufes erfolgt die Bestätigung der Auswahl durch
+    <guibutton>Weiter</guibutton>.</para>
+
+    <para>Es erscheint die Eingabemaske für die Steuerparameter (<xref
+    linkend="spree_2" />), in die bereits die gespeicherten Eingaben für das
+    gewählte Hochwasser eingetragen sind. Für die Fortführung des Rechenlaufs
+    können die Parameter vom Nutzer geändert werden. Es gelten die gleichen
+    Voraussetzungen wie beim Anlegen eines neuen Rechenfalls.</para>
+
+    <para>Zusätzlich ist die Option <guibutton>Zeitreihen
+    aktualisieren</guibutton> aktiv, d. h., die Zeitreihen können für die
+    erneute Berechnung der Variante neu eingelesen werden. Ist das Kästchen
+    deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
+    Rechenlaufs verwendet.</para>
+  </section>
+
+  <section>
+    <title>Kopieren einer Rechenvariante</title>
+
+    <para>Die Wahl dieser Option erfolgt durch Auswahl von <guibutton>einen
+    auf dem Server vorhandenen Rechenfall kopieren</guibutton>. Hierdurch
+    werden die Eingangsdaten eines bereits gespeicherten Hochwassers als neuer
+    Datensatz vom Programm im lokalen Arbeitsverzeichnis gespeichert. Dies
+    bietet den Vorteil, dass bei einer gewünschten Änderung der Eingangsdaten
+    die Originaldateien nicht überschrieben werden. Es erscheint eine Auswahl
+    der auf dem Server gespeicherten Rechenvarianten. Für die lokale Kopie der
+    Rechenvariante muss vom Benutzer ein Name angegeben werden. Nach Auswahl
+    der zu kopierenden Rechenvariante wird durch Bestätigung durch
+    <guibutton>Weiter</guibutton> die Eingabemaske für die Steuerparameter
+    (<xref linkend="spree_2" />) geöffnet.</para>
+  </section>
+
+  <section>
+    <title>Kontrolle der Eingangsdaten</title>
+
+    <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
+    Eingangsdaten durch den Benutzer. Die Zeitreihen setzen sich aus
+    Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen sind
+    abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
+    linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
+    aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
+    (<xref linkend="spree_eingangsdaten" />):</para>
+
+    <figure id="spree_eingangsdaten">
+      <title>Kontrolle der Eingangsdaten (Niederschläge)</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/spree_4.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <orderedlist>
+      <listitem>
+        <para>Niederschlagszeitreihen für die N-A-Modelle innerhalb des
+        Einzugsgebietes</para>
+
+        <para>(Schirgiswalde, Bautzen, Gröditz 1, Jänkendorf, Särichen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Talsperrenabgaben für TS Bautzen und TS Quitzdorf</para>
+      </listitem>
+
+      <listitem>
+        <para>Gemessene Wasserstandsganglinien an allen Vorhersagepegeln für
+        die Nachführung des Hochwasserereignisses</para>
+      </listitem>
+
+      <listitem>
+        <para>Abflusswerte für die Abzweige / Überleitungen</para>
+
+        <para>(Abzweig Kleine Spree, Zuleiter Restloch Bärwalde, Zuleitung
+        Restloch Lohsa II, Überleitung Restlochkette)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zuflüsse am Pegel Burgneudorf</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
+    jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
+    angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gleichzeitig
+    aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
+    auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
+    Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
+    <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
+  </section>
+
+  <section id="spree_berechnung_vorhersage">
+    <title>Berechnung einer Vorhersage</title>
+
+    <para>Die Vorhersageberechnungen erfolgen nach Prüfung der
+    Eingangszeitreihen. Die Reihenfolge der Abarbeitung der Berechnungen für
+    die einzelnen Pegel im Einzugsgebiet der Spree ist in folgender
+    Reihenfolge im Programm implementiert: Zunächst erfolgen Berechnungen für
+    Pegel mit vorgeschaltetem N-A-Modell, anschließend für die
+    Talsperren-Abgabepegel und daraufhin für die Pegel mit vorgeschaltetem
+    Flusslaufmodell (d.h. von Ober- Richtung Unterlauf).</para>
+
+    <para>Dabei ist vom Benutzer auf die Reihenfolge der Pegel zu achten. An
+    einem Pegel sollten erst dann Vorhersageberechnungen vorgenommen werden,
+    wenn für alle oberhalb gelegenen Pegel bereits eine Anpassung der
+    Parameter vorgenommen worden ist.</para>
+
+    <para>Die Wizard-Masken sind jeweils so gestaltet, dass auf der linken
+    Hälfte eine Übersicht der Pegel im Lageplan erscheint (<xref
+    linkend="spree_berechnung" />). In der rechten Hälfte wird oben eine
+    Tabelle angezeigt, über die die entsprechenden Parameter zur Kalibrierung
+    der Nachführung des HW-Ereignisses eingegeben werden können. Im unteren
+    Teil ist eine Diagrammansicht gegeben, in der die Zeitreihen der
+    Berechnung angezeigt werden. Beim Start des Wizards ist die
+    Diagramm-Anzeige zunächst noch ohne Inhalt. Zeitreihen werden durch einen
+    Klick auf den entsprechenden Eintrag in der Tabelle grafisch dargestellt.
+    Die Achsen des Diagramms werden dabei automatisch an die jeweilige
+    Zeitreihe angepasst.</para>
+
+    <figure id="spree_berechnung">
+      <title>Berechnung N-A-Modelle</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/spree_9a.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Die Reihenfolge der Berechnungen und die jeweils vom Benutzer
+    vorzugebenden Modellparameter gliedert sich wie folgt:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Berechnung der Pegeleinzugsgebiete mit N-A-Modell (<xref
+        linkend="spree_berechnung" />)</para>
+
+        <para>In der Tabelle einzugeben ist die Anfangsbodenfeuchte (in den
+        vom Programm vorgegebenen festen Grenzen). Wird für die Bodenfeuchte
+        ein Wert von 0.0 vorgegeben (Standard), wird vom Programm eine
+        optimale Bodenfeuchte berechnet und nach erfolgter Berechnung in die
+        Tabelle eingetragen.</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnung der Talsperreninhalte</para>
+
+        <para>Vorzugeben ist der Stauinhalt der Talsperre zu Beginn der
+        Vorhersage</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnung der Pegel mit Flusslaufmodell</para>
+
+        <para>In der Tabelle anzugeben sind die Parameter zur Korrektur der
+        Abflussganglinie (Niveau-Korrektur multiplikativ und additiv,
+        Laufzeitkorrektur). Eine Empfehlung zur Korrektur wird vom Programm
+        vorgegeben (nicht editierbar).</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Die Berechnung wird über die Schaltfläche <guibutton>Berechnung
+    durchführen</guibutton> gestartet. Nach erfolgreich durchgeführter
+    Berechnung werden die Ergebnisse zusammen mit den Messwerten (soweit
+    vorhanden) grafisch dargestellt. Berechnungen können beliebig oft
+    durchgeführt werden. Die ermittelte Ergebniszeitreihe an einem Pegel dient
+    als Zuflusszeitreihe für den nächsten unterhalb gelegenen Pegel bzw.
+    Talsperre.</para>
+  </section>
+
+  <section id="spree_ergebnisbearbeitung">
+    <title>Ergebnisbearbeitung und Veröffentlichung</title>
+
+    <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
+    <xref linkend="spree_berechnung_vorhersage" />) können die ermittelten
+    Ergebnisse an das Berichtswesen übergeben werden. Zudem ist der Export der
+    berechneten Prognose-Zeitreihen nach PSI-Compact möglich. Die dazugehörige
+    Eingabemaske (<xref linkend="spree_ergebnisse" />) zeigt einen Lageplan
+    mit allen im Modell vorhandenen Vorhersage-Pegeln.</para>
+
+    <figure id="spree_ergebnisse">
+      <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/spree_12.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Im Fenster oben ist der Rechenfall zu wählen, für den die
+    berechneten Zeitreihen noch einmal angezeigt werden sollen bzw. für den
+    eine Berichtsablage der berechneten Zeitreihen erfolgen soll. Ist ein
+    Rechenfall aktiviert, werden durch Auswahl des Pegels die dazugehörigen
+    Zeitreihen im unteren Fenster angezeigt. Eine Mehrfachauswahl ist möglich.
+    In der Grafik kann durch Auswahl der entsprechenden Schaltfläche zwischen
+    der Ergebnisanzeige in Form von Abfluss- oder Wasserstandsganglinien
+    gewählt werden.</para>
+
+    <para>Zur Bearbeitung einer Ergebniszeitreihe ist die Schaltfläche
+    <guibutton>Zeitreihe(n) bearbeiten</guibutton> vorgesehen. Durch Klick auf
+    die Schaltfläche wird das im Programm-Umfang enthaltene Grafikprogramm
+    geöffnet. In diesem bestehen zahlreiche Möglichkeiten zur Visualisierung
+    und Editierung der Zeitreihen (siehe Handbuch zum Grafikprogramm).</para>
+
+    <para>Die Ablage der Ergebnisse auf dem Server (Berichtswesen und
+    PSI-Compact) kann in unterschiedlichen Formaten erfolgen:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Berechnete Zeitreihen der Abflüsse (Grafik für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnete Zeitreihen der Wasserstände (Grafik für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnete Zeitreihen in Tabellen-Form (CSV-Format für das
+        Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Berechnete Zeitreihen nur für den Zeitraum der Vorhersage
+        (Prognosezeitreihen für PSI-Compact)</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafische Darstellung der Ergebnisse im Lageplan, farbige
+        Markierung der Pegel (Grafik für das Berichtswesen)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Durch Aktivierung des Häkchens vor dem jeweiligen Ausgabe-Format
+    kann der Benutzer eine beliebige Kombination der Ergebnisdaten für das
+    Berichtswesen zusammenstellen. Über die Schaltfläche <guibutton>Bericht(e)
+    ablegen</guibutton> werden die Ergebnisse der Vorhersage-Berechnungen für
+    alle Pegel des Modells auf dem Server abgelegt.</para>
+
+    <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
+    <guimenu>Export Prognosen</guimenu> in das Informations-Management-System
+    (PSI-Compact) gespeichert werden. Es erscheint ein Auswahlfenster, in dem
+    diejenigen Ausgabequerschnitte gewählt werden können, für die Zeitreihen
+    herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
+    Vorhersage-Zeitraum.</para>
+  </section>
+</section>

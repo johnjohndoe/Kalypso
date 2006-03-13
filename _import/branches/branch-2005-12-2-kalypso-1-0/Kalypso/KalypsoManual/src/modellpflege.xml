@@ -255,11 +255,19 @@
       <figure id="modellparameter_edit">
         <title>Ansicht zur Änderung von Modellparametern</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/modellpflege/modellparameter_edit.png"
+                       scale="35" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center"
                        fileref="img/modellpflege/modellparameter_edit.png"
-                       scale="35" vendor="sachsen-anhalt" />
+                       scale="35" vendor="" />
           </imageobject>
         </mediaobject>
 
@@ -267,7 +275,7 @@
           <imageobject>
             <imagedata align="center"
                        fileref="img/modellpflege/modellparameter_edit_ing.png"
-                       scale="35" vendor="hh_ingenieurbueros" />
+                       scale="35" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -611,8 +619,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <para>EXPORT</para>
 
       <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden.
       Die Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv

@@ -42,7 +42,9 @@
 	<xsl:param name="latex.hyphenation.tttricks">1</xsl:param>
 	<xsl:param name="latex.generate.indexterm">1</xsl:param>
 
-	<xsl:param name="toc.section.depth">2</xsl:param>
+	<xsl:param name="toc.section.depth">3</xsl:param>
+	<xsl:param name="section.depth">3</xsl:param>
+	
 	<!-- Mögliche fonts:
 		helvetic
 		palatino

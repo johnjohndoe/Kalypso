@@ -458,7 +458,8 @@ public class SpreeCalcJob implements ICalcJob
 
     try
     {
-      ProcessHelper.startProcess( commandString, null, exedir, monitor, 1000, outWriter, errWriter );
+      // timeout after 10 sec
+      ProcessHelper.startProcess( commandString, null, exedir, monitor, 10000, outWriter, errWriter );
     }
     catch( final IOException e )
     {
@@ -480,15 +481,15 @@ public class SpreeCalcJob implements ICalcJob
       logwriter.println( processOut );
 
       // spree.exe erzeugt keinen error stream
-//      final String processErr = errWriter.toString();
-//      logwriter.println( "========================" );
-//      logwriter.println( "=    Fehler-Ausgabe   =" );
-//      logwriter.println( "========================" );
-//      logwriter.println( processErr );
-      
+      //      final String processErr = errWriter.toString();
+      //      logwriter.println( "========================" );
+      //      logwriter.println( "= Fehler-Ausgabe =" );
+      //      logwriter.println( "========================" );
+      //      logwriter.println( processErr );
+
       logwriter.println( "========================" );
       logwriter.println();
-      
+
       if( processOut.endsWith( "Berechnung erfolgreich beendet\r\n" ) )
         logwriter.println( "Rechnung mit spree.exe erfolgreich beendet." );
       else

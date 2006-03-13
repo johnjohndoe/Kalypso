@@ -375,17 +375,24 @@
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/gis_karte2.png"
+                       format="PNG" scale="45" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/gis_karte2.png"
-                       format="PNG" scale="45" vendor="sachsen-anhalt" />
+                       format="PNG" scale="45" vendor="" />
           </imageobject>
         </mediaobject>
 
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_karte.png"
-                       format="PNG" scale="45" vendor="hh_ingenieurbueros" />
+                       format="PNG" scale="45" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -424,10 +431,17 @@
         Style-Editor</title>
 
         <screenshot>
+          <mediaobject vendor="sachsen">
+            <imageobject>
+              <imagedata align="center" fileref="img/gui/style_editor.png"
+                         format="PNG" scale="45" vendor="" />
+            </imageobject>
+          </mediaobject>
+
           <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/style_editor.png"
-                         format="PNG" scale="45" vendor="sachsen-anhalt" />
+                         format="PNG" scale="45" vendor="" />
             </imageobject>
           </mediaobject>
 
@@ -435,7 +449,7 @@
             <imageobject>
               <imagedata align="center"
                          fileref="img/gui/style_editor_tuhh.png" format="PNG"
-                         scale="45" vendor="hh_ingenieurbueros" />
+                         scale="45" vendor="" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -632,17 +646,24 @@
       <figure id="navigation_tabellen_ansicht">
         <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
 
+        <mediaobject vendor="sachsen">
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/tabelle2.png"
+                       scale="45" vendor="" />
+          </imageobject>
+        </mediaobject>
+
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/tabelle2.png"
-                       scale="45" vendor="sachsen-anhalt" />
+                       scale="45" vendor="" />
           </imageobject>
         </mediaobject>
 
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_tabelle.png"
-                       scale="45" vendor="hh_ingenieurbueros" />
+                       scale="45" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -876,19 +897,102 @@
 
         <!--PROFILING ANFANG-->
 
-        <para vendor="sachsen-anhalt">Beim <emphasis
-        role="bold">Export</emphasis> über die Schaltfläche <inlinemediaobject>
+        <para vendor="sachsen">Beim <emphasis role="bold">Export</emphasis>
+        über die Schaltfläche <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/gui/icon_bericht.png" />
             </imageobject>
           </inlinemediaobject> wird die Tabelle im CSV-Format in das
-        Berichtswesen (IMS) abgelegt. Vom Anwender sind Metadaten anzugeben,
-        die dem IMS übergeben werden.</para>
+        Berichtswesen (PSICompact) abgelegt. Vom Anwender sind Metadaten
+        anzugeben, die der Dokumentenablage übergeben werden.</para>
 
         <!--PROFLING ENDE-->
       </section>
 
-      <!--PROFILING ANFANG-->
+      <!--PROFILING sachsen ANFANG-->
+
+      <section id="tabellen_kennzeichnung" vendor="sachsen">
+        <title>Kennzeichnung von Tabellenwerten</title>
+
+        <indexterm>
+          <primary>Zeitreihen</primary>
+
+          <secondary>Kennzeichnung von Tabellenwerten</secondary>
+        </indexterm>
+
+        <para>Beim Aufruf von Zeitreihen über den KALYPSO Zeitreihendienst,
+        dies ist beim LHWZ gleichbedeutend mit dem Abruf der Zeitreihendaten
+        aus PSICompact, werden die Werte einer Zeitreihe mit einem internen
+        Status versehen. Dieser ist abhängig von den Attributen aus
+        PSICompact. Beim Öffnen einer Zeitreihe in KALYPSO mit der
+        Tabellen-Ansicht wird der Status durch ein Symbol visualisiert. Die
+        einzelnen Symbole sind mit dem dazugehörigen Status in einer Tabelle
+        in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol
+        vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den
+        Status <quote>OK</quote>.</para>
+
+        <table id="zeitreihensymbole">
+          <title>Symbole in Zeitreihen-Tabellen</title>
+
+          <tgroup cols="3">
+            <colspec align="center" colwidth="1*" />
+
+            <colspec align="left" colwidth="2*" />
+
+            <colspec align="left" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry align="center">Symbol</entry>
+
+                <entry align="center">KALYPSO-Status</entry>
+
+                <entry align="center">PSICompact-Status</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry valign="middle"></entry>
+
+                <entry>OK</entry>
+
+                <entry>AUTO, OK</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_write.png"
+                valign="middle" /></entry>
+
+                <entry>Vom Benutzer geändert</entry>
+
+                <entry>MANKOR</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_warning.png"
+                valign="middle" /></entry>
+
+                <entry>Wert auf Gültigkeit prüfen</entry>
+
+                <entry>ERSALLG, NACH, NORM, NORMALLG, UNDEF</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_conflict.png"
+                valign="middle" /></entry>
+
+                <entry>Wert nicht ableitbar (W/Q,
+                W/V-Umwandlungsfehler)</entry>
+
+                <entry>-</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <!--PROFLING sachsen-anhalt ANFANG-->
+      </section>
 
       <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
