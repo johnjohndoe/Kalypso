@@ -120,6 +120,7 @@ public class GMLSchemaTest extends TestCase
 
   public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
+    System.out.println( " test " + schemaLocationURL.toString() );
     final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
 
     if( schema != null )
@@ -146,7 +147,7 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        // System.out.println( buffer.toString() );
+//        System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }

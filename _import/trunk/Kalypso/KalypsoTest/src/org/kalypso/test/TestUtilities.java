@@ -53,7 +53,7 @@ public class TestUtilities
 
   public static void compare( final String description, final URL orgiginalResource, final String testText ) throws Exception
   {
-    final InputStreamReader reader = new InputStreamReader( orgiginalResource.openStream());
+    final InputStreamReader reader = new InputStreamReader( orgiginalResource.openStream(),"UTF-8");
     final String orgText = ReaderUtilities.readStringFromReader( reader );
     final String orgText2 = orgText.replaceAll( "\\r", "\n" );
     final String testText2 = testText.replaceAll( "\\r", "\n" );
@@ -85,7 +85,7 @@ public class TestUtilities
           if( n > -1 && n < orgLine.length )
             System.out.println( n + ": " + orgLine[n] );
         }
-        System.out.println( "\n\tfrom last run:" );
+        System.out.println( "\n\tfrom current run:" );
         for( int n = i - radius; n < i + radius; n++ )
         {
           if( n > -1 && n < testLine.length )
