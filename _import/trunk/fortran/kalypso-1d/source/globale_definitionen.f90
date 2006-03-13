@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    3:01 pm
+!     Last change:  WP   13 Mar 2006    3:36 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -35,6 +35,20 @@
 !***********************************************************************
 
 
+!----------------------------------------------------------------------------
+module VERSION
+
+implicit none
+
+save
+
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.17'
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 10.03.2006'
+
+end module VERSION
+
+
+!----------------------------------------------------------------------------
 module DIM_VARIABLEN
 
 implicit none
@@ -45,6 +59,7 @@ INTEGER, parameter :: nch80 = 250      ! Max. Laenge von Zeichenketten, z.B. Dat
 INTEGER, parameter :: merg = 10        ! Max. Anzahl von Abflussereignissen
 INTEGER, parameter :: maxkla = 1000    ! Max. Anzahl von Punkten pro Profil
 INTEGER, parameter :: maxger = 1000    ! Max. Anzahl von Profilen
+INTEGER, parameter :: maxabfluesse = 100    ! Max. Anzahl von Abfluessen bei stat.-ungl. Berechnung
 INTEGER, parameter :: ipro = 16        ! Max. Anzahl von Bloecken in Profildatei (? WP)
 INTEGER, parameter :: itmax = 99       ! Max. Anzahl von Iterationen in versch. Subroutinen
 INTEGER, parameter :: maxw = 50        ! Max. Anzahl von Wehrfeldern
@@ -82,6 +97,92 @@ REAL, parameter :: pi   = 3.1415926
 end module KONSTANTEN
 
 
+
+!-----------------------------------------------------------------------------
+module IO_UNITS
+
+implicit none
+
+save
+
+INTEGER :: UNIT_EIN_PROF        ! Profildatei (z.B. ..\PROF\st000042.prf)
+INTEGER :: UNIT_EIN_STR      	! Strangtabelle
+INTEGER :: UNIT_EIN_QWERT       ! Abflussdatei
+INTEGER :: UNIT_EIN_KM          ! Teilgebietedatei
+INTEGER :: UNIT_EIN_PSI         ! (Einzel-)Verlustbeiwerte
+
+INTEGER :: UNIT_OUT_LOG         ! Kontroll.log
+INTEGER :: UNIT_OUT_LAMBDA_I    ! lambda_i.txt
+INTEGER :: UNIT_OUT_GER         ! Gerinnedatei für den Austausch der KM-Paramter mit NA-Modell
+INTEGER :: UNIT_OUT_LOG_KM      ! out.*, Detaillierte LOG-Datei der KM-Berechnung
+INTEGER :: UNIT_OUT_KM          ! z.B. st000042.km, WQ-Tabelle für jedes einzelne Profil bei stat-ungl. Berechnung
+INTEGER :: UNIT_OUT_TAB         ! Hauptausgabedatei, Tabelle mit Ergebnissen einer stat. Berechnung (z.B. sttb0001.001)
+INTEGER :: UNIT_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Energiestrom und Impulsstrombeiwerte
+INTEGER :: UNIT_OUT_PRO         ! WQ-Tabelle altes WspWin Format
+INTEGER :: UNIT_OUT_WSL         ! Laengschnitt im WspWin Blockformat
+INTEGER :: UNIT_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
+INTEGER :: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+INTEGER :: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+
+end module IO_UNITS
+
+
+
+!-----------------------------------------------------------------------------
+module MOD_ERG
+!
+! In diesem Modul werden alle Ergebnisse global abgelegt, damit
+! sie fuer die unterschiedlichen Ausgaben jederzeit zur Verfuegung
+! stehen.
+!                         Wolf Ploeger, 11.03.2006
+!-----------------------------------------------------------------------------
+
+USE DIM_VARIABLEN
+
+implicit none
+
+save
+
+TYPE :: ergebnis_teilabschnitte
+  REAL :: lambda        ! Widerstandsbeiwert [-]
+  REAL :: formb         ! Formbeiwert [-]
+  REAL :: A             ! Fliessquerschnitt [m2]
+  REAL :: B             ! Wasserspiegelbreite [m]
+  REAL :: lu            ! benetzter Unfang [m]
+  REAL :: v             ! Fliessgeschwindigkeit [m/s]
+  REAL :: Q             ! Abfluss [m3/s]
+END TYPE ergebnis_teilabschnitte
+TYPE (ergebnis_teilabschnitte), DIMENSION(1:maxger, 1:maxabfluesse, 1:3) :: out_IND
+
+TYPE :: ergebnis_profil
+  REAL :: stat          ! Station [km]
+  REAL :: wsp           ! Wasserspiegelhoehe [mNN]
+  REAL :: hen           ! Energiehpehe [mNN]
+  REAL :: sohle         ! Hoehe des tiefsten Punktes im Profil [m]
+  REAL :: qges          ! Gesamtabfluss [m3/s] (links + mitte + rechts)
+  REAL :: h_bv          ! Bordvolle Hoehe des Profils [mNN]
+  REAL :: boeli         ! Boeschungsoberkante links [mNN]
+  REAL :: boere         ! Boeschungsoberkante rechts [mNN]
+  REAL :: tau           ! Schubspannung im Flussschlauch [N/m2]
+  REAL :: hvm           ! Verlusthoehe [m]
+  REAL :: hrm           ! Verlusthoehe [m]
+  REAL :: hein          ! Verlusthoehe [m]
+  REAL :: hort          ! Verlusthoehe [m]
+  REAL :: hm            ! Verlusthoehe [m]
+  LOGICAL :: interpol   ! Profil ist interpoliert (.TRUE.) oder urspruenglich (.FALSE.), wichtig bei Bruecken
+END TYPE ergebnis_profil
+TYPE (ergebnis_profil), DIMENSION(1:maxger, 1:maxabfluesse) :: out_PROF
+
+INTEGER :: nr_q         	! Laufende Nummer des aktuellen Abflusses
+INTEGER :: anz_q        	! Gesamtanzahl der unterschiedlichen Abfluesse
+
+INTEGER, DIMENSION(1:maxabfluesse) :: anz_prof	! Die Anzahl der Profile kann sich während der Berechnung
+                                        	! durch Interpolation je nach Abflusszustand ändern.
+
+end module MOD_ERG
+
+
+
 !-----------------------------------------------------------------------------
 module BEWUCHS
 
@@ -113,19 +214,6 @@ CHARACTER(LEN=5)  :: HHMM
 
 end module ZEIT
 
-
-
-!----------------------------------------------------------------------------
-module VERSION
-
-implicit none
-
-save
-
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.16'
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 02.02.2006'
-
-end module VERSION
 
 
 

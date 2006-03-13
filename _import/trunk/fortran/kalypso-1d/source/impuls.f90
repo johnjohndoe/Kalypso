@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005   10:16 am
+!     Last change:  WP   12 Mar 2006    1:22 pm
 !--------------------------------------------------------------------------
 ! This code, impuls.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -93,7 +93,8 @@ SUBROUTINE impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, m, a, if
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
-
+USE KONSTANTEN
+USE IO_UNITS
 
                                                                         
       REAL x1 (maxkla), h1 (maxkla) 
@@ -151,28 +152,31 @@ COMMON / xr2yr2 / xr2 (mpts, max2), hr2 (mpts, max2), mr2 (max2), kr2
       COMMON / iprint / id 
       CHARACTER(2) id 
                                                                         
-!WP 10.05.2004                                                          
-!WP Common-Block angepasst                                              
+      !WP 10.05.2004
+      !WP Common-Block angepasst
       INTEGER ::isohl, iming 
       REAL ::hming 
       COMMON / p3 / isohl, hming, iming 
-!WP 10.05.2004                                                          
+      !WP 10.05.2004
                                                                         
                                                                         
                                                                         
       COMMON / ges / fges, brges, uges, akges, vges, rhges, alges 
-!==================================================================     
+      !==================================================================
                                                                         
-!**   ------------------------------------------------------------------
-!**   BERECHNUNGEN                                                      
-!**   ------------------------------------------------------------------
+
+      ! ------------------------------------------------------------------
+      ! BERECHNUNGEN
+      ! ------------------------------------------------------------------
                                                                         
       iterfmax = 50 
       iterf = 0 
                                                                         
                                                                         
- 1100 CALL geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy,  &
-      ifehl2, lein, jw8)                                                
+      1100 CONTINUE
+
+      CALL geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
+
       IF (ifehl2.ne.0) then 
         hr = hr + 0.01 
         iterf = iterf + 1 
@@ -182,50 +186,44 @@ COMMON / xr2yr2 / xr2 (mpts, max2), hr2 (mpts, max2), mr2 (max2), kr2
           PRINT * , 'Auch bei Korrektur des Wasserspiegels nicht' 
           PRINT * , 'behebbar. Daher Programmabbruch.' 
                                                                         
-!JK         SCHREIBEN IN KONTROLLFILE                                   
-          IF (lein.eq.3) then 
-      WRITE (jw8, '(''Fehler in UP geometrie'',/,                       &
-     &       ''Auch bei Korrektur des Wasserspiegels nicht'',/          &
-     &       ''behebbar. Daher Programmabbruch.'')')                    
-          ENDIF 
-                                                                        
-          STOP 'Programmabbruch impuls 1' 
+          !JK         SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '(''Fehler in UP geometrie'',/,  &
+           &       ''Auch bei Korrektur des Wasserspiegels nicht'',/  &
+           &       ''behebbar. Daher Programmabbruch.'')')
+          STOP 'Programmabbruch impuls 1'
+
         ELSE 
-!JK         GEOMET NEU EINLESEN                                         
+
+          !JK         GEOMET NEU EINLESEN                                         
           GOTO 1100 
+
         ENDIF 
+
       ENDIF 
                                                                         
-                                                                        
-                                                                        
-                                                                        
-!     *************************************************************     
-!     impulsberechnung als f(iart)                                      
-!     *************************************************************     
-                                                                        
-      g = 9.81 
-                                                                        
+      !     *************************************************************
+      !     impulsberechnung als f(iart)
+      !     *************************************************************
+
       IF (iart.eq.1) then 
                                                                         
-!        - impulsberechnung profil '1'                                  
+        !        - impulsberechnung profil '1'
                                                                         
         cb = cd 
         ab = apg + apl + aue+ad 
                                                                         
-!JK     WAR SCHON DEAKTIVIERT,27.04.00,JK                               
-!       m = ad*hss + aue*hue- apg*hp -apl*hpl +                         
-!     +     q*q/(g*ab*ab) * (ab-cd/2.*apg-cb/2.*apl)                    
+        !JK     WAR SCHON DEAKTIVIERT,27.04.00,JK
+        !       m = ad*hss + aue*hue- apg*hp -apl*hpl +
+        !     +     q*q/(g*ab*ab) * (ab-cd/2.*apg-cb/2.*apl)
                                                                         
-        m = ad * hss + aue * hue+q * q / (g * ab * ab) * (ab - cd / 2. *&
-        apg - cb / 2. * apl)                                            
-                                                                        
-                                                                        
+        m = ad * hss + aue * hue+q * q / (g * ab * ab) * (ab - cd / 2. * apg - cb / 2. * apl)
+
       ELSEIF (iart.eq.2) then 
                                                                         
-!        - impulsberechnung profil '2'                                  
+        !        - impulsberechnung profil '2'
                                                                         
-!           schwerpkt. ages     --> hss                                 
-!           schwerpkt. apfeiler --> hp                                  
+        !           schwerpkt. ages     --> hss
+        !           schwerpkt. apfeiler --> hp
                                                                         
         an = ad+aue 
                                                                         
@@ -234,40 +232,44 @@ COMMON / xr2yr2 / xr2 (mpts, max2), hr2 (mpts, max2), mr2 (max2), kr2
                                                                         
       ELSEIF (iart.eq.3) then 
                                                                         
-!        - (iart=3) impulsberechung profil '3'                          
+        !        - (iart=3) impulsberechung profil '3'
                                                                         
-!           profil "3"                                                  
+        !           profil "3"
                                                                         
         ab = aue+ad+apg + apl 
                                                                         
         IF (hr.lt.hukmax) then 
+
           tau = vges * vges * alges / 8 
-          fr = uges * breite * tau / 9.81 
+          fr = uges * breite * tau / g
+
         ELSE 
+
           fr = 0. 
+
         ENDIF 
                                                                         
-!JK    WAR SCHON DEAKTIVIERT,27.04.00,JK                                
-!      m = ad*hss + aue*hue - apg*hp - apl*hpl + q*q/(g*ab) + fr        
+        !JK    WAR SCHON DEAKTIVIERT,27.04.00,JK
+        !      m = ad*hss + aue*hue - apg*hp - apl*hpl + q*q/(g*ab) + fr
                                                                         
         m = ad * hss + aue * hue+q * q / (g * ab) + fr 
                                                                         
       ENDIF 
                                                                         
-!     gesamt durchstroemte flaeche a=a+aue                              
-!      print *,'***************************************************'    
-!      print *,'*  ergebnisse aus impuls:                         *'    
-!      print *,'*                                                 *'    
-!      print *,'*  - hr = ',hr                                          
-!      print *,'*  - durchstroemte flaeche : a   = ',a                  
-!      print *,'*                            aue = ',aue                
-!      print *,'*  - angestroemte flaeche :  apl = ',apl                
-!      print *,'*  -                         apg = ',apg                
-!      print *,'***************************************************'    
-!      print *                                                          
+      ! gesamt durchstroemte flaeche a=a+aue
+      ! print *,'***************************************************'
+      ! print *,'*  ergebnisse aus impuls:                         *'
+      ! print *,'*                                                 *'
+      ! print *,'*  - hr = ',hr
+      ! print *,'*  - durchstroemte flaeche : a   = ',a
+      ! print *,'*                            aue = ',aue
+      ! print *,'*  - angestroemte flaeche :  apl = ',apl
+      ! print *,'*  -                         apg = ',apg
+      ! print *,'***************************************************'
+      ! print *                                                       
                                                                         
       a = ad+aue 
                                                                         
- 9999 RETURN 
+      9999 RETURN
                                                                         
       END SUBROUTINE impuls                         

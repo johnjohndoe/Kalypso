@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Jul 2005    1:33 pm
+!     Last change:  WP   10 Mar 2006   10:55 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !**********************************************************************
 
-SUBROUTINE w_ber (he, qw, np, nz, jw5, ifg, jw7, idr1, nblatt) 
+SUBROUTINE w_ber (he, qw, np, nz, ifg, idr1, nblatt)
 
 !***********************************************************************
 !**                                                                     
@@ -130,17 +130,7 @@ SUBROUTINE w_ber (he, qw, np, nz, jw5, ifg, jw7, idr1, nblatt)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
+USE IO_UNITS
 
 
 ! COMMON-Block /ERG/ ----------------------------------------------------------
@@ -229,39 +219,38 @@ COMMON / wehr2 / beiw, rkw, lw, wart
 !     ******************************************************************
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Programmstart Subroutine w_ber'')') 
-        WRITE (jw8, '(/,''=============================='')') 
-      ENDIF 
+      WRITE (UNIT_OUT_LOG, '(/,''Programmstart Subroutine w_ber'')')
+      WRITE (UNIT_OUT_LOG, '(/,''=============================='')')
+
                                                                         
 !HW    Ausgabe der Eingabewerte zur Wehrberechnung in Ergebnisfile      
 !HW   ------------------------------------------------------------------
-      WRITE (jw5, '(/,5x,''Eingabedaten der Wehrberechnung'')') 
-      WRITE (jw5, '(5x,''-------------------------------'')') 
-      IF (wart.eq.'rk') then 
-        WRITE (jw5, '(5x,''Wehrtyp: rundkroniges Wehr'')') 
-        WRITE (jw5, '(5x,''Feld-Nr.'',5x,''Radius'')') 
-        DO 100 j = 1, nwfd 
-          WRITE (jw5, '(5x,i2,6x,3f10.2)') j, rkw (j) 
-  100   END DO 
+      WRITE (UNIT_OUT_TAB, '(/,5x,''Eingabedaten der Wehrberechnung'')') 
+      WRITE (UNIT_OUT_TAB, '(5x,''-------------------------------'')')
+      IF (wart.eq.'rk') then
+        WRITE (UNIT_OUT_TAB, '(5x,''Wehrtyp: rundkroniges Wehr'')') 
+        WRITE (UNIT_OUT_TAB, '(5x,''Feld-Nr.'',5x,''Radius'')')
+        DO 100 j = 1, nwfd
+          WRITE (UNIT_OUT_TAB, '(5x,i2,6x,3f10.2)') j, rkw (j) 
+  100   END DO
       ELSEIF (wart.eq.'bk') then 
-        WRITE (jw5, '(5x,''Wehrtyp: breitkroniges Wehr'')') 
-        WRITE (jw5, '(5x,''Feld-Nr.'',5x,''Breite'')') 
-        DO 110 j = 1, nwfd 
-          WRITE (jw5, '(5x,i2,6x,3f10.2)') j, lw (j) 
-  110   END DO 
+        WRITE (UNIT_OUT_TAB, '(5x,''Wehrtyp: breitkroniges Wehr'')') 
+        WRITE (UNIT_OUT_TAB, '(5x,''Feld-Nr.'',5x,''Breite'')')
+        DO 110 j = 1, nwfd
+          WRITE (UNIT_OUT_TAB, '(5x,i2,6x,3f10.2)') j, lw (j) 
+  110   END DO
       ELSEIF (wart.eq.'bw') then 
-        WRITE (jw5, '(5x,''Wehr mit vorgegebenem Ueberfallbeiwert'')') 
-        WRITE (jw5, '(5x,''Feld-Nr.'',5x,''mue'')') 
-        DO 120 j = 1, nwfd 
-          WRITE (jw5, '(5x,i2,6x,3f10.3)') j, beiw (j) 
-  120   END DO 
+        WRITE (UNIT_OUT_TAB, '(5x,''Wehr mit vorgegebenem Ueberfallbeiwert'')') 
+        WRITE (UNIT_OUT_TAB, '(5x,''Feld-Nr.'',5x,''mue'')')
+        DO 120 j = 1, nwfd
+          WRITE (UNIT_OUT_TAB, '(5x,i2,6x,3f10.3)') j, beiw (j) 
+  120   END DO
       ELSEIF (wart.eq.'sk') then 
-        WRITE (jw5, '(5x,''Wehrtyp: scharfkantiges Wehr'')') 
-      ELSE 
-        WRITE (jw5, '(/,5x,''Wehrtyp unbestimmt'')') 
-        WRITE (jw5, '(5x,''Fehler in Eingabe!'')') 
-      ENDIF 
+        WRITE (UNIT_OUT_TAB, '(5x,''Wehrtyp: scharfkantiges Wehr'')') 
+      ELSE
+        WRITE (UNIT_OUT_TAB, '(/,5x,''Wehrtyp unbestimmt'')') 
+        WRITE (UNIT_OUT_TAB, '(5x,''Fehler in Eingabe!'')')
+      ENDIF
 !HW   ------------------------------------------------------------------
 
 dx = 0.1
@@ -278,11 +267,9 @@ hen1 = hen (np - 1)
 v_uw = SQRT (2. * g * (hen1 - hr1) )
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-IF (lein.eq.3) then
-  WRITE (jw8, '(''Wasserspiegel aus Profil n-1: hr1  = '',f8.4)') hr1
-  WRITE (jw8, '(''Energiehoehe  aus Profil n-1: hen1 = '',f8.4)') hen1
-ENDIF
-                                                                        
+WRITE (UNIT_OUT_LOG, '(''Wasserspiegel aus Profil n-1: hr1  = '',f8.4)') hr1
+WRITE (UNIT_OUT_LOG, '(''Energiehoehe  aus Profil n-1: hen1 = '',f8.4)') hen1
+
 psieins = 0.0
 psiorts = 0.0
 
@@ -295,21 +282,16 @@ eps_q = 0.0001
                                                                         
 !HW    Beginn der if-Abfrage hr1 > hokwmin                              
 !HW    Schreiben in Kontrollfile                                        
-IF (lein.eq.3) then
-  WRITE (jw8, '(''Minimale Hoehe Wehr-OK: hokwmin = '',f8.4)') hokwmin
-ENDIF
-                                                                        
+WRITE (UNIT_OUT_LOG, '(''Minimale Hoehe Wehr-OK: hokwmin = '',f8.4)') hokwmin
 
 IF (hr1.gt.hokwmin) then
 
   !JK        SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(/,''Unterwasser'')')
-    WRITE (jw8, '(''hr1='',f8.4)') hr1
-  ENDIF
-                                                                        
+  WRITE (UNIT_OUT_LOG, '(/,''Unterwasser'')')
+  WRITE (UNIT_OUT_LOG, '(''hr1='',f8.4)') hr1
+
   !HW    Aufruf der Subroutine g_wehr
-  CALL g_wehr (hr1, lein, jw8, ifehl, a_uw, h_uw, wl_uw, hwmin_uw)
+  CALL g_wehr (hr1, ifehl, a_uw, h_uw, wl_uw, hwmin_uw)
 
 ENDIF
                                                                         
@@ -317,10 +299,8 @@ ENDIF
 !      Iterieren he - Energiehoehe:                                     
 !      -----------------------------------------------------------------
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-IF (lein.eq.3) then
-  WRITE (jw8, '(/,''Beginn der Energiehoehen-Iteration he'')')
-ENDIF
-                                                                        
+WRITE (UNIT_OUT_LOG, '(/,''Beginn der Energiehoehen-Iteration he'')')
+
 it1000 = 0
 
 !WP 01.02.2005 Wird bereits in Modul DIM_VARIABLES definiert (=99),
@@ -341,10 +321,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
    IF (it1000.gt.it1000max) then
                                                                         
      !JK           SCHREIBEN IN KONTROLLFILE
-     IF (lein.eq.3) then
-      WRITE (jw8, '('' Konvergenz in der Schleife 1000 nicht gefunden !'')')
-     ENDIF
-                                                                        
+     WRITE (UNIT_OUT_LOG, '('' Konvergenz in der Schleife 1000 nicht gefunden !'')')
+
      !JK              WAR SCHON DEAKTIVIERT, 02.05.00, JK
      !**              print*,'keine Konvergenz in der Wehrberechnung!'
      !**              print*,'Schleife1000 -> STOP '
@@ -376,40 +354,38 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
       ENDIF 
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
- 1010 IF (lein.eq.3) then 
-        WRITE (jw8, '(''Neue Energiehoehe he = '',f8.4)') he 
-      ENDIF 
-                                                                        
-!HW    Aufruf der Subroutine wspow                                      
-                                                                        
+
+      1010 CONTINUE
+
+      !HW    SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(''Neue Energiehoehe he = '',f8.4)') he
+
+      !HW    Aufruf der Subroutine wspow
       CALL wspow (he, strbr, qw, q1, hrow, hv, rg, indmax, hvst, hrst,  &
-      psieins, psiorts, jw5, nprof, hgrenz, ikenn, nblatt, nz, idr1)    
+      psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Werte aus wspow'')') 
-        WRITE (jw8, '(''he = '',f8.4)') he 
-        WRITE (jw8, '(''qw = '',f8.4)') qw 
-        WRITE (jw8, '(''q1 = '',f8.4)') q1 
-      ENDIF 
+      !HW    SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,''Werte aus wspow'')')
+      WRITE (UNIT_OUT_LOG, '(''he = '',f8.4)') he
+      WRITE (UNIT_OUT_LOG, '(''qw = '',f8.4)') qw
+      WRITE (UNIT_OUT_LOG, '(''q1 = '',f8.4)') q1
+
                                                                         
-!JK        BERECHNUNG NACH DARCY-WEISBACH                               
+      !JK        BERECHNUNG NACH DARCY-WEISBACH
       IF (ifg.eq.1) then 
         q_wehr = qt (2) 
         v_ow = v (2) 
-!JK        BERECHNUNG NACH GMS                                          
+      !JK        BERECHNUNG NACH GMS
       ELSE 
         q_wehr = qt (indfl) 
         v_ow = v (indfl) 
       ENDIF 
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Berechnung nach DW/GMS'')') 
-        WRITE (jw8, '(''q_wehr = '',f8.4)') q_wehr 
-      WRITE (jw8, '(''v_ow   = '',f8.4)') v_ow 
-      ENDIF 
+      !HW    SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach DW/GMS'')')
+      WRITE (UNIT_OUT_LOG, '(''q_wehr = '',f8.4)') q_wehr
+      WRITE (UNIT_OUT_LOG, '(''v_ow   = '',f8.4)') v_ow
+
                                                                         
       h_v = v_ow**2. / (2. * g) 
                                                                         
@@ -417,13 +393,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       dif_ok = he-h_v 
       dif_hv = h_v / 10. 
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-      WRITE (jw8, '(''h_v    = '',f8.4)') h_v 
-        WRITE (jw8, '(''dif_ok = '',f8.4)') dif_ok 
-        WRITE (jw8, '(''dif_hv = '',f8.4)') dif_hv 
-      ENDIF 
-                                                                        
+      !HW    SCHREIBEN IN KONTROLLFILE
+
+      WRITE (UNIT_OUT_LOG, '(''h_v    = '',f8.4)') h_v 
+      WRITE (UNIT_OUT_LOG, '(''dif_ok = '',f8.4)') dif_ok
+      WRITE (UNIT_OUT_LOG, '(''dif_hv = '',f8.4)') dif_hv
+
       IF ( (dif_ok - hokwmin) .le.dif_hv) then 
                                                                         
         he = he+1.15 * h_v 
@@ -432,224 +407,191 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
       ENDIF 
                                                                         
-!JK        SCHREIBEN IN KONTROLLFILE                                    
-      IF (lein.eq.3) then 
+      !JK        SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,''it1000='',i4,'' he='',f8.4,   &
+        &  '' q_wehr='',f8.4,'' h_v='',f8.4)') it1000, he, q_wehr, h_v
                                                                         
-      WRITE (jw8, '(/,''it1000='',i4,'' he='',f8.4,                     &
-     &            '' q_wehr='',f8.4,'' h_v='',f8.4)') it1000, he, q_wehr&
-     &, h_v                                                             
-                                                                        
-      ENDIF 
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Ende der Energiehoehen-Iteration'')') 
-      ENDIF 
-                                                                        
-!     ------------------------------------------------------------------
-!      Iterieren q_wehr - Wehrueberfall:                                
-!     ------------------------------------------------------------------
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Beginn Abfluss-Iteration - Wehr¸berfall'')') 
-      ENDIF 
-                                                                        
+
+      !HW    SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,''Ende der Energiehoehen-Iteration'')')
+
+      !     ------------------------------------------------------------------
+      !      Iterieren q_wehr - Wehrueberfall:
+      !     ------------------------------------------------------------------
+      !HW    SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,''Beginn Abfluss-Iteration - Wehr¸berfall'')')
+
       dif_q = 10. 
                                                                         
       it2000 = 0 
                                                                         
+      !HW    Beginn do-Schleife abs(dif_q).gt.0.0001 (Abfluss-Iteration)
       DO 2000 WHILE(abs (dif_q) .gt.0.0001) 
                                                                         
-!HW    Beginn do-Schleife abs(dif_q).gt.0.0001 (Abfluss-Iteration)      
+
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(''dif_q = '',f8.4)') dif_q 
-      ENDIF 
+        !HW    SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(''dif_q = '',f8.4)') dif_q
+
                                                                         
-      it2000 = it2000 + 1 
+        it2000 = it2000 + 1
                                                                         
-      IF (it2000.gt.itmax) then 
-!**               if(it2000.gt.itmax2000)then                           
-        PRINT * , 'keine Konvergenz in der Wehrberechnung!' 
-        PRINT * , 'Schleife2000 -> STOP ' 
-        STOP 'programende' 
-      ENDIF 
+        IF (it2000.gt.itmax) then
+
+          PRINT * , 'keine Konvergenz in der Wehrberechnung!'
+          PRINT * , 'Schleife2000 -> STOP '
+          STOP 'programende'
+        ENDIF
                                                                         
-      IF (it2000.eq.1) he_q = he 
+        IF (it2000.eq.1) he_q = he
                                                                         
-!JK            SCHREIBEN IN KONTROLLFILE                                
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''---------------------------------'')') 
-      WRITE (jw8, '(/,'' it2000='',i4,'' he_q='',f8.4,                  &
-     &                    '' nwfd='',i3)') it2000, he_q, nwfd           
-      ENDIF 
+        !JK            SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(/,''---------------------------------'')')
+        WRITE (UNIT_OUT_LOG, '(/,'' it2000='',i4,'' he_q='',f8.4, '' nwfd='',i3)') it2000, he_q, nwfd
+
                                                                         
                                                                         
-!HW    Aufruf der Subroutine g_wehr                                     
+        !HW    Aufruf der Subroutine g_wehr
                                                                         
-      CALL g_wehr (he_q, lein, jw8, ifehl, auew, huew, wl, hwmin) 
+        CALL g_wehr (he_q, ifehl, auew, huew, wl, hwmin)
                                                                         
-      q_ue = 0.0 
+        q_ue = 0.0
                                                                         
-!HW    Summation des Abflusses f¸r alle Wehrfelder                      
+        !HW    Summation des Abflusses f¸r alle Wehrfelder
+        DO 2010 j = 1, nwfd
                                                                         
-      DO 2010 j = 1, nwfd 
+          !HW    SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '(/,''Berechnung öberfallmenge fÅr alle Wehrfelder'')')
+          WRITE (UNIT_OUT_LOG, '(''Wsp. im Wehrscheitel: huew = '',f8.4)') huew (j)
+
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Berechnung öberfallmenge fÅr alle Wehrfelder'')'&
-     &)                                                                 
-          WRITE (jw8, '(''Wsp. im Wehrscheitel: huew = '',f8.4)') huew (&
-          j)                                                            
-        ENDIF 
+          IF (huew (j) .lt.0.0001) then
                                                                         
-        IF (huew (j) .lt.0.0001) then 
+            q_w (j) = 0.0
+            hgrw (j) = 0.0
                                                                         
-          q_w (j) = 0.0 
-          hgrw (j) = 0.0 
+          ELSE
                                                                         
-        ELSE 
+            !HW    vollkommener Ueberfall
+            !HW    SCHREIBEN IN KONTROLLFILE
+
+            WRITE (UNIT_OUT_LOG, '(/,''Vollkommener Ueberfall'')') 
+
+            iueart = 0
                                                                         
-!HW    vollkommener Ueberfall                                           
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Vollkommener Ueberfall'')') 
+            IF (wart.eq.'sk') then
+              wh = hwmin (j) - hming
+                                                                        
+              !HW    SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(/,''scharfkantiges Wehr'')')
+
+            ENDIF
+                                                                        
+            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+                                                                        
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
+            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+            WRITE (UNIT_OUT_LOG, '(''--------------------------'')')
+            WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
+            WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
+            WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
+            WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
+
+            !HW    Berechnung des Wehrueberfalls nach DU BUAT
+                                                                        
+            q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5)
+                                                                        
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Breite des Wehres wl:'')')
+            WRITE (UNIT_OUT_LOG, '(''wl = '',f8.4)') wl (j)
+
+                                                                        
+            q_w (j) = q_b * wl (j)
+            hgrw (j) = (q_b**2. / g) ** (1. / 3.)
+
+          !HW            endif zu huew(j) .lt. 0.0001
+          ENDIF
+                                                                        
+          q_ue = q_ue+q_w (j)
+                                                                        
+          !HW    SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '(''Ergebnis der Summation bis hier:q_ue='',f8.4)') q_ue
+
+                                                                        
+        2010 END DO
+                                                                        
+        !HW    SCHREIBEN IN KONTROLLFILE
+
+        WRITE (UNIT_OUT_LOG, '(/,''Endergebnisse fuer alle Felder:'')') 
+        WRITE (UNIT_OUT_LOG, '(''q_ue   = '',f8.4)') q_ue
+        WRITE (UNIT_OUT_LOG, '(''i      = '',10i8)')  (i, i = 1, nwfd)
+        WRITE (UNIT_OUT_LOG, '(''q_w(i) = '',10f8.4)') (q_w (i) , i = 1, nwfd)
+        WRITE (UNIT_OUT_LOG, '(''cq(i)  = '',10f8.4)')  (cq (i) , i = 1, nwfd)
+        WRITE (UNIT_OUT_LOG, '(''hgrw(i)= '',10f8.4)') (hgrw (i) , i = 1, nwfd)
+
+                                                                        
+        IF (hr1.le.hokwmin) then
+                                                                        
+          IF (abs (q_ue-q_wehr) .le.eps_q) then
+            dif_q = 0.0
+            !JK      ABSPEICHERN GUENSTIGER WERTE
+                                                                        
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Abspeichern guenstiger Werte'')')
+            GOTO 2400
+
+          ELSE
+                                                                        
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Schaetzen neuer Energiehoehe'')')
+
+            !JK        SCHAETZEN NEUER ENERGIEHOEHE
+            GOTO 2100
+
           ENDIF 
                                                                         
-          iueart = 0 
+        !JK            ELSE ZU (hr1.le.hokwmin)
+        ELSE
                                                                         
-          IF (wart.eq.'sk') then 
-            wh = hwmin (j) - hming 
+          q_ue = 0.0
+
+          DO 2020 j = 1, nwfd
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(/,''scharfkantiges Wehr'')') 
-            ENDIF 
+            IF (h_uw (j) .gt.0.0005) then
                                                                         
-          ENDIF 
+              !HW    Berechnung der dimensionslosen Hoehen
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),      &
-          cm)                                                           
+              !HW    SCHREIBEN IN KONTROLLFILE
+
+              WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
+
+              tauu = h_uw (j) / hgrw (j)
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (jw8, '(''Ausgabe der Eingangswerte:'')') 
-            WRITE (jw8, '(''--------------------------'')') 
-      WRITE (jw8, '(''g2   = '',f8.4)') g2 
-      WRITE (jw8, '(''cq   = '',f8.4)') cq (j) 
-            WRITE (jw8, '(''huew = '',f8.4)') huew (j) 
-      WRITE (jw8, '(''hv   = '',f8.4)') hv 
-          ENDIF 
+              taoo = huew (j) / hgrw (j)
+
+              !JK                    SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4, &
+                 & '' taoo='',f8.4)') j, tauu, taoo
+
+              !HW    KONTROLLE DER UEBERFALLART FUER DAS BREITKRONIGE WEHR MITTELS DER
+              !HW    IMPULSBILANZ GEMAESS BWK/MERKBLATT 1, Seite 55, Abb. 3.34
                                                                         
-!HW    Berechnung des Wehrueberfalls nach DU BUAT                       
+              IF (wart.eq.'bk') then
                                                                         
-          q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
+                !HW    SCHREIBEN IN KONTROLLFILE
+                WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
+                WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
+
+                taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
+                 & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
+                 & ) - hwmin (j) / hgrw (j)
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Breite des Wehres wl:'')') 
-            WRITE (jw8, '(''wl = '',f8.4)') wl (j) 
-          ENDIF 
-                                                                        
-          q_w (j) = q_b * wl (j) 
-          hgrw (j) = (q_b**2. / g) ** (1. / 3.) 
-                                                                        
-!HW            endif zu huew(j) .lt. 0.0001                             
-        ENDIF 
-                                                                        
-        q_ue = q_ue+q_w (j) 
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(''Ergebnis der Summation bis hier:q_ue='',f8.4)') q_&
-     &ue                                                                
-        ENDIF 
-                                                                        
- 2010 END DO 
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Endergebnisse fuer alle Felder:'')') 
-      WRITE (jw8, '(''q_ue   = '',f8.4)') q_ue 
-      WRITE (jw8, '(''i      = '',10i8)')  (i, i = 1, nwfd) 
-        WRITE (jw8, '(''q_w(i) = '',10f8.4)') (q_w (i) , i = 1, nwfd) 
-      WRITE (jw8, '(''cq(i)  = '',10f8.4)')  (cq (i) , i = 1, nwfd) 
-        WRITE (jw8, '(''hgrw(i)= '',10f8.4)') (hgrw (i) , i = 1, nwfd) 
-      ENDIF 
-                                                                        
-      IF (hr1.le.hokwmin) then 
-                                                                        
-        IF (abs (q_ue-q_wehr) .le.eps_q) then 
-          dif_q = 0.0 
-!JK                    ABSPEICHERN GUENSTIGER WERTE                     
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Abspeichern guenstiger Werte'')') 
-          ENDIF 
-                                                                        
-          GOTO 2400 
-        ELSE 
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Schaetzen neuer Energiehoehe'')') 
-          ENDIF 
-                                                                        
-!JK                    SCHAETZEN NEUER ENERGIEHOEHE                     
-          GOTO 2100 
-        ENDIF 
-                                                                        
-!JK            ELSE ZU (hr1.le.hokwmin)                                 
-      ELSE 
-                                                                        
-        q_ue = 0.0 
-                                                                        
-        DO 2020 j = 1, nwfd 
-                                                                        
-          IF (h_uw (j) .gt.0.0005) then 
-                                                                        
-!HW    Berechnung der dimensionslosen Hoehen                            
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-            IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Berechnung der dimensionlosen Hoehen'')') 
-            ENDIF 
-                                                                        
-            tauu = h_uw (j) / hgrw (j) 
-                                                                        
-            taoo = huew (j) / hgrw (j) 
-                                                                        
-!JK                    SCHREIBEN IN KONTROLLFILE                        
-            IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''j='',i3,'' tauu='',f8.4,                        &
-     &          '' taoo='',f8.4)') j, tauu, taoo                        
-            ENDIF 
-                                                                        
-!HW    KONTROLLE DER UEBERFALLART FUER DAS BREITKRONIGE WEHR MITTELS DER
-!HW    IMPULSBILANZ GEMAESS BWK/MERKBLATT 1, Seite 55, Abb. 3.34        
-                                                                        
-            IF (wart.eq.'bk') then 
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(/,''Breitkroniges Wehr'')') 
-                WRITE (jw8, '(/,''Kontrolle der Ueberfallart'')') 
-              ENDIF 
-                                                                        
-              taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-              / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-              ) - hwmin (j) / hgrw (j)                                  
-                                                                        
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Grenzwert f¸r ¸berstrˆmen nach Imp.bilanz'')') 
-                WRITE (jw8, '(''taugrenz = '',f8.4)') taugrenz 
-              ENDIF 
-                                                                        
-!HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz     
+                !HW    SCHREIBEN IN KONTROLLFILE
+                WRITE (UNIT_OUT_LOG, '(/,''Grenzwert f¸r ¸berstrˆmen nach Imp.bilanz'')')
+                WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
+
+                !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz
                                                                         
               IF (tauu.gt.taugrenz) then 
                                                                         
@@ -673,17 +615,16 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
             tauo = 3.286 - 1.905 * taoo 
                                                                         
-!HW                        SCHREIBEN IN KONTROLLFILE                    
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(''tauo='',f8.4)') tauo 
-            ENDIF 
+              !HW                        SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(''tauo='',f8.4)') tauo
+
                                                                         
             IF (tauo.ge.tauu.and.tauo.le.1.0) then 
 !                             vollkommener Ueberfall                    
               GOTO 2030 
             ELSEIF (tauo.ge.2.) then 
                                                                         
-      IF (lein.eq.3) write (jw8, '(''Widerspruch !!!!: '',              &
+      write (UNIT_OUT_LOG, '(''Widerspruch !!!!: '',              &
      &               ''tauu < 2.0 <=> tauoo > 2.0'',                    &
      &               /,''Annahme Ueberstroemen !'')')
                                                                         
@@ -696,27 +637,21 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                          Unvollkommener Ueberfall                     
 !                          ------------------------                     
                                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(/,''Unvollkommener Ueberfall'')') 
-            ENDIF 
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Unvollkommener Ueberfall'')')
+
                                                                         
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),    &
-            cm)                                                         
-!HW    SCHREIBEN IN KONTROLLFILE                                        
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(/,''Berechnung q_w (Wehrueberfall)'')') 
-            ENDIF 
-                                                                        
+            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !HW    SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w (Wehrueberfall)'')')
+
             q_w (j) = q_w (j) * cm 
                                                                         
-!JK                        SCHREIBEN IN KONTROLLFILE                    
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j) , &
-              cm                                                        
-            ENDIF 
+            !JK                        SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j), cm
+
                                                                         
             GOTO 2030 
                                                                         
@@ -725,19 +660,17 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  2040       iueart = 2 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(/,''Ueberstroemen'')') 
-              WRITE (jw8, '(/,''Berechnung q_w nach Knapp S.304'')') 
-            ENDIF 
-                                                                        
-            q_w (j) = a_uw (j) * g2 * (huew (j) - h_uw (j) ) **0.5 
+            WRITE (UNIT_OUT_LOG, '(/,''Ueberstroemen'')')
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w nach Knapp S.304'')')
+
+            q_w (j) = a_uw (j) * g2 * (huew (j) - h_uw (j) ) **0.5
                                                                         
 !JK                        SCHREIBEN IN KONTROLLFILE                    
-            IF (lein.eq.3) then 
+
                                                                         
-      WRITE (jw8, '(''q_w(j)='',f8.4,                                   &
-     &        '' Ueberstroemen'')')  (q_w (j) )                         
-            ENDIF 
+      WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,                                   &
+     &        '' Ueberstroemen'')')  (q_w (j) )
+
                                                                         
 !JK                    ENDIF ZU (tauu.ge.2.or.taoo.ge.2)                
           ENDIF 
@@ -745,17 +678,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  2030     q_ue = q_ue+q_w (j) 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(''Summation q_ue bis hier: q_ue ='',f8.4)')   &
-            q_ue                                                        
-          ENDIF 
+
+            WRITE (UNIT_OUT_LOG, '(''Summation q_ue bis hier: q_ue ='',f8.4)') q_ue
+
                                                                         
  2020   END DO 
                                                                         
 !JK                SCHREIBEN IN KONTROLLFILE                            
-        IF (lein.eq.3) then 
-          WRITE (jw8, '(/,''q_ue-m ='',f8.4)') q_ue 
-        ENDIF 
+        WRITE (UNIT_OUT_LOG, '(/,''q_ue-m ='',f8.4)') q_ue
+
                                                                         
 !JK            ENDIF ZU (hr1.le.hokwmin)                                
       ENDIF 
@@ -771,13 +702,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       heb_q = he_q - dx 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''--------------------------------------------'')'&
-     &)                                                                 
-        WRITE (jw8, '(''Schaetzen neuer Energiehoehen und'')') 
-        WRITE (jw8, '(''neue Berechnung mit diesen Werten'')') 
-      WRITE (jw8, '(''--------------------------------------------'')') 
-      ENDIF 
+
+      WRITE (UNIT_OUT_LOG, '(/,''--------------------------------------------'')')
+      WRITE (UNIT_OUT_LOG, '(''Schaetzen neuer Energiehoehen und'')')
+      WRITE (UNIT_OUT_LOG, '(''neue Berechnung mit diesen Werten'')')
+      WRITE (UNIT_OUT_LOG, '(''--------------------------------------------'')')
+
                                                                         
       IF (heb_q.le.hen1) heb_q = hen1 
       IF (heb_q.le.hokwmin) heb_q = (he_q + hokwmin) / 2. 
@@ -786,7 +716,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !        ---> hea_q                                                     
 !       ................................................................
                                                                         
-      CALL g_wehr (hea_q, lein, jw8, ifehl, auew, huew, wl, hwmin) 
+      CALL g_wehr (hea_q, ifehl, auew, huew, wl, hwmin)
                                                                         
       q_uea = 0.0 
                                                                         
@@ -805,19 +735,18 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !JK                    SCHARFKANTIGES WEHR                              
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),      &
-          cm)                                                           
+          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (jw8, '(''Ausgabe der Eingangswerte:'')') 
-      WRITE (jw8, '(''g2    = '',f8.4)') g2 
-      WRITE (jw8, '(''cq    = '',f8.4)') cq (j) 
-      WRITE (jw8, '(''huew  = '',f8.4)') huew (j) 
-            WRITE (jw8, '(''q_uea ='',f8.4)') q_uea 
-      WRITE (jw8, '(''hv    = '',f8.4)') hv 
-          ENDIF 
+
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
+            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+            WRITE (UNIT_OUT_LOG, '(''g2    = '',f8.4)') g2
+            WRITE (UNIT_OUT_LOG, '(''cq    = '',f8.4)') cq (j)
+            WRITE (UNIT_OUT_LOG, '(''huew  = '',f8.4)') huew (j)
+            WRITE (UNIT_OUT_LOG, '(''q_uea ='',f8.4)') q_uea
+            WRITE (UNIT_OUT_LOG, '(''hv    = '',f8.4)') hv
+
                                                                         
           q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
                                                                         
@@ -853,20 +782,18 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             IF (wart.eq.'bk') then 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(/,''Breitkroniges Wehr'')') 
-                WRITE (jw8, '(/,''Kontrolle der Ueberfallart'')') 
-              ENDIF 
-                                                                        
+              WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
+              WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
+
               taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-              / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-              ) - hwmin (j) / hgrw (j)                                  
+               & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
+               & ) - hwmin (j) / hgrw (j)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Grenzwert f¸r ¸berstrˆmen nach Imp.bilanz'')') 
-                WRITE (jw8, '(''taugrenz = '',f8.4)') taugrenz 
-              ENDIF 
+
+              WRITE (UNIT_OUT_LOG, '(/,''Grenzwert f¸r ¸berstrˆmen nach Imp.bilanz'')')
+              WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
+
                                                                         
 !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz     
                                                                         
@@ -898,7 +825,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             ELSEIF (tauo.ge.2.) then 
                                                                         
 !JK                             SCHREIBEN IN KONTROLLFILE               
-      IF (lein.eq.3) write (jw8, '(''Widerspruch !!!!: '',              &
+      write (UNIT_OUT_LOG, '(''Widerspruch !!!!: '',              &
      &                 ''tauu < 2.0 <=> tauoo > 2.0'',                  &
      &                 /,''Annahme Ueberstroemen   !'')')
                                                                         
@@ -910,8 +837,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                             ------------------------                  
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),    &
-            cm)                                                         
+            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         
@@ -936,7 +862,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !        ---> heb_q                                                     
 !       ................................................................
                                                                         
- 2200 CALL g_wehr (heb_q, lein, jw8, ifehl, auew, huew, wl, hwmin) 
+ 2200 CALL g_wehr (heb_q, ifehl, auew, huew, wl, hwmin)
                                                                         
       q_ueb = 0.0 
                                                                         
@@ -955,18 +881,17 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !JK                    SCHARFKANTIGES WEHR                              
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),      &
-          cm)                                                           
+          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (jw8, '(''Ausgabe der Eingangswerte:'')') 
-      WRITE (jw8, '(''g2   = '',f8.4)') g2 
-      WRITE (jw8, '(''cq   = '',f8.4)') cq (j) 
-            WRITE (jw8, '(''huew = '',f8.4)') huew (j) 
-      WRITE (jw8, '(''hv   = '',f8.4)') hv 
-          ENDIF 
+
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
+            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+            WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
+            WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
+            WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
+            WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
+
                                                                         
           q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
                                                                         
@@ -1004,21 +929,18 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             IF (wart.eq.'bk') then 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(/,''Breitkroniges Wehr'')') 
-                WRITE (jw8, '(/,''Kontrolle der Ueberfallart'')') 
-              ENDIF 
-                                                                        
+              WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
+              WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
+
               taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-              / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-              ) - hwmin (j) / hgrw (j)                                  
+               & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
+               & ) - hwmin (j) / hgrw (j)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')'&
-     &)                                                                 
-                WRITE (jw8, '(''taugrenz = '',f8.4)') taugrenz 
-              ENDIF 
+
+              WRITE (UNIT_OUT_LOG, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')')
+              WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
+
                                                                         
 !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz     
                                                                         
@@ -1049,7 +971,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               GOTO 2230 
             ELSEIF (tauo.ge.2.) then 
                                                                         
-      IF (lein.eq.3) write (jw8, '(''Widerspruch !!!!: '',              &
+      write (UNIT_OUT_LOG, '(''Widerspruch !!!!: '',              &
      &                     ''tauu < 2.0 <=> tauoo > 2.0'',              &
      &                     /,''Annahme Ueberstroemen  !'')')
                                                                         
@@ -1061,8 +983,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                              ------------------------                 
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),    &
-            cm)                                                         
+            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         
@@ -1090,15 +1011,14 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       df = (q_uea - q_ueb) / (hea_q - heb_q) 
                                                                         
 !HW            Schreiben in Kontrollfile                                
-      IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''q_uea  ='',f8.4)') q_uea 
-      WRITE (jw8, '(''q_ueb  ='',f8.4)') q_ueb 
-      WRITE (jw8, '(''hea_q  ='',f8.4)') hea_q 
-      WRITE (jw8, '(''heb_q  ='',f8.4)') heb_q 
-      WRITE (jw8, '(''df     ='',f8.4)') df 
-        WRITE (jw8, '(''q_wehr ='',f8.4)') q_wehr 
-      WRITE (jw8, '(''q_ue   ='',f8.4)') q_ue 
-      ENDIF 
+      WRITE (UNIT_OUT_LOG, '(/,''q_uea  ='',f8.4)') q_uea
+      WRITE (UNIT_OUT_LOG, '(''q_ueb  ='',f8.4)') q_ueb
+      WRITE (UNIT_OUT_LOG, '(''hea_q  ='',f8.4)') hea_q
+      WRITE (UNIT_OUT_LOG, '(''heb_q  ='',f8.4)') heb_q
+      WRITE (UNIT_OUT_LOG, '(''df     ='',f8.4)') df
+      WRITE (UNIT_OUT_LOG, '(''q_wehr ='',f8.4)') q_wehr
+      WRITE (UNIT_OUT_LOG, '(''q_ue   ='',f8.4)') q_ue
+
                                                                         
       IF (abs (df) .gt.0.0001) dif_q = (q_wehr - q_ue) / df 
                                                                         
@@ -1107,13 +1027,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  2400 he_q = he_q + dif_q 
                                                                         
 !HW            Schreiben in Kontrollfile                                
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Ende eines Iterationsschrittes '')') 
-        WRITE (jw8, '(''Festlegen neuer Eingangswerte '')') 
-        WRITE (jw8, '(''alt: he_q ='',f8.4)') he_q 
-      WRITE (jw8, '(''dif_q     ='',f8.4)') dif_q 
-        WRITE (jw8, '(''neu: he_q = he_q + dif_q ='',f8.4)') he_q 
-      ENDIF 
+
+        WRITE (UNIT_OUT_LOG, '(/,''Ende eines Iterationsschrittes '')') 
+        WRITE (UNIT_OUT_LOG, '(''Festlegen neuer Eingangswerte '')')
+        WRITE (UNIT_OUT_LOG, '(''alt: he_q ='',f8.4)') he_q
+      WRITE (UNIT_OUT_LOG, '(''dif_q     ='',f8.4)') dif_q
+        WRITE (UNIT_OUT_LOG, '(''neu: he_q = he_q + dif_q ='',f8.4)') he_q
+
                                                                         
       IF (hen1.ge.hokwmin) then 
                                                                         
@@ -1143,12 +1063,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  3000 dif_e = abs (he_q - he) 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Kontrolle der Energiehoehe'')') 
-      WRITE (jw8, '(''he_q  = '',f8.4)') he_q 
-      WRITE (jw8, '(''he    = '',f8.4)') he 
-        WRITE (jw8, '(''dif_e = he_q - he = '',f8.4,/)') dif_e 
-      ENDIF 
+
+        WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Energiehoehe'')') 
+      WRITE (UNIT_OUT_LOG, '(''he_q  = '',f8.4)') he_q
+      WRITE (UNIT_OUT_LOG, '(''he    = '',f8.4)') he
+        WRITE (UNIT_OUT_LOG, '(''dif_e = he_q - he = '',f8.4,/)') dif_e
+
                                                                         
       IF (abs (dif_e) .lt.absmax1) then 
         absmax1 = abs (dif_e) 
@@ -1163,11 +1083,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !      -----------------------------------------------------------------
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
- 4001 IF (lein.eq.3) then 
-        WRITE (jw8, '(/,''Ergebnis der Wehrberechnung:'')') 
-      ENDIF 
+ 4001 CONTINUE
+
+
+      WRITE (UNIT_OUT_LOG, '(/,''Ergebnis der Wehrberechnung:'')')
+
                                                                         
-      CALL g_wehr (he_q, lein, jw8, ifehl, auew, huew, wl, hwmin) 
+      CALL g_wehr (he_q, ifehl, auew, huew, wl, hwmin)
                                                                         
       q_ue = 0.0 
                                                                         
@@ -1184,18 +1106,17 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),      &
-          cm)                                                           
+          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (jw8, '(''Ausgabe der Eingangswerte:'')') 
-      WRITE (jw8, '(''g2   = '',f8.4)') g2 
-      WRITE (jw8, '(''cq   = '',f8.4)') cq (j) 
-            WRITE (jw8, '(''huew = '',f8.4)') huew (j) 
-      WRITE (jw8, '(''hv   = '',f8.4)') hv 
-          ENDIF 
+
+            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
+            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+      WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
+      WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
+            WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
+      WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
+
                                                                         
           q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
                                                                         
@@ -1211,13 +1132,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-      IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''q_ue   ='',f8.4)') q_ue 
-      WRITE (jw8, '(''i      ='',10i8)')  (i, i = 1, nwfd) 
-        WRITE (jw8, '(''q_w(i) ='',10f8.4)') (q_w (i) , i = 1, nwfd) 
-      WRITE (jw8, '(''cq(i)  ='',10f8.4)')  (cq (i) , i = 1, nwfd) 
-        WRITE (jw8, '(''hgrw(i)='',10f8.4)') (hgrw (i) , i = 1, nwfd) 
-      ENDIF 
+
+      WRITE (UNIT_OUT_LOG, '(/,''q_ue   ='',f8.4)') q_ue 
+      WRITE (UNIT_OUT_LOG, '(''i      ='',10i8)')  (i, i = 1, nwfd)
+        WRITE (UNIT_OUT_LOG, '(''q_w(i) ='',10f8.4)') (q_w (i) , i = 1, nwfd)
+      WRITE (UNIT_OUT_LOG, '(''cq(i)  ='',10f8.4)')  (cq (i) , i = 1, nwfd)
+        WRITE (UNIT_OUT_LOG, '(''hgrw(i)='',10f8.4)') (hgrw (i) , i = 1, nwfd)
+
                                                                         
       IF (hr1.le.hokwmin) then 
                                                                         
@@ -1236,10 +1157,10 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             taoo = huew (j) / hgrw (j) 
                                                                         
 !JK                 SCHREIBEN IN KONTROLLFILE                           
-            IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''j='',i3,'' tauu='',f8.4,                        &
-     &          '' taoo='',f8.4)') j, tauu, taoo                        
-            ENDIF 
+
+      WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,                        &
+     &          '' taoo='',f8.4)') j, tauu, taoo
+
                                                                         
 !HW    KONTROLLE DER UEBERFALLART FUER DAS BREITKRONOIGE WEHR MITTELS DE
 !HW    IMPULSBILANZ GEMƒSS BWK/MERKBLATT 1, Seite 55, Abb. 3.34         
@@ -1247,10 +1168,10 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             IF (wart.eq.'bk') then 
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(/,''Breitkroniges Wehr'')') 
-                WRITE (jw8, '(/,''Kontrolle der Ueberfallart'')') 
-              ENDIF 
+
+              WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
+              WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
+
                                                                         
               taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
               / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
@@ -1258,11 +1179,10 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
-              IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')'&
-     &)                                                                 
-                WRITE (jw8, '(''taugrenz = '',f8.4)') taugrenz 
-              ENDIF 
+
+      WRITE (UNIT_OUT_LOG, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')')
+                WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz 
+
                                                                         
 !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz     
                                                                         
@@ -1288,15 +1208,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             tauo = 3.286 - 1.905 * taoo 
                                                                         
 !JK                 SCHREIBEN IN KONTROLLFILE                           
-            IF (lein.eq.3) write (jw8, '(''tauo='',f8.4)') tauo 
-                                                                        
+            write (UNIT_OUT_LOG, '(''tauo='',f8.4)') tauo
+
             IF (tauo.ge.tauu.and.tauo.le.1.0) then 
 !                        vollkommener Ueberfall                         
               GOTO 4030 
             ELSEIF (tauo.ge.2.) then 
                                                                         
 !JK                      SCHREIBEN IN KONTROLLFILE                      
-      IF (lein.eq.3) write (jw8, '(''Widerspruch !!!!: '',              &
+      write (UNIT_OUT_LOG, '(''Widerspruch !!!!: '',              &
      &                       ''tauu < 2.0 <=> tauoo > 2.0'',            &
      &                        /,''Annahme Ueberstroemen  !'')')
                                                                         
@@ -1308,16 +1228,14 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                   ------------------------                            
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j),    &
-            cm)                                                         
+            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         
 !JK                 SCHREIBEN IN KONTROLLFILE                           
-            IF (lein.eq.3) then 
-              WRITE (jw8, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j) , &
-              cm                                                        
-            ENDIF 
+
+              WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j), cm
+
                                                                         
             GOTO 4030 
                                                                         
@@ -1329,10 +1247,9 @@ DO 1000 WHILE(dif_e.gt.0.0001)
             q_w (j) = a_uw (j) * g2 * (huew (j) - h_uw (j) ) **0.5 
                                                                         
 !JK                 SCHREIBEN IN KONTROLLFILE                           
-            IF (lein.eq.3) then 
-      WRITE (jw8, '(''q_w(j)='',f8.4,                                   &
-     &           '' Ueberstroemen'')')  (q_w (j) )                      
-            ENDIF 
+
+      WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4, '' Ueberstroemen'')')  (q_w (j) )
+
                                                                         
 !JK            ENDIF ZU (h_uw(j).gt.0.0005)                             
           ENDIF 
@@ -1345,9 +1262,9 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  4020   END DO 
                                                                         
 !JK        SCHREIBEN IN KONTROLLFILE                                    
-        IF (lein.eq.3) then 
-          WRITE (jw8, '(/,''q_ue-m='',f8.4)') q_ue 
-        ENDIF 
+
+          WRITE (UNIT_OUT_LOG, '(/,''q_ue-m='',f8.4)') q_ue 
+
                                                                         
 !JK    ENDIF ZU (hr1.le.hokwmin)                                        
       ENDIF 
@@ -1357,16 +1274,18 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !HW    -----------------------------------------------------------------
                                                                         
 !JK    SCHREIBEN IN KONTROLLFILE                                        
- 4000 IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Ergebnis der Wehrberechnung'',/,                &
-     & ''he='',f8.4,'' q_wehr='',f8.4)') he_q, q_ue                     
-      ENDIF 
+ 4000 CONTINUE
+
+
+      WRITE (UNIT_OUT_LOG, '(/,''Ergebnis der Wehrberechnung'',/,                &
+     & ''he='',f8.4,'' q_wehr='',f8.4)') he_q, q_ue
+
                                                                         
 !HW    Ausgabe des Ueberfallbeiwertes und der Ueberfallart in Ergebnisfi
-      WRITE (jw5, '(/,5x,''Ergebnisse der Wehrberechnung'')') 
-      WRITE (jw5, '(5x,''-----------------------------'')') 
-      WRITE (jw5, '(5x,''Feld-Nr.'',4x,''mue'',10x,                     &
-     &''q-wehr'',5x,''h-ue'',8x,''A-ue'',6x,''‹-Art'')')                
+      WRITE (UNIT_OUT_TAB, '(/,5x,''Ergebnisse der Wehrberechnung'')') 
+      WRITE (UNIT_OUT_TAB, '(5x,''-----------------------------'')')
+      WRITE (UNIT_OUT_TAB, '(5x,''Feld-Nr.'',4x,''mue'',10x,                     &
+     &''q-wehr'',5x,''h-ue'',8x,''A-ue'',6x,''‹-Art'')')
       DO 5000 j = 1, nwfd 
                                                                         
 !HW    Abfragen der Ueberfallart fuer das Wehrfeld                      
@@ -1378,15 +1297,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
           uearttxt = '‹berstrˆmen' 
         ENDIF 
                                                                         
-      WRITE (jw5, '(5x,i2,10x,f6.4,5x,f7.3,5x,f6.3,5x,f7.3,5x,a)        &
-     &') j, cq (j) , q_w (j) , huew (j) , auew (j) , uearttxt           
+      WRITE (UNIT_OUT_TAB, '(5x,i2,10x,f6.4,5x,f7.3,5x,f6.3,5x,f7.3,5x,a)        &
+     &') j, cq (j) , q_w (j) , huew (j) , auew (j) , uearttxt
                                                                         
  5000 END DO 
                                                                         
 !HW    Ausgabe der Ergebnisse in Ergebnisfile                           
-      WRITE (jw5, '(/,5x,''Summation aller Felder'')') 
-      WRITE (jw5, '(5x,''he-wehr'',5x,''q-wehr'',/,1x,f10.3,2x,f10.3)') &
-      he_q, q_ue                                                        
+      WRITE (UNIT_OUT_TAB, '(/,5x,''Summation aller Felder'')') 
+      WRITE (UNIT_OUT_TAB, '(5x,''he-wehr'',5x,''q-wehr'',/,1x,f10.3,2x,f10.3)') &
+      he_q, q_ue
                                                                         
       nz = nz + 6 
                                                                         
@@ -1396,8 +1315,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
       IF (nz.gt.50) then 
         nblatt = nblatt + 1 
-        CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1) 
-      ENDIF 
+        CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1) 
+      ENDIF
                                                                         
       RETURN 
                                                                         

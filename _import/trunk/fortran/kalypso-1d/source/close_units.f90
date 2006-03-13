@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Dec 2005    5:05 pm
+!     Last change:  WP   10 Mar 2006    9:22 pm
 !--------------------------------------------------------------------------
 ! This code, close_units.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -48,7 +48,7 @@ INTEGER :: istat
 INTEGER :: lunit
 LOGICAL :: offen
                                                                         
-write (UNIT=0, FMT=1000)
+!write (UNIT=0, FMT=1000)
 write (UNIT=*, FMT=1000)
 1000 format (//1X, 'Dateien werden geschlossen...')
 
@@ -59,11 +59,11 @@ do lunit = 10, 200
   IF (offen) then
     close (UNIT=lunit, IOSTAT=istat)
     if (istat/=0) then
-      write (0,1001) lunit
+      !write (0,1001) lunit
       write (*,1001) lunit
       1001 format (1X, 'Problem beim Schliessen von Unit Nr. ', I3, ' -> wird uebersprungen!')
     else
-      write (0,1002) lunit
+      !write (0,1002) lunit
       write (*,1002) lunit
       1002 format (1X, 'Unit Nr. ', I3, ' wird geschlossen.')
     end if

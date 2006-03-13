@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Jan 2006   11:35 am
+!     Last change:  WP   11 Mar 2006    8:16 pm
 !--------------------------------------------------------------------------
 ! This code, AlWSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -89,6 +89,7 @@
 SUBROUTINE alg1 (igraf, ifehl)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 ! mpts = 200 -> entspricht max!
 ! mic = 10 -> entspricht in einigen Subroutinen max
@@ -98,8 +99,6 @@ COMMON / angabe / xko (mpts, 2), yko (mpts, 2), na1, na2
 COMMON / xr0yr0 / xr0 (mpts, max2), yr0 (mpts, max2), mr0 (max2), kr0
 COMMON / xr1yr1 / xr1 (mpts, max2), yr1 (mpts, max2), mr1 (max2), kr1
 COMMON / xr2yr2 / xr2 (mpts, max2), yr2 (mpts, max2), mr2 (max2), kr2
-
-COMMON / ausgabeart / lein, jw8
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
@@ -126,9 +125,7 @@ CALL mengen (ifehl, medu, info, ipru, korr, iboo)
 
 IF (ifehl.gt.0) then
 
-  IF (lein.eq.3) then
-    WRITE (jw8, '(a)') 'Es gibt Fehler in MENGEN'
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(a)') 'Es gibt Fehler in MENGEN'
 
   RETURN
 ENDIF

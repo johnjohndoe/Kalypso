@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    2:03 pm
+!     Last change:  WP   10 Mar 2006   10:11 pm
 !--------------------------------------------------------------------------
 ! This code, geomet.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 
-SUBROUTINE geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2, lein, jw8)
+SUBROUTINE geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 !**
 !JK   BESCHREIBUNG: BERECHNUNG GEOMETRIE AN BRUECKEN - FLAECHEN         
 !**                                                                     
@@ -79,6 +79,7 @@ SUBROUTINE geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2, l
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 REAL x1 (maxkla), h1 (maxkla)
 
@@ -134,18 +135,16 @@ INTEGER :: ifehl1
 !WP -------------------------------------------------------
 
 
-if (lein.eq.3) then
-  write (jw8, 5000) hr, hdif, hsohl, nknot, il, ir, q
-  5000 format (//1X, 'Start der Subroutine GEOMET'              , /, &
-               & 1X, '---------------------------'              , /, &
-               & 1X, 'HR (ermittelter WSP im Profil):   ', F15.5, /, &
-               & 1X, 'HDIF (?):                         ', F15.5, /, &
-               & 1X, 'HSOHL (Hoehe der Sohle?):         ', F15.5, /, &
-               & 1X, 'NKNOT (Anzahl der Knoten?):       ', I15  , /, &
-               & 1X, 'IL (Punktnr. linkes Widerlager):  ', I15  , /, &
-               & 1X, 'IR (Punktnr. rechtes Widerlager): ', I15  , /, &
-               & 1X, 'Q (Abfluss gesamt):               ', F15.5, /)
-END if
+write (UNIT_OUT_LOG, 5000) hr, hdif, hsohl, nknot, il, ir, q
+5000 format (//1X, 'Start der Subroutine GEOMET'              , /, &
+             & 1X, '---------------------------'              , /, &
+             & 1X, 'HR (ermittelter WSP im Profil):   ', F15.5, /, &
+             & 1X, 'HDIF (?):                         ', F15.5, /, &
+             & 1X, 'HSOHL (Hoehe der Sohle?):         ', F15.5, /, &
+             & 1X, 'NKNOT (Anzahl der Knoten?):       ', I15  , /, &
+             & 1X, 'IL (Punktnr. linkes Widerlager):  ', I15  , /, &
+             & 1X, 'IR (Punktnr. rechtes Widerlager): ', I15  , /, &
+             & 1X, 'Q (Abfluss gesamt):               ', F15.5, /)
 
 
 !**   ------------------------------------------------------------------
@@ -795,10 +794,8 @@ IF (ah.gt.0.01) then
   CALL prf (ik1, ik2)
 
   !JK  SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    IF (ik1.eq.1) write (jw8, 1005) 1
-    IF (ik2.eq.1) write (jw8, 1005) 2
-  ENDIF
+  IF (ik1.eq.1) write (UNIT_OUT_LOG, 1005) 1
+  IF (ik2.eq.1) write (UNIT_OUT_LOG, 1005) 2
 
   1005 format (1X, 'Punkte der Linie Nr. ', I2,' abgefiltert!')
 
@@ -813,20 +810,20 @@ IF (ah.gt.0.01) then
 
   !JK SCHREIBEN IN KONTROLLFILE
   !WP ELSEIF (ifehl1.eq.3.and.lein.eq.3) then
-  ELSEIF (lein.eq.3) then
+  ELSE
 
-    WRITE (jw8, 1007)
+    WRITE (UNIT_OUT_LOG, 1007)
     1007 format (1X, 'Linie 1 Gelaende-WSP, bzw. bei Druckabfluss Gelaende-HUKMAX:' )
 
-    write (jw8, 1008) (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
-    !WP WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+    write (UNIT_OUT_LOG, 1008) (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+    !WP WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
     1008 format (1X, I5, 2F10.3)
 
-    WRITE (jw8, 1009)
+    WRITE (UNIT_OUT_LOG, 1009)
     1009 format (1X, 'Linie 2 Gelaende-Brueckenunterkante:' )
 
-    WRITE (jw8, 1008) (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
-    ! WP WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+    WRITE (UNIT_OUT_LOG, 1008) (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+    ! WP WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
 
   ENDIF
 
@@ -856,11 +853,11 @@ IF (ah.gt.0.01) then
     i_print = 0
     !JK UNSINNIG ABFRAGE------------------------------------
     IF (i_print.eq.1) then
-      WRITE (jw8, 1020) i, i
+      WRITE (UNIT_OUT_LOG, 1020) i, i
       1020 format (1X, 'XR0(', I3,') YR0(', I3,')' )
 
-      WRITE (jw8, 1021) (xr0 (ii, i) , hr0 (ii, i) , ii = 1, mr0 (i) )
-      !WP WRITE (jw8, '(2f8.3)') (xr0 (ii, i) , hr0 (ii, i) , ii = 1, mr0 (i) )
+      WRITE (UNIT_OUT_LOG, 1021) (xr0 (ii, i) , hr0 (ii, i) , ii = 1, mr0 (i) )
+      !WP WRITE (UNIT_OUT_LOG, '(2f8.3)') (xr0 (ii, i) , hr0 (ii, i) , ii = 1, mr0 (i) )
       1021 format (1X, 2F8.3)
 
     ENDIF
@@ -909,7 +906,7 @@ IF (ah.gt.0.01) then
     hss = hss + hs (i) * as (i)
 
     IF (i_print.eq.1) then
-      WRITE (jw8, '(''hs '',f10.4,'' as '',f10.4)') hs (i) , as ( i)
+      WRITE (UNIT_OUT_LOG, '(''hs '',f10.4,'' as '',f10.4)') hs (i) , as ( i)
     ENDIF
 
     i_print = 0
@@ -940,14 +937,7 @@ ELSE
 ENDIF
 
 
-!JK      WAR SCHON DEAKTIVIERT,27.04.00,JK
-!**      if(lein .eq. 3)then
-!**        write(jw8,'(''rhy='',f8.4,''phyz='',f8.4)')rhy,phyz
-!**      endif
-
 hss = hr - hss                                                 
-
-
 
 !     ************************************************************      
 !     --> 2. linie 1 differenz linie 2  --> pfeiler und widerlager      
@@ -1009,12 +999,10 @@ hss = hr - hss
       ! Schnittmenge --> aue1
       !----------------------------------------------------------------------------
 
-      if (lein.eq.3) then
-        write (jw8, 5001) isl, il, x1n(isl), x1n(il)
-        5001 format (1X, 'Bereich Nr. 1 von ISL = ', I3, ', bis IL = ', I3, /, &
-                   & 1X, 'X(ISL) = ', F15.5, '  X(IL) = ', F15.5, /, &
-                   & 1X, '-> Schnittmenge AUE1')
-      END if
+      write (UNIT_OUT_LOG, 5001) isl, il, x1n(isl), x1n(il)
+      5001 format (1X, 'Bereich Nr. 1 von ISL = ', I3, ', bis IL = ', I3, /, &
+                 & 1X, 'X(ISL) = ', F15.5, '  X(IL) = ', F15.5, /, &
+                 & 1X, '-> Schnittmenge AUE1')
 
       !JK  START IF-SCHLEIFE BEREICH 1*************************************
       IF (isl.lt.il .and. iflli.eq.0 .and. (x1n (il) - x1n (isl) ) .gt.0.005) then
@@ -1049,10 +1037,8 @@ hss = hr - hss
           GOTO 2023 
         ENDIF 
 
-        if (lein.eq.3) then
-          write (jw8, 5002) ah
-          5002 format (1X, 'Flaeche im Bereich 1, Linie 1:  AH = ', F15.5)
-        END if
+        write (UNIT_OUT_LOG, 5002) ah
+        5002 format (1X, 'Flaeche im Bereich 1, Linie 1:  AH = ', F15.5)
 
         ! Bereich 1, Linie 2:
         ! -------------------
@@ -1104,10 +1090,8 @@ hss = hr - hss
           GOTO 2023 
         ENDIF 
 
-        if (lein.eq.3) then
-          write (jw8, 5003) ah
-          5003 format (1X, 'Flaeche im Bereich 1, Linie 2:  AH = ', F15.5)
-        END if
+        write (UNIT_OUT_LOG, 5003) ah
+        5003 format (1X, 'Flaeche im Bereich 1, Linie 2:  AH = ', F15.5)
 
 
         !JK  ------ENDE LINIE 2------
@@ -1122,32 +1106,28 @@ hss = hr - hss
         CALL prf (ik1, ik2) 
                                                                         
         !JK   SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then 
-          IF (ik1.eq.1) write (jw8, '(''pkte linie 1 abfiltriert'')') 
-          IF (ik2.eq.1) write (jw8, '(''pkte linie 2 abfiltriert'')') 
-        ENDIF 
-                                                                        
+        IF (ik1.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 1 abfiltriert'')')
+        IF (ik2.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 2 abfiltriert'')')
+
         CALL alg1 (igraf, ifehl) 
                                                                         
         IF (ifehl.eq.1) then 
           !JK  SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
-          ENDIF 
-                                                                        
+          WRITE (UNIT_OUT_LOG, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
+
           ifehl1 = 1 
           ifehl2 = 1 
 
         !JK         SCHREIBEN IN KONTROLLFILE                                   
         !WP ELSEIF (ifehl1.eq.3 .and. lein.eq.3) then
-        ELSEIF (lein.eq.3) then
+        ELSE
           !  linie 1 --> gelaende(isl-il)-hr
           !  linie 2 --> hok(i),hmax(ges)
-          WRITE (jw8, '('' linie 1  gelaende(isl,il)-wsp :'')')
-          WRITE (jw8, '(i5,2f15.5)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
-          WRITE (jw8, '('' linie 2  hok(i),hmax (--> aue) '')')
-          WRITE (jw8, '(i5,2f15.5)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
-        ENDIF 
+          WRITE (UNIT_OUT_LOG, '('' linie 1  gelaende(isl,il)-wsp :'')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f15.5)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+          WRITE (UNIT_OUT_LOG, '('' linie 2  hok(i),hmax (--> aue) '')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f15.5)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+        ENDIF
                                                                         
 
 
@@ -1211,12 +1191,6 @@ hss = hr - hss
 
         IF (aue1.gt.0.01) hue1 = hue1 / aue1 
           !JK   SCHREIBEN IN KONTROLLFILE
-
-          !WP Ausgabe siehe unten
-          !WP        IF (lein.eq.3) then
-          !WP      WRITE (jw8, '('' wl1 = '',f8.3,'' aue1 = '',f8.3,                 &
-          !WP     &              '' hue1 = '',f8.3)') wl1, aue1, hue1
-          !WP        ENDIF
 
       !JK   ELSE ZU BEREICH 1
       ELSE
@@ -1340,28 +1314,24 @@ hss = hr - hss
         CALL prf (ik1, ik2) 
                                                                         
         !JK     SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then 
-          IF (ik1.eq.1) write (jw8, '(''pkte linie 1 abfiltriert'')') 
-          IF (ik2.eq.1) write (jw8, '(''pkte linie 2 abfiltriert'')') 
-        ENDIF 
-                                                                        
+        IF (ik1.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 1 abfiltriert'')')
+        IF (ik2.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 2 abfiltriert'')')
+
         CALL alg1 (igraf, ifehl) 
                                                                         
         IF (ifehl.eq.1) then 
           !JK    SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
-          ENDIF 
-                                                                        
+          WRITE (UNIT_OUT_LOG, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
+
           ifehl1 = 1 
           ifehl2 = 1 
         !JK    SCHREIBEN IN KONTROLLFILE
-        ELSEIF (ifehl1.eq.3.and.lein.eq.3) then 
-          WRITE (jw8, '('' linie 1  gelaende(ir,isr)-wsp :'')')
-          WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
-          WRITE (jw8, '('' linie 2  hok(i),hmax (--> aue) '')')
-          WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
-        ENDIF 
+        ELSEIF (ifehl1.eq.3) then
+          WRITE (UNIT_OUT_LOG, '('' linie 1  gelaende(ir,isr)-wsp :'')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+          WRITE (UNIT_OUT_LOG, '('' linie 2  hok(i),hmax (--> aue) '')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+        ENDIF
                                                                         
 
         !JK    START IF-SCHLEIFE INNERHALB BEREICH 2-----------------------
@@ -1423,12 +1393,8 @@ hss = hr - hss
 
         IF (aue2.gt.0.01) hue2 = hue2 / aue2 
           !JK  SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then 
-
-          WRITE (jw8, '('' wl3 = '',f8.3,'' aue3 = '',f8.3, '' hue3 = '',f8.3)') &
+          WRITE (UNIT_OUT_LOG, '('' wl3 = '',f8.3,'' aue3 = '',f8.3, '' hue3 = '',f8.3)') &
             & wl2, aue2, hue2
-
-        ENDIF 
 
       !JK     ELSE ZU START BEREICH 2                                         
       ELSE 
@@ -1528,30 +1494,26 @@ hss = hr - hss
         CALL prf (ik1, ik2) 
                                                                         
         !JK   SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then 
-          IF (ik1.eq.1) write (jw8, '(''pkte linie 1 abfiltriert'')') 
-          IF (ik2.eq.1) write (jw8, '(''pkte linie 2 abfiltriert'')') 
-        ENDIF 
-                                                                        
+        IF (ik1.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 1 abfiltriert'')')
+        IF (ik2.eq.1) write (UNIT_OUT_LOG, '(''pkte linie 2 abfiltriert'')')
+
         CALL alg1 (igraf, ifehl) 
                                                                         
         IF (ifehl.eq.1) then 
 
           !JK   SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then 
-            WRITE (jw8, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
-          ENDIF 
-                                                                        
+          WRITE (UNIT_OUT_LOG, '(''polygonzuege im algebra nicht fehlerfrei abgearbeitet'')')
+
           ifehl1 = 1 
           ifehl2 = 1 
                                                                         
         !JK   SCHREIBEN IN KONTROLLFILE
-        ELSEIF (ifehl1.eq.3.and.lein.eq.3) then 
-          WRITE (jw8, '('' linie 1  hok(il,ir)-hsohl:'')')
-          WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
-          WRITE (jw8, '('' linie 2  hukmax-wsp (--> aue-mitte,apl) '')')
-          WRITE (jw8, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
-        ENDIF 
+        ELSEIF (ifehl1.eq.3) then
+          WRITE (UNIT_OUT_LOG, '('' linie 1  hok(il,ir)-hsohl:'')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+          WRITE (UNIT_OUT_LOG, '('' linie 2  hukmax-wsp (--> aue-mitte,apl) '')')
+          WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+        ENDIF
                                                                         
 
 
@@ -1641,10 +1603,8 @@ hss = hr - hss
                                                                         
           hue3 = hue3 / aue3 
                                                                         
-          IF (lein.eq.3) then 
-            WRITE (jw8, '('' wl2 = '',f8.3,'' aue2 = '',f8.3, '' hue2 = '',f8.3)') &
-              & wl3, aue3, hue3
-          ENDIF 
+          WRITE (UNIT_OUT_LOG, '('' wl2 = '',f8.3,'' aue2 = '',f8.3, '' hue2 = '',f8.3)') &
+             & wl3, aue3, hue3
 
         ELSE 
 
@@ -1708,9 +1668,8 @@ hss = hr - hss
       ENDIF 
                                                                         
 
-      if (lein.eq.3) then
-        write (jw8, 2100) wl, wl1, wl2, wl3, aue, aue1, aue2, aue3, hue, hue1, hue2, hue3, rhy
-        2100 format (1X, 'Flaechen, in GEOMET berechnet    ', /, &
+      write (UNIT_OUT_LOG, 2100) wl, wl1, wl2, wl3, aue, aue1, aue2, aue3, hue, hue1, hue2, hue3, rhy
+      2100 format (1X, 'Flaechen, in GEOMET berechnet    ', /, &
                  & 1X, '-------------------------------- ', /, &
                  & 1X, 'WL (Wehrlaenge gesamt):          ', F15.5, /, &
                  & 1X, 'WL1:                             ', F15.5, /, &
@@ -1727,7 +1686,6 @@ hss = hr - hss
                  & 1X, 'RHY (Hydraulischer Radius):      ', F15.5, /, &
                  & 1X, '-------------------------------- ',        /, &
                  & 1X, 'Ende GEOMET                      ',        //)
-      END if
 
       RETURN 
                                                                         

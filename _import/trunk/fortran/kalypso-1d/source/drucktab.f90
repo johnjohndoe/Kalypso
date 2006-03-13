@@ -1,4 +1,4 @@
-!     Last change:  WP   24 Nov 2005    5:59 pm
+!     Last change:  WP   12 Mar 2006    1:46 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -61,12 +61,13 @@ SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, stat, jw7, idr1)
 !HB                                                                     
 !HB   alph_aus -- Projektpfad der Ausgabedatei Beiwerte.AUS (k.B.)      
 !HB   alpha_ja -  Steuerparameter, ob Beiwerte.AUS erstellt werden soll 
-!HB   nr_alph  -- Interne Dateinummer fuer Beiwerte.AUS                 
-!HB   ***************************************************************** 
+!HB   *****************************************************************
                                                                         
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
+USE MOD_ERG
 
 ! Calling variables
 INTEGER, INTENT(IN) 	:: i        		! NPROF, also Nummer des aktuellen Profils
@@ -79,11 +80,6 @@ INTEGER, INTENT(IN) 	:: jw7              	! UNIT einer weiteren Ausgabedatei ??
 CHARACTER(LEN=1)    	:: idr1             	! = 'j' falls eine Wasserstandsabflussbeziehung
                                         	! ausgegeben werden soll. Gesetzt in wsp.f90 oder QaWSP.f90
 
-! Local variables
-CHARACTER(LEN=72) 	:: textg
-INTEGER                 :: j
-REAL                    :: v
-
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
 CHARACTER(LEN=nch80)    :: alph_aus     ! Projektpfad fuer Beiwerte.AUS
@@ -92,10 +88,9 @@ COMMON / alph_pf / alph_aus, nr_alph
 
 
 ! COMMON-Block /AUSGABELAMBDA/ -----------------------------------------------------
-INTEGER         	:: jw_lambdai
 REAL, DIMENSION(maxkla) :: lambda_teilflaeche
 CHARACTER(LEN=nch80) 	:: lambdai
-COMMON / ausgabelambda / jw_lambdai, lambda_teilflaeche, lambdai
+COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! ----------------------------------------------------------------------------------
 
 
@@ -140,6 +135,11 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 ! -----------------------------------------------------------------------------
 
 
+! Local variables
+CHARACTER(LEN=72) 	:: textg
+INTEGER                 :: j
+REAL                    :: v
+
                                                                         
 ! *****************************************************************
 ! BERECHNUNG
@@ -157,6 +157,30 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 !write (*,*) 'Teilabfluss QTP(i,1)         = ', qtp(i,1)
 !write (*,*) 'Teilabfluss QTP(i,2)         = ', qtp(i,2)
 !write (*,*) 'Teilabfluss QTP(i,3)         = ', qtp(i,3)
+
+
+
+!WP 11.03.2006
+! Speichern der ausgegebenen Werte in dem globalen Ergebnis-Modul
+IF (idr1.eq.'j') then
+
+  do j = 1, 3
+
+    out_IND(i,nr_q,j)%lambda = rkp(i,j)         ! Lambda der Teilabschnitte
+    out_IND(i,nr_q,j)%formb  = fbwp(i,j)        ! Formbeiwert der Teilabschnitte
+    out_IND(i,nr_q,j)%A      = fp(i,j)		! Teilquerschnittsflaeche
+    out_IND(i,nr_q,j)%lu     = up(i,j)          ! benetzter Umfang
+    out_IND(i,nr_q,j)%v      = vp(i,j)          ! mittlere Flieﬂgeschwindigkeit
+    out_IND(i,nr_q,j)%Q      = qtp(i,j)      	! Teilabfluesse
+    out_IND(i,nr_q,j)%B      = brp(i,j)      	! Wasserspiegelbreite der Teilabschnitte
+
+  end do
+
+  out_PROF(i,nr_q)%stat   = stat(i)             ! Station in [km]
+  out_PROF(i,nr_q)%wsp    = wsp(i)              ! Wasserspiegelhoehe [mNN]
+  out_PROF(i,nr_q)%hen    = hen(i)              ! Energielinienhoehe [mNN]
+
+end if
 
 ifbr = 0
 ifpgs = 0
@@ -254,7 +278,7 @@ IF (alpha_ja.eq.1) then
   !HB          Ausdruck der ueblichen Ausgabewerte in die Datei
   !HB          Beiwerte.AUS. Das Format entspricht der bekannten
   !HB          Tabellenform.
-  WRITE (nr_alph, 10) stat(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp (i,j), up(i,j), vp(i,j), qtp(i,j)
+  WRITE (UNIT_OUT_ALPHA, 10) stat(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp (i,j), up(i,j), vp(i,j), qtp(i,j)
 ENDIF
 !HB   *****************************************************************
 
@@ -298,7 +322,7 @@ IF (j .ne. indmax) then
       !HB     Ausdruck der ueblichen Ausgabewerte in die Datei
       !HB     Beiwerte.AUS. Das Format entspricht der bekannten
       !HB     Tabellenform
-      WRITE (nr_alph, 11) j1, rkp(i,j1), fbwp(i,j1), fp(i,j1), up(i,j1), vp(i,j1), qtp(i,j1)
+      WRITE (UNIT_OUT_ALPHA, 11) j1, rkp(i,j1), fbwp(i,j1), fp(i,j1), up(i,j1), vp(i,j1), qtp(i,j1)
     ENDIF
     !HB   ***************************************************************           
 
@@ -355,7 +379,7 @@ DO j = 1, nknot
 
   end if
 
-  write (jw_lambdai,9000) stat(i), j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
+  write (UNIT_OUT_LAMBDA_I,9000) stat(i), j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
 
 END DO
 9000 format (1X, F10.4, i7, F10.3, F10.3, F12.7, F10.3)

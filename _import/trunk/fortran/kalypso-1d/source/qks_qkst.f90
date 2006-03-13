@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    5:37 pm
+!     Last change:  WP   12 Mar 2006    2:20 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot, iuerr)
+SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot)
 
 !***********************************************************************
 !**                                                                     
@@ -130,6 +130,7 @@ SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot, iuerr)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
 
 ! ------------------------------------------------------------------
 ! VEREINBARUNGSTEIL
@@ -141,18 +142,6 @@ INTEGER, INTENT(IN)             :: itere1
 REAL, INTENT(INOUT)             :: hr
 REAL, INTENT(INOUT)             :: hv
 INTEGER, INTENT(IN)             :: nknot
-INTEGER, INTENT(IN)             :: iuerr
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
 
 
 ! COMMON-Block /DARCY/ -------------------------------------------------------------
@@ -227,397 +216,394 @@ REAL 	:: mei (maxkla)
 !HB   Ergänzung Ende                                                    
 !HB***************************************                              
 
+
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
-                                                                        
-!      froud(a,b,c)=c/a/sqrt(9.81*a/b)                                  
-!                                                                       
-!     gleichsetzen der uebergebenen groessen mit den common-werten      
-!                                                                       
-                                                                        
-      ibed = 0 
-      icwl = 0 
-      icwm = 0 
-      icwr = 0 
-      ikol = 0 
-      ikom = 0 
-      ikor = 0 
-      ifum = 0 
-                                                                        
-      itere2 = 1 
-                                                                        
-                                                                        
-      qt (1) = 0. 
-      qt (2) = 0. 
-      qt (3) = 0. 
-      rk (1) = 0. 
-      rk (2) = 0. 
-      rk (3) = 0. 
-                                                                        
-      alsum = 0. 
-      DO 30 ii = 1, nknot 
-        v_ks (ii) = 0.0 
-        l_ks (ii) = 0.0 
-        q_ks (ii) = 0.0 
-   30 hvor (ii) = 0.0 
-                                                                        
-!JK   BERECHNUNG TEILABFLUSS LINKES VORLAND                             
-!JK   -------------------------------------                             
-                                                                        
-      DO 40 ii = ischl, itrli - 1 
-!JK       VORBELEGUNG                                                   
-        hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2. 
-        IF (b_ks (ii) .gt.1.e-01) then 
-          alpha = atan (abs (h_ks (ii) - h_ks (ii + 1) ) / b_ks (ii) ) 
-        ELSE 
-          alpha = 0. 
-        ENDIF 
-!JK      BESTIMMUNG FLIESSTIEFE LINKS                                   
-        IF (ii.gt.1) then 
-          IF (hr.gt.h_ks (ii - 1) ) then 
-            h_li = h_ks (ii - 1) - h_ks (ii) 
-          ELSE 
-            h_li = hr - h_ks (ii - 1) 
-          ENDIF 
-          a_li = a_ks (ii - 1) 
-          aks_li = k_ks (ii - 1) 
-        ELSE 
-          h_li = 0. 
-          a_li = 0. 
-          aks_li = 0. 
-        ENDIF 
-!JK      BESTIMMUNG FLIESSTIEFE RECHTS                                  
-        IF (ii.lt.nknot - 1) then 
-          IF (hr.ge.h_ks (ii + 2) ) then 
-            h_re = h_ks (ii + 2) - h_ks (ii + 1) 
-          ELSE 
-            h_re = hr - h_ks (ii + 1) 
-          ENDIF 
-        ELSE 
-          h_re = 0. 
-          a_re = 0. 
-          aks_re = 0. 
-        ENDIF 
-        a_re = a_ks (ii + 1) 
-        aks_re = k_ks (ii + 1) 
-                                                                        
-        IF (0.60 * hvor (ii) .lt.k_ks (ii) ) then 
-          ak_mi = 0.60 * hvor (ii) 
-        ELSE 
-          ak_mi = k_ks (ii) 
-        ENDIF 
-                                                                        
-        IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then 
-      PRINT * , 'Fehler.Fliesztiefe Vorland  inkorrekt ' 
-          PRINT * , 'Voraussichtlich Geometriefehler.' 
-          PRINT * , 'Beim Entwickler melden.' 
-          STOP 'SUB EB2KS, da Fehler nicht behebbar.' 
-        ENDIF 
-!JK      BERECHNUNG TEILABFLUSS                                         
-        CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
-        hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
-        a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
-        alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-        if_l (ii), formbeiwert(1) )
+
+ibed = 0
+icwl = 0
+icwm = 0
+icwr = 0
+ikol = 0
+ikom = 0
+ikor = 0
+ifum = 0
+
+itere2 = 1
 
 
-                                                                        
-        q_ks (ii) = v_ks (ii) * a_ks (ii) 
-        qt (1) = qt (1) + q_ks (ii) 
-        alsum = alsum + l_ks (ii) * u_ks (ii) 
-   40 END DO 
-                                                                        
-!JK   BERECHNUNG BENETZTER UMFANG?, GESCHWINDIGKEIT (LINKES VORLAND)    
-      IF (f (1) .gt.1.e-06) then 
-        rk (1) = alsum / u (1) 
-        v (1) = qt (1) / f (1) 
-      ELSE 
-        rk (1) = 0. 
-        v (1) = 0. 
-      ENDIF 
-                                                                        
-      alsum = 0. 
-                                                                        
-!JK   BERECHNUNG TEILABFLUSS RECHTES VORLAND                            
-!JK   -------------------------------------                             
-                                                                        
-      DO 60 ii = itrre, ischr - 1 
-!JK       VORBELEGUNG                                                   
-        hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2. 
-        IF (b_ks (ii) .gt.1.e-01) then 
-          alpha = atan (abs (h_ks (ii + 1) - h_ks (ii) ) / b_ks (ii) ) 
-        ELSE 
-          alpha = 0. 
-        ENDIF 
-!JK      BESTIMMUNG FLIESSTIEFE LINKS                                   
-        IF (ii.gt.1) then 
-          IF (hr.gt.h_ks (ii - 1) ) then 
-            h_li = h_ks (ii - 1) - h_ks (ii) 
-          ELSE 
-            h_li = hr - h_ks (ii - 1) 
-          ENDIF 
-          a_li = a_ks (ii - 1) 
-          aks_li = k_ks (ii - 1) 
-        ELSE 
-          h_li = 0. 
-          a_li = 0. 
-          aks_li = 0. 
-        ENDIF 
-!JK      BESTIMMUNG FLIESSTIEFE RECHTS                                  
-        IF (ii.lt.nknot - 1) then 
-          IF (hr.ge.h_ks (ii + 2) ) then 
-            h_re = h_ks (ii + 2) - h_ks (ii + 1) 
-          ELSE 
-            h_re = hr - h_ks (ii + 1) 
-          ENDIF 
-        ELSE 
-          h_re = 0. 
-          a_re = 0. 
-          aks_re = 0. 
-        ENDIF 
-        a_re = a_ks (ii + 1) 
-        aks_re = k_ks (ii + 1) 
-                                                                        
-        IF (0.60 * hvor (ii) .lt.k_ks (ii) ) then 
-          ak_mi = 0.60 * hvor (ii) 
-        ELSE 
-          ak_mi = k_ks (ii) 
-        ENDIF 
-                                                                        
-        IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then 
-      PRINT * , 'Fehler.Fliesztiefe Vorland  inkorrekt ' 
-          PRINT * , 'Voraussichtlich Geometriefehler.' 
-          PRINT * , 'Beim Entwickler melden.' 
-          STOP 'SUB EB2KS, da Fehler nicht behebbar.' 
-        ENDIF 
-!JK      BERECHNUNG TEILABFLUSS                                         
-        CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
-        hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
-        a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
-        alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
-        if_l (ii), formbeiwert(3) )
+qt (1) = 0.
+qt (2) = 0.
+qt (3) = 0.
+rk (1) = 0.
+rk (2) = 0.
+rk (3) = 0.
 
-        q_ks (ii) = v_ks (ii) * a_ks (ii) 
-        qt (3) = qt (3) + q_ks (ii) 
-        alsum = alsum + l_ks (ii) * u_ks (ii) 
-   60 END DO 
+alsum = 0.
+
+DO ii = 1, nknot
+  v_ks (ii) = 0.0
+  l_ks (ii) = 0.0
+  q_ks (ii) = 0.0
+  hvor (ii) = 0.0
+END DO
+
+!JK   BERECHNUNG TEILABFLUSS LINKES VORLAND
+!JK   -------------------------------------
+
+DO ii = ischl, itrli - 1
+
+  !JK       VORBELEGUNG
+  hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
+  IF (b_ks (ii) .gt.1.e-01) then
+    alpha = atan (abs (h_ks (ii) - h_ks (ii + 1) ) / b_ks (ii) )
+  ELSE
+    alpha = 0.
+  ENDIF
+
+  !JK      BESTIMMUNG FLIESSTIEFE LINKS
+  IF (ii.gt.1) then
+    IF (hr.gt.h_ks (ii - 1) ) then
+      h_li = h_ks (ii - 1) - h_ks (ii)
+    ELSE
+      h_li = hr - h_ks (ii - 1)
+    ENDIF
+    a_li = a_ks (ii - 1)
+    aks_li = k_ks (ii - 1)
+  ELSE
+    h_li = 0.
+    a_li = 0.
+    aks_li = 0.
+  ENDIF
+
+  !JK      BESTIMMUNG FLIESSTIEFE RECHTS
+  IF (ii.lt.nknot - 1) then
+    IF (hr.ge.h_ks (ii + 2) ) then
+      h_re = h_ks (ii + 2) - h_ks (ii + 1)
+    ELSE
+      h_re = hr - h_ks (ii + 1)
+    ENDIF
+  ELSE
+    h_re = 0.
+    a_re = 0.
+    aks_re = 0.
+  ENDIF
+  a_re = a_ks (ii + 1)
+  aks_re = k_ks (ii + 1)
+
+  IF (0.60 * hvor (ii) .lt.k_ks (ii) ) then
+    ak_mi = 0.60 * hvor (ii)
+  ELSE
+    ak_mi = k_ks (ii)
+  ENDIF
+
+  IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then
+    PRINT * , 'Fehler.Fliesztiefe Vorland  inkorrekt '
+    PRINT * , 'Voraussichtlich Geometriefehler.'
+    PRINT * , 'Beim Entwickler melden.'
+    STOP 'SUB EB2KS, da Fehler nicht behebbar.'
+  ENDIF
+
+  !JK      BERECHNUNG TEILABFLUSS
+  CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
+   & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
+   & a_re, h_li, h_re, aks_li, aks_re, alpha, cwr (ii), &
+   & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
+   & if_l (ii), formbeiwert(1) )
+
+  q_ks (ii) = v_ks (ii) * a_ks (ii)
+  qt (1) = qt (1) + q_ks (ii)
+  alsum = alsum + l_ks (ii) * u_ks (ii)
+END DO
+
+!JK   BERECHNUNG BENETZTER UMFANG?, GESCHWINDIGKEIT (LINKES VORLAND)
+IF (f (1) .gt.1.e-06) then
+  rk (1) = alsum / u (1)
+  v (1) = qt (1) / f (1)
+ELSE
+  rk (1) = 0.
+  v (1) = 0.
+ENDIF
+
+alsum = 0.
+
+!JK   BERECHNUNG TEILABFLUSS RECHTES VORLAND
+!JK   -------------------------------------
+
+DO ii = itrre, ischr - 1
+
+  !JK       VORBELEGUNG
+  hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
+  IF (b_ks (ii) .gt.1.e-01) then
+    alpha = atan (abs (h_ks (ii + 1) - h_ks (ii) ) / b_ks (ii) )
+  ELSE
+    alpha = 0.
+  ENDIF
+
+  !JK      BESTIMMUNG FLIESSTIEFE LINKS
+  IF (ii.gt.1) then
+    IF (hr.gt.h_ks (ii - 1) ) then
+      h_li = h_ks (ii - 1) - h_ks (ii)
+    ELSE
+      h_li = hr - h_ks (ii - 1)
+    ENDIF
+    a_li = a_ks (ii - 1)
+    aks_li = k_ks (ii - 1)
+  ELSE
+    h_li = 0.
+    a_li = 0.
+    aks_li = 0.
+  ENDIF
+
+  !JK      BESTIMMUNG FLIESSTIEFE RECHTS
+  IF (ii.lt.nknot - 1) then
+    IF (hr.ge.h_ks (ii + 2) ) then
+      h_re = h_ks (ii + 2) - h_ks (ii + 1)
+    ELSE
+      h_re = hr - h_ks (ii + 1)
+    ENDIF
+  ELSE
+    h_re = 0.
+    a_re = 0.
+    aks_re = 0.
+  ENDIF
+  a_re = a_ks (ii + 1)
+  aks_re = k_ks (ii + 1)
+
+  IF (0.60 * hvor (ii) .lt.k_ks (ii) ) then
+    ak_mi = 0.60 * hvor (ii)
+  ELSE
+    ak_mi = k_ks (ii)
+  ENDIF
+
+  IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then
+    PRINT * , 'Fehler.Fliesztiefe Vorland  inkorrekt '
+    PRINT * , 'Voraussichtlich Geometriefehler.'
+    PRINT * , 'Beim Entwickler melden.'
+    STOP 'SUB EB2KS, da Fehler nicht behebbar.'
+  ENDIF
+
+  !JK      BERECHNUNG TEILABFLUSS
+  CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
+   & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
+   & a_re, h_li, h_re, aks_li, aks_re, alpha, cwr (ii), &
+   & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
+   & if_l (ii), formbeiwert(3) )
+
+  q_ks (ii) = v_ks (ii) * a_ks (ii)
+  qt (3) = qt (3) + q_ks (ii)
+  alsum = alsum + l_ks (ii) * u_ks (ii)
+END DO
+
+!JK   BERECHNUNG BENETZTER UMFANG?, GESCHWINDIGKEIT (RECHTES VORLAND)
+IF (f (3) .gt.1.e-06) then
+  rk (3) = alsum / u (3)
+  v (3) = qt (3) / f (3)
+ELSE
+  rk (3) = 0.
+  v (3) = 0.
+ENDIF
+
+
+!JK   BERECHNUNG TEIL-WSP-BREITEN?
+!JK   ----------------------------
+IF (itere1.le.1.and.itere2.le.1) then
+  !JK       WENN KEIN VORLAND
+  IF (itrli.eq.1.and.itrre.eq.nknot) then
+    bf (1) = b_hg / 2.
+    bf (2) = b_hg / 2.
+  !JK       WENN VORLAND NUR RECHTS
+  ELSEIF (itrli.eq.1) then
+    bf (1) = 1.e-06
+    bf (2) = b_hg
+  !JK       WENN VORLAND NUR LINKS
+  ELSEIF (itrre.eq.nknot) then
+    bf (1) = b_hg
+    bf (2) = 1.e-06
+  !JK       WENN VORLAND BEIDSEITIG
+  ELSE
+    IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then
+      IF (abs (l_ks (itrre) ) .le.1.e-04) then
+        vlam = 1.
+      ELSE
+        vlam = 0.
+      ENDIF
+    ELSE
+      vlam = l_ks (itrre) / l_ks (itrli - 1)
+    ENDIF
+    bf (1) = b_hg / (1. + vlam)
+    bf (2) = b_hg - bf (1)
+  ENDIF
+!JK   WENN bf(LINKES VORLAND) ZU KLEIN
+ELSEIF (abs (bf (1) ) .le.1.e-04) then
+  IF (itrli.ne.1.or.ischl.lt.itrli) then
+    IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then
+      IF (abs (l_ks (itrre) ) .le.1.e-04) then
+        vlam = 1.
+      ELSE
+        vlam = 0.
+      ENDIF
+    ELSE
+      vlam = l_ks (itrre) / l_ks (itrli - 1)
+    ENDIF
+    bf (1) = b_hg / (1. + vlam)
+    bf (2) = b_hg - bf (1)
+  ENDIF
+!JK    WENN bf(RECHTES VORLAND) ZU KLEIN
+ELSEIF (abs (bf (2) ) .le.1.e-04) then
+  IF (itrre.ne.nknot.or.ischr.gt.itrre) then
+    IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then
+      IF (abs (l_ks (itrre) ) .le.1.e-04) then
+        vlam = 1.
+      ELSE
+        vlam = 0.
+      ENDIF
+    ELSE
+      vlam = l_ks (itrre) / l_ks (itrli - 1)
+    ENDIF
+    bf (1) = b_hg / (1. + vlam)
+    bf (2) = b_hg - bf (1)
+  ENDIF
+ENDIF
+
+!JK   BERECHNUNG FLUSSSCHLAUCH NACH PASCHE
+CALL pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2,  &
+ & isener, vt_l, anl_l, anb_l, om_l, ct_l, bm_l, alt_l, &
+ & h_t, vt_n, v1_hg, if_pa, formbeiwert)
+
+!JK   GESAMTABFLUSS LINKES VORLAND
+qt (1) = qt (1) + qvor1
+!JK   GESAMTABFLUSS RECHTES VORLAND
+qt (3) = qt (3) + qvor2
+!JK   GESAMTABFLUSS FLUSSSCHLAUCH
+q_hg = v_hg * a_hg
+qt (2) = q_hg
+!JK   GESCHWINDIGKEIT FLUSSSCHLAUCH
+v (2) = v_hg
+!JK   HYDRAULISCHER RADIUS FLUSSSCHLAUCH
+ra (2) = r_hg
+!JK   BENETZTER UMFANG? FLUSSSCHLAUCH
+rk (2) = l_hg
+
+!JK   GESAMTABFLUSS
+qgs = qt (1) + qt (2) + qt (3)
+
+DO i = ischl, itrli - 1
+  !JK   FEHLERMELDUNG FUER LINKES VORLAND
+  IF (if_l (i) .ne.0) then
+    WRITE (UNIT_OUT_LOG, '(''Warnung! w- '',i8,'' am Profilpunkt'',i3, &
+     &          '' bei der Vorlandberechnung'')') if_l (i) , i
+  ENDIF
+END DO
+
+DO i = itrre, ischr - 1
+  !JK   FEHLERMELDUNG FUER RECHTES VORLAND
+  IF (if_l (i) .ne.0) then
+    WRITE (UNIT_OUT_LOG, '(''Warnung! w- '',i8,'' am Profilpunkt'',i3, &
+     &           '' bei der Vorlandberechnung'')') if_l (i) , i
+  ENDIF
+END DO
+
+IF (if_pa.ne.0) then
+  !JK   FEHLERMELDUNG FUER FLUSSSCHLAUCH
+  WRITE (UNIT_OUT_LOG, '(''Warnung! w- '',i8,'' bei der'', &
+   &           '' Sohlberechnung'')') if_pa
+ENDIF
+
+
+!JK   BERECHNUNG VON:
+!JK   ---------------
+!JK      - GESAMTUMFANG
+!JK      - HYDRAULISCHER RADIUS (GESAMT)
+!JK      - GESAMTGESCHWINDIGKEIT
+!JK      - HYDRAULISCHER WIDERSTAND (akges)??
+
+uges = u (1) + u (2) + u (3)
+
+IF (uges.gt.0) then
+  rhges = fges / uges
+  vges = qgs / fges
+  alges = 8 * 9.81 * rhges * isener / vges / vges
+  !JK   WENN WIDERSTANDSGESETZ NACH PASCHE
+  IF (i_typ_flg.eq.'pasche') then
+    factor1 = - 1. / 2.03 / alges**0.5
+    re = vges * 4. * rhges / 1.e-06
+    factor2 = 4.4 / alges**0.5 / re
+  !JK   WENN WIDERSTANDSGESETZ NACH COLEBROOK
+  ELSE
+    factor1 = - 1. / 2. / sqrt (alges)
+    isenk = isener * (1. + isener**2.) **0.5
+    dhy1 = 4. * rhges
+    factor2 = 1.31e-06 * 2.51 / (dhy1 * (2. * 9.81 * dhy1 * isenk) **0.5)
+  ENDIF
+  akges = 3.71 * 4. * rhges * (10** (factor1) - factor2)
+ENDIF
+
+!JK   BERECHNUNG DES WIRKSAMEN GESCHWINDIGKEITSVERLUSTES
+!JK   --------------------------------------------------
+phion = 0.0
+phiun = 0.0
+
+DO ii = ischl, itrli - 1
+  !JK   FUER LINKES VORLAND
+  IF (l_ks (ii) .gt.1.e-6) then
+    phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5)
+    phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5)
+  ENDIF
+END DO
+
+DO ii = itrre, ischl - 1
+  !JK   DAZU RECHTES VORLAND
+  IF (l_ks (ii) .gt.1.e-6) then
+    phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5)
+    phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5)
+  ENDIF
+END DO
+
+!JK   DAZU FLUSSSCHLAUCH
+phion = phion + a_hg * ( (r_hg / l_hg) **1.5)
+phiun = phiun + a_hg * ( (r_hg / l_hg) **0.5)
+
+!JK   WIRKSAMEN GESCHWINDIGKEITSVERLUST
+hv = phion / phiun**3 * qgs * qgs / 9.81 / 2.
+
+
+!JK   UNSINNIGE ABFRAGE----------------------------------------------
+idruck = 0
+IF (idruck.eq.1) then
+  DO i1 = 1, 2
+    IF (i1.eq.1) then
+      WRITE (UNIT_OUT_LOG, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (  &
+       & i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l ( &
+       & i1) , h_t (i1) , l_hg, v1_hg, vt_n (i1)
+    ELSE
+      WRITE (UNIT_OUT_LOG, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (  &
+       & i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l ( &
+       & i1) , h_t (i1) , l_hg, v_hg, vt_n (i1)
+    ENDIF
+  END DO
+ENDIF
+!JK   ENDE UNSINNIG ABFRAGE------------------------------------------
+
+RETURN
+
+END SUBROUTINE qks                                                                
+!-----------------------------------------------------------------------
                                                                         
-!JK   BERECHNUNG BENETZTER UMFANG?, GESCHWINDIGKEIT (RECHTES VORLAND)   
-      IF (f (3) .gt.1.e-06) then 
-        rk (3) = alsum / u (3) 
-        v (3) = qt (3) / f (3) 
-      ELSE 
-        rk (3) = 0. 
-        v (3) = 0. 
-      ENDIF 
-                                                                        
-                                                                        
-!JK   BERECHNUNG TEIL-WSP-BREITEN?                                      
-!JK   ----------------------------                                      
-                                                                        
-   70 IF (itere1.le.1.and.itere2.le.1) then 
-!JK       WENN KEIN VORLAND                                             
-        IF (itrli.eq.1.and.itrre.eq.nknot) then 
-          bf (1) = b_hg / 2. 
-          bf (2) = b_hg / 2. 
-!JK       WENN VORLAND NUR RECHTS                                       
-        ELSEIF (itrli.eq.1) then 
-          bf (1) = 1.e-06 
-          bf (2) = b_hg 
-!JK       WENN VORLAND NUR LINKS                                        
-        ELSEIF (itrre.eq.nknot) then 
-          bf (1) = b_hg 
-          bf (2) = 1.e-06 
-!JK       WENN VORLAND BEIDSEITIG                                       
-        ELSE 
-          IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then 
-            IF (abs (l_ks (itrre) ) .le.1.e-04) then 
-              vlam = 1. 
-            ELSE 
-              vlam = 0. 
-            ENDIF 
-          ELSE 
-            vlam = l_ks (itrre) / l_ks (itrli - 1) 
-          ENDIF 
-          bf (1) = b_hg / (1. + vlam) 
-          bf (2) = b_hg - bf (1) 
-        ENDIF 
-!JK   WENN bf(LINKES VORLAND) ZU KLEIN                                  
-      ELSEIF (abs (bf (1) ) .le.1.e-04) then 
-        IF (itrli.ne.1.or.ischl.lt.itrli) then 
-          IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then 
-            IF (abs (l_ks (itrre) ) .le.1.e-04) then 
-              vlam = 1. 
-            ELSE 
-              vlam = 0. 
-            ENDIF 
-          ELSE 
-            vlam = l_ks (itrre) / l_ks (itrli - 1) 
-          ENDIF 
-          bf (1) = b_hg / (1. + vlam) 
-          bf (2) = b_hg - bf (1) 
-        ENDIF 
-!JK    WENN bf(RECHTES VORLAND) ZU KLEIN                                
-      ELSEIF (abs (bf (2) ) .le.1.e-04) then 
-        IF (itrre.ne.nknot.or.ischr.gt.itrre) then 
-          IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then 
-            IF (abs (l_ks (itrre) ) .le.1.e-04) then 
-              vlam = 1. 
-            ELSE 
-              vlam = 0. 
-            ENDIF 
-          ELSE 
-            vlam = l_ks (itrre) / l_ks (itrli - 1) 
-          ENDIF 
-          bf (1) = b_hg / (1. + vlam) 
-          bf (2) = b_hg - bf (1) 
-        ENDIF 
-      ENDIF 
-                                                                        
-!JK   BERECHNUNG FLUSSSCHLAUCH NACH PASCHE                              
-      CALL pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2,      &
-      isener, iuerr, lein, vt_l, anl_l, anb_l, om_l, ct_l, bm_l, alt_l, &
-      h_t, vt_n, v1_hg, if_pa, formbeiwert)
-                                                                        
-!JK   GESAMTABFLUSS LINKES VORLAND                                      
-      qt (1) = qt (1) + qvor1 
-!JK   GESAMTABFLUSS RECHTES VORLAND                                     
-      qt (3) = qt (3) + qvor2 
-!JK   GESAMTABFLUSS FLUSSSCHLAUCH                                       
-      q_hg = v_hg * a_hg 
-      qt (2) = q_hg 
-!JK   GESCHWINDIGKEIT FLUSSSCHLAUCH                                     
-      v (2) = v_hg 
-!JK   HYDRAULISCHER RADIUS FLUSSSCHLAUCH                                
-      ra (2) = r_hg 
-!JK   BENETZTER UMFANG? FLUSSSCHLAUCH                                   
-      rk (2) = l_hg 
-                                                                        
-!JK   GESAMTABFLUSS                                                     
-      qgs = qt (1) + qt (2) + qt (3) 
-                                                                        
-      DO 160 i = ischl, itrli - 1
-!JK   FEHLERMELDUNG FUER LINKES VORLAND                                 
-        IF (if_l (i) .ne.0) then 
-          IF (lein.eq.3) then 
-      WRITE (iuerr, '(''Warnung! w- '',i8,'' am Profilpunkt'',i3,       &
-     &          '' bei der Vorlandberechnung'')') if_l (i) , i          
-          ENDIF 
-        ENDIF 
-  160 END DO 
-                                                                        
-      DO 161 i = itrre, ischr - 1 
-!JK   FEHLERMELDUNG FUER RECHTES VORLAND                                
-        IF (if_l (i) .ne.0) then 
-          IF (lein.eq.3) then 
-      WRITE (iuerr, '(''Warnung! w- '',i8,'' am Profilpunkt'',i3,       &
-     &           '' bei der Vorlandberechnung'')') if_l (i) , i         
-          ENDIF 
-        ENDIF 
-  161 END DO 
-                                                                        
-      IF (if_pa.ne.0) then 
-!JK   FEHLERMELDUNG FUER FLUSSSCHLAUCH                                  
-        IF (lein.eq.3) then 
-      WRITE (iuerr, '(''Warnung! w- '',i8,'' bei der'',                 &
-     &           '' Sohlberechnung'')') if_pa                           
-        ENDIF 
-      ENDIF 
-!**                                                                     
-                                                                        
-!JK   BERECHNUNG VON:                                                   
-!JK   ---------------                                                   
-!JK      - GESAMTUMFANG                                                 
-!JK      - HYDRAULISCHER RADIUS (GESAMT)                                
-!JK      - GESAMTGESCHWINDIGKEIT                                        
-!JK      - HYDRAULISCHER WIDERSTAND (akges)??                           
-      uges = u (1) + u (2) + u (3) 
-      IF (uges.gt.0) then 
-        rhges = fges / uges 
-        vges = qgs / fges 
-        alges = 8 * 9.81 * rhges * isener / vges / vges 
-!JK   WENN WIDERSTANDSGESETZ NACH PASCHE                                
-        IF (i_typ_flg.eq.'pasche') then 
-          factor1 = - 1. / 2.03 / alges**0.5 
-          re = vges * 4. * rhges / 1.e-06 
-          factor2 = 4.4 / alges**0.5 / re 
-!JK   WENN WIDERSTANDSGESETZ NACH COLEBROOK                             
-        ELSE 
-          factor1 = - 1. / 2. / sqrt (alges) 
-          isenk = isener * (1. + isener**2.) **0.5 
-          dhy1 = 4. * rhges 
-          factor2 = 1.31e-06 * 2.51 / (dhy1 * (2. * 9.81 * dhy1 * isenk)&
-          **0.5)                                                        
-        ENDIF 
-        akges = 3.71 * 4. * rhges * (10** (factor1) - factor2) 
-      ENDIF 
-                                                                        
-!JK   BERECHNUNG DES WIRKSAMEN GESCHWINDIGKEITSVERLUSTES                
-!JK   --------------------------------------------------                
-      phion = 0.0 
-      phiun = 0.0 
-                                                                        
-                                                                        
-  210 DO 250 ii = ischl, itrli - 1 
-!JK   FUER LINKES VORLAND                                               
-        IF (l_ks (ii) .gt.1.e-6) then 
-          phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5) 
-          phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5) 
-        ENDIF 
-  250 END DO 
-                                                                        
-      DO 251 ii = itrre, ischl - 1 
-!JK   DAZU RECHTES VORLAND                                              
-        IF (l_ks (ii) .gt.1.e-6) then 
-          phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5) 
-          phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5) 
-        ENDIF 
-  251 END DO 
-                                                                        
-!JK   DAZU FLUSSSCHLAUCH                                                
-  260 phion = phion + a_hg * ( (r_hg / l_hg) **1.5) 
-      phiun = phiun + a_hg * ( (r_hg / l_hg) **0.5) 
-                                                                        
-!JK   WIRKSAMEN GESCHWINDIGKEITSVERLUST                                 
-      hv = phion / phiun**3 * qgs * qgs / 9.81 / 2. 
-                                                                        
-                                                                        
-!JK   UNSINNIGE ABFRAGE----------------------------------------------   
-      idruck = 0 
-      IF (idruck.eq.1) then 
-  181   DO 6100 i1 = 1, 2 
-          IF (i1.eq.1) then 
-            WRITE (iuerr, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (  &
-            i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l ( &
-            i1) , h_t (i1) , l_hg, v1_hg, vt_n (i1)                     
-          ELSE 
-            WRITE (iuerr, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (  &
-            i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l ( &
-            i1) , h_t (i1) , l_hg, v_hg, vt_n (i1)                      
-          ENDIF 
- 6100   END DO 
-      ENDIF 
-!JK   ENDE UNSINNIG ABFRAGE------------------------------------------   
-                                                                        
-      RETURN 
-                                                                        
-      END SUBROUTINE qks
-                                                                        
-                                                                        
+
+
 
 !-----------------------------------------------------------------------
 SUBROUTINE qkst (indmax, hr, hv, vm, qges, sohle, ife)
-!-----------------------------------------------------------------------
+!
 ! geschrieben :                   24.08.1988  e.pasche
 ! geaendert   :
-!                                                                       
-!-----------------------------------------------------------------------
+!
 ! allgemeine beschreibung :
-!                                                                       
+! -------------------------
 ! das programm qkst berechnet bei vorgegebenen spiegelliniengefaelle
 ! den abflusz in den rauhigkeitszonen und den gesamtabflusz
-!
 !
 !
 ! IN DIESER SUBROUTINE VERWENDETE VARIABLEN
@@ -651,16 +637,6 @@ SUBROUTINE qkst (indmax, hr, hv, vm, qges, sohle, ife)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
 
 
 ! COMMON-Block /GES/ ----------------------------------------------------------

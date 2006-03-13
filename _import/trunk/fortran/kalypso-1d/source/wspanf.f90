@@ -1,4 +1,4 @@
-!     Last change:  WP   29 Aug 2005    3:07 pm
+!     Last change:  WP   11 Mar 2006    5:55 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 
 !--------------------------------------------------------------------------------
 SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-         & hrst, psiein, psiort, jw5, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+         & hrst, psiein, psiort, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 !
 ! BESCHREIBUNG
 ! ------------
@@ -59,8 +59,6 @@ SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
 ! froud   --      Froud-Zahl
 ! hborda  --      Einengungsverlust
 ! ifehl   --      Fehlervariable
-! jw8     --      Name des Kontrollfiles
-! lein    --      Art des Ergebnisausdruckes
 ! sohl(i) --
 ! str     --      Strecke zwischen den Profilen
 !
@@ -82,6 +80,7 @@ SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 
 REAL :: wsanf                   ! Anfangswasserspiegelhöhe
@@ -96,7 +95,6 @@ REAL :: hvst                    ! Verlusthoehe
 REAL :: hrst                    ! Verlusthoehe
 REAL :: psiein                  ! Verlustbeiwert
 REAL :: psiort                  ! Verlustbeiwert
-INTEGER :: jw5                  ! UNIT der Ausgabedatei (Ergebnistabelle)
 INTEGER :: nprof                ! Anzahl der Punkte in einem Profil
 REAL :: hgrenz                  ! Grenztiefe
 INTEGER :: ikenn
@@ -123,16 +121,6 @@ INTEGER         :: ikenn1
 COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
 ! ----------------------------------------------------------------------------------
 
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
 
 
 ! COMMON-Block /GES/ ----------------------------------------------------------
@@ -208,7 +196,7 @@ IF (nprof.eq.1.or.strbr.ne.0.) then
                                                                         
   IF (nprof.eq.1) then
 
-    IF (lein.eq.3) write (jw8, 1000) hmin
+    write (UNIT_OUT_LOG, 1000) hmin
     1000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
 
   ENDIF
@@ -232,17 +220,15 @@ IF (wsanf.lt.0.) then
   IF (nprof.eq.1) str = 100.
 
   CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
-      & hrst, psiein, psiort, jw5, hi, xi, s, ikenn, froud, str, ifehl, &
+      & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
       & nblatt, nz, idr1)
 
   !UT       FALLS DAS AUS station ERHALTENE ifehl ne.0, DANN IN FILE
   IF (ifehl.ne.0) then
 
-    IF (lein.eq.3) then
-      WRITE (jw8, 1001)
-      1001 format (1X, 'Keine Konvergenz in stationaer --> Ermittlung Anfangswsp als Grenztiefe!')
-    ENDIF
-                                                                        
+    WRITE (UNIT_OUT_LOG, 1001)
+    1001 format (1X, 'Keine Konvergenz in stationaer --> Ermittlung Anfangswsp als Grenztiefe!')
+
     wsanf = 0.
                                                                         
     !JK       ZU BERECHNUNG ALS GRENZTIEFE
@@ -261,10 +247,10 @@ ELSEIF (wsanf.eq.0.) then
                                                                         
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
                                                                         
-    WRITE (jw5, 1002)
+    WRITE (UNIT_OUT_TAB, 1002)
     1002 format (/1X, 'Als Ausgangswasserspiegel wird Grenztiefe angesetzt!')
 
     str = 100.
@@ -281,7 +267,7 @@ ELSEIF (wsanf.eq.0.) then
                                                                         
 
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
-     & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, itere1)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
 
 ELSE 
   ! (wsanf.gt.0.)
@@ -299,10 +285,10 @@ ELSE
                                                                         
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
                                                                         
-    WRITE (jw5, 1003) hr
+    WRITE (UNIT_OUT_TAB, 1003) hr
     1003 format (/1X, 'Als Anfangswasserspiegel wird WSP = ', F8.3, ' angesetzt.' )
 
     str = 0. 
@@ -313,7 +299,7 @@ ELSE
   itere1 = 1
                                                                         
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
-     & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, itere1)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
 
   IF (froud.ge.1.) ikenn = 1
                                                                         
@@ -322,15 +308,13 @@ ENDIF
 !UT   WENN ERSTES PROFIL, STRECKLE = null                               
 IF (nprof.eq.1) str = 0.
                                                                         
-IF (lein.eq.3) then
-  WRITE (jw8, 1004) hr, froud, hrst, hvst
-  1004 format (/1X, '--> In WSPANF berechnete Werte:', /, &
-              & 1X, '    HR    = ', F8.3, /, &
-              & 1X, '    FROUD = ', F8.3, /, &
-              & 1X, '    HRST  = ', F8.3, /, &
-              & 1X, '    HVST  = ', F8.3, /)
-ENDIF 
-                                                                        
+WRITE (UNIT_OUT_LOG, 1004) hr, froud, hrst, hvst
+1004 format (/1X, '--> In WSPANF berechnete Werte:', /, &
+            & 1X, '    HR    = ', F8.3, /, &
+            & 1X, '    FROUD = ', F8.3, /, &
+            & 1X, '    HRST  = ', F8.3, /, &
+            & 1X, '    HVST  = ', F8.3, /)
+
 ikenn = ikenn + igrnz
 
 END SUBROUTINE wspanf

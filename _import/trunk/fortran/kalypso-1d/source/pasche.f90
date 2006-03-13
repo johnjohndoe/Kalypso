@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    5:40 pm
+!     Last change:  WP   12 Mar 2006    2:24 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
-    & isener, iuerr, lein, v_tr, anl_l, anb_l, om_l, ct_l, bmwvor, l_tr, &
+    & isener, v_tr, anl_l, anb_l, om_l, ct_l, bmwvor, l_tr, &
     & u_tr, vt_n, v1_hg, if_pa, formbeiwert)
 
 !***********************************************************************
@@ -68,10 +68,8 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 !**   hr                                                                
 !**   iprof   -- ANZAHL PROFILE                                         
 !**   isener  -- ENERGIEGEFAELLE                                        
-!**   iuerr   --                                                        
-!**   itere2  -- ???????????????????????????????                        
-!**   lein    -- PARAMETER ZUR AUSGABE DES KONTROLLFILES                
-!**   nknot   --                                                        
+!**   itere2  -- ???????????????????????????????
+!**   nknot   --
                                                                         
 !**                                                                     
 !**   AUSGABE:                                                          
@@ -143,14 +141,12 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 !**   itr_typ_re      --      Trennflächentyp rechts                    
 !**   itrli   --      Punktnummer der linken Trennfläche                
 !**   itrre   --      Punktnummer der rechten Trennfläche               
-!**   jw8     --      Name des Kontrollfiles                            
-!**   l_hg    --      Widerstandsbeiwert des Flußschauches              
+!**   l_hg    --      Widerstandsbeiwert des Flußschauches
 !**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes          
 !**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes          
 !**   l_tr    --      Widerstandsbeiwert der Trennfläche                
 !**   l_tr(1) --      Widerstandsbeiwert der linken Trennfläche         
 !**   l_tr(2) --      Widerstandsbeiwert der rechten Trennfläche        
-!**   lein    --      Art des Ergebnisausdruckes                        
 !**   num     --      ITERAT-ZAEHLER SCHLEIFE 1000, TRENNFLAECHENGESCHW.
 !**   om_l    --      Bewuchsparameter, FELDEGROESSE RECHTS/LINKS       
 !**   omega   --      Bewuchsparameter                                  
@@ -282,6 +278,7 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE BEWUCHS
+USE IO_UNITS
 
 ! Calling variables
 INTEGER, INTENT(IN) 		  	:: nknot 	! Anzahl der Profilpunkte
@@ -294,8 +291,6 @@ REAL, DIMENSION(maxkla), INTENT(IN) 	:: br           ! Spiegelbreite der drei Ab
 REAL, INTENT(OUT)                       :: qvor1        ! Abfluss Vorland links
 REAL, INTENT(OUT)                       :: qvor2        ! Abfluss Vorland rechts
 REAL, INTENT(IN)                        :: isener       ! Energieliniengefälle
-INTEGER, INTENT(IN)                     :: iuerr        ! UNIT der Fehlerausgabedatei
-INTEGER, INTENT(IN)                     :: lein         ! Parameter zur Kontrolle der Ausgabe von Zwischennformationen
 REAL, DIMENSION(1:2), INTENT(OUT)       :: v_tr         ! Trennflächengeschwindigkeit (1 = links, 2 = rechts)
 REAL, DIMENSION(1:2), INTENT(OUT)       :: anl_l        ! Nachlauflänge  (1 = links, 2 = rechts)
 REAL, DIMENSION(1:2), INTENT(OUT)       :: anb_l        ! Nachlaufbreite (1 = links, 2 = rechts)
@@ -549,7 +544,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-             & iuerr, lein, if_so, formbeiwert(2) )
+             & if_so, formbeiwert(2) )
 
           !UT  ABFLUSS LINKES(1) UND RECHTES(2) VORLAND
           qvor1 = 0.0
@@ -577,7 +572,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-             & iuerr, lein, if_so, formbeiwert(2) )
+             & if_so, formbeiwert(2) )
 
           ! ------------------------------------------------------
           !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
@@ -604,7 +599,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-             & iuerr, lein, if_so, formbeiwert(2) )
+             & if_so, formbeiwert(2) )
 
 
         !JK            Vorland ohne Bewuchs, FALL 2
@@ -626,7 +621,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
                      & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-                     & iuerr, lein, if_so, formbeiwert(2) )
+                     & if_so, formbeiwert(2) )
 
         ELSEIF (v_tr (i1) .le.1.e-03.and.v_ks (ik) .le.1.e-06) then
 
@@ -651,7 +646,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-             & iuerr, lein, if_so, formbeiwert(2) )
+             & if_so, formbeiwert(2) )
 
         !UT   ELSE ZU (iprof(1:1).ne.' ')
         ELSE
@@ -730,19 +725,6 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !UT  FALLS NULL, SETZE AUF HALBE FLUSSBREITE
             IF (abs (bf (i1) ) .lt.1.e-04) then
 
-              !UT  SCHREIBEN IN KONTROLLFILE
-              !IF (lein.eq.3) THEN
-              !  write (iuerr, 7000) iter1, itere2, iter5, hr, bf(1), bf(2)
-              !  7000 format (1X, 'Warnung, Breite BF() = 0.0!', /, &
-              !             & 1X, 'Setze BF() = B_HG/2. ', /, &
-              !             & 1X, 'ITER1  = ', I3, /, &
-              !             & 1X, 'ITERE2 = ', I3, /, &
-              !             & 1X, 'ITER5  = ', I3, /, &
-              !             & 1X, 'HR     = ', F10.4, /, &
-              !             & 1X, 'BF(1)  = ', F10.4, /, &
-              !             & 1X, 'BF(2)  = ', F10.4 )
-              !ENDIF
-
               bf (1) = b_hg / 2.
               bf (2) = b_hg / 2.
 
@@ -763,15 +745,11 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                 ctfak = u_tr (i1) / l_ks (ik)
               ELSE
                 !UT  SCHREIBEN IN KONTROLLFILE
-                IF (lein.eq.3) then
-                  write (iuerr, '(''Berechnung von ctfak nicht moeglich.'' )')
-                END if
+                write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich.'' )')
               ENDIF
             ELSE
               !UT     SCHREIBEN IN KONTROLLFILE
-              IF (lein.eq.3) then
-                write (iuerr, '(''Berechnung von ctfak nicht moeglich.'')')
-              END if
+              write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich.'')')
             ENDIF
 
             ianf_hg = max (itrli, ischl)
@@ -780,7 +758,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !UT AUFRUF SOHLF, BER. LAMBDA, UND GESCHW. FLUSSS. i
             CALL sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr,  &
                & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
-               & iuerr, lein, if_so, formbeiwert(2) )
+               & if_so, formbeiwert(2) )
 
             !write (*,*) 'In Pasche. nach SOHLEF, IFALL = 4, NUM = ', num
             !WRITE (*,*) 'V_HG = ', v_hg, '  l_tr(i1) = ', l_tr(i1)
@@ -791,7 +769,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !UT                 TRENNFLAECHEN GESCHW. [m/s], FORMEL (43)
             vxn = ct * vstt
             !write (*,*) 'CT = ', ct, '   VSTT = ', vstt
-            !write (iuerr,*) ' In PASCHE. vxn = ', vxn
+            !write (UNIT_OUT_LOG,*) ' In PASCHE. vxn = ', vxn
 
             vt_n (i1) = vxn
 
@@ -802,26 +780,24 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
               !UT                    SETZEN FEHLERKENNZAHL SCHLEIFE 1000
               ip1000 = 1000
 
-              if(lein .eq. 3) then
-                write(iuerr,9002) num, v_tr(i1), vxn
-                9002 format(/1X, 'Keine konvergenz in schleife V_TR (sub pasche)!', /, &
-                           & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
-                           & 1X, 'Differenz V_TR_alt = ',F10.4, ' V_TR_neu = ',F10.4)
-                write(iuerr,8901) iter1, i1, v_tr(i1), axn2, b05f, omega, &
-                                & ct, ctfak, bmwvor(i1), bf(1), bf(2), l_tr(i1)
-                8901 FORMAT (/1X, 'ITER1 = ', I7, /, &
-                            & 1X, 'I1    = ', I7, /, &
-                            & 1X, 'V_TR  = ', F7.4, /, &
-                            & 1X, 'AXN2  = ', F7.4, /, &
-                            & 1X, 'B05F  = ', F7.4, /, &
-                            & 1X, 'OMEGA = ', F7.4, /, &
-                            & 1X, 'CT    = ', F7.4, /, &
-                            & 1X, 'HT/LV = ', F7.4, /, &
-                            & 1X, 'BMW   = ', F7.4, /, &
-                            & 1X, 'BF(1) = ', F7.4, /, &
-                            & 1X, 'BF(1) = ', F7.4, /, &
-                            & 1X, 'LAMT  = ', F7.4 )
-              END if
+              write(UNIT_OUT_LOG,9002) num, v_tr(i1), vxn
+              9002 format(/1X, 'Keine konvergenz in schleife V_TR (sub pasche)!', /, &
+                         & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
+                         & 1X, 'Differenz V_TR_alt = ',F10.4, ' V_TR_neu = ',F10.4)
+              write(UNIT_OUT_LOG,8901) iter1, i1, v_tr(i1), axn2, b05f, omega, &
+                              & ct, ctfak, bmwvor(i1), bf(1), bf(2), l_tr(i1)
+              8901 FORMAT (/1X, 'ITER1 = ', I7, /, &
+                          & 1X, 'I1    = ', I7, /, &
+                          & 1X, 'V_TR  = ', F7.4, /, &
+                          & 1X, 'AXN2  = ', F7.4, /, &
+                          & 1X, 'B05F  = ', F7.4, /, &
+                          & 1X, 'OMEGA = ', F7.4, /, &
+                          & 1X, 'CT    = ', F7.4, /, &
+                          & 1X, 'HT/LV = ', F7.4, /, &
+                          & 1X, 'BMW   = ', F7.4, /, &
+                          & 1X, 'BF(1) = ', F7.4, /, &
+                          & 1X, 'BF(1) = ', F7.4, /, &
+                          & 1X, 'LAMT  = ', F7.4 )
 
               !JK   VERLASSEN DER 1000-SCHLEIFE,
               !JK   DA KEINE KONVERGENZ NACH 10 DURCHLAEUFEN
@@ -876,13 +852,11 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
         !UT            SETZE FEHLERKENNZAHL
         ip5 = 10000 
                                                                         
-        if(lein .eq. 3) then
-          write(iuerr,9003) iter5, vffa, v_hg
-          9003 format(/1X, 'Keine konvergenz in schleife 5 (sub pasche)!', /, &
-                     & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
-                     & 1X, 'Differenz V_HG_alt = ',F10.4, ' V_HG_neu = ',F10.4)
-        END if
-                                                                        
+        write(UNIT_OUT_LOG,9003) iter5, vffa, v_hg
+        9003 format(/1X, 'Keine konvergenz in schleife 5 (sub pasche)!', /, &
+                   & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
+                   & 1X, 'Differenz V_HG_alt = ',F10.4, ' V_HG_neu = ',F10.4)
+
         !JK  ZU VERLASSEN DER 5-SCHLEIFE,
         !JK  DA KEINE KONVERGENZ NACH 20 DURCHLAEUFEN
         GOTO 3110 
@@ -890,7 +864,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
       !UT         ENDIF ZU (iter5.gt.20)
       ENDIF 
                                                                         
-      ! write(iuerr,'(3i2,11f8.4)')itere2,iter1,iter5,hr,vffa,v_hg, &
+      ! write(UNIT_OUT_LOG,'(3i2,11f8.4)')itere2,iter1,iter5,hr,vffa,v_hg, &
       !   & bf(1),bf(2),l_tr(1),l_tr(2),l_hg,l_ks(itrli),bmwvor(1), &
       !   & bmwvor(2)
                                                                         
@@ -972,17 +946,6 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
       !UT  SETZE FEHLERKENNZAHL SCHLEIFE 1, DA iter1>10
       ip1 = 100000
-
-
-      !UT   ------------------------------------------------------------------
-      !JK            WAR SCHON DEAKTIVIERT, 01.05.00, JK
-      !**            if(lein .eq. 3)
-      !**     *         write(iuerr,9003) iter1,bf(1),bfn1
-      !**9003           format(/'keine konvergenz in schleife 1 [up pasche]'/,
-      !**     1           'nach ',i2,' iterationen betraegt die differenz  '/,
-      !**     2              'bf(1)-alt = ',f10.4,'bf(1)-neu = ',f10.4)
-      !UT   ------------------------------------------------------------------
-
 
       !JK  VERLASSEN DER 1-SCHLEIFE,
       !JK  DA KEINE KONVERGENZ NACH 10 DURCHLAEUFEN

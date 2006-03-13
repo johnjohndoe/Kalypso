@@ -583,3 +583,108 @@ Dimensions-Variablen MIN2=500 und MAX2=20 in globale_definitionen.f90 konnte das
 Problem behoben werden.
 
                                                     Wolf Plöger, 17.01.2006
+
+
+
+Kalypso 1.0.16   Februar 2006
+-----------------------------
+1.)  Änderung der Variablenbezeichnung von az zu ay in LINDY (konform den anderen
+     Subroutinen).
+2.)  Zusätzliche Prüfung der eingegebenen Bewuchsparameter. Bewuchs zwischen den
+     Trennflächen wird direkt gelöscht, Inkonsistente Dateieneingabe, z.B.
+     ax= 5.0,  ay = 5.0,  dp = 0.0 wird geprüft und dann Bewuchs an dieser Stelle
+     entfernt. Warnhinweise werden in error2.log geschrieben.
+3.)  Verbesserung der Iteration zur Bestimmung von V_TR in Sub PASCHE. Einführung 
+     einer semi-adaptiven Unterrelaxation.
+4.)  Deklarierung der Übergabevariablen in LINDY. Löschen der Variable ks_mi aus
+     Übergabeliste, da nie verwendet! -> Änderungen in EB2KS und QKS_QKST.
+
+                                                    Wolf Plöger, 02.02.2006
+
+Kalypso 1.0.17   März 2006
+--------------------------
+1.)  Einführung eines neuen globalen Moduls IO_UNITS, das alle UNITs verwaltet.
+
+2.)  Ersetzen aller UNIT-Variablen im Code (z.B. jw2, jw8 usw.) durch neue
+     Variablen. Löschen aller alten Unit-Variablen aus Übergabeparametern von 
+     Subroutinen. In allen Subroutinen, in denen Ausgaben produziert werden,
+     muss ab sofort das Modul IO_UNITS eingebunden werden. Ausnahmen bleiben
+     bis auf weiteres die Subroutinen KOPF und DRUCKTAB.
+
+3.)  Löschen des COMMON-Blocks /FUNIT/, da überflüssig geworden.
+
+4.)  Löschen aller alten UNIT-Variablen in den entsprechenden COMMON-Blöcken.
+
+5.)  Löschen des Common-Blocks /AUSGABEART/, da nun überflüssig.
+
+6.)  Entfernen aller Abfragen IF (lein==3) THEN, da Kontroll.log jetzt immer
+     vorhanden ist. Hierbei Änderung in den folgenden Subroutinen:
+      - anf
+      - normber
+      - br_konv
+      - wspanf
+      - w_ber
+      - preo_pro
+      - verluste
+      - newton
+      - pegasus
+      - station
+      - abfluss
+      - geomet
+      - g_wehr
+      - eb2ks
+      - eb2kst
+      - qks
+      - qkst
+      - lindy
+      - pasche
+      - sohlef
+
+7.)  Einführung eines neuen Moduls zur globalen Ergebnisspeicherung MOD_ERG.
+     Hierin werden die TYPEn out_IND(prof,abfluss,1-3) und out_PROF(prof, abfluss)
+     definiert. Diese neu definierten Varialen Typen sollen alle jemals
+     berechneten Ergebnisse zentral speichern. Wurde vorher in Commonblock /ERG/
+     und weiteren Blöcken sehr unübersichtlich vorgenommen. Insbesondere bei
+     stationär-ungleichförmiger Berechnung sind Probleme durch Fehlzuweisungen
+     aufgetreten.
+
+8.)  Komplettes Reworking der Ausgabe der *.KM Dateien. Es hat sich gezeigt, dass
+     bei der stat.-unglf. Berechnung bei unterschiedlichen Abflüssen eine
+     unterschiedliche Anzahl von Profilen interpoliert werden (z.B. bei Brücken).
+     Deshalb kam es in der Vergangenheit zu Verschiebungen bei der Ausgabe
+     der Ergebnisse.
+     Jetzt werden zunächst A L L E jemals erzeugten Berechnungsergebnisse in
+     dem globalen Modul MOD_ERG abgelegt. Hierbei wird insbesondere auch die
+     Information, ob ein Profil mit Nummer i bei Abfluss j interpoliert wurde,
+     abgelegt.
+     Für die Datenausgabe werden in einer neuen Subroutine die entsprechenden
+     Rückverschiebungen durchgeführt:
+
+     !---------------------------------------------------------------------------
+     subroutine shift_left_array_out(nr_prof, j)
+     !
+     ! Beschreibung:
+     ! -------------
+     ! Aufgrund der Komplexitaet der verwendeten Berechnungsmethoden, werden
+     ! in bestimmten Faellen (z.B. Bruecken) Profile interpoliert. Die Anzahl
+     ! der interpolierten Profile haengt von dem jeweiligen Abflussereignis.
+     !
+     ! AbflussNr   Stat[km]  Stat[km]  Stat[km]  Stat[km] Stat[km]  Stat[km]  Stat[km]  Stat[km]
+     !    1         1.000     1.500     1.520     1.600    1.980     2.000     2.020     2.500
+     !    2         1.000     1.500     1.600     1.980    2.000     2.020     2.500
+     !    3         1.000     1.500     1.600     2.000    2.500
+     !    4         1.000     1.500     1.520     1.600    1.980     2.000     2.500
+     !    5         1.000     1.500     1.600     1.980    2.000     2.500
+     !
+     ! In diesem Beispiel sind alle ungeraden Werte (1.520, 1.980, 2.020)
+     ! interpolierte Profile. Die urspruenglich 5 Profile wurden bei Abfluss
+     ! Nr. 1 auf 8 Profile erweitert.
+     ! Fuer die Ausgabe von WQ-Beziehungen bzw. Tabellen fuer die Kalinin-Miljukow
+     ! Berechnung muessen die interpolierten Werte entfernt werden und der
+     ! Rest der Zeile nach links geschoben werden.
+ 
+
+9.)  Neue verbesserte Fehlerausgabe, wenn bei Bordvollberechung kein Abfluss
+     berechnet wurde.
+
+                                                    Wolf Plöger, 13.03.2006

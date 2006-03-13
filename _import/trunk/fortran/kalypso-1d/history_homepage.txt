@@ -215,3 +215,17 @@ Kalypso 1.0.16   Februar 2006
 2.)  Verbesserung der Iteration zur Bestimmung der Trennflächenrauhigkeit.
 
                                                     Wolf Plöger, 02.02.2006
+
+
+Kalypso 1.0.17   März 2006
+--------------------------
+1.)  BUG-Fix bei der Ausgabe der *.km Dateien.
+
+2.)  "Verschönerung" der Ausgabe in MS-DOS Box und in error2.log.
+
+3.)  Neue verbesserte Fehlerausgabe, wenn bei Bordvollberechung kein Abfluss
+     berechnet wurde.
+
+4.)  Datei mit Kontrollausgaben KONTROLL.LOG wird ab sofort immer ausgegeben.
+
+                                                    Wolf Plöger, 13.03.2006

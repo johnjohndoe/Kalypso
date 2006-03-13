@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Jul 2005    1:31 pm
+!     Last change:  WP   11 Mar 2006    2:07 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-     & psiein, psiort, jw5, froud, xi, hi, s, ifehl, istat)
+     & psiein, psiort, froud, xi, hi, s, ifehl, istat)
 
 ! geschrieben: p. Koch      Maerz 1990
 !
@@ -62,6 +62,7 @@ SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
 
 implicit none
 
@@ -80,7 +81,6 @@ REAL, INTENT(INOUT) :: hrst             ! Geschwindigkeitsverlust
 INTEGER, INTENT(INOUT) :: indmax	! Anzahl der Rauhigkeitszonen in einem Profil
 REAL, INTENT(INOUT) :: psiein		! Verlustbeiwert
 REAL, INTENT(INOUT) :: psiort		! Örtlicher Verlust
-INTEGER, INTENT(IN) :: jw5              ! UNIT-Nr. Wird weder hier noch in VERLUSTE verwendet!
 REAL, INTENT(INOUT) :: froud            ! Froudzahl, wird in VERLUSTE -> ERFROUD bestimmt.
 REAL, INTENT(INOUT) :: xi (maxkla)	! Abstand der einzelnen Profilpunkte (werden in VERLUSTE -> UF verwendet)
 REAL, INTENT(INOUT) :: hi (maxkla)      ! Höhen der einzelnen Profilpunkte (werden in VERLUSTE -> UF verwendet)
@@ -89,22 +89,10 @@ INTEGER, INTENT(OUT) :: ifehl           ! Fehlerkennung, normalerweise = 0
 INTEGER, INTENT(IN) :: istat            ! Flag zur Kennzeichnung der Strömung ( = 1 gleichförmig, = 0 ungleichförmig)
 
 
-
 ! COMMON-Block /ALT/ ---------------------------------------------------------------
 REAL            :: ws1, rg1, vmp1, fges1, hv1
 INTEGER         :: ikenn1
 COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
 ! ----------------------------------------------------------------------------------
 
 
@@ -208,26 +196,25 @@ hvstb = 0.0
 
 
 !WP 19.05.2005
-IF (lein.eq.3) then
-  write (jw8, 1000) str, q, q1, i, hr, hv, rg, hvst, hrst, indmax
-  1000 format (/1X, 'In NEWTON:', /, &
-              & 1X, '----------', /, &
-              & 1X, 'STR =    ', F10.4, /, &
-              & 1X, 'Q =      ', F10.4, /, &
-              & 1X, 'Q1 =     ', F10.4, /, &
-              & 1X, 'I =      ', I10, /, &
-              & 1X, 'HR =     ', F10.4, /, &
-              & 1X, 'HV =     ', F10.4, /, &
-              & 1X, 'RG =     ', F10.4, /, &
-              & 1X, 'HVST =   ', F10.4, /, &
-              & 1X, 'HRST =   ', F10.4, /, &
-              & 1X, 'INDMAX = ', I10)
+write (UNIT_OUT_LOG, 1000) str, q, q1, i, hr, hv, rg, hvst, hrst, indmax
+1000 format (/1X, 'In NEWTON:', /, &
+            & 1X, '----------', /, &
+            & 1X, 'STR =    ', F10.4, /, &
+            & 1X, 'Q =      ', F10.4, /, &
+            & 1X, 'Q1 =     ', F10.4, /, &
+            & 1X, 'I =      ', I10, /, &
+            & 1X, 'HR =     ', F10.4, /, &
+            & 1X, 'HV =     ', F10.4, /, &
+            & 1X, 'RG =     ', F10.4, /, &
+            & 1X, 'HVST =   ', F10.4, /, &
+            & 1X, 'HRST =   ', F10.4, /, &
+            & 1X, 'INDMAX = ', I10)
 
-  WRITE (jw8, 1001) 'I', 'HR', 'HRNEU'
-  1001 format (/1X, 'Iteration mittels Newton-Verfahren:', //, &
-              & 1X,  A2, A15,         A15            , /, &
-              & 1X, '--------------------------------')
-ENDIF
+WRITE (UNIT_OUT_LOG, 1001) 'I', 'HR', 'HRNEU'
+1001 format (/1X, 'Iteration mittels Newton-Verfahren:', //, &
+            & 1X,  A2, A15,         A15            , /, &
+            & 1X, '--------------------------------')                    
+
 
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
@@ -262,7 +249,7 @@ DO 100 jsch = 1, itmax_newton
   ifehlg = 0
 
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-               & psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, jen)
+               & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
 
   hrneu = ws1 + hrst + hvst + hborda + heins + horts
 
@@ -270,10 +257,9 @@ DO 100 jsch = 1, itmax_newton
   ! konvergenzueberpruefung
   ! **************************************************************
 
-  IF (lein.eq.3) then
-    WRITE (jw8, 1002) jsch, hr, hrneu
-    1002 format (1X, I2, F15.5, F15.5)
-  ENDIF
+
+  WRITE (UNIT_OUT_LOG, 1002) jsch, hr, hrneu
+  1002 format (1X, I2, F15.5, F15.5)
 
   IF (abs (hrneu - hr) .lt. err) then
     hr = hrneu
@@ -321,13 +307,13 @@ DO 100 jsch = 1, itmax_newton
 
     !WP Aufruf fuer Parameterset A
     CALL verluste (str, q, q1, i, hra, hv, rg, hvsta, hrsta,      &
-     & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, jen)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
 
     fa = ws1 + hrsta + hvsta + hborda + heins + horts
 
     !WP Aufruf fuer Parameterset B
     CALL verluste (str, q, q1, i, hrb, hv, rg, hvstb, hrstb,      &
-     & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, jen)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
 
     fb = ws1 + hrstb + hvstb + hborda + heins + horts
 
@@ -364,10 +350,9 @@ DO 100 jsch = 1, itmax_newton
 
         IF (abs (hra - hrneu) .lt. 0.01) then
 
-          IF (lein.eq.3) then
-            WRITE (jw8, 9000) dif
-            9000 format (1X, 'Achtung! Abbruch der Iteration bei DIF = ', F15.5)
-          ENDIF
+          WRITE (UNIT_OUT_LOG, 9000) dif
+          9000 format (1X, 'Achtung! Abbruch der Iteration bei DIF = ', F15.5)
+
           hr = hra
           !JK   DATENUEBERGABE
           GOTO 9999
@@ -394,34 +379,26 @@ IF (ifehl.eq.0) then
 
   ! stroemender bereich
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-   & psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, jsch)
+   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch)
 
   !JK  SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
+  IF (idruck.eq.0) then
 
-    IF (idruck.eq.0) then
+    WRITE (UNIT_OUT_LOG, 1003) hr,froud
+    1003 format (/1X, 'Wasserspiegel wurde in NEWTON ermittelt zu   HR = ', F15.5, '.', /, &
+                & 1X, '                          ( Froudzahl ist FROUD = ', F15.5, ')')
+  ELSE
 
-      WRITE (jw8, 1003) hr,froud
-      1003 format (/1X, 'Wasserspiegel wurde in NEWTON ermittelt zu   HR = ', F15.5, '.', /, &
-                  & 1X, '                          ( Froudzahl ist FROUD = ', F15.5, ')')
-
-    ELSE
-
-      WRITE (jw8, 1004) hr, hmax
-      1004 format (/1X, 'Wasserspiegel wurde in NEWTON ermittelt zu   HR = ', F15.5, '.', /, &
-                  & 1X, '                                         ( HMAX = ', F15.5, ')')
-
-    ENDIF
-
+    WRITE (UNIT_OUT_LOG, 1004) hr, hmax
+    1004 format (/1X, 'Wasserspiegel wurde in NEWTON ermittelt zu   HR = ', F15.5, '.', /, &
+                & 1X, '                                         ( HMAX = ', F15.5, ')')
   ENDIF
 
 ELSE
 
   !JK     SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, 9001)
-    9001 format (1X, 'Achtung! Keine Konvergenz in NEWTON -> Weiter mit PEGASUS!')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, 9001)
+  9001 format (1X, 'Achtung! Keine Konvergenz in NEWTON -> Weiter mit PEGASUS!')
 
 ENDIF
 

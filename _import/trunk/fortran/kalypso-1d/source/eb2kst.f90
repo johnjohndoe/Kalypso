@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Jul 2005    5:23 pm
+!     Last change:  WP   12 Mar 2006    2:33 pm
 !--------------------------------------------------------------------------
 ! This code, eb2kst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -68,6 +68,7 @@ SUBROUTINE eb2kst (indmax, hr, hv, rg, q)
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
                                                                         
@@ -80,13 +81,7 @@ COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
 ! -----------------------------------------------------------------------------
 
 
-!     ******************************************************************
-!      lein=1    --> einfacher ergebnisausdruck                         
-!      lein=2    --> erweiterter ergebnisausdruck                       
-!      lein=3    --> erstellung kontrollfile                            
-      COMMON / ausgabeart / lein, jw8 
-
-      REAL alg (maxkla) 
+REAL alg (maxkla)
                                                                         
                                                                         
 ! ------------------------------------------------------------------
@@ -139,19 +134,17 @@ COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
                                                                         
                                                                         
       IF (c1.lt.1.e-06) then 
-!         abbruch, weil profilwerte unsinnig  (c1=0)                    
-                                                                        
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(''abbruch, weil profilwerte unsinnig in eb2kst'',   &
-     &        /,''--> return'')')                                       
-        ENDIF 
+        !    abbruch, weil profilwerte unsinnig  (c1=0)
+        WRITE (UNIT_OUT_LOG, '(''abbruch, weil profilwerte unsinnig in eb2kst'',   &
+         &        /,''--> return'')')
+
         RETURN 
                                                                         
       ELSE 
                                                                         
         rg = c1 
         c1 = q / c1 
-!**          rg  = c1                                                   
+        !**          rg  = c1
                                                                         
         IF (als1.lt.1.e-04) then 
           alges = 0. 
@@ -159,7 +152,7 @@ COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
           alges = uges / als1 
           alges = 1 / alges 
         ENDIF 
-!**                                                                     
+
       ENDIF 
                                                                         
       IF (uges.gt.0) then 

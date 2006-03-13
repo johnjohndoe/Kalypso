@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    5:36 pm
+!     Last change:  WP   12 Mar 2006    2:04 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 
-SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, iuerr)
+SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 
 !***********************************************************************
 !**                                                                     
@@ -54,8 +54,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, iue
 !**   hv      -                                                         
 !**   iprof   -                                                         
 !**   itere1  - Zahl der Iterationen                                    
-!**   iuerr   - Fehlerausgabedatei                                      
-!**   nstat                                                             
+!**   nstat
 !**   q       -                                                         
 !**   q_alt   -                                                         
 !**   rg                                                                
@@ -114,8 +113,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, iue
 !**   l_hg    --      Widerstandsbeiwert des Flußschlauches             
 !**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes im       
 !**                   Vorland                                           
-!**   lein    --      Art des Ergebnisausdruckes                        
-!**   maxkla  --      Anzahl der Rauheitsabschnitte                     
+!**   maxkla  --      Anzahl der Rauheitsabschnitte
 !**   nknot   --      Anzahl der Punkte in einem Profil                 
 !**   nstat   --      Anzahl der Stationen                              
 !**   phion   --      Zähler des Energiestrombeiwertes                  
@@ -192,10 +190,10 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, iue
 !**   lindy(v_ks(ii),l_ks(ii),ax(ii),ay(ii),                            
 !**   1                   dp(ii),hvor(ii),isener,                       
 !**   2                 u_ks(ii),a_ks(ii),ak_mi,a_li,a_re,h_li,h_re,    
-!**   3              aks_li,aks_re,alpha,iuerr,lein,cwr(ii),alp(ii),    
+!**   3              aks_li,aks_re,alpha,cwr(ii),alp(ii),
 !**   4              also(ii),anl(ii),anb(ii),vnvv(ii),cwn(ii),if_l(ii))
-!**   pasche(nknot,iprof,hr,bf,itere2,br,qvor1,qvor2,isener,iuerr,      
-!**        lein,vt_l,anl_l,anb_l,om_l,ct_l,bm_l,alt_l,h_t,vt_n,v1_hg,   
+!**   pasche(nknot,iprof,hr,bf,itere2,br,qvor1,qvor2,isener,
+!**        vt_l,anl_l,anb_l,om_l,ct_l,bm_l,alt_l,h_t,vt_n,v1_hg,
 !**        if_pa)                                                       
                                                                         
 !***********************************************************************
@@ -209,6 +207,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, iue
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
 
 ! Calling variables
 CHARACTER(LEN=1), INTENT(IN) 	  	:: iprof        ! Art des Profils
@@ -221,18 +220,6 @@ INTEGER, INTENT(IN)                     :: itere1       ! Zahl der Iterationen
 INTEGER, INTENT(IN)                     :: nstat        ! Anzahl der Stationen/Nummer der aktuellen Station
 REAL, INTENT(IN)                  	:: hr		! Wasserspiegelhöhe
 INTEGER, INTENT(IN) 		  	:: nknot 	! Anzahl der Profilpunkte
-INTEGER, INTENT(IN)                     :: iuerr        ! UNIT der Fehlerausgabedatei
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
 
 
 ! COMMON-Block /DARCY/ -------------------------------------------------------------
@@ -339,11 +326,6 @@ ibed = 0
 !WP 10.05.2004                                                          
 
 
-!DO i = itrli, itrre-1
-!   write (jw8,*) 'In EB2KS. Zeile 343.  u_ks(',i,') = ', u_ks(i)
-!END DO
-
-                                                                        
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
@@ -574,8 +556,6 @@ DO 15 WHILE(difi.gt.0.01)
     !write (*,*) 'aks_li   = ', aks_li
     !write (*,*) 'aks_re   = ', aks_re
     !write (*,*) 'alpha    = ', alpha
-    !write (*,*) 'iuerr    = ', iuerr
-    !write (*,*) 'lein     = ', lein
     !write (*,*) 'cwr(ii)  = ', cwr(ii)
     !write (*,*) 'alp(ii)  = ', alp(ii)
     !write (*,*) 'also(ii) = ', also(ii)
@@ -589,7 +569,7 @@ DO 15 WHILE(difi.gt.0.01)
 
     CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
      & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
-     & a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
+     & a_re, h_li, h_re, aks_li, aks_re, alpha, cwr (ii), &
      & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
      & if_l (ii), formbeiwert(1) )
 
@@ -614,8 +594,6 @@ DO 15 WHILE(difi.gt.0.01)
     !write (*,*) 'aks_li   = ', aks_li
     !write (*,*) 'aks_re   = ', aks_re
     !write (*,*) 'alpha    = ', alpha
-    !write (*,*) 'iuerr    = ', iuerr
-    !write (*,*) 'lein     = ', lein
     !write (*,*) 'cwr(ii)  = ', cwr(ii)
     !write (*,*) 'alp(ii)  = ', alp(ii)
     !write (*,*) 'also(ii) = ', also(ii)
@@ -894,7 +872,7 @@ DO 15 WHILE(difi.gt.0.01)
 
     CALL lindy (v_ks (ii), l_ks (ii), ax (ii), ay (ii), dp (ii),    &
      & hvor (ii), mei (ii), isener, u_ks (ii), a_ks (ii), ak_mi, a_li, &
-     & a_re, h_li, h_re, aks_li, aks_re, alpha, iuerr, lein, cwr (ii), &
+     & a_re, h_li, h_re, aks_li, aks_re, alpha, cwr (ii), &
      & alp (ii), also (ii), anl (ii), anb (ii), vnvv (ii), cwn (ii),   &
      & if_l (ii), formbeiwert(3) )
 
@@ -1143,7 +1121,7 @@ DO 15 WHILE(difi.gt.0.01)
 
 
   CALL pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2,      &
-   & isener, iuerr, lein, vt_l, anl_l, anb_l, om_l, ct_l, bm_l, alt_l, &
+   & isener, vt_l, anl_l, anb_l, om_l, ct_l, bm_l, alt_l, &
    & h_t, vt_n, v1_hg, if_pa, formbeiwert)
 
   !***********************************************************************
@@ -1391,17 +1369,11 @@ DO 15 WHILE(difi.gt.0.01)
 
 
 
-
-  !      write(iuerr,'(2i2,4x,9f8.4)')itere1,itere2,hr,isenen,
-  !     *                  qt(1),qt(2),qt(3),qgs,rk(1),rk(2),rk(3)
-
   IF (itere2.gt.10) then
     !**   SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (iuerr, 9006) itere2, difi
-      9006 FORMAT (1X, 'Warnung! Keine Konvergenz bei der Berechnung des Gefaelles!', /, &
-               & 1X, 'Nach ',I3,' Iterationen betraegt der Fehler :', F10.4)
-    ENDIF
+    WRITE (UNIT_OUT_LOG, 9006) itere2, difi
+    9006 FORMAT (1X, 'Warnung! Keine Konvergenz bei der Berechnung des Gefaelles!', /, &
+             & 1X, 'Nach ',I3,' Iterationen betraegt der Fehler :', F10.4)
     GOTO 181
   ENDIF
 
@@ -1422,11 +1394,9 @@ DO 15 WHILE(difi.gt.0.01)
 DO i = ischl, itrli - 1
   IF (if_l (i) .ne.0) then
     !**   SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (iuerr, 9001) if_l (i) , i
-      9001 format (1X, 'Warnung! w- ',I8,' am Profilpunkt',i3, /, &
-                 & 1X, 'bei der Vorlandberechnung links.')
-    ENDIF
+    WRITE (UNIT_OUT_LOG, 9001) if_l (i) , i
+    9001 format (1X, 'Warnung! w- ',I8,' am Profilpunkt',i3, /, &
+               & 1X, 'bei der Vorlandberechnung links.')
   ENDIF
 END DO
 
@@ -1434,11 +1404,9 @@ END DO
 DO i = itrre, ischr - 1
   IF (if_l (i) .ne.0) then
     !**      SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (iuerr, 9000) if_l(i), i
-      9000 format (1X, 'Warnung! w- ', I8, 'am Profilpunkt' ,I3, /, &
-                 & 1X, 'bei der Vorlandberechnung rechts.')
-    ENDIF
+    WRITE (UNIT_OUT_LOG, 9000) if_l(i), i
+    9000 format (1X, 'Warnung! w- ', I8, 'am Profilpunkt' ,I3, /, &
+               & 1X, 'bei der Vorlandberechnung rechts.')
   ENDIF
 END DO
 
@@ -1446,9 +1414,7 @@ END DO
 IF (if_pa.ne.0) then
 
   !**      SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (iuerr, '(''Warnung! w- '',i8,'' bei der Sohlberechnung'')') if_pa
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(''Warnung! w- '',i8,'' bei der Sohlberechnung'')') if_pa
 
 ENDIF
 
@@ -1664,24 +1630,22 @@ IF (iergeb.ne.0) then
   DO i1 = ischl, ischr
     IF (i1.lt.itrli.or.i1.ge.itrre) then
       !**    SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) write (iuerr, '(9f8.4)') cwr (i1) , alp (i1) &
-      , also (i1) , l_ks (i1) , v_ks (i1) , anl (i1) , anb (i1) , &
-      vnvv (i1) , cwn (i1)
+      write (UNIT_OUT_LOG, '(9f8.4)') cwr (i1) , alp (i1), &
+       & also (i1) , l_ks (i1) , v_ks (i1) , anl (i1) , anb (i1) , &
+       & vnvv (i1) , cwn (i1)
     ENDIF
   END DO
 
   DO i1 = 1, 2
     !**   SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      IF (i1.eq.1) then
-        WRITE (iuerr, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (&
-        i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l &
-        (i1) , h_t (i1) , l_hg, v1_hg, vt_n (i1)
-      ELSE
-        WRITE (iuerr, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (&
-        i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l &
-        (i1) , h_t (i1) , l_hg, v_hg, vt_n (i1)
-      ENDIF
+    IF (i1.eq.1) then
+      WRITE (UNIT_OUT_LOG, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (&
+       & i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l &
+       & (i1) , h_t (i1) , l_hg, v1_hg, vt_n (i1)
+    ELSE
+      WRITE (UNIT_OUT_LOG, '(12f8.4)') vt_l (i1) , anl_l (i1) , anb_l (&
+       & i1) , om_l (i1) , ct_l (i1) , bm_l (i1) , bf (i1) , alt_l &
+       & (i1) , h_t (i1) , l_hg, v_hg, vt_n (i1)
     ENDIF
   END DO
 

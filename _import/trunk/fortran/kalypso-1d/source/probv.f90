@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005   10:21 am
+!     Last change:  WP   10 Mar 2006    8:38 pm
 !--------------------------------------------------------------------------
 ! This code, probv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !-----------------------------------------------------------------------
-SUBROUTINE probv1 (nstat, iw12, qmax, hrb, lif, &
+SUBROUTINE probv1 (nstat, qmax, hrb, lif, &
                  & kif, lv, kv, qges, bges, wspgef, cc, sgef_m)
 !
 ! Beschreibung
@@ -56,7 +56,6 @@ SUBROUTINE probv1 (nstat, iw12, qmax, hrb, lif, &
 ! bges     - GESAMTE FLUSSBREITE?
 ! cc       - ???
 ! hrb      - Fliesstiefe [m NN]
-! iw12     - NAME DER AUSGABEDATEI [-]
 ! kif      - k_i Fluss
 ! kv       - kiv?
 ! lif      - REZIPROKE CHAR. LAENGE? (FELD) [1/m?]
@@ -116,10 +115,10 @@ SUBROUTINE probv1 (nstat, iw12, qmax, hrb, lif, &
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 ! Calling variables
 INTEGER, INTENT(IN) 	:: nstat    	! Anzahl der Stationen
-INTEGER, INTENT(IN) 	:: iw12     	! Unit fuer Datenausgabe
 REAL, INTENT(IN)        :: qmax         ! Maximaler Abfluss (Bordvoll?)
 REAL, INTENT(IN)        :: hrb          ! Fliesstiefe [m NN]
 REAL       		:: lif(6)       ! l_i Fluss
@@ -335,13 +334,13 @@ END DO
 IF ( (ianzv - 1) .gt.1.e-06) cc = csum / (ianzv - 1)
 
 
-!**   Schreiben der KOPFZEILEN IN ErgebnissDATEI iw12 UND DES GEFAELLES
+!**   Schreiben der KOPFZEILEN IN ErgebnissDATEI UNIT_OUT_LOG_KM UND DES GEFAELLES
 
-!     write(iw12,9001)statso
-WRITE (iw12, 9002) gefaelle
-WRITE (iw12, 9003)
-WRITE (iw12, 9004)
-WRITE (iw12, 9005)
+!     write(UNIT_OUT_LOG_KM,9001)statso
+WRITE (UNIT_OUT_LOG_KM, 9002) gefaelle
+WRITE (UNIT_OUT_LOG_KM, 9003)
+WRITE (UNIT_OUT_LOG_KM, 9004)
+WRITE (UNIT_OUT_LOG_KM, 9005)
 
 lv (1) = 0.
 kv (1) = 0.
@@ -362,7 +361,7 @@ DO 5000 i1 = 2, istep
 
   IF (hwsp (ikenn2, nstat) .le.hrb) then
 
-    WRITE (iw12, 9008) hwsp (ikenn2, nstat), fb (ikenn2, nstat),  &
+    WRITE (UNIT_OUT_LOG_KM, 9008) hwsp (ikenn2, nstat), fb (ikenn2, nstat),  &
     bb (ikenn2, nstat), bb (ikenn2, nstat), qq (ikenn2, nstat),   &
     sli, ski
 
@@ -389,7 +388,7 @@ DO 5000 i1 = 2, istep
       qges (i1) = qq (ikenn2, nstat)
     ENDIF
 
-    WRITE (iw12, 9006) hwsp (ikenn2, nstat), fb (ikenn2, nstat),  &
+    WRITE (UNIT_OUT_LOG_KM, 9006) hwsp (ikenn2, nstat), fb (ikenn2, nstat),  &
     fvor (ikenn2, nstat), bb (ikenn2, nstat), bvor (ikenn2, nstat)&
     , bges (i1), qq (ikenn2, nstat), qvor (ikenn2, nstat),        &
     sli, ski, sliv, skiv
@@ -402,9 +401,9 @@ rnfk = rnf * 1000.
 rnvk = rnv * 1000.
 
 !**   SCHREIBEN DER KONSTANTEN FUER FLUSS UND VORLAND
-!**   SOWIE VON qmax UND DER FLIESSTIEFE IN DATEI iw12
-WRITE (iw12, 9007) hrb, qmax, rkf, rnfk, rkv, rnvk
-                                                                                
+!**   SOWIE VON qmax UND DER FLIESSTIEFE IN DATEI UNIT_OUT_LOG_KM
+WRITE (UNIT_OUT_LOG_KM, 9007) hrb, qmax, rkf, rnfk, rkv, rnvk
+
 
                                                                         
 ! -----------------------------------------------------------------
@@ -431,4 +430,4 @@ WRITE (iw12, 9007) hrb, qmax, rkf, rnfk, rkv, rnvk
      &             ' 1/km')                                             
  9008 FORMAT(2f8.3,t25,f8.3,t41,2f8.3,t65,2f8.3) 
                                                                         
-      END SUBROUTINE probv1
+END SUBROUTINE probv1

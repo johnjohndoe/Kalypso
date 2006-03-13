@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005    1:41 pm
+!     Last change:  WP   12 Mar 2006    2:37 pm
 !--------------------------------------------------------------------------
 ! This code, yarnell.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -78,84 +78,73 @@ SUBROUTINE yarnell (hpf, fges, q, xk)
 !**                                                                     
 !***********************************************************************
                                                                         
+USE IO_UNITS
+USE KONSTANTEN
                                                                         
+COMMON / pfeilerstau / alpha, bnetto
+
+!     xk - pfeilerformbeiwert
+!     hz - bezugshoehe (idealisiert rechteckquerschnitt)
+
+iykenn = 0
+
+!UT   BERECHNUNG DER BEZUGSHOEHE
+hz = fges / bnetto
+
+!UT   MITTLERE GESCHW. VON BRUECKENPROFIL 3
+vm3 = q / fges
+
+!UT   TABELLE 3.44, BWK, S. 66
+IF (alpha.gt.0.23) then
+
+  !UT     SCHREIBEN IN KONTROLLDATEI
+  WRITE (UNIT_OUT_LOG, '(''warnung !!!!'')')
+  WRITE (UNIT_OUT_LOG, '(''verbauverhaeltnis alpha = '',f8.4)') alpha
+  WRITE (UNIT_OUT_LOG, '(''- fuer rechteckgerinne alpha < 0.23'')')
+  WRITE (UNIT_OUT_LOG, '(''- fuer trapezgerinne'')')
+  WRITE (UNIT_OUT_LOG, '(''  boeschungsneigung  1:2     < 0.34'')')
+  WRITE (UNIT_OUT_LOG, '(''                     1:3     < 0.44'')')
+
+ENDIF
+
+!UT   LIEGT alpha ueber 0.44 GILT TABELLE 3.44 nicht MEHR
+!UT   iykenn WIRD 1 GESETZT UND AN SUB-ENDE DANN STAUHOEWHE AUF NULL
+IF (alpha.gt.44) iykenn = 1                                                      
                                                                         
-      COMMON / pfeilerstau / alpha, bnetto 
-      COMMON / ausgabeart / lein, jw8 
-!     xk - pfeilerformbeiwert                                           
-!     hz - bezugshoehe (idealisiert rechteckquerschnitt)                
-                                                                        
-      iykenn = 0 
-                                                                        
-!UT   BERECHNUNG DER BEZUGSHOEHE                                        
-      hz = fges / bnetto 
-                                                                        
-!UT   MITTLERE GESCHW. VON BRUECKENPROFIL 3                             
-      vm3 = q / fges 
-                                                                        
-!UT   TABELLE 3.44, BWK, S. 66                                          
-      IF (alpha.gt.0.23) then 
-                                                                        
-!UT     SCHREIBEN IN KONTROLLDATEI                                      
-        IF (lein.eq.3) then 
-          WRITE (jw8, '(''warnung !!!!'')') 
-          WRITE (jw8, '(''verbauverhaeltnis alpha = '',f8.4)') alpha 
-          WRITE (jw8, '(''- fuer rechteckgerinne alpha < 0.23'')') 
-          WRITE (jw8, '(''- fuer trapezgerinne'')') 
-      WRITE (jw8, '(''  boeschungsneigung  1:2     < 0.34'')') 
-      WRITE (jw8, '(''                     1:3     < 0.44'')') 
-        ENDIF 
-                                                                        
-      ENDIF 
-                                                                        
-!UT   LIEGT alpha ueber 0.44 GILT TABELLE 3.44 nicht MEHR               
-!UT   iykenn WIRD 1 GESETZT UND AN SUB-ENDE DANN STAUHOEWHE AUF NULL    
-      IF (alpha.gt.44) iykenn = 1 
-                                                                        
-!JK         WAR SCHON DEAKTIVIERT, 30.04.00, JK                         
-!**         print *                                                     
-!**         print *                                                     
-!**         print *,'warnung !!!!'                                      
-!**         print *                                                     
-!**         print *,'verbauverhaeltnis alpha = ',alpha                  
-!**         print *,'- fuer rechteckgerinne alpha < 0.23'               
-!**         print *,'- fuer trapezgerinne'                              
-!**         print *,'  boeschungsneigung  1:2     < 0.34'               
-!**         print *,'                     1:3     < 0.44'               
-!**         print *,'ueberpruefen sie ggf. die verhaeltnisse !!'        
-!**         print *,'(vgl beschreibung)'                                
-!**         endif                                                       
-                                                                        
-!UT      BERECHNUNG NACH PFEILERSTAUFORMEL 58,S.35 IN PROGRAMMANLEITUNG 
-!UT      KLAMMERTERM                                                    
-      alpha = alpha + 15.0 * alpha**4 
-                                                                        
-!UT      GESCHWINDIGKEITSTERM                                           
-      hpf = vm3 * vm3 / 2. / 9.81 
-                                                                        
-!UT      FAKTOR 10-TERM                                                 
-      fak = hpf * 10. / hz 
-                                                                        
-      fak = xk + fak - 0.6 
-                                                                        
-!JK         WAR SCHON DEAKTIVIERT, 30.04.00, JK                         
-!**         hpf=hpf*alpha                                               
-                                                                        
-      fak = fak * alpha 
-                                                                        
-!UT   BERECHNUNG PFEILERSTAU, FORMEL 58,S.35 IN PROGRAMMANLEITUNG       
-      hpf = hpf * 2.0 * xk * fak 
-                                                                        
-                                                                        
-!UT      SCHREIBEN IN KONTROLLDATEI                                     
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(''Pfeilerstau hpf='',f8.3)') hpf 
-      ENDIF 
-                                                                        
-      IF (iykenn.eq.1) hpf = 0.0 
-!**                                                                     
-                                                                        
- 9999 RETURN 
-                                                                        
-!UT   ENDE SUB YARNELL                                                  
-      END SUBROUTINE yarnell                        
+!JK         WAR SCHON DEAKTIVIERT, 30.04.00, JK
+!**         print *
+!**         print *
+!**         print *,'warnung !!!!'
+!**         print *
+!**         print *,'verbauverhaeltnis alpha = ',alpha
+!**         print *,'- fuer rechteckgerinne alpha < 0.23'
+!**         print *,'- fuer trapezgerinne'
+!**         print *,'  boeschungsneigung  1:2     < 0.34'
+!**         print *,'                     1:3     < 0.44'
+!**         print *,'ueberpruefen sie ggf. die verhaeltnisse !!'
+!**         print *,'(vgl beschreibung)'
+!**         endif
+
+!UT      BERECHNUNG NACH PFEILERSTAUFORMEL 58,S.35 IN PROGRAMMANLEITUNG
+!UT      KLAMMERTERM
+alpha = alpha + 15.0 * alpha**4
+
+!UT      GESCHWINDIGKEITSTERM
+hpf = vm3 * vm3 / 2. / g
+
+!UT      FAKTOR 10-TERM
+fak = hpf * 10. / hz
+
+fak = xk + fak - 0.6
+fak = fak * alpha
+
+!UT   BERECHNUNG PFEILERSTAU, FORMEL 58,S.35 IN PROGRAMMANLEITUNG
+hpf = hpf * 2.0 * xk * fak
+
+!UT      SCHREIBEN IN KONTROLLDATEI
+WRITE (UNIT_OUT_LOG, '(''Pfeilerstau hpf='',f8.3)') hpf
+
+IF (iykenn.eq.1) hpf = 0.0
+
+
+END SUBROUTINE yarnell

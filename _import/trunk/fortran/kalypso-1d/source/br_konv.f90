@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005    9:39 am
+!     Last change:  WP   13 Mar 2006    1:46 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,8 +41,8 @@
 
 !-----------------------------------------------------------------------
 SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
-     & hrst, indmax, psieins, psiorts, jw5, nblatt, &
-     & nz, jw7, idr1, hgrenz, ikenn, ifroud, iwehr, lein, jw8)
+     & hrst, indmax, psieins, psiorts, nblatt, &
+     & nz, idr1, hgrenz, ikenn, ifroud, iwehr)
 !
 ! BESCHREIBUNG: KONVENTIONELLE BRUECKENBERECHNUNG
 !
@@ -67,6 +67,7 @@ SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 REAL, INTENT(IN)     	:: staso        ! Station [km]
 REAL                    :: str1         ! Abstand zum naechsten Profil [m]
@@ -81,18 +82,13 @@ REAL                    :: hrst
 INTEGER                 :: indmax       ! Anzahl der Rauheitsabschnitte
 REAL                    :: psieins
 REAL                    :: psiorts
-INTEGER                 :: jw5
 INTEGER                 :: nblatt
 INTEGER                 :: nz
-INTEGER                 :: jw7
 CHARACTER(LEN=1) 	:: idr1
 REAL                    :: hgrenz
 INTEGER                 :: ikenn
 INTEGER                 :: ifroud
 INTEGER                 :: iwehr
-INTEGER                 :: lein
-INTEGER                 :: jw8
-
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
 ! fuer BRUECKENBERECHNUNG, AUFRUF IN INTDAT, IMPULS, WSPBER
@@ -230,25 +226,25 @@ REAL :: x11 (maxkla), h11 (maxkla), ax1 (maxkla), ay1 (maxkla), dp1 (maxkla)
 INTEGER, PARAMETER :: itmax_brkon = 20
 
 
-if (lein == 3) then
-  write (jw8, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
-  20 format (//1X, 'Subroutine BR_KONV', /, &
-             & 1X, '------------------------------------------------', //, &
-             & 5X, 'Uebergebene Parameter:', /, &
-             & 5X, '----------------------', /, &
-             & 5X, 'STASO (Station)                      = ', F12.5, /, &
-             & 5X, 'STR1 (Abstand zum vorh. Profil)      = ', F12.5, /, &
-             & 5X, 'Q (Abfluss)                          = ', F12.5, /, &
-             & 5X, 'Q1 (Abfluss?)                        = ', F12.5, /, &
-             & 5X, 'NPROF (Nummer des Profils)           = ', I12,   /, &
-             & 5X, 'HR (Wasserstand im vorh. Profil)     = ', F12.5, /, &
-             & 5X, 'RG (?)                               = ', F12.5, /, &
-             & 5X, 'HVST (Verlusthoehe?)                 = ', F12.5, /, &
-             & 5X, 'HRST (Reibungsverlust aus STATION)   = ', F12.5, /)
+
+write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
+20 format (//1X, 'Subroutine BR_KONV', /, &
+           & 1X, '------------------------------------------------', //, &
+           & 5X, 'Uebergebene Parameter:', /, &
+           & 5X, '----------------------', /, &
+           & 5X, 'STASO (Station)                      = ', F12.5, /, &
+           & 5X, 'STR1 (Abstand zum vorh. Profil)      = ', F12.5, /, &
+           & 5X, 'Q (Abfluss)                          = ', F12.5, /, &
+           & 5X, 'Q1 (Abfluss?)                        = ', F12.5, /, &
+           & 5X, 'NPROF (Nummer des Profils)           = ', I12,   /, &
+           & 5X, 'HR (Wasserstand im vorh. Profil)     = ', F12.5, /, &
+           & 5X, 'RG (?)                               = ', F12.5, /, &
+           & 5X, 'HVST (Verlusthoehe?)                 = ', F12.5, /, &
+           & 5X, 'HRST (Reibungsverlust aus STATION)   = ', F12.5, /)
   !do i = 1, nknot
-  !  write (jw8,*) i, x1(i), h1(i)
+  !  write (UNIT_OUT_LOG,*) i, x1(i), h1(i)
   !end do
-end if
+
 
 
 ! ------------------------------------------------------------------
@@ -318,9 +314,8 @@ ifroud = 0
 
 
 !JK    SCHREIBEN IN KONTROLLFILE
-IF (lein .eq. 3) then
-  WRITE (jw8, 28) iokl, iokr
-ENDIF
+
+WRITE (UNIT_OUT_LOG, 28) iokl, iokr
 28 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
           & 1X, 'IOKR (Nummer des Punktes der Oberkante rechts): ', I3)
 
@@ -402,9 +397,8 @@ DO i = 1, npl
 END DO
 
 
-IF (lein.eq.3) then
-  WRITE (jw8, 29) npl, i2, nknot
-ENDIF
+
+WRITE (UNIT_OUT_LOG, 29) npl, i2, nknot
 29 format (/1X, 'NPL (Anzahl Punkte auf Brueckenlinie?):       ', I3,/,&
           & 1X, 'I2 (Gesamte Anzahl der Punkte inkl. Bruecke): ', I3,/,&
           & 1X, 'NKNOT (Anzahl Profilpunkte ohne Bruecke):     ', I3)
@@ -427,15 +421,11 @@ DO i = 1, nknot
   ENDIF
 
   !JK   SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-
-    !JK     WENN BERECHNUNG NACH DARCY-WEISBACH
-    IF (ifg.eq.1) then
-      WRITE (jw8, 30) i, x1 (i) , h1 (i) , rau (i) , ax (i) , ay (i) , dp (i)
-    ELSE
-      WRITE (jw8, 31) i, x1 (i) , h1 (i) , rau (i)
-    ENDIF
-
+  !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
+  IF (ifg.eq.1) then
+    WRITE (UNIT_OUT_LOG, 30) i, x1 (i) , h1 (i) , rau (i) , ax (i) , ay (i) , dp (i)
+  ELSE
+    WRITE (UNIT_OUT_LOG, 31) i, x1 (i) , h1 (i) , rau (i)
   ENDIF
 
 END DO
@@ -474,16 +464,14 @@ htrli = h1 (itrli)
 htrre = h1 (itrre)
 
 !JK   SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-  WRITE (jw8, 32) itrli, itrre
-ENDIF
+
+WRITE (UNIT_OUT_LOG, 32) itrli, itrre
 32 format (/1X, 'ITRLI (Trennflaeche links):  ', I3,/,&
           & 1X, 'ITRRE (Trennflaeche rechts): ', I3)
 
-!WP
-if (lein.eq.3) then
-  write (jw8,*) 'Zeile 423 in brkon, Starte NORMBER!'
-END if
+
+!write (UNIT_OUT_LOG,*) 'Zeile 423 in brkon, Starte NORMBER!'
+
 
 !WP Die urspruengliche Profilgeometrie wird wiederhergestellt.
 !do i = 1, maxkla
@@ -496,7 +484,7 @@ END if
 !end do
 
 CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, indmax, &
-            & psieins, psiorts, jw5, hgrenz, ikenn, froud, nblatt, nz)
+            & psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
 
 !WP Die urspruengliche Profilgeometrie wird wiederhergestellt.
 !do i = 1, maxkla
@@ -506,25 +494,23 @@ CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, indmax, &
 !end do
 
 
-!WP
-if (lein.eq.3) then
-  write (jw8,*) 'Zeile 429 in brkon, Ende NORMBER!'
-END if
+
+!write (UNIT_OUT_LOG,*) 'Zeile 429 in brkon, Ende NORMBER!'
 
 CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
 
-WRITE (jw5, '(/,t10,'' Profil "3":'')')
+WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "3":'')')
 nz = nz + 2
 IF (nz.gt.50) then
   nblatt = nblatt + 1
-  CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
 ENDIF
-CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
 IF (nz.gt.50) then
   nblatt = nblatt + 1
-  CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
 ENDIF
 
 he3 = hen (nprof)
@@ -607,21 +593,17 @@ CALL intdat (staso, ifehl)
 101 continue
 
 !JK     SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-  WRITE (jw8, '(/,''anfangsgeometrie im uw-profil'',/)')
-ENDIF
+WRITE (UNIT_OUT_LOG, '(/,''anfangsgeometrie im uw-profil'',/)')
 
 !WP
-if (lein.eq.3) then
-  write (jw8,*) 'Zeile 533 in brkon, Starte GEOMET!'
-END if
+!write (UNIT_OUT_LOG,*) 'Zeile 533 in brkon, Starte GEOMET!'
+
 
 CALL geomet (hr3, x1, h1, hdif, hsohl, nknot, il, ir, q, wl3, rhy,&
-           & ifehl2, lein, jw8)
+           & ifehl2)
 !WP
-if (lein.eq.3) then
-  write (jw8,*) 'Zeile 538 in brkon, Ende GEOMET!'
-END if
+!write (UNIT_OUT_LOG,*) 'Zeile 538 in brkon, Ende GEOMET!'
+
 
 aue3 = aue
 
@@ -631,10 +613,9 @@ vm = q / fges
 !**  he3=hr3+vm*vm/2./9.81
 !  schaetzung wsp in profil 1: hr1=he1
 
-if (lein == 3) then
-  write (jw8,33) aue3, vm, q, fges
-  33 format (1X, 'AUE3 = ', F12.5, '  VM = ', F12.5, ' q = ', F12.5, ' FGES = ', F12.5)
-end if
+
+write (UNIT_OUT_LOG,33) aue3, vm, q, fges
+33 format (1X, 'AUE3 = ', F12.5, '  VM = ', F12.5, ' q = ', F12.5, ' FGES = ', F12.5)
 
 
 
@@ -654,21 +635,18 @@ ELSE
 ENDIF
 
 !JK      SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-  WRITE (jw8, '(//,'' q = '',f6.2,'' hukmax = '',f6.2)') q, hukmax
-ENDIF
+WRITE (UNIT_OUT_LOG, '(//,'' q = '',f6.2,'' hukmax = '',f6.2)') q, hukmax
 
 hea = he3 + dx
 heb = he3
 
-if (lein == 3) then
-  write (jw8, 34) he1, he3, hr3, hea, heb
-  34 format (1X, 'HE1 (Energiehoehe am Profil 1):     ', F12.5, /, &
-           & 1X, 'HE3 (Energiehoehe am Profil 3):     ', F12.5, /, &
-           & 1X, 'HR3 (=hr, Wasserspiegel am Profil): ', F12.5, /, &
-           & 1X, 'HEA (Energiehoehe am Profil A):     ', F12.5, /, &
-           & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5, )
-end if
+
+write (UNIT_OUT_LOG, 34) he1, he3, hr3, hea, heb
+34 format (1X, 'HE1 (Energiehoehe am Profil 1):     ', F12.5, /, &
+         & 1X, 'HE3 (Energiehoehe am Profil 3):     ', F12.5, /, &
+         & 1X, 'HR3 (=hr, Wasserspiegel am Profil): ', F12.5, /, &
+         & 1X, 'HEA (Energiehoehe am Profil A):     ', F12.5, /, &
+         & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5, )
 
 
 ibiter = 0
@@ -679,24 +657,21 @@ itbmax = 30
 1015 CONTINUE
 
 CALL geomet (heb, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, &
-           & ifehl2, lein, jw8)
+           & ifehl2)
 
 IF (ifehl2.ne.0) then
 
   ibiter = ibiter + 1
   !JK  SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(''Fehler bei der Abarbeitung von Geometrie!'')')
-    WRITE (jw8, '(''stop in bruecke_konv'')')
-    WRITE (jw8, '(''Korrektur der Hoehe heb um -dx/10.'')')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(''Fehler bei der Abarbeitung von Geometrie!'')')
+  WRITE (UNIT_OUT_LOG, '(''stop in bruecke_konv'')')
+  WRITE (UNIT_OUT_LOG, '(''Korrektur der Hoehe heb um -dx/10.'')')
+
   heb = heb - dx / 10.
   IF (ibiter.gt.itbmax) then
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '(''auch nach wiederholter Korrektur.'')')
-      WRITE (jw8, '(''Daher Programmabbruch'')')
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '(''auch nach wiederholter Korrektur.'')')
+    WRITE (UNIT_OUT_LOG, '(''Daher Programmabbruch'')')
     STOP 'br_konv 2'
   ENDIF
   !JK  NOCHMALIGER DURCHLAUF NACH KORREKTUR DER HOEHE
@@ -709,13 +684,11 @@ ENDIF
 isch = isch + 1
 
 CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
-            & qw, qgesb, lein, jw8, jw5, aue3, wl3, iartb, ifg)
+            & qw, qgesb, aue3, wl3, iartb, ifg)
 
 !JK      SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-  WRITE (jw8, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-  WRITE (jw8, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, heb, qd, qw, qgesb
-ENDIF
+WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, heb, qd, qw, qgesb
 
 ibiter = 0
 
@@ -724,24 +697,22 @@ ibiter = 0
 1016 CONTINUE
 
 CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, &
-           & ifehl2, lein, jw8)
+           & ifehl2)
 
 IF (ifehl2.ne.0) then
 
   ibiter = ibiter + 1
   !JK  SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(''Fehler bei der Abarbeitung von Geometrie !'')')
-    WRITE (jw8, '(''stop in bruecke_konv'')')
-    WRITE (jw8, '(''Korrektur der Hoehe hea um dx/10.'')')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(''Fehler bei der Abarbeitung von Geometrie !'')')
+  WRITE (UNIT_OUT_LOG, '(''stop in bruecke_konv'')')
+  WRITE (UNIT_OUT_LOG, '(''Korrektur der Hoehe hea um dx/10.'')')
 
   hea = hea + dx / 10.
 
   IF (ibiter.gt.itbmax) then
     !JK   SCHREIBEN IN KONTROLLFILE
-    WRITE (jw8, '(''auch nach wiederholter Korrektur.'')')
-    WRITE (jw8, '(''Daher Programmabbruch'')')
+    WRITE (UNIT_OUT_LOG, '(''auch nach wiederholter Korrektur.'')')
+    WRITE (UNIT_OUT_LOG, '(''Daher Programmabbruch'')')
     STOP 'br_konv 3'
   ENDIF
   !JK   NOCHMALIGER DURCHLAUF NACH KORREKTUR DER HOEHE
@@ -753,17 +724,14 @@ ENDIF
 isch = isch + 1
 
 CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, qd,  &
-            & qw, qgesa, lein, jw8, jw5, aue3, wl3, iartt, ifg)
+            & qw, qgesa, aue3, wl3, iartt, ifg)
 
 !JK  SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-  WRITE (jw8, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-  WRITE (jw8, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-ENDIF
+WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
+
 
 heaa = - 1000.
-
-
 
 
 
@@ -785,9 +753,7 @@ DO 100 i = 1, itmax_brkon
 
     IF (hr1.le.hukmax) then
 
-      IF (lein.eq.3) then
-        WRITE (jw8, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
       !JK  ZUR IMPULSBERECHNUNG
       GOTO 200
 
@@ -796,10 +762,8 @@ DO 100 i = 1, itmax_brkon
     IF (iartt.eq.0) then
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '('' --> weiter mit hr1 = '',f7.3)') hr1
-        WRITE (jw8, '('' (vollkommener ueberfall) '',/)')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
+      WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
 
       qdiff = q / qgesa
       qw = qw * qdiff
@@ -814,10 +778,10 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 40) qw, qd, q
+          WRITE (UNIT_OUT_TAB, 40) qw, qd, q
           40 format (//10X, 'Druck- und Wehrabfluss', /, &
                      & 10X, '----------------------', /, &
                      & 10X, 'Q-Wehr   = ', F10.3, /, &
@@ -830,10 +794,10 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 41) qd, q
+          WRITE (UNIT_OUT_TAB, 41) qd, q
           41 format (//10X, 'Druckabfluss', /, &
                      & 10X, '------------', /, &
                      & 10X, 'Q-Druck  = ', F10.3, /, &
@@ -851,10 +815,8 @@ DO 100 i = 1, itmax_brkon
     ELSE
 
       !JK  SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '(''unvollkommener ueberfall'',/)')
-        WRITE (jw8, '(''--> weiter mit impuls'',/)')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+      WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
 
       !JK  ZU IMPULSBERECHNUNG
       GOTO 200
@@ -872,9 +834,7 @@ DO 100 i = 1, itmax_brkon
     IF (hr1 .le. hukmax) then
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
 
       !JK  ZU IMPULSBERECHNUNG
       GOTO 200
@@ -884,12 +844,10 @@ DO 100 i = 1, itmax_brkon
     IF (iartt.eq.0) then
 
       !JK                  SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        write (jw8, 42) hr1
-        42 format (1X, 'Konvergenz im Wasserspiegel erreicht!', /, &
-                 & 1X, '--> weiter mit hr1 = ',f12.5, /, &
-                 & 1X, '(vollkommener Ueberfall)',/)
-      ENDIF
+      write (UNIT_OUT_LOG, 42) hr1
+      42 format (1X, 'Konvergenz im Wasserspiegel erreicht!', /, &
+               & 1X, '--> weiter mit hr1 = ',f12.5, /, &
+               & 1X, '(vollkommener Ueberfall)',/)
 
       qdiff = q / qgesa
       qw = qw * qdiff
@@ -903,10 +861,10 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 43) qw, qd, q
+          WRITE (UNIT_OUT_TAB, 43) qw, qd, q
           43 format (//10X, 'Druck- und Wehrabfluss', /, &
                      & 10X, '----------------------', /, &
                      & 10X, 'Q-Wehr   = ', F10.3, /, &
@@ -920,10 +878,10 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz .gt. 50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 44) qd, q
+          WRITE (UNIT_OUT_TAB, 44) qd, q
           44 format (//10X, 'Druckabfluss', /, &
                      & 10X, '------------', /, &
                      & 10X, 'Q-Druck  = ', F10.3, /, &
@@ -942,10 +900,8 @@ DO 100 i = 1, itmax_brkon
     ELSE
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '(''unvollkommener ueberfall'',/)')
-        WRITE (jw8, '(''--> weiter mit impuls'',/)')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+      WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
 
       !JK   ZU IMPULSBERECHNUNG
       GOTO 200
@@ -962,16 +918,12 @@ DO 100 i = 1, itmax_brkon
     ! he3 ==> weiter mit impuls
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-
-      write (jw8, 45) hukmax, he3
-      45 format (1X, 'Keine Konvergenz moeglich, da die q-anteile ', /, &
-               &     'mit steigendem WSP steigen!', /, &
-               & 1X, '-> HE1 muss zwischen HUKMAX und HE3 liegen!', /, &
-               & 1X, '   (HUKMAX = ', F12.5, '  HE3 = ', F12.5, ')', /, &
-               & 1X, '-> Weiter mit Impulsberechnung.')
-
-    ENDIF
+    write (UNIT_OUT_LOG, 45) hukmax, he3
+    45 format (1X, 'Keine Konvergenz moeglich, da die q-anteile ', /, &
+             &     'mit steigendem WSP steigen!', /, &
+             & 1X, '-> HE1 muss zwischen HUKMAX und HE3 liegen!', /, &
+             & 1X, '   (HUKMAX = ', F12.5, '  HE3 = ', F12.5, ')', /, &
+             & 1X, '-> Weiter mit Impulsberechnung.')
 
     !JK  ZU IMPULSBERECHNUNG
     GOTO 200
@@ -999,10 +951,8 @@ DO 100 i = 1, itmax_brkon
         IF (hr1 .le. hukmax) then
 
           !JK   SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''energiehoehe tiefer hukmax -->'', &
-              & ''weiter mit impuls'')')
-          ENDIF
+          WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax -->'', &
+               & ''weiter mit impuls'')')
 
           !JK   ZU IMPULSBERECHNUNG
           GOTO 200
@@ -1012,12 +962,10 @@ DO 100 i = 1, itmax_brkon
         IF (iartt.eq.0) then
 
           !JK   SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''Konvergenz im Wasserspiegel '', &
-                & ''erreicht.'')')
-            WRITE (jw8, '('' --> weiter mit hr1 = '',f7.3)') hr1
-            WRITE (jw8, '('' (vollkommener ueberfall) '',/)')
-          ENDIF
+          WRITE (UNIT_OUT_LOG, '(''Konvergenz im Wasserspiegel erreicht.'')')
+          WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
+          WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
+
 
           qdiff = q / qgesa
           qw = qw * qdiff
@@ -1031,14 +979,14 @@ DO 100 i = 1, itmax_brkon
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
               ENDIF
 
-              WRITE (jw5, '(//t10,'' Druckabfluss '',//  &
+              WRITE (UNIT_OUT_TAB, '(//t10,'' Druckabfluss '',//  &
                 &             t10,'' Q-Druck= '',f8.2,// &
                 &                ,''Q-gesamt = '',f8.2)') qd, q
 
-              WRITE (jw5, '(//t10,'' Druck- und Wehrabfluss '', / &
+              WRITE (UNIT_OUT_TAB, '(//t10,'' Druck- und Wehrabfluss '', / &
                         &     t10,'' Q-Wehr = '',f8.2,'' Q-Druck= '',f8.2,// &
                         &         ,''Q-gesamt = '',f8.2)') qw, qd, q
 
@@ -1048,10 +996,10 @@ DO 100 i = 1, itmax_brkon
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
               ENDIF
 
-              WRITE (jw5, '(//t10,'' Druckabfluss '',//   &
+              WRITE (UNIT_OUT_TAB, '(//t10,'' Druckabfluss '',//   &
                      &        t10,'' Q-Druck= '',f8.2,//  &
                      &        ,''Q-gesamt = '',f8.2)') qd, q
             ENDIF
@@ -1067,10 +1015,8 @@ DO 100 i = 1, itmax_brkon
         ELSE
 
           !JK  SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''unvollkommener ueberfall'',/)')
-            WRITE (jw8, '(''--> weiter mit impuls'',/)')
-          ENDIF
+          WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+          WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
 
           !JK   ZU IMPULSBERECHNUNG
           GOTO 200
@@ -1084,18 +1030,17 @@ DO 100 i = 1, itmax_brkon
       hea = hea + 0.1 * (heb - hea)
 
       CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl,&
-       & rhy, ifehl2, lein, jw8)
+       & rhy, ifehl2)
 
       isch = isch + 1
 
       CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, &
-             & qd, qw, qgesa, lein, jw8, jw5, aue3, wl3, iartt, ifg)
+             & qd, qw, qgesa, aue3, wl3, iartt, ifg)
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-        WRITE (jw8, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+      WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
+
 
       !JK  ZU NULLSTELLE
       GOTO 110
@@ -1111,9 +1056,7 @@ DO 100 i = 1, itmax_brkon
       IF (abs (df) .lt.1.e-04) then
 
         !JK  SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then
-          WRITE (jw8, '(''df--> 0! --> he1=he1+0.1'')')
-        ENDIF
+        WRITE (UNIT_OUT_LOG, '(''df--> 0! --> he1=he1+0.1'')')
 
         hea = hea + 0.1
 
@@ -1134,17 +1077,15 @@ DO 100 i = 1, itmax_brkon
     IF (hea.lt.hmass) hea = hmass
 
     CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl,  &
-     & rhy, ifehl2, lein, jw8)
+     & rhy, ifehl2)
 
     isch = isch + 1
     CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3,  &
-     & qd, qw, qgesa, lein, jw8, jw5, aue3, wl3, iartt, ifg)
+     & qd, qw, qgesa, aue3, wl3, iartt, ifg)
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-      WRITE (jw8, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+    WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
 
   ENDIF
 
@@ -1153,13 +1094,11 @@ DO 100 i = 1, itmax_brkon
     ! he3 ==> weiter mit impuls
 
     !JK    SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '(''keine konvergenz moeglich, da  '',        &
-        &  ''he1 unter hukmax liegt '',/,                       &
-        &  '' ==> he1 muss zwischen hukmax und he3 liegen : '', &
-        &  /,''hukmax = '',f6.2,'' he3 = '',f6.2,/,             &
-        &  '' ==> weiter mit impuls '')') hukmax, hea
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '(''keine konvergenz moeglich, da  '',        &
+      &  ''he1 unter hukmax liegt '',/,                       &
+      &  '' ==> he1 muss zwischen hukmax und he3 liegen : '', &
+      &  /,''hukmax = '',f6.2,'' he3 = '',f6.2,/,             &
+      &  '' ==> weiter mit impuls '')') hukmax, hea
 
     !JK  ZU IMPULSBERECHNUNG
     GOTO 200
@@ -1175,10 +1114,8 @@ DO 100 i = 1, itmax_brkon
 ifkonv = 10000
 
 !JK   SCHREIBEN IN KONTROLLFILE
-IF (lein.eq.3) then
-WRITE (jw8, '(''maximale anzahl der iterationsschritte ueberschritten &
-  & ==> weiter mit impuls !'')')
-ENDIF
+WRITE (UNIT_OUT_LOG, '(''maximale anzahl der iterationsschritte ueberschritten ==> weiter mit impuls !'')')
+
 
 
 ! Brueckenberechnung mit impulsgleichung:
@@ -1199,16 +1136,14 @@ IF ( (hr3 - hsohl) .le.0.0001) then
   hsohl = hmin
 
   !JK        SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(''wasserspiegel unterhalb tiefster'')')
-    WRITE (jw8, '(''sohlenkoordinate in bruecke (profil 3 - uw) -->'')')
-    WRITE (jw8, '(''weiter mit grenztiefe im ow-profil 1'')')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(''wasserspiegel unterhalb tiefster'')')
+  WRITE (UNIT_OUT_LOG, '(''sohlenkoordinate in bruecke (profil 3 - uw) -->'')')
+  WRITE (UNIT_OUT_LOG, '(''weiter mit grenztiefe im ow-profil 1'')')
 
 
 
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
-  write (*,*) 'In BR_KONV. Aufruf von GRNZH.'
+  !write (*,*) 'In BR_KONV. Aufruf von GRNZH.'
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
@@ -1224,10 +1159,10 @@ IF ( (hr3 - hsohl) .le.0.0001) then
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, 11) (staso - str1 / 1000.), hr1
+  WRITE (UNIT_OUT_TAB, 11) (staso - str1 / 1000.), hr1
   11 FORMAT (/,t10,'wsp unterhalb tiefstem Sohlpkt. uw (profil "3") &
           &  ',t10,'--> weiter mit Grenztiefe im ow    (profil "1") &
           &  ',/,f10.3,f11.3)
@@ -1250,21 +1185,17 @@ ELSE
   nz = nz + 8
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, '(/,t10,''Profil "3": hr  m  a'',/,t10,3f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "3": hr  m  a'',/,t10,3f10.3)') &
    & hr3, m3, a3
-  WRITE (jw5, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
    & ad, aue, apl, apg
 
   !JK   SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(/,t10,''profil "3": hr  m  a'',/,t10,3f10.3)') &
-     & hr3, m3, a3
-    WRITE (jw8, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
-     & ad, aue, apl, apg
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(/,t10,''profil "3": hr  m  a'',/,t10,3f10.3)') hr3, m3, a3
+  WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
 
   !JK        WENN DRUCKABFLUSS
   IF (hr3.ge.hukmax) then
@@ -1272,22 +1203,19 @@ ELSE
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
 
-    WRITE (jw5, 23)
-    IF (idr1.eq.'j') write (jw7, 23)
+    WRITE (UNIT_OUT_TAB, 23)
+    IF (idr1.eq.'j') write (UNIT_OUT_PRO, 23)
 
-    IF (lein.eq.3) then
-      WRITE (jw8, 23)
-    ENDIF
+    WRITE (UNIT_OUT_LOG, 23)
     23 FORMAT (/,10x,'Druckabfluss')
 
     !JK   ZU IMPULSBERECHNUNG PROFIL '1'
     GOTO 8000
 
   ENDIF
-
 
 
   ! ************************************************
@@ -1314,18 +1242,19 @@ ELSE
   hr = hokmax + 0.5
 
   CALL iterat (hr, hdif, hmin, 2, cd, a3, a2, x1, h1, nknot, il,  &
-  ir, q, m3, m2, staso)
+   & ir, q, m3, m2, staso)
+
 
   hr2 = hr
   nz = nz + 8
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, '(/,t10,''Profil "2": hr  m  a'',/,t10,3f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "2": hr  m  a'',/,t10,3f10.3)') &
    & hr2, m2, a2
-  WRITE (jw5, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
    & ad, aue, apl, apg
   !**           print *,'profil 2:'
   !**           print *,'impuls am profil 3 m3=',m3
@@ -1338,11 +1267,11 @@ ELSE
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
 
-    WRITE (jw5, 24)
-    IF (idr1.eq.'j') write (jw7, 24)
+    WRITE (UNIT_OUT_TAB, 24)
+    IF (idr1.eq.'j') write (UNIT_OUT_PRO, 24)
     24 FORMAT     (/,10x,'Druckabfluss')
 
   ENDIF
@@ -1356,7 +1285,6 @@ ELSE
   ! m3 = m1 !!
 
   !  profil '1' --> ow-profil !!
-
 
   8000 continue
 
@@ -1373,9 +1301,7 @@ ELSE
   ENDIF
 
   !JK  SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '('' in iteration :'')')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '('' in iteration :'')')
 
   CALL iterat (hr, hdif, hsohl, 1, cd, a, a1, x1, h1, nknot, il,  &
   ir, q, m, m1, staso)
@@ -1384,44 +1310,37 @@ ELSE
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, '(/,t10,''Profil "1": hr  m  a'',/,t10,3f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "1": hr  m  a'',/,t10,3f10.3)') &
    & hr1, m1, a1
-  WRITE (jw5, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
+  WRITE (UNIT_OUT_TAB, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
    & ad, aue, apl, apg
 
   !JK   SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '(/,t10,''profil "1": hr  m  a'',/,t10,3f10.3)') &
-     & hr1, m1, a1
-    WRITE (jw8, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
-     & ad, aue, apl, apg
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '(/,t10,''profil "1": hr  m  a'',/,t10,3f10.3)') hr1, m1, a1
+  WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
 
   IF (hr1.ge.hukmax.or.hr2.ge.hukmax.or.hr3.ge.hukmax) then
     !  druckabfluss
 
     !JK   SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '(''druckabfluss !!'',/,  &
-       &   ''ermittelt hr1 aus impuls: '',f10.2)') hr1
-      WRITE (jw8, 17)
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '(''druckabfluss !!'',/,''ermittelt hr1 aus impuls: '',f10.2)') hr1
+    WRITE (UNIT_OUT_LOG, 17)
 
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
 
-    WRITE (jw5, 17)
+    WRITE (UNIT_OUT_TAB, 17)
     17 FORMAT (/,t10,'Druckabfluss',/, &
               &  t10, '--> wsp im ow (profil "1") ermittelt aus Impulsbilanz')
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
     nz = nz + 2
 
@@ -1431,10 +1350,8 @@ ELSE
     ! Kontrolle, ob schiessende stroemung in '2'
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '('' profil 1: '',/,''impuls m1: '',f7.3,/,   &
+    WRITE (UNIT_OUT_LOG, '('' profil 1: '',/,''impuls m1: '',f7.3,/,   &
        &  '' gesamt durchstroemte flaeche (aue+ad) '',f7.3)') m1, a1
-    ENDIF
 
     tm = (ad+aue) / bnetto
     vm = q / (ad+aue)
@@ -1447,13 +1364,13 @@ ELSE
       ! Schiessende stroemung in profil '2'
       ! --> hr1 aus impulsgleichung 1 bleibt wasserstand
 
-      WRITE (jw5, 12)
+      WRITE (UNIT_OUT_TAB, 12)
       12 FORMAT (/,10X, 'schiessende Stroemung in Profil "2"', /, &
                  & 10X, '--> wsp im ow (profil "1") ermittelt aus Impulsbilanz')
 
       IF (nz.gt.50) then
         nblatt = nblatt + 1
-        CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+        CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
       ENDIF
 
       nz = nz + 2
@@ -1478,47 +1395,43 @@ ELSE
       IF (hpf.gt.0.001) then
 
         !JK   SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) then
-          WRITE (jw8, '(/,''berechnung der fliesstiefe mit yarnell:'' &
-            &      /,'' => pfeilerstau aus yarnell = '',f7.3)') hpf
-          WRITE (jw8, '('' --> wsp profil 1 = max (hr3+hpf,hr1): '',/ &
-            &        ''        = max ('',2(f7.3,1x),'')'')') hr1n, hr1
-        ENDIF
+        WRITE (UNIT_OUT_LOG, '(/,''berechnung der fliesstiefe mit yarnell:'' &
+          &      /,'' => pfeilerstau aus yarnell = '',f7.3)') hpf
+        WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf,hr1): '',/ &
+          &        ''        = max ('',2(f7.3,1x),'')'')') hr1n, hr1
 
         !**  if (hr1n.ge.hr1) then
         IF (hr1n.ge.hr1.AND.hr1n.le.hukmax) then
 
           !JK  SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then
-            WRITE (jw8, '('' --> wsp profil 1 = max (hr3+hpf, hr1): '',/, &
+          WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf, hr1): '',/, &
                         & '' = max ('',2(f7.3,1x),'')'')') hr1n, hr1
-          ENDIF
 
           hr1 = hr1n
-          IF (lein.eq.3) write (jw8, 14) hpf
+          write (UNIT_OUT_LOG, 14) hpf
           nz = nz + 4
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 14) hpf
+          WRITE (UNIT_OUT_TAB, 14) hpf
           14 FORMAT (/10X, 'WSP im ow (Profil "1") ermittelt aus der YARNELL-Gleichung',/, &
                     & 10X, '--> Pfeilerstau aus YARNELL: ', F7.3)
         ELSE
 
           !JK  SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) write (jw8, 13)
+          write (UNIT_OUT_LOG, 13)
 
           nz = nz + 2
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           ENDIF
 
-          WRITE (jw5, 13)
+          WRITE (UNIT_OUT_TAB, 13)
 
         ENDIF
 
@@ -1526,16 +1439,16 @@ ELSE
       ELSE
 
         !JK  SCHREIBEN IN KONTROLLFILE
-        IF (lein.eq.3) write (jw8, 13)
+        write (UNIT_OUT_LOG, 13)
 
         nz = nz + 2
 
         IF (nz.gt.50) then
           nblatt = nblatt + 1
-          CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
         ENDIF
 
-        WRITE (jw5, 13)
+        WRITE (UNIT_OUT_TAB, 13)
         13 FORMAT (/,t10,'wsp im ow (Profil "1") ermittelt aus Impulsbilanz')
 
       !JK   ENDIF ZU (hpf.gt.0.001)
@@ -1550,6 +1463,8 @@ ELSE
 !JK    ENDIF ZU ((hr3-hsohl).le.0.0001)
 ENDIF
 
+
+
 9999 CONTINUE
 
 IF (iartt.eq.2) then
@@ -1558,17 +1473,15 @@ IF (iartt.eq.2) then
   ! *****************************************************************
 
   !JK    SCHREIBEN IN KONTROLLFILE
-  IF (lein.eq.3) then
-    WRITE (jw8, '('' unvollkommener ueberfall --> it. normber.'')')
-  ENDIF
+  WRITE (UNIT_OUT_LOG, '('' unvollkommener ueberfall --> it. normber.'')')
 
   nz = nz + 1
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, '(t10,''unvollkommener ueberfall '')')
+  WRITE (UNIT_OUT_TAB, '(t10,''unvollkommener ueberfall '')')
 
   ! Common-block fuer die gewaessergeometrie uberschreiben ((
   ! x1,h1,rau,boli,bore .... festlegen
@@ -1599,7 +1512,7 @@ IF (iartt.eq.2) then
   strbr = breite / 2.
 
   CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,      &
-   & indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud, nblatt, nz)
+   & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
 
   stat (nprof) = stat (nprof) - strbr / 1000.
 
@@ -1616,16 +1529,16 @@ IF (iartt.eq.2) then
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, '(/,t10,'' profil "2":'')')
+  WRITE (UNIT_OUT_TAB, '(/,t10,'' profil "2":'')')
 
-  CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+  CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
   ! Wiederherstellen der urspruenglichen profilwerte:
@@ -1634,8 +1547,7 @@ IF (iartt.eq.2) then
   stat (nprof) = stat (nprof - 1) + strbr / 1000.
   CALL intdat (staso, ifehl)
 
-  CALL linier (hokmax, x1, h1, rau, nknot, iwl, iwr, npl, xl, hl, &
-  raul)
+  CALL linier (hokmax, x1, h1, rau, nknot, iwl, iwr, npl, xl, hl, raul)
 
   h1 (1) = hokmax
   ! x1(1) bleibt
@@ -1665,7 +1577,7 @@ IF (iartt.eq.2) then
   hming = hsohl
 
   CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,      &
-  indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud, nblatt, nz)
+  indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
 
 
   ikenn = ikenn + ifkonv

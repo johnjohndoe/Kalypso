@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Nov 2005    2:48 pm
+!     Last change:  WP   12 Mar 2006    3:29 pm
 !--------------------------------------------------------------------------
 ! This code, sohlef.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,10 +40,7 @@
 
 SUBROUTINE sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr, &
                  & l_tr, isener, l_hg, v_hg, ifall, itrli, itrre, &
-                 & itere2, i1, iuerr, lein, if_so, fbw)
-
-! ST 23.03.2005
-! Die Variable a_ks in dieser Subroutine nicht verwendet und auch nicht weiter übergegeben!!!
+                 & itere2, i1, if_so, fbw)
 
 !***********************************************************************
 !**                                                                     
@@ -87,6 +84,7 @@ SUBROUTINE sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr, &
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE BEWUCHS
+USE IO_UNITS
 
 !---------------------
 ! ST 23.03.2005
@@ -103,8 +101,6 @@ INTEGER, INTENT(IN) :: itrli            	! Punktnummer der linken Trennfläche
 INTEGER, INTENT(IN) :: itrre            	! Punktnummer der rechten Trennfläche
 INTEGER, INTENT(IN) :: itere2           	! ???
 INTEGER, INTENT(IN) :: i1               	! Fallunterschiedung Bewuchsseite
-INTEGER, INTENT(IN) :: lein             	! Ausgabeart in Kontrolldatei
-INTEGER, INTENT(IN) :: iuerr            	! Fehlerausgabedatei
 REAL, INTENT(IN) :: fbw            		! Formbeiwert fuer den Flussschlauch
 
 ! Output variables
@@ -130,10 +126,9 @@ REAL :: dm (maxkla)                     ! mittlerer Durchmesser der Rauheitselem
 
 
 ! COMMON-Block /AUSGABELAMBDA/ -----------------------------------------------------
-INTEGER         	:: jw_lambdai
 REAL, DIMENSION(maxkla) :: lambda_teilflaeche
 CHARACTER(LEN=nch80) 	:: lambdai
-COMMON / ausgabelambda / jw_lambdai, lambda_teilflaeche, lambdai
+COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! ----------------------------------------------------------------------------------
 
 
@@ -345,7 +340,7 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
                   & 1X, 'a) Trennflaechen falsch gesetzt ?', /, &
                   & 1X, 'b) Abfluss zu gering (Q < 0.001) ?', //, &
                   & 1X, 'Programm wird beendet!')
-        call stop_programm(0)
+        call stop_programm(11)
      ENDIF
                                                                         
      !ST Summe über alle Teilflächen lambda * benetzter Umfang (Superpositionsprinzip)
@@ -399,10 +394,8 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      !UT       SCHREIBEN IN KONTROLLDATEI, FALLS LAMBDA NULL -> Programmabbruch
      IF (l_hg.lt.1.e-06) then
 
-        IF (lein.eq.3) then
-          !write (iuerr, 1000) i, itere2, iter3, iter2, l_hg, v_hg, ln_ks(i), rhynn(i)
-          write (iuerr, 1001)
-        end if
+        !write (UNIT_OUT_LOG, 1000) i, itere2, iter3, iter2, l_hg, v_hg, ln_ks(i), rhynn(i)
+        write (UNIT_OUT_LOG, 1001)
 
         !write (0, 1000) i, itere2, iter3, iter2, l_hg, v_hg, ln_ks(i), rhynn(i)
         !write (*, 1000) i, itere2, iter3, iter2, l_hg, v_hg, ln_ks(i), rhynn(i)
@@ -454,18 +447,18 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      DO 30 i = itrli, itrre-1
                                                                         
         IF (ln_ks (i) .le.1.e-05) then
-           IF (lein.eq.3) write (iuerr, '(3i2,4f8.4)') itere2, iter3,    &
-                               & iter2, l_hg, v_hg, ln_ks (i) , rhynn (i)
-           CLOSE (iuerr)
+           write (UNIT_OUT_LOG, '(3i2,4f8.4)') itere2, iter3, iter2, l_hg, v_hg, ln_ks (i) , rhynn (i)
            PRINT * , 'Fehler bei ca. Zeile 215 in SUB SOHLEF. Beim Entwickler melden'
            PRINT * , 'ln_ks(i).le.1.e-05, ln_ks(i) = ', ln_ks (i)
-           STOP 'Fehler bei ca. Zeile 215 in SUB SOHLEF. Beim Entwickler melden'
+           PRINT * , 'Fehler bei ca. Zeile 215 in SUB SOHLEF. Beim Entwickler melden'
+           call stop_programm(0)
         ENDIF
                                                                         
         IF (k_ks (i) .le.1.e-06) then
            WRITE ( * , '(''Fehler in der Rauhigkeitsdefinition.'')')
            WRITE ( * , '(''Rauhigkeit ist gleich Null an Station'',i3)') i
-           STOP 'nicht uebergehbarer Fehler in SUB SOHLEF'
+           WRITE ( * , '(''nicht uebergehbarer Fehler in SUB SOHLEF'')')
+           call stop_programm(0)
         ENDIF
                                                                         
                                                                         
@@ -697,14 +690,7 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      IF (iter2.gt.20) then
 
          is2000 = 1
-         !**
-         !JK            WAR SCHON DEAKTIVIERT, 30.4.00, JK
-         !**            if(lein.eq.3)
-         !**     *      write(iuerr,9001)iter2,sumdel
-         !**9001        format(/'konvergenzfehler in schleife 2000 [up sohlef]'/,
-         !**     1           'nach ',i2,' iterationen betraegt der fehler noch',
-         !**     2           f10.4)
-                                                                        
+
          GOTO 1850
 
      ENDIF
@@ -776,13 +762,11 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
                                                                         
                                                                         
       !JK         WAR SCHON DEAKTIVIERT, 30.4.00, JK
-      !**         if (lein.eq.3)
-      !**     *      write(iuerr,9002)iter3,sumdd
+      !**     *      write(UNIT_OUT_LOG,9002)iter3,sumdd
       !**9002        format(/'konvergenzfehler in schleife 3000 [up sohlef]'/,
       !**     1             'nach ',i2,' iterationen betraegt der fehler noch'
       !**     2              f10.4)
-                                                                        
-                                                                        
+
       !UT         SUB ENDE - MUSS NICHT DIE FEHLERBERECHNUNG MIT REIN???,25080
       !UT         ALSO 3 ZEILEN VORHER
       GOTO 2050

@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005    9:43 am
+!     Last change:  WP   10 Mar 2006    8:56 pm
 !--------------------------------------------------------------------------
 ! This code, alpha_dru.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -75,8 +75,7 @@ SUBROUTINE alpha_dru (stat, wsp, hen, up, qs)
 !HB   lambda_g -- Lambda des Gesamtquerschnittes                        
 !HB   maxkger  -- Parameter fuer Laenge einer Zeichenkette              
 !HB   maxkla   -- Parameter fuer Laenge einer Zeichenkette              
-!HB   nr_alph  -- Interne Dateinummer fuer Beiwerte.AUS                 
-!HB   pn_alpha -- Profilnummer                                          
+!HB   pn_alpha -- Profilnummer
 !HB   st_alpha -- Stationskilometer                                     
 !HB   trenn_li -- benetzter Umfang der Trennflaeche links (=u_tr(1))    
 !HB   trenn_re -- benetzter Umfang der Trennflaeche rechts (=u_tr(2))   
@@ -88,6 +87,7 @@ SUBROUTINE alpha_dru (stat, wsp, hen, up, qs)
 
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
@@ -162,7 +162,7 @@ COMMON / h_trenn / trenn_li, trenn_re
 !HB   ***************************************************************** 
                                                                         
 !HB   Schreiben der Werte in die Datei Beiwerte.AUS                     
-      WRITE (nr_alph, 500) stat (i), wsp (i), hen (i), lambda_g (i),    &
+      WRITE (UNIT_OUT_ALPHA, 500) stat (i), wsp (i), hen (i), lambda_g (i),    &
       gesamt_a (i), umfang_g (i), geschw_g (i), qs (i), alpha_EW (i),   &
       alpha_IW (i), gefaelle                                            
 !HB   Formatbeschreibung der Ausgabezeile                               

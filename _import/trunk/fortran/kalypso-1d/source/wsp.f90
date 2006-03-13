@@ -1,4 +1,4 @@
-!     Last change:  WP    8 Dec 2005    3:29 pm
+!     Last change:  WP   13 Mar 2006   11:36 am
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -79,8 +79,7 @@ PROGRAM WSP
 !HB   ----------------------                                            
 !HB   alph_aus - Pfad ?:\Projekt\Projektname\dath\Beiwerte.AUS          
 !HB   i_alph   - Funktionswert                                          
-!HB   nr_alph  - Interne Dateinummer fuer Beiwerte.AUS                  
-!HB   ***************************************************************** 
+!HB   *****************************************************************
 !**                                                                     
 !**   AUFGERUFENE UNTERPROGRAMME                                        
 !**   --------------------------                                        
@@ -102,7 +101,8 @@ PROGRAM WSP
 USE DIM_VARIABLEN
 USE ZEIT
 USE VERSION
-
+USE IO_UNITS
+USE MOD_ERG
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
@@ -111,22 +111,10 @@ COMMON / alph_pf / alph_aus, nr_alph
 ! ----------------------------------------------------------------------------------
 
 
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
-! ----------------------------------------------------------------------------------
-
-
 ! COMMON-Block /AUSGABELAMBDA/ -----------------------------------------------------
-INTEGER         	:: jw_lambdai
 REAL, DIMENSION(maxkla) :: lambda_teilflaeche
 CHARACTER(LEN=nch80) 	:: lambdai
-COMMON / ausgabelambda / jw_lambdai, lambda_teilflaeche, lambdai
+COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! ----------------------------------------------------------------------------------
 
 
@@ -155,12 +143,6 @@ COMMON / datlin2 / x, y, noprxw, nopryw, npr, np
 CHARACTER(LEN=6):: i_typ_flg
 COMMON / flg_typ / i_typ_flg
 ! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /FUNIT/ --------------------------------------------------------
-INTEGER 	:: jw1, jw2
-COMMON / funit / jw1, jw2
-! -----------------------------------------------------------------------------
 
 
 ! COMMON-Block /K_M/ ----------------------------------------------------------
@@ -220,8 +202,8 @@ COMMON / reib / rg_vst
 
 ! COMMON-Block /TEILDAT/ ------------------------------------------------------
 REAL 		:: anftg (merg)
-INTEGER 	:: iw13, numitg (merg), ikg
-COMMON / teildat / iw13, anftg, numitg, ikg
+INTEGER 	:: numitg (merg), ikg
+COMMON / teildat / anftg, numitg, ikg
 ! -----------------------------------------------------------------------------
 
 
@@ -238,6 +220,9 @@ COMMON / w_a / a_m
 
 
 
+! Local variables
+INTEGER :: istat                ! Check in IOSTAT-clause while opening files
+INTEGER :: lein
 
 INTEGER :: anq (merg), int (maxkla)
 INTEGER :: zint (merg)
@@ -427,10 +412,10 @@ unit2 (ilen1 + 1:) = dfluss
 
 
 ! UNIT holen
-jw2 = ju0gfu ()
+UNIT_EIN_STR = ju0gfu ()
 ! Oeffnen der Datei mit den Profilenamen (z.B. Stoer.001), siehe 3. Zeile in BAT.001
-OPEN (unit = jw2, iostat = ierr, file = unit2, status = 'old')
-IF (ierr /= 0) then
+OPEN (unit = UNIT_EIN_STR, file = unit2, iostat = istat, status = 'old')
+IF (istat /= 0) then
    write (*, 9000) unit2
    9000 format (//1X, 'Problem beim Oeffnen der Datei ', A, /, &
                &  1X, '-> PROGRAMMABBRUCH!')
@@ -541,24 +526,24 @@ IF (mode.eq.1.or.mode.eq.2) then
   ! WP 24.05.2005
   ! Von der Oberflaeche wird eine Datei QWERT.001 erzeugt, die nach Ablauf der
   ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
-  !ilen = ju0nch (fnam1)
+
   ilen = LEN_TRIM (fnam1)
   unit4 = fnam1
   unit4 (ilen + 1:nch80) = 'qwert.'
-  !ilen = ju0nch (unit4)
+
   ilen = LEN_TRIM (unit4)
   unit4 (ilen + 1:nch80) = fall
-  jw3 = ju0gfu ()
+  UNIT_EIN_QWERT = ju0gfu ()
   ierr = 0                          
 
-  OPEN (UNIT = jw3, IOSTAT = ierr, FILE = unit4, STATUS = 'OLD', ACTION='READ')
+  OPEN (UNIT = UNIT_EIN_QWERT, FILE = unit4, IOSTAT = istat, STATUS = 'OLD', ACTION='READ')
                                                                         
-  IF (ierr.ne.0) then
+  IF (istat.ne.0) then
 
     write (*,*)
 
     WRITE ( * , '(''qwert.dat existiert nicht auf der ebene'', a,'' !!'')') fnam1(1:ilen-1)
-    CLOSE (jw3)
+    CLOSE (UNIT_EIN_QWERT)
                                                                         
     1901 continue
     write (*,*) 'Gib Durchfluss [in qm/s] am 1. Profil an -->'
@@ -592,7 +577,7 @@ IF (mode.eq.1.or.mode.eq.2) then
       aqwert (1, j) = 0.
       awsanf (j) = 0.
 
-      READ (jw3, '(a)', end = 92) dummy
+      READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
 
       CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
 
@@ -605,23 +590,23 @@ IF (mode.eq.1.or.mode.eq.2) then
       !**      anq = Anzahl der Stationen mit q-Wert-Wechsel
       IF (anq (j) .eq.0) then
          PRINT * , 'anzahl der stationen mit q-wert-wechsel=', nq, '!'
-         CLOSE (jw3)
+         CLOSE (UNIT_EIN_QWERT)
          GOTO 9999
       ELSEIF (anq (j) .gt.merg) then
          PRINT * , 'Fehler. Zuviele Q-Wechsel in QWERT-DATEI.'
          PRINT * , 'Erhoehe Parameter MERG auf ', anq (j)
-         CLOSE (jw3)
+         CLOSE (UNIT_EIN_QWERT)
          GOTO 9999
       ENDIF
 
       DO 90 i = 1, anq (j)
 
-        READ (jw3, '(a)', end = 92) dummy
+        READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
         CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
         IF (ireal.lt.2) then
           PRINT * , 'Fehler in QWERT.DAT - Datei '
           PRINT * , 'Kein Wertepaar selektiert in Zeile ', i
-          CLOSE (jw3)
+          CLOSE (UNIT_EIN_QWERT)
           GOTO 9999
         ENDIF
 
@@ -636,7 +621,7 @@ IF (mode.eq.1.or.mode.eq.2) then
                                                                         
     95 END DO
                                                                         
-    CLOSE (jw3)
+    CLOSE (UNIT_EIN_QWERT)
                                                                         
   !**      endif(ierr.ne.0)
   ENDIF
@@ -837,7 +822,6 @@ ELSEIF (mode.eq.3.or.mode.eq.4) then
 
     ELSEIF (mode.eq.3) then
 
-      IF (lein.eq.3) close (jw8)
       write (*, 9010)
       9010 format (1X, 'Programmende!')
       STOP
@@ -850,7 +834,6 @@ ELSEIF (mode.eq.3.or.mode.eq.4) then
                                                                         
   ELSE
 
-    IF (lein.eq.3) close (jw8) 
     write (*, 9011)
     9011 format (1X, 'Programmende!')
     STOP
@@ -859,7 +842,6 @@ ELSEIF (mode.eq.3.or.mode.eq.4) then
                                                                         
 ELSE
 
-  IF (lein.eq.3) close (jw8)
   write (*, 9012)
   9012 format (1X, 'Programmende!')
   STOP
@@ -894,23 +876,21 @@ IF (bordvoll.ne.'n') then
                                                                         
     ikitg = 1
                                                                         
-    !ilen = ju0nch (fnam1)
     ilen = LEN_TRIM (fnam1)
     unit13 = fnam1
     unit13 (ilen + 1:nch80) = 'teilg.'
-    !ilen = ju0nch (unit13)
+
     ilen = LEN_TRIM (unit13)
     unit13 (ilen + 1:nch80) = fall
-    iw13 = ju0gfu ()
+    UNIT_EIN_KM = ju0gfu ()
     ierr = 0
 
-    OPEN (UNIT=iw13, IOSTAT=ierr, FILE=unit13, STATUS='OLD', ACTION='READ')
+    OPEN (UNIT=UNIT_EIN_KM, FILE=unit13, IOSTAT=istat, STATUS='OLD', ACTION='READ')
 
-
-    IF (ierr.ne.0) then
+    IF (istat.ne.0) then
 
       WRITE ( * , '(''teilg.dat existiert nicht auf der ebene'', A )')  fnam1 (1:ilen - 1)
-      CLOSE (iw13)
+      CLOSE (UNIT_EIN_KM)
 
       3901 continue
       ! -----------------------------------------------------------------
@@ -929,7 +909,7 @@ IF (bordvoll.ne.'n') then
 
       3902 continue
 
-      READ (iw13, '(a)', end = 3903) dummy
+      READ (UNIT_EIN_KM, '(a)', end = 3903) dummy
       CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
       IF (ifehl.ne.0) then
         GOTO 3902
@@ -946,7 +926,7 @@ IF (bordvoll.ne.'n') then
       IF (ikg.eq.0) then
 
         WRITE ( * , '(''keine Teilgebietbestimmung in '',a,'' !!'')') unit13
-        CLOSE (iw13)
+        CLOSE (UNIT_EIN_KM)
 
         3904 continue
         ! -----------------------------------------------------------------
@@ -980,19 +960,18 @@ write (*, *)
 ! Von der Oberflaeche wird eine Datei PSIVER.001 erzeugt, die nach Ablauf der
 ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
 ! Einlesen der oertlichen Verluste:
-!ilen = ju0nch (fnam1)
+
 ilen = LEN_TRIM (fnam1)
 unit6 = fnam1
 unit6 (ilen + 1:nch80) = 'psiver.'
-!ilen = ju0nch (unit6)
+
 ilen = LEN_TRIM (unit6)
 unit6 (ilen + 1:nch80) = fall
-jw4 = ju0gfu ()
-                                                                        
+UNIT_EIN_PSI = ju0gfu ()
 
-OPEN (UNIT=jw4, IOSTAT=ierr, FILE=unit6, STATUS='OLD', ACTION='READ')
+OPEN (UNIT=UNIT_EIN_PSI, IOSTAT=istat, FILE=unit6, STATUS='OLD', ACTION='READ')
                                                                         
-IF (ierr.ne.0.) then
+IF (istat.ne.0.) then
   write (*, 9020) fnam1(1:ilen-1)
   9020 format (/1X, 'Datei mit oertlichen Verlusten ist nicht vorhanden in ', /, &
               & 1X, A, /, &
@@ -1008,7 +987,7 @@ jpsi = 0
 
 DO j = 1, maxger
                                                                         
-  READ (jw4, '(a)', end = 191) string
+  READ (UNIT_EIN_PSI, '(a)', end = 191) string
 
   CALL ju0chr (string, feldr, ianz, char, ichar, int, iint, ifehl)
 
@@ -1050,7 +1029,7 @@ DO j = 1, maxger
                 & 1X, 'Bitte pruefen Sie die Angabe von oertlichen Verlusten', /, &
                 & 1X, 'bei Station: ', F10.4, '!', /, &
                 & 1X, '-> PROGRAMMABBRUCH!' )
-    CLOSE (jw4)
+    CLOSE (UNIT_EIN_PSI)
     STOP
 
   !**         ENDIF ZU (ifehl.eq.0.and.ichar.eq.ianz)
@@ -1058,7 +1037,7 @@ DO j = 1, maxger
                                                                         
 END DO
 
-CLOSE (jw4) 
+CLOSE (UNIT_EIN_PSI)
                                                                         
 
 
@@ -1235,7 +1214,6 @@ IF (bordvoll.eq.'n') then
                                                                         
   ELSEIF (mode.eq.4) then
 
-    IF (lein.eq.3) close (jw8)
     STOP 'Programmende'
                                                                         
   ELSE
@@ -1287,7 +1265,6 @@ write (* , *) lein
                                                                         
 !UT   UMBENNUNG VON lein von 2 auf 3, da 2 bei Eingabe gewaehlt wurde
 IF (lein.eq.2) lein = 3
-                                                                        
 
 !**   Kennung fuer die Ausgabe des Ergebnisausdruckes:
 IF (lein.eq.0) then
@@ -1295,28 +1272,29 @@ IF (lein.eq.0) then
   !UT LABEL 9999 = ENDE DES PROGRAMMES
   GOTO 9999
 
-ELSEIF (lein.eq.3) then
-
-  ! Kontrollfile anlegen
-  jw8 = ju0gfu ()
-  ierr = 0
-  unit7 = fnam1
-  ilen = LEN_TRIM (unit7)
-
-  unit7 (ilen - 4:ilen - 1) = 'dath'
-  unit7 (ilen + 1:nch80) = 'Kontroll.log'
-
-  OPEN (unit = jw8, file = unit7, status = 'REPLACE', iostat = ierr)
-  if (ierr /= 0) then
-    write (*, 9003) unit7
-    9003 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
-               & 1X, 'Programm wird beendet!')
-    call stop_programm(0)
-  end if
-
-  write (*,*) 'Kontrolldatei "KONTROL.LOG" wird angelegt!'
-
 ENDIF
+
+
+!WP 10.03.2006 ----------------------------------------------------------------------
+! Kontrollfile wird ab sofort  I M M E R  angelegt!
+UNIT_OUT_LOG = ju0gfu ()
+
+unit7 = fnam1
+ilen = LEN_TRIM (unit7)
+
+unit7 (ilen - 4:ilen - 1) = 'dath'
+unit7 (ilen + 1:nch80) = 'Kontroll.log'
+
+OPEN (unit = UNIT_OUT_LOG, file = unit7, status = 'REPLACE', iostat = istat)
+if (istat /= 0) then
+  write (*, 9003) unit7
+  9003 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+             & 1X, 'Programm wird beendet!')
+  call stop_programm(0)
+end if                                                                       
+!WP 10.03.2006 ----------------------------------------------------------------------
+
+
                                                                         
 
 
@@ -1607,23 +1585,23 @@ write (*, 1017)
 !WP 11.11.2005
 !WP Es wird eine Datei zum Ausgeben der einzelnen Lambda-Werte
 !WP ueber den gesamten Querschnitt angelegt.
-jw_lambdai = ju0gfu ()
-ierr = 0
+
+UNIT_OUT_LAMBDA_I = ju0gfu ()
 lambdai = fnam1
 ilen = LEN_TRIM (lambdai)
 
 lambdai (ilen - 4:ilen - 1) = 'dath'
 lambdai (ilen + 1:nch80) = 'lambda_i.txt'
 
-OPEN (unit = jw_lambdai, file = lambdai, status = 'REPLACE', iostat = ierr)
-if (ierr /= 0) then
+OPEN (unit = UNIT_OUT_LAMBDA_I, file = lambdai, status = 'REPLACE', iostat = istat)
+if (istat /= 0) then
   write (*, 9007) lambdai
   9007 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
              & 1X, 'Programm wird beendet!')
   call stop_programm(0)
 end if
 
-write (jw_lambdai, 9008) 'PROFIL', 'PUNKT', 'X [m]', 'H [m]', 'LAMBDA [-]', 'V [m/s]'
+write (UNIT_OUT_LAMBDA_I, 9008) 'PROFIL', 'PUNKT', 'X [m]', 'H [m]', 'LAMBDA [-]', 'V [m/s]'
 9008 format (1X, A10, A7, A10, A10, A12, A10)
 !WP -----------------------------------------------------------------------------------
 
@@ -1649,21 +1627,24 @@ IF (bordvoll.ne.'n') then
   CALL qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
 
   IF (km.eq.'j' .and. ikitg.eq.1) then
-    CLOSE (iw13)
+    CLOSE (UNIT_EIN_KM)
   ENDIF
 
 ELSE
 
+  nr_q = 1
+  anz_q = 1
   CALL wspber (unit1, ibruecke, wehr)
 
 ENDIF
                                                                         
-CLOSE (jw2, STATUS = 'DELETE')
+CLOSE (UNIT_EIN_STR, STATUS = 'DELETE')
                                                                         
-!**   lein=3: Erstellung eines Kontrollfiles, dann Datei jw8 schlieﬂen  
+
+
 9999 CONTINUE
 
-IF (lein.eq.3) close (jw8)
+call close_units()
 
 WRITE ( *, 1099) VERSIONNR
 1099 FORMAT (//1X, 'Es wurde mit ', A29, ' erfolgreich gerechnet.',//     &

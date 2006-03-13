@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Jul 2005    1:30 pm
+!     Last change:  WP   12 Mar 2006    1:50 pm
 !--------------------------------------------------------------------------
 ! This code, anf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !***********************************************************************
 SUBROUTINE anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,    &
-              & psiein, psiort, jw5, ikenn, froud, xi, hi, s, ifehl, &
+              & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, &
               & nblatt, nz, istat)
 
 !***********************************************************************
@@ -82,9 +82,7 @@ SUBROUTINE anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,    &
 !**   ifehl   --      Parameter für Fehlermeldungen                     
 !**   iprof   --      Art des Profils                                   
 !**   ischn   --      Anzahl der Schnittpunkte                          
-!**   jw8     --      Name des Kontrollfiles                            
-!**   lein    --      Art des Ergebnisausdruckes                        
-!**   nblatt  --      Anzahl der Blätter im Ergebnisfile                
+!**   nblatt  --      Anzahl der Blätter im Ergebnisfile
 !**   nz      --      Anzahl der Zeilen im Ergebnisfile                 
 !**  ws1     --      Wasserspiegelhöhe                                  
 !**                                                                     
@@ -105,6 +103,7 @@ SUBROUTINE anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,    &
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
 
 CHARACTER(LEN=1) :: iprof
 CHARACTER(LEN=1) :: a (10)
@@ -149,12 +148,6 @@ REAL hbv (maxger), isstat (maxger), hmingp (maxger), k_kp (maxger)
 COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig,&
 boli, bore, hmin, hmax, ianf, iend, hrbv
 
-
-COMMON / ausgabeart / lein, jw8
-!     lein =1 --> einfacher ergebnisausdruck
-!     lein =2 --> erweiterter ergebnisausdruck
-!     lein =3 --> kontrollfile
-
 COMMON / vort / hborda, heins, horts
 
 COMMON / p4 / ifg, betta
@@ -181,24 +174,22 @@ COMMON / rohr / idruck
       a (3) = ' ' 
       a (4) = ' ' 
                                                                         
-!**   SCHREIBEN IN KONTROLLFILE                                         
-      IF (lein.eq.3) then 
-        IF (iprof.ne.' ') then 
-          WRITE (jw8, '('' Art des Profils : iprof = '',a1)') iprof 
-        ENDIF 
-      WRITE (jw8, '('' Bestimmen Einschlussintervall in anf.f77 : ''    &
-     &            ,/,''   i   hr        hrneu      froud'',             &
-     &            ''     hvst      hrst'',/)')                          
-      ENDIF 
-                                                                        
-!**   BEREITS DEAKTIVIERT, 20.01.00 -------------------------           
-!     ermitteln hrkrit: d.h. keine beeinflussung vom uw mehr,           
-!                       wenn hrneu --> hrkrit                           
-!      hrkrit=ws1+(q+q1)/rg1*str+hv1+heins+horts                        
-!      if (lein.eq.3) then                                              
-!      write(jw8,'('' grenzwert hrneu --> hrkrit = '',f15.3)') hrkrit   
-!      endif                                                            
-!**   ---------------------------------------------------------------   
+      !**   SCHREIBEN IN KONTROLLFILE
+      IF (iprof.ne.' ') then
+        WRITE (UNIT_OUT_LOG, '('' Art des Profils : iprof = '',a1)') iprof
+      ENDIF
+      WRITE (UNIT_OUT_LOG, '('' Bestimmen Einschlussintervall in anf.f90 : '' &
+       &            ,/,''   i   hr        hrneu      froud'',             &
+       &            ''     hvst      hrst'',/)')
+
+      !**   BEREITS DEAKTIVIERT, 20.01.00 -------------------------
+      !     ermitteln hrkrit: d.h. keine beeinflussung vom uw mehr,
+      !                       wenn hrneu --> hrkrit
+      !      hrkrit=ws1+(q+q1)/rg1*str+hv1+heins+horts
+      !      if (lein.eq.3) then
+      !      write(UNIT_OUT_LOG,'('' grenzwert hrneu --> hrkrit = '',f15.3)') hrkrit
+      !      endif
+      !**   ---------------------------------------------------------------          
                                                                         
       ik = 0 
       ifehl = 0 
@@ -207,12 +198,18 @@ COMMON / rohr / idruck
       dff = 1.0 
       jmin = 1 
                                                                         
-  101 dx = 0.2 
+      101 CONTINUE
+
+      dx = 0.2 
       ischn = 0 
- 1000 jzaehl = 0 
+
+
+      1000 CONTINUE 
+
+      jzaehl = 0 
                                                                         
-!**   ------------------------------------------------------------------
-!**   Iterationsschleife                                                
+      !**   ------------------------------------------------------------------
+      !**   Iterationsschleife
                                                                         
       jverl = 0 
       jmax = 100 
@@ -222,7 +219,7 @@ COMMON / rohr / idruck
         hborda = 0. 
                                                                         
   102   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-        psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, jsch)     
+        psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch)
                                                                         
         hrneu = ws1 + hrst + hvst + hborda + heins + horts 
                                                                         
@@ -249,18 +246,16 @@ COMMON / rohr / idruck
           ENDIF 
         ENDIF 
                                                                         
-!**      SCHREIBEN IN KONTROLLFILE                                      
-        IF (lein.eq.3) then 
-          WRITE (jw8, '(i4,5f10.3)') jsch, hr, hrneu, froud, hvst, hrst 
-        ENDIF 
-                                                                        
+        !**      SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(i4,5f10.3)') jsch, hr, hrneu, froud, hvst, hrst
+
         IF (jsch.gt.1) then 
                                                                         
           dff = abs (hrneu - hrneua) 
                                                                         
           IF ( (hrneua - hra) * (hrneu - hr) .le.0.) then 
-!JK            NULLDURCHGANG                                            
-!              abspeichern des einschlussintervalls                     
+            !JK            NULLDURCHGANG
+            !              abspeichern des einschlussintervalls
             h1x = hra 
             h2x = hr 
             f1 = hrneua 
@@ -270,132 +265,116 @@ COMMON / rohr / idruck
               ik = ik + 1 
               a (ik) = 'u' 
                                                                         
-!**              SCHREIBEN IN KONTROLLFILE                              
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(1x,i1,''ter schnittpunkt'')') ik 
-              ENDIF 
-                                                                        
+              !**              SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(1x,i1,''ter schnittpunkt'')') ik
+
               jmin = 1 
                                                                         
-!JK              BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES                
-!JK              (SCHLEIFENANFANG)                                      
+              !JK              BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES
+              !JK              (SCHLEIFENANFANG)
               GOTO 101 
                                                                         
             ELSEIF (froud.ge.1.) then 
                                                                         
               IF (idruck.ne.0) then 
                                                                         
-!**                    SCHREIBEN IN KONTROLLFILE                        
-                IF (lein.eq.3) then 
-      WRITE (jw8, '('' froud>1. und druckabfluss -->'',                 &
-     &       /,'' Froudzahl nicht mehr massgebend '')')                 
-                ENDIF 
-                                                                        
+                !**                    SCHREIBEN IN KONTROLLFILE
+                WRITE (UNIT_OUT_LOG, '('' froud>1. und druckabfluss -->'',  &
+                 &       /,'' Froudzahl nicht mehr massgebend '')')
+
                 ik = ik + 1 
                 a (ik) = 'm' 
                 hr = h2x 
                 jmin = 1 
                                                                         
-!JK                 BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES             
-!JK                 (SCHLEIFENANFANG)                                   
+                !JK                 BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES
+                !JK                 (SCHLEIFENANFANG)
                 GOTO 101 
                                                                         
               ENDIF 
                                                                         
-!**                  SCHREIBEN IN KONTROLLFILE                          
-              IF (lein.eq.3) then 
-      WRITE (jw8, '('' froud>1 !! --> '',                               &
-     &        '' Einschlussintervall komplett '',                       &
-     &        ''im schiessenden Bereich'',/,                            &
-     &        '' suchen naechster Schnittpunkt'')')                     
-                WRITE (jw8, '(''froud '',f15.3,'' h2x = '',f15.3)')     &
-                froud, h2x                                              
-              ENDIF 
-                                                                        
+              !**                  SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '('' froud>1 !! --> '',              &
+               &        '' Einschlussintervall komplett '',             &
+               &        ''im schiessenden Bereich'',/,                  &
+               &        '' suchen naechster Schnittpunkt'')')
+              WRITE (UNIT_OUT_LOG, '(''froud '',f15.3,'' h2x = '',f15.3)') froud, h2x
+
               hr = h2x 
               ik = ik + 1 
-!JK                  SCHIESSENDER ABFLUSS                               
+              !JK                  SCHIESSENDER ABFLUSS
               a (ik) = 's' 
                                                                         
-!**                  SCHREIBEN IN KONTROLLFILE                          
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(1x,i1,''ter schnittpunkt'')') ik 
-              ENDIF 
-                                                                        
+              !**                  SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(1x,i1,''ter schnittpunkt'')') ik
+
               jmin = 1 
                                                                         
-!JK                  BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES            
-!JK                  (SCHLEIFENANFANG)                                  
+              !JK                  BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES
+              !JK                  (SCHLEIFENANFANG)
               GOTO 101 
                                                                         
             ELSEIF (frouda.lt.1.) then 
                                                                         
-!**                  SCHREIBEN IN KONTROLLFILE                          
-              IF (lein.eq.3) then 
-      WRITE (jw8, '('' einschlussintervall komplett '',                 &
-     &            ''im stroemenden bereich '',/,                        &
-     &            '' h1x = '',f15.3,'' frouda = '',f15.3)') h1x, frouda 
-              ENDIF 
-                                                                        
+              !**                  SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '('' einschlussintervall komplett '',   &
+               &            ''im stroemenden bereich '',/,                        &
+               &            '' h1x = '',f15.3,'' frouda = '',f15.3)') h1x, frouda
+
               ik = ik + 1 
-!JK                  STROEMENDER ABFLUSS                                
+
+              !JK                  STROEMENDER ABFLUSS                                
               a (ik) = 'm' 
                                                                         
-!**                  SCHREIBEN IN KONTROLLFILE                          
-              IF (lein.eq.3) then 
-                WRITE (jw8, '(1x,i1,''ter schnittpunkt'')') ik 
-              ENDIF 
-                                                                        
+              !**                  SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '(1x,i1,''ter schnittpunkt'')') ik
+
               hr = h1x 
                                                                         
-!JK                  DATENUEBERGABE                                     
+              !JK                  DATENUEBERGABE
               GOTO 9999 
                                                                         
             ELSE 
                                                                         
-!**                  SCHREIBEN IN KONTROLLFILE                          
-              IF (lein.eq.3) then 
-      WRITE (jw8, '( ''Mischintervall (h1x<hgrenz,h2x>hgrenz)'',/       &
-     &            '' --> Intervall verkleinern'')')                     
-              ENDIF 
-                                                                        
+              !**                  SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '( ''Mischintervall (h1x<hgrenz,h2x>hgrenz)'',/ &
+               &            '' --> Intervall verkleinern'')')
+
               dx = dx / 2. 
               hr = h1x + dx 
                                                                         
               IF (dx.lt.0.01) then 
                                                                         
-!**                    SCHREIBEN IN KONTROLLFILE                        
-                IF (lein.eq.3) then 
-      WRITE (jw8, '(''Keine Konvergenz beim Misch-'',/                  &
-     &             ''intervall. Schnittpunt im '',/                     &
-     &          ''schiessenden Bereich angenommen.'')')                 
-                ENDIF 
-                                                                        
+                !**                    SCHREIBEN IN KONTROLLFILE
+                WRITE (UNIT_OUT_LOG, '(''Keine Konvergenz beim Misch-'',/ &
+                 &             ''intervall. Schnittpunt im '',/           &
+                 &          ''schiessenden Bereich angenommen.'')')
+
                 ik = ik + 1 
-!JK                    SCHIESSENDER ABFLUSS                             
+                !JK                    SCHIESSENDER ABFLUSS
                 a (ik) = 's' 
                 hr = h2x 
                 jmin = 1 
                                                                         
-!JK                    BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES          
-!JK                    (SCHLEIFENANFANG)                                
+                !JK                    BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES
+                !JK                    (SCHLEIFENANFANG)
                 GOTO 101 
                                                                         
               ENDIF 
                                                                         
-!JK                 BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES             
-!JK                 (SCHLEIFENANFANG)                                   
+              !JK                 BESTIMMUNG DES NAECHSTEN SCHNITTPUNKTES
+              !JK                 (SCHLEIFENANFANG)
               GOTO 100 
+
             ENDIF 
                                                                         
-!JK        ENDIF ZU ((hrneua-hra)*(hrneu-hr).le.0.)                     
+          !JK        ENDIF ZU ((hrneua-hra)*(hrneu-hr).le.0.)
           ENDIF 
-!JK       ENDIF ZU (jsch.gt.1)                                          
+
+        !JK       ENDIF ZU (jsch.gt.1)
         ENDIF 
                                                                         
-!          print *,'dff = ',dff,'dffmin = ',dffmin                      
-                                                                        
-!JK       WENN GRENZKRITERIUM ERREICHT                                  
+        !JK       WENN GRENZKRITERIUM ERREICHT
         IF (abs (dff) .le.dffmin) then 
                                                                         
           IF (hr.gt.ws1) then 
@@ -420,41 +399,38 @@ COMMON / rohr / idruck
               GOTO 101 
             ENDIF 
                                                                         
-!**             ik = Anzahl Schnittpunkte, wo wird ischn oberhalb       
-!**             gesetzt??? UT, nur in folgenden Zeilen?                 
-!JK             ISCHN WIRD DIREKT VOR SCHLEIFENANFANG = 0 GESETZT       
+            !**             ik = Anzahl Schnittpunkte, wo wird ischn oberhalb
+            !**             gesetzt??? UT, nur in folgenden Zeilen?
+            !JK             ISCHN WIRD DIREKT VOR SCHLEIFENANFANG = 0 GESETZT
             IF (ik.eq.0.and.ischn.eq.0) then 
                                                                         
-!**                SCHREIBEN IN KONTROLLFILE                            
-              IF (lein.eq.3) then 
-      WRITE (jw8, '('' keine Schnittpunkt in anf --> '',                &
-     &   '' Verringere Intervall dx auf 0.05'',/,                       &
-     &   '' Nochmaliger Suchlauf'')')                                   
-              ENDIF 
-                                                                        
+              !**                SCHREIBEN IN KONTROLLFILE
+              WRITE (UNIT_OUT_LOG, '('' keine Schnittpunkt in anf --> '', &
+               &   '' Verringere Intervall dx auf 0.05'',/,                       &
+               &   '' Nochmaliger Suchlauf'')')
+
               dx = 0.05 
               ifehl = 0 
               hr = hmin + 0.005 
               ischn = 1 
                                                                         
-!JK              ZUM SCHLEIFENANFANG,                                   
-!JK              MIT KLEINEREM dx NOCHMALIGER DURCHLAUF                 
+              !JK              ZUM SCHLEIFENANFANG,
+              !JK              MIT KLEINEREM dx NOCHMALIGER DURCHLAUF
               GOTO 1000 
                                                                         
             ENDIF 
                                                                         
-!**             SCHREIBEN IN KONTROLLFILE                               
-            IF (lein.eq.3) then 
-      WRITE (jw8, '(''keine aenderung des wsp mehr -->'',               &
-     &  '' beeinflussung vom uw '',/,                                   &
-     &  '' --> kein zusaetzlicher schnittpunkt mehr '')')               
-            ENDIF 
-!JK          DATENUEBERGABE                                             
+            !**             SCHREIBEN IN KONTROLLFILE
+            WRITE (UNIT_OUT_LOG, '(''keine aenderung des wsp mehr -->'', &
+             &  '' beeinflussung vom uw '',/,                            &
+             &  '' --> kein zusaetzlicher schnittpunkt mehr '')')
+
+            !JK          DATENUEBERGABE
             GOTO 9999 
                                                                         
-!JK          ENDIF ZU (hr.gt.ws1)                                       
+          !JK          ENDIF ZU (hr.gt.ws1)
           ENDIF 
-!jk       ENDIF ZU (abs(dff).le.dffmin)                                 
+        !jk       ENDIF ZU (abs(dff).le.dffmin)
         ENDIF 
                                                                         
         hra = hr 
@@ -462,8 +438,8 @@ COMMON / rohr / idruck
         frouda = froud 
         hr = hr + dx 
                                                                         
-!**   ENDE DER SCHLEIFE                                                 
-  100 END DO 
+      !**   ENDE DER SCHLEIFE
+      100 END DO
                                                                         
       IF (idruck.eq.1) then 
         IF (hr.lt.hrneu) then 
@@ -472,104 +448,92 @@ COMMON / rohr / idruck
           frouda = froud 
           jmin = 2 
           hr = hr + dx 
-!JK                  NOCHMALIGER SCHLEIFENDURCHLAUF                     
+          !JK                  NOCHMALIGER SCHLEIFENDURCHLAUF
           GOTO 101 
         ENDIF 
       ENDIF 
                                                                         
-!JK   WENN KEIN SCHNITTPUNKT GEFUNDEN                                   
+      !JK   WENN KEIN SCHNITTPUNKT GEFUNDEN
       IF (ik.eq.0) then 
-!JK     WENN KEIN SUCHDURCHLAUF MIT KLEINEREM INTERVALL                 
-!JK     DURCHGEFUEHRT WURDE                                             
+
+        !JK     WENN KEIN SUCHDURCHLAUF MIT KLEINEREM INTERVALL
+        !JK     DURCHGEFUEHRT WURDE
         IF (ischn.eq.0) then 
                                                                         
-!**       SCHREIBEN IN KONTROLLFILE                                     
-          IF (lein.eq.3) then 
-      WRITE (jw8, '('' keine schnittpunkt in anf --> '',                &
-     &           '' Verringere Intervall dx auf 0.05'',/,               &
-     &           '' Nochmaliger Suchlauf'')')                           
-          ENDIF 
-                                                                        
+          !**       SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '('' keine schnittpunkt in anf --> '', &
+           &           '' Verringere Intervall dx auf 0.05'',/,       &
+           &           '' Nochmaliger Suchlauf'')')
+
           dx = 0.05 
           ik = 0 
           ifehl = 0 
           hr = hmin + 0.005 
           ischn = 1 
                                                                         
-!JK        NOCHMALIGER SUCHDURCHLAUF MIT KLEINEREM INTERVALL            
+          !JK        NOCHMALIGER SUCHDURCHLAUF MIT KLEINEREM INTERVALL
           GOTO 1000 
                                                                         
         ELSE 
                                                                         
-!**     SCHREIBEN IN KONTROLLFILE                                       
-          IF (lein.eq.3) then 
-      WRITE (jw8, '('' keine schnittpunkt in anf --> '',                &
-     &             '' keine konvergenz moeglich'',/,                    &
-     &             '' --> profile einschalten'')')                      
-          ENDIF 
-                                                                        
+          !**     SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '('' keine schnittpunkt in anf --> '', &
+           &             '' keine konvergenz moeglich'',/,            &
+           &             '' --> profile einschalten'')')
+
         ENDIF 
                                                                         
-!**   SCHREIBEN IN KONTROLLFILE                                         
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(''Keinen Schnittpunkt im stroemenden Bereich gef.'')&
-     &')                                                                
-        ENDIF 
-                                                                        
+        !**   SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(''Keinen Schnittpunkt im stroemenden Bereich gef.'')')
+
         ifehl = 1 
                                                                         
-!     /* nur schnittpunkt im schiessenden bereich                       
+        !     /* nur schnittpunkt im schiessenden bereich
                                                                         
       ENDIF 
                                                                         
-!**   SCHREIBEN IN KONTROLLFILE                                         
- 9999 IF (lein.eq.3) then 
-      WRITE (jw8, '(/,'' insgesamt '',i1,'' schnittpunkte '',3(1x,a1),/)&
-     &') ik,  (a (i1) , i1 = 1, 3)                                      
-      ENDIF 
-                                                                        
+
+ 9999 CONTINUE
+
+      !**   SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(/,'' insgesamt '',i1,'' schnittpunkte '',3(1x,a1),/)&
+       &') ik,  (a (i1) , i1 = 1, 3)
+
       IF (ik.eq.0) then 
         nz = nz + 2 
         IF (nz.gt.50) then 
           nblatt = nblatt + 1 
-          CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1) 
-        ENDIF 
-                                                                        
-!**      write(jw5,'(/,t10,''Kein Einfluss vom Unterwasser'')')         
-                                                                        
-!**      SCHREIBEN IN KONTROLLFILE                                      
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(/,''Kein Einfluss vom Unterwasser.   '')') 
-          WRITE (jw8, '(/,'' --> Fall 1: Profile einschalten '')') 
-        ENDIF 
-                                                                        
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+        ENDIF
+
+        !**      SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(/,''Kein Einfluss vom Unterwasser.   '')')
+        WRITE (UNIT_OUT_LOG, '(/,'' --> Fall 1: Profile einschalten '')')
+
         ifehl = 2 
                                                                         
       ELSEIF (ik.eq.1.and.a (1) .eq.'u') then 
                                                                         
-!**     SCHREIBEN IN KONTROLLFILE                                       
-        IF (lein.eq.3) then 
-      WRITE (jw8, '(''Nur ein Schnittpunkt, und der im Schiessenden.'', &
-     &              /,''Diskontinuitaet --> Es muss ein Fliesswechsel'',&
-     &            '' stattgefunden haben (vgl. seus/uslu)'')')          
-        ENDIF 
-                                                                        
+        !**     SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(''Nur ein Schnittpunkt, und der im Schiessenden.'', &
+         &              /,''Diskontinuitaet --> Es muss ein Fliesswechsel'',&
+         &            '' stattgefunden haben (vgl. seus/uslu)'')')
+
         ik = 0 
         ifehl = 2 
                                                                         
       ENDIF 
                                                                         
-!**   SCHREIBEN IN KONTROLLFILE                                         
-      IF (lein.eq.3.and.ifehl.ne.2) then 
-      WRITE (jw8, '(''in anf --> h1x = '',f15.3,'' h2x = '',f15.3,/,    &
-     &              ''           f1  = '',f15.3,'' f2  = '',f15.3,/,    &
-     &              ''          hmin = '',f15.3)') h1x, h2x, f1, f2, hmi&
-     &n                                                                 
+      !**   SCHREIBEN IN KONTROLLFILE
+      IF (ifehl.ne.2) then
+        WRITE (UNIT_OUT_LOG, '(''in anf --> h1x = '',f15.3,'' h2x = '',f15.3,/, &
+         &              ''           f1  = '',f15.3,'' f2  = '',f15.3,/,    &
+         &              ''          hmin = '',f15.3)') h1x, h2x, f1, f2, hmin
       ENDIF 
                                                                         
       hr = h1x 
                                                                         
       RETURN 
                                                                         
-!UT   ENDE SUB anf                                                      
+      !UT   ENDE SUB anf
       END SUBROUTINE anf                            

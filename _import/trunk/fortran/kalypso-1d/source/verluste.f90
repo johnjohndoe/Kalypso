@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    2:14 pm
+!     Last change:  WP   12 Mar 2006    2:07 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 
 SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
-         & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, itere1)
+         & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
 
 !***********************************************************************
 !**                                                                     
@@ -100,7 +100,7 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 !**                                                                     
 !**   AUFGERUFENE ROUTINEN                                              
 !**   --------------------                                              
-!**   qks (iprof,sohle,q,itere1,hr,hv,nknot,jw8)                        
+!**   qks (iprof,sohle,q,itere1,hr,hv,nknot)
 !**   qkst (indmax,hr,hv,vm,q,sohle,ife)                                
 !**   uf (hr,hi,xi,s,indmax,nfli,nfre)                                  
 !JK   eb2ks                                                             
@@ -131,7 +131,6 @@ REAL, INTENT(INOUT) 	:: hrst         ! Geschwindigkeitsverlust
 INTEGER, INTENT(INOUT) 	:: indmax       ! Anzahl der Rauhigkeitszonen in einem Profil
 REAL, INTENT(INOUT) 	:: psiein       ! Verlustbeiwert
 REAL, INTENT(INOUT) 	:: psiort       ! Örtlicher Verlust
-INTEGER, INTENT(IN) 	:: jw5          ! UNIT-Nr. Wird weder hier noch in VERLUSTE verwendet!
 REAL, INTENT(INOUT) 	:: xi (maxkla)  ! Abstand der einzelnen Profilpunkte (werden in VERLUSTE -> UF verwendet)
 REAL, INTENT(INOUT) 	:: hi (maxkla)  ! Höhen der einzelnen Profilpunkte (werden in VERLUSTE -> UF verwendet)
 REAL, INTENT(INOUT) 	:: s (maxkla)   ! Distanz der Profilpunkte (werden in VERLUSTE -> UF verwendet)
@@ -145,17 +144,6 @@ INTEGER 		:: itere1       ! Iterationsvariable
 REAL            :: ws1, rg1, vmp1, fges1, hv1
 INTEGER         :: ikenn1
 COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
 ! ----------------------------------------------------------------------------------
 
 
@@ -302,7 +290,7 @@ IF (bordvoll.ne.'g') then
   !JK  BERECHNUNG NACH DARCY-WEISBACH
   IF (ifg.eq.1) then
     nstat = nprof
-    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, jw8)
+    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
   !JK  BERECHNUNG NACH GMS
   ELSE
     ! vorbelegung
@@ -435,7 +423,7 @@ ELSE
 
     IF (ifg.eq.1) then
 
-      CALL qks (iprof, sohle, q, itere1, hr, hv, nknot, jw8)
+      CALL qks (iprof, sohle, q, itere1, hr, hv, nknot)
 
       IF (fges.gt.1.e-05) then
         vm = q / fges

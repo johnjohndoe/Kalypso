@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    2:25 pm
+!     Last change:  WP   13 Mar 2006    6:33 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -112,8 +112,8 @@ SUBROUTINE wspber (unit1, ibruecke, wehr)
 !HB   alpha_IW -  Boussinesq-Beiwert auf Profilnummer bezogen           
 !HB   alpha_ja -  Steuerparameter, ob Beiwerte.AUS erstellt werden soll 
 !HB   gesamt_a -  gesamte durchstroemte Flaeche                         
-!HB   nr_alph  -  Interne Dateinummer fuer Beiwerte.AUS                 
-!HB   pn_alpha -  Profilnummer (=nprof)                                 
+!HB   UNIT_OUT_ALPHA  -  Interne Dateinummer fuer Beiwerte.AUS                 
+!HB   pn_alpha -  Profilnummer (=nprof)
 !HB   st_alpha -  Stationskilometer (=staso)                            
 !HB   ***************************************************************** 
 !
@@ -121,16 +121,11 @@ SUBROUTINE wspber (unit1, ibruecke, wehr)
 !
 !   Benutzte unit-nr.:
 !   ------------------
-!   - jw1   -  bis jetzt noch nicht benutzt! - ''fluss.dat''
-!   - jw2   -  datei 'flussname.dat',  z.b. ''westerbach.dat''
 !   - jw4   -  Profildatei prof....dat, z.b. ''prof0001.dat''
 !   - jw5   -  Ergebnisdatei ....tab, z.b. ''westerhq2.tab''
 !                                  oder  '' wester250.tab''(bei
 !                                  bordvoll->d.h. q=250 m**3/s)
-!   - jw6   -  Ergebnisdatei Wasserspiegellaengschnitt
-!             'flussname'.wsl ,z.b. wester.wsl
 !   - jw7   -  Ergebnisdatei Wasserstands-Abflussbeziehung
-!   - jw8   -  Kontrollfile
 !
 !   - unit1 -  Filename .tab-file
 !   - unit4
@@ -140,11 +135,9 @@ SUBROUTINE wspber (unit1, ibruecke, wehr)
 !   drucktab (nprof,indmax,nz,jw5,nblatt,stat,jw7,idr1)
 !   intdat (staso,ifehl)
 !   kopf (nblatt,nz,jw5,ifg,jw7,idr1)
-!   lapro1 (jw6,jw6,nprof,mark)
 !   lcase (unit4)
 !   lu0trf (jw5)
 !   proe_pro (jw4,text33,filename)
-!   proein (jw4)
 !   speicher (nprof,hbv_gl,hv,hvst,hrst,q,stat(nprof),indmax,ikenn)
 !
 !***********************************************************************
@@ -156,28 +149,19 @@ SUBROUTINE wspber (unit1, ibruecke, wehr)
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
+USE MOD_ERG
 
 ! Calling variables
-CHARACTER(LEN=nch80), INTENT(IN) :: unit1
-CHARACTER(LEN=1), INTENT(IN)     :: ibruecke
-CHARACTER(LEN=1), INTENT(IN)     :: wehr
+CHARACTER(LEN=nch80), INTENT(IN) :: unit1               ! Pfadname des Projektes
+CHARACTER(LEN=1), INTENT(IN)     :: ibruecke            ! Schalter, ob Bruecken berechnet werden sollen
+CHARACTER(LEN=1), INTENT(IN)     :: wehr                ! Schalter, ob Wehre berechnet werden sollen
 
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
 CHARACTER(LEN=nch80)    :: alph_aus     ! Projektpfad fuer Beiwerte.AUS
 COMMON / alph_pf / alph_aus, nr_alph
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
 ! ----------------------------------------------------------------------------------
 
 
@@ -253,12 +237,6 @@ REAL		:: vmp (maxger), hbors (maxger), hein (maxger), hort (maxger), brg (maxger
 INTEGER 	:: igrenz (maxger)
 COMMON / erg / wsp, hen, qs, fgesp, froudp, hvs, hrs, hs, fp, up, &
              & vp, qtp, rkp, fbwp, brp, vmp, hbors, hein, hort, igrenz, brg
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /FUNIT/ --------------------------------------------------------
-INTEGER 	:: jw1, jw2
-COMMON / funit / jw1, jw2
 ! -----------------------------------------------------------------------------
 
 
@@ -395,9 +373,9 @@ COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw
 
 
 ! Local variables ---------------------------------------------------------------------------------
+INTEGER :: istat
 LOGICAL :: is_open
 
-INTEGER :: jw6, jw7
 INTEGER :: fseek
 INTEGER :: np (ipro)
 INTEGER :: int (merg)
@@ -466,9 +444,15 @@ izz = 1
 nprof = 0
 
 !**   Eroeffnen der Ausgabedatei 'Flussname.tab' (dateiname-unit1)
-jw5 = ju0gfu ()
+UNIT_OUT_TAB = ju0gfu ()
 
-OPEN (unit = jw5, file = unit1, status = 'unknown')
+OPEN (unit = UNIT_OUT_TAB, file = unit1, status = 'REPLACE', ACTION='WRITE', IOSTAT = istat)
+if (istat /= 0) then
+  write (*, 8900) unit1
+  8900 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+             & 1X, 'Programm wird beendet!')
+  call stop_programm(0)
+end if
 
 !HB   *****************************************************************
 !HB   26.11.2001 - H.Broeker
@@ -490,12 +474,12 @@ IF (alpha_ja.eq.1) then
   !HB     strombeiwert-Auswertung (zusaetzliche Ausgabedatei: Beiwerte.AUS
 
   !HB     Einholen einer Dateinummer fuer Datei
-  nr_alph = ju0gfu ()
+  UNIT_OUT_ALPHA = ju0gfu ()
   !HB     Oeffnen der Datei Beiwerte.AUS
-  OPEN (UNIT = nr_alph, IOSTAT = ierr, FILE = alph_aus, STATUS = 'replace')
+  OPEN (UNIT = UNIT_OUT_ALPHA, IOSTAT = istat, FILE = alph_aus, STATUS = 'replace')
 
   !HB     Schreiben der Kopfzeile der Ausgabedatei Beiwert.AUS
-  WRITE (nr_alph, 9911)
+  WRITE (UNIT_OUT_ALPHA, 9911)
   9911 FORMAT  (/,'Ergebnisdatei BEIWERTE.AUS',//,                       &
     &'1.Zeile je Profil: auf den Gesamtquerschnitt bezogene Groessen',/&
     &,'Lambda   = (Gefaelle*Flaeche**3*8*g)/(Umfang*Durchfluss**2)',/  &
@@ -548,20 +532,23 @@ ELSE
 
 ENDIF
 
-!**   jw5 = Flussname.tab'?
-WRITE (jw5, '(a)') text
+!**   UNIT_OUT_TAB = Flussname.tab'?
+WRITE (UNIT_OUT_TAB, '(a)') text
 
 
 !**   Schreiben des Kopfes der Datei 'flussname.tab'
 nblatt = 1
 IF (idr1.ne.'j') then
-  CALL kopf (nblatt, nz, jw5, ifg, jw5, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_TAB, idr1)
 ENDIF
 
 !**   nz wird in kopf zu 1 gesetzt, maxger ist Anzahl der
 !**   Gerinneabschnitte
-!**   REWIND setzt jw2 auf Anfangspunkt zurueck
-REWIND (jw2)                                                                                   
+!**   REWIND setzt Strangtabelle auf Anfangspunkt zurueck
+REWIND (UNIT_EIN_STR)
+
+
+
 
 
 !WP -----------------------------------------------------------------------------------
@@ -571,7 +558,7 @@ REWIND (jw2)
 Hauptschleife: DO i = 1, maxger
 
   ! Einlesen aus flussname.dat:
-  READ (jw2, '(a)', end = 5000) dummy
+  READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
                                                                         
   CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
 
@@ -600,8 +587,10 @@ Hauptschleife: DO i = 1, maxger
   ! Anzahl der Profile fuer die WSP-Berechnung:
   nprof = nprof + 1
   stat (nprof) = statles
+
   prof_it (nprof) = 0
-                                                                        
+  out_PROF(nprof,nr_q)%interpol = .FALSE.
+  out_PROF(nprof,nr_q)%stat = stat(nprof)
                                                                         
   ! ------------------------------------------------------------------
   ! Einlesen der Profildatei NR (z.B. St000150.prf)
@@ -614,24 +603,20 @@ Hauptschleife: DO i = 1, maxger
   unit4 (ilen + 1:nch80) = nr           ! Kompletter Pfad zur Profildatei
   CALL lcase (unit4)
 
-  jw4 = ju0gfu ()                       ! Leere Unit holen
-  ierr = 0
+  UNIT_EIN_PROF = ju0gfu ()                       ! Leere Unit holen
+  istat = 0
 
-  !**   lein=3 im Falle der Erstellung des Kontrollfiles
-  IF (lein.eq.3) then
-    write (jw8, '(/,''----------------------------------------------------------------------'')')
-    write (jw8, '(''Oeffnen Profildatei '',a)') unit4
-  END if
+
+  write (UNIT_OUT_LOG, '(///,''----------------------------------------------------------------------'')')
+  write (UNIT_OUT_LOG, '(''Oeffnen Profildatei '',a)') unit4
 
   ! Zuweisung des kompletten Dateinamens der Profildatei zu einem Array
   dateiname(i) = unit4
 
-  OPEN (unit = jw4, iostat = ierr, file = unit4, status = 'old')
-  IF (ierr.ne.0) then
+  OPEN (unit = UNIT_EIN_PROF, iostat = istat, file = unit4, status = 'old')
+  IF (istat.ne.0) then
     write (*, 9001) unit4
-    IF (lein.eq.3) then
-      write (jw8, 9001) unit4
-    ENDIF
+    write (UNIT_OUT_LOG, 9001) unit4
     9001 format (/1X, 'Fehler: Datei existiert nicht: ', A, /, &
                 & 1X, '-> Programm wird beendet.')
     GOTO 999
@@ -670,20 +655,20 @@ Hauptschleife: DO i = 1, maxger
     unit7 (ilen + 1:nch80) = text
     ilen = LEN_TRIM (unit7)
     unit7 (ilen + 1:nch80) = '.pro'
-    jw7 = ju0gfu ()
+    UNIT_OUT_PRO = ju0gfu ()
 
-    OPEN (unit = jw7, file = unit7, status = 'unknown')
+    OPEN (unit = UNIT_OUT_PRO, file = unit7, status = 'unknown')
 
     IF (isch.eq.1) then
 
       !**  /* stutze file ab pointer
-      CALL lu0trf (jw7)
-      CALL kopf (nblatt, nz, jw7, ifg, jw7, idr1)
+      CALL lu0trf (UNIT_OUT_PRO)
+      CALL kopf (nblatt, nz, UNIT_OUT_PRO, ifg, UNIT_OUT_PRO, idr1)
 
     ELSE
 
-      INQUIRE (UNIT = jw7, OPENED = is_open, IOSTAT = ierr)
-      if (ierr /= 0) then
+      INQUIRE (UNIT = UNIT_OUT_PRO, OPENED = is_open, IOSTAT = istat)
+      if (istat /= 0) then
         ! 9002
         write (*,*) ' In WSPBER ist ein Fehler beim Untersuchen des Zustandes'
         write (*,*) ' einer UNIT aufgetreten (INQUIRE-Befehl), ca. Zeile 697'
@@ -692,7 +677,7 @@ Hauptschleife: DO i = 1, maxger
       end if
 
       IF (is_open) then
-        fehler_id = fseek (jw7, 0, 2)
+        fehler_id = fseek (UNIT_OUT_PRO, 0, 2)
         if (fehler_id /= 0) then
           ! 9003
           write (*,*) ' In WSPBER ist ein Fehler aufgetreten beim Platzieren eines'
@@ -712,18 +697,17 @@ Hauptschleife: DO i = 1, maxger
   ! Einlesen der Daten in Sub proein und Weiterverarbeitung in intdat
   ! ------------------------------------------------------------------
 
-  CALL proe_pro (jw4,		& 	! <- Unit der Profildatei *.prf
-               & text33, 	& 	! -> Station km als Zeichenkette (Character)
+  CALL proe_pro (text33, 	& 	! -> Station km als Zeichenkette (Character)
                & unit4)                 ! <- Kompletter Pfad zur Profildatei
 
   text32 = text321
 
 
-  !**   ------------------------------------------------------------------
-  !**   Definition des Profils
-  !**   ------------------------------------------------------------------
+  ! ------------------------------------------------------------------
+  ! Definition des Profils
+  ! ------------------------------------------------------------------
 
-  !**   KONVERTIERUNG DES TEXTES text 32 VON KLEIN- ZU GROSSBUCHSTABEN
+  ! KONVERTIERUNG DES TEXTES text 32 VON KLEIN- ZU GROSSBUCHSTABEN
   CALL lcase (text32)
 
   find_l: DO i6 = 1, 36
@@ -741,7 +725,7 @@ Hauptschleife: DO i = 1, maxger
 
   prof_nr = prof_nr (i7:i7 + ilen)
 
-  CLOSE (jw4)
+  CLOSE (UNIT_EIN_PROF)
 
   staso = stat (nprof)
 
@@ -767,14 +751,14 @@ Hauptschleife: DO i = 1, maxger
   !HB*******************************************************************
 
 
-  write (*,1000) staso
-  write (0,1000) staso
-  1000 format (/1X, 'Berechnung an Profil: ', F8.4)
 
 
+  ! --------------------------------------------------------------------------------------------------
+  write (   *  ,      1000) staso
+  write (   0  ,      1000) staso
+  write (UNIT_OUT_LOG,1000) staso
+  1000 format (/1X, 'Starte Berechnung an Profil: ', F10.4)
 
-  !**   SCHREIBEN VON STASO IN KONTROLLFILE
-  IF (lein.eq.3) write (jw8, '(''Bearbeiten Station km '',f12.4)') staso
 
   !**   Abspeichern alter Q-Wert:
   IF (nprof.gt.1) q1 = q
@@ -788,9 +772,11 @@ Hauptschleife: DO i = 1, maxger
 
       IF (dif1.gt.0. .and. dif2.le.0.) then
 
-        WRITE (jw5, 13) stat (nprof), qwert (izz)
-        nz = nz + 2  ! Anzahl der Zeilen auf Seite in Dateo mit Tabellenausgabe (jw5)
-        IF (lein.eq.3) write (jw8, 13) stat (nprof), qwert (izz)
+        WRITE (UNIT_OUT_TAB, 13) stat (nprof), qwert (izz)
+
+        nz = nz + 2  ! Anzahl der Zeilen auf Seite in Dateo mit Tabellenausgabe (UNIT_OUT_TAB)
+
+        write (UNIT_OUT_LOG, 13) stat (nprof), qwert (izz)
         13 FORMAT (/,5x,'Durchflussaenderung bei Station km ',f7.3, &
                 & ' :  Q = ',f7.2,' m**3/s')
 
@@ -810,10 +796,10 @@ Hauptschleife: DO i = 1, maxger
         dif2 = qstat (izz + 1) - stat (nprof)
 
         IF (dif1.le.0..and.dif2.gt.0.) then
-          WRITE (jw5, 14) stat (nprof), qwert (izz)
+          WRITE (UNIT_OUT_TAB, 14) stat (nprof), qwert (izz)
 
 
-          IF (lein.eq.3) write (jw8, 14) stat (nprof), qwert (izz)
+          write (UNIT_OUT_LOG, 14) stat (nprof), qwert (izz)
           14 FORMAT (/,5x,'Durchfluss bei Station km ',f7.3,  &
                   & ' :  Q = ',f7.2,' m**3/s')
           q = qwert (izz)
@@ -821,7 +807,7 @@ Hauptschleife: DO i = 1, maxger
           izz = izz + 1
 
         ELSEIF (izz + 1.eq.nq.AND.qstat (izz + 1) .le.stat (nprof) ) then
-          WRITE (jw5, 14) stat (nprof), qwert (izz + 1)
+          WRITE (UNIT_OUT_TAB, 14) stat (nprof), qwert (izz + 1)
           q = qwert (izz + 1)
           nz = nz + 3
 
@@ -836,9 +822,9 @@ Hauptschleife: DO i = 1, maxger
       ELSE
 
         IF (dif1.lt.0.and.dif2.ge.0) then
-          WRITE (jw5, 114) stat (nprof), qwert (izz)
+          WRITE (UNIT_OUT_TAB, 114) stat (nprof), qwert (izz)
 
-          IF (lein.eq.3) write (jw8, 114) stat (nprof), qwert (izz)
+          write (UNIT_OUT_LOG, 114) stat (nprof), qwert (izz)
           114 FORMAT (/,5x,'Durchfluss bei Station km ',f7.3, &
                    & ' :  Q = ',f7.2,' m**3/s')
 
@@ -867,8 +853,9 @@ Hauptschleife: DO i = 1, maxger
   ENDIF
 
 
-  !**   ******************************************************************
-  !**   Ergaenzung zur Beruecksichtigung oert. Verluste 13.09.90 E. Pasche
+
+  ! ------------------------------------------------------------------------------------------------
+  ! Ergaenzung zur Beruecksichtigung oert. Verluste 13.09.90 E. Pasche
   psieins = 0.
   psiorts = 0.
 
@@ -879,14 +866,13 @@ Hauptschleife: DO i = 1, maxger
       EXIT oertl_verluste
     ENDIF
   END DO oertl_verluste
+  ! Ende Ergaenzung v. 13.09.90  E. Pasche
+  ! ------------------------------------------------------------------------------------------------
 
-  !**   Ende Ergaenzung v. 13.09.90  E. Pasche
-  !**   ******************************************************************
 
 
-  !**   ------------------------------------------------------------------
-  !**   Anfangswasserspiegel fuer das erste Profil
-  !**   ------------------------------------------------------------------
+  ! ------------------------------------------------------------------------------------------------
+  ! Anfangswasserspiegel fuer das erste Profil
 
   IF (bordvoll.ne.'g') then
 
@@ -899,37 +885,30 @@ Hauptschleife: DO i = 1, maxger
       strbr = 0.
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-        & hrst, psieins, psiorts, jw5, nprof, hgrenz, ikenn, nblatt,  &
+        & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
         & nz, idr1)
 
     !**   ABFRAGE ZUR BRUECKENBERECHNUNG
     ELSEIF (ibridge.eq.'b' .and. ibruecke.eq.'j') then
 
 
-      !**   ------------------------------------------------------------------
-      !**   Brueckenberechnung
-      !**   ------------------------------------------------------------------
-
-      print *
+      ! ------------------------------------------------------------------
+      ! Brueckenberechnung
+      ! ------------------------------------------------------------------
 
       ! SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-
-        write (jw8, 22) x1(iwl), iwl, h1(iwl), x1(iwr), iwr, h1(iwr), hukmax, hmin, breite
-
-        22 format(/1X, 'Fuer die Brueckenberechnung eingelesenen Werte:',/, &
-                 & 1X, '-----------------------------------------------',/, &
-                 & 1X, '  linkes Widerlager  X1(IWL) = ', F12.3,/, &
-                 & 1X, '                     IWL     = ', I12,/,   &
-                 & 1X, '                     H1(IWL) = ', F12.3,/, &
-                 & 1X, '  rechtes Widerlager X1(IWR) = ', F12.3,/, &
-                 & 1X, '                     IWR     = ', I12,/,   &
-                 & 1X, '                     H1(IWR) = ', F12.3,/, &
-                 & 1X, '  Brueckenunterkante HUKMAX  = ', F12.3,/, &
-                 & 1X, '  Sohlhoehe HMIN             = ', F12.3,/, &
-                 & 1X, '  Brueckenbreite BREITE      = ', F12.3/)
-
-      ENDIF
+      write (UNIT_OUT_LOG, 22) x1(iwl), iwl, h1(iwl), x1(iwr), iwr, h1(iwr), hukmax, hmin, breite
+      22 format(/1X, 'Fuer die Brueckenberechnung eingelesenen Werte:',/, &
+               & 1X, '-----------------------------------------------',/, &
+               & 1X, '  linkes Widerlager  X1(IWL) = ', F12.3,/, &
+               & 1X, '                     IWL     = ', I12,/,   &
+               & 1X, '                     H1(IWL) = ', F12.3,/, &
+               & 1X, '  rechtes Widerlager X1(IWR) = ', F12.3,/, &
+               & 1X, '                     IWR     = ', I12,/,   &
+               & 1X, '                     H1(IWR) = ', F12.3,/, &
+               & 1X, '  Brueckenunterkante HUKMAX  = ', F12.3,/, &
+               & 1X, '  Sohlhoehe HMIN             = ', F12.3,/, &
+               & 1X, '  Brueckenbreite BREITE      = ', F12.3/)
 
 
       statgem = stat (nprof)              !WP Station gemerkt?
@@ -937,12 +916,8 @@ Hauptschleife: DO i = 1, maxger
       strecke = (statgem - stat1) * 1000. !WP Distanz zwischen Bruecke und Unterwasser
 
       !     SCHREIBEN IN KONTROLLFILE
-      IF (lein .eq. 3) then
-        write (jw8, 23) stat (nprof)
-        WRITE (jw5, 23) stat (nprof)
-      else
-        WRITE (jw5, 23) stat (nprof)
-      END if
+      write (UNIT_OUT_LOG, 23) stat (nprof)
+      WRITE (UNIT_OUT_TAB, 23) stat (nprof)
       23 FORMAT (/,5x,'Brueckenberechnung an Station km   ',f7.3,' : ',/)
 
 
@@ -968,12 +943,14 @@ Hauptschleife: DO i = 1, maxger
 
       delta1 = delta + breite  ! Abstand des moeglichen Profils 'a' vom Brueckenprofil
 
-      if (lein .eq. 3) then
-        write (jw8, 24) delta1, strecke
-      end if
+      write (UNIT_OUT_LOG, 24) delta1, strecke
       24 format (1X, 'Delta1: ', F10.3, '  Strecke: ', F10.3)
 
 
+
+      ! ----------------------------------------------------------------------------------------------
+      ! P R O F I L   "A"
+      ! =================
       ! Falls es zu einem Nennenswerten Aufweitungsverlust kommt, muss am Unterwasser
       ! ein Profil ('a') eingefuegt werden.
       IF (strecke .gt. delta1) then
@@ -983,29 +960,30 @@ Hauptschleife: DO i = 1, maxger
 
         prof_it(nprof) = 1
 
+        out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+                                                        !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                        !WP Anzahl der interpolierten Profile aendern
+        out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+                                                        !WP interpoliert wurde.
+
         num (nprof) = '0'
 
 
+        write (   *  ,      1001) stat (nprof)
+        write (   0  ,      1001) stat (nprof)
+        write (UNIT_OUT_LOG,1001) stat (nprof)
+        1001 format (/1X, '       Profil "a" (Bruecke): ', F10.4)
 
-        PRINT * , 'Profil a : Station km ', stat (nprof)
+        WRITE (UNIT_OUT_TAB, '(/t10,'' Profil "a": '')')
 
-
-        WRITE (jw5, '(/t10,'' Profil "a": '')')
-
-        ! SCHREIBEN IN KONTROLLFILE
-        IF (lein .eq. 3) then
-          WRITE (jw8, '(''Profil "a" Station km '',f12.4)') stat (nprof)
-        ENDIF
 
         dif = hmin - sohlp(nprof - 1)
         d1 = dif / strecke * delta
         d2 = ( (brg (nprof - 1) - br1) * delta / strecke+br1)  / br1
         x1wr = x1 (iwr)
 
-        if (lein .eq. 3) then
-          write (jw8, 25) dif, d1, d2, x1wr
-
-        end if
+        write (UNIT_OUT_LOG, 25) dif, d1, d2, x1wr
         25 format (/1X, 'DIF:  ', F12.4, /, &
                   & 1X, 'D1:   ', F12.4, /, &
                   & 1X, 'D2:   ', F12.4, /, &
@@ -1032,22 +1010,22 @@ Hauptschleife: DO i = 1, maxger
         htrli = htrli - d1
 
         CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-        indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud,      &
-        nblatt, nz)
+         & indmax, psieins, psiorts, hgrenz, ikenn, froud,      &
+         & nblatt, nz)
 
-        IF (lein.eq.3) write (jw8, 26) hmin, hr
+        write (UNIT_OUT_LOG, 26) hmin, hr
         26 format (/1X, 'Sohlhoehe HMIN: ', F12.4,/, &
                  &  1X, 'WSP:            ', F12.4,/)
 
 
         IF (nz .gt. 50) then
           nblatt = nblatt + 1
-          CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
         ENDIF
 
         CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
-        CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+        CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
         !**  Original Profilwerte herstellen:
         IF (ifg.eq.1) then
@@ -1070,7 +1048,10 @@ Hauptschleife: DO i = 1, maxger
 
 
 
-      !**      Profil '3':
+      ! ----------------------------------------------------------------------------------------------
+      ! P R O F I L   "3"
+      ! =================
+
       stat (nprof) = statgem - breite / 1000.
 
       str1 = (stat (nprof) - stat (nprof - 1) ) * 1000.
@@ -1079,14 +1060,21 @@ Hauptschleife: DO i = 1, maxger
 
       num (nprof) = '0'
 
+      out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+                                                      !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                      !WP Anzahl der interpolierten Profile aendern
+
+      out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+                                                !WP dass dieses Profil bei dem aktuellen Abfluss
+                                                !WP interpoliert wurde.
 
 
-      PRINT * , 'Profil 3 : Station km ', stat (nprof)
+      write (   *  ,      1002) stat (nprof)
+      write (   0  ,      1002) stat (nprof)
+      write (UNIT_OUT_LOG,1002) stat (nprof)
+      1002 format (/1X, '       Profil "3" (Bruecke): ', F10.4)
 
-      !        SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        write (jw8, 27) stat (nprof)
-      ENDIF
+      write (UNIT_OUT_LOG, 27) stat (nprof)
       27 format (/,1X, 'Berechnung in Subroutine Bruecke:', /, &
                 &  1X, '---------------------------------', /, &
                 &/,1X, 'Berechnung WSP im Unterwasser,   ', /, &
@@ -1094,8 +1082,8 @@ Hauptschleife: DO i = 1, maxger
 
 
       CALL br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
-      hrst, indmax, psieins, psiorts, jw5, nblatt,  &
-      nz, jw7, idr1, hgrenz, ikenn, ifroud, iwehrb, lein, jw8)
+       & hrst, indmax, psieins, psiorts, nblatt,  &
+       & nz, idr1, hgrenz, ikenn, ifroud, iwehrb)
 
       ! mit vorgebenem wsp hr3 in wspanf --> berechnen wsp unverbautes
 
@@ -1149,9 +1137,7 @@ Hauptschleife: DO i = 1, maxger
       hmax = hokmax
 
       !**    SCHREIBEN IN KONTROLLFILE
-      IF (lein .eq. 3) then
-        WRITE (jw8, 28) iokl, iokr
-      ENDIF
+      WRITE (UNIT_OUT_LOG, 28) iokl, iokr
       28 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
                 & 1X, 'IOKR (Nummer des Punktes der Oberkante rechts): ', I3)
 
@@ -1263,10 +1249,7 @@ Hauptschleife: DO i = 1, maxger
 
 
       !**    SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '('' ianf='',i3,'' iend='',i3,)') ianf, iend
-      ENDIF
-
+      WRITE (UNIT_OUT_LOG, '('' ianf='',i3,'' iend='',i3,)') ianf, iend
 
       boli = h1 (ianf)
       bore = h1 (iend)
@@ -1280,30 +1263,25 @@ Hauptschleife: DO i = 1, maxger
 
 
       !      SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '('' itrli='',i3,'' itrre='',i3)') itrli, itrre
-      ENDIF
+      WRITE (UNIT_OUT_LOG, '('' itrli='',i3,'' itrre='',i3)') itrli, itrre
 
-      !**   SCHREIBEN IN KONTROLLFILE jw8
+      !**   SCHREIBEN IN KONTROLLFILE UNIT_OUT_LOG
       DO j = 1, nknot
-        IF (lein.eq.3) then
 
-          IF (ifg.eq.1) then
+        IF (ifg.eq.1) then
 
-            WRITE (jw8, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
-             & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
-             & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
-          ELSE
-            WRITE (jw8, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,''rau='',f8.3)') &
-             & j, x1 (j) , h1 (j) , rau (j)
-          ENDIF
-
+          WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
+           & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
+           & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
+        ELSE
+          WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,''rau='',f8.3)') &
+           & j, x1 (j) , h1 (j) , rau (j)
         ENDIF
 
       END DO
 
 
-      WRITE (jw5, '(/,t10,'' Profil "1":'')')
+      WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "1":'')')
 
 
       !**       Bestimmung des Wasserspiegels im Profil "1"
@@ -1320,7 +1298,7 @@ Hauptschleife: DO i = 1, maxger
       IF (iwehrb.eq.0) then
 
         CALL wspanf (wsanf1, strbr, q, q1, hr, hv, rg, indmax,    &
-        hvst, hrst, psieins, psiorts, jw5, nprof, hgrenz, ikenn,  &
+        hvst, hrst, psieins, psiorts, nprof, hgrenz, ikenn,  &
         nblatt, nz, idr1)
 
       ELSE
@@ -1328,7 +1306,7 @@ Hauptschleife: DO i = 1, maxger
         henow = hr
 
         CALL wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
-        hrst, psieins, psiorts, jw5, nprof, hgrenz, ikenn, nblatt,&
+        hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,&
         nz, idr1)
 
       !**  ENDIF ZU (iwehr.eq.q)
@@ -1343,23 +1321,23 @@ Hauptschleife: DO i = 1, maxger
       !**   Wehrberechnung
       !**   --------------------------------------------------------------
 
-      WRITE (jw5, 323) stat (nprof)
+      WRITE (UNIT_OUT_TAB, 323) stat (nprof)
       323 FORMAT   (/,5x,'Wehrberechnung an Station km   ',f7.3,' : ',/)
 
       nz = nz + 3
 
       !**      SCHREIBEN IN KONTROLLFILE OHNE VARIABLE?
-      IF (lein.eq.3) write (jw8, 323)
+      write (UNIT_OUT_LOG, 323)
 
       num (nprof) = prof_nr (1:10)
 
-      CALL w_ber (henw, q, nprof, nz, jw5, ifg, jw7, idr1, nblatt)
+      CALL w_ber (henw, q, nprof, nz, ifg, idr1, nblatt)
 
       !**      Wasserspiegel im Oberwasser, WELCHE VARIABLE WIRD GESCHRIEBEN?
-      WRITE (jw5, 324)
+      WRITE (UNIT_OUT_TAB, 324)
 
       !**      SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) write (jw8, 324)
+      write (UNIT_OUT_LOG, 324)
       324 FORMAT   (/,5x,'Oberwasser:')
 
       nz = nz + 2
@@ -1367,7 +1345,7 @@ Hauptschleife: DO i = 1, maxger
       strbr = 0.
 
       CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
-       & hrst, psieins, psiorts, jw5, nprof, hgrenz, ikenn, nblatt,  &
+       & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
        & nz, idr1)
 
     !UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
@@ -1387,13 +1365,11 @@ Hauptschleife: DO i = 1, maxger
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
 
       CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst,    &
-       & indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud, nblatt,&
+       & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt,&
        & nz)
 
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
-
-
 
     !**   ------------------------------------------------------------------
     !**   Abspeichern der Ergebnisse
@@ -1401,7 +1377,7 @@ Hauptschleife: DO i = 1, maxger
 
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
 
     CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
@@ -1410,14 +1386,14 @@ Hauptschleife: DO i = 1, maxger
     !**   Ausdrucken der Ergebisse im .tab-file
     !**   ------------------------------------------------------------------
 
-    CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
 
     IF (nprof.gt.1) then
       IF (ibridge.eq.'b'.and.ibruecke.eq.'j') then
 
         !     Einlesen aus flussname.dat:
-        READ (jw2, '(a)', end = 5000) dummy
+        READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
         CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
         IF (ifehl.ne.0.or.ianz.eq.0) then
           PRINT * , 'Fehlerhaftes Format in der Profil.dat-datei.'
@@ -1428,9 +1404,14 @@ Hauptschleife: DO i = 1, maxger
 
         statneu = feldr (1)
 
-        BACKSPACE (jw2)
+        BACKSPACE (UNIT_EIN_STR)
 
         statgrz = stat (nprof) + 5. / 1000.
+
+
+        ! ----------------------------------------------------------------------------------------------
+        ! P R O F I L   "B"
+        ! =================
 
         IF (statneu.gt.statgrz + 0.001) then
 
@@ -1447,14 +1428,22 @@ Hauptschleife: DO i = 1, maxger
           num (nprof) = '0'
 
           stat (nprof) = stat (nprof - 1) + 5. / 1000.
-          WRITE (jw5, '(/,t10,'' Profil "b":'')')
 
-          PRINT * , 'Profil b : Station km ', stat (nprof)
+          out_PROF(nprof,nr_q)%stat = stat(nprof)	!WP Zuweisung der Stationierung in globalen Array
+                                                        !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                        !WP Anzahl der interpolierten Profile aendern
 
-          !             SCHREIBEN IN KONTROLLFILE
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''Profil "b" Station km '',f12.4)') stat (nprof)
-          ENDIF
+          out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+                                                        !WP interpoliert wurde.
+
+          write (   *  ,      1003) stat (nprof)
+          write (   0  ,      1003) stat (nprof)
+          write (UNIT_OUT_LOG,1003) stat (nprof)
+          1003 format (/1X, '       Profil "B" (Bruecke): ', F10.4)
+
+          WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "b":'')')
+
 
           d1 = 0.05
           hminn = 1000.
@@ -1487,7 +1476,7 @@ Hauptschleife: DO i = 1, maxger
           str = (stat (nprof) - stat (nprof - 1) ) * 1000.
 
           CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-           & indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud,  &
+           & indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
            & nblatt, nz)
 
           !**   ------------------------------------------------------------------
@@ -1496,7 +1485,7 @@ Hauptschleife: DO i = 1, maxger
 
           if (nz.gt.50) then
             blatt = nblatt + 1
-            call kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+            call kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
           endif
 
           CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
@@ -1505,7 +1494,7 @@ Hauptschleife: DO i = 1, maxger
           !**   Ausdrucken der Ergebisse im .tab-file
           !**   -----------------------------------------------------------
 
-          CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
         !**    ELSE ZU (statneu.gt.statgrz+0.001)???
         ELSE
@@ -1527,7 +1516,7 @@ Hauptschleife: DO i = 1, maxger
           IF (igrenz(nprof-1).ne.1 .and. igrenz(nprof-1) .ne. 2) then
 
             !**   Einlesen aus flussname.dat:
-            READ (jw2, '(a)', end = 5000) dummy
+            READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
 
             CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
 
@@ -1541,7 +1530,7 @@ Hauptschleife: DO i = 1, maxger
             statneu = feldr (1)
 
             !**   POINTER IN DATEI UM EINEN RECORD ZURUECKSETZEN
-            BACKSPACE (jw2)
+            BACKSPACE (UNIT_EIN_STR)
 
             statgrz = stat (nprof) + 5. / 1000.
 
@@ -1558,12 +1547,18 @@ Hauptschleife: DO i = 1, maxger
 
               num (nprof) = '0'
 
+              out_PROF(nprof,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
+                                                        !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                        !WP Anzahl der interpolierten Profile aendern
 
-              write (*,1000) stat(nprof)
+              out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+                                                        !WP interpoliert wurde.
 
-              IF (lein.eq.3) then
-                WRITE (jw8, '(/,''Bearbeiten Station km '',f12.4)') stat (nprof)
-              ENDIF
+              write (    *       ,1000) stat(nprof)
+              write (    0       ,1000) stat(nprof)
+              write (UNIT_OUT_LOG,1000) stat(nprof)
+
 
               IF (iprof.ne.' ') then
                 d1 = abs (sohlg) * difs
@@ -1600,7 +1595,7 @@ Hauptschleife: DO i = 1, maxger
               str = (stat (nprof) - stat (nprof - 1) ) * 1000.
 
               CALL normber (str, q, q1, nprof, hr, hv, rg, hvst,     &
-               & hrst, indmax, psieins, psiorts, jw5, hgrenz, ikenn, &
+               & hrst, indmax, psieins, psiorts, hgrenz, ikenn, &
                & froud, nblatt, nz)
 
               !**   --------------------------------------------------------------
@@ -1609,7 +1604,7 @@ Hauptschleife: DO i = 1, maxger
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
               ENDIF
 
               CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
@@ -1618,7 +1613,7 @@ Hauptschleife: DO i = 1, maxger
               !*    Ausdrucken der Ergebisse im .tab-file
               !**   ----------------------------------------------------------
 
-              CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+              CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
             !**     ENDIF ZU (statneu.gt.statgrz+0.001)
             ENDIF
@@ -1637,7 +1632,7 @@ Hauptschleife: DO i = 1, maxger
     ENDIF
 
     !**     idr=j IM FALL VON BORDVOLLBERECHNUNG
-    IF (idr1.eq.'j') close (jw7)
+    IF (idr1.eq.'j') close (UNIT_OUT_PRO)
 
 
   !**    ELSE FUER BORDVOLLBERECHNUNG STATIONAER GLEICHFOERMIG?
@@ -1659,13 +1654,11 @@ Hauptschleife: DO i = 1, maxger
 
         IF (isstat (nprof - 1) .lt.1.e-05) then
 
-          !**        SCHREIBEN IN KONTROLLFILE jw8 WENN lein=3
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''Warnung.    &
-             & Sohlgefaelle an Station'',f10.4,'' kleiner gleich Null'')'&
-             &) stat (nprof)
-            WRITE (jw8, '(''Setze Sohlgefaelle = 0.00001 '')')
-          ENDIF
+          !**        SCHREIBEN IN KONTROLLFILE UNIT_OUT_LOG WENN lein=3
+          WRITE (UNIT_OUT_LOG, '(''Warnung.    &
+           & Sohlgefaelle an Station'',f10.4,'' kleiner gleich Null'')'&
+           &) stat (nprof)
+          WRITE (UNIT_OUT_LOG, '(''Setze Sohlgefaelle = 0.00001 '')')
 
           !**        DAS GEFAELLE WIRD ZU EINEM HUNDERSTEL PROMILLE GESETZT
           isstat (nprof - 1) = 0.00001
@@ -1758,7 +1751,7 @@ Hauptschleife: DO i = 1, maxger
       ENDIF
 
       CALL normber (str, q, vmbv, nprof, hbv_gl, hv, rg, hvst,    &
-       & hrst, indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud,  &
+       & hrst, indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
        & nblatt, nz)
 
       IF (i_km.eq.4) then
@@ -1776,7 +1769,7 @@ Hauptschleife: DO i = 1, maxger
       hbv_gl = hbv (nprof)
 
       CALL normber (str, q, vmbv, nprof, hbv_gl, hv, rg, hvst,    &
-      & hrst, indmax, psieins, psiorts, jw5, hgrenz, ikenn, froud,  &
+      & hrst, indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
       & nblatt, nz)
 
       !**      SETZE DIE ERHALTENEN WERTE DEN FELDERN GLEICH
@@ -1794,7 +1787,7 @@ Hauptschleife: DO i = 1, maxger
 
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
     ENDIF
 
     CALL speicher (nprof, hbv_gl, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
@@ -1804,13 +1797,11 @@ Hauptschleife: DO i = 1, maxger
     !**   Ausdrucken der Ergebisse im .tab-file
     !**   ------------------------------------------------------------------
 
-    CALL drucktab (nprof, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
   !**    ENDIF ZU (bordvoll.eq.g)?
   ENDIF                                                                                    
                                                                         
-
-
 !** DO-SCHLEIFE ZUM EINLESEN DER GERINNEABSCHNITTE
 END DO Hauptschleife
                                                                         
@@ -1822,17 +1813,30 @@ END DO Hauptschleife
 
 5000 CONTINUE
 
-CLOSE (jw5)
-                                                                        
+CLOSE (UNIT_OUT_TAB)
+
 !HB   ***************************************************************** 
 !HB   26.11.2001 - H.Broeker                                            
 !HB   ----------------------                                            
 !HB   Schliessen der Datei Beiwerte.AUS                                 
-CLOSE (nr_alph)
-!HB   ***************************************************************** 
+CLOSE (UNIT_OUT_ALPHA)
+!HB   *****************************************************************
                                                                         
 !UT    Erzeugen des Wasserspiegellaengsschnittes (.wsl-file)            
 999 CONTINUE
+
+
+
+!WP Zuweisung der Anzahl der Profile fuer diesen Abflusszustand
+!WP (kann durch Interpolation an Bruecken variieren!)
+anz_prof(nr_q) = nprof
+
+!do i = 1, anz_prof(nr_q)
+!  write (*,*) 'INTERPOL, Profil(',i,') = ', out_PROF(i,nr_q)%interpol
+!end do
+
+
+
 
 
 IF (bordvoll.eq.'n') then
@@ -1862,9 +1866,6 @@ IF (bordvoll.eq.'n') then
   unit5 (ilen + 1:nch80) = ereignis (1:ierlen)
   ilen   = LEN_TRIM (unit5)
   unit5 (ilen + 1:nch80) = '.wsl'
-  jw6    = ju0gfu ()
-
-  OPEN (unit = jw6, file = unit5, status = 'unknown')
 
   !ST------------------------------------------------
   !ST 29.03.2005
@@ -1881,11 +1882,9 @@ IF (bordvoll.eq.'n') then
 
   CALL lapro1 (unit5, pfad2, nprof, mark, file_laengs)
 
-  CLOSE (jw6)
-
 !**   ENDIF ZU (bordvoll.eq.'n')
 ENDIF                                                           
-                                                                        
+
                                                                         
 9999 RETURN
                                                                         

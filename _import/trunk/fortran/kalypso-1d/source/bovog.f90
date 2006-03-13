@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005   10:31 am
+!     Last change:  WP   10 Mar 2006    8:36 pm
 !--------------------------------------------------------------------------
 ! This code, bovog.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !-----------------------------------------------------------------------
-SUBROUTINE bovog1 (iw11, iw12, nbv, qvar, rqmax, rqmin)
+SUBROUTINE bovog1 (nbv, qvar, rqmax, rqmin)
 !
 ! IN DIESER SUBROUTINE WEITERHIN VERWENDETE VARIABLEN
 ! ---------------------------------------------------
@@ -57,7 +57,7 @@ SUBROUTINE bovog1 (iw11, iw12, nbv, qvar, rqmax, rqmin)
 ! AUFGERUFENE ROUTINEN
 ! --------------------
 ! linreg (xsp,hsohle,lz,byx,xq,yq,xww,yww)
-! probv1(l,iw12,st_o,st_u,q_fl_bv,hbord(l),qvar,lif,
+! probv1(l,UNIT_OUT_LOG_KM,st_o,st_u,q_fl_bv,hbord(l),qvar,lif,
 !        kif,liv,kiv,qges,bges,wspgef,c(l),slhngg)
 !-----------------------------------------------------------------------
 
@@ -67,10 +67,9 @@ SUBROUTINE bovog1 (iw11, iw12, nbv, qvar, rqmax, rqmin)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 ! Calling variables
-INTEGER, INTENT(IN) :: iw11
-INTEGER, INTENT(IN) :: iw12
 INTEGER, INTENT(IN) :: nbv
 REAL, INTENT(IN) :: qvar
 REAL, INTENT(IN) :: rqmax
@@ -104,8 +103,8 @@ COMMON / prof / hwsp
 
 ! COMMON-Block /TEILDAT/ ------------------------------------------------------
 REAL 		:: anftg (merg)
-INTEGER 	:: iw13, numitg (merg), ikg
-COMMON / teildat / iw13, anftg, numitg, ikg
+INTEGER 	:: numitg (merg), ikg
+COMMON / teildat / anftg, numitg, ikg
 ! -----------------------------------------------------------------------------
 
 
@@ -154,8 +153,8 @@ IF (ikitg.eq.0) then
   iendtg = 1
 
 ELSEIF (stat (nbv) .le.anftg (1) ) then
-  WRITE (iw12, '(''kein Teilgebiet im Abschnitt!!'')')
-  WRITE (iw12, '(''K-M Parameter wird nicht bestimmt!'')')
+  WRITE (UNIT_OUT_LOG_KM, '(''kein Teilgebiet im Abschnitt!!'')')
+  WRITE (UNIT_OUT_LOG_KM, '(''K-M Parameter wird nicht bestimmt!'')')
   GOTO 2000
 ELSEIF (stat (1) .ge.anftg (ikg) ) then
 
@@ -177,8 +176,8 @@ ELSEIF (ikg.eq.1) then
   END DO
 
   IF (ianftg.eq.0) then
-    WRITE (iw12, '(''kein Teilgebiet im Abschnitt!'')')
-    WRITE (iw12, '(''K-M Parameter wird nicht bestimmt'')')
+    WRITE (UNIT_OUT_LOG_KM, '(''kein Teilgebiet im Abschnitt!'')')
+    WRITE (UNIT_OUT_LOG_KM, '(''K-M Parameter wird nicht bestimmt'')')
     GOTO 2000
   ENDIF
 
@@ -253,8 +252,8 @@ DO jj = ianftg, iendtg
 END DO
 
 IF (it1.eq.iteil) then
-  WRITE (iw12, '("nur 1 Profil in Teilgebieten!")')
-  WRITE (iw12, '("K-M Parameter wird nicht bestimmt!")')
+  WRITE (UNIT_OUT_LOG_KM, '("nur 1 Profil in Teilgebieten!")')
+  WRITE (UNIT_OUT_LOG_KM, '("K-M Parameter wird nicht bestimmt!")')
   GOTO 2000
 ENDIF
 
@@ -262,12 +261,12 @@ ENDIF
 DO 500 jj = ianftg, iendtg
   nteil = numitg (jj)
 
-WRITE (iw12, '('''',/////////////////////t12,                    &
+WRITE (UNIT_OUT_LOG_KM, '('''',/////////////////////t12,                    &
    &     ''auswertung fuer gerinneabschnitt '',i5)') nteil
 
   IF (ikenntg (jj) .eq.1) then
-    WRITE (iw12, '("nur 1 Profil im Teilgebiet!")')
-    WRITE (iw12, '("K-M Parameter wird nicht bestimmt!")')
+    WRITE (UNIT_OUT_LOG_KM, '("nur 1 Profil im Teilgebiet!")')
+    WRITE (UNIT_OUT_LOG_KM, '("K-M Parameter wird nicht bestimmt!")')
 
     GOTO 500
   ENDIF
@@ -319,7 +318,7 @@ WRITE (iw12, '('''',/////////////////////t12,                    &
       wspg (l, i2) = 0.
     END DO
 
-    WRITE (iw12, 9001) stat (l)
+    WRITE (UNIT_OUT_LOG_KM, 9001) stat (l)
 
     IF (qbord (l) .gt.0.) then
 
@@ -328,7 +327,7 @@ WRITE (iw12, '('''',/////////////////////t12,                    &
       ikenn = ischbv (l)
       IF (qmaxo.gt.rqmax.or.qminu.lt.rqmin) then
 
-        WRITE (iw12, '("K-M Parameter ist nicht bestimmbar!")')
+        WRITE (UNIT_OUT_LOG_KM, '("K-M Parameter ist nicht bestimmbar!")')
         GOTO 1000
 
       ELSE
@@ -347,14 +346,14 @@ WRITE (iw12, '('''',/////////////////////t12,                    &
 
         304 CONTINUE
 
-        CALL probv1 (l, iw12, q_fl_bv, hbord (l),     &
+        CALL probv1 (l, q_fl_bv, hbord (l),     &
          & lif, kif, liv, kiv, qges, bges, wspgef, c (l),      &
          & slhngg)
       ENDIF
 
     ELSE
-      WRITE (iw12, '("kein Bordvollabfluss!!")')
-      WRITE (iw12, '("K-M Parameter ist nicht bestimmbar!")')
+      WRITE (UNIT_OUT_LOG_KM, '("kein Bordvollabfluss!!")')
+      WRITE (UNIT_OUT_LOG_KM, '("K-M Parameter ist nicht bestimmbar!")')
       GOTO 1000
     ENDIF
 
@@ -460,16 +459,16 @@ WRITE (iw12, '('''',/////////////////////t12,                    &
   END DO
 
   iart = 1
-  WRITE (iw11, * ) nteil
-  WRITE (iw11, * ) iart
-  WRITE (iw11, * ) qmax, ckf, vmit, sumlen, slhngg
+  WRITE (UNIT_OUT_GER, * ) nteil
+  WRITE (UNIT_OUT_GER, * ) iart
+  WRITE (UNIT_OUT_GER, * ) qmax, ckf, vmit, sumlen, slhngg
 
-  WRITE (iw12, 9304) nteil, qmax, vmit, sumlen, slhngg
+  WRITE (UNIT_OUT_LOG_KM, 9304) nteil, qmax, vmit, sumlen, slhngg
 
   DO i1 = 2, 6
 
-    WRITE (iw11, '(7f12.6)') qqg (i1), rkf(i1), rnf(i1), rkv(i1), rnv(i1), bgg(i1), hwg(i1)
-    WRITE (iw12, 9305)       qqg (i1), rnf(i1), rkf(i1), rnv(i1), rkv(i1), bgg(i1), hwg(i1)
+    WRITE (UNIT_OUT_GER, '(7f12.6)') qqg (i1), rkf(i1), rnf(i1), rkv(i1), rnv(i1), bgg(i1), hwg(i1)
+    WRITE (UNIT_OUT_LOG_KM, 9305)    qqg (i1), rnf(i1), rkf(i1), rnv(i1), rkv(i1), bgg(i1), hwg(i1)
 
   END DO
 

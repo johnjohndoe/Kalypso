@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    6:14 pm
+!     Last change:  WP   13 Mar 2006    1:23 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,8 +39,8 @@
 !***********************************************************************
 
 
-SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
-                 & psiein, psiort, jw5, hgrenz, ikenn, froud, nblatt, nz)
+SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
+                 & psiein, psiort, hgrenz, ikenn, froud, nblatt, nz)
 
 !***********************************************************************
 !**                                                                    *
@@ -77,8 +77,7 @@ SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
 !**   indmax -                                                          
 !**   psiein - VERLUSTE?                                                
 !**   psiort - OERTLICHE VERLUSTE?                                      
-!**   jw5    - NAME DER ERGEBNISDATEI .TAB?                             
-!**   hgrenz -                                                          
+!**   hgrenz -
 !**   ikenn  -                                                          
 !**   froud  -                                                          
 !**   nblatt -                                                          
@@ -110,31 +109,35 @@ SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
 !**                                                                    *
 !***********************************************************************
                                                                         
-
-! ------------------------------------------------------------------
-! VEREINBARUNGSTEIL
-! ------------------------------------------------------------------
-
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE IO_UNITS
+
+! Calling variables
+REAL, INTENT(INOUT) :: str              ! Abstand zwischen zwei Profilen in [m]
+REAL, INTENT(INOUT) :: q                ! Durchfluss in bestimmten Faellen [m3/s] (inout?)
+REAL, INTENT(INOUT) :: q1               ! alter Q-Wert in WSPBER [m**3/s] (inout?)
+INTEGER, INTENT(IN) :: i                ! entspricht nprof in WSPBER
+REAL, INTENT(INOUT) :: hr               ! Verlusthoehe
+REAL, INTENT(INOUT) :: hv               ! Verlusthoehe
+REAL, INTENT(INOUT) :: rg               ! Verlusthoehe
+REAL, INTENT(INOUT) :: hvst             ! Verlusthoehe
+REAL, INTENT(INOUT) :: hrst             ! Verlusthoehe
+INTEGER, INTENT(INOUT) :: indmax        ! Anzahl der Rauheitsabschnitte (1-3)
+REAL, INTENT(INOUT) :: psiein           ! Verluste
+REAL, INTENT(INOUT) :: psiort           ! Oertliche Verluste
+REAL, INTENT(OUT) :: hgrenz             ! Grenztiefe am Profil
+INTEGER, INTENT(INOUT) :: ikenn         ! Zustandskennung (= 0 fuer Normalberechnung, = 1 fuer Schiessen mit Grenztiefe)
+REAL, INTENT(INOUT) :: froud            ! Froudezahl
+INTEGER, INTENT(INOUT) :: nblatt        ! Anzahl der Seiten in Tabellenausgabe
+INTEGER, INTENT(INOUT) :: nz        	! Anzahl der Zeilen in aktueller Seite in Tabellenausgabe
 
 
 ! COMMON-Block /ALT/ ---------------------------------------------------------------
 REAL            :: ws1, rg1, vmp1, fges1, hv1
 INTEGER         :: ikenn1
 COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /AUSGABEART/ --------------------------------------------------------
-! lein=1    --> einfacher ergebnisausdruck
-! lein=2    --> erweiterter ergebnisausdruck
-! lein=3    --> erstellung kontrollfile
-! jw8       --> NAME KONTROLLFILE
-INTEGER 	:: lein
-INTEGER 	:: jw8
-COMMON / ausgabeart / lein, jw8
 ! ----------------------------------------------------------------------------------
 
 
@@ -279,37 +282,26 @@ IF (bordvoll .ne. 'g') then
   jschl = 0
   dx = 0.05
 
-  !**   ------------------------------------------------------------------
-  !**   Berechnung von Basisgeometriegroessen : Sehnen, Abstand zwischen
-  !**   den Profilpunkten (horizontal und veritkal)
-  !**   ------------------------------------------------------------------
-  !**   Input: nknot,x,h, Output: xi,hi,s
+  !  ------------------------------------------------------------------
+  !  Berechnung von Basisgeometriegroessen : Sehnen, Abstand zwischen
+  !  den Profilpunkten (horizontal und veritkal)
+  !  ------------------------------------------------------------------
+  ! Input: nknot,x1,h1,maxkla
+  ! Output: xi,hi,s
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 
 
-  !**   AM 12.01.00 DIE BEIDEN FOLGENDEN ZEILEN SO DEAKTIVIERT?, UT
-  !     berechnung der tiefsten sohle und der boeschungskanten (s. profil)
-  !     gebraucht werden - boli(i),bore(i),sohl(i)
-
-
-  !**   ------------------------------------------------------------------
-  !**   Berechnung der Grenztiefe hgrenz
-  !**   ------------------------------------------------------------------
-
+  ! ------------------------------------------------------------------
+  ! Berechnung der Grenztiefe hgrenz
+  ! ------------------------------------------------------------------
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
   irdruck = idruck
 
-  !**        WAR BEREITS DEAKTIVIERT, 12.014.00, UT
-  !          if (idruck.eq.1) then
-  !              print *,'keine grenztiefe ermittelt '
-  !              hgrenz=0.
-  !          endif
 
-
-  !**   ------------------------------------------------------------------
-  !**   Schaetzung Anfangswasserspiegel
-  !**   ------------------------------------------------------------------
+  ! ------------------------------------------------------------------
+  ! Schaetzung Anfangswasserspiegel
+  ! ------------------------------------------------------------------
 
   !**    ifehl=0 --> Einschlussintervall in stroemendem Bereich gefunden
   ifehl = 0
@@ -318,12 +310,8 @@ IF (bordvoll .ne. 'g') then
   !JK      WENN BERECHNUNG UEBER EINSCHLUSSINTERVALL
   IF (a_m .eq. 2) then
 
-    !ep  call anf(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax, &
-    !ep         & psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl,nblatt,nz, istat)
-    !ep  Korrektur, da istat in anf erwartet wird, dieser Parameter aber
-
     CALL anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-           & psiein, psiort, jw5, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
+           & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
            & nz, istat)
 
   !JK  WENN BERECHNUNG UEBER EINFACHE ITERATION
@@ -339,10 +327,8 @@ IF (bordvoll .ne. 'g') then
   IF (ifehl.eq.1) then
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      WRITE (jw8, '('' schiessender abfluss --> mit grenztiefe aus normber'')')
-      WRITE (jw8, '('' grenztiefe = '',f15.3)') hgrenz
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '('' schiessender abfluss --> mit grenztiefe aus normber'')')
+    WRITE (UNIT_OUT_LOG, '('' grenztiefe = '',f15.3)') hgrenz
 
     ikenn = 1
     froud = 1.
@@ -350,7 +336,7 @@ IF (bordvoll .ne. 'g') then
     hr = hgrenz
 
     CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-                 & psiein, psiort, jw5, hi, xi, s, istat, froud, ifehlg, 1)
+                 & psiein, psiort, hi, xi, s, istat, froud, ifehlg, 1)
     !JK     ZU DATENUEBERGABE, DA SCHIESSENDER BEREICH ABGESCHLOSSEN
     GOTO 9999
 
@@ -373,10 +359,8 @@ IF (bordvoll .ne. 'g') then
       hranf = hr
 
       !JK SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        ! halt = ws1+str*q1/rg1      /* anfangs-wsp altes programm
-        WRITE (jw8, '('' ermittelter anfangsiterationswert'',f15.3 /)') hr
-      ENDIF
+      ! halt = ws1+str*q1/rg1      /* anfangs-wsp altes programm
+      WRITE (UNIT_OUT_LOG, '('' ermittelter anfangsiterationswert'',f15.3 /)') hr
 
     !**  ELSE (iprof .eq. ' ')
     ELSE
@@ -387,10 +371,8 @@ IF (bordvoll .ne. 'g') then
       ENDIF
 
       !JK  SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, '('' iprof = '',a1,'' --> anfwsp festgelegt zu'', f15.3,/,&
+      WRITE (UNIT_OUT_LOG, '('' iprof = '',a1,'' --> anfwsp festgelegt zu'', f15.3,/,&
             & '' ws1 = '',f15.3,'' hmax = '',f15.3)') iprof, hr, ws1, hmax
-      ENDIF
 
     !**     ENDIF (iprof.eq.' ')
     ENDIF
@@ -400,7 +382,7 @@ IF (bordvoll .ne. 'g') then
     !JK  BERECHNUNG WSP NACH NEWTON
     !JK  ----------------------------------------------------------
     CALL newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-               & psiein, psiort, jw5, froud, xi, hi, s, ifehl, istat)
+               & psiein, psiort, froud, xi, hi, s, ifehl, istat)
 
     IF (ifehl.eq.0) then
 
@@ -414,15 +396,12 @@ IF (bordvoll .ne. 'g') then
         !JK Ermitteln der verlustwerte
         !JK --------------------------
 
-        IF (lein.eq.3) then
-          !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
-          !**  write(jw8,'(/,'' grenztiefe aus stationaer '')')
-          WRITE (jw8, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
-          WRITE (jw8, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
-        ENDIF
+        !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
+        WRITE (UNIT_OUT_LOG, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
+        WRITE (UNIT_OUT_LOG, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
 
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-          & indmax, psiein, psiort, jw5, hi, xi, s, istat, froud, &
+          & indmax, psiein, psiort, hi, xi, s, istat, froud, &
           & ifehlg, itere1)
 
       ENDIF
@@ -442,7 +421,7 @@ IF (bordvoll .ne. 'g') then
       !JK  BERECHNUNG WSP NACH PEGASUS
       !JK  ---------------------------
       CALL pegasus (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
-      psiein, psiort, jw5, ikenn, froud, xi, hi, s, ifehl, istat)
+      psiein, psiort, ikenn, froud, xi, hi, s, ifehl, istat)
 
       IF (ifehl.ne.0) then
         ! weiter mit stationaer gleichfoermig
@@ -465,15 +444,14 @@ IF (bordvoll .ne. 'g') then
 
           !JK Ermitteln der verlustwerte
           !JK --------------------------
-          IF (lein.eq.3) then
-            !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
-            !**  write(jw8,'(/,'' grenztiefe aus stationaer '')')
-            WRITE (jw8, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
-            WRITE (jw8, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
-          ENDIF
+
+          !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
+          !**  write(UNIT_OUT_LOG,'(/,'' grenztiefe aus stationaer '')')
+          WRITE (UNIT_OUT_LOG, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
+          WRITE (UNIT_OUT_LOG, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
 
           CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,      &
-            & hrst, indmax, psiein, psiort, jw5, hi, xi, s, istat, &
+            & hrst, indmax, psiein, psiort, hi, xi, s, istat, &
             & froud, ifehlg, itere1)
 
         !**  ENDIF (froud.ge.1.0.and.irdruck.ne.0)
@@ -500,24 +478,25 @@ IF (bordvoll .ne. 'g') then
 
   !**  SCHREIBEN IN KONTROLLFILE
   9000 continue
-  IF (lein.eq.3) then
-    WRITE (jw8, 1000)
-  ENDIF
+
+  !write (UNIT_OUT_LOG, *) ' In NORMBER. Zeile 482. i = ', i
+
+  WRITE (UNIT_OUT_LOG, 1000)
   1000 format (/1X, 'Keine Konvergenz in NORMBER!', /, &
               & 1X, '-> weiter mit stationaer gleichfoermig')
 
   !**  SCHREIBEN IN *.tab
-  WRITE (jw5, 1001)
+  WRITE (UNIT_OUT_TAB, 1001)
   1001 format (/10X, 'Kein Einfluss vom Unterwasser!')
 
   !**  Ermitteln einzusetzendes Gefaelle
   nz = nz + 5
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, jw5, ifg, jw7, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (jw5, 1002)
+  WRITE (UNIT_OUT_TAB, 1002)
   1002 format (/10X, 'Annahme stationaer-gleichfoermiger Abfluss')
 
 
@@ -536,16 +515,14 @@ IF (bordvoll .ne. 'g') then
     IF (iprof.ne.' '.and.sohlg.lt.0.) then
 
       !JK  SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, 1003) sgef
-        1003 format (5X, 'Ermitteltes Sohlgefaelle I = ', F15.4,/,&
-                   & 5X, 'Steigung entgegen der Fliessrichtung.',/,&
-                   & 5X, '=> Uebernehme Gefaelle aus Profil.')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, 1003) sgef
+      1003 format (5X, 'Ermitteltes Sohlgefaelle I = ', F15.4,/,&
+                 & 5X, 'Steigung entgegen der Fliessrichtung.',/,&
+                 & 5X, '=> Uebernehme Gefaelle aus Profil.')
 
       sgef = sohlg
 
-      WRITE (jw5, 1004) sgef
+      WRITE (UNIT_OUT_TAB, 1004) sgef
       1004 format (/10X, 'Berechnung der Spiegellinie mit Energieliniengefaelle.',/,&
                   & 10X, 'I = ', F10.5, '(= angegebenes Sohlgefaelle)')
 
@@ -553,12 +530,11 @@ IF (bordvoll .ne. 'g') then
     ELSE
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) then
-        WRITE (jw8, 1005) sgef
-        1005 format (1X, 'Ermitteltes Sohlgefaelle I = ', F15.4,  &
-                   &     ' (-> Steigung!)', /,&
-                   & 1X, '=> Ermittlung Energieliniengefaelle')
-      ENDIF
+      WRITE (UNIT_OUT_LOG, 1005) sgef
+      1005 format (1X, 'Ermitteltes Sohlgefaelle I = ', F15.4,  &
+                 &     ' (-> Steigung!)', /,&
+                 & 1X, '=> Ermittlung Energieliniengefaelle')
+
 
       ! Weiter mit energieliniengefaelle,wenn die
       ! letzten beiden profile in ordnung waren
@@ -575,17 +551,16 @@ IF (bordvoll .ne. 'g') then
           IF (sgef.ge.0.) then
 
             !JK  SCHREIBEN IN KONTROLLFILE
-            IF (lein.eq.3) then
-              WRITE (jw8, '(1x,''- ermitteltes energieliniengefaelle i = '',f15.4,/,&
+            WRITE (UNIT_OUT_LOG, '(1x,''- ermitteltes energieliniengefaelle i = '',f15.4,/,&
               &  '' > 0.0 => gefaelle wird angesetzt zu -0.001'')') sgef
-              sgef = - 0.001
-            ENDIF
 
-            WRITE (jw5, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
+            sgef = - 0.001
+
+            WRITE (UNIT_OUT_TAB, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
             & t10,''i = '', f10.5)') sgef
           ELSE
 
-            WRITE (jw5, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
+            WRITE (UNIT_OUT_TAB, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
             & t10,''i = '', f10.5)') sgef
           ENDIF
 
@@ -593,16 +568,14 @@ IF (bordvoll .ne. 'g') then
         !**    & igrenz(i-2).ne.2.and.igrenz(i-1).ne.2) then
         ELSE
 
-          IF (lein.eq.3) then
-            WRITE (jw8, '(''ueberpruefung der letzten beiden'', &
-                      &   '' profile ergab grenztiefe -->'')')
-            WRITE (jw8, '(/,''gefaelle wird angesetzt'',        &
-                      &   '' zu -0.001'')')
-          ENDIF
+          WRITE (UNIT_OUT_LOG, '(''ueberpruefung der letzten beiden'', &
+                    &   '' profile ergab grenztiefe -->'')')
+          WRITE (UNIT_OUT_LOG, '(/,''gefaelle wird angesetzt'',        &
+                    &   '' zu -0.001'')')
 
           sgef = - 0.001
 
-          WRITE (jw5, '(/,t10,''Berechnung der Spiegellinie'',              &
+          WRITE (UNIT_OUT_TAB, '(/,t10,''Berechnung der Spiegellinie'',              &
                         &     '' mit Energieliniengefaelle  '',/,&
                         & t10,''i = '', f10.5)') sgef
 
@@ -613,15 +586,13 @@ IF (bordvoll .ne. 'g') then
       !**   ELSE (i.ge.3)
       ELSE
 
-        IF (lein.eq.3) then
-          WRITE (jw8, '(''ueberpruefung der letzten beiden'',   &
-                &       '' profile nicht moeglich i<3 -->'')')
-          WRITE (jw8, '(/,''gefaelle wird angesetzt'',          &
-                  &       '' zu -0.001'')')
-        ENDIF
+        WRITE (UNIT_OUT_LOG, '(''ueberpruefung der letzten beiden'',   &
+              &       '' profile nicht moeglich i<3 -->'')')
+        WRITE (UNIT_OUT_LOG, '(/,''gefaelle wird angesetzt'',          &
+                &       '' zu -0.001'')')
 
         sgef = - 0.001
-        WRITE (jw5, 1020) sgef
+        WRITE (UNIT_OUT_TAB, 1020) sgef
         1020 format (/10X, 'Berechnung der Spiegellinie mit Energieliniengefaelle',/,&
                     & 10X, 'I = ', F10.5)
       !**  ENDIF (i.ge.3)
@@ -633,12 +604,10 @@ IF (bordvoll .ne. 'g') then
   !** ELSE (sgef.eg.0.)
   ELSE
 
-   WRITE (jw5, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
-              & t10,''i = '', f10.5)') sgef
+    WRITE (UNIT_OUT_TAB, '(/,t10,''Berechnung der Spiegellinie mit Energieliniengefaelle '',/, &
+               & t10,''i = '', f10.5)') sgef
 
-    IF (lein.eq.3) then
-      WRITE (jw8, '(''gefaelle wird angesetzt zu '',f15.5, ''(sohlgefaelle)'')') sgef
-    ENDIF
+    WRITE (UNIT_OUT_LOG, '(''gefaelle wird angesetzt zu '',f15.5, ''(sohlgefaelle)'')') sgef
 
   !**  ENDIF (sgef.eg.0.)
   ENDIF
@@ -650,12 +619,12 @@ IF (bordvoll .ne. 'g') then
   !         write(jw5,'(/,t10,''angsetztes sohlgefaelle unsinnig -->'',
   !     +              '' gewaehlt i = '',f15.5)') sgef
   !         if (lein.eq.3) then
-  !         write(jw8,'(''gefaelle unsinnig--> gewaehlt i='',f15.5)') sgef
+  !         write(UNIT_OUT_LOG,'(''gefaelle unsinnig--> gewaehlt i='',f15.5)') sgef
   !         endif
   !      endif
 
   CALL station (sgef, i, hgrenz, q, hr, hv, rg, indmax, hvst,     &
-    & hrst, psiein, psiort, jw5, hi, xi, s, ikenn, froud, str, ifehl, &
+    & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
     & nblatt, nz, idr1)
 
   hrst = 0.
@@ -672,7 +641,7 @@ ELSE
   sgef = isstat (i)
 
   CALL station (sgef, i, hr, q, hr, hv, rg, indmax, hvst, hrst,   &
-    & psiein, psiort, jw5, hi, xi, s, ikenn, froud, str, ifehl,   &
+    & psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl,   &
     & nblatt, nz, idr1)
 
   q1 = hvst

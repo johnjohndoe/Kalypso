@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    6:03 pm
+!     Last change:  WP   12 Mar 2006    2:10 pm
 !--------------------------------------------------------------------------
 ! This code, lindy.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 SUBROUTINE lindy (vxmvor, lamvog, ax, ay, dp, h_mi, meil, is, &
      & u_mi, a_mi, rau_mi, a_li, a_re, h_li, h_re, rau_li, rau_re, alpha, &
-     & iuerr, lein, cwr, lamv, aln_mi, axn1, b05, vv2, cwn, ifehl, fbw)
+     & cwr, lamv, aln_mi, axn1, b05, vv2, cwn, ifehl, fbw)
 
 !***********************************************************************
 !**                                                                     
@@ -184,10 +184,6 @@ REAL, INTENT(IN)  	:: is                 	! Energieliniengefaelle [-]
 REAL, INTENT(IN)  	:: u_mi               	! BENETZTER UMFANG DES TEILABSCHNITTES DES VORLANDES [m]
 REAL, INTENT(IN)  	:: a_mi               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
 REAL, INTENT(IN)        :: rau_mi               ! Rauhigkeit (ks) des Abschnittes [m]
-
-INTEGER, INTENT(IN)     :: iuerr                ! Unit der Kontroll.log
-INTEGER, INTENT(IN)     :: lein                 ! Steuerung Ausgabe in Kontroll.log
-
 REAL, INTENT(OUT)       :: cwr                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe
 REAL, INTENT(OUT)       :: lamv                 ! WIDERSTANDSBEIWERT DURCH BEWUCHS [-]
 REAL, INTENT(OUT)       :: aln_mi               ! WIDERSTANDSBEIWERT DURCH SOHLRAUHEIT [-]
@@ -461,14 +457,6 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
       IF (abs (fr2) .lt.1.e-06) then
         il_fr30 = 1
-
-        !**      -----------------------------------
-        !JK      WAR SCHON DEAKTIVIERT, 01.05.00, JK
-        !**      if(lein.eq.3)
-        !**   *  write(iuerr,'(''Warnung. Iteration in Schleife 3 fehlerhaft.'',
-        !**   *                ''Froud-2 = 0'','' Fortsetzung mit FR2=FR1'')')
-        !**      endif
-        !**      -----------------------------------
 
         fr2 = fr1
 
@@ -1047,18 +1035,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
         IF (iter4.gt.it4max) then 
 
           il2730 = 10 
-                                                                        
-          !**           -----------------------------------
-          !JK           WAR SCHON DEAKTIVIERT, 01.05.00, JK
-          !**           if(lein.eq.3)then
-          !**            write(iuerr,
-          !**     &             '(''Warnung. Keine Konvergenz in Lambda-Schleife''
-          !**     &                 '' der SUB LINDY.'')')
-          !**            write(iuerr,'(''(Der Fehler betraegt nach '',i4,
-          !**     &               '' Iterationen DELLAM = '',F10.6)')iter4,dellam
-          !**           endif
-          !**           -----------------------------------                        
-                                                                        
+
           GOTO 2731 
         ENDIF 
                                                                         
@@ -1102,17 +1079,6 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
         il2720 = 100
 
-        !**           -----------------------------------
-        !JK           WAR SCHON DEAKTIVIERT, 01.05.00, JK
-        !**           if(lein .eq.3)then
-        !**            write(iuerr,
-        !**     &           '(''Warnung. Keine Konvergenz in Reynolds-Schleife''
-        !**     &                 '' der SUB LINDY.'')')
-        !**            write(iuerr,'(''(Der Fehler betraegt nach '',i4,
-        !**     &             '' Iterationen DELREV = '',F10.6)')iter272,delrev
-        !**           endif
-        !**           -----------------------------------
-
         GOTO 2721
       ENDIF                                                                          
                                                                         
@@ -1155,17 +1121,6 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
       il2710 = 1000
                                                                         
-      !**           -----------------------------------
-      !JK           WAR SCHON DEAKTIVIERT, 01.05.00, JK
-      !**           if(lein .eq. 3)then
-      !**            write(iuerr,
-      !**     &             '(''Warnung. Keine Konvergenz in DHYDR-Schleife''
-      !**     &                 '' der SUB LINDY.'')')
-      !**            write(iuerr,'(''(Der Fehler betraegt nach '',i4,
-      !**     &               '' Iterationen delhyd = '',F10.6)')iter27,delhyd
-      !**           endif
-      !**           -----------------------------------                        
-                                                                        
       GOTO 3000
     ENDIF
                                                                         
@@ -1191,27 +1146,12 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !UT           BERECHNUNG DER NOCH VORLIEGENDEN DIFFERENZ
     !UT           WIRD IM MOMENT NICHT BENOETIGT, 25.08.2000
     delcwr = abs (cwr - cwn)
-                                                                        
-    !**           -----------------------------------
-    !JK           WAR SCHON DEAKTIVIERT, 01.05.00, JK
-    !**           if(lein .eq. 3)then
-    !**            write(iuerr,
-    !**     &             '(''Warnung. Keine Konvergenz in CWR-Schleife''
-    !**     &                 '' der SUB LINDY.'')')
-    !**            write(iuerr,'(''(Der Fehler betraegt nach '',i4,
-    !**     &               '' Iterationen DELcwr = '',F10.6)')itcwr,delcwr
-    !**           endif
-    !**           -----------------------------------                        
-                                                                        
+
     cwr = (cwn + cwr) / 2.
     cwn = cwr
                                                                         
   ENDIF
 
-  ! WP 02.02.2006
-  !write (iuerr,*) ' In LINDY. Iteration ', itcwr, ' cwr = ', cwr
-
-                                                                        
 !UT   SCHLEIFE ZUR BERECHNUNG VON CWR, MAXIMAL 40 ITERATIONEN -----------------------
 3000 CONTINUE
                                                                         

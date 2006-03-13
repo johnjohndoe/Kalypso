@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Nov 2005   10:18 am
+!     Last change:  WP    9 Mar 2006    7:06 pm
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -171,15 +171,6 @@ DO i = 1, nprof
   !1000 format (1X, 'I = ', I5, '  M = ', I5, '  NUM5 = ', A10, '  XSS = ', F10.3)
 
 END DO
-
-
-!WP 07.05.2004
-!      PRINT *, ' '
-!      PRINT *, 'Aufruf von ZEILA mit Parametern:'
-!      PRINT *, 'unit5:   ', unit5
-!      PRINT *, 'nprof:   ', nprof
-!      PRINT *, 'pfad2:   ', pfad2
-!      PRINT *, 'mark:    ', mark
 
 
 !ST 29.03.2005---------------------------------------------------

@@ -1,4 +1,4 @@
-!     Last change:  WP   24 Jun 2005    4:54 pm
+!     Last change:  WP   10 Mar 2006    9:53 pm
 !--------------------------------------------------------------------------
 ! This code, Abfluss.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
-                  & qd, qw, qges, lein, jw8, jw5, aue3, wl3, iart, ifg)
+                  & qd, qw, qges, aue3, wl3, iart, ifg)
 
 !**
 !JK   BESCHREIBUNG: BERECHNUNG DES GESAMTABFLUSSES AN EINEM             
@@ -72,11 +72,9 @@ SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
 !**   iart    --      Art des Überfalls an der Brücke                   
 !**   ifg     --      Art der Widerstandsbeiwertberechnung nach Darcy-  
 !**                   Weisbauch oder Gauckler-Manning-Strickler         
-!**   jw8     --      Name des Kontrollfiles                            
-!**   lam     --      Widerstandsbeiwert für die Iteration              
+!**   lam     --      Widerstandsbeiwert für die Iteration
 !**   lam_neu --      Widerstandsbeiwert                                
-!**   lein    --      Art des Ergebnisausdruckes                        
-!**   qd      --      Druckabfluß an der Brücke                         
+!**   qd      --      Druckabfluß an der Brücke
 !**   qges    --      Gesamtabfluß an der Brücke                        
 !**   qw      --      Wehrabfluß an der Brücke                          
 !**   qw1     --      Wehrabfluß an der Brücke                          
@@ -115,6 +113,7 @@ SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
 
 !WP 01.02.2005
 USE KONSTANTEN
+USE IO_UNITS
 
 implicit none
 
@@ -122,7 +121,7 @@ implicit none
 REAL, INTENT(IN)  	:: ad, aue, apg, wl, rhy, raub, breite
 REAL, INTENT(IN)  	:: he1, hr3, aue3, wl3
 REAL, INTENT(OUT) 	:: qd, qw, qges
-INTEGER, INTENT(IN) 	:: lein, jw8, jw5, ifg
+INTEGER, INTENT(IN) 	:: ifg
 INTEGER, INTENT(OUT)    :: iart
 
 ! Lokale Variablen
@@ -138,16 +137,14 @@ REAL :: GET_LAMBDA, f
 !**   BERECHNUNGEN
 !**   ------------------------------------------------------------------
 
-if (lein == 3) then
-  write (jw8, 1000) ad, aue, wl, apg, aue3, wl3, rhy, raub, breite, he1, hr3, ifg, lein
-  1000 format (/1X, 'SUB ABFLUSS, uebergebene Variablen:', /, &
-             &  1X, '-----------------------------------', /, &
-             &  1X, 'AD  = ', F12.5, '  AUE  = ', F12.5, '  WL     = ', F12.5, /, &
-             &  1X, 'APG = ', F12.5, '  AUE3 = ', F12.5, '  WL3    = ', F12.5, /, &
-             &  1X, 'RHY = ', F12.5, '  RAUB = ', F12.5, '  BREITE = ', F12.5, /, &
-             &  1X, 'HE1 = ', F12.5, '  HR3  = ', F12.5, /, &
-             &  1X, 'IFG = ', I12,   '  LEIN = ', I12 )
-end if
+write (UNIT_OUT_LOG, 1000) ad, aue, wl, apg, aue3, wl3, rhy, raub, breite, he1, hr3, ifg
+1000 format (/1X, 'SUB ABFLUSS, uebergebene Variablen:', /, &
+           &  1X, '-----------------------------------', /, &
+           &  1X, 'AD  = ', F12.5, '  AUE  = ', F12.5, '  WL     = ', F12.5, /, &
+           &  1X, 'APG = ', F12.5, '  AUE3 = ', F12.5, '  WL3    = ', F12.5, /, &
+           &  1X, 'RHY = ', F12.5, '  RAUB = ', F12.5, '  BREITE = ', F12.5, /, &
+           &  1X, 'HE1 = ', F12.5, '  HR3  = ', F12.5, /, &
+           &  1X, 'IFG = ', I12)
 
 qw   = 0.
 qd   = 0.
@@ -216,13 +213,9 @@ IF (ifg.eq.1) then
 
     IF (iter.gt.itermax) then
 
-      IF (lein.eq.3) then
-
-        WRITE (jw8, 15) iter, dif
-        15 FORMAT (/1X, 'Konvergenzfehler in schleife 20 in SUB abfluss!',/, &
-                  & 1X, 'Nach ',I3,' Iterationen betraegt der fehler noch: ', F10.4)
-
-      ENDIF
+      WRITE (UNIT_OUT_LOG, 15) iter, dif
+      15 FORMAT (/1X, 'Konvergenzfehler in schleife 20 in SUB abfluss!',/, &
+                & 1X, 'Nach ',I3,' Iterationen betraegt der fehler noch: ', F10.4)
 
       EXIT it_lambda_bruecke
 
@@ -288,7 +281,7 @@ IF (aue.gt.0.) then
 
     !JK     WAR SCHON DEAKTIVIERT:25.04.2000, JK
     !**       if(lein.eq.3)then
-    !**       write(jw8,'(''tau00='',f8.3,'' tauu0='',f8.3,'' tauu='',
+    !**       write(UNIT_OUT_LOG,'(''tau00='',f8.3,'' tauu0='',f8.3,'' tauu='',
     !**     *     f8.3,'' tau0u=''f8.3,'' hmit='',f8.3,'' yk'',f8.3)')
     !**     *            tau00,tauu0,tauu,tau0u,hmit,yk
     !**       endif
@@ -339,7 +332,7 @@ IF (aue.gt.0.) then
 
       !JK         WAR SCHON DEAKTIVIERT: 25.04.2000, JK
       !**         if(lein.eq.3)then
-      !**            write(jw8,'(''i='',i3,'' x1='',f8.3,'' fx1='',f8.3,
+      !**            write(UNIT_OUT_LOG,'(''i='',i3,'' x1='',f8.3,'' fx1='',f8.3,
       !**     1            '' f1='',f8.3, '' x2='',f8.3,'' fx2='',f8.3)')
       !**     2                  itx,x1,fx1,f1,x2,fx2
       !**         endif
@@ -349,16 +342,12 @@ IF (aue.gt.0.) then
 
       IF (itx.gt.itxmax) then
 
-        IF (lein.eq.3) then
-
-          !UT  ACHTUNG f2 ALS FEHLER AN DIESER STELLE NICHT BEKANNT
-          !UT  ITX = ANZAHL DER ITERATIONEN, ES MUESSTE fx2 HEISSEN
-          ! alt    write (jw8,16) itx,f2, bis 18.08.2000
-          WRITE (jw8, 16) itx, fx2
-          16 FORMAT (/1X, 'Konvergenzfehler in schleife 40 in SUB abfluss!',/, &
-                    & 1X, 'Nach ',I3,' Iterationen betraegt der fehler noch: ', F10.4)
-
-        ENDIF
+        !UT  ACHTUNG f2 ALS FEHLER AN DIESER STELLE NICHT BEKANNT
+        !UT  ITX = ANZAHL DER ITERATIONEN, ES MUESSTE fx2 HEISSEN
+        ! alt    write (UNIT_OUT_LOG,16) itx,f2, bis 18.08.2000
+        WRITE (UNIT_OUT_LOG, 16) itx, fx2
+        16 FORMAT (/1X, 'Konvergenzfehler in schleife 40 in SUB abfluss!',/, &
+                  & 1X, 'Nach ',I3,' Iterationen betraegt der fehler noch: ', F10.4)
 
         GOTO 999
 
@@ -396,13 +385,11 @@ ENDIF
 qges = qd + qw
 
 
-if (lein == 3) then
-  write (jw8, 1001) qd, qw, qges, iart
-  1001 format (/1X, 'SUB ABFLUSS, berechnete Variablen:', /, &
-             &  1X, '-----------------------------------', /, &
-             &  1X, 'QD   = ', F12.5, '  QW   = ', F12.5, '  QGES   = ', F12.5, /, &
-             &  1X, 'IART = ', I2, //)
-end if
+write (UNIT_OUT_LOG, 1001) qd, qw, qges, iart
+1001 format (/1X, 'SUB ABFLUSS, berechnete Variablen:', /, &
+           &  1X, '-----------------------------------', /, &
+           &  1X, 'QD   = ', F12.5, '  QW   = ', F12.5, '  QGES   = ', F12.5, /, &
+           &  1X, 'IART = ', I2, //)
 
 
 END SUBROUTINE abfluss

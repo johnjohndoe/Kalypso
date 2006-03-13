@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005   12:00 pm
+!     Last change:  WP   10 Mar 2006    9:33 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -62,10 +62,11 @@ USE DIM_VARIABLEN
 USE ZEIT
 USE AUSGABE_LAENGS
 USE KONSTANTEN
+USE IO_UNITS
                                                                         
 !WP -- Calling Variables -------------------------------------------------------------------------------------
 CHARACTER(LEN=nch80), INTENT(IN) :: pfad2	! Pfad- und Dateinamen für zu erstellende Dateien
-CHARACTER(LEN=nch80), INTENT(IN) :: unit5       ! Pfad- und Dateinamen für zu erstellende Dateien
+CHARACTER(LEN=nch80), INTENT(IN) :: unit5       ! Pfad- und Dateinamen für Laengsschnittdatei (z.B. Fawl0001.001)
 INTEGER, INTENT(IN) :: nprof                    ! Anzahl Profile
 INTEGER, INTENT(IN) :: mark                     ! Art der Berechnung:
 						! 1 = Spiegellinie, bordvoll,gleich-/ungleichfoermig etc.
@@ -98,6 +99,7 @@ COMMON / p4 / ifg, betta
 
 
 !WP -- Local variables -------------------------------------------------------------------------------------
+
 CHARACTER(LEN=20) :: bete1   	! Fuer Ausdruck in WSP-Laengsschnittdatei
 CHARACTER(LEN=20) :: bete12  	! Fuer Ausdruck in WSP-Laengsschnittdatei
 
@@ -118,8 +120,6 @@ INTEGER :: lityp (15), nzeiyl (15), nzeist (15), nzeiho (15)
 INTEGER :: wnull, weins, w7, w6, w5, w9
 INTEGER :: ischacht (maxger)
 
-INTEGER :: unit_nr_laengs               ! UNIT-Nr fuer die Laengsschnittdatei
-
 
 w9 = 0
 
@@ -131,10 +131,10 @@ weins = 1
 if (mark == 1) then
 
   ! Holen einer neuen Dateinummer
-  unit_nr_laengs = ju0gfu ()
+  UNIT_OUT_LAENGS = ju0gfu ()
 
   ! Oeffnen der laengsschnitt.txt-Datei
-  open (unit = unit_nr_laengs, file = file_laengs, status = 'REPLACE', ACTION='WRITE', IOSTAT = ierr)
+  open (unit = UNIT_OUT_LAENGS, file = file_laengs, status = 'REPLACE', ACTION='WRITE', IOSTAT = ierr)
   IF (ierr / = 0) then
     WRITE (*,*) 'ZEILA: Fehler beim Oeffnen von Laengsschnitt.txt'
     GOTO 9801
@@ -144,9 +144,9 @@ end if
 
 
 !HB   Holen einer neuen Dateinummer                                     
-iw1 = ju0gfu ()
+UNIT_OUT_QB1 = ju0gfu ()
                                                                         
-OPEN (unit = iw1, file = unit5, status = 'REPLACE', IOSTAT = ierr)
+OPEN (unit = UNIT_OUT_QB1, file = unit5, status = 'REPLACE', IOSTAT = ierr)
 IF (ierr / = 0) then
      PRINT * , 'ZEILA: Fehler beim Oeffnen von ', unit5
      GOTO 9801
@@ -158,8 +158,8 @@ ENDIF
 
 IF (mark.eq.2.or.mark.eq.4) then
 
-     iw2 = ju0gfu ()
-     OPEN (unit = iw2, file = pfad2, status = 'REPLACE', IOSTAT = ierr)
+     UNIT_OUT_QB2 = ju0gfu ()
+     OPEN (unit = UNIT_OUT_QB2, file = pfad2, status = 'REPLACE', IOSTAT = ierr)
      IF (ierr / = 0) then
           PRINT * , 'ZEILA: Fehler beim Oeffnen von ', pfad2
           GOTO 9801
@@ -190,32 +190,32 @@ END DO
                                                                         
 ! ST 30.03.2005
 !---Start--- Kopf der *.wsl-Datei
-WRITE (iw1, 5) unit5
-WRITE (iw1, 5) ' '
-WRITE (iw1, 5) ' '
-WRITE (iw1, 5) ' '
-WRITE (iw1, 5) ' '
-WRITE (iw1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) unit5
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) ' '
 
 IF (mark.eq.1) then
-     WRITE (iw1, '(a)') 'SPIEGELLINIEN-LAENGSSCHNITT '
-     WRITE (iw1, 5) ' '
+     WRITE (UNIT_OUT_QB1, '(a)') 'SPIEGELLINIEN-LAENGSSCHNITT '
+     WRITE (UNIT_OUT_QB1, 5) ' '
 ELSEIF (mark.eq.2) then
-     WRITE (iw1, '(a)') 'BORDVOLLER ABFLUSZ'
-     WRITE (iw1, '(a)') 'STATIONAER-UNGLEICHFOERMIG'
+     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSZ'
+     WRITE (UNIT_OUT_QB1, '(a)') 'STATIONAER-UNGLEICHFOERMIG'
 ELSEIF (mark.eq.4) then
-     WRITE (iw1, '(a)') 'BORDVOLLER ABFLUSZ'
-     WRITE (iw1, '(a)') 'STATIONAER-GLEICHFOERMIG'
+     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSZ'
+     WRITE (UNIT_OUT_QB1, '(a)') 'STATIONAER-GLEICHFOERMIG'
 ENDIF
 
-WRITE (iw1, 5) ' '
-WRITE (iw1, 5) ' '
-WRITE (iw1, 7) MMTTJJ , HHMMSS
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 5) ' '
+WRITE (UNIT_OUT_QB1, 7) MMTTJJ , HHMMSS
 
                                                                         
 !HB***************************************                              
-WRITE (iw1, 6) 'B- 2 0 0 0 0 0'
-WRITE (iw1, 5) ' '
+WRITE (UNIT_OUT_QB1, 6) 'B- 2 0 0 0 0 0'
+WRITE (UNIT_OUT_QB1, 5) ' '
 !---Ende--- Kopf der *.wsl-Datei
                                                                         
 
@@ -248,19 +248,19 @@ IF (mark.eq.1.or.mark.eq.3) then
      IF (nschacht.gt.0) then
           IF (nr_ausg.eq.'n') then
                ianz = 10
-               WRITE (iw1, '(11i4)') ianz, (nprof, i = 1, ianz - 1)
+               WRITE (UNIT_OUT_QB1, '(11i4)') ianz, (nprof, i = 1, ianz - 1)
           ELSE
                ianz = 11
-               WRITE (iw1, '(11i4)') ianz, (nprof, i = 1, ianz - 2)
+               WRITE (UNIT_OUT_QB1, '(11i4)') ianz, (nprof, i = 1, ianz - 2)
           ENDIF
      ELSE
           IF (nr_ausg.eq.'n') then
                ianz = 8
-               WRITE (iw1, '(11i4)') ianz, (nprof, i = 1, ianz)
+               WRITE (UNIT_OUT_QB1, '(11i4)') ianz, (nprof, i = 1, ianz)
           ELSE
                ianz = 9
-               WRITE (iw1, '(11i4)') ianz, (nprof, i = 1, ianz - 1)
-          ENDIF 
+               WRITE (UNIT_OUT_QB1, '(11i4)') ianz, (nprof, i = 1, ianz - 1)
+          ENDIF
      ENDIF
                                                                         
      !ST -------------------------------------------------------
@@ -284,8 +284,8 @@ IF (mark.eq.1.or.mark.eq.3) then
      ENDIF
      gy = 29.7
      yo = 0.0
-     WRITE (iw1, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
-                                                                        
+     WRITE (UNIT_OUT_QB1, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
+
      !     ************************************************************
      !     mark=1: darstellungsform 1 - sohlhoehe, boe. links,
      !                                  boe. rechts, wsp bordvoll
@@ -392,13 +392,13 @@ IF (mark.eq.1.or.mark.eq.3) then
           ELSEIF (j.eq.13) then 
                IF (nschacht.eq.0) goto 204
                bete1 = ' '
-               WRITE (iw1, 5) bete1
-               WRITE (iw1, 5) bete12
+               WRITE (UNIT_OUT_QB1, 5) bete1
+               WRITE (UNIT_OUT_QB1, 5) bete12
                w7 = 2
-               WRITE (iw1, 10) (wnull, i = 1, 8), w7
-               WRITE (iw1, '(''1'',i4,'' 2'',i4,i4)') nprof, nprof, nschacht
-               WRITE (iw1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
-               WRITE (iw1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
+               WRITE (UNIT_OUT_QB1, 10) (wnull, i = 1, 8), w7
+               WRITE (UNIT_OUT_QB1, '(''1'',i4,'' 2'',i4,i4)') nprof, nprof, nschacht
+               WRITE (UNIT_OUT_QB1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
+               WRITE (UNIT_OUT_QB1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
                GOTO 204
           ELSEIF (j.eq.10) then 
                IF (nschacht.eq.0) goto 204
@@ -516,18 +516,18 @@ IF (mark.eq.1.or.mark.eq.3) then
           ENDIF 
                                                                         
                                                                         
-          WRITE (iw1, 5) bete1 
-          WRITE (iw1, 5) bete12 
-          WRITE (iw1, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), w5, wnull, w7, (wnull, i1 = 1, 2)
-          WRITE (iw1, 20) (wnull, xss (jj), jj = 1, nprof) 
-          WRITE (iw1, 15) (wnull, yss (jj), jj = 1, nprof) 
-                                                                        
+          WRITE (UNIT_OUT_QB1, 5) bete1 
+          WRITE (UNIT_OUT_QB1, 5) bete12
+          WRITE (UNIT_OUT_QB1, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), w5, wnull, w7, (wnull, i1 = 1, 2)
+          WRITE (UNIT_OUT_QB1, 20) (wnull, xss (jj), jj = 1, nprof)
+          WRITE (UNIT_OUT_QB1, 15) (wnull, yss (jj), jj = 1, nprof)
+
      204 END DO
                                                                         
 
      IF (nr_ausg.eq.'j') then
           DO ii = 1, 2
-            WRITE (iw1, 5)
+            WRITE (UNIT_OUT_QB1, 5)
           END DO
                                                                         
           w9 = 10 
@@ -535,11 +535,11 @@ IF (mark.eq.1.or.mark.eq.3) then
           itext = nprof 
           ilage = 1 
                                                                         
-          WRITE (iw1, 10) (wnull, i1 = 1, 8), w9 
-          WRITE (iw1, 11) ibdat, itext, ilage 
-                                                                        
+          WRITE (UNIT_OUT_QB1, 10) (wnull, i1 = 1, 8), w9 
+          WRITE (UNIT_OUT_QB1, 11) ibdat, itext, ilage
+
           DO  ii = 1, nprof
-            WRITE (iw1, 23) ii, num5 (ii)
+            WRITE (UNIT_OUT_QB1, 23) ii, num5 (ii)
           END DO
                                                                         
      ENDIF
@@ -549,11 +549,11 @@ IF (mark.eq.1.or.mark.eq.3) then
      ! Schreibe in Datei laengsschnitt.txt Tabelle
 
      !Tabellenkopf
-     !WRITE (unit_nr_laengs, 7) MMTTJJ , HHMMSS
-     WRITE (unit_nr_laengs, 8) 'Stat', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+     !WRITE (UNIT_OUT_LAENGS, 7) MMTTJJ , HHMMSS
+     WRITE (UNIT_OUT_LAENGS, 8) 'Stat', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
                              & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re'
 
-     WRITE (unit_nr_laengs, 8) 'km'  , 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+     WRITE (UNIT_OUT_LAENGS, 8) 'km'  , 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
                              & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm'
 
 
@@ -562,7 +562,7 @@ IF (mark.eq.1.or.mark.eq.3) then
 
        tau_fl(i) = (rk_fl(i) / 8) * rho * vp_fl(i)**2
 
-       WRITE (unit_nr_laengs, 9) Stat1(i), sohl1(i), wsp1(i), hen1(i), bv1(i), boli1(i), bore1(i), vbv1(i), &
+       WRITE (UNIT_OUT_LAENGS, 9) Stat1(i), sohl1(i), wsp1(i), hen1(i), bv1(i), boli1(i), bore1(i), vbv1(i), &
                   & tau_fl(i), rk_li(i), rk_fl(i), rk_re(i), fp_li(i), fp_fl(i), fp_re(i), br_li(i), br_fl(i), br_re(i)
 
      END DO
@@ -633,23 +633,23 @@ ELSEIF (mark.gt.1) then
      iqmax = int (qmax / 5.)
      qmax = float (iqmax) * 5.0
 
-     WRITE (iw2, 5) pfad2
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, '(a)') 'ABFLUSSLAENGSSCHNITT '
-     WRITE (iw2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) pfad2
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, '(a)') 'ABFLUSSLAENGSSCHNITT '
+     WRITE (UNIT_OUT_QB2, 5) ' '
 
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 5) ' '
-     WRITE (iw2, 6) 'B- 2 0 0 0 0 0'
-     WRITE (iw2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 5) ' '
+     WRITE (UNIT_OUT_QB2, 6) 'B- 2 0 0 0 0 0'
+     WRITE (UNIT_OUT_QB2, 5) ' '
 
      ianz = 2
-     WRITE (iw2, '(3i5)') ianz, nprof2, nprof2
+     WRITE (UNIT_OUT_QB2, '(3i5)') ianz, nprof2, nprof2
 
      7007   y0 = 0.5
      xmass = 1000.0
@@ -664,7 +664,7 @@ ELSEIF (mark.gt.1) then
      ENDIF
      gy = 29.7
      yo = 0.0
-     WRITE (iw2, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
+     WRITE (UNIT_OUT_QB2, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
 
      !     ************************************************************
      !     mark=2: darstellungsform 2 - bordvoller abflusz, kennung
@@ -699,10 +699,10 @@ ELSEIF (mark.gt.1) then
           i2 = 1
           i3 = 3
 
-          WRITE (iw2, 5) bete1
-          WRITE (iw2, 5) bete12
-          WRITE (iw2, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), weins, (wnull, i4 = 1, 4)
-          WRITE (iw2, 21) i1, xss (1), (i1, xss (jj), i3, xss (jj), jj = 1, nprof)
+          WRITE (UNIT_OUT_QB2, 5) bete1
+          WRITE (UNIT_OUT_QB2, 5) bete12
+          WRITE (UNIT_OUT_QB2, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), weins, (wnull, i4 = 1, 4)
+          WRITE (UNIT_OUT_QB2, 21) i1, xss (1), (i1, xss (jj), i3, xss (jj), jj = 1, nprof)
 
           IF (j.eq.2) then
                yssa = 0.
@@ -711,7 +711,7 @@ ELSEIF (mark.gt.1) then
                yssa = 0.
           ENDIF
 
-          WRITE (iw2, 16) i1, yssa, i2, yss (1), (i2, yss (jj), i1, yss (jj), jj = 2, nprof - 1), i2, yss (nprof), i2,&
+          WRITE (UNIT_OUT_QB2, 16) i1, yssa, i2, yss (1), (i2, yss (jj), i1, yss (jj), jj = 2, nprof - 1), i2, yss (nprof), i2,&
                 yss (nprof), i1, yssa
      END DO                                                                                                                
                                                                         
@@ -743,18 +743,18 @@ ELSEIF (mark.gt.1) then
      IF (nschacht.eq.0) then
           IF (nr_ausg.eq.'n') then
                ianz = 6
-               WRITE (iw1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz)
+               WRITE (UNIT_OUT_QB1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz)
           ELSE
                ianz = 7
-               WRITE (iw1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 1)
+               WRITE (UNIT_OUT_QB1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 1)
           ENDIF
      ELSE
           IF (nr_ausg.eq.'n') then
                ianz = 10
-               WRITE (iw1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 1)
+               WRITE (UNIT_OUT_QB1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 1)
           ELSE
                ianz = 11
-               WRITE (iw1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 2)
+               WRITE (UNIT_OUT_QB1, '(i2,10i4)') ianz, (nprof, i2 = 1, ianz - 2)
           ENDIF
      ENDIF
 
@@ -772,7 +772,7 @@ ELSEIF (mark.gt.1) then
 
      gy = 29.7
      yo = 0.0
-     WRITE (iw1, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
+     WRITE (UNIT_OUT_QB1, '(6f8.2,i2)') yo, gx, bzgh, xmass, ymass, gy, wnull
 
 
      !     ************************************************************
@@ -864,13 +864,13 @@ ELSEIF (mark.gt.1) then
           ELSEIF (j.eq.10) then
                IF (nschacht.eq.0) goto 301
                bete1 = ' '
-               WRITE (iw1, 5) bete1
-               WRITE (iw1, 5) bete12
+               WRITE (UNIT_OUT_QB1, 5) bete1
+               WRITE (UNIT_OUT_QB1, 5) bete12
                w7 = 2
-               WRITE (iw1, '(9i2)') (wnull, i1 = 1, 8) , w7
-               WRITE (iw1, '(''1'',i4,'' 2'',i4,i4)') nprof, nprof, nschacht
-               WRITE (iw1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
-               WRITE (iw1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
+               WRITE (UNIT_OUT_QB1, '(9i2)') (wnull, i1 = 1, 8) , w7
+               WRITE (UNIT_OUT_QB1, '(''1'',i4,'' 2'',i4,i4)') nprof, nprof, nschacht
+               WRITE (UNIT_OUT_QB1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
+               WRITE (UNIT_OUT_QB1, '(40i3)') (ischacht (jj) , jj = 1, nschacht)
                GOTO 301
           ELSEIF (j.eq.9) then
                IF (nschacht.eq.0) goto 301
@@ -965,16 +965,16 @@ ELSEIF (mark.gt.1) then
 
           ENDIF
 
-          WRITE (iw1, 5) bete1
-          WRITE (iw1, 5) bete12
+          WRITE (UNIT_OUT_QB1, 5) bete1
+          WRITE (UNIT_OUT_QB1, 5) bete12
 
-          WRITE (iw1, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), w5, w6, w7, wnull, wnull
+          WRITE (UNIT_OUT_QB1, 10) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j), w5, w6, w7, wnull, wnull
 
           !WP 07.05.2004
           !WP Urspruengliche Datenausgabe
 
-          !WP          write(iw1,20)(nopwx(jj),xss(jj),jj=1,nprof)
-          !WP          write(iw1,15)(nopwy(jj),yss(jj),jj=1,nprof)
+          !WP          write(UNIT_OUT_QB1,20)(nopwx(jj),xss(jj),jj=1,nprof)
+          !WP          write(UNIT_OUT_QB1,15)(nopwy(jj),yss(jj),jj=1,nprof)
 
           !WP Es ist auch unklar, warum das ueberhaupt bisher funktioniert hat,
           !WP da Format-Anweisungen normalerweise nicht in die naechst Zeilen
@@ -986,7 +986,7 @@ ELSEIF (mark.gt.1) then
                                                                         
           DO m = 1, vzeil
 
-               WRITE (UNIT = iw1, FMT = 20, IOSTAT = ierr) nopwx ( (m - 1) * 8 + 1), xss ( (m - 1) * 8 + 1), nopwx ( (m - 1)&
+               WRITE (UNIT = UNIT_OUT_QB1, FMT = 20, IOSTAT = ierr) nopwx ( (m - 1) * 8 + 1), xss ( (m - 1) * 8 + 1), nopwx ((m -1)&
                       * 8 + 2), xss ( (m - 1) * 8 + 2), nopwx ( (m - 1) * 8 + 3), xss ( (m - 1) * 8 + 3), nopwx ( (m - 1) * 8&
                       + 4), xss ( (m - 1) * 8 + 4), nopwx ( (m - 1) * 8 + 5), xss ( (m - 1) * 8 + 5), nopwx ( (m - 1) * 8 + 6)&
                       , xss ( (m - 1) * 8 + 6), nopwx ( (m - 1) * 8 + 7), xss ( (m - 1) * 8 + 7), nopwx ( (m - 1) * 8 + 8), &
@@ -998,7 +998,7 @@ ELSEIF (mark.gt.1) then
 
           END DO
 
-          WRITE (UNIT = iw1, FMT = 20, IOSTAT = ierr) (nopwx (jj), xss (jj), jj = (vzeil * 8 + 1), nprof)
+          WRITE (UNIT = UNIT_OUT_QB1, FMT = 20, IOSTAT = ierr) (nopwx (jj), xss (jj), jj = (vzeil * 8 + 1), nprof)
           IF (ierr / = 0) then
                WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (XSS(i):', ierr
                STOP
@@ -1006,7 +1006,7 @@ ELSEIF (mark.gt.1) then
 
           DO m = 1, vzeil
 
-               WRITE (UNIT = iw1, FMT = 15, IOSTAT = ierr) nopwx ( (m - 1) * 8 + 1), yss ( (m - 1) * 8 + 1), nopwx ( (m - 1) *&
+               WRITE (UNIT = UNIT_OUT_QB1, FMT = 15, IOSTAT = ierr) nopwx ( (m - 1) * 8 + 1), yss ( (m - 1) * 8 + 1),nopwx((m -1) *&
                       8 + 2), yss ( (m - 1) * 8 + 2), nopwx ( (m - 1) * 8 + 3), yss ( (m -  1) * 8 + 3), nopwx ( (m - 1) * 8 +&
                       4), yss ( (m - 1) * 8 + 4), nopwx ( (m - 1) * 8 + 5), yss ( (m - 1) * 8 + 5), nopwx ( (m - 1) * 8 + 6),&
                       yss ( (m - 1) * 8 + 6), nopwx ( (m - 1) * 8 + 7), yss ( (m - 1) * 8 + 7), nopwx ( (m - 1) * 8 + 8), yss &
@@ -1019,7 +1019,7 @@ ELSEIF (mark.gt.1) then
                                                                         
           END DO
                                                                         
-          WRITE (UNIT = iw1, FMT = 15, IOSTAT = ierr) (nopwx (jj), yss (jj), jj = (vzeil * 8 + 1), nprof)
+          WRITE (UNIT = UNIT_OUT_QB1, FMT = 15, IOSTAT = ierr) (nopwx (jj), yss (jj), jj = (vzeil * 8 + 1), nprof)
           IF (ierr / = 0) then
                WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (YSS(i):', ierr
                STOP
@@ -1031,7 +1031,7 @@ ELSEIF (mark.gt.1) then
      IF (nr_ausg.eq.'j') then
 
           DO ii = 1, 2
-               WRITE (iw1, 5)
+               WRITE (UNIT_OUT_QB1, 5)
           END DO
 
           w9 = 10
@@ -1039,11 +1039,11 @@ ELSEIF (mark.gt.1) then
           itext = nprof
           ilage = 1
 
-          WRITE (iw1, 10) (wnull, i1 = 1, 8), w9
-          WRITE (iw1, 11) ibdat, itext, ilage
+          WRITE (UNIT_OUT_QB1, 10) (wnull, i1 = 1, 8), w9
+          WRITE (UNIT_OUT_QB1, 11) ibdat, itext, ilage
 
           DO ii = 1, nprof
-               WRITE (iw1, 23) ii, num5 (ii)
+               WRITE (UNIT_OUT_QB1, 23) ii, num5 (ii)
           END DO
 
      ENDIF                                         
@@ -1051,9 +1051,9 @@ ELSEIF (mark.gt.1) then
 ENDIF
                                                                         
 !WP 10.05.2004
-CLOSE (iw1)
-CLOSE (iw2)
-CLOSE (unit_nr_laengs)
+CLOSE (UNIT_OUT_QB1)
+CLOSE (UNIT_OUT_QB2)
+CLOSE (UNIT_OUT_LAENGS)
 !WP 10.05.2004
                                                                         
 RETURN

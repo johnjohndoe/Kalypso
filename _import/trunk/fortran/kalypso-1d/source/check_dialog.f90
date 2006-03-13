@@ -1,4 +1,4 @@
-!     Last change:  WP   19 Jul 2005    2:45 pm
+!     Last change:  WP   13 Mar 2006    9:27 am
 !--------------------------------------------------------------------------
 ! This code, check_dialog.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,8 +39,19 @@
 
 
 
-!-------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 subroutine Check_Dialog(fehlnr, selected)
+!
+! Beschreibung:
+! -------------
+! Bei bestimmten Programmabruchen wird ein Fenster geoeffnet,
+! das dem Benutzer die Fehlermeldung direkt zeigt.
+!
+! Der gezeigt Text in den Popup Fenstern muss in RESOURCE.RC
+! eingetragen werden!
+!
+!                              Wolf Ploeger, 12.03.2006
+! ----------------------------------------------------------------------------
 
 USE WINTERACTER
 
@@ -49,8 +60,12 @@ IMPLICIT NONE
 INTEGER, INTENT(IN)  :: fehlnr
 INTEGER, INTENT(OUT) :: selected
 
+! Probleme bei Wehren
 INTEGER, PARAMETER :: IDD_WEHR1  =   101
 INTEGER, PARAMETER :: IDD_WEHR2  =   102
+
+! Probleme bei der Geometrie
+INTEGER, PARAMETER :: IDD_BV1    =   111
 
 TYPE(WIN_STYLE)   :: MAIN_WINDOW
 TYPE(WIN_MESSAGE) :: MESSAGE
@@ -92,6 +107,21 @@ select case (fehlnr)
 
     CALL WDialogLoad(IDD_WEHR2)
     CALL WDialogSelect(IDD_WEHR2)
+    CALL WDialogShow(-1,-1,0,Modal)
+    IF (WInfoDialog(ExitButton) == IDOK) THEN
+      selected = 1
+      CALL WindowClose()
+      RETURN
+    ELSE
+      selected = 0
+      CALL WindowClose()
+      RETURN
+    END IF                                    
+
+  case (11)
+
+    CALL WDialogLoad(IDD_BV1)
+    CALL WDialogSelect(IDD_BV1)
     CALL WDialogShow(-1,-1,0,Modal)
     IF (WInfoDialog(ExitButton) == IDOK) THEN
       selected = 1

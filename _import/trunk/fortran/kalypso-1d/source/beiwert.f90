@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005    9:33 am
+!     Last change:  WP   11 Mar 2006    8:29 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -80,9 +80,7 @@ SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
 !**   huew    --      Überfallhöhe                                      
 !**   huw     --      Wasserspiegelhöhe im Unterwasser                  
 !**   iueart  --      Art des Überfalls am Wehr                         
-!**   jw8     --      Name des Kontrollfiles                            
-!**   lein    --      Art des Ergebnisausdruckes                        
-!**   lw      --      Länge des Wehres in Fließrichtung                 
+!**   lw      --      Länge des Wehres in Fließrichtung
 !**   phi     --      Parameter zur Berechnung des Überfallbeiwertes    
 !**                   für rundkronige Wehre nach Knapp                  
 !**   Wehre                                                             
@@ -106,6 +104,7 @@ SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 CHARACTER(LEN=2) :: wart
 
@@ -113,8 +112,6 @@ REAL :: beiw (maxw), rkw (maxw), lw (maxw)
 
 COMMON / wehr2 / beiw, rkw, lw, wart
 
-COMMON / ausgabeart / lein, jw8
-                                                                        
 
 !**   ------------------------------------------------------------------
 !**   BERECHNUNGEN                                                      
@@ -167,7 +164,7 @@ ELSEIF (wart.eq.'rk') then
 
   DO 10 WHILE(dif .gt. 0.0001)
 
-    WRITE (jw8, '(''dif='',f8.4)') dif
+    WRITE (UNIT_OUT_LOG, '(''dif='',f8.4)') dif
     it10 = it10 + 1
 
     IF (it10.gt.it10max) then
@@ -175,7 +172,7 @@ ELSEIF (wart.eq.'rk') then
       y0 = .7 * huew
 
       !JK              SCHREIBEN IN KONTROLILE
-      IF (lein.eq.3) write (jw8, '(''Keine y0-Tiefe gefunden y0=.7*HO ='',f8.4,/)') y0
+      write (UNIT_OUT_LOG, '(''Keine y0-Tiefe gefunden y0=.7*HO ='',f8.4,/)') y0
 
       GOTO 20
     ENDIF
@@ -276,8 +273,8 @@ IF (iueart.eq.1) then
     ELSE
 
       !JK                SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) write (jw8, '(''Widerspruch!  dh=huw/how='',f8.4,'' >1.0 '')') dh
-      PRINT * , 'Widerspruch in der Beiwertberechnung, deshalb STOP!'
+      write (UNIT_OUT_LOG, '(''Widerspruch!  dh=huw/how='',f8.4,'' >1.0 '')') dh
+      WRITE (*, *) 'Widerspruch in der Beiwertberechnung, deshalb STOP!'
       STOP
 
     ENDIF
@@ -310,8 +307,8 @@ IF (iueart.eq.1) then
     ELSE
 
       !JK          SCHREIBEN IN KONTROLLFILE
-      IF (lein.eq.3) write (jw8, '(''Widerspruch! dh=huw/how='',f8.4,'' >1.0 '')') dh
-      PRINT * , 'Widerspruch in der Beiwertberechnung', 'deshalb STOP!!'
+      write (UNIT_OUT_LOG, '(''Widerspruch! dh=huw/how='',f8.4,'' >1.0 '')') dh
+      write (*,*) 'Widerspruch in der Beiwertberechnung', 'deshalb STOP!!'
       STOP
 
     ENDIF

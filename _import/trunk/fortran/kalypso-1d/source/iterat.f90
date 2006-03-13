@@ -1,4 +1,4 @@
-!     Last change:  WP   30 May 2005   10:17 am
+!     Last change:  WP   13 Mar 2006   12:57 pm
 !--------------------------------------------------------------------------
 ! This code, iterat.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -66,9 +66,7 @@ SUBROUTINE iterat (hr, hdif, hsohl, iart, cd, a, ai, x1, h1,      &
 !**   hsohl   --      Sohlhöhe                                          
 !**   ifehl   --      Fehlervariable                                    
 !**   ischnitt--      Anzahl der Schnittpunkte                          
-!**   jw8     --      Name des Kontrollfiles                            
-!**   lein    --      Art des Ergebnisausdruckes                        
-!**   m       --      Impuls                                            
+!**   m       --      Impuls
 !**   ma      --      Impuls                                            
 !**   mb      --      Impuls                                            
 !**   mi      --      Impuls                                            
@@ -89,6 +87,7 @@ SUBROUTINE iterat (hr, hdif, hsohl, iart, cd, a, ai, x1, h1,      &
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 CHARACTER(2) id
 COMMON / iprint / id
@@ -98,23 +97,15 @@ REAL m, mi, ma, mb
 REAL ms (100)
 REAL x1 (maxkla), h1 (maxkla)
                                                                         
-COMMON / ausgabeart / lein, jw8
-!     lein =1 --> einfacher ergebnisausdruck                            
-!     lein =2 --> erweiterter ergebnisausdruck                          
-!     lein =3 --> kontrollfile                                          
+
+      ! ------------------------------------------------------------------
+      ! BERECHNUNGEN
+      ! ------------------------------------------------------------------
                                                                         
-!     uebergabe a!!!!!!!!!!!!!!!!                                       
-                                                                        
-!JK   ------------------------------------------------------------------
-!JK   BERECHNUNGEN                                                      
-!JK   ------------------------------------------------------------------
-                                                                        
-!JK   SCHREIBEN IN KONTROLLFILE                                         
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(//,''iteration in subroutine iteration : '')') 
-      ENDIF 
-                                                                        
-!     anfangswert:                                                      
+      !JK   SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(//,''Beginn der Iteration in subroutine iteration : '')')
+
+      !     anfangswert:
       delta = 0.01 
       difopt = 10000. 
       dx = 0.05 
@@ -126,58 +117,36 @@ COMMON / ausgabeart / lein, jw8
                                                                         
       ischnitt = 0 
       vm = q / a 
-!WP 01.02.2005
-!WP itmax wird in MODUL DIM_VARIABLEN zentral auf 99 gesetzt
-!itmax = 50
-                                                                        
+
    11 CONTINUE 
                                                                         
-!JK   SCHREIBEN IN KONTROLLFILE                                         
-      IF (lein.eq.3) then 
-        WRITE (jw8, '(''q= '',f10.3,'' iart = '',i2,'' m= '',f10.3,/)') &
-        q, iart, m                                                      
-      WRITE (jw8, '(''i   hr     mi     ad     aue     apl    '',       &
-     &            '' apg     hss     hue     hpl     hpg'')')           
-      ENDIF 
+      !JK   SCHREIBEN IN KONTROLLFILE
+
+      WRITE (UNIT_OUT_LOG, '(''q= '',f10.3,'' iart = '',i2,'' m= '',f10.3,/)') q, iart, m
+      WRITE (UNIT_OUT_LOG, '(''i   hr     mi     ad     aue     apl     apg     hss     hue     hpl     hpg'')')
+
                                                                         
-!JK    WAR SCHON DEAKTIVIERT, 01.05.00, JK                              
-!      itmax=20         /* test                                         
-                                                                        
-!JK   ITERATIONSSCHLEIFE                                                
-!JK   ------------------                                                
+
+      !JK   ITERATIONSSCHLEIFE
+      !JK   ------------------
       DO 10 i = 1, itmax 
                                                                         
-!           wiederherstellen der urspruenglichen profilwerte:           
+        !           wiederherstellen der urspruenglichen profilwerte:
+        CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, mi, ai, ifehl)
                                                                         
-!JK          WAR SCHON DEAKTIVIERT, 01.05.00, JK                        
-!            call intdat(staso,ifehl)                                   
-!             dx1=0.1   /* test                                         
-                                                                        
-        CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q,     &
-        iart, mi, ai, ifehl)                                            
-                                                                        
-!JK                      WAR SCHON DEAKTIVIERT, 01.05.00, JK            
-!                        hr=hr+dx       /* test                         
-!                        goto 10        /* test                         
-                                                                        
-        IF (ifehl.ne.0) then 
-!               kein durchflussquerschnitt --> hr zu klein              
+        IF (ifehl.ne.0) then
+          !               kein durchflussquerschnitt --> hr zu klein
           hr = hr + abs (hr - hsohl) 
         ENDIF 
-!           ueberpruefen der bedingung mi = m !!!                       
-                                                                        
-!JK            WAR SCHON DEAKTIVIERT, 01.05.00, JK                      
-!**            write(*,'(i4,6(f8.2,1x),a2)') i,m,mi,hr,ai,aue,hss,id    
-                                                                        
-!JK         SCHREIBEN IN KONTROLLFILE                                   
-        IF (lein.eq.3) then 
-          WRITE (jw8, '(i4,10f8.3,a2)') i, hr, mi, ad, aue, apl, apg,   &
-          hss, hue, hpl, hpg, id                                        
-        ENDIF 
-                                                                        
+
+        !           ueberpruefen der bedingung mi = m !!!                       
+
+        !JK         SCHREIBEN IN KONTROLLFILE
+        WRITE (UNIT_OUT_LOG, '(i4,10f8.3,a2)') i, hr, mi, ad, aue, apl, apg, hss, hue, hpl, hpg, id
+
         IF (hr.le.hsohl) then 
           PRINT * , 'stop in iteration' 
-          PRINT * , 'hr<hsohl' 
+          PRINT * , 'hr < hsohl'
         ENDIF 
                                                                         
         difn = abs (mi - m) 
@@ -191,63 +160,68 @@ COMMON / ausgabeart / lein, jw8
                                                                         
         IF (abs (mi - m) .lt.delta) then 
                                                                         
-!               2 schnittpunkte sind moeglich:                          
-!               --> ueberpruefung der fliessgeschwindigkeit             
-!                   (kontinuitaetsbedingung q=v*a)                      
+          !               2 schnittpunkte sind moeglich:
+          !               --> ueberpruefung der fliessgeschwindigkeit
+          !                   (kontinuitaetsbedingung q=v*a)
                                                                         
           vmi = q / ai 
                                                                         
           IF ( (a - ai) .le.delta) then 
             IF ( (vmi - vm) .le.delta) then 
-!                     schnittpunkt gefunden                             
-!JK                   DATENUEBERGABE                                    
+              ! schnittpunkt gefunden
+              !JK DATENUEBERGABE
               GOTO 20 
+
             ELSE 
-!                     neue iteration mit anderem anfangswert :          
-!                     aendern der iterationsrichtung:                   
+              ! neue iteration mit anderem anfangswert :
+              ! aendern der iterationsrichtung:
                                                                         
               hr = hsohl + hdif + 10. 
-!JK                   ZUM SCHLEIFENANFANG                               
+              !JK  ZUM SCHLEIFENANFANG
               GOTO 11 
             ENDIF 
+
           ELSE 
+
             IF (vmi.gt.vm) then 
-!                     schnittpunkt gefunden                             
-!JK                   DATENUEBERGABE                                    
+              ! schnittpunkt gefunden
+              !JK   DATENUEBERGABE
               GOTO 20 
+
             ELSE 
-!                     neue iteration mit anderem anfangswert :          
-!                     aendern der iterationsrichtung                    
+
+              ! neue iteration mit anderem anfangswert :
+              ! aendern der iterationsrichtung
               hr = hdif + hsohl + 10. 
-!JK                   ZUM SCHLEIFENANFANG                               
+              !JK     ZUM SCHLEIFENANFANG
               GOTO 11 
+
             ENDIF 
+
           ENDIF 
                                                                         
-!JK         ELSE ZU (abs(mi-m).lt.delta)                                
+        !JK         ELSE ZU (abs(mi-m).lt.delta)
         ELSE 
                                                                         
-!              ansonsten : neuer schaetzwert nach newton'scher iteration
-!              ableitung:                                               
+          ! ansonsten : neuer schaetzwert nach newton'scher iteration
+          ! ableitung:
           hra = hr + dx 
           hrb = hr - dx 
                                                                         
           IF (hrb.le.hsohl) hrb = hr 
                                                                         
-          CALL impuls (hra, cd, x1, h1, hdif, hsohl, nknot, il, ir, q,  &
-          iart, ma, aa, ifehl)                                          
+          CALL impuls (hra, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, ma, aa, ifehl)
                                                                         
-          CALL impuls (hrb, cd, x1, h1, hdif, hsohl, nknot, il, ir, q,  &
-          iart, mb, ab, ifehl)                                          
+          CALL impuls (hrb, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, mb, ab, ifehl)
                                                                         
           IF (ifehl.ne.0) then 
-!              kein durchflussquerschnitt --> hrb nicht beruecksichtigen
+            !  kein durchflussquerschnitt --> hrb nicht beruecksichtigen
             df = (ma - mi) / (hra - hr) 
           ELSE 
             df = (ma - mb) / (hra - hrb) 
           ENDIF 
                                                                         
-!              geradengleichung der tangente und schnitt mit sollwert m:
+          !  geradengleichung der tangente und schnitt mit sollwert m:
                                                                         
           IF (abs (df) .le.0.001) then 
             dif = 0.1 
@@ -256,10 +230,8 @@ COMMON / ausgabeart / lein, jw8
           ENDIF 
                                                                         
           IF (abs (dif) .le.0.005) then 
-            IF (lein.eq.3) then 
-              WRITE (jw8, '('' abbruch der iteration --> dif = '', f15.3)') dif
-            ENDIF 
-!JK                ZU ENDE PROGRAMM                                     
+            WRITE (UNIT_OUT_LOG, '('' abbruch der iteration --> dif = '', f15.3)') dif
+            !JK    ZU ENDE PROGRAMM
             GOTO 8000 
           ENDIF 
                                                                         
@@ -270,59 +242,58 @@ COMMON / ausgabeart / lein, jw8
           hr = (hra + hr) / 2. 
           IF (abs (dif) .lt.0.005) then 
             IF (abs (m - mi) .lt.0.1.or.abs (hr - hra) .lt.0.005) then 
-!JK                    ZU ENDE PROGRAMM                                 
+              !JK                    ZU ENDE PROGRAMM
               GOTO 8000 
             ENDIF 
           ENDIF 
-!JK         ENDIF ZU (abs(mi-m).lt.delta)                               
+
+        !JK         ENDIF ZU (abs(mi-m).lt.delta)                               
         ENDIF 
                                                                         
    10 END DO 
 !JK   ENDE ITERATIONSSCHLEIFE----------------------------------------   
                                                                         
                                                                         
-!JK       WAR SCHON DEAKTIVIERT, 01.05.00, JK                           
-!**       print *,'maximale anzahl der iterationsschritte'              
-!**       print *,'ueberschritten !!! -->  weiter mit optimalstem wert' 
+      !JK       WAR SCHON DEAKTIVIERT, 01.05.00, JK
+      !**       print *,'maximale anzahl der iterationsschritte'
+      !**       print *,'ueberschritten !!! -->  weiter mit optimalstem wert'
                                                                         
                                                                         
       hr = hropt 
-      CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, &
-      mi, ai, ifehl)                                                    
+
+      CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, mi, ai, ifehl)
+
       difn = abs (mi - m) 
                                                                         
                                                                         
-!JK       WAR SCHON DEAKTIVIERT, 01.05.00, JK                           
-!**       print *,' m = ',m,' mi= ',mi, ' hr= ',hr                      
-!**20       print *                                                     
-!**    print *,'anzahl der iterationschritte : ',i                      
-!*****                                                                  
-!**      print *,'hr = ',hr,' ermittelt!!'                              
-!**      print *,'***************************************************'  
-!**      print *,'*  ergebnisse :                                   *'  
-!**      print *,'*                                                 *'  
-!**      print *,'*  - hr = ',hr                                        
-!**      print *,'*  - durchstroemte flaeche : a   = ',a,' (aue+a)'     
-!**      print *,'*                            aue = ',aue              
-!**      print *,'*  - angestroemte flaeche :  apl = ',apl              
-!**      print *,'*  -                         apg = ',apg              
-!**      print *,'***************************************************'  
-!       call graf(i,ms,m)                                               
+      !JK       WAR SCHON DEAKTIVIERT, 01.05.00, JK
+      !**       print *,' m = ',m,' mi= ',mi, ' hr= ',hr
+      !**20       print *
+      !**    print *,'anzahl der iterationschritte : ',i
+      !*****
+      !**      print *,'hr = ',hr,' ermittelt!!'
+      !**      print *,'***************************************************'
+      !**      print *,'*  ergebnisse :                                   *'
+      !**      print *,'*                                                 *'
+      !**      print *,'*  - hr = ',hr
+      !**      print *,'*  - durchstroemte flaeche : a   = ',a,' (aue+a)'
+      !**      print *,'*                            aue = ',aue
+      !**      print *,'*  - angestroemte flaeche :  apl = ',apl
+      !**      print *,'*  -                         apg = ',apg
+      !**      print *,'***************************************************'
+      !       call graf(i,ms,m)                                                
                                                                         
    20 RETURN 
                                                                         
- 8000 PRINT * 
+ 8000 CONTINUE
                                                                         
-!JK      WAR SCHON DEAKTIVIERT, 01.05.00, JK                            
-!**8000  print *,'abbruch der iteration : dif < 0.005  '                
+      !JK      WAR SCHON DEAKTIVIERT, 01.05.00, JK
+      !**8000  print *,'abbruch der iteration : dif < 0.005  '
                                                                         
       hr = hropt 
                                                                         
-      CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, &
-      mi, ai, ifehl)                                                    
+      CALL impuls (hr, cd, x1, h1, hdif, hsohl, nknot, il, ir, q, iart, mi, ai, ifehl)
                                                                         
-!JK      WAR SCHON DEAKTIVIERT, 01.05.00, JK                            
-!**      write(*,'(i4,4(f8.2,7x),a1)') i,m,mi,hr,ai,id                  
-                                                                        
-      RETURN 
+      RETURN
+
       END SUBROUTINE iterat                         

@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006   11:38 am
+!     Last change:  WP   13 Mar 2006    3:05 pm
 !--------------------------------------------------------------------------
 ! This code, proe_pro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 
 
 ! -----------------------------------------------------------------------------------------
-SUBROUTINE proe_pro (nfil, textkm, filename)
+SUBROUTINE proe_pro (textkm, filename)
 !
 ! Einlesen der Daten aus den Profildateien. Die Werte werden den
 ! globalen Variablen zugewiesen
@@ -51,8 +51,8 @@ SUBROUTINE proe_pro (nfil, textkm, filename)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
 
-INTEGER, INTENT(IN)  		:: nfil		! FORTRAN-Unit der Profildatei (aus WSPBER)
 CHARACTER(LEN=36), INTENT(OUT)	:: textkm       !
 CHARACTER(LEN=nch80), INTENT(IN):: filename     ! Name der Profildatei
 
@@ -271,7 +271,7 @@ COMMON / lcr1 / ilcr, xlcr1, xlcr2, ylcr1, ylcr2, lcrtext
 
 CHARACTER(LEN=128) :: string
 CHARACTER(LEN=30) :: words (50)
-INTEGER :: test
+INTEGER :: test, istat
 LOGICAL :: flag, ex
 
 CHARACTER(LEN=36) :: text321
@@ -300,30 +300,33 @@ isatz = 0
 test = 1
 n = 0
 isatz = 0
-                                                                        
-READ (nfil, '(a)') text0
-READ (nfil, '(a)') text1
-READ (nfil, '(a)') text11
-READ (nfil, '(a)') text2
-READ (nfil, '(a)') text22
-READ (nfil, '(a)') text23
-READ (nfil, '(a)') text3
-READ (nfil, '(a)') text32
-READ (nfil, '(a)') text33
-READ (nfil, '(a)') text4
-READ (nfil, '(a)') text5
+
+
+READ (UNIT_EIN_PROF, '(a)', IOSTAT = istat) text0
+READ (UNIT_EIN_PROF, '(a)') text1
+READ (UNIT_EIN_PROF, '(a)') text11
+READ (UNIT_EIN_PROF, '(a)') text2
+READ (UNIT_EIN_PROF, '(a)') text22
+READ (UNIT_EIN_PROF, '(a)') text23
+READ (UNIT_EIN_PROF, '(a)') text3
+READ (UNIT_EIN_PROF, '(a)') text32
+READ (UNIT_EIN_PROF, '(a)') text33
+READ (UNIT_EIN_PROF, '(a)') text4
+READ (UNIT_EIN_PROF, '(a)') text5
 n = n + 12
 
-READ (nfil, '(a)') string
+READ (UNIT_EIN_PROF, '(a)') string
+
+
 CALL rstring (string, iword, words)
 !c      if(iword.lt.4) goto 3000
 !c      call querfeld (iword,words)
 
 n = n + 1
-READ (nfil, '(a)') text7
+READ (UNIT_EIN_PROF, '(a)') text7
 
 n = n + 1
-READ (nfil, '(a)') string             ! Anzahl Blocke, Anzahl Werte pro Block
+READ (UNIT_EIN_PROF, '(a)') string             ! Anzahl Blocke, Anzahl Werte pro Block
                                       ! z.B. " 6 23  2  1  2  0  3"
 
 CALL rstring (string, iword, words)   ! String wird aufgeteilt in einzelne Stücke
@@ -333,7 +336,7 @@ CALL profil (iword, words)            ! In PROFIL werden die Werte aus RSTRING d
                                       ! NPROF (Anz. Bloecke) und NP(i) (Anz. Zeilen pro Block)
 
 n = n + 1
-READ (nfil, '(a)') string
+READ (UNIT_EIN_PROF, '(a)') string
 CALL rstring (string, iword, words)
 IF (iword.lt.7) goto 3000
 
@@ -350,15 +353,15 @@ nn = 0
 DO 75 j = 1, nprof                    ! NPROF: Anzahl der Bloecke
 
   isatz = isatz + 1
-  READ (nfil, '(a)') bete1 (j)        ! Bezeichnungstext 1
-  READ (nfil, '(a)') bete12 (j)       ! bezeichnungstext 2
+  READ (UNIT_EIN_PROF, '(a)') bete1 (j)        ! Bezeichnungstext 1
+  READ (UNIT_EIN_PROF, '(a)') bete12 (j)       ! bezeichnungstext 2
 
   !WP 11.01.2005
   !write (*,*) 'BETE1(j):  ', bete1(j)
   !write (*,*) 'BETE12(j): ', bete12(j)
   !WP ende
 
-  READ (nfil, '(a)') string           ! Zwischenzeile mit "0 0 0 0" usw.
+  READ (UNIT_EIN_PROF, '(a)') string           ! Zwischenzeile mit "0 0 0 0" usw.
   CALL rstring (string, iword, words)
 
   n = 3
@@ -369,12 +372,12 @@ DO 75 j = 1, nprof                    ! NPROF: Anzahl der Bloecke
 
   IF (iword .ne. 9) goto 3000         ! Falls in dem String NICHT neun Zahlen stehen
                                       ! liegt Sonderblock vor, daher Sprung zu 3000
-  BACKSPACE (nfil)
+  BACKSPACE (UNIT_EIN_PROF)
 
   ! Lesen der Zeile mit den ganzen Nullen!
   ! Offenbar haben diese Nullen doch eine Bedeutung! fuer das Programm PROFBER?
   ! Allerdings nicht fuer Kalypso-1D!
-  READ (nfil, * ) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j),  &
+  READ (UNIT_EIN_PROF, * ) lityp (j), nzeiyl (j), nzeist (j), nzeiho (j),  &
                 & nzeisf (j), nzeiyk (j), ntextl (j), ntextg (j), nsymb (j)
 
   nn = nn + 1
@@ -395,11 +398,11 @@ DO 75 j = 1, nprof                    ! NPROF: Anzahl der Bloecke
     ! Sonderprofil. Aus irgendeinem Grund muss dann der Bezeichnungstext BETE12
     ! nocheinmal eingelsen werden.
     if (nsymb(j) .ne. 17) then
-      READ (nfil, '(a)') bete12 (j)
-      backspace (nfil)
+      READ (UNIT_EIN_PROF, '(a)') bete12 (j)
+      backspace (UNIT_EIN_PROF)
     end if
 
-    CALL rsymbole (j, n, nfil, nnp) ! In Abhaengigkeit von NSYMB(j) werden
+    CALL rsymbole (j, n, UNIT_EIN_PROF, nnp) ! In Abhaengigkeit von NSYMB(j) werden
                                     ! die verschiedenen Einleseroutinen
                                     ! aufgerufen, z.B.: NSYMB(j) = 7 -> Kreisprofil
 
@@ -408,7 +411,7 @@ DO 75 j = 1, nprof                    ! NPROF: Anzahl der Bloecke
     2010 CONTINUE
 
     n = n + 1 
-    READ (nfil, '(a)') string
+    READ (UNIT_EIN_PROF, '(a)') string
     CALL rstring (string, iword, words)
 
     ilauf = ilauf + iword
@@ -435,7 +438,7 @@ DO 75 j = 1, nprof                    ! NPROF: Anzahl der Bloecke
 
     n = n + 1
                                                                         
-    READ (nfil, '(a)') string
+    READ (UNIT_EIN_PROF, '(a)') string
     CALL rstring (string, iword, words)
 
     ilauf = ilauf + iword
@@ -480,7 +483,7 @@ IF (flag) then
 
 ENDIF 
                                                                         
-!       close(nfil)                                                     
+!       close(UNIT_EIN_PROF)                                                     
 textkm = text33
 text321 = text32
 

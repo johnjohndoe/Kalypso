@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Dec 2005    6:09 pm
+!     Last change:  WP   13 Mar 2006    6:20 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -80,9 +80,7 @@ SUBROUTINE qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
 !   idr2    --      Abfrage nach Erstellen von Ergebnislisten
 !   ilen    --      Länge einer Zeichenkette
 !   isstat  --
-!   jw8     --      Name des Kontrollfiles
 !   k_kp    --
-!   lein    --      Art des Ergebnisausdruckes
 !   nbv     --      Nummer des Bordvollereignisses
 !   nprof   --      Anzahl der Profilpunkte
 !   q       --      jeweiliger Abfluß
@@ -114,6 +112,8 @@ SUBROUTINE qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE IO_UNITS
+USE MOD_ERG
 
 ! Calling Variables -----------------------------------------------------------
 REAL, INTENT(INOUT) 		:: rqmax               ! Maximaler Abfluss
@@ -121,16 +121,6 @@ REAL, INTENT(INOUT) 		:: rqmin               ! Minimaler Abfluss
 REAL, INTENT(INOUT) 		:: qstep               ! Minimaler Abfluss
 CHARACTER(LEN=1), INTENT(IN) 	:: ibruecke            ! Kennung, ob Bruecke gerechnet werden soll (= 'j' oder 'n')
 CHARACTER(LEN=1), INTENT(IN) 	:: wehr                ! Kennung, ob Wehr gerechnet werden soll (= 'j' oder 'n')
-
-
-! COMMON-Block /AUSGABEART/ ---------------------------------------------------
-INTEGER :: lein                 ! Art der Kontrollausgabe
-!   lein=1    --> einfacher ergebnisausdruck
-!   lein=2    --> erweiterter ergebnisausdruck
-!   lein=3    --> erstellung kontrollfile
-INTEGER :: jw8                  ! UNIT der Kontrolldatei
-COMMON / ausgabeart / lein, jw8
-! -----------------------------------------------------------------------------
 
 
 ! COMMON-Block /BV/ -----------------------------------------------------------
@@ -289,6 +279,8 @@ COMMON / ueber_km / qq, bb, fb, vfl, qvor, bvor, fvor, ischbv
 !HB   wird fuer den Aufruf von SUB LAPRO1 benoetigt (Dateipfade)
 CHARACTER(LEN=nch80) :: unit5
 
+INTEGER :: istat
+
 INTEGER :: i
 INTEGER :: np (ipro)
 INTEGER :: int (merg)
@@ -320,27 +312,6 @@ file_laengs = ' '
 ! BERECHNUNGEN
 !------------------------------------------------------------------
 
-!write (*,*) 'Jetzt in QBORDV. lein = ', lein
-
-IF (lein.ne.3) then
-  ! ACHTUNG: Nur wenn Kontrolldatei NICHT aktiviert ist, wird eine neue aufgerufen!
-
-  ! Kontrollfile anlegen
-  jw8 = ju0gfu ()       		! Eine freie UNIT-Nummer suchen
-  ierr = 0
-  unit7 = fnam1
-  ilen = LEN_TRIM (unit7)
-  unit7 (ilen - 4:ilen - 1) = 'dath'
-  unit7 (ilen + 1:nch80) = 'Kontroll'
-  OPEN (UNIT = jw8, FILE = unit7, STATUS = 'REPLACE', IOSTAT = ierr)
-
-  write (*,1000)
-  1000 format (/1X, ' KONTROLL-Datei fuer Bordvollberechnung wird angelegt.', /)
-
-ENDIF
-
-!write (*,*) 'FNAM1 = ', fnam1
-!write (*,*) 'UNIT1 = ', unit1
 
 unit1 = fnam1
 
@@ -362,7 +333,6 @@ unit1 (ilen + 5:nch80) = '.tab'
 unit2 = unit1
 
 
-
 !JK   WENN STATIONAER-UNGLEICHFOERMIGE ABFLUSSVERHAELTNISSE
 !--------------------------------------------------------------------------------------------------
 IF (bordvoll.eq.'u') then
@@ -378,8 +348,10 @@ IF (bordvoll.eq.'u') then
   ianz = ifix ( (rqmax - rqmin) / qstep + 0.1)
   ianz = ianz + 1
 
-  ! anfangswert fuer q:
+  ! Zuweisung der Anzahl der Abfluesse zu dem globalen Modul MOD_ERG
+  anz_q = ianz
 
+  ! anfangswert fuer q:
   qvar = rqmin
   qschritt (1) = qvar
 
@@ -390,16 +362,16 @@ IF (bordvoll.eq.'u') then
 
   DO isch = 1, ianz
 
+    ! Zuweisung der Abfluss-Nummer zu dem globalen Modul MOD_ERG
+    nr_q = isch
+
     q = qvar
 
     nbv = 0
 
-    write (*, 1001) qvar
-    write (0, 1001) qvar
-    !JK SCHREIBEN IN KONTROLLFILE
-    IF (lein.eq.3) then
-      write (jw8, 1001) qvar
-    ENDIF
+    write (    *       , 1001) qvar
+    write (    0       , 1001) qvar
+    write (UNIT_OUT_LOG, 1001) qvar
     1001 format (//1X, '*************************************************', /, &
                  & 1X, 'Bordvoll-Berechung --> Q=', F10.3, ' m**3/s', /, &
                  & 1X, '*************************************************', /)
@@ -598,25 +570,25 @@ IF (bordvoll.eq.'u') then
 
     ENDIF
 
-    write (jw8, 1002) stat(ji), 'Q-Werte', 'Differenz', 'Kennung'
+    write (UNIT_OUT_LOG, 1002) stat(ji), 'Q-Werte', 'Differenz', 'Kennung'
     1002 format (//1X, '*****************************************************', /, &
                  & 1X, 'Ergebnisse Bordvollberechnung an Station ', f12.4, /, &
                  & 1X, '*****************************************************', //, &
                  & 1X, A12, A12, A12)
 
     DO isch = 1, ianz
-      WRITE (jw8, 1003) qschritt(isch), dif(isch), ikennung(isch,ji)
+      WRITE (UNIT_OUT_LOG, 1003) qschritt(isch), dif(isch), ikennung(isch,ji)
     END DO
     1003 format (1X, F12.3, F12.3, I12)
 
 
     IF (ikenn.ne.0) then
-      WRITE (jw8, 1004) ikenn, qschritt(ikenn)
+      WRITE (UNIT_OUT_LOG, 1004) ikenn, qschritt(ikenn)
       1004 format (/1X, '--> Bordvoll beim ',I4,'-ten Schritt mit Q-Bordvoll = ', F12.3, ' m3/s.')
       write (*,1005) stat(ji), qschritt(ikenn)
       1005 format (/1X, 'Bei Station ', F12.4, ' liegt bordvoller Abfluss bei Q = ', F12.3, ' m3/s')
     ELSE
-      WRITE (jw8, 1006)
+      WRITE (UNIT_OUT_LOG, 1006)
       1006 format (/1X, '--> Bordvoller Abfluss nicht gefunden!')
       write (*, 1007) stat(ji)
       1007 format (/1X, 'Achtung! Bordvoller Abfluss bei Station ', F12.4, ' nicht gefunden!')
@@ -750,8 +722,8 @@ IF (km.eq.'j') then
   ilen3 = LEN_TRIM (unit3)
   unit3 (ilen3 + 1:nch80) = '.ger'
 
-  iw11 = ju0gfu ()
-  OPEN (unit = iw11, file = unit3, status = 'unknown')
+  UNIT_OUT_GER = ju0gfu ()
+  OPEN (unit = UNIT_OUT_GER, file = unit3, status = 'unknown')
 
   unit4 = fnam1
   ilen4 = LEN_TRIM (unit4)
@@ -759,8 +731,8 @@ IF (km.eq.'j') then
   unit4 (ilen4 + 1:ilen4 + 4) = 'out.'
   unit4 (ilen4 + 5:nch80) = fluss
 
-  iw12 = ju0gfu ()
-  OPEN (unit = iw12, file = unit4, status = 'unknown')
+  UNIT_OUT_LOG_KM = ju0gfu ()
+  OPEN (unit = UNIT_OUT_LOG_KM, file = unit4, status = 'unknown')
 
   IF (bordvoll.ne."u") then
     qstep = 0.0
@@ -768,15 +740,17 @@ IF (km.eq.'j') then
     rqmin = 1.e-06
   ENDIF
 
+  ! WP Neue Ausgabe fuer die Berechnung der KM-Paramter --------------------
   call schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, fnam1, stat)
+  ! WP ---------------------------------------------------------------------
 
   ! ---------------------------------------------------------------
   ! AUFRUF KM-VERFAHREN
-  CALL bovog1 (iw11, iw12, nbv, qstep, rqmax, rqmin)
+  CALL bovog1 (nbv, qstep, rqmax, rqmin)
   ! ---------------------------------------------------------------
 
-  CLOSE (iw11)
-  CLOSE (iw12)
+  CLOSE (UNIT_OUT_GER)
+  CLOSE (UNIT_OUT_LOG_KM)
 
 ENDIF
 
@@ -852,8 +826,6 @@ pfad_qb2 = unit2
 CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, file_laengs)
 !ST ------------------------------------------------
 
-IF (lein.ne.3) close (jw8)
-                                                                        
 END SUBROUTINE qbordv
 
 
@@ -861,20 +833,31 @@ END SUBROUTINE qbordv
 
 !------------------------------------------------------------------------------------
 subroutine schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, fnam1, stat)
+!
+! Beschreibung:
+! -------------
+! Die Ergebnisse der Spiegellinienberechnung mit variablem Abfluss werden
+! für jedes einzelne Profil in die entsprechende *.km Datei im Ordner /PROF/
+! ausgegeben. Hierbei muss die die Berechnung von Kalinin-Miljukow-Parametern
+! aktiviert sein.
+!                              Wolf Plöger, 11.03.2006
+! -----------------------------------------------------------------------------------
 
 USE DIM_VARIABLEN
 USE AUSGABE_LAENGS
+USE MOD_ERG
+USE IO_UNITS
 
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN) 	:: ianz
-INTEGER, INTENT(IN) 	:: nprof
-REAL, INTENT(IN)        :: qstep
-REAL, INTENT(IN)        :: rqmax
-REAL, INTENT(IN)        :: rqmin
-CHARACTER(LEN=nch80), INTENT(IN) :: fnam1
-REAL, INTENT(IN)        :: stat(maxger)
+INTEGER, INTENT(IN) 	:: ianz                 ! Anzahl der Abfluesse
+INTEGER, INTENT(IN) 	:: nprof                ! Anzahl der Profile
+REAL, INTENT(IN)        :: qstep                ! Schrittweite der Abfluesse
+REAL, INTENT(IN)        :: rqmax                ! Maximaler Abfluss
+REAL, INTENT(IN)        :: rqmin                ! Minimaler Abfluss
+CHARACTER(LEN=nch80), INTENT(IN) :: fnam1       ! Pfad der Projektes
+REAL, INTENT(IN)        :: stat(maxger)         ! Stationierung der Profile
 
 
 ! COMMON-Block /DATEINAME_PROF/ ----------------------------------------------------
@@ -899,57 +882,107 @@ COMMON / prof / hwsp
 
 
 ! Local variables
-INTEGER :: i, j, ilen, ierr
+INTEGER :: i, j, ilen, istat, anz_prof_orig, nr_prof
 INTEGER :: ju0gfu
-INTEGER :: unit_out, unit_km_out
 CHARACTER(LEN=nch80) :: filename_out
 CHARACTER(LEN=nch80) :: datei_km_out
 REAL    :: I_wsp
+REAL  	:: Q_fluss_temp, Q_vorland_temp
+REAL  	:: A_fluss_temp, A_vorland_temp
+REAL  	:: B_fluss_temp, B_vorland_temp
+REAL    :: WSP_temp
 
-unit_out = ju0gfu ()
 
-filename_out = fnam1
-ilen = LEN_TRIM (filename_out)
-filename_out(ilen - 4:ilen - 1) = 'dath'
-filename_out(ilen + 1:ilen + 9) = 'unglf.out'
+! WP 13.03.2006, Bemerkungen
+! --------------------------
+! Bei unterschiedlichen Abfluessen können automatisch Profile interpoliert
+! worden sein (z.B. bei Bruecken, aber auch wenn keine Konvergenz erzielt werden kann).
+! Da die urspruengliche Variable fuer die Profilanzahl NPROF kein Array ist,
+! kann sie diese Variabilität nicht beruecksichtigen
+! Durch die Einfuehrung der globalen Variablen ANZ_PROF(i) wird jedem
+! Abflusszustand die Anzahl der Profile zugewisen.
+! Bei der Datenausgabe sollen *.KM-Dateien fuer die wirklich physikalisch
+! vorhandenen Profile ausgegeben werden.
 
-OPEN (UNIT = unit_out, FILE = filename_out, STATUS = 'REPLACE', IOSTAT=ierr)
-if (ierr /= 0) then
-  write (0, 9000) filename_out
-  write (*, 9000) filename_out
-  9000 format (1X, 'Problem beim Oeffnen der Ausgabedatei ', A)
-  return
-end if
+anz_prof_orig = 0     ! Anzahl der "echten" nicht-interpolierten Profile
 
-write (unit_out,1000) ianz, nprof, qstep, rqmax, rqmin
-1000 format (1X, 'IANZ  = ', I12, /, &
-           & 1X, 'NPROF = ', I12, /, &
-           & 1X, 'QSTEP = ', F12.3, /, &
-           & 1X, 'RQMAX = ', F12.3, /, &
-           & 1X, 'RQMIN = ', F12.3, /)
+! Fuer das Suchen der "echten" Profile reicht es, nur einen
+! Abfluss zu durchsuchen, da die Anzahl fuer alle Abfluesse
+! gleich sein muss.
+do i = 1, anz_prof(1)
 
-do i = 1, nprof
+  if (out_PROF(i,1)%interpol) cycle      ! Wenn Profil interpoliert
+
+  anz_prof_orig = anz_prof_orig + 1
+
+end do
+
+!write (*,*) ' Anzahl der original Profile = ', anz_prof_orig, ' Anzahl Abfluesse = ', anz_q
+
+!do i = 1, anz_prof_orig
+!  write (*,*) dateiname(i)
+!end do
+
+
+Schieben: do j = 1, anz_q
+
+  !write (*,*) ' Anzahl Profile bei Abfluss ', j, ' = ', anz_prof(j)
+
+  nr_prof = 1  ! Profil Nummer
+
+  do
+
+    if (nr_prof > anz_prof(j)) EXIT
+
+    if (out_PROF(nr_prof,j)%interpol) then
+      ! Bei Abfluss j ist Profil nr_prof interpoliert
+      ! -> verschieben aller Eintraege von out_PROF um ein Profil nach links
+      !write (*,*) 'In Profil ', nr_prof, ' muss bei Abfluss ', j, ' geschoben werden.'
+      call shift_left_array_out(nr_prof, j)
+
+      ! Nocheinmal von Anfang an durchgehen
+      nr_prof = 1
+
+      CYCLE
+
+    end if
+
+    nr_prof = nr_prof + 1
+
+  end do
+
+end do Schieben
+
+
+
+
+
+
+! -------------------------------------------------------------------------------------
+! Hauptschleife
+alle_profile: do i = 1, anz_prof_orig
 
   ilen = LEN_TRIM(dateiname(i))
   datei_km_out = dateiname(i)
   datei_km_out(ilen-2:ilen) = 'km '
-  unit_km_out = ju0gfu()
-  open (UNIT=unit_km_out, FILE=datei_km_out, STATUS='REPLACE', IOSTAT=ierr)
-  if (ierr /= 0) then
-    write (*,9001) datei_km_out
-    9001 format (/1X, 'Problem beim Oeffnen der KM-OUT Datei', A)
+  UNIT_OUT_KM = ju0gfu()
+
+  open (UNIT=UNIT_OUT_KM, FILE=datei_km_out, STATUS='REPLACE', IOSTAT=istat)
+  if (istat /= 0) then
+    write (*,9001) !datei_km_out
+    9001 format (/1X, 'Problem beim Oeffnen der KM-OUT Datei')
     CYCLE
   end if
 
-  write (unit_km_out, 1001) stat(i)
-  write (unit_out, 1001) stat(i)
+  write (UNIT_OUT_KM, 1001) stat(i)
   1001 format (1X, F12.4, '  Station [km]', /)
 
-  write (unit_km_out, 1002) 'NR', ' Wasserspiegel- ', '    Abfluss     ', '  Abfluss   ', '    Flaeche    ', '  Flaeche   ', &
+
+  write (UNIT_OUT_KM, 1002) 'NR', ' Wasserspiegel- ', '    Abfluss     ', '  Abfluss   ', '    Flaeche    ', '  Flaeche   ', &
                              &    '    Breite     ', '  Breite   ', ' Wasserspiegel- '
-  write (unit_km_out, 1002) ' ',  '     hoehe      ', '  Flussschlauch ', '  Vorland   ', ' Flussschlauch ', '  Vorland   ', &
+  write (UNIT_OUT_KM, 1002) ' ',  '     hoehe      ', '  Flussschlauch ', '  Vorland   ', ' Flussschlauch ', '  Vorland   ', &
                              &    ' Flussschlauch ', '  Vorland  ', '   gefaelle     '
-  write (unit_km_out, 1002) ' ',  '     [mNN]      ', '     [m3/s]     ', '   [m3/s]   ', '     [m2]      ', '    [m2]    ', &
+  write (UNIT_OUT_KM, 1002) ' ',  '     [mNN]      ', '     [m3/s]     ', '   [m3/s]   ', '     [m2]      ', '    [m2]    ', &
                              &    '      [m]      ',  '   [m]    ', '       [-]      '
   1002 format (1X, A5, 8A16)
 
@@ -964,22 +997,115 @@ do i = 1, nprof
     ! aktuellem und unterhalb liegendem Profil.
     if (i == 1) then
       ! Falls es sich um das erste Profil eines Abschnittes handelt
-      I_wsp = (hwsp(j,i+1)-hwsp(j,i)) / (1000.0 * ABS(stat(i+1)-stat(i)))
+      I_wsp = (out_PROF(i+1,j)%wsp - out_PROF(i,j)%wsp) / (1000.0 * ABS (out_PROF(i+1,j)%stat - out_PROF(i,j)%stat) )
     else
       ! Fuer alle anderen Profile
-      I_wsp = (hwsp(j,i) - hwsp(j,i-1)) / (1000.0 * ABS(stat(i)-stat(i-1)))
+      I_wsp = (out_PROF(i,j)%wsp - out_PROF(i-1,j)%wsp) / (1000.0 * ABS (out_PROF(i,j)%stat - out_PROF(i-1,j)%stat) )
     end if
 
-    write (unit_km_out, 1003) j, hwsp(j,i), qq(j,i), qvor(j,i), fb(j,i), fvor(j,i), bb(j,i), bvor(j,i), I_wsp
+    WSP_temp = out_PROF(i,j)%wsp
+
+    Q_fluss_temp = out_IND(i,j,2)%Q
+    Q_vorland_temp = out_IND(i,j,1)%Q + out_IND(i,j,3)%Q
+    A_fluss_temp = out_IND(i,j,2)%A
+    A_vorland_temp = out_IND(i,j,1)%A + out_IND(i,j,3)%A
+    B_fluss_temp = out_IND(i,j,2)%B
+    B_vorland_temp = out_IND(i,j,1)%B + out_IND(i,j,3)%B
+
+    !write (UNIT_OUT_KM, 1003) j, hwsp(j,i), qq(j,i), qvor(j,i), fb(j,i), fvor(j,i), bb(j,i), bvor(j,i), I_wsp
+    write (UNIT_OUT_KM, 1003) j, WSP_temp, &
+                            & Q_fluss_temp, Q_vorland_temp, &
+                            & A_fluss_temp, A_vorland_temp, &
+                            & B_fluss_temp, B_vorland_temp, &
+                            & I_wsp                           
     1003 format (1X, I5, F16.4, F16.4, F16.4, F16.4, F16.4, F16.4, F16.4, F16.10)
 
   end do Alle_Abfluesse
 
-  close (unit_km_out)
+  close (UNIT_OUT_KM)
 
-end do
+end do alle_profile
 
-close (unit_out)
 
 end subroutine schreib_erg_stat_unglf
+
+
+
+!------------------------------------------------------------------------------------
+subroutine shift_left_array_out(nr_prof, j)
+!
+! Beschreibung:
+! -------------
+! Aufgrund der Komplexitaet der verwendeten Berechnungsmethoden, werden
+! in bestimmten Faellen (z.B. Bruecken) Profile interpoliert. Die Anzahl
+! der interpolierten Profile haengt von dem jeweiligen Abflussereignis.
+!
+! AbflussNr   Stat[km]  Stat[km]  Stat[km]  Stat[km] Stat[km]  Stat[km]  Stat[km]  Stat[km]
+!    1         1.000     1.500     1.520     1.600    1.980     2.000     2.020     2.500
+!    2         1.000     1.500     1.600     1.980    2.000     2.020     2.500
+!    3         1.000     1.500     1.600     2.000    2.500
+!    4         1.000     1.500     1.520     1.600    1.980     2.000     2.500
+!    5         1.000     1.500     1.600     1.980    2.000     2.500
+!
+! In diesem Beispiel sind alle ungeraden Werte (1.520, 1.980, 2.020)
+! interpolierte Profile. Die Urspruenglich 5 Profile wurden bei Abfluss
+! Nr. 1 auf 8 Profile erweitert.
+! Fuer die Ausgabe von WQ-Beziehungen bzw. Tabellen fuer die Kalinin-Miljukow
+! Berechnung muessen die interpolierten Werte entfernt werden und der
+! Rest der Zeile nach links geschoben werden.
+!
+!                              Wolf Plöger, 11.03.2006
+! -----------------------------------------------------------------------------------
+
+USE MOD_ERG
+
+implicit none
+
+! Calling variables
+INTEGER, INTENT(IN) :: nr_prof
+INTEGER, INTENT(IN) :: j
+
+! Local variables
+INTEGER :: i, k
+
+! Ausgehend von dem zu loeschenden Eintrag nr_prof werden alle folgenden Eintraege
+! im Array nach links verschoben
+do i = nr_prof, anz_prof(j)-1
+
+  do k = 1, 3
+    out_IND(i,j,k)%lambda = out_IND(i+1,j,k)%lambda
+    out_IND(i,j,k)%formb  = out_IND(i+1,j,k)%formb
+    out_IND(i,j,k)%A      = out_IND(i+1,j,k)%A
+    out_IND(i,j,k)%B      = out_IND(i+1,j,k)%B
+    out_IND(i,j,k)%lu     = out_IND(i+1,j,k)%lu
+    out_IND(i,j,k)%v      = out_IND(i+1,j,k)%v
+    out_IND(i,j,k)%Q      = out_IND(i+1,j,k)%Q     
+  end do
+
+  out_PROF(i,j)%stat 	= out_PROF(i+1,j)%stat
+  out_PROF(i,j)%wsp 	= out_PROF(i+1,j)%wsp
+  out_PROF(i,j)%hen 	= out_PROF(i+1,j)%hen
+  out_PROF(i,j)%sohle 	= out_PROF(i+1,j)%sohle
+  out_PROF(i,j)%qges 	= out_PROF(i+1,j)%qges
+  out_PROF(i,j)%h_bv 	= out_PROF(i+1,j)%h_bv
+  out_PROF(i,j)%boeli 	= out_PROF(i+1,j)%boeli
+  out_PROF(i,j)%boere 	= out_PROF(i+1,j)%boere
+  out_PROF(i,j)%tau 	= out_PROF(i+1,j)%tau
+  out_PROF(i,j)%hvm 	= out_PROF(i+1,j)%hvm
+  out_PROF(i,j)%hrm 	= out_PROF(i+1,j)%hrm
+  out_PROF(i,j)%hein 	= out_PROF(i+1,j)%hein
+  out_PROF(i,j)%hort 	= out_PROF(i+1,j)%hort
+  out_PROF(i,j)%hm 	= out_PROF(i+1,j)%hm 
+  out_PROF(i,j)%interpol= out_PROF(i+1,j)%interpol
+end do
+
+anz_prof(j) = anz_prof(j) - 1
+
+!write (*,*)
+!write (*,*) ' Nach Verschiebung noch ',anz_prof(j),' uebrig:'
+!do i = 1, anz_prof(j)
+!  write (*,*) i,' station = ', out_PROF(i,j)%stat
+!end do
+
+end subroutine shift_left_array_out
 
