@@ -15,8 +15,9 @@
   Navigation leicht zwischen den einzelnen Seiten des Assistenten wechseln zu
   können, als besonders hilfreich.</para>
 
-  <para>Die Datenkontrollen und -eingaben sind abgestimmt auf den nächsten
-  Berechnungsschritt und berücksichtigen dessen Notwendigkeiten.</para>
+  <para>Die Datenkontrollen und -eingaben sind jeweils auf den nächsten
+  Berechnungsschritt abgestimmt und berücksichtigen dessen
+  Notwendigkeiten.</para>
 
   <section id="SA_Assi_Bode_01_Steuerparams">
     <title>Steuerparameter</title>
@@ -27,7 +28,7 @@
       <secondary>Bode</secondary>
     </indexterm>
 
-    <para>Auf der nächsten Seite des Assistenten (siehe <xref
+    <para>Auf der zweiten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Bode_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
     Rechenvarianten generiert. Bei fortgeführten oder kopierten
