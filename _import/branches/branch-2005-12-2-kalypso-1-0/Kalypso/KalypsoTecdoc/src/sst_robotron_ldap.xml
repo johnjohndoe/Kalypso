@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="robotron-ldap" vendor="sachsen-anhalt">
-  <title>Benutzerdienst: LDAP, Szenario, usw.</title>
-
-  <para>KALYPSO unterstützt folgende Benutzerklassen:</para>
-
-  <itemizedlist>
-    <listitem>
-      <para>Vorhersage</para>
-    </listitem>
-
-    <listitem>
-      <para>Experte und</para>
-    </listitem>
-
-    <listitem>
-      <para>Administration.</para>
-    </listitem>
-  </itemizedlist>
-
-  <para>In der HVZ wird das Recht <quote>Modellierer</quote> an Benutzer
-  vergeben, die KALYPSO Experten bzw. Administratoren sind. Weitere
-  feingranulierte Benutzerrechte werden nicht benötigt. Die Client-Anwendung
-  passt die Oberfläche automatisch an die Benutzerklassen eines Benutzers
-  an.</para>
-
-  <para>Der SDK bietet standardmäßig Klassen und Methoden, um auf einem
-  Verzeichnisdienst zugreifen zu können. Es werden also keine besondere
-  Java-Bibliotheken benötigt.</para>
-
-  <para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
-  Szenario-Einstellungen werden in der Konfigurationsdatei der KALYPSO User
-  Dienst vorgenommen.</para>
+	<title>Benutzerdienst: LDAP, Szenario, usw.</title>
+	
+	<para>KALYPSO unterstützt folgende Benutzerklassen:</para>
+	
+	<itemizedlist>
+		<listitem>
+			<para>Vorhersage</para>
+		</listitem>
+		
+		<listitem>
+			<para>Experte und</para>
+		</listitem>
+		
+		<listitem>
+			<para>Administration.</para>
+		</listitem>
+	</itemizedlist>
+	
+	<para>In der HVZ wird das Recht
+		<quote>Modellierer</quote> an Benutzer vergeben, die KALYPSO Experten bzw.
+		Administratoren sind. Weitere feingranulierte Benutzerrechte werden nicht
+		benötigt. Die Client-Anwendung passt die Oberfläche automatisch an die
+		Benutzerklassen eines Benutzers an.</para>
+	
+	<para>Zusätzlich wird der Flag
+		<quote>Simulation</quote> ausgewertet. Ist der Flag gesetzt, darf sich
+	der Benutzer nur im Simulationsbetrieb anmelden. Sonst darf er sich im Normalbetrieb und
+	im SImulationsbetrieb anmelden.</para>
+	
+	<para>Der SDK bietet standardmäßig Klassen und Methoden, um auf einem
+		Verzeichnisdienst zugreifen zu können. Es werden also keine besondere
+		Java-Bibliotheken benötigt.</para>
+	
+	<para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
+		Szenario-Einstellungen werden in die Konfigurationsdateien die im
+		Konfigurationsverzeichnis des Kalypso User Dienst vorgenommen. Der Pfad lautet:
+		<filename> TOMCAT_HOME\webapps\webdav\srvconf\IUSerService
+		</filename>.
+	</para>
 </section>
