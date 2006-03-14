@@ -7,6 +7,7 @@ import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 
 import de.psi.go.lhwz.PSICompact;
 
@@ -27,7 +28,33 @@ public final class PSICompactFactory
 
   private static Calendar m_psiCalendar = null;
 
+  /**
+   * Kennzeichen der Zeitzone in welche PSICompact operiert
+   */
   private static final String TIMEZONE_ID = "TIMEZONE_ID";
+
+  /**
+   * der Kalender-Field im Sinne von java.util.Calendar worauf die AMOUNT_BEFORE und AMOUNT_AFTER sich beziehen.
+   */
+  private static final String OVERWRITE_CALENDAR_FIELD = "OVERWRITE_CALENDAR_FIELD";
+
+  /**
+   * Anzahl an Zeit-Einheiten die vor der Begin einer Zeitreihe mit OVERWRITE_VALUE überschrieben werden, bevor die
+   * Zeitreihe in PSICompact zurückgeschrieben wird
+   */
+  private static final String OVERWRITE_AMOUNT_BEFORE = "OVERWRITE_AMOUNT_BEFORE";
+
+  /**
+   * Anzahl an Zeit-Einheiten die nach der Ende einer Zeitreihe mit OVERWRITE_VALUE überschrieben werden, bevor die
+   * Zeitreihe in PSICompact zurückgeschrieben wird
+   */
+  private static final String OVERWRITE_AMOUNT_AFTER = "OVERWRITE_AMOUNT_AFTER";
+
+  /**
+   * Überschreibungswert um die Zeitreihe so zu markieren, dass keine Darstellung der entsprechende Werte bei
+   * Betrachtung im Web (Informationsmanagementsystem) erfolgt
+   */
+  private static final String OVERWRITE_VALUE = "OVERWRITE_VALUE";
 
   /**
    * Returns the connection to the PSI-Interface implementation.
@@ -73,9 +100,6 @@ public final class PSICompactFactory
     return m_psiCompact;
   }
 
-  /**
-   * @return factory properties
-   */
   public final static Properties getProperties()
   {
     if( m_factoryProperties == null )
@@ -91,9 +115,29 @@ public final class PSICompactFactory
 
     return m_psiCalendar;
   }
-  
+
   public final static String toKalypsoRight( final String psiRight )
   {
     return getProperties().getProperty( "RIGHT_" + psiRight );
+  }
+  
+  public final static double getOverwriteValue()
+  {
+    return Double.parseDouble( getProperties().getProperty( OVERWRITE_VALUE ) );
+  }
+
+  public final static int getOverwriteAmountBefore()
+  {
+    return Integer.parseInt( getProperties().getProperty( OVERWRITE_AMOUNT_BEFORE ) );
+  }
+  
+  public final static int getOverwriteAmountAfter()
+  {
+    return Integer.parseInt( getProperties().getProperty( OVERWRITE_AMOUNT_AFTER ) );
+  }
+  
+  public final static int getOverwriteCalendarField()
+  {
+    return CalendarUtilities.getCalendarField( getProperties().getProperty( OVERWRITE_CALENDAR_FIELD ) );
   }
 }

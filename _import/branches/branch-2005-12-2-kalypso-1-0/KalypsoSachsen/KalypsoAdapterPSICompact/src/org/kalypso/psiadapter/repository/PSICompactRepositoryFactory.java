@@ -129,28 +129,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   }
 
   /**
-   * Helper that returns the appropriate archive type depending on the measure type.
-   * 
-   * @param measType
-   * @return archive type
-   */
-  public final static int measureTypeToArchiveType( int measType )
-  {
-    switch( measType )
-    {
-    case PSICompact.MEAS_RAINFALL:
-      return PSICompact.ARC_MIN15;
-    //      PSICompact.ARC_HOUR;
-    default:
-      return PSICompact.ARC_MIN15;
-    }
-  }
-
-  /**
    * Helper für die Übersetzung des valueType in eine leesbare String
-   * 
-   * @param valueType
-   * @return string
    */
   public final static String valueTypeToString( int valueType )
   {
@@ -171,9 +150,6 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
   /**
    * Helper für die Übersetzung des 'Unit' (ObjectMetaData) in eine leesbare String
-   * 
-   * @param unit
-   * @return string
    */
   private final static String unitToString( final int unit )
   {
@@ -200,9 +176,6 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
   /**
    * Creates the adequate converter between psi and kalypso units
-   * 
-   * @param psiUnit
-   * @param kalypsoUnit
    * @return adequate converter
    */
   public final static IValueConverter getConverter( final int psiUnit, final String kalypsoUnit )

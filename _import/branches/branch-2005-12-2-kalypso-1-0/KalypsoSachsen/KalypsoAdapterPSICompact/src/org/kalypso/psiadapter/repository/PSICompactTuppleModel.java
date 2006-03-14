@@ -93,21 +93,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Generiert mehr Daten mit dem angegebenen Wert amountOfBefore/calendarField vor und amountOfAfter/calendarField nach
-   * dem Originalzeitraum.
-   *
-   * @param amountOfBefore Anzahl an Zeit vor dem Originalzeitraum
-   * @param amoutOfAfter Anzahl an Zeit nach dem Originalzeitraum
-   * @param calendarField Zeiteinheit worauf amountOf* sich beziehen
-   */
-  public static PSICompactTuppleModel copyModelWithOverwrite( final ITuppleModel values, final IValueConverter vc,
-      final int amountOfBefore, final int amoutOfAfter, final int calendarField )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * Helper that creates ArchiveData[] having a ITuppleModel
    * 
    * @param vc

@@ -1,7 +1,10 @@
 package org.kalypso.psiadapter.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
 import org.kalypso.ogc.sensor.DateRange;
@@ -203,25 +206,6 @@ public class PSICompactObservationItem implements IObservation
   }
 
   /**
-   * @return welche Archivtyp benutzt werden soll
-   */
-  private int measureTypeToArchiveType()
-  {
-    int measType = PSICompact.MEAS_UNDEF;
-
-    try
-    {
-      measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
-    }
-    catch( final ECommException e )
-    {
-      e.printStackTrace();
-    }
-
-    return PSICompactRepositoryFactory.measureTypeToArchiveType( measType );
-  }
-
-  /**
    * @return das Werttyp dieser Zeitreihe
    */
   private String valueTypeToString()
@@ -285,7 +269,7 @@ public class PSICompactObservationItem implements IObservation
       m_to = dr.getTo();
 
       final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
-          measureTypeToArchiveType(), m_from, m_to );
+          PSICompact.ARC_MIN15, m_from, m_to );
 
       m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
@@ -302,17 +286,17 @@ public class PSICompactObservationItem implements IObservation
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
-    // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
-    // überschrieben werden --> sonst Internet Darstellung kann misst sein
-    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModelWithOverwrite( values, m_vc, -48, 48,
-        Calendar.HOUR_OF_DAY );
-
+    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, m_vc );
+        
     if( model.getCount() > 0 )
     {
+    // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
+    // überschrieben werden --> sonst Internet Darstellung kann misst sein
+      final ArchiveData[] data = extendForOverwrite( model.getData() );
+      
       try
       {
-        final ArchiveData[] data = model.getData();
-        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
+        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15,
             data[0].getTimestamp(), data );
 
         // this observation has changed
@@ -323,6 +307,47 @@ public class PSICompactObservationItem implements IObservation
         throw new SensorException( e );
       }
     }
+  }
+  
+  /**
+   * Erweitert die Zeitreihe damit sie mit Überschreibungswerte versehen wird.
+   */
+  private ArchiveData[] extendForOverwrite( ArchiveData[] data )
+  {
+    final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
+    cal.setTime( data[0].getTimestamp() );
+    cal.add( PSICompactFactory.getOverwriteCalendarField(), -PSICompactFactory.getOverwriteAmountBefore() );
+    final Date begin = cal.getTime();
+    
+    cal.setTime( data[data.length - 1].getTimestamp() );
+    cal.add( PSICompactFactory.getOverwriteCalendarField(), PSICompactFactory.getOverwriteAmountAfter() );
+    final Date end = cal.getTime();
+
+    final List list = new ArrayList( data.length * 2 );
+
+    final double value = PSICompactFactory.getOverwriteValue();
+    
+    // insert overwrite values until begin is reached
+    cal.setTime( begin );
+    while( cal.getTime().before( data[0].getTimestamp() ) )
+    {
+      list.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_UNDEF, value ) );
+      cal.add( Calendar.MINUTE, 15 );
+    }
+    
+    // insert original values
+    list.addAll( Arrays.asList( data ) );
+    
+    // insert overwrite values until end is reached
+    cal.setTime( data[data.length - 1].getTimestamp() );
+    cal.add( Calendar.MINUTE, 15 );
+    while( cal.getTime().before( end ) )
+    {
+      list.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_UNDEF, value ) );
+      cal.add( Calendar.MINUTE, 15 );
+    }
+    
+    return (ArchiveData[])list.toArray( new ArchiveData[list.size()] );
   }
 
   /**
