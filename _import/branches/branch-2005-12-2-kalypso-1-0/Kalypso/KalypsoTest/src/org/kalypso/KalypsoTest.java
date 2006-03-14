@@ -32,34 +32,19 @@ package org.kalypso;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.bind.JAXBException;
-
 import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.lhwsachsenanhalt.tubig.TubigUrlCatalog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -71,7 +56,7 @@ public class KalypsoTest
 {
   private static boolean init = false;
 
-  public static void init() throws IOException, TypeRegistryException, JAXBException
+  public static void init() throws IOException
   {
     if( init )
       return;
