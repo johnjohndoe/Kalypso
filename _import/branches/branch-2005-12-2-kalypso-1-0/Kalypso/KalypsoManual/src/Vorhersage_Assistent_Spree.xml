@@ -31,12 +31,12 @@
     Eintrag kann vom Benutzer angepasst werden.</para>
 
     <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
-    einer neuen Rechenvariante automatisch auf die letzte volle Stunde der
-    aktuellen Uhrzeit gesetzt. Bis zu diesem Zeitpunkt werden ggf. die
-    Messwerte aus der Zeitreihenablage geholt. Dieser Eintrag kann vom
-    Benutzer angepasst werden. Der Endzeitpunkt der Vorhersage wird durch das
-    Modell bestimmt und liegt 48 Stunden nach dem <guilabel>Start der
-    Vorhersage</guilabel>.</para>
+    einer neuen Rechenvariante automatisch auf den letzten gültigen
+    Startzeitpunkt für die Modellrechnung der Spree gesetzt (1h, 4h, ...,
+    22h). Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der
+    Zeitreihenablage geholt. Der Eintrag kann vom Benutzer angepasst werden.
+    Der Endzeitpunkt der Vorhersage wird durch das Modell bestimmt und liegt
+    48 Stunden nach dem <guilabel>Start der Vorhersage</guilabel>.</para>
 
     <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
     <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
@@ -75,7 +75,7 @@
     Eingangsdaten durch den Benutzer. Die Zeitreihen setzen sich aus
     Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen sind
     abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
-    linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
+    linkend="tabellen_kennzeichnung" />). Der Vorhersage-Assistent ist so
     aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
     (<xref linkend="spree_eingangsdaten" />):</para>
 
@@ -85,7 +85,8 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_4.png" scale="30" />
+            <imagedata fileref="img/wizard/sachsen/spree_kontrolle_niederschlag.png"
+                       scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -93,10 +94,14 @@
 
     <orderedlist>
       <listitem>
-        <para>Niederschlagszeitreihen für die N-A-Modelle innerhalb des
-        Einzugsgebietes</para>
+        <para>Gemessene Niederschläge an Ombrometerstationen im Einzugsgebiet
+        der Spree</para>
+      </listitem>
 
-        <para>(Schirgiswalde, Bautzen, Gröditz 1, Jänkendorf, Särichen)</para>
+      <listitem>
+        <para>Niederschlagszeitreihen für die N-A-Modelle innerhalb des
+        Einzugsgebietes (Schirgiswalde, Bautzen, Gröditz 1, Jänkendorf,
+        Särichen)</para>
       </listitem>
 
       <listitem>
@@ -109,10 +114,9 @@
       </listitem>
 
       <listitem>
-        <para>Abflusswerte für die Abzweige / Überleitungen</para>
-
-        <para>(Abzweig Kleine Spree, Zuleiter Restloch Bärwalde, Zuleitung
-        Restloch Lohsa II, Überleitung Restlochkette)</para>
+        <para>Abflusswerte für die Abzweige / Überleitungen (Abzweig Kleine
+        Spree, Zuleiter Restloch Bärwalde, Zuleitung Restloch Lohsa II,
+        Überleitung Restlochkette)</para>
       </listitem>
 
       <listitem>
@@ -127,6 +131,38 @@
     auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
     Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
     <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
+  </section>
+
+  <section>
+    <title>Berechnung des Gebietsniederschlag</title>
+
+    <para>Ein Spezialfall ist die Anzeige der Niederschlagszeitreihen für die
+    N-A-Modelle innerhalb des Einzugsgebietes (Seite <quote>Kontrolle
+    Niederschlag - Eingabepegel (NA Modelle)</quote> ). Diese Ganglinien
+    wurden beim Erstellen der Rechenvariante automatisch anhand eines
+    Gebietsniederschlagmodells aus den Niederschlagmessungen sowie den
+    DWD-Rastervorhersagen zusammengesetzt.</para>
+
+    <para>Fall die gemesssenen Niederschlagswerte nachträglich vom Benutzer
+    angepasst wurde (auf der vorhergehenden Seite des Assistenten), müssen
+    diese erneut in die Gebietsniederschläge übernommen werden. Zu diesem
+    Zweck dient der Schalter <guilabel>Neuberechnung
+    Gebietsniederschlag</guilabel> auf dieser Seite des Assistenten (siehe
+    <xref linkend="spree_eingangsdaten_namodell" />).</para>
+
+    <figure id="spree_eingangsdaten_namodell">
+      <title>Kontrolle und Neuberechnung Niederschlag - Eingabepegel
+      (NA-Modelle)</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/spree_kontrolle_niederschlag_namodelle.png"
+                       scale="40" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
   </section>
 
   <section id="spree_berechnung_vorhersage">
@@ -163,7 +199,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_9a.png" scale="30" />
+            <imagedata fileref="img/wizard/sachsen/spree_9a.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -226,7 +262,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_12.png" scale="30" />
+            <imagedata fileref="img/wizard/sachsen/spree_12.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -279,10 +315,10 @@
     alle Pegel des Modells auf dem Server abgelegt.</para>
 
     <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
-    <guimenu>Export Prognosen</guimenu> in das Informations-Management-System
-    (PSI-Compact) gespeichert werden. Es erscheint ein Auswahlfenster, in dem
-    diejenigen Ausgabequerschnitte gewählt werden können, für die Zeitreihen
-    herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
-    Vorhersage-Zeitraum.</para>
+    <guimenu>Vorhersagen Exportieren</guimenu> in das
+    Informations-Management-System (PSI-Compact) gespeichert werden. Es
+    erscheint ein Auswahlfenster, in dem diejenigen Ausgabequerschnitte
+    gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
+    Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
   </section>
 </section>
