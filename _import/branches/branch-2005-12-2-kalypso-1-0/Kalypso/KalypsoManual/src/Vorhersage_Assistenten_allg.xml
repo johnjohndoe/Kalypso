@@ -116,6 +116,8 @@
     <figure id="pic_SA_Assi_allg_02_Startseite">
       <title>KALYPSO-Startseite</title>
 
+      <!--PROFILING ANFANG-->
+
       <mediaobject vendor="sachsen">
         <imageobject>
           <imagedata align="center"
@@ -131,6 +133,8 @@
                      format="PNG" scale="30" />
         </imageobject>
       </mediaobject>
+
+      <!--PROFILING ENDE-->
     </figure>
 
     <para>Im linken Teil der Startseite, die nach dem Anmelden erscheint, wird
@@ -239,14 +243,10 @@
     benötigten Dateien werden im lokalen Arbeitsverzeichnis gespeichert. Im
     weiteren Verlauf besteht die Möglichkeit, die derzeit bearbeitete
     Rechenvariante auf dem Server zu archivieren und somit für die anderen
-    Nutzer zugänglich zu machen ( siehe <xref
-    linkend="SA_Assi_Ilse_05_Berichtsablage_VarianteArchivieren" />, <xref
-    linkend="SA_Assi_Bode_12_Berichtsablage_Pegel_VarianteArchivieren" /> ,
-    <xref linkend="SA_Assi_Saale_05_Berichtsablage_VarianteArchivieren" /> ).
-    Rechenvarianten können auch über <guilabel>Vorhersagen
-    verwalten</guilabel> auf dem Server archiviert werden (siehe <xref
-    linkend="SA_Assi_allg_03_VorhersagenVerw" />). Dieser Dialog kann auch
-    über <menuchoice>
+    Nutzer zugänglich zu machen. Rechenvarianten können auch über
+    <guilabel>Vorhersagen verwalten</guilabel> auf dem Server archiviert
+    werden (siehe <xref linkend="SA_Assi_allg_03_VorhersagenVerw" />). Dieser
+    Dialog kann auch über <menuchoice>
         <guimenu>Modell</guimenu>
 
         <guisubmenu>Vorhersagen verwalten</guisubmenu>

@@ -2,141 +2,70 @@
 <section id="spree_view_prognose" vendor="sachsen">
   <title>Vorhersagemodell Spree</title>
 
-  <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Spree ist
-  in der KALYPSO-Oberfläche ein Wizard implementiert. Unabhängig von den ihm
-  zugeordneten Rechten wird der Benutzer direkt bei dem Programmstart in den
-  Vorhersagemodus geführt (<xref linkend="spree_startbildschirm" />). Für
-  Benutzer mit erweiterten Rechten ist es jederzeit möglich, aus dem
-  Expertenmodus in den Vorhersagemodus zu wechseln (Menü
-  <guimenu>Modell</guimenu> <guimenu>-&gt; Vorhersage
-  durchführen</guimenu>).</para>
+  <section id="spree_2">
+    <title>Eingabe der Steuerparameter</title>
 
-  <figure id="spree_startbildschirm">
-    <title id="dummy">Startbildschirm Vorhersagemodus</title>
+    <para>Auf der zweiten Seite des Assistenten (siehe <xref
+    linkend="spree_steuerparameter" />) werden verschiedene Informationen
+    angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
+    generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
+    die Einträge denen der ursprünglichen Rechenvariante.</para>
 
-    <screenshot>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/wizard/sachsen/spree_1.png" scale="30" />
-        </imageobject>
-      </mediaobject>
-    </screenshot>
-  </figure>
+    <figure id="spree_steuerparameter">
+      <title>Eingabe der Steuerparameter</title>
 
-  <para>Beim Start des Vorhersage-Wizards öffnet sich eine Maske, in der dem
-  Benutzer drei verschiedene Möglichkeiten gegeben werden, Vorhersagen
-  durchzuführen:</para>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/spree_3.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
 
-  <section id="spree_1">
-    <title>Neue Hochwasservorhersage anlegen</title>
+    <para>Der <guilabel>Start der Simulation</guilabel> gibt den Beginn der
+    Simulationsrechnung an. Ab diesem Zeitpunkt werden ggf. die Messwerte aus
+    der Zeitreihenablage geholt. <guibutton>Start der Simulation</guibutton>
+    wird beim Erzeugen einer neuen Rechenvariante standardmäßig auf zwei Tage
+    (48h) vor <guilabel>Start der Vorhersage</guilabel> gesetzt. Dieser
+    Eintrag kann vom Benutzer angepasst werden.</para>
 
-    <para>Mit der Option <guibutton>einen neuen Rechenfall
-    erzeugen</guibutton> wird eine neue Rechenvariante angelegt. Die
-    Bezeichnung der Rechenvariante ist vom Benutzer frei wählbar und wird
-    unter dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit
-    der Bestätigung durch Klick auf <guibutton>Weiter</guibutton> erfolgt die
-    Aufforderung zur Eingabe der Steuerparameter (<xref
-    linkend="spree_steuerparameter" />).</para>
+    <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
+    einer neuen Rechenvariante automatisch auf die letzte volle Stunde der
+    aktuellen Uhrzeit gesetzt. Bis zu diesem Zeitpunkt werden ggf. die
+    Messwerte aus der Zeitreihenablage geholt. Dieser Eintrag kann vom
+    Benutzer angepasst werden. Der Endzeitpunkt der Vorhersage wird durch das
+    Modell bestimmt und liegt 48 Stunden nach dem <guilabel>Start der
+    Vorhersage</guilabel>.</para>
 
-    <section id="spree_2">
-      <title>Steuerparameter</title>
+    <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
+    <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
+    ein <guilabel>Kommentar</guilabel> und der
+    <guilabel>Erstellungszeitpunkt</guilabel> eingetragen. Beim Erzeugen einer
+    neuen Rechenvariante werden diese Felder mit Standard-Werten belegt. Ein
+    detailliertes Ausfüllen dieser Metadaten erleichtert das weitere Arbeiten
+    mit der erzeugten Rechenvariante. Jeder dieser Einträge kann vom Benutzer
+    geändert werden. Der Eintrag zum <guilabel>Szenario</guilabel>
+    (<quote>Normalbetrieb</quote> oder <quote>Testbetrieb</quote>) dient zur
+    Information darüber, welchem Szenario die Rechenvariante zugeordnet ist.
+    Dieser Eintrag ist unveränderlich und spiegelt den bei der Erstellung
+    gewählten Betriebsmodus wider.</para>
 
-      <figure id="spree_steuerparameter">
-        <title>Eingabe der Steuerparameter</title>
+    <para>Ein aktiviertes Kontrollkästchen <guilabel>Zeitreihen
+    aktualisieren</guilabel> bewirkt, dass beim Übergang auf die nächste Seite
+    des Assistenten die vom Modell benötigten Messwerte für die Zeit vom
+    <guilabel>Start der Simulation</guilabel> bis zum <guilabel>Start der
+    Vorhersage</guilabel> aus der Zeitreihenablage geholt werden (Niederschlag
+    an den Niederschlagsstationen, Wasserstand und W/Q-Beziehung an den
+    Pegeln). Außerdem werden leere Zeitreihen für den Gebietsniederschlag
+    generiert. Gleichzeitig wird der Gebietsniederschlag entsprechend des
+    Gebietsniederschlagsmodells berechnet. Ist das Kontrollkästchen nicht
+    aktiviert, werden die Zeitreihen nicht geholt bzw. nicht aktualisiert. Nur
+    beim Anlegen einer neuen Rechenvariante ist dieses Kästchen standardmäßig
+    aktiviert.</para>
 
-        <screenshot>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/wizard/sachsen/spree_3.png" scale="30" />
-            </imageobject>
-          </mediaobject>
-        </screenshot>
-      </figure>
-
-      <itemizedlist>
-        <listitem>
-          <para><emphasis>Start der Simulation</emphasis></para>
-
-          <para>Der Startzeitpunkt der Simulation wird vom Programm
-          standardmäßig auf 2 Tage (48 h) vor Beginn der Vorhersage gesetzt
-          (vom Benutzer editierbar).</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis>Start der Vorhersage</emphasis></para>
-
-          <para>Beschreibt den Zeitpunkt an dem das Modell die Vorhersage
-          startet, dieser wird automatisch vom Programm gesetzt und sollte
-          nicht editiert werden. Der Endzeitpunkt der Vorhersageberechnung
-          wird durch die Dauer des in den Prognosedaten enthaltenen Zeitraums
-          bestimmt. Die Berechnung endet im längsten Fall 48 h nach Beginn der
-          Vorhersage.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis>Metadaten</emphasis></para>
-
-          <para>Sind vom Anwender optional anzugebende Daten zur Beschreibung
-          und Erläuterung des Rechenfalls. Sie werden beim Speichern des
-          Rechenfalls abgelegt, sind aber nicht notwendig zur Durchführung
-          einer Berechnung.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis>Zeitreihen aktualisieren</emphasis></para>
-
-          <para>Bei Aktivierung dieser Option werden die zur Berechnung
-          notwendigen Zeitreihen neu in das Programm eingelesen. Dies ist
-          allerdings nur sinnvoll bei Vorführung oder Neuberechnung eines
-          bereits angelegten Hochwassers. Beim Anlegen eines neuen Rechenfalls
-          werden die Zeitreihen immer neu eingelesen (auch bei deaktiviertem
-          Kästchen). Die Bestätigung der getätigten Angaben erfolgt über den
-          Klick auf <guibutton>Weiter</guibutton>.</para>
-        </listitem>
-      </itemizedlist>
-    </section>
-  </section>
-
-  <section>
-    <title>Fortführen einer Rechenvariante</title>
-
-    <para>Durch die Wahl der Option <emphasis role="bold">einen bereits
-    vorhandenen Rechenfall fortführen</emphasis> wird dem Benutzer die
-    Möglichkeit gegeben, eine zuvor berechnete und gespeicherte
-    Hochwasserprognose erneut zu laden und die Berechnungen zu aktualisieren
-    bzw. fortzuführen (bspw. bei Vorhandensein aktueller Prognosedaten). Nach
-    Auswahl der Option erscheint ein Auswahlfenster, in dem alle gespeicherten
-    Rechenläufe angezeigt werden. Nach Markieren des entsprechenden
-    Rechenlaufes erfolgt die Bestätigung der Auswahl durch
-    <guibutton>Weiter</guibutton>.</para>
-
-    <para>Es erscheint die Eingabemaske für die Steuerparameter (<xref
-    linkend="spree_2" />), in die bereits die gespeicherten Eingaben für das
-    gewählte Hochwasser eingetragen sind. Für die Fortführung des Rechenlaufs
-    können die Parameter vom Nutzer geändert werden. Es gelten die gleichen
-    Voraussetzungen wie beim Anlegen eines neuen Rechenfalls.</para>
-
-    <para>Zusätzlich ist die Option <guibutton>Zeitreihen
-    aktualisieren</guibutton> aktiv, d. h., die Zeitreihen können für die
-    erneute Berechnung der Variante neu eingelesen werden. Ist das Kästchen
-    deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
-    Rechenlaufs verwendet.</para>
-  </section>
-
-  <section>
-    <title>Kopieren einer Rechenvariante</title>
-
-    <para>Die Wahl dieser Option erfolgt durch Auswahl von <guibutton>einen
-    auf dem Server vorhandenen Rechenfall kopieren</guibutton>. Hierdurch
-    werden die Eingangsdaten eines bereits gespeicherten Hochwassers als neuer
-    Datensatz vom Programm im lokalen Arbeitsverzeichnis gespeichert. Dies
-    bietet den Vorteil, dass bei einer gewünschten Änderung der Eingangsdaten
-    die Originaldateien nicht überschrieben werden. Es erscheint eine Auswahl
-    der auf dem Server gespeicherten Rechenvarianten. Für die lokale Kopie der
-    Rechenvariante muss vom Benutzer ein Name angegeben werden. Nach Auswahl
-    der zu kopierenden Rechenvariante wird durch Bestätigung durch
-    <guibutton>Weiter</guibutton> die Eingabemaske für die Steuerparameter
-    (<xref linkend="spree_2" />) geöffnet.</para>
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
+    Eingangsdaten.</para>
   </section>
 
   <section>
