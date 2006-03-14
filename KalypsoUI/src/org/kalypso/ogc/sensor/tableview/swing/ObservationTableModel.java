@@ -142,7 +142,10 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      if( col == null || !col.isShown() )
+      // test if column index is -1, in that case do nothing. This might happen when
+      // concurrent updates are done on the table: a column is being removed despite
+      // the fact it's not there (anymore).
+      if( col == null || !col.isShown() || pos == -1 )
         return;
 
       final IAxis keyAxis = col.getKeyAxis();
