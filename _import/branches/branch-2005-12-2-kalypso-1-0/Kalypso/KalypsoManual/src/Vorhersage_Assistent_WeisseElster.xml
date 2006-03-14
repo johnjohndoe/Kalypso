@@ -2,159 +2,66 @@
 <section id="weisse_elster_view_prognose" vendor="sachsen">
   <title>Vorhersagemodell Weiße Elster</title>
 
-  <para>Zur Berechnung von HW-Vorhersagen für das Einzugsgebiet der Weißen
-  Elster ist in der Kalypso-Oberfläche ein Wizard implementiert. Unabhängig
-  von den ihm zugeordneten Rechten wird der Benutzer direkt beim Programmstart
-  in den Vorhersagemodus geführt (<xref linkend="we_startseite" />). Für
-  Benutzer mit erweiterten Rechten ist es jederzeit möglich, aus dem
-  Expertenmodus in den Vorhersagemodus zu wechseln (Menü
-  <guimenu>Modell</guimenu> -&gt; <guimenu>Vorhersage
-  durchführen</guimenu>).</para>
+  <section id="weisse_elster_2">
+    <title>Eingabe der Steuerparameter</title>
 
-  <figure id="we_startseite">
-    <title>Startseite Kalypso</title>
+    <para>Auf der zweiten Seite des Assistenten (siehe <xref
+    linkend="we_steuerparameter" />) werden verschiedene Informationen
+    angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
+    generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
+    die Einträge denen der ursprünglichen Rechenvariante.</para>
 
-    <screenshot>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/wizard/sachsen/we_1.png" scale="30" />
-        </imageobject>
-      </mediaobject>
-    </screenshot>
-  </figure>
-
-  <para>Beim Start des Vorhersage-Wizards öffnet sich die Maske zum Erzeugen
-  einer Vorhersage (<xref linkend="we_erzeuge_vorhersage" />), in der dem
-  Benutzer freigestellt wird, ein neues Hochwasser anzulegen, einen bereits
-  angelegten Rechenfall fortzuführen oder einen bereits angelegten Rechenfall
-  zu kopieren und neu zu berechnen (bspw. als neue Rechenvariante). Alle
-  Rechenfälle werden zunächst lokal bearbeitet. Auch die dazugehörigen
-  Zeitreihen werden vom Server geladen und im lokalen Arbeitsverzeichnis
-  abgelegt. Erst nach dem Ende der Berechnungen besteht die Möglichkeit, die
-  ermittelten Ergebnisse als Rechenvariante oder Bericht auf dem Server
-  abzulegen.</para>
-
-  <figure id="we_erzeuge_vorhersage">
-    <title>Erzeugen einer Vorhersage</title>
-
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="img/wizard/sachsen/we_1b.png" scale="50" />
-      </imageobject>
-    </mediaobject>
-  </figure>
-
-  <section id="weisse_elster_1">
-    <title>Neue Hochwasservorhersage anlegen</title>
-
-    <para>Mit der Option <guibutton>einen neuen Rechenfall
-    erzeugen</guibutton> wird eine neue Hochwasservorhersage angelegt. Die
-    Bezeichnung des Rechenfalls ist vom Benutzer frei wählbar und wird unter
-    dem angegebenen Namen im lokalen Arbeitsverzeichnis gespeichert. Mit der
-    Bestätigung durch Klick auf <guibutton>Weiter</guibutton> erfolgt die
-    Aufforderung zur Eingabe der Steuerparameter (<xref
-    linkend="weisse_elster_2" />).</para>
-
-    <section id="weisse_elster_2">
+    <figure id="we_steuerparameter">
       <title>Steuerparameter</title>
 
-      <figure id="we_steuerparameter">
-        <title>Steuerparameter</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/wizard/sachsen/we_3.png" scale="40" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
 
-        <screenshot>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/wizard/sachsen/we_3.png" scale="30" />
-            </imageobject>
-          </mediaobject>
-        </screenshot>
-      </figure>
+    <para>Der <guilabel>Start der Simulation</guilabel> gibt den Beginn der
+    Simulationsrechnung an. Ab diesem Zeitpunkt werden ggf. die Messwerte aus
+    der Zeitreihenablage geholt. <guibutton>Start der Simulation</guibutton>
+    wird beim Erzeugen einer neuen Rechenvariante standardmäßig auf fünf Tage
+    (120h) vor <guilabel>Start der Vorhersage</guilabel> gesetzt. Dieser
+    Eintrag kann vom Benutzer angepasst werden.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para><emphasis>Start der Simulation</emphasis></para>
+    <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
+    einer neuen Rechenvariante automatisch auf die letzte volle Stunde der
+    aktuellen Uhrzeit gesetzt. Bis zu diesem Zeitpunkt werden ggf. die
+    Messwerte aus der Zeitreihenablage geholt. Dieser Eintrag kann vom
+    Benutzer angepasst werden. Der Endzeitpunkt der Vorhersage wird durch das
+    Modell bestimmt und liegt 48 Stunden nach dem <guilabel>Start der
+    Vorhersage</guilabel>.</para>
 
-          <para>Der Startzeitpunkt der Simulation wird vom Programm
-          standardmäßig auf 5 Tage (120 h) vor Beginn der Vorhersage gesetzt
-          (vom Benutzer editierbar).</para>
-        </listitem>
+    <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
+    <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
+    ein <guilabel>Kommentar</guilabel> und der
+    <guilabel>Erstellungszeitpunkt</guilabel> eingetragen. Beim Erzeugen einer
+    neuen Rechenvariante werden diese Felder mit Standard-Werten belegt. Ein
+    detailliertes Ausfüllen dieser Metadaten erleichtert das weitere Arbeiten
+    mit der erzeugten Rechenvariante. Jeder dieser Einträge kann vom Benutzer
+    geändert werden.</para>
 
-        <listitem>
-          <para><emphasis>Start der Vorhersage</emphasis></para>
+    <para>Ein aktiviertes Kontrollkästchen <guilabel>Zeitreihen
+    aktualisieren</guilabel> bewirkt, dass beim Übergang auf die nächste Seite
+    des Assistenten die vom Modell benötigten Messwerte für die Zeit vom
+    <guilabel>Start der Simulation</guilabel> bis zum <guilabel>Start der
+    Vorhersage</guilabel> aus der Zeitreihenablage geholt werden (Niederschlag
+    an den Niederschlagsstationen, Wasserstand und W/Q-Beziehung an den
+    Pegeln). Außerdem werden leere Zeitreihen für den Gebietsniederschlag
+    generiert. Gleichzeitig wird der Gebietsniederschlag entsprechend des
+    Gebietsniederschlagsmodells berechnet. Ist das Kontrollkästchen nicht
+    aktiviert, werden die Zeitreihen nicht geholt bzw. nicht aktualisiert. Nur
+    beim Anlegen einer neuen Rechenvariante ist dieses Kästchen standardmäßig
+    aktiviert.</para>
 
-          <para>Beschreibt den Zeitpunkt, an dem das Modell die Vorhersage
-          startet. Dieser wird automatisch auf die letzte volle Stunde der
-          aktuellen Uhrzeit gesetzt, ist aber vom Benutzer editierbar. Der
-          Endzeitpunkt der Vorhersageberechnung wird durch die Dauer des in
-          den Prognosedaten enthaltenen Zeitraums bestimmt. Die Berechnung
-          endet im längsten Fall 48 h nach Beginn der Vorhersage.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis>Metadaten</emphasis></para>
-
-          <para>Sind vom Anwender optional einzugebende Daten zur Beschreibung
-          und Erläuterung des Rechenfalls. Sie werden beim Speichern des
-          Rechenfalls und bei der Berichtsablage verwendet, sind aber nicht
-          notwendig zur Durchführung einer Berechnung.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis>Zeitreihen aktualisieren</emphasis></para>
-
-          <para>Bei Aktivierung dieser Option werden die zur Berechnung
-          notwendigen Zeitreihen neu in das Programm eingelesen. Dies ist
-          allerdings nur sinnvoll bei Fortführung oder Neuberechnung eines
-          bereits angelegten Hochwassers. Beim Anlegen eines neuen Rechenfalls
-          werden die Zeitreihen immer neu eingelesen (auch bei deaktiviertem
-          Kästchen). Die Bestätigung der getätigten Angaben erfolgt über den
-          Klick auf <guibutton>weiter</guibutton>.</para>
-        </listitem>
-      </itemizedlist>
-    </section>
-  </section>
-
-  <section>
-    <title>Fortführen eines Rechenfalls</title>
-
-    <para>Durch die Wahl der Option <emphasis role="bold">einen bereits
-    vorhandenen Rechenfall fortführen</emphasis> wird dem Benutzer die
-    Möglichkeit gegeben, eine zuvor berechnete und gespeicherte
-    Hochwasserprognose erneut zu laden und die Berechnungen zu aktualisieren
-    bzw. fortzuführen (bspw. bei Vorhandensein aktueller Prognosedaten). Nach
-    Auswahl der Option erscheint ein Auswahlfenster, in dem alle gespeicherten
-    Rechenläufe angezeigt werden. Nach Markieren des entsprechenden
-    Rechenlaufs erfolgt die Bestätigung der Auswahl durch
-    <guibutton>weiter</guibutton>.</para>
-
-    <para>Es erscheint die Eingabemaske für die Steuerparameter (<xref
-    linkend="weisse_elster_2" />), in die bereits die gespeicherten Eingaben
-    für das gewählte Hochwasser eingetragen sind. Für die Fortführung des
-    Rechenlaufs können die Parameter vom Nutzer geändert werden. Es gelten die
-    gleichen Voraussetzungen wie beim Anlegen eines neuen Rechenfalls.</para>
-
-    <para>Zusätzlich ist die Option <guibutton>Zeitreihen
-    aktualisieren</guibutton> aktiv, d.h., die Zeitreihen können für die
-    erneute Berechnung der Variante neu eingelesen werden. Ist das Kästchen
-    deaktiviert, werden die vom Modell gespeicherten Zeitreihen des letzten
-    Rechenlaufs verwendet.</para>
-  </section>
-
-  <section>
-    <title>Kopieren eines Rechenfalls</title>
-
-    <para>Die Wahl dieser Option erfolgt durch Auswahl des <guibutton>einen
-    bereits vorhandenen Rechenfall kopieren</guibutton> Feldes. Hierdurch
-    werden die Eingangsdaten eines bereits gespeicherten Hochwassers unter
-    einer anzugebenden Bezeichnung lokal gespeichert. Dies bietet den Vorteil,
-    dass bei Änderung der Eingangsdaten die Originaldateien nicht
-    überschrieben werden. Alle Einstellungen in den Steuerparametern werden
-    übernommen und können ggf. geändert werden. Die zum Ereignis gehörigen
-    Zeitreihen können aus dem gespeicherten Rechenlauf übernommen oder über
-    <guibutton>Zeitreihen aktualisieren</guibutton> vom Server neu eingelesen
-    werden. Nach Auswahl des zu kopierenden Rechenfalls wird über Bestätigung
-    durch <guibutton>weiter</guibutton> die Eingabemaske für die
-    Steuerparameter (<xref linkend="weisse_elster_2" />) geöffnet.</para>
+    <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
+    Eingangsdaten.</para>
   </section>
 
   <section id="weisse_elster_4">
@@ -162,10 +69,10 @@
 
     <para>Nach der Eingabe der Steuerparameter erfolgt die Überprüfung der
     Eingangsgdaten durch den Benutzer. Die Zeitreihen setzen sich aus
-    Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen sind
-    abhängig vom eingelesenen Status durch Symbole gekennzeichnet (vgl. <xref
-    linkend="tabellen_kennzeichnung" />). Der Vorhersage-Wizard ist so
-    aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
+    Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen
+    sind, abhängig vom eingelesenen Status, durch Symbole gekennzeichnet (vgl.
+    <xref linkend="tabellen_kennzeichnung" />). Der Vorhersage-Assistent ist
+    so aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
     (<xref linkend="we_ndata" />):</para>
 
     <figure id="we_ndata">
@@ -201,6 +108,11 @@
         </listitem>
 
         <listitem>
+          <para>Temperaturzeitreihe einschließlich Gebietstemperaturmodell für
+          alle Teilgebiete</para>
+        </listitem>
+
+        <listitem>
           <para>Zuflüsse in das Modell an den Talsperren-Abgabepegeln</para>
         </listitem>
       </orderedlist></para>
@@ -219,7 +131,7 @@
 
     <para>Nach Kontrolle und Eingabe der Eingangsdaten öffnet sich durch Klick
     auf <guibutton>Weiter</guibutton> das Prognosefenster (<xref
-    linkend="we_berechnung" />) im oberen Bereich des Fensters befindet sich
+    linkend="we_berechnung" />). Im oberen Bereich des Fensters befindet sich
     die Information über den Pegel, an dem die aktuelle Vorhersage
     durchgeführt wird. Im Kartenfenster wird eine schematische Ansicht des
     Einzuggebietes dargestellt, in der alle Vorhersage- und Zuflusspegel
@@ -285,7 +197,7 @@
       </listitem>
     </itemizedlist>
 
-    <para>Der Standartwert für alle Parameter beträgt zu Beginn einer neuen
+    <para>Der Standardwert für alle Parameter beträgt zu Beginn einer neuen
     Vorhersage 1,0. Durch Änderung eines oder mehrerer Parameter können die
     Berechnungsergebnisse, die vor dem Startzeitpunkt der Vorhersage liegen,
     anhand von Pegelaufzeichnungen angepasst werden (Nachführung). Bezüglich
@@ -299,7 +211,7 @@
     zur Darstellung der Zeitreihen für gemessene und berechnete Abflüsse am
     Pegel sowie die in der Vorhersage verwendeten Niederschlagszeitreihen. Die
     Ansicht im Zeitreihenfenster ist nicht veränderbar; alle Einstellungen
-    sind vordefiniert bzw. ändern sich automatisch in Abhängigkeit der
+    sind vordefiniert bzw. ändern sich automatisch in Abhängigkeit von der
     Zeitreihe (Anpassung der Skalierung).</para>
 
     <para>Zum Starten einer Prognoserechnung dient die Schaltfläche
@@ -396,12 +308,6 @@
       <listitem>
         <para>Berechnete Zeitreihen nur für den Zeitraum der Vorhersage
         (Prognosezeitreihe für PSI-Compact)</para>
-      </listitem>
-
-      <listitem>
-        <para>Grafische Darstellung der Ergebnisse im Lageplan, farbige
-        Markierung der Pegel nach Alarmstufen (Grafik fü das
-        Berichtswesen)</para>
       </listitem>
     </itemizedlist>
 

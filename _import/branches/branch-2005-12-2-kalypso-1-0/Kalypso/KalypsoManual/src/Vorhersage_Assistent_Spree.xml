@@ -270,11 +270,6 @@
         <para>Berechnete Zeitreihen nur für den Zeitraum der Vorhersage
         (Prognosezeitreihen für PSI-Compact)</para>
       </listitem>
-
-      <listitem>
-        <para>Grafische Darstellung der Ergebnisse im Lageplan, farbige
-        Markierung der Pegel (Grafik für das Berichtswesen)</para>
-      </listitem>
     </itemizedlist>
 
     <para>Durch Aktivierung des Häkchens vor dem jeweiligen Ausgabe-Format
