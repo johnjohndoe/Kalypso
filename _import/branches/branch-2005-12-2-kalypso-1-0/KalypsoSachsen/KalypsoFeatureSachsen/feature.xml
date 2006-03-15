@@ -109,12 +109,6 @@
          version="1.4"/>
 
    <plugin
-         id="org.kalypso.manual"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
@@ -176,6 +170,12 @@
 
    <plugin
          id="org.kalypso.services.metadoc.client"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.manual.sachsen"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
