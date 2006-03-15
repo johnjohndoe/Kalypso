@@ -139,17 +139,12 @@
         </exec>
 
         <delete includeemptydirs="true" failonerror="false">
-            <!-- empty '.prognose' and 'Rechenvariante' dirs -->
-            <fileset dir="${dist.webdav}/prognose/${pName}/.prognose" includes="**/*" />
-            <fileset dir="${dist.webdav}/prognose/${pName}/Rechenvarianten" includes="**/*" />
-
-            <!-- remove all '.calculation' files -->
-            <fileset dir="${dist.webdav}/prognose/${pName}" includes="**/.calculation" />
 
             <!-- remove all CVS files -->
             <fileset dir="${dist.webdav}/prognose/${pName}" defaultexcludes="false">
                 <include name="**/CVS/*" />
                 <include name="**/CVS/**" />
+                <include name="**/.cvs*" />
             </fileset>
 
         </delete>

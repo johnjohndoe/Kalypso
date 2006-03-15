@@ -140,7 +140,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/kap11/Konfiguration_1.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_1.png" scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -150,7 +150,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/kap11/Konfiguration_2.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_2.png" scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -306,7 +306,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/kap11/Caching_Mechanismus.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/caching_mechanismus.png" scale="70" />
         </imageobject>
       </mediaobject>
     </figure>

@@ -70,7 +70,7 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;doktyp&gt;Prognose&lt;/doktyp&gt;
  &lt;dokument&gt;Vorhersage-20.05.2005&lt;/dokument&gt;
  &lt;description&gt;blablabla Beschreibung&lt;/description&gt;
- &lt;schluessel&gt;eindeutige Schlüssel-foobarscript&lt;/schluessel&gt;
+ &lt;schluessel&gt;eindeutiger Schlüssel-foobarscript&lt;/schluessel&gt;
  &lt;klasse&gt;Scheitelwerttabelle&lt;/klasse&gt;
  &lt;ersteller&gt;HVZ&lt;/ersteller&gt;
  &lt;erstelldat&gt;2005-08-26&lt;/erstelldat&gt;

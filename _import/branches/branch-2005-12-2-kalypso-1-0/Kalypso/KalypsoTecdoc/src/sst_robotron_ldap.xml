@@ -40,8 +40,11 @@
 	<para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
 		Szenario-Einstellungen werden in die Konfigurationsdateien die im
 		Konfigurationsverzeichnis des Kalypso User Dienst vorgenommen. Der Pfad lautet:
-		<filename> TOMCAT_HOME\webapps\webdav\srvconf\IUSerService
-		</filename>. Hier folgt ein Beispiel der Konfigurationsdatei des Benutzerdienstes.
+		</para>
+		<para><filename>TOMCAT_HOME\webapps\webdav\srvconf\IUSerService</filename>.
+		</para>
+		<para>	
+			 Hier folgt ein Beispiel der Konfigurationsdatei des Benutzerdienstes.
 		
 		<programlisting>
 # classname of the user rights provider
@@ -68,13 +71,13 @@ CHOOSE_SCENARIO=true
 LDAP_CONNECTION=ldap://smdhvzldat:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de
 LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de
 LDAP_CREDENTIALS=geheim
-		</programlisting>.
+		</programlisting>
 	</para>
 	
 	<section>
 		<title>Szenarien: Normalbetrieb und Simulationsbetrieb</title>
 		
-		<para>Die Variable SCENARIO_INI_LIST gibt an, welche sog. INI-Dateien
+		<para>Die Variable <emphasis>SCENARIO_INI_LIST</emphasis> gibt an, welche sog. INI-Dateien
 			(Konfigurationsdateien) für die Parametrisierung der verschiedenen
 			Betriebe zuständig sind. Dort können die Darstellungseigenschaften der
 			Kalypso-Benutzeroberfläche je nach Modi angepasst werden. Zum Beispiel, im

@@ -1,26 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="robotron-ims" vendor="sachsen-anhalt">
-  <title>Schnittstelle zu IMS: Dokumentenablage</title>
-
-  <para>Die Schnittstelle basiert auf einem Webdienst Methodenaufruf. Dazu
-  wird Apache-Axis benutzt, in Gegensatz zu den in KALYPSO sonst üblichen
-  JAX-RCP-Aufrufen.<!--REMARK: auch Axis implementiert doch JAX-RPC, besser hier also von Sun sprechen?--></para>
-
-  <para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und über das
-  Ablageverzeichnis an das IMS weitergereicht. Der Aufbau dieser XML-Datei ist
-  recht einfach:</para>
-
-  <figure>
-    <title>Dokumentenablage</title>
-
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="img/kap13/Schnittstelle_Dokumentenablage.png"
-                   scale="70" />
-      </imageobject>
-    </mediaobject>
-  </figure>
-
-  <para>Mehr Details dazu finden Sie in der Konfigurationsdatei des
-  Dienstes.</para>
+	<title>Schnittstelle zu IMS: Dokumentenablage</title>
+	
+	<para>Die Schnittstelle basiert auf einem Webdienst Methodenaufruf. Dazu wird
+		Apache-Axis benutzt, in Gegensatz zu der in KALYPSO sonst übliche von Sun
+		implementierte JAX-RPC Bibliothek.
+	</para>
+	
+	<para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und über das
+		Ablageverzeichnis an das IMS weitergereicht. Der Aufbau dieser XML-Datei ist recht
+		einfach. Hier folgt ein Beispiel:
+	</para>
+	
+	<para>
+		<figure>
+			<title>Beispiel Metadatendatei</title>
+			
+			<mediaobject>
+				<imageobject>
+					<imagedata
+						fileref="img/sst/sachsen-anhalt/ims_dok_ablage.png"
+						scale="70"/>
+				</imageobject>
+			</mediaobject>
+		</figure> Die Bedeutung der Elemente wird hier kurz beschrieben.
+		
+		<glosslist>
+			<glossentry><glossterm>autor</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>ersteller</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>erstelldat</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>gueltigdat</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>doktyp</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>dokument</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>schluessel</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>typ</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>klasse</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>description</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>simulation</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>gebiet</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>station_id</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+			<glossentry><glossterm>files bzw. file</glossterm>
+				<glossdef>
+					<para>
+					</para>
+				</glossdef>
+			</glossentry>
+		</glosslist>
+	</para>
+	
+	<para>TODO Konfigurationsdatei des Dienstes.</para>
 </section>
