@@ -23,95 +23,164 @@
 						scale="70"/>
 				</imageobject>
 			</mediaobject>
-		</figure> Die Bedeutung der Elemente wird hier kurz beschrieben.
+		</figure>
+		Die Bedeutung der Elemente wird in der folgende Liste dargestellt:
 		
 		<glosslist>
 			<glossentry><glossterm>autor</glossterm>
 				<glossdef>
-					<para>
+					<para>Der Name des Autor der aktuelle Vorhersage. Der Name ist
+						standardmäßig der Name des Benutzers der sich am System
+						angemeldet hat. Der Benutzer kann der Wert dieser Eigenschaft im
+						Export-Assistent ändern, bevor das Dokument exportiert wird.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>ersteller</glossterm>
 				<glossdef>
-					<para>
+					<para>Der Name der Institution die für die Ausgabe der Dokumente
+						zuständig ist. Standarmäßig ist es die
+						<emphasis>HVZ</emphasis>. Der Benutzer kann der Wert dieser
+						Eigenschaft im Export-Assistent ändern, bevor das Dokument
+						exportiert wird.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>erstelldat</glossterm>
 				<glossdef>
-					<para>
+					<para>Das Erstellungsdatum, also wann das Dokument erstellt wurde.
+						Das aktuelle Datum wird als Standardwert übernommen. Der
+						Benutzer kann der Wert dieser Eigenschaft im Export-Assistent
+						ändern, bevor das Dokument exportiert wird.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>gueltigdat</glossterm>
 				<glossdef>
-					<para>
+					<para>Das Gültigkeitsdatum, also bis wann das Dokument gültig ist.
+						Das aktuelle Datum wird als Standardwert übernommen. Der
+						Benutzer kann der Wert dieser Eigenschaft im Export-Assistent
+						ändern, bevor das Dokument exportiert wird.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>doktyp</glossterm>
 				<glossdef>
-					<para>
+					<para>Der übergeordnete Typ des Dokuments, hier immer
+						<emphasis>Vorhersage</emphasis>. Der Wert ist immer gleich und
+						wird in der Konfigurationsdatei des Dokumentendienstes
+						gesetzt. Diese Eigenschaft dient der Identizierung der Quelle
+						des Dokuments.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>dokument</glossterm>
 				<glossdef>
-					<para>
+					<para>Der Name der aktuelle Vorhersage, wie er vom Benutzer beim
+						Erstellen im Vorhersage-Assistent eingegeben wurde. Diese Eigenschaft
+						dient der Strukturierung im IMS.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>schluessel</glossterm>
 				<glossdef>
-					<para>
+					<para>Ein eindeutiger Schlüssel welcher das Dokument
+						identifiziert. Diese Eigenschaft dient dem Überschreiben im IMS
+						gleicher Dokumente einer gleiche Vorhersage.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>typ</glossterm>
 				<glossdef>
-					<para>
+					<para>Die Information worum es sich im Dokument handelt: ist es ein Speicher? ein Pegel? usw. Der Wert wird automatisch
+						von Kalypso gesetzt (je nach Einstellungen in die <filename>calcWizard.xml</filename>-Dateien).
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>klasse</glossterm>
 				<glossdef>
-					<para>
+					<para>Die Klasse des Dokuments für die aktuelle Vorhersage. Der Wert
+						wird automatisch von Kalypso gesetzt (je nach Einstellungen in
+						die
+						<filename>calcWizard.xml</filename>-Dateien). Diese
+						Eigenschaft dient der Klassifizierung im IMS.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>description</glossterm>
 				<glossdef>
-					<para>
+					<para>Eine vom Benutzer angegebene Beschreibung. Standarmäßig wird
+						die Beschreibung der Vorhersage übernommen, der Wert kann aber
+						vom Benutzer im Vorhersage-Assistent geändert werden.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>simulation</glossterm>
 				<glossdef>
-					<para>
+					<para>Die Information ob es sich um eine simulierte Vorhersage
+						handelt (Unterscheidung zwischen Normalbetrieb und
+						Simulationsbetrieb).
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>gebiet</glossterm>
 				<glossdef>
-					<para>
+					<para>Der Name des Einzugsgebiet (Bode, Ilse, Saale usw.).
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>station_id</glossterm>
 				<glossdef>
-					<para>
+					<para>Der Stationskennziffer wenn es sich um einen Dokument der nur
+						ein Pegel oder Speicher betrifft handelt. Wenn das Dokument eine
+						Übersicht darstellt ist diese Eigenschaft leer.
 					</para>
 				</glossdef>
 			</glossentry>
 			<glossentry><glossterm>files bzw. file</glossterm>
 				<glossdef>
-					<para>
+					<para>Das Element
+						<emphasis>files</emphasis> beinhaltet immer nur ein Element
+						<emphasis>file</emphasis> welches wiederum der Dateiname des
+						Dokuments beinhaltet.
 					</para>
 				</glossdef>
 			</glossentry>
 		</glosslist>
 	</para>
 	
-	<para>TODO Konfigurationsdatei des Dienstes.</para>
+	<para>Der Metadokument-Webdienst wird anhand einer Konfigurationsdatei an den
+		eigenen Bedürfnisse angepasst. Die Datei befindet sich im
+		Konfigurationsverzeichnis des Dienstes. Der Standort ist:
+		<filename>TOMCAT_HOME/webapps/webdav/srvconf/IMetaDocService</filename>. Hier folgt ein Beispiel:</para>
+	
+	<para>
+		<programlisting>
+# classname of the document commiter
+COMMITER=org.kalypso.robotronadapter.RobotronMetaDocCommiter
+
+# Robotron Dokumentenablage
+robotron.ws.endpoint=http://11.9.44.25:8080/IMS/KalypsoConnectorWS.jws
+
+robotron.preset.autor=autor
+robotron.preset.doktyp=Vorhersage
+robotron.preset.ersteller=HVZ
+robotron.preset.description=calcCaseDescription
+
+robotron.md.scenario=currentScenarioId
+
+# Depending on the scenario, the simulation-tag is either 0
+# or 1. We list both possibilities here and the right
+# one will be picked by RobotronMetaDocCommiter.
+# Format of the key: Xml-Elementname_Scenario-Id
+robotron.md.simulation_=0
+robotron.md.simulation_test=1
+
+# used for the metadataExtensions
+robotron.md.station_id=Kennziffer
+robotron.md.gebiet=projectName
+robotron.md.dokument=calcCaseName	
+		</programlisting>
+		
+	</para>
 </section>
