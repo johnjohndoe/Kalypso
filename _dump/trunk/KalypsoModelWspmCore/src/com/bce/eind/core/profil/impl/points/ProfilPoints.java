@@ -176,7 +176,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
    */
   public final boolean removePoint( final IProfilPoint point )
   {
-    return this.remove( point );
+    return remove( point );
   }
 
   /* (non-Javadoc)

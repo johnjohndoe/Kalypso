@@ -44,11 +44,11 @@ public interface IProfilPoint
 
     HOCHWERT("Hochwert", true, true, true, 0.0001),
 
-    UNTERKANTEBRUECKE("Brückenunterkante", true, true, false, 0.0001),
+    UNTERKANTEBRUECKE("Brückenunterkante", true, true, true, 0.0001),
 
-    OBERKANTEBRUECKE("Brückenoberkante", true, true, false, 0.0001),
+    OBERKANTEBRUECKE("Brückenoberkante", true, true, true, 0.0001),
 
-    OBERKANTEWEHR("Wehr", true, true, false, 0.0001),
+    OBERKANTEWEHR("Wehr", true, true, true, 0.0001),
 
     HOEHE("Geländehöhe", false, true, true, 0.0001),
 

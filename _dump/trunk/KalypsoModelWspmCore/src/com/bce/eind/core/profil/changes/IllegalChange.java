@@ -3,43 +3,33 @@
  */
 package com.bce.eind.core.profil.changes;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilChange;
-import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.util.ProfilUtil;
 
 /**
  * @author kimwerner
  */
-public class PointRemove implements IProfilChange
+public class IllegalChange implements IProfilChange
 {
-  private final IProfil m_profil;
 
-  private final IProfilPoint m_point;
+  private final String m_message;
 
-  private IProfilPoint m_pointBefore;
-
-  public PointRemove( final IProfil profil, final IProfilPoint point )
+  public IllegalChange(  final String msg )
   {
-    m_profil = profil;
-    m_point = point;
+    m_message = msg;
   }
 
   /**
    * @see com.bce.eind.core.profil.IProfilChange#doChange()
    */
+  @SuppressWarnings("unused")
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    if (hint!=null) hint.setPointsChanged();
-    
-    m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
-    
-    if (m_profil.removePoint( m_point ))
-
-    return new PointAdd( m_profil, m_pointBefore, m_point );
-    else return new IllegalChange("Punkt bei "+" kann nicht gelöscht werden");
+    /**
+     * do nothing
+     */
+     return null;
   }
 
   /**
@@ -47,7 +37,7 @@ public class PointRemove implements IProfilChange
    */
   public Object getObject( )
   {
-        return m_point;
+        return m_message;
   }
 
   /**

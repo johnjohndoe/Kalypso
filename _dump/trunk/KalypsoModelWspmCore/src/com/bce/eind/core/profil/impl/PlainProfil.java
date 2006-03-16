@@ -384,6 +384,10 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public boolean removePoint( final IProfilPoint point )
   {
+    for(IProfilDevider devider:m_devider)
+    {
+      if (devider.getPoint() == point) return false;
+    }
     return m_points.removePoint( point );
   }
 
