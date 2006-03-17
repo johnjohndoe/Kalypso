@@ -57,10 +57,21 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project}" />
-		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
+<!--
+	<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
+-->
+		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true" stackSize="50mb">
+			
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />
 			</schema>
+
+<!--
+			<classpath>
+			      <pathelement path="${classpath}"/>
+			      <pathelement location="lib/helper.jar"/>
+			    </classpath>
+-->
 			<!-- use depends ??
 	  -->
 			<!-- Important Note: the produces element specifies the

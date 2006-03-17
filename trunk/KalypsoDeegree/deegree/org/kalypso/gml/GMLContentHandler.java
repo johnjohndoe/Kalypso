@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 import org.xml.sax.Attributes;
@@ -93,6 +94,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   // 
   private final boolean m_useSchemaCatalog;
+
+  private ToStringContentHandler m_exceptionContentHandler = null;
 
   /**
    * uses GMLSchemaCatalog
@@ -138,6 +141,18 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void startElement( String uri, String localName, String qName, Attributes atts )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
+      return;
+    }
+    if( localName != null && localName.endsWith( "Exception" ) )
+    {
+      m_exceptionContentHandler = new ToStringContentHandler();
+      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
+      return;
+    }
+    // TODO test if first element is a OGC Exception
     m_indent++;
     indent();
     // System.out.println( "<" + uri + ":" + localName + ">" );
@@ -160,7 +175,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       // 2. try : from schemalocation attributes
       if( schema == null )
         schema = getSchema( atts );
-
       // 3. try : from namespace of root element
       if( schema == null && m_useSchemaCatalog )
         schema = GMLSchemaCatalog.getSchema( uri );
@@ -170,6 +184,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         throw new UnsupportedOperationException( "could not load schema" );
       m_gmlSchema = schema;
     }
+
+    if( uri == null || uri.length() < 1 )
+      uri = m_gmlSchema.getTargetNamespace();
 
     switch( m_status )
     {
@@ -181,7 +198,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       case START_PROPERTY_END_FEATURE:
       {
         final Feature feature = m_featureParser.getCurrentFeature();
-        m_propParser.createProperty( feature, uri, localName, qName, atts );
+        m_propParser.createProperty( feature, uri, localName, atts );
         // 
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
         final Feature parentFE = m_featureParser.getCurrentFeature();
@@ -203,7 +220,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else
         {
-//          System.out.println( "unknown: " + uri + " " + localName );
+          // System.out.println( "unknown: " + uri + " " + localName );
           // unknown element in schema, probably this property is removed from schema and still occurs in the xml
           // instance document
           // we just ignore it
@@ -239,6 +256,13 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void endElement( String uri, String localName, String qName )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.endElement( uri, localName, qName );
+      return;
+    }
+    if( uri == null || uri.length() < 1 )
+      uri = m_gmlSchema.getTargetNamespace();
     indent();
     // System.out.println( "</" + uri + ":" + localName + ">" );
     m_indent--;
@@ -270,6 +294,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void ignorableWhitespace( char[] ch, int start, int length )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.ignorableWhitespace( ch, start, length );
+      return;
+    }
+    // TODO call characters() from here ??
     // System.out.println( "debug" );
     // nothing
   }
@@ -279,7 +309,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void characters( char[] ch, int start, int length )
   {
-    // System.out.println( "debug" );
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.characters( ch, start, length );
+      return;
+    }
     final Feature feature = m_featureParser.getCurrentFeature();
     switch( m_status )
     {
@@ -306,7 +340,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void startPrefixMapping( String prefix, String uri )
   {
-    // System.out.println( "debug" );
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.startPrefixMapping( prefix, uri );
+      return;
+    }
     // nothing
   }
 
@@ -315,6 +353,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void endDocument( )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.endDocument();
+      return;
+    }
     // System.out.println( "debug" );
     // TODO finish
   }
@@ -324,7 +367,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void endPrefixMapping( String prefix )
   {
-    // nothing
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.endPrefixMapping( prefix );
+      return;
+    }
   }
 
   /**
@@ -332,6 +379,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void processingInstruction( String target, String data )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.processingInstruction( target, data );
+      return;
+    }
     // nothing
   }
 
@@ -340,6 +392,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void setDocumentLocator( Locator locator )
   {
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.setDocumentLocator( locator );
+      return;
+    }
   }
 
   /**
@@ -347,8 +404,11 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public void skippedEntity( String name )
   {
-
-    // System.out.println( "debug" );
+    if( m_exceptionContentHandler != null )
+    {
+      m_exceptionContentHandler.skippedEntity( name );
+      return;
+    }
     // nothing
   }
 
@@ -404,11 +464,16 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public GMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
-
   }
 
-  public Feature getRootFeature( )
+  public Feature getRootFeature( ) throws GMLException
   {
-    return m_rootFeature;
+    if( m_rootFeature != null )
+      return m_rootFeature;
+
+    if( m_exceptionContentHandler != null )
+      throw new GMLException( m_exceptionContentHandler.getOGCException() );
+    throw new GMLException( "could not load GML" );
   }
+
 }

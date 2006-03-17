@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -53,7 +52,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
@@ -75,7 +73,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -111,51 +108,10 @@ public final class GmlSerializer
       final InputSource inpuSource = new GMLWorkspaceInputSource( gmlWorkspace );
       final Source source = new SAXSource( reader, inpuSource );
       final StreamResult result = new StreamResult( writer );
-      // TODO use this:
-      // transformer.setOutputProperty( "{http://xml.apache.org/xalan}indent-amount", "2" );
-      // t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-      // transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "5" );
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
       transformer.transform( source, result );
 
-      // final GMLDocument gmlDoc = new GMLDocument_Impl();
-      //
-      // final String schemaNamespace = workspace.getSchemaNamespace();
-      // if( schemaNamespace != null )
-      // {
-      // final GMLNameSpace namespace = new GMLNameSpace_Impl( null, schemaNamespace );
-      // gmlDoc.addNameSpace( namespace );
-      // }
-      //
-      // final Map namespaces = workspace.getNamespaceMap();
-      // for( final Iterator entryIt = namespaces.entrySet().iterator(); entryIt.hasNext(); )
-      // {
-      // final Map.Entry entry = (Entry) entryIt.next();
-      // final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String) entry.getKey(), (String) entry.getValue() );
-      // // do not use the xmlns:xmlns namespace, its the LAW!
-      // if( !ns.getSubSpaceName().equals( "xmlns" ) )
-      // gmlDoc.addNameSpace( ns );
-      // }
-      //
-      // // TODO: why aren't those already in the namespace map???
-      // final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl( "gml", CommonNamespaces.GMLNS );
-      // final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl( "xlink", CommonNamespaces.XLINKNS );
-      // final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl( "xsi", CommonNamespaces.XSINS );
-      // gmlDoc.addNameSpace( gmlNameSpace );
-      // gmlDoc.addNameSpace( xlinkNameSpace );
-      // gmlDoc.addNameSpace( xsiNameSpace );
-      //
-      // final GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc, workspace.getRootFeature(),
-      // workspace.getContext() );
-      // gmlDoc.setRoot( gmlFeature );
-      //
-      // workspace.getContext();
-      // final String schemaLoc = workspace.getSchemaLocation();
-      // if( schemaLoc != null )
-      // gmlDoc.setSchemaLocation( schemaNamespace + " " + schemaLoc );
-      //
-      // XMLHelper.writeDOM( gmlDoc, charsetEncoding, writer );
     }
     catch( final Exception e )
     {
@@ -245,102 +201,9 @@ public final class GmlSerializer
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null );
     return workspace;
 
-    //    
-    // final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
-    // final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
-    //
-    // final GMLSchema schema = loadSchemaForGmlDoc( context, gml );
-    //
-    // return createGMLWorkspace( gml, schema, context, urlResolver );
   }
 
-  // private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml, final GMLSchema schema, final URL
-  // context, final IUrlResolver urlResolver ) throws Exception
-  // {
-  // // create feature and workspace gml
-  // final IFeatureType[] types = schema.getAllFeatureTypes();
-  // final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types, context, urlResolver );
-  //
-  // return new GMLWorkspace_Impl( schema, types, feature, context, gml.getSchemaLocationName() );
-  // }
-
-  // /**
-  // * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per Namespace, dann per schemaLocation.
-  // *
-  // * @param context
-  // * context to resolve relative urls, or <code>null</code> if context unknown
-  // */
-  // private static GMLSchema loadSchemaForGmlDoc( final URL context, final GMLDocument gmldoc ) throws
-  // GmlSerializeException
-  // {
-  // final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
-  // final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
-  // if( schema == null )
-  // {
-  // StringBuffer errorMessage = new StringBuffer( ". Noch über die SchemaLocation: " );
-  //
-  // try
-  // {
-  // final URL schemaLocation = gmldoc.getSchemaLocation( context );
-  // final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
-  //
-  // if( schema2 != null )
-  // return schema2;
-  //
-  // errorMessage.append( schemaLocation );
-  // }
-  // catch( final MalformedURLException e )
-  // {
-  // errorMessage.append( e.getLocalizedMessage() ).append( ". Häufige Ursache ist ein fehlendes Schema im Cache
-  // (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)" );
-  //
-  // Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage.toString() );
-  // }
-  //
-  // throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: " + schemaURI +
-  // errorMessage );
-  // }
-  //
-  // return schema;
-  // }
-
-  // /**
-  // * crrate GMLWorkspace from inputStream and GMLSchema<br>
-  // * intended to be used from WFSLoader, where the GMLSchema can not be loaded from normal URLCatalog<br>
-  // * otherwise use other methode !
-  // */
-  // public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final GMLSchema gmlSchema )
-  // {
-  // final SAXParserFactory saxFac = SAXParserFactory.newInstance();
-  // saxFac.setNamespaceAware( true );
-  // final SAXParser saxParser = saxFac.newSAXParser();
-  // final XMLReader xmlReader = saxParser.getXMLReader();
-  // final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader );
-  // xmlReader.setContentHandler( contentHandler );
-  // xmlReader.parse( inputSource );
-  //
-  // final GMLSchema schema = contentHandler.getGMLSchema();
-  // final Feature rootFeature = contentHandler.getRootFeature();
-  // final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null );
-  // return workspace;
-  // // throw new UnsupportedOperationException();
-  // // }
-  // // /**
-  // // * @deprecated does not use THE CACHE
-  // // */
-  // final Document gmlAsDOM = XMLHelper.getAsDOM( new InputSource( inputStream ), true );
-  // final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
-  //  
-  // GMLSchema schema = null;
-  // if( schemaURL != null )
-  // schema = GMLSchemaFactory.createGMLSchema( schemaURL );
-  // else
-  // // TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
-  // schema = loadSchemaForGmlDoc( null, gml );
-  // return createGMLWorkspace( gml, schema, schemaURL, null );
-  // }
-
-  public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint ,final boolean useGMLSchemaCache) throws ParserConfigurationException, SAXException, IOException
+  public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache ) throws Exception
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );

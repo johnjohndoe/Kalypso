@@ -30,7 +30,6 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -40,22 +39,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
-import org.deegree.services.capabilities.DCPType;
-import org.deegree.services.capabilities.HTTP;
-import org.deegree.services.capabilities.Protocol;
-import org.deegree.services.wfs.capabilities.Capability;
-import org.deegree.services.wfs.capabilities.GetFeature;
-import org.deegree.services.wfs.capabilities.Request;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
 /**
  * @author doemming
@@ -63,36 +60,87 @@ import org.xml.sax.SAXException;
 public class WFSUtilities
 {
 
-  public static WFSCapabilities getCapabilites( final URL baseURL ) throws IOException, SAXException, Exception
+  public static IWFSCapabilities getCapabilites( final URL baseURL ) throws Exception
   {
-    final URL urlGetCap = new URL( baseURL + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-    final URLConnection conGetCap = urlGetCap.openConnection();
-    final InputStream isGetCap = conGetCap.getInputStream();
-    final Reader reader = new InputStreamReader( isGetCap );
-    return WFSCapabilitiesFactory.createCapabilities( reader );
+    final MultiException multiExcepts = new MultiException();
+    final URL urlGetCap = new URL( baseURL + "?" + "SERVICE=WFS&REQUEST=GetCapabilities" );
+    try
+    {
+      // try deegree1 implementation
+      final URLConnection conGetCap = urlGetCap.openConnection();
+      final InputStream isGetCap = conGetCap.getInputStream();
+      final Reader reader = new InputStreamReader( isGetCap );
+      final WFSCapabilities capabilities = WFSCapabilitiesFactory.createCapabilities( reader );
+      return new WFSCapabilitiesDeegree1( capabilities );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      multiExcepts.addException( e );
+    }
+    try
+    {
+      // hack
+      // File file = new File( "D:/eclipse3.1/tmp/XPlanungCaps.xml" );
+      // URL url = file.toURL();
+      final Document dom = XMLHelper.getAsDOM( urlGetCap, true );
+      return new WFSCapabilitiesFromDOM( dom );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      multiExcepts.addException( e );
+    }
+    throw multiExcepts;
   }
 
-  public static String buildGetFeatureRequestPOST( final String featureTypeToLoad, final String filter, final String maxFeatureAsString )
+  public static String buildGetFeatureRequestPOST( final IWFSCapabilities wfsCaps, final QName ftQName, final String filter, final String maxFeatureAsString )
   {
     final StringBuffer sb = new StringBuffer();
     // final int maxFeatures = 5000;
 
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );// iso-8859-1
-    sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" );
+    sb.append( "<wfs:GetFeature " );
+    final String[] outFormats = wfsCaps.getGetFeatureOutputFormats();
+    String oFormat = null;
+    if( outFormats.length > 0 )
+    {
+      for( int i = 0; i < outFormats.length; i++ )
+      {
+        if( outFormats[i].equalsIgnoreCase( "gml2" ) )
+        {
+          oFormat = outFormats[i];
+          break;
+        }
+      }
+      if( oFormat == null )
+        oFormat = outFormats[0];
+    }
+    if( oFormat != null )
+      sb.append( " outputFormat=\"" + oFormat + "\"" );
+    // sb.append( " outputFormat=\"GML2\"" );
+    sb.append( " version=\"" + wfsCaps.getVersion() + "\" " );
     sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " );
     sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" );
     sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" );
     if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
       sb.append( " maxFeatures=\"" + maxFeatureAsString + "\"" );
     sb.append( " >\n" );
-    sb.append( "<wfs:Query typeName=\"" + featureTypeToLoad + "\">\n" );
+    String namespaceURI = ftQName.getNamespaceURI();
+    String localPart = ftQName.getLocalPart();
+    if( namespaceURI != null && namespaceURI.length() > 0 )
+    {
+      sb.append( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" );
+    }
+    else
+      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" );
     if( filter != null && filter.length() > 0 )
     {
       sb.append( filter ).append( "\n" );
       // sb.append( "<ogc:Filter>\n" );
       // sb.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
-      // sb.append( "<ogc:PropertyName>VERSKLASSE</ogc:PropertyName>\n" );
-      // sb.append( "<ogc:Literal>3</ogc:Literal>\n" );
+      // sb.append( "<ogc:PropertyName>KENNZAHL</ogc:PropertyName>\n" );
+      // sb.append( "<ogc:Literal>59519000</ogc:Literal>\n" );
       // sb.append( "</ogc:PropertyIsEqualTo>\n" );
       // sb.append( "</ogc:Filter>\n" );
     }
@@ -111,42 +159,20 @@ public class WFSUtilities
    * @return gmlworkspace
    * @throws Exception
    */
-  public static GMLWorkspace createGMLWorkspaceFromGetFeature( final URL baseURL, final String featureTypeToLoad, final CS_CoordinateSystem targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
+  public static GMLWorkspace createGMLWorkspaceFromGetFeature( final URL baseURL, final QName featureTypeToLoad, final CS_CoordinateSystem targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;
-
+    // PROXY litzu135.lit.hamburg.de:8080
     try
     {
-      // URL[] getOnlineResources = null;
-      URL[] postOnlineResources = null;
+      final IWFSCapabilities wfsCaps = WFSUtilities.getCapabilites( baseURL );
 
-      // URL m_schemaURL = new URL( baseURL + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
-      // + featureTypeToLoad );
-      // get wfs capabiliets to check which protocol types are supported by the service
-      final WFSCapabilities wfsCaps = WFSUtilities.getCapabilites( baseURL );
+      final URL[] baseURLGetCapabilitiesRequest = wfsCaps.getBaseURLGetFeatureRequest( IWFSCapabilities.METHODE_HTTP_POST );
+      if( baseURLGetCapabilitiesRequest.length > 0 )
+      {
 
-      final Capability capability = wfsCaps.getCapability();
-      final Request request = capability.getRequest();
-      final GetFeature getFeature = request.getGetFeature();
-      final DCPType[] type = getFeature.getDCPType();
-      for( int i = 0; i < type.length; i++ )
-      {
-        final DCPType dcpt = type[i];
-        final Protocol protocol = dcpt.getProtocol();
-        if( protocol instanceof HTTP )
-        {
-          // getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
-          postOnlineResources = ((HTTP) protocol).getPostOnlineResources();
-          // if( getOnlineResources.length > 0 )
-          // getProtocol = true;
-          // if( postOnlineResources.length > 0 )
-          // postProtocol = true;
-        }
-      }
-      if( postOnlineResources.length > 0 )
-      {
-        final URLConnection con = postOnlineResources[0].openConnection();
+        final URLConnection con = baseURLGetCapabilitiesRequest[0].openConnection();
         con.setDoOutput( true );
         con.setDoInput( true );
 
@@ -154,20 +180,20 @@ public class WFSUtilities
         OutputStream connectionOutputStream = con.getOutputStream();
         postWriter = new PrintStream( connectionOutputStream );
 
-        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( featureTypeToLoad, filter, maxFeatureAsString );
+        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( wfsCaps, featureTypeToLoad, filter, maxFeatureAsString );
         postWriter.print( getFeaturePost );
 
         // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
 
-        // Hack for testing
-        // final File tmpFile = new File( "C:\\TMP\\test.txt" );
+        // // Hack for testing
+        // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
         // final OutputStream outStream = new FileOutputStream( tmpFile );
         // StreamUtilities.streamCopy( inputStream, outStream );
         // IOUtils.closeQuietly( inputStream );
         // IOUtils.closeQuietly( outStream );
 
-        final URL schemaURLHint = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
+        final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
 
         final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false );
@@ -194,11 +220,53 @@ public class WFSUtilities
    * @return url to describefeaturetyperequest
    * @throws MalformedURLException
    */
-  public static URL createDescribeFeatureTypeRequestURL( final URL baseURL, final String featureType ) throws MalformedURLException
+  public static URL createDescribeFeatureTypeRequestURL( IWFSCapabilities wfsCaps, final QName ftQName ) throws MalformedURLException
   {
-    final StringBuffer result = new StringBuffer( baseURL.toString() );
-    result.append( "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType" );
-    result.append( "&typename=" + featureType );
-    return new URL( result.toString() );
+    final URL[] baseURL = wfsCaps.getBaseURLDescribeFeatureTypeRequest( IWFSCapabilities.METHODE_HTTP_GET );
+    final String baseURLAsString = baseURL[0].toString();
+    if( wfsCaps.getVersion().startsWith( "1.0" ) )
+    {
+      // TODO support namespaces
+      if( baseURL.length > 0 )
+      {
+        final StringBuffer result = new StringBuffer( baseURLAsString );
+        if( baseURLAsString.indexOf( "?" ) < 0 )
+          result.append( "?" );
+        result.append( "SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType" );
+        result.append( "&typename=" + ftQName.getLocalPart() );
+        return new URL( result.toString() );
+      }
+    }
+    if( wfsCaps.getVersion().startsWith( "1.1" ) )
+    {
+      if( baseURL.length > 0 )
+      {
+        final StringBuffer result = new StringBuffer( baseURLAsString );
+        if( baseURLAsString.indexOf( "?" ) < 0 )
+          result.append( "?" );
+        result.append( "SERVICE=WFS&VERSION=1.1.0&REQUEST=DescribeFeatureType" );
+        final String localPart = ftQName.getLocalPart();
+        final String namespaceURI = ftQName.getNamespaceURI();
+        final String prefix = ftQName.getPrefix();
+        // check if featuretype is qualified
+        if( namespaceURI == null || namespaceURI.length() < 1 )
+          result.append( "&TYPENAME=" + ftQName.getLocalPart() );
+        // check if prefix is provided
+        else if( prefix != null && prefix.length() > 0 )
+        {
+          result.append( "&TYPENAME=" + prefix + ":" + localPart );
+          result.append( "&NAMESPACE=xmlns(" + prefix + "=" + namespaceURI + ")" );
+        }
+        // use standard prefix
+        else
+        {
+          result.append( "&TYPENAME=" + "sn99:" + localPart );
+          result.append( "&NAMESPACE=xmlns(sn99=" + namespaceURI + ")" );
+        }
+        // TODO check for chars to escape in namespace
+        return new URL( result.toString() );
+      }
+    }
+    throw new UnsupportedOperationException();
   }
 }
