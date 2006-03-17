@@ -3,7 +3,7 @@
   <title>Modellintegration Weiße Elster</title>
 
   <para>Das Niederschlag-Abfluss-Modell-Plugin integriert den Rechenkern
-  Kalypso-NA in die Benutzeroberfläche Kalypso-Enterprise zum Zweck der
+  Kalypso-NA in die Benutzeroberfläche KALYPSO-Enterprise zum Zweck der
   Abflussvorhersage, Nachrechnung historischer Ereignisse und zur Simulation
   von Modellvarianten.</para>
 
@@ -13,7 +13,7 @@
     <section>
       <title>Modellprojekt Weiße Elster</title>
 
-      <para>Beschreibung der Dateien und Verzeichnisse (im folgenden
+      <para>Beschreibung der Dateien und Verzeichnisse (im Folgenden
       bezeichnet ein führendes '/' in Pfadangaben das
       Projektverzeichnis.).</para>
 
@@ -23,12 +23,12 @@
         <para>Modelldatensatz bestehend aus den Modellelementen: Teilgebiete,
         Gewässerstränge und Gewässerknoten. Die entsprechenden Modellparameter
         sind den Elementen zugeordnet, u.a. auch Geometrien für die grafische
-        Visualisierung und Verknüpfungen auf Zeitreihen. Diese Datei
-        beinhaltet die initialen Modelldaten, die für die Erzeugung eines
-        Rechenfalles oder für eine Vorhersagerechnung übernommen werden. Die
+        Visualisierung und Verknüpfungen mit Zeitreihen. Diese Datei
+        beinhaltet die initialen Modelldaten, die für die Erzeugung einer
+        Rechenvariante oder für eine Vorhersagerechnung übernommen werden. Die
         einzelnen Modellparameter sind im zugehörigen GML-Schema
         <filename>/.model/schema/namodell.xsd</filename> dokumentiert.
-        Folgende vordefinierte Ansichten liegen vor:<glosslist>
+        Folgende vordefinierte Ansichten bestehen:<glosslist>
             <glossentry>
               <glossterm><filename>/Modell_Karten/Karte.gmt</filename></glossterm>
 
@@ -46,7 +46,7 @@
             </glossentry>
 
             <glossentry>
-              <glossterm><filename>Modell_Tabellen/Tabelle_KMGewaesser.gtt</filename></glossterm>
+              <glossterm><filename>/Modell_Tabellen/Tabelle_KMGewaesser.gtt</filename></glossterm>
 
               <glossdef>
                 <para>Tabellenansicht der Gewässerstränge</para>
@@ -64,11 +64,11 @@
       </section>
 
       <section>
-        <title><filename>/ombometer.gml</filename></title>
+        <title><filename>/ombrometer.gml</filename></title>
 
         <para>Datenmodell der Niederschlagsmessungen: Standpunkte der
         Ombrometer und deren Verknüpfungen mit dem Zeitreihenrepository.
-        Folgende vordefinierte Ansicht liegt vor:<glosslist>
+        Folgende vordefinierte Ansicht besteht:<glosslist>
             <glossentry>
               <glossterm><filename>/Modell_Karten/Ombrometer.gmt</filename></glossterm>
 
@@ -132,13 +132,13 @@
         <section>
           <title><filename>/.model/launch</filename></title>
 
-          <para>ANT-Skrip und Launches zum Erstellen und Aktualisieren einer
-          Rechenvariante. Eine tabellarische Übersicht über die Ant-Targets
+          <para>ANT-Skript und Launches zum Erstellen und Aktualisieren einer
+          Rechenvariante. Eine tabellarische Übersicht über die ANT-Targets
           und deren Arbeitsweise findet sich in den Modelldaten in der Datei
           <filename>/KalypsoWeisseElster/.model/info/WeisseElster_Pegel.xls</filename>.
           In der gleichen Datei befinden sich auch die Pfadangaben zu den
           verschiedenen Zuordnungsdateien, welche zur Verlinkung zwischen
-          Zeitreihen in PSICompact und dem WeißenElster Modell benutzt
+          Zeitreihen in PSICompact und dem Modell für die Weiße Elster benutzt
           werden.</para>
 
           <section>
@@ -147,31 +147,31 @@
             <orderedlist>
               <listitem>
                 <para>Kopieren des initialen Modelldatensatzes
-                <filename>/modell.gml nach
-                Rechenvariante/calcCase.gml</filename> .</para>
+                <filename>/modell.gml</filename> nach
+                <filename>Rechenvariante/calcCase.gml</filename>.</para>
               </listitem>
 
               <listitem>
                 <para>Kopieren von Steuerdateien und Ansichtsdateien aus dem
                 Vorlagenverzeichnis <filename>/.templates/calcCase/</filename>
-                zur Rechenvariante.</para>
+                in die Rechenvariante.</para>
               </listitem>
 
               <listitem>
-                <para>Anlegen des Verzeichnis <filename>Ergebnisse/</filename>
-                Hier werden die Ergebnisse der Simulationsrechnung
-                gespeichert.</para>
+                <para>Anlegen des Verzeichnisses
+                <filename>Ergebnisse</filename>. Hier werden die Ergebnisse
+                der Simulationsrechnung gespeichert.</para>
               </listitem>
 
               <listitem>
                 <para>Kopieren von Vorlagendateien aus dem Ordner
-                <filename>./templates/calcCase</filename> in das
+                <filename>/.templates/calcCase</filename> in das
                 Rechenverzeichnis.</para>
               </listitem>
 
               <listitem>
                 <para>Kopieren der Konfiguration zur Optimierung
-                <filename>./templates/calcCase/sce.xml</filename> in das
+                <filename>/.templates/calcCase/sce.xml</filename> in das
                 Rechenverzeichnis.</para>
               </listitem>
             </orderedlist>
@@ -183,24 +183,24 @@
             <orderedlist>
               <listitem>
                 <para>Zeitreihen der gemessenen Niederschläge zur Kontrolle
-                der Eingangsdaten in <filename>Verzeichnis
-                Ombrometer/</filename></para>
+                der Eingangsdaten im Verzeichnis
+                <filename>Ombrometer</filename></para>
               </listitem>
 
               <listitem>
                 <para>Zeitreihen der Pegelmessungen zum visuellen Vergleich
-                und zur Parameteroptimierung in V<filename>erzeichnis
-                Pegel/</filename></para>
+                und zur Parameteroptimierung im Verzeichnis
+                <filename>Pegel</filename></para>
               </listitem>
 
               <listitem>
-                <para>Zeitreihen der Zuflussganglinien in
-                <filename>Verzeichnis Zufluss/</filename></para>
+                <para>Zeitreihen der Zuflussganglinien im Verzeichnis
+                <filename>Zufluss</filename></para>
               </listitem>
 
               <listitem>
-                <para>Zeitreihen der Gebietsniederschläge in
-                <filename>Verzeichnis Niederschlag/</filename></para>
+                <para>Zeitreihen der Gebietsniederschläge im Verzeichnis
+                <filename>Niederschlag</filename></para>
               </listitem>
             </orderedlist>
           </section>
@@ -226,7 +226,7 @@
         <section>
           <title><filename>/.model/modelspec[1-17].xml</filename></title>
 
-          <para>Für die Berechnung im Vorhersageemodus existiert für jeden
+          <para>Für die Berechnung im Vorhersagemodus existiert für jeden
           Vorhersagepegel [1-17] eine Konfiguration der Dateien und
           Verzeichnisse, die zum Rechendienst übertragen werden.Diese
           unterscheiden sich vom Expertenmodus durch unterschiedliche
@@ -236,13 +236,13 @@
         <section>
           <title><filename>/.model/calcWizard.xml</filename></title>
 
-          <para>Konfiguration der einzelnen Wizardseiten für die
-          Benutzerführung des Vorhersagemodus.</para>
+          <para>Konfiguration der einzelnen Seiten des
+          Vorhersage-Assistenten.</para>
         </section>
       </section>
 
       <section>
-        <title>Aufbau Rechenvariante</title>
+        <title>Aufbau einer Rechenvariante</title>
 
         <section>
           <title>Zur Rechenvariante gehören folgende Daten- und
@@ -282,11 +282,9 @@
                 </glossdef>
               </glossentry>
             </glosslist></para>
-        </section>
 
-        <section>
-          <title>Vorlagendateien zum Steuerungsdatensatz
-          <filename>(expertControl.gml)</filename></title>
+          <para>Vorlagendateien zum Steuerungsdatensatz
+          (<filename>expertControl.gml</filename>):</para>
 
           <para><glosslist>
               <glossentry>
@@ -298,11 +296,7 @@
                   NA-Modell)</para>
                 </glossdef>
               </glossentry>
-            </glosslist></para>
-        </section>
-
-        <section>
-          <title>Weitere Dateien:</title>
+            </glosslist>Weitere Dateien:</para>
 
           <para><glosslist>
               <glossentry>
@@ -318,8 +312,8 @@
                 <glossterm><filename>.sce.xml</filename></glossterm>
 
                 <glossdef>
-                  <para>Steuerdatei zur Parameteroptimierung. (wird vom
-                  Benutzer nicht verändert)</para>
+                  <para>Steuerdatei zur Parameteroptimierung (wird vom
+                  Benutzer nicht verändert).</para>
                 </glossdef>
               </glossentry>
             </glosslist></para>
@@ -329,8 +323,8 @@
           <title>Steuerdateien Vorhersagemodus:</title>
 
           <para>Je Vorhersagepegel (1-17) existiert eine Steuerungsdatei
-          (.nacontrol_[1-17].gml), welche vom Vorhersage-Wizard verwendet
-          wird.</para>
+          (<filename>.nacontrol_[1-17].gml</filename>), welche vom
+          Vorhersage-Assistenten verwendet wird.</para>
         </section>
       </section>
     </section>
@@ -339,7 +333,7 @@
       <title>Modellintegration Server</title>
 
       <para>Die Programmierung zur Modellintegration findet sich im
-      Quellcodeprojekt <filename>KalypsoNA</filename>. Dort befindet sich
+      Quellcodeprojekt <filename>KalypsoModelNA</filename>. Dort befindet sich
       ebenfalls der Rechenkern (fortran-win32-exe) des NA-Modells
       <filename>Kalypso.exe</filename>. Er wird zur Berechnung ins
       Arbeitsverzeichnis kopiert.</para>
@@ -355,27 +349,27 @@
           </listitem>
 
           <listitem>
-            <para>Kontrolle des Simulationsablauf</para>
+            <para>Kontrolle des Simulationsablaufs</para>
           </listitem>
 
           <listitem>
             <para>Konvertierung der nativen Simulations-Ergebnisdaten in das
-            Kalypso-Zeitreihenformat</para>
+            KALYPSO-Zeitreihenformat</para>
           </listitem>
         </itemizedlist></para>
 
       <para>Die Integration zur Optimierung ist im Quellcodeprojekt
-      <filename>KalypsoOptimizePlugin</filename> enthalten und wird von
-      KalypsoNA benutzt. Dort befindet sich die Implementierung des
+      <filename>KalypsoOptimize</filename> enthalten und wird von KalypsoNA
+      benutzt. Dort befindet sich die Implementierung des
       Optimierungsalgorithmus als fortran-win32-exe
       <filename>sce.exe_</filename>. Zur Durchführung der Optimierung wird sie
       ebenfalls ins Arbeitsverzeichnis kopiert.</para>
 
       <section>
-        <title>Ablaufschema bei Modellrechnung ohne
+        <title>Ablaufschema bei einer Modellrechnung ohne
         Parameter-Optimierung</title>
 
-        <para>Zunächst werden die Daten (nach
+        <para>Zunächst werden die Daten (entsprechend der Datei
         <filename>modelspec.xml</filename>) zum Rechendienst übertragen. Dort
         werden folgende Schritte durchgeführt:</para>
 
@@ -426,12 +420,12 @@
       </section>
 
       <section>
-        <title>Ablaufschema bei Modellrechnung mit
+        <title>Ablaufschema bei einer Modellrechnung mit
         Parameter-Optimierung</title>
 
-        <para>Im Vorhersagemodus hat der Anwender die Möglichkeit im
-        Worhersage-Wizard für einen Berechnung eine Parameter-Optimierung zu
-        benutzen. Der Rechendienst erkennt dies durch einen Eintrag in den
+        <para>Im Vorhersagemodus hat der Anwender die Möglichkeit, im
+        Vorhersage-Assistenten für eine Berechnung, eine Parameter-Optimierung
+        zu benutzen. Der Rechendienst erkennt dies durch einen Eintrag in den
         Steuerdateien <filename>.control_*.gml</filename>.</para>
 
         <para>Ist die Optimierung gewünscht, werden im Unterschied zur
@@ -455,7 +449,7 @@
             </listitem>
           </orderedlist></para>
 
-        <para>Nach erfolgter Optimierung der Korrekturwerte wird das
+        <para>Nach erfolgter Optimierung der Korrekturwerte werden das
         optimierte Simulationsergebnis sowie die Steuerdatei mit den
         ermittelten Korrekturwerten zum Client übertragen. Die Optimierung ist
         nur im Vorhersagemodus möglich.</para>

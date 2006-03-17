@@ -139,7 +139,7 @@
       <para>Da die XML Schemata später über den Rechendienst zur Verfügung
       gestellt werden (siehe auch das Interface
       <interfacename>org.kalypso.contribs.java.net.IUrlCatalog</interfacename>),
-      ist es sinnvoll die Schemadefinitionsdateien direkt in den
+      ist es sinnvoll, die Schemadefinitionsdateien direkt in den
       Programmquellen des Modell-Plugins abzulegen. Dabei ist frei wählbar, ob
       die Modellspezifikation in einer einzelnen Datei abgelegt ist oder auf
       mehrere Dateien verteilt wird. Verweise (Importe) der Schemata
@@ -211,7 +211,7 @@
     </section>
 
     <section>
-      <title>Die Datei '.calculation'</title>
+      <title>Die Datei <filename>.calculation</filename></title>
 
       <para>Die Datei <filename>.calculation</filename> ist eine Datei im
       GML-Format, welche beim Erzeugen einer Rechenvariante automatisch
@@ -253,9 +253,9 @@
             <para>:scenarioDescription: Beschreibung des
             Anwendungsszenario</para>
           </listitem>
-        </itemizedlist>Soll die Anzeige der <filename>.calculation</filename>
-      (=zweite Seite des Wizards zur Erzeugung einer Rechenvariante - Menü
-      <menuchoice>
+        </itemizedlist>Soll die Anzeige der <filename>Datei
+      .calculation</filename> (=zweite Seite des Wizards zur Erzeugung einer
+      Rechenvariante - Menü <menuchoice>
           <guimenu>Rechenvariante</guimenu>
 
           <guimenuitem>Neu</guimenuitem>
@@ -434,7 +434,7 @@
     angemeldet werden.</para>
   </section>
 
-  <section>
+  <section id="sec_konfigAssi">
     <title>Konfiguration des Vorhersage-Assistenten</title>
 
     <para>Die bislang geschilderte Methode beschreibt ausschließlich die

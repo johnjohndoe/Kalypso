@@ -15,10 +15,10 @@
 
   <para>Die zur Integration des Modells nötige Programmierung ist innerhalb
   der Programmquellen vollständig im Projekt
-  <filename>KalypsoModellSpree</filename> zusammengefasst. Neben der
-  Implementation des Rechendienstes finden sich dort alle für die Berechnung
-  benötigten weiteren Resourcen (ausführbares Programm hw_spree.exe,
-  unveränderbare Parameterdateien sowie Testdatensätze) wieder.</para>
+  <filename>KalypsoModelSpree</filename> zusammengefasst. Neben der
+  Implementierung des Rechendienstes finden sich dort alle für die Berechnung
+  benötigten weiteren Ressourcen wieder (ausführbares Programm hw_spree.exe,
+  unveränderbare Parameterdateien sowie Testdatensätze).</para>
 
   <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
   Modelldaten usw., befinden sich im Datenprojekt
@@ -32,8 +32,8 @@
     <para>Die Verzeichnisstruktur des Modellprojektes
     <filename>KalypsoSpree</filename> ist gemäß <xref linkend="abschn_5_1" />
     aufgebaut. Über die Standard-Struktur hinaus wurde das Verzeichnis
-    .Rechenvarianten_test angelegt, welches Testdatensätze als fertige
-    Rechenvarianten enthält.</para>
+    <filename>.Rechenvarianten_test</filename> angelegt, welches
+    Testdatensätze als fertige Rechenvarianten enthält.</para>
 
     <para>Die GML-Applikationsschemata wurden wie empfohlen in den
     Programmquellen des Modell-Plugins im Paket
@@ -46,7 +46,7 @@
     Überblick über die Struktur der Modelldaten in Form einer Baumansicht
     verschaffen. Nach dem Öffnen der Ansicht erscheint eine (Baum-)
     Strukturansicht des Modells, welche unter anderem auch das Bearbeiten der
-    einzelnen Modellelemente erlaubt (siehe Abbildung <xref
+    einzelnen Modellelemente erlaubt (siehe <xref
     linkend="fig_modellintegration_spree_ueberblick" />).</para>
 
     <figure id="fig_modellintegration_spree_ueberblick">
@@ -67,8 +67,8 @@
     <itemizedlist>
       <listitem>
         <para>Die Liste der Pegel (PegelCollectionAssociation) enthält alle
-        Pegel und deren Parameter. Innerhalb der Pegel wird in Einzugsgebiete
-        und Flusslaufmodelle unterschieden.</para>
+        Pegel und deren Parameter. Innerhalb der Pegel wird zwischen
+        Einzugsgebieten und Flusslaufmodellen unterschieden.</para>
       </listitem>
 
       <listitem>
@@ -79,7 +79,8 @@
 
       <listitem>
         <para>Die Liste der Vorgabe-Elemente (VorgabeCollectionAssociation)
-        enthält die Abflusszu- und -abgaben ('Flutungen') des Modells.</para>
+        enthält die Abflusszu- und -abgaben (<quote>Flutungen</quote>) des
+        Modells.</para>
       </listitem>
 
       <listitem>
@@ -90,8 +91,8 @@
 
     <para>Im Folgenden werden die einzelnen Modellparameter und Spalten der
     Modelltabellen erläutert. Die Eingabe der Parameter erfolgt entweder über
-    die entsprechenden Ansichten im Kalypso-Modeler (Expertenmodus) oder im
-    Vorhersage-Wizard.</para>
+    die entsprechenden Ansichten im KALYPSO-Modeler (Expertenmodus) oder im
+    Vorhersage-Assistenten.</para>
 
     <table>
       <title>Parameter der N-A-Modelle (Einzugsgebiete)</title>
@@ -165,7 +166,7 @@
           <row>
             <entry>Ausdehnung</entry>
 
-            <entry>[m2]</entry>
+            <entry>[m<superscript>2</superscript>]</entry>
 
             <entry>Fläche des Einzugsgebiets (nicht benutzt)</entry>
           </row>
@@ -175,7 +176,7 @@
 
             <entry>cm/Tag</entry>
 
-            <entry>Parameter zur Ermittlung der Umhüllenden
+            <entry>Parameter zur Ermittlung der umhüllenden
             Vorhersageganglinien</entry>
           </row>
 
@@ -193,7 +194,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf gemessene Niederschlagszeitreihe auf dem
+            <entry>Verknüpfung mit gemessener Niederschlagszeitreihe auf dem
             Server</entry>
           </row>
 
@@ -202,7 +203,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf Wasserstandsganglinie auf dem
+            <entry>Verknüpfung mit Wasserstandsganglinie auf dem
             Server</entry>
           </row>
 
@@ -211,7 +212,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf gemessene Wasserstandsganglinie</entry>
+            <entry>Verknüpfung mit gemessener Wasserstandsganglinie</entry>
           </row>
 
           <row>
@@ -219,7 +220,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf berechnete Wasserstandsganglinie</entry>
+            <entry>Verknüpfung mit berechneter Wasserstandsganglinie</entry>
           </row>
 
           <row>
@@ -227,7 +228,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage</entry>
+            <entry>Verknüpfung mit der Wasserstandsvorhersage</entry>
           </row>
 
           <row>
@@ -235,7 +236,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage, untere
+            <entry>Verknüpfung mit der Wasserstandsvorhersage, untere
             Umhüllende</entry>
           </row>
 
@@ -244,7 +245,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage, obere
+            <entry>Verknüpfung mit der Wasserstandsvorhersage, obere
             Umhüllende</entry>
           </row>
         </tbody>
@@ -351,7 +352,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage</entry>
+            <entry>Verknüpfung der Wasserstandsvorhersage</entry>
           </row>
 
           <row>
@@ -359,7 +360,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage, untere
+            <entry>Verknüpfung der Wasserstandsvorhersage, untere
             Umhüllende</entry>
           </row>
 
@@ -368,7 +369,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung der Wasserstandvorhersage, obere
+            <entry>Verknüpfung der Wasserstandsvorhersage, obere
             Umhüllende</entry>
           </row>
         </tbody>
@@ -415,7 +416,7 @@
           <row>
             <entry>Anfangsstauvolumen</entry>
 
-            <entry>[hm3]</entry>
+            <entry>[hm<superscript>3</superscript>]</entry>
 
             <entry>Stauinhalt der Talsperren zu Beginn der Simulation</entry>
           </row>
@@ -425,7 +426,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf Abgabezeitreihe auf dem Server</entry>
+            <entry>Verknüpfung mit der Abgabezeitreihe auf dem Server</entry>
           </row>
 
           <row>
@@ -433,7 +434,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf Abgabezeitreihe im Modell</entry>
+            <entry>Verknüpfung mit der Abgabezeitreihe im Modell</entry>
           </row>
 
           <row>
@@ -441,7 +442,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf durch den Rechenkern plausibilisierte
+            <entry>Verknüpfung mit der durch den Rechenkern plausibilisierten
             Abgabezeitreihe</entry>
           </row>
 
@@ -450,7 +451,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf berechnete Zeitreihe der
+            <entry>Verknüpfung mit berechneter Zeitreihe der
             TS-Volumina</entry>
           </row>
 
@@ -459,7 +460,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf berechnete Zuflusszeitreihe</entry>
+            <entry>Verknüpfung mit berechneter Zuflusszeitreihe</entry>
           </row>
         </tbody>
       </tgroup>
@@ -507,7 +508,7 @@
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung auf Vorgabezeitreihe im Modell</entry>
+            <entry>Verknüpfung mit der Vorgabezeitreihe im Modell</entry>
           </row>
         </tbody>
       </tgroup>
@@ -590,17 +591,17 @@
 
         <thead>
           <row>
-            <entry align="center">Pfadrelative zur Rechenvariante</entry>
+            <entry align="center">Pfade relativ zur Rechenvariante</entry>
 
             <entry align="center">Beschreibung</entry>
 
-            <entry align="center">Herkunft</entry>
+            <entry align="center">Entstehung</entry>
           </row>
         </thead>
 
         <tbody>
           <row>
-            <entry>Steuerparameter.gft</entry>
+            <entry><filename>Steuerparameter.gft</filename></entry>
 
             <entry>Ansichtvorlage für die Steuerparameter</entry>
 
@@ -609,7 +610,7 @@
           </row>
 
           <row>
-            <entry>Gesamtansicht.gmt</entry>
+            <entry><filename>Gesamtansicht.gmt</filename></entry>
 
             <entry>Karte des Gesamtgebiets mit allen Modellelementen</entry>
 
@@ -618,7 +619,7 @@
           </row>
 
           <row>
-            <entry>Bodenfeuchten.gtt</entry>
+            <entry><filename>Bodenfeuchten.gtt</filename></entry>
 
             <entry>Tabelle der Einzugsgebiete (N-A Modell) zur Editierung der
             Anfangsbodenfeuchten</entry>
@@ -628,7 +629,7 @@
           </row>
 
           <row>
-            <entry>Anfangsvolumen.gtt</entry>
+            <entry><filename>Anfangsvolumen.gtt</filename></entry>
 
             <entry>Tabelle der Talsperren zur Editierung der
             Anfangsvolumina</entry>
@@ -638,7 +639,7 @@
           </row>
 
           <row>
-            <entry>Flusslaufparameter.gtt</entry>
+            <entry><filename>Flusslaufparameter.gtt</filename></entry>
 
             <entry>Tabelle der Flusslauf-modelle zur Editierung ihrer
             Parameter</entry>
@@ -648,7 +649,7 @@
           </row>
 
           <row>
-            <entry>calcCase.log</entry>
+            <entry><filename>calcCase.log</filename></entry>
 
             <entry>Log-Datei zur Erstellung der Rechenvariante, insbesondere
             Meldungen zur Gültigkeit der Zeitreihenwerte</entry>
@@ -657,7 +658,7 @@
           </row>
 
           <row>
-            <entry>.calculation</entry>
+            <entry><filename>.calculation</filename></entry>
 
             <entry>Steuerparameter der Berechnung</entry>
 
@@ -667,32 +668,32 @@
           </row>
 
           <row>
-            <entry>calcCase.gml</entry>
+            <entry><filename>calcCase.gml</filename></entry>
 
-            <entry>GML der Modelldaten der Rechenvariante</entry>
+            <entry>GML-Datei der Modelldaten der Rechenvariante</entry>
 
             <entry>Kopie der Grunddaten des Modells
             (<filename>/KalypsoSpree/modell.gml</filename>)</entry>
           </row>
 
           <row>
-            <entry>Zeitreihen/*.zml</entry>
+            <entry><filename>Zeitreihen/*.zml</filename></entry>
 
             <entry>Eingangszeitreihen der Berechnung</entry>
 
-            <entry>Kalypso Zeitreihendienst</entry>
+            <entry>KALYPSO-Zeitreihendienst</entry>
           </row>
 
           <row>
-            <entry>Ergebnisse/*</entry>
+            <entry><filename>Ergebnisse/*</filename></entry>
 
             <entry>Ergebnisse einer Berechnung</entry>
 
-            <entry>Kalypso Berechnungsdienst</entry>
+            <entry>KALYPSO-Berechnungsdienst</entry>
           </row>
 
           <row>
-            <entry>Ergebnisse/calcCase.zml</entry>
+            <entry><filename>Ergebnisse/calcCase.gml</filename></entry>
 
             <entry>Eventuell durch die Berechnung geänderte Modelldaten
             (optimierte Anfangsbodenfeuchten)</entry>
@@ -701,7 +702,7 @@
           </row>
 
           <row>
-            <entry>Ergebnisse/spree.log</entry>
+            <entry><filename>Ergebnisse/spree.log</filename></entry>
 
             <entry>Log-Datei der Berechnung</entry>
 
@@ -709,16 +710,16 @@
           </row>
 
           <row>
-            <entry>Ergebnisse/.native</entry>
+            <entry><filename>Ergebnisse/.native</filename></entry>
 
-            <entry>Modelldaten im Format des Rechenkerns (.dbf) zu Prüfzwecken
-            hier abgelegt</entry>
+            <entry>Modelldaten im Format des Rechenkerns (*.dbf), zu
+            Prüfzwecken hier abgelegt</entry>
 
             <entry></entry>
           </row>
 
           <row>
-            <entry>Ergebnisse/Zeitreihen</entry>
+            <entry><filename>Ergebnisse/Zeitreihen</filename></entry>
 
             <entry>Eigentliche Berechnungsergebnisse in Form von
             Zeitreihen</entry>
@@ -730,16 +731,16 @@
     </table>
 
     <para>Die Benennung der Zeitreihendateien ist jeweils an die Benennung der
-    Zeitreihendaten des ursprünglichen Modells angelegt.</para>
+    Zeitreihendaten des ursprünglichen Modells angelehnt.</para>
 
     <section>
-      <title>Launches und Ant-Skripte</title>
+      <title>Launches und ANT-Skripte</title>
 
-      <para>Die Modellstruktur wird anhand der in Datei
+      <para>Die Modellstruktur wird mit Hilfe der in der Datei
       <filename>/KalypsoSpree/.model/launch/build.xml</filename> enthaltenen
-      Ant-Targets erstellt.</para>
+      ANT-Targets erstellt.</para>
 
-      <para>Die Ant-Targets sind entsprechend den in <xref
+      <para>Die ANT-Targets sind entsprechend den in <xref
       linkend="sec-modellintegration-allgemein" /> beschrieben Launches in
       drei Gruppen (Erstellung der Rechenvariante, Aktualisierung der
       Rechenvariante und Aktualisierung der Rechenvariante nach einer
@@ -751,10 +752,11 @@
 
         <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
         (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
-        Steuerparameter .calculation (siehe Unten) wird mit Standardwerten
-        besetzt. Die eigentlichen Modelldaten befinden sich in der Datei
-        calcCase.gml und stellen eine reine Kopie der Grunddaten
-        (/KalypsoSpree/modell.gml) dar.</para>
+        Steuerparameter <filename>.calculation</filename> (siehe <xref
+        linkend="sec_pktCalculation" />) wird mit Standardwerten belegt. Die
+        eigentlichen Modelldaten befinden sich in der Datei
+        <filename>calcCase.gml</filename> und stellen eine reine Kopie der
+        Grunddaten (<filename>/KalypsoSpree/modell.gml</filename>) dar.</para>
       </section>
 
       <section>
@@ -787,7 +789,7 @@
 
                 <entry>PA_*</entry>
 
-                <entry>Berechnung via Gebietsniederschlagmodell</entry>
+                <entry>Berechnung via Gebietsniederschlagsmodell</entry>
               </row>
 
               <row>
@@ -803,7 +805,7 @@
 
                 <entry>QV_*</entry>
 
-                <entry>Kalypso Server dateibasiert</entry>
+                <entry>KALYPSO-Server, dateibasiert</entry>
               </row>
 
               <row>
@@ -811,7 +813,7 @@
 
                 <entry>QP_*</entry>
 
-                <entry>Kalypso Server dateibasiert</entry>
+                <entry>KALYPSO-Server, dateibasiert</entry>
               </row>
 
               <row>
@@ -827,8 +829,8 @@
 
         <para>Zur Zeit sind lediglich die Wasserstände und die gemessenen bzw.
         vorhergesagten Niederschläge über PSICompact abrufbar. Die
-        vorgegebenen Abflüsse sind im Modell mit auf Kalypso Serverseite
-        abgelegten Dateien (Kalypso Datei-Repository im Pfad ) verknüpft,
+        vorgegebenen Abflüsse sind im Modell mit auf dem KALYPSO-Server
+        abgelegten Dateien (KALYPSO Datei-Repository im Pfad ) verknüpft,
         welche die historischen Daten des Hochwasserereignisses vom April 2004
         enthalten. Wird ein anderer Zeitraum gewählt (Hochwasservorhersage)
         werden die benötigten Zeitreihen mit Nullwerten befüllt, die Daten
@@ -836,7 +838,7 @@
 
         <para>Die Zuordnung zwischen Zeitreihen der Rechenvariante und
         Zeitreihen in PSICompact bzw. Zeitreihen in Dateien auf dem Server
-        befindet sich in den Zuordnungsdateien (.gml) im Verzeichnis
+        befindet sich in den Zuordnungsdateien (*.gml) im Verzeichnis
         <filename>/KalypsoSpree/.model/observationConf</filename>.</para>
       </section>
 
@@ -845,7 +847,7 @@
 
         <para>Die Modelldaten der Rechenvariante
         (<filename>calcCase.gml</filename>) werden durch die von der
-        Berechnung geänderten Modelldaten (Optimierte Bodenfeuchten,
+        Berechnung geänderten Modelldaten (optimierte Bodenfeuchten,
         <filename>Ergebnisse/calcCase.gml</filename>) ersetzt.</para>
       </section>
 
@@ -854,7 +856,7 @@
 
         <para>Die Umsetzung des Gebietsniederschlagsmodell findet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
-        Ant-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
+        ANT-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
         sowie bei expliziter Neuberechnung des Gebietsniederschlags in der
         ersten Seite des Vorhersageassistenten aufgerufen wird.</para>
 
@@ -868,18 +870,19 @@
         <para>Die Vergangenheitswerte werden über eine lineare Gewichtung aus
         den gemessenen Ombrometerwerten hergeleitet. Die Gewichtung wurde als
         Relation im GML-Applikationsschema modelliert und hängt als Parameter
-        <quote>Gewichtungselement</quote> direkt an den Einzuggebietselementen
-        des Datenmodells (<filename>modell.xml</filename>).</para>
+        <quote>Gewichtungselement</quote> direkt an den
+        Einzugsgebietselementen des Datenmodells
+        (<filename>modell.gml</filename>).</para>
       </section>
     </section>
 
-    <section>
-      <title>calculation.xml</title>
+    <section id="sec_pktCalculation">
+      <title>Die Datei <filename>.calculation</filename></title>
 
-      <para>Die Steuerdatei .calculation wird durch das Schema
-      <filename>/KalypsoSpree/.model/schema/control.xsd</filename>
+      <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
+      Schema <filename>/KalypsoSpree/.model/schema/control.xsd</filename>
       spezifiziert und enthält neben dem Simulationszeitraum (Start der
-      Simulation, Start der Vorhersage, Ende der Simulation) noch ein paar
+      Simulation, Start der Vorhersage, Ende der Simulation) noch weitere
       Metadaten, um eine Rechenvariante ausführlich beschreiben zu können.
       Diese sind:</para>
 
@@ -890,7 +893,7 @@
         </listitem>
 
         <listitem>
-          <para>das Erstellungsdatum der Rechenvariante (Default-Wert:
+          <para>das Erstellungsdatum der Rechenvariante (Default-Wert ist die
           Systemzeit bei Anlegen der Rechenvariante)</para>
         </listitem>
 
@@ -905,11 +908,11 @@
 
       <para>Um eine ansprechende Darstellung der Steuerparameter und Metadaten
       im Dialog <guilabel>Rechenvariante Neu</guilabel> sowie im
-      Vorhersage-Wizard zu erhalten, wurde eine Ansichtvorlage für die
+      Vorhersage-Assistenten zu erhalten, wurde eine Ansichtvorlage für die
       Steuerdatei unter
       <filename>/KalypsoSpree/.model/.calculation.view</filename> abgelegt.
       Sie hat den gleichen Aufbau wie die Vorlagendatei
-      <filename>Steuerparamter.gft</filename> im Verzeichnis der
+      <filename>Steuerparameter.gft</filename> im Verzeichnis der
       Rechenvariante.</para>
 
       <tip>
@@ -930,23 +933,23 @@
 
     <para>Zur Berechnung einer Rechenvariante wurde clientseitig die Datei
     <filename>/KalypsoSpree/.model/modelspec.xml</filename> angelegt, welche
-    die Dateien beschreibt, die zur Berechnung an den Kalypso Rechendienst
+    die Dateien beschreibt, die zur Berechnung an den KALYPSO-Rechendienst
     übertragen werden. Im Fall des Spree-Modells werden alle Dateien der
     Rechenvariante bis auf die Vorlagen übertragen.</para>
 
-    <para>Zur Berechnung wird der Kalypso Berechnungsdienst mit der Typ-ID des
+    <para>Zur Berechnung wird der KALYPSO-Berechnungsdienst mit der Typ-ID des
     Spree-Modells (hier <quote>spree</quote>) angestoßen. Der Dienst aktiviert
-    anhand der ID die entsprechende Implementation des Interface
+    anhand der ID die entsprechende Implementierung des Interface
     <interfacename>org.Kalypso.services.calculation.job.ICalcJob</interfacename>,
     im Falle des Spree-Modells die Klasse
     <interfacename>org.kalypso.lhwzsachsen.spree.SpreeCalcJob</interfacename>
-    im Projekt <filename>KalypsoSpreePlugin</filename> der Programmquellen.
-    Wie oben bereits beschrieben sind alle Spree-spezifischen Programmierungen
-    und für das Anstoßen des Rechenkerns benötigten Daten in diesem Projekt
-    zusammengefasst.</para>
+    im Projekt <filename>KalypsoModelSpree</filename> der Programmquellen. Wie
+    oben bereits beschrieben wurde, sind alle Spree-spezifischen
+    Programmierungen und die für das Anstoßen des Rechenkerns benötigten Daten
+    in diesem Projekt zusammengefasst.</para>
 
-    <para>Die Implementation des Spree-Berechnungsdienstes geht für jede
-    Berechnung wie folgt vor:</para>
+    <para>Der implementierte Spree-Berechnungsdienst geht für jede Berechnung
+    wie folgt vor:</para>
 
     <itemizedlist>
       <listitem>
@@ -958,7 +961,7 @@
         <para>Es werden das ausführbare Programm nebst Programmbibliotheken
         sowie alle gleichbleibenden Parameterdaten in das temporäre
         Verzeichnis kopiert. Diese Daten finden sich gesammelt im Paket
-        <filename>/KalypsoSpreePlugin/src/org/Kalypso/lhwzsachsen/spree/resources/exe</filename>.</para>
+        <filename>/KalypsoModelSpree/src/org/Kalypso/lhwzsachsen/spree/resources/exe</filename>.</para>
       </listitem>
 
       <listitem>
@@ -981,21 +984,21 @@
     </itemizedlist>
 
     <para>Neben den konvertierten Daten (Zeitreihendaten, veränderte
-    Modelldaten siehe Auflistung oben) werden auch die nativen, vom Rechenkern
-    verarbeiteten Daten zurück zum Client übertragen, was eine eventuelle
-    Fehlersuche erleichtert. Insbesondere können diese direkt von der
-    ursprünglichen Version des Rechenprogramms (mit Oberfläche) verarbeitet
-    und kontrolliert werden.</para>
+    Modelldaten - Auflistung siehe oben) werden auch die nativen, vom
+    Rechenkern verarbeiteten Daten zurück zum Client übertragen, was eine
+    eventuelle Fehlersuche erleichtert. Insbesondere können diese direkt von
+    der ursprünglichen Version des Rechenprogramms (mit Oberfläche)
+    clientseitig verarbeitet und kontrolliert werden.</para>
   </section>
 
   <section>
     <title>Konfiguration des Vorhersage-Assistenten</title>
 
     <para>Die Konfiguration des Vorhersage-Assistenten des Spree-Modells
-    befindet sich wie gefordert in der Datei
-    <filename>/KalypsoSpree/.model/calcWizard.xml</filename>. Der Ablauf des
-    Assistenten ist im Benutzerhandbuch zum Spree-Modell beschrieben und in
-    der Konfigurationsdatei kommentiert.</para>
+    befindet sich wie in <xref linkend="sec_konfigAssi" /> gefordert in der
+    Datei <filename>/KalypsoSpree/.model/calcWizard.xml</filename>. Der Ablauf
+    des Assistenten ist im Benutzerhandbuch zum Spree-Modell beschrieben und
+    in der Konfigurationsdatei kommentiert.</para>
 
     <para>Die Konfigurationsdatei <filename>calcWizard.xml</filename> verweist
     ihrerseits auf eine Reihe von Ansichtsvorlagen zur Darstellung der
