@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="com.bce.eind.core"
+   name="Profil Core Plugin"
+   version="1.0.0"
+   provider-name="bce.com"
+   class="com.bce.eind.core.ProfilCorePlugin">
+   <runtime>
+      <library name="wspprofilcore.jar">
+         <export name="*"/>
+      </library>
+      <library name="libs/commons-io-1.0.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.runtime" export="true"/>
+      <import plugin="org.kalypso.contribs.java" export="true"/>
+   </requires>
+   
+   <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
+   <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
+   <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
+</plugin>

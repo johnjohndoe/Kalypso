@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.bce.eind.kalypso1d"
+   name="Profil Kalypso 1d"
+   version="1.0.0"
+   provider-name="bce.com"
+   class="org.bce.eind.kalypso1d.ProfilKalypso1DPlugin">
+   <runtime>
+      <library name="kalypso1d.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.bce.eind.core"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+     <extension
+           point="com.bce.eind.core.validatortype">
+        <validatortype
+              description="Pasche"
+              id="pasche"/>
+     </extension>
+   <extension
+         point="com.bce.eind.core.validatorrule">
+      <rule
+            class="org.bce.eind.kalypso1d.rules.RuecksprungRule"
+            description="Rücksprung"
+            id="pasche.ruecksprung"
+            type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.TrennerRule"
+              description="Trennflächen"
+              id="pasche.trenner"
+              type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.BrueckeRule"
+              description="Brücke"
+              id="pasche.bruecke"
+              type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.WehrRule"
+              description="Wehr"
+              id="pasche.wehr"
+              type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.DoppelterPunktRule"
+              description="DoppelterPunkt"
+              id="pasche.doppelterpunkt"
+              type="Pasche"/>
+   </extension>
+</plugin>
