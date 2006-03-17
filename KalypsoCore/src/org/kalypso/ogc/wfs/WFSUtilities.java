@@ -163,7 +163,6 @@ public class WFSUtilities
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;
-    // PROXY litzu135.lit.hamburg.de:8080
     try
     {
       final IWFSCapabilities wfsCaps = WFSUtilities.getCapabilites( baseURL );
