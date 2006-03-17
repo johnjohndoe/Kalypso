@@ -4,24 +4,24 @@
 
   <para>Alle von KALYPSO benötigten Zeitreihendaten werden innerhalb des
   Hochwasserzentrums von WISKI geliefert bzw. alle Ergebnisse in Form von
-  Zeitreihen nach WISKI zurück geschrieben. Der Zugriff auf die WISKI Daten
-  erfolgt aus Sicht von KALPYSO über den von der KistersAG gestellten
+  Zeitreihen nach WISKI zurück geschrieben. Der Zugriff auf die WISKI-Daten
+  erfolgt aus Sicht von KALPYSO über den von der Kisters AG gestellten
   WISKI-WebDataProvider (WDP).</para>
 
   <section>
     <title>Überblick</title>
 
-    <para>Entsprechend der beiden WISKI Instanzen in Magdeburg und Halle sind
+    <para>Entsprechend der beiden WISKI-Instanzen in Magdeburg und Halle sind
     auch zwei WDP-Instanzen auf den Rechnern <filename>smdhvlapp</filename>
     und <filename>shalhvzlapp</filename> installiert. Der Aufruf erfolgt über
     Java-RMI (Remote Method Invocation), jeweils Port 10991.</para>
 
-    <para>Der Aufruf des WDP erfordert gernerell eine Authentifizierung. Für
+    <para>Der Aufruf des WDP erfordert generell eine Authentifizierung. Für
     den Zugriff seitens KALYPSO wurde hierzu ein separater Benutzer namens
     'wdpuser' eingerichtet.</para>
 
-    <para><xref linkend="tbl_wdp_methoden" /> fasst die Anwendung der WDP
-    Schnittstelle aus der Sicht von KALYPSO zusammen.</para>
+    <para><xref linkend="tbl_wdp_methoden" /> fasst die Anwendung der
+    WDP-Schnittstelle aus der Sicht von KALYPSO zusammen.</para>
 
     <table id="tbl_wdp_methoden">
       <title>Benutzte Methoden der WDP-Schnittstelle</title>
@@ -41,58 +41,58 @@
 
         <tbody>
           <row>
-            <entry>getSuperGroupList</entry>
+            <entry><methodname>getSuperGroupList</methodname></entry>
 
             <entry>Liste der WISKI-Gruppenarten ermitteln. Dient zum Aufbau
-            der IRepository Struktur in KALYPSO.</entry>
+            der IRepository-Struktur in KALYPSO.</entry>
           </row>
 
           <row>
-            <entry>getGroupList</entry>
+            <entry><methodname>getGroupList</methodname></entry>
 
             <entry>Liste der WISKI-Gruppen ermitteln. Dient zum Aufbau der
-            IRepository Struktur in KALYPSO.</entry>
+            IRepository-Struktur in KALYPSO.</entry>
           </row>
 
           <row>
-            <entry>getTsInfoList</entry>
+            <entry><methodname>getTsInfoList</methodname></entry>
 
             <entry>Liste der Zeitreihen ermitteln.</entry>
           </row>
 
           <row>
-            <entry>getAlarmLevelList</entry>
+            <entry><methodname>getAlarmLevelList</methodname></entry>
 
             <entry>Alarmstufen abfragen.</entry>
           </row>
 
           <row>
-            <entry>getRatingTables</entry>
+            <entry><methodname>getRatingTables</methodname></entry>
 
-            <entry>W/Q und W/V Beziehungen abfragen.</entry>
+            <entry>W/Q- und W/V- Beziehungen abfragen.</entry>
           </row>
 
           <row>
-            <entry>getStationDetailList</entry>
+            <entry><methodname>getStationDetailList</methodname></entry>
 
             <entry>Metadaten abfragen.</entry>
           </row>
 
           <row>
-            <entry>getTsData</entry>
+            <entry><methodname>getTsData</methodname></entry>
 
             <entry>Zeitreihendaten abholen.</entry>
           </row>
 
           <row>
-            <entry>IsTsWritable</entry>
+            <entry><methodname>IsTsWritable</methodname></entry>
 
             <entry>Prüfen, ob Daten einer Zeitreihe zurückgeschrieben werden
             können.</entry>
           </row>
 
           <row>
-            <entry>setTsData</entry>
+            <entry><methodname>setTsData</methodname></entry>
 
             <entry>Zeitreihendaten zurückschreiben.</entry>
           </row>
@@ -112,8 +112,8 @@
 
     <para>Die Firma Kisters hat die Funktionen des WDP über eine
     Java-Bilbiothek zur Verfügung gestellt. Aus dem Namensraum
-    <classname>de.kisters.wiski.webdataprovider</classname> sind alle WDP
-    Klassen zu erreichen.</para>
+    <classname>de.kisters.wiski.webdataprovider</classname> sind alle
+    WDP-Klassen zu erreichen.</para>
   </section>
 
   <section>
@@ -128,11 +128,11 @@
     linkend="chapter_4_zeitreihen" /> und <xref
     linkend="install-server_services_config" />).</para>
 
-    <para>Daneben ist die Implementierung der KALYPSO-WDP Schnittstelle über
+    <para>Daneben ist die Implementierung der KALYPSO-WDP-Schnittstelle über
     eine Konfigurationsdatei anpassbar (siehe
     <filename>org/Kalypso/wiskiadapter/resources/config.ini</filename>). Dort
-    sind die möglichen Parameter aufgelistet und beschrieben. Siehe auch die
-    <xref linkend="abb_wdp_konfig1" /> und <xref
+    sind die möglichen Parameter aufgelistet und beschrieben. Siehe auch <xref
+    linkend="abb_wdp_konfig1" /> und <xref
     linkend="abb_wdp_konfig2" />:</para>
 
     <figure id="abb_wdp_konfig1">
@@ -140,7 +140,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_1.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_1.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -150,7 +151,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_2.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/wiski_konfiguration_2.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -159,11 +161,11 @@
   <section>
     <title>Laufzeit</title>
 
-    <para>Zur Laufzeit wird die von der KistersAG gelieferte Java-Bibliothek
+    <para>Zur Laufzeit wird die von der Kisters AG gelieferte Java-Bibliothek
     <filename>kiwwebdp-externalclient.jar</filename> benötigt und im
-    Lib-Verzeichnis des Projekts KalypsoAdapterWiski abgelegt. Da RMI
-    standardmäßig mit dem JDK geliefert wird, werden hierzu keine weiteren
-    Bibliotheken benötigt.</para>
+    Lib-Verzeichnis des Projekts <filename>KalypsoAdapterWiski</filename>
+    abgelegt. Da RMI standardmäßig mit dem JDK geliefert wird, werden hierzu
+    keine weiteren Bibliotheken benötigt.</para>
 
     <para>Da Tomcat im Sicherheitsmodus gestartet wird, sind entsprechende
     Einträge für die WDP-Codebase notwendig. Die Datei
@@ -247,18 +249,18 @@
   <section>
     <title>WDP-Login</title>
 
-    <para>Die WDP-Schnittstelle der KistersAG wurde speziell fürs Internet
+    <para>Die WDP-Schnittstelle der Kisters AG wurde speziell fürs Internet
     entwickelt, um eine Interaktion zwischen Benutzer und WISKI per Browser zu
-    ermöglichen. Dabei wird ein Login/Logout Mechanimus verwendet, welcher
+    ermöglichen. Dabei wird ein Login-/Logout-Mechanimus verwendet, welcher
     einen automatischen Logout nach einer bestimmten Zeit vorsieht.</para>
 
     <para>Die Anwendung dieser Schnittstelle in KALYPSO stellt dagegen eine
-    andere Art von Interaktion zwischen den beiden Systemen dar. Die WDP-SST
-    wird direkt vom KALYPSO Observation Dienst über einen festgelegten
-    Benutzer ('wdpuser') benutzt, ohne Authentifizierung gegen den
-    tatsächlichen angemeldeten Benutzer. Das heisst, der KALYPSO Observation
-    Dienst meldet sich beim Start an dem WDP an und meldet sich nur in
-    bestimmten Fällen ab:</para>
+    andere Art von Interaktion zwischen den beiden Systemen dar. Die
+    WDP-Schnittstelle wird direkt vom KALYPSO-Observationdienst über einen
+    festgelegten Benutzer (<quote>wdpuser</quote>) benutzt, ohne
+    Authentifizierung gegen den tatsächlichen angemeldeten Benutzer. Das
+    heisst, der KALYPSO-Observationdienst meldet sich beim Start an dem WDP an
+    und meldet sich nur in bestimmten Fällen ab:</para>
 
     <itemizedlist>
       <listitem>
@@ -266,39 +268,41 @@
       </listitem>
 
       <listitem>
-        <para>beim Stoppen des Server.</para>
+        <para>beim Stoppen des Servers.</para>
       </listitem>
     </itemizedlist>
 
-    <para>Wann dies tatsächlich passiert ist dabei nicht vorhersehbar. Das
+    <para>Wann dies tatsächlich passiert, ist dabei nicht vorhersehbar. Das
     bedeutet, dass ein automatischer Logout durch den WDP nicht ausgeschlossen
     werden kann.</para>
 
-    <para>Um vor dieser Art von Logout zu schützen wurde der KALYPSO
-    Observation Dienst so implementiert, dass stets ein automatischer
+    <para>Um vor dieser Art von Logout zu schützen, wurde der
+    KALYPSO-Observationdienst so implementiert, dass stets ein automatischer
     Login-Versuch bei jedem Zugriff erfolgt. Dadurch ist die Verbindung
-    zwischen KALYPSO und WDP ohne Ausfall garantiert, vorrausgesetzt die
+    zwischen KALYPSO und WDP ohne Ausfall garantiert, vorausgesetzt die
     Systeme stehen zur Verfügung. Diese Vorgehensweise wurde in der Kodierung
     durch eine anfrageorientierte Verwaltung der WDP-Aufrufe berücksichtigt
-    (siehe lWiskiCall und WiskiRepository. executeWiskiCall).</para>
+    (siehe <filename>IWiskiCall</filename> und
+    <filename>WiskiRepository.executeWiskiCall</filename>).</para>
   </section>
 
   <section>
-    <title>Caching Mechanismus von W/Q-artigen Beziehungen</title>
+    <title>Caching-Mechanismus von W/Q-artigen Beziehungen</title>
 
     <para>Um den Betrieb von KALYPSO auch beim Ausfall von WISKI zumindest
     grundsätzlich (d.h. per Handeingabe der Zeitreihenwerte) zu ermöglichen,
     ist es seitens KALYPSO nötig, stets auf die W/Q- (oder W/V-) Beziehungen
     der Messreihen zugreifen zu können.</para>
 
-    <para>Zu diesem Zweck werden bei stets die zuletzt aus WISKI gelesenen
-    W/Q- oder W/V-Beziehungen als Datei auf dem KALYPSO Server gespeichert
-    ('gecached'). Sollte WISKI nicht mehr zur Verfügung stehen, wird die
-    abgespeicherte Datei benutzt.</para>
+    <para>Zu diesem Zweck werden stets die zuletzt aus WISKI gelesenen W/Q-
+    oder W/V-Beziehungen als Datei auf dem KALYPSO-Server gespeichert
+    (<quote>gecached</quote>). Sollte WISKI nicht mehr zur Verfügung stehen,
+    wird die abgespeicherte Datei benutzt.</para>
 
-    <para>Hierzu wurde speziell die WiskiObservationManipulator Klasse
-    erstellt. Sie wird vom KalypsoObservationDienst benutzt, über Reflektion
-    instanziert, und in der Konfigurationsdatei des Observation-Dienstes
+    <para>Hierzu wurde speziell die
+    <filename>WiskiObservationManipulator</filename>-Klasse erstellt. Sie wird
+    vom <filename>KalypsoObservationDienst</filename> benutzt, über Reflektion
+    instanziert, und in der Konfigurationsdatei des Observationdienstes
     konfiguriert. Konfigurationsausschnitt:</para>
 
     <figure>
@@ -306,12 +310,13 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/sst/sachsen-anhalt/caching_mechanismus.png" scale="70" />
+          <imagedata fileref="img/sst/sachsen-anhalt/caching_mechanismus.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
 
-    <para>Die Ablage der zwischengespeicherten W/Q bzw. W/V Beziehungen
+    <para>Die Ablage der zwischengespeicherten W/Q- bzw. W/V-Beziehungen
     erfolgt im Verzeichnis
     <filename>//smdhvzwapp/D/kalypso/Tomcat5.0/temp/wiskiRatingTables</filename>.</para>
   </section>
@@ -321,7 +326,7 @@
 
     <para>Damit die Zeitreihen einheitlich zwischen WISKI und KALYPSO
     angezeigt werden, wurde die Einstellung der Zeitzone (auch eine
-    Eigenschaft der Konfiguration des Observation-Dienstes) auf GMT1 gesetzt.
+    Eigenschaft der Konfiguration des Observationdienstes) auf GMT1 gesetzt.
     WISKI arbeitet immer in Winterzeit.</para>
   </section>
 </section>

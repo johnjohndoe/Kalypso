@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="robotron-ldap" vendor="sachsen-anhalt">
-	<title>Benutzerdienst: LDAP, Szenario, usw.</title>
-	
-	<para>KALYPSO unterstützt folgende Benutzerklassen:</para>
-	
-	<itemizedlist>
-		<listitem>
-			<para>Vorhersage</para>
-		</listitem>
-		
-		<listitem>
-			<para>Experte und</para>
-		</listitem>
-		
-		<listitem>
-			<para>Administration.</para>
-		</listitem>
-	</itemizedlist>
-	
-	<para>In der HVZ wird das Recht
-		<quote>Modellierer</quote> (als Attribut in die LDAP-Eigenschaften eines
-		Benutzers, mehr Information dazu erhalten Sie in die Techische Dokumentation des
-		IMS) an Benutzer vergeben, die KALYPSO Experten bzw. Administratoren sind. Weitere
-		feingranulierte Benutzerrechte werden nicht benötigt. Die Client-Anwendung
-		passt die Oberfläche automatisch an die Benutzerklassen eines Benutzers
-		an.</para>
-	
-	<para>Zusätzlich wird der Flag
-		<quote>Simulation</quote> (als Attribut in die LDAP-Eigenschaften eines
-		Benutzers, mehr Information dazu erhalten Sie in die Techische Dokumentation des
-		IMS) ausgewertet. Ist der Flag gesetzt, darf sich der Benutzer nur im
-		Simulationsbetrieb anmelden. Sonst darf er sich im Normalbetrieb und im
-		SImulationsbetrieb anmelden.</para>
-	
-	<para>Der Java-SDK bietet standardmäßig Klassen und Methoden, um auf einem
-		Verzeichnisdienst zugreifen zu können. Es werden also keine besondere
-		Java-Bibliotheken benötigt.</para>
-	
-	<para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
-		Szenario-Einstellungen werden in die Konfigurationsdateien die im
-		Konfigurationsverzeichnis des Kalypso User Dienst vorgenommen. Der Pfad lautet:
-		</para>
-		<para><filename>TOMCAT_HOME\webapps\webdav\srvconf\IUSerService</filename>.
-		</para>
-		<para>	
-			 Hier folgt ein Beispiel der Konfigurationsdatei des Benutzerdienstes.
-		
-		<programlisting>
+  <title>Benutzerdienst: LDAP, Szenario, usw.</title>
+
+  <para>KALYPSO unterstützt folgende Benutzerklassen:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Vorhersage</para>
+    </listitem>
+
+    <listitem>
+      <para>Experte und</para>
+    </listitem>
+
+    <listitem>
+      <para>Administration.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>In der HVZ wird das Recht <quote>Modellierer</quote> (als Attribut in
+  den LDAP-Eigenschaften eines Benutzers, mehr Information dazu erhalten Sie
+  in der Technischen Dokumentation des IMS) an Benutzer vergeben, die
+  KALYPSO-Experten bzw. -Administratoren sind. Weitere feingranulierte
+  Benutzerrechte werden nicht benötigt. Die Client-Anwendung passt die
+  Oberfläche automatisch an die Benutzerklassen eines Benutzers an.</para>
+
+  <para>Zusätzlich wird des Flag <quote>Simulation</quote> (als Attribut in
+  den LDAP-Eigenschaften eines Benutzers, mehr Information dazu erhalten Sie
+  in der Technischen Dokumentation des IMS) ausgewertet. Ist das Flag gesetzt,
+  darf sich der Benutzer nur im Simulationsbetrieb anmelden. Sonst darf er
+  sich im Normalbetrieb und im Simulationsbetrieb anmelden.</para>
+
+  <para>Das Java-SDK bietet standardmäßig Klassen und Methoden an, um auf
+  einen Verzeichnisdienst zugreifen zu können. Es werden also keine besonderen
+  Java-Bibliotheken benötigt.</para>
+
+  <para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
+  Szenario-Einstellungen werden in den Konfigurationsdateien, die im
+  Konfigurationsverzeichnis des Kalypso-Benutzerdienstes vorgenommen. Der Pfad
+  lautet:</para>
+
+  <para><filename>TOMCAT_HOME\webapps\webdav\srvconf\IUSerService</filename>.</para>
+
+  <para>Hier folgt ein Beispiel für eine Konfigurationsdatei des
+  Benutzerdienstes. <programlisting>
 # classname of the user rights provider
 PROVIDER=org.kalypso.robotronadapter.RobotronRightsProvider
 
@@ -70,23 +67,20 @@ CHOOSE_SCENARIO=true
 # to the LDAP server in the HVZ Installation
 LDAP_CONNECTION=ldap://smdhvzldat:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de
 LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de
-LDAP_CREDENTIALS=geheim
-		</programlisting>
-	</para>
-	
-	<section>
-		<title>Szenarien: Normalbetrieb und Simulationsbetrieb</title>
-		
-		<para>Die Variable <emphasis>SCENARIO_INI_LIST</emphasis> gibt an, welche sog. INI-Dateien
-			(Konfigurationsdateien) für die Parametrisierung der verschiedenen
-			Betriebe zuständig sind. Dort können die Darstellungseigenschaften der
-			Kalypso-Benutzeroberfläche je nach Modi angepasst werden. Zum Beispiel, im
-			Simulationsbetrieb wird die Datei
-			<filename>test.ini</filename> benutzt, Diagramme haben ein Wasserzeichen
-			(Siehe Eigenschaft
-			<emphasis>DIAG_BACKGROUND_IMAGE_URL</emphasis>) und Tabellen eine
-			zusätzliche Kopfzeile (Siehe Eigenschaft
-			<emphasis>TABLE_HEADER_IMAGE_URL</emphasis>).</para>
-	</section>
-	
+LDAP_CREDENTIALS=geheim</programlisting></para>
+
+  <section>
+    <title>Szenarien: Normalbetrieb und Simulationsbetrieb</title>
+
+    <para>Die Variable <emphasis>SCENARIO_INI_LIST</emphasis> gibt an, welche
+    sog. INI-Dateien (Konfigurationsdateien) für die Parametrisierung der
+    verschiedenen Betriebsmodi zuständig sind. Dort können die
+    Darstellungseigenschaften der Kalypso-Benutzeroberfläche je nach Modus
+    angepasst werden. Im Simulationsbetrieb wird z. B. die Datei
+    <filename>test.ini</filename> benutzt, diese legt fest, dass Diagramme ein
+    Wasserzeichen (siehe Eigenschaft
+    <emphasis>DIAG_BACKGROUND_IMAGE_URL</emphasis>) und Tabellen eine
+    zusätzliche Kopfzeile (siehe Eigenschaft
+    <emphasis>TABLE_HEADER_IMAGE_URL</emphasis>) haben.</para>
+  </section>
 </section>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="chapter_4_zeitreihen">
-  <title>Zeitreihen Ablage</title>
+  <title>Zeitreihen-Ablage</title>
 
   <section>
     <title>Grundprinzip</title>
@@ -59,7 +59,7 @@
     Verwaltung aller Dateitypen möglich, da das FileRepository nicht
     spezifisch für ZML (Zeitreihen Markup Language, der für KALYPSO speziell
     entwickelten XML <quote>Serialisierung von Observations</quote>)
-    implementiert ist. </para>
+    implementiert ist.</para>
 
     <para>Für das FileRepository stehen die folgenden Factories (siehe Oben)
     zur Verfügung:</para>
@@ -108,8 +108,8 @@
 
     <para>Anhand von Filtern und bestehenden Repositories (wie z.B.
     Datei-basiert oder aus der Zeitreihendatenbank) werden die synthetische
-    Zeitreihen generiert. Die hierarchische Struktur ist frei definierbar.
-    </para>
+    Zeitreihen generiert. Die hierarchische Struktur ist frei
+    definierbar.</para>
 
     <!--PROFILING ANFANG sachsen-anhalt,sachsen-->
 
