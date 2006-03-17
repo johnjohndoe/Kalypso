@@ -821,7 +821,7 @@ public class NaModelInnerCalcJob implements ISimulation
     else if( kalypsoNAVersion.equals( "test" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_03beta;
+      m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4beta" ))
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else
