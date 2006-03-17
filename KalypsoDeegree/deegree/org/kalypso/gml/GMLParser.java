@@ -56,6 +56,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -70,20 +71,7 @@ import org.xml.sax.XMLReader;
  */
 public class GMLParser
 {
-  public GMLParser( )
-  {
-
-    // final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    // final ITypeHandler typeHandler = registry.getTypeHandlerForClassName( String.class );
-    // final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-    // final Unmarshaller unmarshaller = jc.createUnmarshaller();
-    // XMLEventReader arg0 = null;
-    // unmarshaller.unmarshal( arg0 );
-    // Marshaller marshaller = jc.createMarshaller();
-
-  }
-
-  public GMLWorkspace parseGML( final URL gmlURL ) throws SAXException, ParserConfigurationException, IOException
+  public GMLWorkspace parseGML( final URL gmlURL ) throws SAXException, ParserConfigurationException, IOException, GMLException
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );

@@ -86,7 +86,7 @@ public class PropertyParser
 
   final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
 
-  public void createProperty( Feature feature, String uri, String localName, String name, Attributes atts )
+  public void createProperty( Feature feature, String uri, String localName, Attributes atts )
   {
     final IFeatureType featureType = feature.getFeatureType();
     final QName propQName = new QName( uri, localName );
