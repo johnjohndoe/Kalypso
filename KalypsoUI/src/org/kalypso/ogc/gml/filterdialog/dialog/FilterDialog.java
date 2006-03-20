@@ -30,12 +30,8 @@
 package org.kalypso.ogc.gml.filterdialog.dialog;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
-import org.apache.tools.ant.filters.StringInputStream;
-import org.deegree.services.wfs.filterencoding.FilterConstructionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -47,8 +43,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -57,12 +51,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -72,63 +64,39 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartService;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
-import org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite;
-import org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
-import org.kalypsodeegree_impl.filterencoding.FeatureId;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
- * @author kuepferle
+ * @author kuepfer
  */
-public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciever
+public class FilterDialog extends TitleAreaDialog implements ModellEventListener, IErrorMessageReciever
 {
-  private static final String EMPTY_FEATURE_LIST = "-EMPTY FEATURE ID LIST-";
-
-  private static final int ID_BUTTON_APPLY = 100;
-
-  private static final String LABEL_BUTTON_APPLY = "Anwenden";
-
-  public static final int APPLY_FILTER = 101;
-
-  private static final String FILTER_KEY = "filter";
-
-  protected final IFeatureType m_ft;
+  protected final FeatureType m_featureType;
 
   protected FilterRootElement m_root;
+
+  private Group m_treeGroup;
 
   protected Group m_propGroup;
 
   protected Composite m_main;
 
-  protected TreeViewer m_viewer;
+  protected TreeViewer m_viewer2;
 
   protected final FilterLabelProvider m_labelProvider = new FilterLabelProvider();
 
@@ -136,271 +104,116 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private ToolBar m_toolBar;
 
-  Feature m_spatialOperators;
+  private FilterCompositeFactory m_filterCompositeFactory = null;
 
-  AbstractFilterComposite m_newOpsComposite;
-
-  private Composite m_top;
-
-  final private KalypsoUserStyle m_userStyle;
-
-  private final boolean RESTOREABLE;
-
-  /**
-   * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
-   * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
-   */
-  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final KalypsoUserStyle style, final Filter filter, final Feature spatialOperator, final boolean restorable )
+  public FilterDialog( Shell parent, FeatureType featureType, Filter root )
   {
     super( parent );
-    m_userStyle = style;
-    m_ft = ftToSelectFrom;
-    m_spatialOperators = spatialOperator;
-    RESTOREABLE = restorable;
+    m_featureType = featureType;
     m_root = new FilterRootElement();
-    if( filter != null )
-      m_root.addChild( filter );
+    if( root != null )
+      m_root.addChild( root );
+    m_filterCompositeFactory = FilterCompositeFactory.getInstance( FilterDialog.this, null );
+    m_filterCompositeFactory.addModellListener( this );
     setShellStyle( getShellStyle() | SWT.MAX );
-
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createContents(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected Control createContents( Composite parent )
-  {
-    Control control = super.createContents( parent );
-    createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
-    if( m_userStyle == null )
-      getButton( ID_BUTTON_APPLY ).setEnabled( false );
-    return control;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
-   */
-  @Override
-  protected void buttonPressed( int buttonId )
-  {
-    super.buttonPressed( buttonId );
-    try
-    {
-      if( buttonId == ID_BUTTON_APPLY )
-      {
-        m_userStyle.fireModellEvent( new ModellEvent( m_userStyle, ModellEvent.STYLE_CHANGE ) );
-        setReturnCode( APPLY_FILTER );
-      }
-
-    }
-    catch( Exception e )
-    {
-      MessageDialog.openError( getShell(), "Filterfehler", "Fehler beim Anwenden des Filters, dieser Dialog hat keinen UserStyle" );
-      e.printStackTrace();
-    }
-
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
   protected Control createDialogArea( Composite parent )
   {
-    // load old status from the local storage
-    if( RESTOREABLE && m_root.getFilter() == null )
+    m_main = (Composite)super.createDialogArea( parent );
+    //    m_main.setLayout( new GridLayout( 2, true ) );
+    //    applyDialogFont( m_main );
+    //tree-group
+    m_treeGroup = new Group( m_main, SWT.FILL );
+    m_treeGroup.setText( "Filter für " + m_featureType.getName() );
+    m_treeGroup.setLayoutData( new GridData( 280, 180 ) );
+    m_treeGroup.setLayout( new GridLayout() );
+    //tree-viewer
+    m_viewer2 = new TreeViewer( m_treeGroup, SWT.FILL | SWT.V_SCROLL )
     {
-      IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
-      String filterXML = dialogSettings.get( FILTER_KEY );
-      if( filterXML != null || filterXML.length() > 0 )
+      public ISelection getSelection()
       {
-        StringInputStream input = new StringInputStream( filterXML );
-        try
+        return new TreeSelection( (IStructuredSelection)super.getSelection() )
         {
-          Filter filter = readFilterFragment( input );
-          m_root.addChild( filter );
-        }
-        catch( Exception e1 )
-        {
-          e1.printStackTrace();
-        }
-      }
-    }
-    m_main = (Composite) super.createDialogArea( parent );
-    m_top = new Composite( m_main, SWT.NONE );
-    GridLayout gridLayout = new GridLayout( 2, true );
-    m_top.setLayout( gridLayout );
-    GridData data2 = new GridData( GridData.FILL_BOTH );
-    data2.grabExcessHorizontalSpace = true;
-    data2.grabExcessVerticalSpace = true;
-    m_top.setLayoutData( data2 );
-
-    /* tree-group */
-    final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( "Filter für " );// + AnnotationUtilities.getAnnotation( m_featureType ).getLabel() );
-    GridData data3 = new GridData( GridData.FILL_BOTH );
-    data3.grabExcessHorizontalSpace = true;
-    data3.grabExcessVerticalSpace = true;
-    treeGroup.setLayoutData( data3 );
-    treeGroup.setLayout( new GridLayout() );
-
-    /* filter tree-viewer */
-    m_viewer = new TreeViewer( treeGroup, SWT.H_SCROLL | SWT.V_SCROLL )
-    {
-      @Override
-      public ISelection getSelection( )
-      {
-        return new TreeSelection( (IStructuredSelection) super.getSelection() )
-        {
-          public void contentChanged( )
+          public void contentChanged()
           {
             refresh( true );
             collapseAll();
             expandAll();
           }
 
-          public void structureChanged( )
+          public void structureChanged()
           {
             refresh( true );
             collapseAll();
             expandAll();
           }
 
-          @Override
-          public Object getModel( )
+          public Object getModel()
           {
             return m_root;
           }
         };
       }
     };
-    GridData data1 = new GridData( GridData.FILL_BOTH );
-    data1.grabExcessHorizontalSpace = true;
-    data1.grabExcessVerticalSpace = true;
-    data1.heightHint = 200;
-    data1.widthHint = 150;
-    m_viewer.getControl().setLayoutData( data1 );
-    m_viewer.setLabelProvider( m_labelProvider );
-    m_viewer.setContentProvider( m_contentProvider );
-    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_viewer2.setLabelProvider( m_labelProvider );
+    m_viewer2.setContentProvider( m_contentProvider );
+    m_viewer2.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_viewer2.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       public void selectionChanged( SelectionChangedEvent event )
       {
         ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+          //erases the property group each time the selection changes
+          if( m_propGroup != null && !m_propGroup.isDisposed() )
+          {
+            m_propGroup.dispose();
+            m_propGroup = null;
+          }
+          m_propGroup = new Group( m_main, SWT.FILL );
+          m_propGroup.setText( "Filter-Eigenschaften" );
+          m_propGroup.setLayout( new GridLayout() );
+          GridData data = new GridData( GridData.FILL_BOTH );
+          data.heightHint = 150;
+          data.widthHint = 250;
+          data.grabExcessHorizontalSpace = true;
+          m_propGroup.setLayoutData( data );
+          m_propGroup.setLocation( 300, 5 );
+          Object firstElement = ( (IStructuredSelection)selection ).getFirstElement();
           if( firstElement instanceof Operation )
           {
-            if( m_newOpsComposite != null )
-            {
-              if( !m_newOpsComposite.isDisposed() )
-                m_newOpsComposite.dispose();
-            }
-            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, new TreeSet<String>(), m_ft, m_spatialOperators );
-            if( m_newOpsComposite != null )
-            {
-              m_newOpsComposite.addModellListener( new ModellEventListener()
-              {
-
-                public void onModellChange( ModellEvent modellEvent )
-                {
-                  m_viewer.refresh( true );
-                }
-
-              } );
-              m_newOpsComposite.pack();
-            }
+            Object oldValue = firstElement;
+            FilterCompositeFactory.getInstance( FilterDialog.this, null ).createFilterElementComposite(
+                (Operation)firstElement, m_propGroup, m_featureType );
+            //            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue, firstElement );
           }
           else if( firstElement instanceof FeatureFilter )
           {
-            FeatureFilter filter = (FeatureFilter) firstElement;
+            FeatureFilter filter = (FeatureFilter)firstElement;
             m_propGroup.setText( "Eigenschaften-Feature Filter" );
-            final Composite ffComposite = new Composite( m_propGroup, SWT.NONE );
-            GridLayout ffGridLayout = new GridLayout();
-            ffComposite.setLayout( ffGridLayout );
-            GridData ffGridData = new GridData();
-            ffGridData.horizontalIndent = 10;
-            ffGridData.verticalIndent = 10;
-            ffGridData.widthHint = 150;
-            ffComposite.setLayoutData( ffGridData );
-            ArrayList<FeatureId> featureIds = filter.getFeatureIds();
-            Label featureFilterLabel = new Label( ffComposite, SWT.NULL );
+            ArrayList featureIds = filter.getFeatureIds();
+            Label featureFilterLabel = new Label( m_propGroup, SWT.NULL );
             featureFilterLabel.setText( "Feature-ID's: " );
-            final List idList = new List( ffComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
-            GridData gridData = new GridData();
-            gridData.widthHint = 150;
-            idList.setLayoutData( gridData );
-            String[] items = featureIds.toArray( new String[featureIds.size()] );
+            List idList = new List( m_propGroup, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
+            idList.setLayoutData( new GridData( 250, 80 ) );
+            String[] items = (String[])featureIds.toArray( new String[featureIds.size()] );
             if( items.length > 0 )
               idList.setItems( items );
             else
-              idList.add( EMPTY_FEATURE_LIST );
-            Button importSelectedFeatures = new Button( ffComposite, SWT.CHECK );
-            importSelectedFeatures.setText( "Selektion übernehmen" );
-            importSelectedFeatures.setToolTipText( "Übernimmt die aktuelle Selektion aus der Karte in den Feature-Filter" );
-            importSelectedFeatures.addSelectionListener( new SelectionAdapter()
-            {
-
-              /**
-               * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-               */
-              @Override
-              public void widgetSelected( SelectionEvent e )
-              {
-                Button source = (Button) e.getSource();
-                if( source.getSelection() )
-                {
-                  final IWorkbench workbench = PlatformUI.getWorkbench();
-                  final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-                  final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-                  IEditorPart activeEditor = activePage.getActiveEditor();
-                  if( activeEditor instanceof GisMapEditor )
-                  {
-                    MapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
-                    IStructuredSelection s = (IStructuredSelection) mapPanel.getSelection();
-                    if( s instanceof KalypsoFeatureThemeSelection )
-                    {
-                      KalypsoFeatureThemeSelection fts = ((KalypsoFeatureThemeSelection) s);
-                      Object[] elements = fts.toArray();
-                      String[] features = new String[elements.length];
-                      for( int i = 0; i < elements.length; i++ )
-                      {
-                        Feature f = (Feature) elements[i];
-                        if( f != null )
-                          features[i] = f.getId();
-                      }
-                      idList.setItems( features );
-                    }
-
-                  }
-                }
-                else
-                {
-                  idList.setItems( new String[] { EMPTY_FEATURE_LIST } );
-                }
-                ffComposite.pack();
-              }
-            } );
-            ffComposite.pack();
+              idList.add( "-EMPTY FEATURE ID LIST-" );
           }
+          m_propGroup.pack();
         }
       }
     } );
-    m_viewer.setInput( new Object[] { m_root } );
-    m_viewer.expandAll();
-    // property group
-    m_propGroup = new Group( m_top, SWT.FILL );
-    m_propGroup.setText( "Filter-Eigenschaften" );
-    m_propGroup.setLayout( new GridLayout() );
-    GridData data = new GridData( GridData.FILL_BOTH );
-    data.heightHint = 150;
-    data.widthHint = 250;
-    data.grabExcessHorizontalSpace = true;
-    m_propGroup.setLayoutData( data );
-    // toolbar
-    m_toolBar = new ToolBar( m_top, SWT.NULL | SWT.FLAT );
+    //property view
+    m_viewer2.setInput( new Object[]
+    { m_root } );
+    m_viewer2.expandAll();
+    //toolbar
+    m_toolBar = new ToolBar( m_main, SWT.NULL | SWT.FLAT );
     ToolItem m_loadFilterItem = new ToolItem( m_toolBar, SWT.NONE );
     m_loadFilterItem.setToolTipText( "Filter aus dem Workspace laden" );
     m_loadFilterItem.setImage( ImageProvider.IMAGE_UTIL_IMPORT_WIZARD.createImage() );
@@ -409,27 +222,30 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       public void widgetSelected( SelectionEvent e )
       {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(), "Filter auswählen", new String[] { "xml" }, workspace.getRoot() );
+        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(),
+            "Filter auswählen", new String[]
+            { "xml" }, workspace.getRoot() );
         int open = dialog2.open();
         if( open == Window.OK )
         {
           Object[] result = dialog2.getResult();
-          IPath path = (IPath) result[0];
+          IPath path = (IPath)result[0];
           Filter filter = null;
           try
           {
             IFile file = workspace.getRoot().getFile( path );
-            filter = readFilterFragment( file.getContents() );
+            filter = FilterReader.readFilterFragment( file.getContents() );
           }
           catch( Exception e1 )
           {
             e1.printStackTrace();
           }
           m_root.addChild( filter );
-          m_viewer.setContentProvider( m_contentProvider );
-          m_viewer.setLabelProvider( m_labelProvider );
-          m_viewer.setInput( new Object[] { m_root } );
-          m_viewer.expandAll();
+          m_viewer2.setContentProvider( m_contentProvider );
+          m_viewer2.setLabelProvider( m_labelProvider );
+          m_viewer2.setInput( new Object[]
+          { m_root } );
+          m_viewer2.expandAll();
         }
       }
 
@@ -473,7 +289,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     return m_main;
   }
 
-  private void createContextMenu( )
+  private void createContextMenu()
   {
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
@@ -481,7 +297,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       public void menuAboutToShow( IMenuManager manager )
       {
-        IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)m_viewer2.getSelection();
         if( selection.getFirstElement() instanceof FilterRootElement )
         {
           manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -496,41 +312,27 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       }
     } );
 
-    // Register the context menu at the active workbench part
+    //Register the context menu at the active workbench part
     IPartService workbenchPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService();
     IWorkbenchPartSite site = workbenchPart.getActivePart().getSite();
     if( site != null )
     {
-      final Menu menu = menuManager.createContextMenu( m_viewer.getControl() );
-      site.registerContextMenu( menuManager, m_viewer );
-      m_viewer.getControl().setMenu( menu );
+      final Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
+      site.registerContextMenu( menuManager, m_viewer2 );
+      m_viewer2.getControl().setMenu( menu );
     }
   }
 
-  @Override
-  protected void okPressed( )
+  protected void okPressed()
   {
-    if( RESTOREABLE )
-    {
-      IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
-      final Filter filter = getFilter();
-      String xml = "";
-      if( filter != null )
-      {
-        xml = filter.toXML().toString();
-      }
-      dialogSettings.put( FILTER_KEY, xml );
-    }
     super.okPressed();
   }
 
-  @Override
-  protected void cancelPressed( )
+  protected void cancelPressed()
   {
     super.cancelPressed();
   }
 
-  @Override
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
@@ -540,72 +342,43 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   protected Action m_action = new Action( "&Löschen", ImageProvider.IMAGE_STYLEEDITOR_REMOVE )
   {
-    @Override
-    public void run( )
+    public void run()
     {
-      IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+      IStructuredSelection selection = (IStructuredSelection)m_viewer2.getSelection();
       if( !selection.isEmpty() )
       {
 
         m_root.removeChild( selection.getFirstElement() );
-        m_viewer.refresh( true );
-        setErrorMessage( null );
-        if( m_newOpsComposite != null )
-          m_newOpsComposite.dispose();
-        m_propGroup.setText( "Eigenschaften-Unbekannte Operation" );
+        m_viewer2.refresh();
       }
     }
   };
 
-  public Filter getFilter( )
+  public Filter getFilter()
   {
     return m_root.getFilter();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#setErrorMessage(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  @Override
-  public void setErrorMessage( String message )
+  public void onModellChange( ModellEvent modellEvent )
   {
-    super.setErrorMessage( message );
+    if( modellEvent.getEventSource().equals( m_filterCompositeFactory ) )
+    {
+      m_viewer2.refresh();
+      m_viewer2.expandAll();
+
+    }
 
   }
 
   /**
-   * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#getErrorMessageReciever()
+   * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#setErrorMessage(java.lang.String)
    */
-  public IErrorMessageReciever getErrorMessageReciever( )
+  public void setErrorMessage( String message )
   {
-    return this;
-  }
+    super.setErrorMessage( message );
 
-  Filter readFilterFragment( InputStream reader )
-  {
-    Filter filter = null;
-    try
-    {
-      Document asDOM = XMLHelper.getAsDOM( reader, true );
-      Element element = asDOM.getDocumentElement();
-
-      filter = AbstractFilter.buildFromDOM( element );
-
-    }
-    catch( FilterConstructionException e )
-    {
-      e.printStackTrace();
-      MessageDialog.openWarning( getShell(), "Filter-Dialog", "Fehler beim laden des Filters: " + e.getMessage() );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      MessageDialog.openWarning( getShell(), "Filter-Dialog", "Fehler beim laden des Filters: " + e.getMessage() );
-    }
-    return filter;
-  }
-
-  public boolean isRestorable( )
-  {
-    return RESTOREABLE;
   }
 }

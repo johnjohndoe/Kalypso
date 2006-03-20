@@ -46,16 +46,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
  * @author von Dömming
  */
 public class CreateGeometryFeatureWidget extends AbstractWidget
@@ -66,7 +66,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  @Override
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
@@ -76,7 +75,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
-  @Override
   public void clickPopup( Point p )
   {
     if( myWidget != null )
@@ -86,7 +84,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
-  @Override
   public void dragged( Point p )
   {
     if( myWidget != null )
@@ -96,7 +93,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
-  @Override
   public void leftClicked( Point p )
   {
     if( myWidget != null )
@@ -106,7 +102,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
-  @Override
   public void leftPressed( Point p )
   {
     if( myWidget != null )
@@ -116,7 +111,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
-  @Override
   public void leftReleased( Point p )
   {
     if( myWidget != null )
@@ -126,7 +120,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
-  @Override
   public void middleClicked( Point p )
   {
     if( myWidget != null )
@@ -136,7 +129,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
-  @Override
   public void middlePressed( Point p )
   {
     if( myWidget != null )
@@ -146,7 +138,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
-  @Override
   public void middleReleased( Point p )
   {
     if( myWidget != null )
@@ -156,7 +147,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
-  @Override
   public void moved( Point p )
   {
     if( myWidget != null )
@@ -166,7 +156,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
-  @Override
   public void paint( Graphics g )
   {
     if( myWidget != null )
@@ -176,7 +165,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
-  @Override
   public void rightClicked( Point p )
   {
     if( myWidget != null )
@@ -186,7 +174,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
-  @Override
   public void rightPressed( Point p )
   {
     if( myWidget != null )
@@ -196,7 +183,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
-  @Override
   public void rightReleased( Point p )
   {
     if( myWidget != null )
@@ -209,51 +195,52 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
     setup();
   }
 
-  private void setup( )
+  private void setup()
   {
     final IKalypsoTheme activeTheme = getActiveTheme();
     myWidget = null;
     if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final IFeatureType ft = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();
-      final IPropertyType[] ftps = ft.getProperties();
-      final List<IPropertyType> geoFtps = new ArrayList<IPropertyType>();
+      final FeatureType ft = ( (IKalypsoFeatureTheme)activeTheme ).getFeatureType();
+      final FeatureTypeProperty[] ftps = ft.getProperties();
+      final List geoFtps = new ArrayList();
       // collect available geometry properties
       for( int i = 0; i < ftps.length; i++ )
       {
-        if( GeometryUtilities.isGeometry( ftps[i] ) )
+        if(GeometryUtilities.isGeometry(ftps[i]))
           geoFtps.add( ftps[i] );
       }
 
-      // TODO ask for geometry to create
-      // if( geoFtps.size() > 1 )
-      // ;
+      //    TODO ask for geometry to create
+      //      if( geoFtps.size() > 1 )
+      //        ;
 
       if( geoFtps.size() > 0 )
-        setGeometryWidget( (IKalypsoFeatureTheme) activeTheme, (IValuePropertyType) geoFtps.get( 0 ) );
+        setGeometryWidget( (IKalypsoFeatureTheme)activeTheme, (FeatureTypeProperty)geoFtps.get( 0 ) );
     }
   }
 
-  private void setGeometryWidget( final IKalypsoFeatureTheme theme, final IValuePropertyType ftp )
+  private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
-    if( GeometryUtilities.isPointGeometry( ftp ) )
-      myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getQName().getLocalPart(), this, theme, ftp );
+    if( GeometryUtilities.isPointGeometry(ftp) )
+      myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getName(), this, theme, ftp );
+    //      myWidget = new CreateMultilinestringFeatureWidget();
   }
 
   /**
+   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  public void perform( )
+  public void perform()
   {
-    // if( myWidget != null )
-    // return myWidget.performIntern();
-    // return null;
+  //    if( myWidget != null )
+  //      return myWidget.performIntern();
+  //    return null;
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  @Override
   public void onModellChange( ModellEvent modellEvent )
   {
     super.onModellChange( modellEvent );

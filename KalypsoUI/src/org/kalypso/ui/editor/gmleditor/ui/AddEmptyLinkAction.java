@@ -32,17 +32,16 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * 
@@ -52,7 +51,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class AddEmptyLinkAction extends Action
 {
-  private final IRelationType m_fatp;
+  private final FeatureAssociationTypeProperty m_fatp;
 
   private final CommandableWorkspace m_workspace;
 
@@ -60,7 +59,7 @@ public class AddEmptyLinkAction extends Action
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp,
+  public AddEmptyLinkAction( String text, ImageDescriptor image, FeatureAssociationTypeProperty fatp,
       Feature parentFeature, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
     super( text, image );
@@ -70,21 +69,20 @@ public class AddEmptyLinkAction extends Action
     m_selectionManager = selectionManager;
   }
 
-  @Override
   public void run()
   {
-    final IFeatureType[] featureTypes = m_fatp.getTargetFeatureTypes(null,false);
+    FeatureType[] featureTypes = m_fatp.getAssociationFeatureTypes();
     Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     ICommand command = null;
     FeatureTypeSelectionDialog dialog = null;
-    IFeatureType ft = null;
+    FeatureType ft = null;
     if( featureTypes.length > 1 )
     {
-      dialog = new FeatureTypeSelectionDialog( shell, featureTypes, SWT.MULTI );
+      dialog = new FeatureTypeSelectionDialog( shell, featureTypes );
       int open = dialog.open();
       if( open == Window.OK )
       {
-        IFeatureType[] types = dialog.getSelectedFeatureTypes();
+        FeatureType[] types = dialog.getSelectedFeatureTypes();
         ft = types[0];
         if( ft == null )
           return;
@@ -92,7 +90,7 @@ public class AddEmptyLinkAction extends Action
     }
     else
       ft = featureTypes[0];
-    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp, 0, null );
+    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp.getName(), 0, m_selectionManager );
     try
     {
       m_workspace.postCommand( command );

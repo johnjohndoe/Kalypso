@@ -74,7 +74,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
     m_type = type;
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -111,13 +111,12 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
     m_eventProvider.removeModellListener( listener );
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_name;
   }
 
-  public String getType( )
+  public String getType()
   {
     return "[" + m_type + "] ";
   }

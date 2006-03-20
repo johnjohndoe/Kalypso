@@ -61,7 +61,9 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 /**
  * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
  * und für jedes Feature eine Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle (definiert durch
- * eine andere Property des Features) zu schreiben. <code>
+ * eine andere Property des Features) zu schreiben.
+ * 
+ * <code>
  *    <copyObservation gml="${project.dir}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="Wiski" context="${calc.dir}" targetObservation="lokal">
  *      <source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}" />
  *    </copyObservation>
@@ -75,10 +77,10 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Zielverzeichnis für generierte Zeitreihen. Überschreibt targetobservation.
    */
   private File m_targetObservationDir;
-
   /**
    * Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird.
    */
+   
   private String m_targetobservation;
 
   /**
@@ -98,32 +100,29 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * <p>
    * tokenName-featurePropertyName;tokenName-featurePropertyName;...
    * <p>
-   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als
-   * Request-Name zu setzen)
+   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als Request-Name zu setzen)
    */
   private String m_tokens = "";
-
+  
   /**
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
-  private List<CopyObservationFeatureVisitor.Source> m_sources = new LinkedList<CopyObservationFeatureVisitor.Source>();
+  private List m_sources = new LinkedList();
 
   /**
    * List of metadata-properties and values to set to the target observation
    */
   private Properties m_metadata = new Properties();
 
-  public CopyObservationTask( )
+  public CopyObservationTask(  )
   {
     super( false );
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter, final IProgressMonitor monitor )
   {
     Date forecastFrom = null;
@@ -134,16 +133,19 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     if( m_forecastTo != -1 )
       forecastTo = new Date( m_forecastTo );
 
-    final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
+    final CopyObservationFeatureVisitor.Source[] srcs = (CopyObservationFeatureVisitor.Source[])m_sources
+        .toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
     if( m_targetObservationDir != null )
-    {
-      return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs, m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
-
+    {      
+    return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs,
+        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
+      
     }
-    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs, m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
+    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
+        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
   }
 
-  public final String getTargetobservation( )
+  public final String getTargetobservation()
   {
     return m_targetobservation;
   }
@@ -163,9 +165,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final Date fromDate = new Date( from );
     final Date toDate = new Date( to );
     final String filter = source.getFilter();
-    final Project project2 = getProject();
-    if(project2!=null)
-      project2.log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
+    getProject().log(
+        "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(),
+        Project.MSG_DEBUG );
 
     m_sources.add( new CopyObservationFeatureVisitor.Source( property, fromDate, toDate, filter ) );
   }
@@ -180,7 +182,8 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     if( metadata.getValue() == null )
     {
-      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(), Project.MSG_WARN );
+      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(),
+          Project.MSG_WARN );
       return;
     }
 
@@ -197,7 +200,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     private String filter;
 
-    public final String getProperty( )
+    public final String getProperty()
     {
       return property;
     }
@@ -207,7 +210,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       this.property = prop;
     }
 
-    public final long getFrom( )
+    public final long getFrom()
     {
       return from;
     }
@@ -217,7 +220,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       this.from = lfrom;
     }
 
-    public final long getTo( )
+    public final long getTo()
     {
       return to;
     }
@@ -227,7 +230,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       this.to = lto;
     }
 
-    public final String getFilter( )
+    public final String getFilter()
     {
       return filter;
     }
@@ -238,7 +241,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     }
   }
 
-  public final long getForecastFrom( )
+  public final long getForecastFrom()
   {
     return m_forecastFrom;
   }
@@ -248,7 +251,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_forecastFrom = forecastFrom;
   }
 
-  public final long getForecastTo( )
+  public final long getForecastTo()
   {
     return m_forecastTo;
   }
@@ -257,12 +260,12 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   {
     m_forecastTo = forecastTo;
   }
-
-  public String getTokens( )
+  
+  public String getTokens()
   {
     return m_tokens;
   }
-
+  
   public void setTokens( String tokens )
   {
     m_tokens = tokens;
@@ -274,7 +277,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     private String m_value;
 
-    public String getName( )
+    public String getName()
     {
       return m_name;
     }
@@ -284,7 +287,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       m_name = name;
     }
 
-    public String getValue( )
+    public String getValue()
     {
       return m_value;
     }
@@ -298,26 +301,24 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
-  @Override
-  protected void validateInput( )
+  protected void validateInput()
   {
     // nothing to do
   }
-
+  
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
   public void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen", status );
+    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
+        "Fehler beim Kopieren der Zeitreihen", status );
   }
-
-  public File getTargetObservationDir( )
+  public File getTargetObservationDir()
   {
     return m_targetObservationDir;
   }
-
   public void setTargetObservationDir( File targetObservationDir )
   {
     m_targetObservationDir = targetObservationDir;

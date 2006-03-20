@@ -56,7 +56,6 @@ import org.jfree.chart.title.TextTitle;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -83,7 +82,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     try
@@ -110,7 +108,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
@@ -126,8 +123,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
   // noch nix
   }

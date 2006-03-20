@@ -44,31 +44,48 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
  * @author doemming
  */
-public class VirtualFeatureAssociationTypeProperty extends AbstractVirtualPropertyType
+public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
-  private IRelationType m_linkName;
+  private final String m_type;
 
-  public VirtualFeatureAssociationTypeProperty( IRelationType ftp )
+  private String m_linkName;
+
+  public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
   {
-    super( new QName( "virtual", "link_" + ftp.getName() ), 0, 1, GeometryUtilities.getLineStringClass() );
-    m_linkName = ftp;
+    super( "link_" + ftp.getName(), "virtual", new HashMap() );
+    m_linkName = ftp.getName();
+    m_type = GeometryUtilities.getLineStringClass().getName();
+  }
+
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
+   */
+  public String getType()
+  {
+    return m_type;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
+   */
+  public boolean isNullable()
+  {
+    return true;
   }
 
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
@@ -85,8 +102,9 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractVirtualProper
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List curves = new ArrayList();
       for( int i = 0; i < destGeo.length; i++ )
-        curves.add( GeometryUtilities.createArrowLineString( srcGeo.getCentroid(), destGeo[i].getCentroid(), 0.8, 0.01 ) );
-      return GeometryFactory.createGM_MultiCurve( (GM_Curve[]) curves.toArray( new GM_Curve[curves.size()] ) );
+        curves
+            .add( GeometryUtilities.createArrowLineString( srcGeo.getCentroid(), destGeo[i].getCentroid(), 0.8, 0.01 ) );
+      return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves.size()] ) );
     }
     catch( GM_Exception e )
     {
@@ -95,5 +113,4 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractVirtualProper
     }
 
   }
-
 }

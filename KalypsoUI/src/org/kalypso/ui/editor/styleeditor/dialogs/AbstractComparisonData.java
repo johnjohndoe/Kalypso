@@ -58,6 +58,5 @@ public abstract class AbstractComparisonData extends AbstractData
     this.propertyName = m_propertyName;
   }
 
-  @Override
-  public abstract boolean verify( );
+  public abstract boolean verify();
 }

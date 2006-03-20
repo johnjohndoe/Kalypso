@@ -20,10 +20,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -32,6 +30,8 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -51,13 +51,13 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final JobExclusiveCommandTarget m_target;
 
-  protected Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
+  protected Collection m_listeners = new ArrayList();
 
   private final IFeatureSelectionManager m_selectionManager;
 
   private final IFeatureChangeListener m_fcl;
 
-  public TableFeatureContol( final GMLWorkspace workspace, final IPropertyType ftp,
+  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
       final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     super( workspace, ftp );
@@ -90,7 +90,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       }
     } );
 
-    final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     final IEditorPart activeEditor = activePage.getActiveEditor();
     if( activeEditor != null )
@@ -107,7 +107,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  @Override
   public void dispose()
   {
     if( m_viewer != null )
@@ -126,7 +125,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature)
    */
-  @Override
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     super.setFeature( workspace, feature );
@@ -155,12 +153,12 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       // create columns
       // add all columns: TODO: use template?
-      final IFeatureType featureType = m_kft.getFeatureType();
-      final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
+      final FeatureType featureType = m_kft.getFeatureType();
+      final FeatureTypeProperty[] properties = featureType == null ? new FeatureTypeProperty[0] : featureType.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        final IPropertyType ftp = properties[i];
-        m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
+        final FeatureTypeProperty ftp = properties[i];
+        m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
       }
     }
   }

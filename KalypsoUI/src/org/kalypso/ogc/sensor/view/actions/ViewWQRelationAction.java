@@ -67,8 +67,7 @@ public class ViewWQRelationAction extends AbstractObservationChooserAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
     if( obs == null )

@@ -53,6 +53,8 @@ import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 
 /**
+ * 
+ * 
  * copies data from a url to a file <br>
  * the source url can be a list of URLs separated by a given separator (default separator is <code>,</code>)<br>
  * the task uses the first valid url to copy, If copy succeded task will finish, if not it will give a try to the next
@@ -71,6 +73,7 @@ public class FetchFromURLsTask extends Task
   private String m_src;
 
   /**
+   * 
    * @param context
    *          used to resolve relative urls
    */
@@ -79,17 +82,18 @@ public class FetchFromURLsTask extends Task
     m_context = context;
   }
 
-  public final URL getContext( )
+  public final URL getContext()
   {
     return m_context;
   }
 
-  public final String getSrc( )
+  public final String getSrc()
   {
     return m_src;
   }
 
   /**
+   * 
    * @param src
    *          source URL or a list of source URLs
    */
@@ -103,7 +107,7 @@ public class FetchFromURLsTask extends Task
     m_dest = dest;
   }
 
-  public final String getDest( )
+  public final String getDest()
   {
     return m_dest;
   }
@@ -113,7 +117,7 @@ public class FetchFromURLsTask extends Task
     m_listSeparator = listSeparator;
   }
 
-  public final String getListSeparator( )
+  public final String getListSeparator()
   {
     return m_listSeparator;
   }
@@ -121,8 +125,7 @@ public class FetchFromURLsTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
-  @Override
-  public void execute( ) throws BuildException
+  public void execute() throws BuildException
   {
     // set Listseparator
     final String listSeparator;
@@ -141,7 +144,6 @@ public class FetchFromURLsTask extends Task
     final String[] src = srcList.split( listSeparator );
     int i = 0;
     boolean succeded = false;
-    final Project project2 = getProject();
     while( !succeded && i < src.length )
     {
       URL url = null;
@@ -154,20 +156,14 @@ public class FetchFromURLsTask extends Task
           parentFile.mkdirs();
         outputStream = new FileOutputStream( destination );
         CopyUtils.copy( url.openStream(), outputStream );
-        if( project2 != null )
-        {
-          project2.log( "copied from url : " + url.toExternalForm(), Project.MSG_INFO );
-          project2.log( "copied to file  : " + destination.toString(), Project.MSG_INFO );
-        }
+        getProject().log( "copied from url : " + url.toExternalForm(), Project.MSG_INFO );
+        getProject().log( "copied to file  : " + destination.toString(), Project.MSG_INFO );
         succeded = true;
       }
       catch( IOException e )
       {
-        if( project2 != null )
-        {
-          project2.log( "failed to fetch from url: " + url.toExternalForm(), Project.MSG_INFO );
-          project2.log( e.getLocalizedMessage(), Project.MSG_INFO );
-        }
+        getProject().log( "failed to fetch from url: " + url.toExternalForm(), Project.MSG_INFO );
+        getProject().log( e.getLocalizedMessage(), Project.MSG_INFO );
         e.printStackTrace();
       }
       finally
@@ -176,7 +172,7 @@ public class FetchFromURLsTask extends Task
       }
       i++;
     }
-    if( !succeded && project2 != null )
-      project2.log( "failed to fetch data from any url", Project.MSG_ERR );
+    if( !succeded )
+      getProject().log( "failed to fetch data from any url", Project.MSG_ERR );
   }
 }

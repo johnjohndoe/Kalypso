@@ -28,7 +28,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
 import org.kalypso.contribs.java.util.Arrays;
@@ -64,7 +64,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createControl( final Composite parent )
   {
     super.createControl( parent );
@@ -89,7 +88,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2#createTreeViewer(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected TreeViewer createTreeViewer( final Composite parent )
   {
     return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
@@ -101,7 +99,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   public ObsViewItem[] getSelectedItems()
   {
     final ISelection sel = getSelection();
-    final List<ObsViewItem> items = new ArrayList<ObsViewItem>();
+    final List items = new ArrayList();
 
     if( sel instanceof IStructuredSelection )
     {
@@ -110,7 +108,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
       Arrays.addAllOfClass( structSel.toList(), items, ObsViewItem.class );
     }
 
-    return items.toArray( new ObsViewItem[items.size()] );
+    return (ObsViewItem[])items.toArray( new ObsViewItem[items.size()] );
   }
 
   /**
@@ -181,7 +179,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.eclipse.ui.part.IPage#dispose()
    */
-  @Override
   public void dispose()
   {
     if( m_view != null )
@@ -221,7 +218,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   /**
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
-  @Override
   public void setActionBars( IActionBars actionBars )
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
@@ -252,7 +248,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     /**
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
      */
-    @Override
     public boolean performDrop( Object data )
     {
       if( m_view == null )
@@ -264,7 +259,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
       final Job updateTemplateJob = new Job( "Vorlage aktualisieren" )
       {
-        @Override
         protected IStatus run( IProgressMonitor monitor )
         {
           monitor.beginTask( getName(), IProgressMonitor.UNKNOWN );
@@ -304,7 +298,6 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int,
      *      org.eclipse.swt.dnd.TransferData)
      */
-    @Override
     public boolean validateDrop( Object target, int operation, TransferData transferType )
     {
       if( !FileTransfer.getInstance().isSupportedType( transferType ) )

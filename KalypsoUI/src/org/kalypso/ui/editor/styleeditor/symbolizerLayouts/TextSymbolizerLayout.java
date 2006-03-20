@@ -50,9 +50,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
@@ -72,9 +69,10 @@ import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
@@ -82,12 +80,13 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
+ *  
  */
 
 public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  private final IFeatureType m_featureTyped;
+  private final FeatureType m_featureTyped;
 
   private TextInputPanel labelTextInput = null;
 
@@ -113,16 +112,15 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   public final static int GM_OBJECT = 6;
 
-  public TextSymbolizerLayout( Composite comp, Symbolizer symb, KalypsoUserStyle style, IFeatureType featureType )
+  public TextSymbolizerLayout( Composite comp, Symbolizer symb, KalypsoUserStyle style, FeatureType featureType )
   {
     super( comp, symb, style );
     m_featureTyped = featureType;
   }
 
-  @Override
-  public void draw( ) throws FilterEvaluationException
+  public void draw() throws FilterEvaluationException
   {
-    final TextSymbolizer textSymbolizer = (TextSymbolizer) symbolizer;
+    final TextSymbolizer textSymbolizer = (TextSymbolizer)symbolizer;
 
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
@@ -147,12 +145,12 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       {
         if( obj[i] instanceof PropertyName )
         {
-          labelTextCombo = ((PropertyName) obj[i]).getValue().trim();
+          labelTextCombo = ( (PropertyName)obj[i] ).getValue().trim();
           break;
         }
         else if( obj[i] instanceof String )
         {
-          String labelString = ((String) obj[i]).trim();
+          String labelString = ( (String)obj[i] ).trim();
           if( labelString.length() > 0 )
           {
             labelTextField = labelString;
@@ -161,16 +159,18 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       }
     }
-    textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL, m_featureTyped, labelTextCombo );
+    textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL, m_featureTyped,
+        labelTextCombo );
     labelTextInput = new TextInputPanel( fontGroup, MessageBundle.STYLE_EDITOR_OR_TEXT, labelTextField );
 
     textLabelComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        String ftpString = ((TextLabelComboPanel) event.getSource()).getSelectedFeatureTypeProperty();
+        String ftpString = ( (TextLabelComboPanel)event.getSource() ).getSelectedFeatureTypeProperty();
         PropertyName propName = new PropertyName( ftpString );
-        Expression exp[] = { propName };
+        Expression exp[] =
+        { propName };
         textSymbolizer.setLabel( StyleFactory.createParameterValueType( exp ) );
         getLabelTextInput().reset();
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -180,7 +180,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( PanelEvent event )
       {
-        String labelText = ((TextInputPanel) event.getSource()).getLabelText();
+        String labelText = ( (TextInputPanel)event.getSource() ).getLabelText();
         textSymbolizer.setLabel( StyleFactory.createParameterValueType( labelText ) );
         getTextLabelComboPanel().reset();
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -193,7 +193,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( PanelEvent event )
       {
-        FontChooserPanel source = (FontChooserPanel) event.getSource();
+        FontChooserPanel source = (FontChooserPanel)event.getSource();
         Font m_font = source.getFont();
         textSymbolizer.setFont( m_font );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -208,12 +208,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     }
     // Halo ColorChooser
     ColorChooserPanel haloColorChooserPanel = null;
-    haloColorChooserPanel = new ColorChooserPanel( fontGroup, MessageBundle.STYLE_EDITOR_COLOR, halo.getFill().getFill( null ) );
+    haloColorChooserPanel = new ColorChooserPanel( fontGroup, MessageBundle.STYLE_EDITOR_COLOR, halo.getFill().getFill(
+        null ) );
     haloColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        Color color = ((ColorChooserPanel) event.getSource()).getColor();
+        Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
         getHalo().getFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
@@ -223,12 +224,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Halo Opacity Slider
     SliderPanel haloOpacityPanel = null;
-    haloOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, halo.getFill().getOpacity( null ) );
+    haloOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL,
+        halo.getFill().getOpacity( null ) );
     haloOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double opacity = ((SliderPanel) event.getSource()).getSelection();
+        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
         getHalo().getFill().setOpacity( opacity );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
@@ -238,12 +240,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Halo Stroke Opacity Slider
     SliderPanel haloStrokeOpacityPanel = null;
-    haloStrokeOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_STROKE_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, halo.getStroke().getOpacity( null ) );
+    haloStrokeOpacityPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_STROKE_OPACITY, 0, 1, 1,
+        SliderPanel.DECIMAL, halo.getStroke().getOpacity( null ) );
     haloStrokeOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double opacity = ((SliderPanel) event.getSource()).getSelection();
+        double opacity = ( (SliderPanel)event.getSource() ).getSelection();
         getHalo().getStroke().setOpacity( opacity );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
@@ -252,7 +255,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     labelPlacement = textSymbolizer.getLabelPlacement();
-    final IPropertyType ftp;
+    final FeatureTypeProperty ftp;
     Geometry geometry = textSymbolizer.getGeometry();
     if( geometry != null )
     {
@@ -267,12 +270,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       if( labelPlacement == null )
         labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "auto" ) );
       int linePlacementIndex = labelPlacement.getLinePlacement().getPlacementType( null );
-      LabelPlacementComboPanel labelPlacementComboBoxPanel = new LabelPlacementComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, linePlacementIndex );
+      LabelPlacementComboPanel labelPlacementComboBoxPanel = new LabelPlacementComboPanel( fontGroup,
+          MessageBundle.STYLE_EDITOR_PLACEMENT, linePlacementIndex );
       labelPlacementComboBoxPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
         {
-          int type = ((LabelPlacementComboPanel) event.getSource()).getSelection();
+          int type = ( (LabelPlacementComboPanel)event.getSource() ).getSelection();
           getLabelPlacement().getLinePlacement().setPlacementType( type );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
@@ -280,13 +284,14 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel gapPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_GAP, 0, 10, 1, SliderPanel.INTEGER, labelPlacement.getLinePlacement().getGap( null ) );
+      SliderPanel gapPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_GAP, 0, 10, 1, SliderPanel.INTEGER,
+          labelPlacement.getLinePlacement().getGap( null ) );
       gapPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
         {
-          double gap = ((SliderPanel) event.getSource()).getSelection();
-          getLabelPlacement().getLinePlacement().setGap( (int) gap );
+          double gap = ( (SliderPanel)event.getSource() ).getSelection();
+          getLabelPlacement().getLinePlacement().setGap( (int)gap );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
@@ -297,16 +302,17 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     else
     {
       if( labelPlacement == null )
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement( 0.0, 0.0, 0.0, 0.0, 0.0 ) );
+        labelPlacement = StyleFactory
+            .createLabelPlacement( StyleFactory.createPointPlacement( 0.0, 0.0, 0.0, 0.0, 0.0 ) );
 
-      final PointPlacement pointPlacement = labelPlacement.getPointPlacement();
-      double displacement[] = pointPlacement.getDisplacement( null );
-      LabelPointPlacementPanel labelPointPlacementPanel = new LabelPointPlacementPanel( fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, displacement );
+      double displacement[] = labelPlacement.getPointPlacement().getDisplacement( null );
+      LabelPointPlacementPanel labelPointPlacementPanel = new LabelPointPlacementPanel( fontGroup,
+          MessageBundle.STYLE_EDITOR_PLACEMENT, displacement );
       labelPointPlacementPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
         {
-          double disp[] = ((LabelPointPlacementPanel) event.getSource()).getValue();
+          double disp[] = ( (LabelPointPlacementPanel)event.getSource() ).getValue();
           getLabelPlacement().getPointPlacement().setDisplacement( disp );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
@@ -314,12 +320,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel rotationPanel = rotationPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, pointPlacement.getRotation( null ) * 180 );
+      SliderPanel rotationPanel = rotationPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_ROTATION, 0,
+          360, 15, SliderPanel.INTEGER, labelPlacement.getPointPlacement().getRotation( null ) * 180 );
       rotationPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
         {
-          double rotation = ((SliderPanel) event.getSource()).getSelection();
+          double rotation = ( (SliderPanel)event.getSource() ).getSelection();
           rotation = rotation / 180.0;
           getLabelPlacement().getPointPlacement().setRotation( rotation );
           if( textSymbolizer.getLabelPlacement() == null )
@@ -330,32 +337,29 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     }
   }
 
-  public static int getFeatureTypeGeometryType( final IPropertyType ftp )
+  public static int getFeatureTypeGeometryType( final FeatureTypeProperty ftp )
   {
     if( ftp == null )
       return NO_GEOMETRY;
-    if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( GeometryUtilities.isPointGeometry( vpt ) )
-        return GM_POINT;
-      else if( GeometryUtilities.isMultiPointGeometry(  vpt ) )
-        return GM_MULTIPOINT;
-      else if( GeometryUtilities.isLineStringGeometry(  vpt ) )
-        return GM_LINESTRING;
-      else if( GeometryUtilities.isMultiLineStringGeometry(  vpt ) )
-        return GM_MULTILINESTRING;
-      else if( GeometryUtilities.isPolygonGeometry(  vpt ) )
-        return GM_POLYGON;
-      else if( GeometryUtilities.isMultiPolygonGeometry(  vpt ) )
-        return GM_MULTIPOLYGON;
-      else if( GeometryUtilities.isUndefinedGeometry(  vpt ) )
-        return GM_OBJECT;
-    }
+
+    if( GeometryUtilities.isPointGeometry( ftp ) )
+      return GM_POINT;
+    else if( GeometryUtilities.isMultiPointGeometry( ftp ) )
+      return GM_MULTIPOINT;
+    else if( GeometryUtilities.isLineStringGeometry( ftp ) )
+      return GM_LINESTRING;
+    else if( GeometryUtilities.isMultiLineStringGeometry( ftp ) )
+      return GM_MULTILINESTRING;
+    else if( GeometryUtilities.isPolygonGeometry( ftp ) )
+      return GM_POLYGON;
+    else if( GeometryUtilities.isMultiPolygonGeometry( ftp ) )
+      return GM_MULTIPOLYGON;
+    else if( GeometryUtilities.isUndefinedGeometry( ftp ) )
+      return GM_OBJECT;
     return NO_GEOMETRY;
   }
 
-  public TextInputPanel getLabelTextInput( )
+  public TextInputPanel getLabelTextInput()
   {
     return labelTextInput;
   }
@@ -365,7 +369,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     this.labelTextInput = m_labelTextInput;
   }
 
-  public LabelPlacement getLabelPlacement( )
+  public LabelPlacement getLabelPlacement()
   {
     return labelPlacement;
   }
@@ -375,7 +379,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     this.labelPlacement = m_labelPlacement;
   }
 
-  public Halo getHalo( )
+  public Halo getHalo()
   {
     return halo;
   }
@@ -385,7 +389,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     this.halo = m_halo;
   }
 
-  public TextLabelComboPanel getTextLabelComboPanel( )
+  public TextLabelComboPanel getTextLabelComboPanel()
   {
     return textLabelComboPanel;
   }

@@ -59,13 +59,11 @@ public class MoveThemeUpAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     getListManipulator().moveElementUp( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
-  @Override
   protected final void refresh()
   {
     boolean bEnable = false;

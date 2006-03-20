@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.kalypso.ui.addlayer"
+   name="KaylpsoAddLayer"
+   version="0.0.1"
+   provider-name="kalypso.org"
+   class="org.kaylpso.ui.KalypsoAddLayerPlugin">
 
-     <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
+   <runtime>
+      <library name="KaylpsoAddLayerPlugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.ui" export="true"/>
+      <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
+   </requires>
    <extension
          id="mapviewaction"
          name="mapviewaction"
@@ -11,41 +31,41 @@
             title="AddLayer"
             enabled="true"
             icon="icon/add_row.gif"
-            class="org.kalypso.ui.view.action.AddThemeAction"
+            class="org.kaylpso.ui.view.action.AddThemeAction"
             tooltip="Thema zu Karte hinzufügen"/>
    </extension>
    <extension
-         id="addLayerWizard"
+         id="dataimport"
          name="dataimport"
-         point="org.kalypso.ui.addlayer.addLayerWizard">
+         point="org.kalypso.ui.dataimportwizard">
       <wizard
             icon="icon/file_shp.GIF"
-            class="org.kalypso.ui.wizard.shape.ImportShapeSourceWizard"
+            class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
             name="%org.kalypso.ui.wizard.shape.name"
             id="org.kalypso.ui.wizard.shape"/>
       <wizard
             icon="icon/Datastore_WMS.gif"
-            class="org.kalypso.ui.wizard.wms.ImportWmsSourceWizard"
+            class="org.kaylpso.ui.wizard.wms.ImportWmsSourceWizard"
             name="%org.kalypso.ui.wizard.wms.name"
             id="org.kalypso.ui.wizard.wms"/>
       <wizard
             icon="icon/Datastore_WFS.gif"
-            class="org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard"
+            class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
             name="%org.kalypso.ui.wizard.wfs.name"
             id="org.kalypso.ui.wizard.wfs"/>
       <wizard
             icon="icon/fileGml.gif"
-            class="org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard"
+            class="org.kaylpso.ui.wizard.gml.KalypsoGmlImportWizard"
             name="%gml.name"
             id="gml"/>
       <wizard
             icon="icon/raster.GIF"
-            class="org.kalypso.ui.wizard.raster.ImportRasterSourceWizard"
+            class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
             name="%org.kalypso.ui.wizard.raster.name"
             id="org.kalypso.ui.wizard.raster"/>
       <wizard
             icon="icon/file_image.gif"
-            class="org.kalypso.ui.wizard.image.ImportImageSourceWizard"
+            class="org.kaylpso.ui.wizard.image.ImportImageSourceWizard"
             name="%org.kalypso.ui.wizard.image.name"
             id="org.kalypso.ui.wizard.image"/>
    </extension>
@@ -56,28 +76,6 @@
             icon="icon/kalypso_gmt.gif"
             name="%org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.name"
             id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            id="org.kalypso.ui.gazetterview"
-            name="GazetterView"/>
-      <view
-            category="org.kalypso.ui.gazetterview"
-            class="org.kalypso.ui.gazetter.view.GazetterView"
-            icon="icons/sample.gif"
-            id="org.kalypso.ui.gazetter.view.GazetterView"
-            name="GazetterView"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
-         <view
-               id="org.kalypso.ui.gazetter.view.GazetterView"
-               ratio="0.5"
-               relationship="right"
-               relative="org.eclipse.ui.views.TaskList"/>
-      </perspectiveExtension>
    </extension>
 
 </plugin>

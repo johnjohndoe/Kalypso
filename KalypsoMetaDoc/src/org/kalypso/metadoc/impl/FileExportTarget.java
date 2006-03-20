@@ -49,6 +49,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -68,22 +69,21 @@ public class FileExportTarget extends AbstractExportTarget
 {
   /** Must be a File (a directory or a real file) */
   public final static String CONF_FILEEXPORT_FILE = FileExportTarget.class.getName() + ".file";
-
-  /** Extension of the file (must be in the form: .ext ) */
+  
+  /** Extension of the file (must be in the form: .ext )*/
   public final static String CONF_FILEEXPORT_EXTENSION = FileExportTarget.class.getName() + ".extension";
-
+  
   /**
-   * @see org.kalypso.metadoc.IExportTarget#commitDocument(org.kalypso.metadoc.IExportableObject,
-   *      org.apache.commons.configuration.Configuration, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.metadoc.IExportTarget#commitDocument(org.kalypso.metadoc.IExportableObject, org.apache.commons.configuration.Configuration, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws InvocationTargetException
+  public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     monitor.beginTask( "Export von " + document.getPreferredDocumentName(), IProgressMonitor.UNKNOWN );
-
+    
     FileOutputStream stream = null;
     try
     {
-      final File file = (File) conf.getProperty( CONF_FILEEXPORT_FILE );
+      final File file = (File)conf.getProperty( CONF_FILEEXPORT_FILE );
       final File docFile;
       if( file.isDirectory() )
         docFile = new File( file, document.getPreferredDocumentName() );
@@ -100,7 +100,7 @@ public class FileExportTarget extends AbstractExportTarget
     finally
     {
       IOUtils.closeQuietly( stream );
-
+      
       monitor.done();
     }
   }
@@ -112,7 +112,7 @@ public class FileExportTarget extends AbstractExportTarget
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" );
     final FileSelectionWizardPage page = new FileSelectionWizardPage( configuration, "file.export.target.page", "Dateiauswahl", imgDesc, "Datei" );
-
+    
     return new IWizardPage[] { page };
   }
 }

@@ -53,7 +53,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -64,18 +63,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.template.obstableview.ObjectFactory;
-import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
-import org.kalypso.template.obstableview.Obstableview.Rules;
+import org.kalypso.template.obstableview.ObstableviewType.RulesType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
@@ -89,7 +87,6 @@ public final class TableViewUtils
   public final static String OTT_FILE_EXTENSION = "ott";
 
   private final static ObjectFactory OTT_OF = new ObjectFactory();
-  private final static JAXBContext OTT_JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   /**
    * Not to be instanciated
@@ -105,7 +102,7 @@ public final class TableViewUtils
    * @return table view template
    * @throws JAXBException
    */
-  public static Obstableview loadTableTemplateXML( final Reader reader ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final Reader reader ) throws JAXBException
   {
     try
     {
@@ -122,7 +119,7 @@ public final class TableViewUtils
    * 
    * @return table view template
    */
-  public static Obstableview loadTableTemplateXML( final InputStream ins ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {
@@ -139,9 +136,9 @@ public final class TableViewUtils
    * 
    * @return table view template
    */
-  public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final Obstableview baseTemplate = (Obstableview)OTT_JC.createUnmarshaller().unmarshal( ins );
+    final ObstableviewType baseTemplate = (ObstableviewType)OTT_OF.createUnmarshaller().unmarshal( ins );
 
     return baseTemplate;
   }
@@ -149,11 +146,11 @@ public final class TableViewUtils
   /**
    * Saves the given template (binding). Closes the stream.
    */
-  public static void saveTableTemplateXML( final Obstableview xml, final OutputStream outs ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final OutputStream outs ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller(OTT_JC);
+      final Marshaller m = OTT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -166,11 +163,11 @@ public final class TableViewUtils
   /**
    * Saves the given template (binding). Closes the writer.
    */
-  public static void saveTableTemplateXML( final Obstableview xml, final Writer writer ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final Writer writer ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC);
+      final Marshaller m = OTT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, writer );
     }
@@ -185,18 +182,18 @@ public final class TableViewUtils
    * 
    * @return xml binding object (ready for marshalling for instance)
    */
-  public static Obstableview buildTableTemplateXML( final TableView template )
+  public static ObstableviewType buildTableTemplateXML( final TableView template ) throws JAXBException
   {
-    final Obstableview xmlTemplate = OTT_OF.createObstableview();
+    final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
     xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
     
     xmlTemplate.setAlphaSort( template.isAlphaSort() );
 
     // rendering rules
-    final Rules xmlRulesType = OTT_OF.createObstableviewRules();
+    final RulesType xmlRulesType = OTT_OF.createObstableviewTypeRulesType();
     xmlTemplate.setRules( xmlRulesType );
-    final List<TypeRenderingRule> xmlRules = xmlRulesType.getRenderingrule();
+    final List xmlRules = xmlRulesType.getRenderingrule();
 
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
@@ -217,7 +214,7 @@ public final class TableViewUtils
     }
 
     // themes
-    final List<TypeObservation> xmlObsList = xmlTemplate.getObservation();
+    final List xmlObsList = xmlTemplate.getObservation();
 
     int colCount = 0;
 
@@ -237,7 +234,7 @@ public final class TableViewUtils
       xmlObsList.add( xmlObs );
 
       // columns
-      final List<TypeColumn> xmlColumns = xmlObs.getColumn();
+      final List xmlColumns = xmlObs.getColumn();
 
       final List columns = (List)entry.getValue();
       for( Iterator itCol = columns.iterator(); itCol.hasNext(); )
@@ -260,7 +257,7 @@ public final class TableViewUtils
     return xmlTemplate;
   }
 
-  public static IStatus applyXMLTemplate( final TableView view, final Obstableview xml, final URL context,
+  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
       final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
@@ -275,7 +272,7 @@ public final class TableViewUtils
 
     view.setAlphaSort( xml.isAlphaSort() );
 
-    final Rules trules = xml.getRules();
+    final RulesType trules = xml.getRules();
     if( trules != null )
     {
       // clear the rules since we get ones from the xml
@@ -285,10 +282,10 @@ public final class TableViewUtils
         view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule)it.next() ) );
     }
 
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List stati = new ArrayList();
 
-    final List<TypeObservation> list = xml.getObservation();
-    final TypeObservation[] tobs = list.toArray(new TypeObservation[list.size()]);
+    final List list = xml.getObservation();
+    final TypeObservation[] tobs = (TypeObservation[])list.toArray(new TypeObservation[list.size()]);
     for( int i = 0; i < tobs.length; i++ )
     {
       // check, if href is ok
@@ -312,9 +309,9 @@ public final class TableViewUtils
    * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
    * are based on it.
    */
-  public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List tableViewColumns )
+  public static Map buildObservationColumnsMap( final List tableViewColumns )
   {
-    final Map<IObservation, ArrayList<TableViewColumn>>  map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
+    final Map map = new HashMap();
 
     for( final Iterator it = tableViewColumns.iterator(); it.hasNext(); )
     {
@@ -322,9 +319,9 @@ public final class TableViewUtils
       final IObservation obs = col.getObservation();
 
       if( !map.containsKey( obs ) )
-        map.put( obs, new ArrayList<TableViewColumn>() );
+        map.put( obs, new ArrayList() );
 
-      map.get( obs ).add( col );
+      ( (ArrayList)map.get( obs ) ).add( col );
     }
 
     return map;

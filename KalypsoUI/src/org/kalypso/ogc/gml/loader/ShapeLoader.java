@@ -82,7 +82,6 @@ public class ShapeLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
@@ -172,8 +171,8 @@ public class ShapeLoader extends AbstractLoader
     }
   }
 
-  @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+      throws LoaderException
   {
     try
     {

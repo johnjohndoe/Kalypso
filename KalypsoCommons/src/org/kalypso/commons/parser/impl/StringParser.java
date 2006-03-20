@@ -52,7 +52,6 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
-  @Override
   public String toStringInternal( Object obj )
   {
     return obj.toString();
@@ -85,7 +84,6 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.String, java.lang.String)
    */
-  @Override
   public int compare( String value1, String value2 )
   {
     if( value1.compareTo( value2 ) == 0 )

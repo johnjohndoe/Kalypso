@@ -37,8 +37,6 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
@@ -47,20 +45,16 @@ import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.CopyObservationMappingHelper;
-import org.kalypso.zml.filters.AbstractFilterType;
-import org.kalypso.zml.filters.NOperationFilterType;
+import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.OperationFilterType;
-import org.kalypso.zml.filters.ZmlFilterType;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.filters.OperationFilter;
+import org.kalypso.zml.filters.ZmlFilter;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
@@ -90,9 +84,9 @@ public class GMLWeightingTask extends Task
 
   private String m_propWeight; // e.g. "faktor"
 
-  private String m_propRelationSourceFeature; // e.g. "ombrometerMember"
+  private String m_propRelationSourceFeature; //e.g. "ombrometerMember"
 
-  private String m_propZMLSource;// e.g. Niederschlag_gemessen
+  private String m_propZMLSource;//e.g. Niederschlag_gemessen
 
   private long m_from;
 
@@ -103,8 +97,7 @@ public class GMLWeightingTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
-  @Override
-  public void execute( ) throws BuildException
+  public void execute() throws BuildException
   {
     try
     {
@@ -119,9 +112,7 @@ public class GMLWeightingTask extends Task
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
-      final JAXBContext filterJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-      
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(filterJC);
+      final Marshaller marshaller = filterFac.createMarshaller();
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 
@@ -134,30 +125,28 @@ public class GMLWeightingTask extends Task
 
       // 2. locate features to process
       final FeaturePath path = new FeaturePath( m_featurePathTarget );
-      final FeatureList feList = (FeatureList) path.getFeature( workspace );
+      final FeatureList feList = (FeatureList)path.getFeature( workspace );
       // loop all features
       for( int i = 0; i < feList.size(); i++ )
       {
-        final Feature targetFE = (Feature) feList.get( i );
+        final Feature targetFE = (Feature)feList.get( i );
         // 3. find target
-        final TimeseriesLinkType targetLink = (TimeseriesLinkType) targetFE.getProperty( m_propZMLTarget );
+        final TimeseriesLink targetLink = (TimeseriesLink)targetFE.getProperty( m_propZMLTarget );
         final URL targetURL = urlResolver.resolveURL( m_targetContext, targetLink.getHref() );
 
         // 4. build n-operation filter
-        final NOperationFilterType nOperationFilter = filterFac.createNOperationFilterType();
+        final NOperationFilter nOperationFilter = filterFac.createNOperationFilter();
         nOperationFilter.setOperator( "+" );
-        final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
+        final List filterList = nOperationFilter.getFilter();
 
         // 5. resolve weights
-        final IRelationType pt = (IRelationType) FeatureHelper.getPT(targetFE, m_propRelationWeightMember);
-        final Feature[] weightFEs = workspace.resolveLinks( targetFE, pt );
+        final Feature[] weightFEs = workspace.resolveLinks( targetFE, m_propRelationWeightMember );
 
         // 6. loop weights
         for( int j = 0; j < weightFEs.length; j++ )
         {
           // 7. resolve feature that has source zml reference
-          final IRelationType pt2 = (IRelationType) FeatureHelper.getPT(weightFEs[j], m_propRelationSourceFeature);
-          final Feature sourceFE = workspace.resolveLink( weightFEs[j], pt2 );
+          final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
           if( sourceFE == null )
           {
             logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );
@@ -167,7 +156,7 @@ public class GMLWeightingTask extends Task
           }
 
           // 8. resolve property that is source zml reference
-          final TimeseriesLinkType zmlLink = (TimeseriesLinkType) sourceFE.getProperty( m_propZMLSource );
+          final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
           if( zmlLink == null )
           {
             logger.log( "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
@@ -177,13 +166,13 @@ public class GMLWeightingTask extends Task
           }
 
           // 9. build operation filter with parameters from gml
-          final OperationFilterType filter = filterFac.createOperationFilterType();
-          filterList.add( filterFac.createFilter( filter ) );
+          final OperationFilter filter = filterFac.createOperationFilter();
+          filterList.add( filter );
           filter.setOperator( "*" );
-          double factor = ((Double) weightFEs[j].getProperty( m_propWeight )).doubleValue();
+          double factor = ( (Double)weightFEs[j].getProperty( m_propWeight ) ).doubleValue();
           filter.setOperand( Double.toString( factor ) );
-          final ZmlFilterType zmlFilter = filterFac.createZmlFilterType();
-          filter.setFilter( filterFac.createFilter( zmlFilter ) );
+          final ZmlFilter zmlFilter = filterFac.createZmlFilter();
+          filter.setFilter( zmlFilter );
           final SimpleLinkType simpleLink = linkFac.createSimpleLinkType();
           simpleLink.setHref( zmlLink.getHref() );
           zmlFilter.setZml( simpleLink );
@@ -200,7 +189,8 @@ public class GMLWeightingTask extends Task
         logger.log( " Ziel-ZML " + targetURL );
       }
       // 13. do the mapping
-      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, new Date( m_from ), new Date( m_forecastFrom ), new Date( m_to ), true );
+      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, new Date( m_from ),
+          new Date( m_forecastFrom ), new Date( m_to ), true );
 
       // 14. serialize result workspace to file
       if( m_targetMapping != null )

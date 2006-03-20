@@ -135,7 +135,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   /**
    * Retourne le symbole du préfix. Cette méthode retourne systématiquement le champ {@link #symbol}.
    */
-  @Override
   public String toString()
   {
     return symbol;
@@ -162,7 +161,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
    * <code>object</code> est aussi un objet <code>Prefix</code> et si les deux préfix ont les mêmes nom et symbole
    * et représentent la même quantité {@link #amount}.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object == this )
@@ -179,7 +177,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   /**
    * Retourne un code représentant ce préfix.
    */
-  @Override
   public int hashCode()
   {
     final long code = Double.doubleToLongBits( amount );

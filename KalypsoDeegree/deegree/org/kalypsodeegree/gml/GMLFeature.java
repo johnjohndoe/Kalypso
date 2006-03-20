@@ -60,11 +60,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.gml;
 
-import javax.xml.namespace.QName;
-
 import org.w3c.dom.Element;
 
 /**
+ * 
+ * 
  * <p>
  * ----------------------------------------------------------
  * </p>
@@ -87,7 +87,7 @@ public interface GMLFeature
   /**
    * returns the ID of the feature
    */
-  public String getId( );
+  public String getId();
 
   /**
    * @see #getId()
@@ -97,7 +97,7 @@ public interface GMLFeature
   /**
    * returns the description of the feature
    */
-  public String getDescription( );
+  public String getDescription();
 
   /**
    * @see #getDescription()
@@ -105,24 +105,16 @@ public interface GMLFeature
   public void setDescription( String describtion );
 
   /**
-   * @deprecated
+   * returns the name of the Geometry. (with namespace qualifier, shortcut)
    */
-  @Deprecated
-  public String getName( );
-
-  public QName getQName( );
+  public String getName();
 
   /**
-   * @deprecated
+   * returns the name of the Geometry.
    */
-  @Deprecated
-  public String getLocalName( );
+  public String getLocalName();
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  public String getNamespaceURI( );
+  public String getNamespaceURI();
 
   /**
    * @see #getName()
@@ -132,27 +124,27 @@ public interface GMLFeature
   /**
    * return the name of the feature type the feature based on
    */
-  public String getFeatureTypeName( );
+  public String getFeatureTypeName();
 
   /**
    * returns the boundingbox of the feature
    */
-  public GMLBox getBoundedBy( );
+  public GMLBox getBoundedBy();
 
   /**
    * returns all properties of the feature
    */
-  public GMLProperty[] getProperties( );
+  public GMLProperty[] getProperties();
 
   /**
    * returns alls properties that are a GMLGeometry
    */
-  public GMLGeoProperty[] getGeoProperties( );
+  public GMLGeoProperty[] getGeoProperties();
 
   /**
    * returns alls properties that are not a GMLGeometry
    */
-  public GMLProperty[] getNoneGeoProperties( );
+  public GMLProperty[] getNoneGeoProperties();
 
   /**
    * returns a specific property identified by its name
@@ -164,22 +156,34 @@ public interface GMLFeature
    */
   public void addProperty( GMLProperty property ) throws GMLException;
 
-  public Element getAsElement( );
-
+  public Element getAsElement();
 }
 /*
- * Changes to this class. What the people haven been up to: $Log$
- * Changes to this class. What the people haven been up to: Revision 1.9  2006/02/27 12:43:09  devgernot
- * Changes to this class. What the people haven been up to: *** empty log message ***
  * Changes to this class. What the people haven been up to:
- * Changes to this class. What the people haven been up to: Revision 1.8  2006/02/09 18:16:25  doemming
- * Changes to this class. What the people haven been up to: *** empty log message ***
- * Changes to this class. What the people haven been up to: Revision 1.7 2005/06/20 14:07:44
- * belger Formatierung Revision 1.6 2005/03/08 11:01:10 doemming *** empty log message *** Revision 1.5 2005/02/03
- * 18:37:42 belger *** empty log message *** Revision 1.4 2005/01/18 12:50:41 doemming *** empty log message ***
- * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:51 doemming ***
- * empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming *** empty log message *** Revision 1.3 2004/04/27
- * 15:40:15 poth no message Revision 1.2 2003/07/21 07:50:47 poth no message Revision 1.1.1.1 2002/09/25 16:01:45 poth
- * no message Revision 1.2 2002/08/19 15:59:20 ap no message Revision 1.1 2002/04/04 16:17:15 ap no message Revision 1.4
- * 2001/11/23 10:40:53 axel as: CVS change-log comment added
+ * 
+ * $Log$
+ * Revision 1.7  2005/06/20 14:07:44  belger
+ * Formatierung
+ * Revision 1.6 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2005/02/03 18:37:42 belger *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * empty log message *** Revision 1.3 2004/04/27 15:40:15 poth no message
+ * 
+ * Revision 1.2 2003/07/21 07:50:47 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:01:45 poth no message
+ * 
+ * Revision 1.2 2002/08/19 15:59:20 ap no message
+ * 
+ * Revision 1.1 2002/04/04 16:17:15 ap no message
+ * 
+ * Revision 1.4 2001/11/23 10:40:53 axel as: CVS change-log comment added
+ * 
+ *  
  */

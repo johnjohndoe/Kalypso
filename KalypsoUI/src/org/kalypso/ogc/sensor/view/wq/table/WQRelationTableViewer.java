@@ -123,8 +123,7 @@ public class WQRelationTableViewer extends AbstractViewer
     m_table.setModel( WQRelationFactory.createTableModel( table ) );
   }
 
-  @Override
-  public Control getControl( )
+  public Control getControl()
   {
     return m_composite;
   }

@@ -77,17 +77,17 @@ import org.w3c.dom.Element;
 public class ArithmeticExpression extends Expression_Impl
 {
   /** The first operand. */
-  Expression m_expr1;
+  Expression expr1;
 
   /** The second operand. */
-  Expression m_expr2;
+  Expression expr2;
 
   /** Constructs a new ArithmeticExpression. */
   public ArithmeticExpression( int id, Expression expr1, Expression expr2 )
   {
-    m_id = id;
-    m_expr1 = expr1;
-    m_expr2 = expr2;
+    this.id = id;
+    this.expr1 = expr1;
+    this.expr2 = expr2;
   }
 
   /**
@@ -104,17 +104,17 @@ public class ArithmeticExpression extends Expression_Impl
     int id = EXPRESSION_DEFINES.getIdByName( name );
     switch( id )
     {
-      case ExpressionDefines.ADD:
-      case ExpressionDefines.SUB:
-      case ExpressionDefines.MUL:
-      case ExpressionDefines.DIV:
-      {
-        break;
-      }
-      default:
-      {
-        throw new FilterConstructionException( "Element's name does not match 'Add' / 'Sub' / 'Mul' or 'Div'!" );
-      }
+    case ExpressionDefines.ADD:
+    case ExpressionDefines.SUB:
+    case ExpressionDefines.MUL:
+    case ExpressionDefines.DIV:
+    {
+      break;
+    }
+    default:
+    {
+      throw new FilterConstructionException( "Element's name does not match 'Add' / 'Sub' / 'Mul' or 'Div'!" );
+    }
     }
 
     // determine the arguments
@@ -129,14 +129,13 @@ public class ArithmeticExpression extends Expression_Impl
   }
 
   /** Produces an indented XML representation of this object. */
-  @Override
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer();
 
     sb.append( "<ogc:" ).append( getExpressionName() ).append( ">" );
-    sb.append( m_expr1.toXML() );
-    sb.append( m_expr2.toXML() );
+    sb.append( expr1.toXML() );
+    sb.append( expr2.toXML() );
     sb.append( "</ogc:" ).append( getExpressionName() ).append( ">" );
     return sb;
   }
@@ -152,45 +151,45 @@ public class ArithmeticExpression extends Expression_Impl
    */
   public Object evaluate( Feature feature ) throws FilterEvaluationException
   {
-    Object o1 = m_expr1.evaluate( feature );
-    Object o2 = m_expr2.evaluate( feature );
+    Object o1 = expr1.evaluate( feature );
+    Object o2 = expr2.evaluate( feature );
 
-    if( !(o1 instanceof Number && o2 instanceof Number) )
+    if( !( o1 instanceof Number && o2 instanceof Number ) )
     {
       throw new FilterEvaluationException( "ADD/SUB/DIV/MUL may only be applied to numerical expressions." );
     }
-    double d1 = ((Number) o1).doubleValue();
-    double d2 = ((Number) o2).doubleValue();
-    switch( m_id )
+    double d1 = ( (Number)o1 ).doubleValue();
+    double d2 = ( (Number)o2 ).doubleValue();
+    switch( id )
     {
-      case ExpressionDefines.ADD:
-        return new Double( d1 + d2 );
-      case ExpressionDefines.SUB:
-        return new Double( d1 - d2 );
-      case ExpressionDefines.MUL:
-        return new Double( d1 * d2 );
-      case ExpressionDefines.DIV:
-        return new Double( d1 / d2 );
-      default:
-      {
-        throw new FilterEvaluationException( "Unknown ArithmeticExpression: '" + getExpressionName() + "'!" );
-      }
+    case ExpressionDefines.ADD:
+      return new Double( d1 + d2 );
+    case ExpressionDefines.SUB:
+      return new Double( d1 - d2 );
+    case ExpressionDefines.MUL:
+      return new Double( d1 * d2 );
+    case ExpressionDefines.DIV:
+      return new Double( d1 / d2 );
+    default:
+    {
+      throw new FilterEvaluationException( "Unknown ArithmeticExpression: '" + getExpressionName() + "'!" );
+    }
     }
   }
 
   /**
    * returns the first expression
    */
-  public Expression getFirstExpression( )
+  public Expression getFirstExpression()
   {
-    return m_expr1;
+    return expr1;
   }
 
   /**
    * returns the second expression
    */
-  public Expression getSecondExpression( )
+  public Expression getSecondExpression()
   {
-    return m_expr1;
+    return expr1;
   }
 }

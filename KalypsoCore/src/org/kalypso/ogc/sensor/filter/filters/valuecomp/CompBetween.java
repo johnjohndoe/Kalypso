@@ -67,7 +67,8 @@ public class CompBetween extends AbstractValueComp
    * @param modeToInclusive
    * @throws ParserException
    */
-  public CompBetween( final IAxis[] axes, final String axisType, final String valueFrom, final boolean modeFromInclusive, final String valueTo, final boolean modeToInclusive ) throws ParserException
+  public CompBetween( final IAxis[] axes, final String axisType, final String valueFrom,
+      final boolean modeFromInclusive, final String valueTo, final boolean modeToInclusive ) throws ParserException
   {
     super( axes, axisType );
 
@@ -80,7 +81,6 @@ public class CompBetween extends AbstractValueComp
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.AbstractValueComp#internalValidates(java.lang.Object)
    */
-  @Override
   public boolean internalValidates( final Object element ) throws ParserException
   {
     if( m_parser.compare( element, m_valueFrom ) < 0 )

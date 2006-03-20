@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
+import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 
 /**
@@ -234,7 +234,7 @@ public class ZmlTest extends TestCase
 
     final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), zmlFile.getAbsolutePath() );
 
-    final Observation xml = ZmlFactory.createXML( obs, null );
+    final ObservationType xml = ZmlFactory.createXML( obs, null );
     final StringWriter writer = new StringWriter();
     ZmlFactory.getMarshaller().marshal( xml, writer );
 
@@ -243,7 +243,7 @@ public class ZmlTest extends TestCase
     System.out.println( xmlStr );
 
     final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), "fake-id", null );
-    final Observation xml2 = ZmlFactory.createXML( obs2, null );
+    final ObservationType xml2 = ZmlFactory.createXML( obs2, null );
     final StringWriter writer2 = new StringWriter();
     ZmlFactory.getMarshaller().marshal( xml2, writer2 );
     System.out.println( writer2.toString() );

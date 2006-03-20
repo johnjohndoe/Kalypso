@@ -49,7 +49,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
@@ -64,11 +63,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
@@ -77,21 +71,29 @@ import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.Checkbox;
+import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.featureview.FeaturetemplateType;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridLayoutType;
+import org.kalypso.template.featureview.GroupType;
+import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
-import org.kalypso.template.featureview.Radiobutton;
-import org.kalypso.template.featureview.Subcomposite;
-import org.kalypso.template.featureview.Table;
-import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.RadiobuttonType;
+import org.kalypso.template.featureview.SubcompositeType;
+import org.kalypso.template.featureview.TableType;
+import org.kalypso.template.featureview.TextType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -99,14 +101,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
-  // TODO: refactor tu use QName instead, but we must adapt the binding of FeatureviewType as well
-  private final Map<String, FeatureviewType> m_viewMap = new HashMap<String, FeatureviewType>();
+  /** FeatureType -> FeatureView */
+  private final Map m_viewMap = new HashMap();
 
-  private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
+  private final Collection m_featureControls = new ArrayList();
 
-  private final Collection<Control> m_swtControls = new ArrayList<Control>();
+  private final Collection m_swtControls = new ArrayList();
 
-  private final Collection<ModifyListener> m_modifyListeners = new ArrayList<ModifyListener>( 5 );
+  private final Collection m_modifyListeners = new ArrayList( 5 );
 
   private Control m_control = null;
 
@@ -131,7 +133,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     super( workspace, feature, null );
 
     m_selectionManager = selectionManager;
-
+    
     for( int i = 0; i < views.length; i++ )
       addView( views[i] );
   }
@@ -139,11 +141,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.updateControl();
     }
   }
@@ -151,8 +153,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     disposeControl();
 
@@ -163,11 +164,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl)iter.next();
 
       if( !fc.isValid() )
         return false;
@@ -182,10 +183,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * @param featureType
    * @return featureview
    */
-  public FeatureviewType getFeatureview( final IFeatureType featureType )
+  public FeatureviewType getFeatureview( final FeatureType featureType )
   {
     final String typename = featureType.getName();
-    final FeatureviewType view = m_viewMap.get( typename );
+    final FeatureviewType view = (FeatureviewType)m_viewMap.get( typename );
     if( view != null )
       return view;
 
@@ -196,7 +197,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return newView;
   }
 
-  public Control createControl( final Composite parent, final int style, final IFeatureType ft )
+  public Control createControl( final Composite parent, final int style, final FeatureType ft )
   {
     final FeatureviewType view = getFeatureview( ft );
 
@@ -222,14 +223,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( control.getToolTipText() == null )
       control.setToolTipText( controlType.getTooltip() );
 
-    final JAXBElement< ? extends LayoutDataType> jaxLayoutData = controlType.getLayoutData();
-    if( jaxLayoutData != null )
-    {
-      final LayoutDataType layoutData = jaxLayoutData.getValue();
+    final LayoutDataType layoutData = controlType.getLayoutData();
+    if( layoutData != null )
       control.setLayoutData( createLayoutData( layoutData ) );
-    }
-    else
-      control.setLayoutData( new GridData() );
+
     return control;
   }
 
@@ -239,43 +236,39 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final GMLWorkspace workspace = getWorkspace();
     if( controlType instanceof CompositeType )
     {
-      final CompositeType compositeType = (CompositeType) controlType;
+      final CompositeType compositeType = (CompositeType)controlType;
       final Composite composite = createCompositeFromCompositeType( parent, style, compositeType );
 
       // Layout setzen
-      final LayoutType layoutType = compositeType.getLayout().getValue();
+      final LayoutType layoutType = compositeType.getLayout();
       if( layoutType != null )
         composite.setLayout( createLayout( layoutType ) );
 
       // die Children einbauen
-      final Iterator<JAXBElement< ? extends ControlType>> iter = compositeType.getControl().iterator();
-      while( iter.hasNext() )
-      {
-        Object object = iter.next();
-        final JAXBElement< ? extends ControlType> element = (JAXBElement< ? extends ControlType>) object;
-        final ControlType control = element.getValue();
-        createControl( composite, SWT.NONE, control );
-      }
+      final List children = compositeType.getControl();
+      for( final Iterator iter = children.iterator(); iter.hasNext(); )
+        createControl( composite, SWT.NONE, (ControlType)iter.next() );
+
       return composite;
     }
 
     // control erzeugen!
-    if( controlType instanceof org.kalypso.template.featureview.Label )
+    if( controlType instanceof LabelType )
     {
-      final org.kalypso.template.featureview.Label labelType = (org.kalypso.template.featureview.Label) controlType;
+      final LabelType labelType = (LabelType)controlType;
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
       label.setText( labelType.getText() );
       applyAnnotation( label, labelType.getProperty(), feature );
 
       return label;
     }
-    else if( controlType instanceof Text )
+    else if( controlType instanceof TextType )
     {
-      final Text editorType = (Text) controlType;
+      final TextType editorType = (TextType)controlType;
 
       final String propertyName = editorType.getProperty();
 
-      final IValuePropertyType ftp = (IValuePropertyType) feature.getFeatureType().getProperty( propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       final TextFeatureControl tfc = new TextFeatureControl( workspace, feature, ftp );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
@@ -285,13 +278,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Checkbox )
+    else if( controlType instanceof CheckboxType )
     {
-      final Checkbox checkboxType = (Checkbox) controlType;
+      final CheckboxType checkboxType = (CheckboxType)controlType;
 
       final String propertyName = checkboxType.getProperty();
 
-      final IValuePropertyType ftp = (IValuePropertyType) feature.getFeatureType().getProperty( propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( workspace, feature, ftp );
 
       final Control control = cfc.createControl( parent, SWTUtilities.createStyleFromString( checkboxType.getStyle() ) );
@@ -301,13 +294,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Button )
+    else if( controlType instanceof ButtonType )
     {
-      final Button buttonType = (Button) controlType;
+      final ButtonType buttonType = (ButtonType)controlType;
 
       final String propertyName = buttonType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp, m_selectionManager );
 
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
@@ -315,13 +308,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Radiobutton )
+    else if( controlType instanceof RadiobuttonType )
     {
-      final Radiobutton radioType = (Radiobutton) controlType;
+      final RadiobuttonType radioType = (RadiobuttonType)controlType;
 
       final String propertyName = radioType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      
       final Object valueToSet = radioType.getValueToSet();
       final String text = radioType.getText();
       final RadioFeatureControl rfc = new RadioFeatureControl( workspace, feature, ftp, valueToSet, text );
@@ -333,14 +326,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Subcomposite )
+    else if( controlType instanceof SubcompositeType )
     {
-      final Subcomposite compoType = (Subcomposite) controlType;
+      final SubcompositeType compoType = (SubcompositeType)controlType;
 
       final String propertyName = compoType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager, (FeatureviewType[])m_viewMap.values().toArray(
+          new FeatureviewType[0] ) );
       fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
@@ -349,12 +343,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Table )
+    else if( controlType instanceof TableType )
     {
-      final Table tableType = (Table) controlType;
+      final TableType tableType = (TableType)controlType;
 
       final String propertyName = tableType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
       final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
@@ -364,7 +358,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final Control control = fc.createControl( parent, SWT.NONE );
       control.setLayoutData( new GridData() );
-      return (Composite) control;
+      return (Composite)control;
     }
 
     final Label label = new Label( parent, SWT.NONE );
@@ -372,12 +366,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style,
+      final CompositeType compositeType )
   {
-    if( compositeType instanceof org.kalypso.template.featureview.Group )
+    if( compositeType instanceof GroupType )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
-      group.setText( ((org.kalypso.template.featureview.Group) compositeType).getText() );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, style
+          | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      group.setText( ( (GroupType)compositeType ).getText() );
       return group;
     }
 
@@ -386,9 +382,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Layout createLayout( final LayoutType layoutType )
   {
-    if( layoutType instanceof org.kalypso.template.featureview.GridLayout )
+    if( layoutType instanceof GridLayoutType )
     {
-      final org.kalypso.template.featureview.GridLayout gridLayoutType = (org.kalypso.template.featureview.GridLayout) layoutType;
+      final GridLayoutType gridLayoutType = (GridLayoutType)layoutType;
       final GridLayout layout = new GridLayout();
       layout.horizontalSpacing = gridLayoutType.getHorizontalSpacing();
       layout.verticalSpacing = gridLayoutType.getVerticalSpacing();
@@ -405,9 +401,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Object createLayoutData( final LayoutDataType layoutDataType )
   {
-    if( layoutDataType instanceof org.kalypso.template.featureview.GridData )
+    if( layoutDataType instanceof GridDataType )
     {
-      final org.kalypso.template.featureview.GridData gridDataType = (org.kalypso.template.featureview.GridData) layoutDataType;
+      final GridDataType gridDataType = (GridDataType)layoutDataType;
       final GridData gridData = new GridData();
 
       gridData.grabExcessHorizontalSpace = gridDataType.isGrabExcessHorizontalSpace();
@@ -451,13 +447,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_modifyListeners.remove( this );
   }
 
-  @Override
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     super.setFeature( workspace, feature );
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.setFeature( workspace, feature );
     }
   }
@@ -466,21 +461,19 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     try
     {
-      Object unmarshal = FeatureviewHelper.JC.createUnmarshaller().unmarshal( url );
-      if( unmarshal instanceof JAXBElement )
-        unmarshal = ((JAXBElement) unmarshal).getValue();
-
+      final Object unmarshal = FeatureviewHelper.UNMARSHALLER.unmarshal( url );
       if( unmarshal instanceof FeatureviewType )
-        addView( (FeatureviewType) unmarshal );
-      else if( unmarshal instanceof Featuretemplate )
+        addView( (FeatureviewType)unmarshal );
+      else if( unmarshal instanceof FeaturetemplateType )
       {
-        final Featuretemplate ftt = (Featuretemplate) unmarshal;
+        final FeaturetemplateType ftt = (FeaturetemplateType)unmarshal;
         final List view = ftt.getView();
         for( final Iterator vIt = view.iterator(); vIt.hasNext(); )
-          addView( (FeatureviewType) vIt.next() );
+          addView( (FeatureviewType)vIt.next() );
       }
       else
-        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
+        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in "
+            + url.toString() );
     }
     catch( final JAXBException e )
     {
@@ -493,18 +486,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_viewMap.put( view.getTypename(), view );
   }
 
-  public void disposeControl( )
+  public void disposeControl()
   {
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
-      final IFeatureControl fc = (IFeatureControl) iter.next();
+      final IFeatureControl fc = (IFeatureControl)iter.next();
       fc.dispose();
     }
     m_featureControls.clear();
 
     for( final Iterator iter = m_swtControls.iterator(); iter.hasNext(); )
     {
-      final Control c = (Control) iter.next();
+      final Control c = (Control)iter.next();
       c.dispose();
     }
     m_swtControls.clear();
@@ -516,7 +509,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
   }
 
-  public Control getControl( )
+  public Control getControl()
   {
     return m_control;
   }
@@ -525,18 +518,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     if( propertyName != null && propertyName.length() > 0 )
     {
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       if( ftp != null )
       {
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
+        final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault().getPluginPreferences()
+            .getString( IKalypsoPreferences.LANGUAGE ) );
 
         if( annotation != null )
         {
           try
           {
-            final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } );
+            final Method method = label.getClass().getMethod( "setText", new Class[]
+            { String.class } );
             if( method != null )
-              method.invoke( label, annotation.getLabel() );
+              method.invoke( label, new String[]
+              { annotation.getLabel() } );
           }
           catch( final Exception e )
           {
@@ -558,10 +554,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
-  public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+  public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
   {
     fireOpenFeatureRequested( feature, ftp );
   }
@@ -571,13 +566,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    */
   public void modifyText( final ModifyEvent e )
   {
-    final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
+    final ModifyListener[] listeners = (ModifyListener[])m_modifyListeners
+        .toArray( new ModifyListener[m_modifyListeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final ModifyListener listener = listeners[i];
       Platform.run( new SafeRunnable()
       {
-        public void run( ) throws Exception
+        public void run() throws Exception
         {
           listener.modifyText( e );
         }

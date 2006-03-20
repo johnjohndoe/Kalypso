@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.convert.source;
 import java.util.Map;
 
 import org.kalypso.gml.util.RegisterSourceType;
+import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -65,9 +66,9 @@ public class RegisterSourceHandler implements ISourceHandler
   /**
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace( )
+  public GMLWorkspace getWorkspace() throws GmlConvertException
   {
-    return (GMLWorkspace) m_externData.get( m_registeredID );
+    return (GMLWorkspace)m_externData.get( m_registeredID );
   }
 
 }

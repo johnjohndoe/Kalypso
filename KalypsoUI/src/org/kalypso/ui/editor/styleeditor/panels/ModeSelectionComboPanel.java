@@ -1,3 +1,8 @@
+package org.kalypso.ui.editor.styleeditor.panels;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,10 +43,6 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.panels;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 
 public class ModeSelectionComboPanel extends ComboPanel
 {
@@ -57,14 +58,12 @@ public class ModeSelectionComboPanel extends ComboPanel
     setSelection( index );
   }
 
-  @Override
-  public int getSelection( )
+  public int getSelection()
   {
     return comboBox.getSelectionIndex();
   }
 
-  @Override
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
     comboBox.select( index );
   }

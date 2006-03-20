@@ -93,7 +93,7 @@ public class PropertyCalcJobFactory implements ICalcJobFactory
 
   public String[] getSupportedTypes()
   {
-    return m_jobTypes.keySet().toArray( new String[0] );
+    return (String[])m_jobTypes.keySet().toArray( new String[0] );
   }
 
   public ICalcJob createJob( final String typeID ) throws CalcJobServiceException

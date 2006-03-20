@@ -65,7 +65,7 @@ public class DataHoleFilterCreator implements IFilterCreator
 
     final DataholeFilterType ft = (DataholeFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
 
     Double replaceWith = null;
     if( ft.isReplace() )

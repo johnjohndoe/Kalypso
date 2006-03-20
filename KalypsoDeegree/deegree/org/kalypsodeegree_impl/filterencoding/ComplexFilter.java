@@ -60,16 +60,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Filter>element that contains an Operation (only) (as defined in the Filter DTD).
@@ -87,12 +82,12 @@ public class ComplexFilter extends AbstractFilter
 {
 
   /** Operation the ComplexFilter is based on */
-  private Operation m_operation;
+  private Operation operation;
 
   /** Constructs a new ComplexFilter based on the given operation. */
   public ComplexFilter( Operation operation )
   {
-    m_operation = operation;
+    this.operation = operation;
   }
 
   /**
@@ -104,7 +99,7 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( int operatorId )
   {
-    m_operation = new LogicalOperation( operatorId, new ArrayList<Operation>() );
+    operation = new LogicalOperation( operatorId, new ArrayList() );
   }
 
   /**
@@ -121,26 +116,26 @@ public class ComplexFilter extends AbstractFilter
   {
 
     // extract the Operations from the Filters
-    ArrayList<Operation> arguments = new ArrayList<Operation>();
+    ArrayList arguments = new ArrayList();
     arguments.add( filter1.getOperation() );
     if( filter2 != null )
       arguments.add( filter2.getOperation() );
 
-    m_operation = new LogicalOperation( operatorId, arguments );
+    operation = new LogicalOperation( operatorId, arguments );
   }
 
   /** Returns the contained Operation. */
-  public Operation getOperation( )
+  public Operation getOperation()
   {
-    return m_operation;
+    return operation;
   }
 
-  /** Sets the Operation. */
-  public void setOperation( Operation operation )
+  /** Returns the contained Operation. */
+  public void setOperation( Operation operation)
   {
-    m_operation = operation;
+    this.operation =operation; 
   }
-
+  
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
@@ -152,36 +147,16 @@ public class ComplexFilter extends AbstractFilter
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
-    return m_operation.evaluate( feature );
+    return operation.evaluate( feature );
   }
 
   /** Produces an indented XML representation of this object. */
-  @Override
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
-    sb.append( m_operation.toXML() );
+    sb.append( operation.toXML() );
     sb.append( "</ogc:Filter>\n" );
     return sb;
-  }
-
-  @Override
-  public Filter clone( ) throws CloneNotSupportedException
-  {
-    StringBuffer buffer = toXML();
-    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
-    Document asDOM = null;
-    try
-    {
-      asDOM = XMLHelper.getAsDOM( input, true );
-      Element element = asDOM.getDocumentElement();
-      return AbstractFilter.buildFromDOM( element );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    throw new CloneNotSupportedException();
   }
 }

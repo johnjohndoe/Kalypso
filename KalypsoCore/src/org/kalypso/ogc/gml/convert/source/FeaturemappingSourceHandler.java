@@ -12,10 +12,10 @@ import org.kalypso.gml.util.ChangeFeaturesMappingType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.MappingType;
 import org.kalypso.gml.util.SourceType;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.AddFeaturesToFeaturelist;
@@ -69,14 +69,14 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       final String fromID = mapping.getFromID();
       final FeatureList toFeatures = getFeatureList( secondGML, toPath );
       final String toID = mapping.getToID();
-      final IFeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
+      final FeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
 
       final Properties properties = new Properties();
 
       final List mapList = mapping.getMap();
       for( final Iterator mapIt = mapList.iterator(); mapIt.hasNext(); )
       {
-        final MappingType.Map map = (MappingType.Map)mapIt.next();
+        final MappingType.MapType map = (MappingType.MapType)mapIt.next();
         properties.setProperty( map.getFrom(), map.getTo() );
       }
 
@@ -88,13 +88,13 @@ public class FeaturemappingSourceHandler implements ISourceHandler
   }
 
   private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures,
-      final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
+      final FeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
       throws GmlConvertException
   {
     if( mapping instanceof AddFeaturesMappingType )
     {
       final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
-      final String handleExisting = addType.getHandleExisting().value();
+      final String handleExisting = addType.getHandleExisting();
       final String fID = addType.getFid();
       return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID );
     }

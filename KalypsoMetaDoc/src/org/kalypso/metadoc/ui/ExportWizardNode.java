@@ -59,13 +59,10 @@ import org.kalypso.metadoc.IExporter;
 public class ExportWizardNode implements IWizardNode
 {
   private final IExportTarget m_target;
-
   private final IExporter m_exporter;
-
   private final Shell m_shell;
 
   private IWizard m_wizard = null;
-
   private ImageDescriptor m_defaultImage;
 
   public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage )
@@ -79,7 +76,7 @@ public class ExportWizardNode implements IWizardNode
   /**
    * @see org.eclipse.jface.wizard.IWizardNode#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_wizard != null )
     {
@@ -91,7 +88,7 @@ public class ExportWizardNode implements IWizardNode
   /**
    * @see org.eclipse.jface.wizard.IWizardNode#getExtent()
    */
-  public Point getExtent( )
+  public Point getExtent()
   {
     return new Point( -1, -1 );
   }
@@ -99,7 +96,7 @@ public class ExportWizardNode implements IWizardNode
   /**
    * @see org.eclipse.jface.wizard.IWizardNode#getWizard()
    */
-  public IWizard getWizard( )
+  public IWizard getWizard()
   {
     if( m_wizard == null )
     {
@@ -121,23 +118,22 @@ public class ExportWizardNode implements IWizardNode
   /**
    * @see org.eclipse.jface.wizard.IWizardNode#isContentCreated()
    */
-  public boolean isContentCreated( )
+  public boolean isContentCreated()
   {
     return m_wizard != null;
   }
 
-  public IExporter getExporter( )
+  public IExporter getExporter()
   {
     return m_exporter;
   }
-
+  
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_exporter.getDescription();
   }
-
+  
 }

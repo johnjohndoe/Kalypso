@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -70,27 +70,30 @@ public class ResourcePool
   private final ILoaderFactory m_factory;
 
   /** type -> loader */
-  private final Map<String, ILoader> m_loaderCache = new HashMap<String, ILoader>();
+  private final Map m_loaderCache = new HashMap();
 
   /** key -> KeyInfo */
-  private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
+  private final Map m_keyInfos = new TreeMap( KeyComparator.getInstance() );
 
   /**
    * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
    */
-  private final ISchedulingRule m_mutex = new MutexRule();
+  private final ISchedulingRule m_mutex = new MutexSchedulingRule();
 
   public ResourcePool( final ILoaderFactory factory )
   {
     m_factory = factory;
   }
 
-  public void dispose( )
+  public void dispose()
   {
     synchronized( m_keyInfos )
     {
-      for( final Entry<IPoolableObjectType, KeyInfo> entry : m_keyInfos.entrySet() )
-        entry.getValue().dispose();
+      for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)iter.next();
+        ( (KeyInfo)entry.getValue() ).dispose();
+      }
       m_keyInfos.clear();
     }
     m_loaderCache.clear();
@@ -108,7 +111,7 @@ public class ResourcePool
 
     synchronized( m_keyInfos )
     {
-      KeyInfo info = m_keyInfos.get( key );
+      KeyInfo info = (KeyInfo)m_keyInfos.get( key );
       if( info == null )
       {
         try
@@ -119,8 +122,6 @@ public class ResourcePool
         }
         catch( final Exception e )
         {
-          e.printStackTrace();
-          e.getMessage();
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
           m_logger.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
@@ -137,10 +138,10 @@ public class ResourcePool
     {
       for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
-        final Map.Entry entry = (Entry) iter.next();
+        final Map.Entry entry = (Entry)iter.next();
 
-        final IPoolableObjectType key = (IPoolableObjectType) entry.getKey();
-        final KeyInfo info = (KeyInfo) entry.getValue();
+        final IPoolableObjectType key = (IPoolableObjectType)entry.getKey();
+        final KeyInfo info = (KeyInfo)entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
           m_logger.info( "Releasing key (no more listeners): " + key );
@@ -153,7 +154,7 @@ public class ResourcePool
 
   private ILoader getLoader( final String type ) throws FactoryException
   {
-    ILoader loader = m_loaderCache.get( type );
+    ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
     {
       loader = m_factory.getLoaderInstance( type );
@@ -173,16 +174,16 @@ public class ResourcePool
       final Collection values = m_keyInfos.values();
       for( final Iterator iter = values.iterator(); iter.hasNext(); )
       {
-        final KeyInfo info = (KeyInfo) iter.next();
+        final KeyInfo info = (KeyInfo)iter.next();
         if( info.getObject() == object )
           info.saveObject( monitor );
       }
     }
   }
 
-  public KeyInfo[] getInfos( )
+  public KeyInfo[] getInfos()
   {
-    return m_keyInfos.values().toArray( new KeyInfo[0] );
+    return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
   }
 
   /**
@@ -195,7 +196,7 @@ public class ResourcePool
    */
   public Object getObject( final PoolableObjectType key ) throws CoreException
   {
-    final KeyInfo info = m_keyInfos.get( key );
+    final KeyInfo info = (KeyInfo)m_keyInfos.get( key );
     if( info != null )
     {
       try

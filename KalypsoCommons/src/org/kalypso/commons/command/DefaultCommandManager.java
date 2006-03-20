@@ -53,7 +53,7 @@ public class DefaultCommandManager implements ICommandManager
 {
   private EventListenerList m_listenerList = new EventListenerList();
 
-  private Vector<ICommand> stack = new Vector<ICommand>();
+  private Vector stack = new Vector();
 
   private boolean doable = false;
 
@@ -114,7 +114,7 @@ public class DefaultCommandManager implements ICommandManager
 
       try
       {
-        stack.elementAt( stackPos ).redo();
+        ( (ICommand)stack.elementAt( stackPos ) ).redo();
       }
       catch( final Exception e )
       {
@@ -136,7 +136,7 @@ public class DefaultCommandManager implements ICommandManager
 
       try
       {
-        stack.elementAt( stackPos + 1 ).undo();
+        ( (ICommand)stack.elementAt( stackPos + 1 ) ).undo();
       }
       catch( final Exception e )
       {
@@ -172,7 +172,7 @@ public class DefaultCommandManager implements ICommandManager
 
   private void fireCommandManagerChanged()
   {
-    final ICommandManagerListener[] listeners = m_listenerList
+    final ICommandManagerListener[] listeners = (ICommandManagerListener[])m_listenerList
         .getListeners( ICommandManagerListener.class );
     for( int i = 0; i < listeners.length; i++ )
       listeners[i].onCommandManagerChanged( this );
@@ -200,7 +200,7 @@ public class DefaultCommandManager implements ICommandManager
   public String getUndoDescription()
   {
     if( canUndo() )
-      return stack.elementAt( stackPos ).getDescription();
+      return ( (ICommand)stack.elementAt( stackPos ) ).getDescription();
 
     return "<cannot undo>";
   }
@@ -211,7 +211,7 @@ public class DefaultCommandManager implements ICommandManager
   public String getRedoDescription()
   {
     if( canRedo() )
-      return stack.elementAt( stackPos + 1 ).getDescription();
+      return ( (ICommand)stack.elementAt( stackPos + 1 ) ).getDescription();
 
     return "<cannot redo>";
   }

@@ -87,7 +87,7 @@ public class SimpleAxis implements IAxis
     return m_isPersistable;
   }
 
-  public Class<?> getDataClass()
+  public Class getDataClass()
   {
     return TimeserieUtils.getDataClass( m_type );
   }
@@ -110,7 +110,6 @@ public class SimpleAxis implements IAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IAxis ) )
@@ -128,8 +127,7 @@ public class SimpleAxis implements IAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  @Override
-  public int hashCode( )
+  public int hashCode()
   {
     final StringBuffer bf = new StringBuffer();
 

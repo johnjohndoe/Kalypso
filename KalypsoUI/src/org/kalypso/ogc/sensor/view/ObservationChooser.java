@@ -288,7 +288,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   /**
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
-  @Override
   public Control getControl()
   {
     return m_repViewer.getControl();
@@ -297,7 +296,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  @Override
   public ISelection getSelection()
   {
     return m_repViewer.getSelection();
@@ -306,7 +304,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  @Override
   public void setSelection( final ISelection selection )
   {
     m_repViewer.setSelection( selection );
@@ -315,7 +312,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  @Override
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
     m_repViewer.addSelectionChangedListener( listener );
@@ -324,7 +320,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  @Override
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
     m_repViewer.removeSelectionChangedListener( listener );

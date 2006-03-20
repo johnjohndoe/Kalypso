@@ -55,12 +55,11 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -79,7 +78,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     m_table = new ObservationTable( m_tableView, false, false );
@@ -100,7 +98,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
@@ -116,8 +113,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
   // noch nix
   }

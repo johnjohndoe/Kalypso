@@ -43,8 +43,6 @@ package org.kalypso.ogc.gml.gui;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -52,7 +50,9 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
@@ -62,9 +62,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
   public IFeatureDialog createFeatureDialog( final GMLWorkspace workspace, final Feature feature,
-      final IPropertyType ftp );
+      final FeatureTypeProperty ftp );
 
   public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
 }

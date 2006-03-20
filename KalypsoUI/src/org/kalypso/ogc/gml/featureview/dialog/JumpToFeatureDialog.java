@@ -45,10 +45,9 @@ import java.util.Collection;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * A fake dialog, which instead of opening a Dialog fire the requestOpenDialog event.
@@ -59,9 +58,9 @@ public class JumpToFeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
   private final IFeatureChangeListener m_listener;
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public JumpToFeatureDialog( final IFeatureChangeListener listener, final Feature feature, final IPropertyType ftp )
+  public JumpToFeatureDialog( final IFeatureChangeListener listener, final Feature feature, final FeatureTypeProperty ftp )
   {
     m_listener = listener;
     m_feature = feature;
@@ -82,7 +81,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     // nothing to collect
   }

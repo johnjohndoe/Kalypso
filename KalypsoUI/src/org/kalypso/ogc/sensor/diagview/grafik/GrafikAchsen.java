@@ -54,7 +54,7 @@ import org.kalypso.template.obsdiagview.TypeAxis;
 public class GrafikAchsen
 {
   /** maps diag-axis-id to grafik-axis (only for vertical axes) */
-  private final Map<String, GrafikAchse> m_name2grafikAxis = new HashMap<String, GrafikAchse>();
+  private final Map m_name2grafikAxis = new HashMap();
 
   private String m_leftLabel = "";
 
@@ -118,7 +118,7 @@ public class GrafikAchsen
    */
   public GrafikAchse getFor( final String diagAxisID )
   {
-    return m_name2grafikAxis.get( diagAxisID );
+    return (GrafikAchse)m_name2grafikAxis.get( diagAxisID );
   }
 
   /**
@@ -157,8 +157,7 @@ public class GrafikAchsen
     /**
      * @see java.lang.Object#toString()
      */
-    @Override
-    public String toString( )
+    public String toString()
     {
       return getName();
     }

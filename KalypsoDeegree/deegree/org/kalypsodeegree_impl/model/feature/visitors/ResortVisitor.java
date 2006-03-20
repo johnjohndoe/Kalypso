@@ -7,7 +7,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class ResortVisitor extends FeatureListsVisitor
 {
-  
   /**
    * @see org.kalypsodeegree_impl.model.feature.visitors.FeatureListsVisitor#visitList(org.kalypsodeegree.model.feature.FeatureList)
    */

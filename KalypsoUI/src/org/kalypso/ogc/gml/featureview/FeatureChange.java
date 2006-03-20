@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -50,28 +49,26 @@ public class FeatureChange
 {
   private final Feature m_feature;
 
-  private final IPropertyType m_property;
+  private final String m_property;
 
   private final Object m_newValue;
 
-  public FeatureChange( final Feature feature, final IPropertyType property, final Object newValue )
+  public FeatureChange( final Feature feature, final String property, final Object newValue )
   {
     m_feature = feature;
     m_property = property;
     m_newValue = newValue;
   }
-
-  public Feature getFeature( )
+  
+  public Feature getFeature()
   {
     return m_feature;
   }
-
-  public Object getNewValue( )
+  public Object getNewValue()
   {
     return m_newValue;
   }
-
-  public IPropertyType getProperty( )
+  public String getProperty()
   {
     return m_property;
   }

@@ -54,6 +54,11 @@ import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
 import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypsodeegree.graphics.sld.Rule;
 
+/**
+ * 
+ *  
+ */
+
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener
 {
   private ISelectionProvider gmop = null;
@@ -72,7 +77,6 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     super.dispose();
@@ -83,7 +87,6 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( Composite parent )
   {
     guiBuilder = new SLDEditorGuiBuilder( parent );
@@ -102,8 +105,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
   // 
   }

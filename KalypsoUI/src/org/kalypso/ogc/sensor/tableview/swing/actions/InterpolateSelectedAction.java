@@ -14,10 +14,10 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
 {
   public InterpolateSelectedAction( ObservationTable table )
   {
-    super( table, "Werte interpolieren", "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
+    super( table, "Werte interpolieren",
+        "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
   }
 
-  @Override
   public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();
@@ -34,13 +34,13 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
     final Object obj1 = table.getValueAt( minRow, col );
     final Object obj2 = table.getValueAt( maxRow, col );
 
-    if( !(obj1 instanceof Number) || !(obj2 instanceof Number) )
+    if( !( obj1 instanceof Number ) || !( obj2 instanceof Number ) )
       return;
 
-    final double v1 = ((Number) obj1).doubleValue();
-    final double v2 = ((Number) obj2).doubleValue();
+    final double v1 = ( (Number)obj1 ).doubleValue();
+    final double v2 = ( (Number)obj2 ).doubleValue();
 
-    final double step = (v2 - v1) / (maxRow - minRow);
+    final double step = ( v2 - v1 ) / ( maxRow - minRow );
 
     int i = 1;
     for( int row = minRow + 1; row < maxRow; row++ )

@@ -1,7 +1,7 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -58,35 +58,35 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
-  public boolean isDekoratorOf( IPropertyType ftp )
+  public boolean isDekoratorOf( FeatureTypeProperty ftp )
   {
     return false;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp )
   {
-    return new VirtualFeatureTypeProperty[0];
+    return new FeatureTypeProperty[0];
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.FeatureType)
    */
-  public boolean isDekoratorOf( IFeatureType ft )
+  public boolean isDekoratorOf( FeatureType ft )
   {
     return true;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.FeatureType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
   {
-    return new VirtualFeatureTypeProperty[]
+    return new FeatureTypeProperty[]
     { new VirtualIdFeatureTypeProperty() };
   }
 }

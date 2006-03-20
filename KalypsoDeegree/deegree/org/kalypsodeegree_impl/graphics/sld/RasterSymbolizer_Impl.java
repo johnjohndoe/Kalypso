@@ -66,12 +66,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import net.opengis.sld.ObjectFactory;
 
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Interval;
@@ -79,6 +77,7 @@ import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
+ * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -102,7 +101,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     setColorMap( colorMap );
   }
 
-  public TreeMap getColorMap( )
+  public TreeMap getColorMap()
   {
     return m_colorMap;
   }
@@ -112,7 +111,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     m_colorMap = colorMap;
   }
 
-  public Geometry getGeometry( )
+  public Geometry getGeometry()
   {
     return m_geometry;
   }
@@ -122,7 +121,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     m_geometry = geometry;
   }
 
-  public int getMode( )
+  public int getMode()
   {
     return mode;
   }
@@ -132,36 +131,36 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     this.mode = mode;
   }
 
-  public TreeMap getIntervalMap( )
+  public TreeMap getIntervalMap()
   {
     TreeMap intervalMap = new TreeMap();
     Object[] colorMapKeys = m_colorMap.keySet().toArray();
     int startIndex = 0;
     double nullValue = -9999;
-    if( ((Double) colorMapKeys[0]).doubleValue() == nullValue )
+    if( ( (Double)colorMapKeys[0] ).doubleValue() == nullValue )
     {
       startIndex = 1;
     }
     for( int i = startIndex; i < colorMapKeys.length - 1; i++ )
     {
-      ColorMapEntry colorMapEntry_i = (ColorMapEntry) m_colorMap.get( colorMapKeys[i] );
-      ColorMapEntry colorMapEntry_i1 = (ColorMapEntry) m_colorMap.get( colorMapKeys[i + 1] );
+      ColorMapEntry colorMapEntry_i = (ColorMapEntry)m_colorMap.get( colorMapKeys[i] );
+      ColorMapEntry colorMapEntry_i1 = (ColorMapEntry)m_colorMap.get( colorMapKeys[i + 1] );
       Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
       Color color = colorMapEntry_i.getColor();
-      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int) Math.round( colorMapEntry_i.getOpacity() * 255 ) );
+      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int)Math
+          .round( colorMapEntry_i.getOpacity() * 255 ) );
       intervalMap.put( interval, colorWithOpacity );
     }
     return intervalMap;
   }
 
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     try
     {
-      final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
-      // marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
+      ObjectFactory fac = new ObjectFactory();
+      Marshaller marshaller = fac.createMarshaller();
+      //marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
       // );
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
       if( m_colorMap != null )
@@ -171,7 +170,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
         Iterator it = m_colorMap.keySet().iterator();
         while( it.hasNext() )
         {
-          ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
+          ColorMapEntry colorMapEntry = (ColorMapEntry)m_colorMap.get( it.next() );
           colorMapEntryList.add( colorMapEntry.exportAsXML() );
         }
         rasterSymbolizerElement.setColorMap( colorMapElement );
@@ -179,8 +178,8 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       StringWriter writer = new StringWriter();
       marshaller.marshal( rasterSymbolizerElement, writer );
       writer.close();
-      // System.out.println( writer.toString() );
-      return ((writer.toString()).replaceFirst( "<?.*?>", "" )).trim();
+      //System.out.println( writer.toString() );
+      return ( ( writer.toString() ).replaceFirst( "<?.*?>", "" ) ).trim();
     }
     catch( Exception e )
     {

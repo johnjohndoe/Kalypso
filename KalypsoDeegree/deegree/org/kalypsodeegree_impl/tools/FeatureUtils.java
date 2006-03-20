@@ -43,11 +43,8 @@ package org.kalypsodeegree_impl.tools;
 
 import java.text.ParseException;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -63,26 +60,27 @@ public class FeatureUtils
    * Creates a data object sutiable for a feature property out of string.
    * 
    * @return null, if the data-type is unknown
+   * 
    * @throws NumberFormatException
    */
-  public static final Object createFeaturePropertyFromStrings( final Class type, final String format, final String[] input )
+  public static final Object createFeaturePropertyFromStrings( final String type, final String format, final String[] input )
   {
-    if( String.class == type )
+    if( String.class.getName().equals( type ) )
       return input[0];
 
-    if( Integer.class == type )
+    if( Integer.class.getName().equals( type ) )
       return new Integer( input[0] );
 
-    if( Long.class == type )
+    if( Long.class.getName().equals( type ) )
       return new Long( input[0] );
 
-    if( Float.class == type )
+    if( Float.class.getName().equals( type ) )
       return new Float( input[0] );
 
-    if( Double.class == type )
+    if( Double.class.getName().equals( type ) )
       return new Double( input[0].replace( ',', '.' ) );
 
-    if( GeometryUtilities.getPointClass() == type )
+    if( GeometryUtilities.getPointClass().getName().equals( type ) )
     {
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();
@@ -92,7 +90,7 @@ public class FeatureUtils
         crsString = input[2];
       else
         crsString = format;
-
+      
       final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( crsString );
       if( rwString == null || rwString.length() == 0 || hwString == null || hwString.length() == 0 )
         return GeometryFactory.createGM_Point( 0, 0, crs );
@@ -102,8 +100,8 @@ public class FeatureUtils
 
       return GeometryFactory.createGM_Point( rw, hw, crs );
     }
-
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
+    
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
     if( typeHandler != null )
     {
       try
@@ -117,27 +115,5 @@ public class FeatureUtils
     }
 
     return null;
-  }
-
-  public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
-  {
-    if( rt.isList() )
-    {
-      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
-      list.add( childFE );
-    }
-    else
-      parentFE.setProperty( rt, childFE );
-  }
-
-  public static void addChild( Feature parentFE, IRelationType rt, String featureID )
-  {
-    if( rt.isList() )
-    {
-      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
-      list.add( featureID );
-    }
-    else
-      parentFE.setProperty( rt, featureID );
   }
 }

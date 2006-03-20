@@ -85,9 +85,9 @@ import org.w3c.dom.Element;
  */
 public class PropertyIsCOMPOperation extends ComparisonOperation
 {
-  private Expression m_expr1;
+  private Expression expr1;
 
-  private Expression m_expr2;
+  private Expression expr2;
 
   /**
    * Creates a new PropertyIsCOMPOperation object.
@@ -99,15 +99,14 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   public PropertyIsCOMPOperation( int id, Expression expr1, Expression expr2 )
   {
     super( id );
-    m_expr1 = expr1;
-    m_expr2 = expr2;
+    this.expr1 = expr1;
+    this.expr2 = expr2;
   }
 
   public void setOperatorId( int operatorId )
   {
-    m_operatorId = operatorId;
+    super.operatorId = operatorId;
   }
-
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.
@@ -123,14 +122,14 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
 
     switch( operatorId )
     {
-      case OperationDefines.PROPERTYISEQUALTO:
-      case OperationDefines.PROPERTYISLESSTHAN:
-      case OperationDefines.PROPERTYISGREATERTHAN:
-      case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
-      case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-        break;
-      default:
-        throw new FilterConstructionException( "'" + name + "' is not a PropertyIsOperator!" );
+    case OperationDefines.PROPERTYISEQUALTO:
+    case OperationDefines.PROPERTYISLESSTHAN:
+    case OperationDefines.PROPERTYISGREATERTHAN:
+    case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
+    case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
+      break;
+    default:
+      throw new FilterConstructionException( "'" + name + "' is not a PropertyIsOperator!" );
     }
 
     ElementList children = XMLTools.getChildElements( element );
@@ -149,36 +148,36 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   /**
    * returns the first <tt>Expression</tt> of the comparison
    */
-  public Expression getFirstExpression( )
+  public Expression getFirstExpression()
   {
-    return m_expr1;
+    return expr1;
   }
 
   public void setFirstExperssion( Expression expr1 )
   {
-    this.m_expr1 = expr1;
+    this.expr1 = expr1;
   }
 
   /**
    * returns the second <tt>Expression</tt> of the comparison
    */
-  public Expression getSecondExpression( )
+  public Expression getSecondExpression()
   {
-    return m_expr2;
+    return expr2;
   }
 
   public void setSecondExperssion( Expression expr2 )
   {
-    this.m_expr2 = expr2;
+    this.expr2 = expr2;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
-    sb.append( m_expr1.toXML() );
-    sb.append( m_expr2.toXML() );
+    sb.append( expr1.toXML() );
+    sb.append( expr2.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
@@ -195,21 +194,22 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
-    Object value1 = m_expr1.evaluate( feature );
-    Object value2 = m_expr2.evaluate( feature );
+    Object value1 = expr1.evaluate( feature );
+    Object value2 = expr2.evaluate( feature );
 
     if( value1 == null || value2 == null )
       return false;
 
-    // Convert to comparable datatype
-    if( (value1 instanceof String && value2 instanceof Number) || (value1 instanceof Number && value2 instanceof String) )
+    //Convert to comparable datatype
+    if( ( value1 instanceof String && value2 instanceof Number )
+        || ( value1 instanceof Number && value2 instanceof String ) )
     {
       if( value1 instanceof String )
       {
-        // Prefer numeric comparison
+        //Prefer numeric comparison
         try
         {
-          value1 = Double.valueOf( (String) value1 );
+          value1 = Double.valueOf( (String)value1 );
         }
         catch( NumberFormatException e )
         {
@@ -220,7 +220,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
       {
         try
         {
-          value2 = Double.valueOf( (String) value2 );
+          value2 = Double.valueOf( (String)value2 );
         }
         catch( NumberFormatException e )
         {
@@ -234,48 +234,49 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     {
       switch( getOperatorId() )
       {
-        case OperationDefines.PROPERTYISEQUALTO:
+      case OperationDefines.PROPERTYISEQUALTO:
+      {
+        if( ( value1 == null ) || ( value2 == null ) )
         {
-          if( (value1 == null) || (value2 == null) )
-          {
-            return false;
-          }
-
-          return value1.equals( value2 );
+          return false;
         }
-        case OperationDefines.PROPERTYISLESSTHAN:
-        case OperationDefines.PROPERTYISGREATERTHAN:
-        case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
-        case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-          throw new FilterEvaluationException( "'" + getOperatorName() + "' can not be applied to " + "String values!" );
-        default:
-          throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
+
+        return value1.equals( value2 );
+      }
+      case OperationDefines.PROPERTYISLESSTHAN:
+      case OperationDefines.PROPERTYISGREATERTHAN:
+      case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
+      case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
+        throw new FilterEvaluationException( "'" + getOperatorName() + "' can not be applied to " + "String values!" );
+      default:
+        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
       }
     }// compare Doubles
-    else if( (value1 instanceof Number) && (value2 instanceof Number) )
+    else if( ( value1 instanceof Number ) && ( value2 instanceof Number ) )
     {
       double d1 = Double.parseDouble( value1.toString() );
       double d2 = Double.parseDouble( value2.toString() );
 
       switch( getOperatorId() )
       {
-        case OperationDefines.PROPERTYISEQUALTO:
-          return d1 == d2;
-        case OperationDefines.PROPERTYISLESSTHAN:
-          return d1 < d2;
-        case OperationDefines.PROPERTYISGREATERTHAN:
-          return d1 > d2;
-        case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
-          return d1 <= d2;
-        case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-          return d1 >= d2;
-        default:
-          throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
+      case OperationDefines.PROPERTYISEQUALTO:
+        return d1 == d2;
+      case OperationDefines.PROPERTYISLESSTHAN:
+        return d1 < d2;
+      case OperationDefines.PROPERTYISGREATERTHAN:
+        return d1 > d2;
+      case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
+        return d1 <= d2;
+      case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
+        return d1 >= d2;
+      default:
+        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
       }
     }
     else
     {
-      throw new FilterEvaluationException( "Can not apply operation '" + getOperatorName() + "' to " + "different datatypes!" );
+      throw new FilterEvaluationException( "Can not apply operation '" + getOperatorName() + "' to "
+          + "different datatypes!" );
     }
   }
 }

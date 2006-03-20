@@ -1,8 +1,7 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -24,18 +23,15 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   private FeatureVisitor m_visitor;
 
-  private final GMLSchema m_context;
-
-  public FeatureTypeVisitor( final GMLSchema context, final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final FeatureType ft, final boolean acceptIfSubstituting )
   {
-    this( context, visitor, ft.getQName().getLocalPart(), acceptIfSubstituting );
+    this( visitor, ft.getName(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final GMLSchema context, final FeatureVisitor visitor, String typeLocalPart, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final String typename, final boolean acceptIfSubstituting )
   {
-    m_context = context;
     m_visitor = visitor;
-    m_typename = typeLocalPart;
+    m_typename = typename;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
@@ -55,23 +51,12 @@ public class FeatureTypeVisitor implements FeatureVisitor
     return true;
   }
 
-  /**
-   * 
-   */
   public boolean matchesType( final Feature f )
   {
-    final IFeatureType featureType = f.getFeatureType();
-    // final FeatureType[] substituts = f.getFeatureType().getSubstituts( m_context, false, true );
+    final FeatureType featureType = f.getFeatureType();
 
-    // final String substName = featureType.getNamespace() + ":" + m_typename;
-    // return (m_typename.equals( featureType.getQName() ) || (m_acceptIfSubstituting && substName.equals(
-    // featureType.getSubstitutionGroup() )));
-    if( m_typename.equals( featureType.getName() ) )
-      return true;
-    if( m_acceptIfSubstituting )
-    {
-      return m_typename.equals( f.getFeatureType().getSubstitutionGroupFT().getQName() );
-    }
-    return false;
+    final String substName = featureType.getNamespace() + ":" + m_typename;
+    return ( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType
+        .getSubstitutionGroup() ) ) );
   }
 }

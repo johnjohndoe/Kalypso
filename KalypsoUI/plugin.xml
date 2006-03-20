@@ -1,8 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.kalypso.ui"
+   name="KalypsoUI"
+   version="1.0.0"
+   provider-name="kalypso.org"
+   class="org.kalypso.ui.KalypsoGisPlugin">
 
-     <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
+   <runtime>
+      <library name="KalypsoUi.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypsoservice_observation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/kalypsoservice_calculation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/KalypsoServiceCore.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/swtcalendar.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jcommon-0.9.6.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jfreechart-0.9.21.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources" export="true"/>
+      <import plugin="org.eclipse.ui.ide" export="true"/>
+      <import plugin="org.eclipse.ui.views" export="true"/>
+      <import plugin="org.eclipse.compare" export="true"/>
+      <import plugin="org.eclipse.core.runtime" export="true"/>
+      <import plugin="org.eclipse.ui.workbench" export="true"/>    
+      <import plugin="org.eclipse.debug.ui" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.kalypso.jwsdp" export="true"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
+      <import plugin="org.kalypso.auth"/>
+      <import plugin="org.kalypso.metadoc"/>
+      <import plugin="org.kalypso.services.core.client"/>
+   </requires>
+   <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
+   <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
    <extension-point id="calculationService" name="calculationService" schema="schema/org.kalypso.services.calculation.exsd"/>
 
    <extension
@@ -181,7 +227,7 @@
                enablesFor="+"
                toolbarPath="edit"
                label="%Extension.EditorActions.saveData.label"
-               tooltip="%Extension.EditorActions.saveData.table.tooltip"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate"
                style="push"
@@ -222,7 +268,7 @@
                disabledIcon="icons/map/save_edit_disabled.gif"
                toolbarPath="Baum/edit"
                label="%Extension.EditorActions.saveData.label"
-               tooltip="%Extension.EditorActions.saveData.tree.tooltip"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate"
                style="push"
@@ -367,7 +413,7 @@
                disabledIcon="icons/map/save_edit_disabled.gif"
                toolbarPath="karte/edit"
                label="%Extension.EditorActions.saveData.label"
-               tooltip="%Extension.EditorActions.saveData.map.tooltip"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
                style="push"
@@ -395,61 +441,6 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
-         <action
-               toolbarPath="karte/tools"
-               label="Geometrie zeichnen"
-               tooltip="Neue Geometry in einer Karte auf das Skizzier-Thema zeichen "
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate"
-               icon="icons/feature/geom_multipoint.gif"
-               style="radio"
-               state="false"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.CreateGeometry"/>
-         <action
-               toolbarPath="karte/tools"
-               label="Polygon zeichnen"
-               tooltip="Neues Polygon in einer Karte auf das Skizzier-Thema zeichen "
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate"
-               icon="icons/feature/geom_polygon.gif"
-               style="radio"
-               state="false"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.CreatePolygon"/>
-         <action
-               toolbarPath="karte/tools"
-               label="Polylinie zeichnen"
-               tooltip="Neue Polylinie in einer Karte auf das Skizzier-Thema zeichen "
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate"
-               icon="icons/feature/geom_line.gif"
-               style="radio"
-               state="false"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.CreatePolyline"/>
-         <action
-               toolbarPath="karte/tools"
-               label="Punkt zeichnen"
-               tooltip="Neuer Punkt in einer Karte auf das Skizzier-Thema zeichen "
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate"
-               icon="icons/feature/geom_point.gif"
-               style="radio"
-               state="false"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.CreatePoint"/>
-         <action
-               class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
-               icon="icons/feature/gis_feature_neu.gif"
-               id="org.kalypso.ui.editor.mapeditor.action.newfeature"
-               label="Neues Feature erzeugen"
-               style="push"/>
-         <action
-               class="org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate"
-               disabledIcon="icons/map/geoInfo_gray.gif"
-               icon="icons/filterdialog/filter_ps.gif"
-               id="org.kalypso.ogc.filterdialog.actions.openfilterdialog"
-               label="Feature selektieren.."
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               style="push"
-               tooltip="Auswahl von Elementen aus der Karte mit einem Filter"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
@@ -467,7 +458,7 @@
                toolbarPath="tabelle"
                label="%Extension.EditorActions.saveData.label"
                icon="icons/feature/save_GML.gif"
-               tooltip="%Extension.EditorActions.saveData.table.tooltip"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                style="push"
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
@@ -512,14 +503,14 @@
          point="org.eclipse.ui.popupMenus">
        <objectContribution
             objectClass="org.kalypsodeegree.model.feature.Feature"
-            adaptable="false"
+            adaptable="true"
             id="org.kalypso.objectclass.feature">
          <action
                enablesFor="1"
                label="%Extension.popupMenus.feature.delete.label"
                tooltip="%Extension.popupMenus.feature.delete.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate"
-               icon="icons/feature/gis_feature_delete.gif"
+               icon="icons/gistable/rem_row.gif"
                style="push"
                id="org.kalypso.objectclass.feature.action.remove">
          </action>
@@ -528,21 +519,20 @@
                label="%Extension.popupMenus.feature.new.label"
                tooltip="%Extension.popupMenus.feature.new.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
-               icon="icons/feature/gis_feature_neu.gif"
+               icon="icons/gistable/add_row.gif"
                style="push"
-               id="org.kalypso.objectclass.feature.action.new">
+               id="org.kalypso.objectclass.feature.action.remove">
          </action>
          <action
                enablesFor="1"
                label="%Extension.popupMenus.feature.setValue.label"
                tooltip="%Extension.popupMenus.feature.setValue.tooltip"
-               icon="icons/gistable/applyValues.gif"
+               icon="icons/gistable/applyValues2.gif"
                class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate"
                style="push"
-               id="org.kalypso.objectclass.feature.action.setValues"/>
+               id="org.kalypso.objectclass.feature.action.remove"/>
          <action
                label="%Extension.popupMenus.feature.edit"
-               icon="icons/feature/gis_feature_edit.gif"
                class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
                id="org.kalypso.objectclass.feature.editfeature"/>
       </objectContribution>
@@ -664,7 +654,7 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
        </objectContribution>
-		<objectContribution
+       <objectContribution
              adaptable="false"
              objectClass="org.eclipse.core.resources.IFile"
              id="org.kalypso.objectclass.zmlFile">
@@ -675,40 +665,6 @@
                 class="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"
                 menubarPath="extensions"
                 id="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"/>
-       </objectContribution>
-       <objectContribution
-             adaptable="false"
-             objectClass="org.kalypso.ogc.gml.outline.ThemeStyleTreeObject"
-             id="org.kalypso.objectclass.style.save">
-          <action
-                label="Style speichern"
-                tooltip="Style speichern"
-                icon="icons/map/save_edit.gif"
-                class="org.kalypso.ogc.gml.outline.SaveStyleAction2"
-                menubarPath="org.kalypso.objectclass.style.menu/styleops"
-                id="org.kalypso.objectclass.style.savestyle"/>
-          <menu
-                label="Style"
-                id="org.kalypso.objectclass.style.menu">
-             <separator name="styleops"/>
-          </menu>
-       </objectContribution>
-       <objectContribution
-             adaptable="false"
-             objectClass="org.kalypso.ogc.gml.outline.RuleTreeObject"
-             id="org.kalypso.objectclass.style.remove">
-          <action
-                label="Style enfernen"
-                tooltip="Style entfernen"
-                icon="icons/full/elcl16/remove.gif"
-                class="org.kalypso.ogc.gml.outline.RemoveRuleAction2"
-                menubarPath="org.kalypso.objectclass.style.menu/styleops"
-                id="org.kalypso.objectclass.removerule"/>
-                <menu
-                label="Style"
-                id="org.kalypso.objectclass.style.menu">
-             <separator name="styleops"/>
-          </menu>
        </objectContribution>
    </extension>
    <extension
@@ -827,48 +783,5 @@
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
             interfacename="IObservationService"/>
-   </extension>
-   <extension
-         point="org.eclipse.compare.contentMergeViewers">
-      <viewer
-            extensions="zml"
-            class="org.eclipse.compare.internal.TextMergeViewerCreator"
-            id="org.eclipse.compare.TextMergeViewerCreator">
-      </viewer>
-   </extension>
-   <extension
-         id="org.kalypso.ui.mapview.action"
-         name="mapviewoutline"
-         point="org.kalypso.ui.mapviewaction">
-      <MapviewAction
-            title="Thema aktivieren"
-            enabled="false"
-            tooltip="Thema aktivieren"
-            icon="icons/full/elcl16/newpack_wiz.gif"
-            class="org.kalypso.ogc.gml.outline.ActivateThemeAction2"/>
-      <MapviewAction
-            title="Thema nach unten verschieben"
-            enabled="false"
-            tooltip="Thema eins nach unten verschieben"
-            icon="icons/full/elcl16/next_nav.gif"
-            class="org.kalypso.ogc.gml.outline.MoveThemeDownAction2"/>
-      <MapviewAction
-            title="Thema nach oben verschieben"
-            enabled="false"
-            tooltip="Thema eins nach oben verschieben"
-            icon="icons/full/elcl16/prev_nav.gif"
-            class="org.kalypso.ogc.gml.outline.MoveThemeUpAction2"/>
-      <MapviewAction
-            title="Thema Löschen"
-            enabled="false"
-            tooltip="Thema löschen"
-            icon="icons/full/elcl16/remove.gif"
-            class="org.kalypso.ogc.gml.outline.RemoveThemeAction2"/>
-      <MapviewAction
-            title="Style ändern"
-            enabled="false"
-            tooltip="Style ändern"
-            icon="icons/util/update.gif"
-            class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction2"/>
    </extension>
  </plugin>

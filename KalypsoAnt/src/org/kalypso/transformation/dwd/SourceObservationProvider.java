@@ -29,9 +29,10 @@
  */
 package org.kalypso.transformation.dwd;
 
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 
+//import org.kalypso.zml.obslink.ObjectFactory;
 /**
  * SourceObservationProvider
  * <p>
@@ -56,7 +57,7 @@ public class SourceObservationProvider
     m_linkProperty = linkProperty;
   }
 
-  public TimeseriesLinkType getObservaionForId( String id )
+  public TimeseriesLink getObservaionForId( String id )
   {
     for( int i = 0; i < m_features.length; i++ )
     {
@@ -73,8 +74,8 @@ public class SourceObservationProvider
     return null;
   }
 
-  private TimeseriesLinkType getObservationForFeature( Feature fe )
+  private TimeseriesLink getObservationForFeature( Feature fe )
   {
-    return (TimeseriesLinkType)fe.getProperty( m_linkProperty );
+    return (TimeseriesLink)fe.getProperty( m_linkProperty );
   }
 }

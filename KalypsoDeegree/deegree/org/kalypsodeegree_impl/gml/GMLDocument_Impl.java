@@ -66,14 +66,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLFeature;
@@ -81,16 +77,18 @@ import org.kalypsodeegree.gml.GMLFeatureCollection;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.gml.GMLNameSpace;
 import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.DOMPrinter;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
-import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -103,8 +101,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-import org.w3c.dom.TypeInfo;
-import org.w3c.dom.UserDataHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -115,7 +111,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
 {
   private final org.w3c.dom.Document m_document;
 
-  private Element getGMLElement( )
+  private Element getGMLElement()
   {
     return m_document.getDocumentElement();
   }
@@ -127,7 +123,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * Creates a new GMLDocument_Impl object.
    */
-  public GMLDocument_Impl( )
+  public GMLDocument_Impl()
   {
     DocumentBuilder parser = null;
     try
@@ -148,6 +144,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
    * Creates a new GMLDocument_Impl object.
    * 
    * @param reader
+   * 
    * @throws IOException
    * @throws SAXException
    */
@@ -167,13 +164,16 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
+   * 
    * @see org.kalypsodeegree.gml.GMLDocument#getSchemaLocation(java.net.URL)
    */
   public URL getSchemaLocation( final URL context ) throws MalformedURLException
   {
-    final String schemaLocation = m_document.getDocumentElement().getAttributeNS( "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
-    if( schemaLocation == null || schemaLocation.length() < 1 )
+    final String schemaLocation = m_document.getDocumentElement().getAttributeNS(
+        "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation" );
+    if( schemaLocation == null )
       return null;
+
     final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
     if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
     {
@@ -190,20 +190,23 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * returns the location of the schema the document based on
    */
-  public String getSchemaLocationName( )
+  public String getSchemaLocationName()
   {
     Debug.debugMethodBegin( this, "getSchemaLocation" );
+
     try
     {
       final String schemaLocation = m_document.getDocumentElement().getAttributeNS( XSI_NS, "schemaLocation" );
       if( schemaLocation == null )
         return null;
+
       final String namespaceURI = m_document.getDocumentElement().getNamespaceURI();
       if( namespaceURI != null && schemaLocation.startsWith( namespaceURI ) )
       {
         final String path = schemaLocation.substring( namespaceURI.length() ).trim();
         return path;
       }
+
       return schemaLocation;
     }
     finally
@@ -236,7 +239,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     m_nameSpaces.put( nameSpace.getNameSpaceValue(), nameSpace );
   }
 
-  public void applyNameSpaces( )
+  public void applyNameSpaces()
   {
     GMLNameSpace[] nameSpaces = getNameSpaces();
     for( int i = 0; i < nameSpaces.length; i++ )
@@ -245,7 +248,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       Element root = m_document.getDocumentElement();
       if( nameSpace.getSubSpaceName() != null )
       {
-        root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(), nameSpace.getNameSpaceValue() );
+        root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(), nameSpace
+            .getNameSpaceValue() );
       }
       else
       {
@@ -259,12 +263,12 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
    * 
    * @deprecated
    */
-  public GMLFeatureCollection getRoot( )
+  public GMLFeatureCollection getRoot()
   {
     return new GMLFeatureCollection_Impl( m_document.getDocumentElement() );
   }
 
-  public GMLFeature getRootFeature( )
+  public GMLFeature getRootFeature()
   {
     return new GMLFeature_Impl( m_document.getDocumentElement() );
   }
@@ -281,18 +285,21 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     {
       m_document.removeChild( node );
     }
-    XMLTools.insertNodeInto( ((GMLFeatureCollection_Impl) root).getAsElement(), m_document );
+    XMLTools.insertNodeInto( ( (GMLFeatureCollection_Impl)root ).getAsElement(), m_document );
   }
 
   public void setRoot( GMLFeature rootFeature )
   {
     Debug.debugMethodBegin();
+
     Node node = m_document.getDocumentElement();
+
     // remove root node if it already exists
     if( node != null )
     {
       m_document.removeChild( node );
     }
+
     XMLTools.insertNodeInto( rootFeature.getAsElement(), m_document );
     //    
     applyNameSpaces();
@@ -303,15 +310,16 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * returns true if the document is valid against the referenced schemas
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return true;
   }
 
   /**
+   * 
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return DOMPrinter.nodeToString( m_document, "" );
   }
@@ -319,9 +327,9 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * @see org.kalypsodeegree.gml.GMLDocument#getNameSpaces()
    */
-  public GMLNameSpace[] getNameSpaces( )
+  public GMLNameSpace[] getNameSpaces()
   {
-    return (GMLNameSpace[]) m_nameSpaces.values().toArray( new GMLNameSpace[m_nameSpaces.size()] );
+    return (GMLNameSpace[])m_nameSpaces.values().toArray( new GMLNameSpace[m_nameSpaces.size()] );
   }
 
   public Node appendChild( Node arg0 ) throws DOMException
@@ -354,7 +362,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document.createComment( arg0 );
   }
 
-  public DocumentFragment createDocumentFragment( )
+  public DocumentFragment createDocumentFragment()
   {
     return m_document.createDocumentFragment();
   }
@@ -371,7 +379,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       // it seems that prefix is allready set
       return m_document.createElementNS( namespace, propName );
     }
-    GMLNameSpace ns = (GMLNameSpace) m_nameSpaces.get( namespace );
+    GMLNameSpace ns = (GMLNameSpace)m_nameSpaces.get( namespace );
     if( ns != null )
     {
       String prefix = ns.getSubSpaceName();
@@ -404,22 +412,22 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document.equals( obj );
   }
 
-  public NamedNodeMap getAttributes( )
+  public NamedNodeMap getAttributes()
   {
     return m_document.getAttributes();
   }
 
-  public NodeList getChildNodes( )
+  public NodeList getChildNodes()
   {
     return m_document.getChildNodes();
   }
 
-  public DocumentType getDoctype( )
+  public DocumentType getDoctype()
   {
     return m_document.getDoctype();
   }
 
-  public Element getDocumentElement( )
+  public Element getDocumentElement()
   {
     return m_document.getDocumentElement();
   }
@@ -439,77 +447,77 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document.getElementsByTagNameNS( arg0, arg1 );
   }
 
-  public Node getFirstChild( )
+  public Node getFirstChild()
   {
     return m_document.getFirstChild();
   }
 
-  public DOMImplementation getImplementation( )
+  public DOMImplementation getImplementation()
   {
     return m_document.getImplementation();
   }
 
-  public Node getLastChild( )
+  public Node getLastChild()
   {
     return m_document.getLastChild();
   }
 
-  public String getLocalName( )
+  public String getLocalName()
   {
     return m_document.getLocalName();
   }
 
-  public String getNamespaceURI( )
+  public String getNamespaceURI()
   {
     return m_document.getNamespaceURI();
   }
 
-  public Node getNextSibling( )
+  public Node getNextSibling()
   {
     return m_document.getNextSibling();
   }
 
-  public String getNodeName( )
+  public String getNodeName()
   {
     return m_document.getNodeName();
   }
 
-  public short getNodeType( )
+  public short getNodeType()
   {
     return m_document.getNodeType();
   }
 
-  public String getNodeValue( ) throws DOMException
+  public String getNodeValue() throws DOMException
   {
     return m_document.getNodeValue();
   }
 
-  public Document getOwnerDocument( )
+  public Document getOwnerDocument()
   {
     return m_document.getOwnerDocument();
   }
 
-  public Node getParentNode( )
+  public Node getParentNode()
   {
     return m_document.getParentNode();
   }
 
-  public String getPrefix( )
+  public String getPrefix()
   {
     return m_document.getPrefix();
   }
 
-  public Node getPreviousSibling( )
+  public Node getPreviousSibling()
   {
     return m_document.getPreviousSibling();
   }
 
-  public boolean hasAttributes( )
+  public boolean hasAttributes()
   {
     return m_document.hasAttributes();
   }
 
-  public boolean hasChildNodes( )
+  public boolean hasChildNodes()
   {
     return m_document.hasChildNodes();
   }
@@ -517,7 +525,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode( )
+  public int hashCode()
   {
     return m_document.hashCode();
   }
@@ -537,7 +545,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document.isSupported( arg0, arg1 );
   }
 
-  public void normalize( )
+  public void normalize()
   {
     m_document.normalize();
   }
@@ -617,7 +625,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return getGMLElement().setAttributeNode( arg0 );
   }
 
-  public String getTagName( )
+  public String getTagName()
   {
     return getGMLElement().getTagName();
   }
@@ -632,16 +640,18 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return getGMLElement().getAttributeNS( arg0, arg1 );
   }
 
-  public Document getDocument( )
+  public Document getDocument()
   {
     return m_document;
   }
 
-  public GMLFeature createGMLFeature( final IFeatureType featureType )
+  public GMLFeature createGMLFeature( final FeatureType featureType )
   {
-    Debug.debugMethodBegin( "", "createGMLFeature(Document, IFeatureType)" );
+    Debug.debugMethodBegin( "", "createGMLFeature(Document, FeatureType)" );
+
     final Element elem = createElementNS( featureType.getNamespace(), featureType.getName() );
     final GMLFeature feature = new GMLFeature_Impl( elem );
+
     Debug.debugMethodEnd();
     return feature;
   }
@@ -652,24 +662,30 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   public GMLFeatureCollection createGMLFeatureCollection( final String collectionName )
   {
     Debug.debugMethodBegin();
+
     final Element elem = createElementNS( CommonNamespaces.GMLNS, collectionName );
     final Element el = createElementNS( CommonNamespaces.GMLNS, "boundedBy" );
     elem.appendChild( el );
+
     final GMLFeatureCollection feature = new GMLFeatureCollection_Impl( elem );
+
     Debug.debugMethodEnd();
     return feature;
   }
 
   /**
-   * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.IFeatureType,
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.FeatureType,
    *      java.lang.String, org.kalypsodeegree.gml.GMLProperty[])
    */
-  public GMLFeature createGMLFeature( final IFeatureType featureType, final String id, GMLProperty[] properties ) throws GMLException
+  public GMLFeature createGMLFeature( final FeatureType featureType, final String id, GMLProperty[] properties )
+      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLFeature(Document, String, String, GMLProperty[])" );
+
     final GMLFeature feature = createGMLFeature( featureType );
     for( int i = 0; i < properties.length; i++ )
       feature.addProperty( properties[i] );
+
     Debug.debugMethodEnd();
     return feature;
   }
@@ -677,41 +693,41 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   /**
    * factory method to create a GMLProperty. the property that will be return doesn't contain a value.
    */
-  public GMLProperty createGMLProperty( final IPropertyType ftp )
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp )
   {
-    final QName qName = ftp.getQName();
-    final Element elem = createElementNS( qName.getNamespaceURI(), qName.getLocalPart() );
+    final Element elem = createElementNS( ftp.getNamespace(), ftp.getName() );
     final GMLProperty ls = new GMLProperty_Impl( elem );
     return ls;
   }
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final Element propertyValue )
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Element propertyValue )
   {
     final GMLProperty ls = createGMLProperty( ftp );
     ls.setPropertyValue( propertyValue );
     return ls;
   }
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final String attributeValue )
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue )
   {
-    final QName qName = ftp.getQName();
-    final Element element = createElementNS( qName.getNamespaceURI(), qName.getLocalPart());
+    final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
     GMLProperty gmlProp = new GMLProperty_Impl( ftp, element );
     gmlProp.setPropertyValue( attributeValue );
     return gmlProp;
   }
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final Object customObject ) throws GMLException
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException
   {
     try
     {
-      final QName qName = ftp.getQName();
-      final Element element = createElementNS(qName.getNamespaceURI(),qName.getLocalPart() );
+      final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
+
       // marshalling
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton
+          .getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
       // TODO give context not null
       typeHandler.marshall( customObject, element, null );
       GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
+
       Debug.debugMethodEnd();
       return gmlProp;
     }
@@ -722,295 +738,16 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
+   * 
    * @throws GMLException
-   * @see org.kalypsodeegree.gml.GMLDocument#createGMLGeoProperty(org.kalypsodeegree.model.feature.IPropertyType,
+   * @see org.kalypsodeegree.gml.GMLDocument#createGMLGeoProperty(org.kalypsodeegree.model.feature.FeatureTypeProperty,
    *      org.kalypsodeegree.model.geometry.GM_Object)
    */
-  public GMLProperty createGMLGeoProperty( IPropertyType ftp, GM_Object geom ) throws GMLException
+  public GMLProperty createGMLGeoProperty( FeatureTypeProperty ftp, GM_Object geom ) throws GMLException
   {
     final GMLProperty ls = createGMLProperty( ftp );
     GMLGeometry geometry = GMLFactory.createGMLGeometry( this, geom );
-    ls.setPropertyValue( ((GMLGeometry_Impl) geometry).getAsElement() );
+    ls.setPropertyValue( ( (GMLGeometry_Impl)geometry ).getAsElement() );
     return ls;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#adoptNode(org.w3c.dom.Node)
-   */
-  public Node adoptNode( Node arg0 ) throws DOMException
-  {
-    return m_document.adoptNode( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#compareDocumentPosition(org.w3c.dom.Node)
-   */
-  public short compareDocumentPosition( Node arg0 ) throws DOMException
-  {
-    return m_document.compareDocumentPosition( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#getBaseURI()
-   */
-  public String getBaseURI( )
-  {
-    return m_document.getBaseURI();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getDocumentURI()
-   */
-  public String getDocumentURI( )
-  {
-    return m_document.getDocumentURI();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getDomConfig()
-   */
-  public DOMConfiguration getDomConfig( )
-  {
-    return m_document.getDomConfig();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#getFeature(java.lang.String, java.lang.String)
-   */
-  public Object getFeature( String arg0, String arg1 )
-  {
-    return m_document.getFeature( arg0, arg1 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getInputEncoding()
-   */
-  public String getInputEncoding( )
-  {
-    return m_document.getInputEncoding();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getStrictErrorChecking()
-   */
-  public boolean getStrictErrorChecking( )
-  {
-    return m_document.getStrictErrorChecking();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#getTextContent()
-   */
-  public String getTextContent( ) throws DOMException
-  {
-    return m_document.getTextContent();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#getUserData(java.lang.String)
-   */
-  public Object getUserData( String arg0 )
-  {
-    return m_document.getUserData( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getXmlEncoding()
-   */
-  public String getXmlEncoding( )
-  {
-    return m_document.getXmlEncoding();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getXmlStandalone()
-   */
-  public boolean getXmlStandalone( )
-  {
-    return m_document.getXmlStandalone();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#getXmlVersion()
-   */
-  public String getXmlVersion( )
-  {
-    return m_document.getXmlVersion();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#isDefaultNamespace(java.lang.String)
-   */
-  public boolean isDefaultNamespace( String arg0 )
-  {
-    return m_document.isDefaultNamespace( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#isEqualNode(org.w3c.dom.Node)
-   */
-  public boolean isEqualNode( Node arg0 )
-  {
-    return m_document.isEqualNode( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#isSameNode(org.w3c.dom.Node)
-   */
-  public boolean isSameNode( Node arg0 )
-  {
-    return m_document.isSameNode( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#lookupNamespaceURI(java.lang.String)
-   */
-  public String lookupNamespaceURI( String arg0 )
-  {
-    return m_document.lookupNamespaceURI( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#lookupPrefix(java.lang.String)
-   */
-  public String lookupPrefix( String arg0 )
-  {
-    return m_document.lookupPrefix( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#normalizeDocument()
-   */
-  public void normalizeDocument( )
-  {
-    m_document.normalizeDocument();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#renameNode(org.w3c.dom.Node, java.lang.String, java.lang.String)
-   */
-  public Node renameNode( Node arg0, String arg1, String arg2 ) throws DOMException
-  {
-    return m_document.renameNode( arg0, arg1, arg2 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#setDocumentURI(java.lang.String)
-   */
-  public void setDocumentURI( String arg0 )
-  {
-    m_document.setDocumentURI( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#setStrictErrorChecking(boolean)
-   */
-  public void setStrictErrorChecking( boolean arg0 )
-  {
-    m_document.setStrictErrorChecking( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#setTextContent(java.lang.String)
-   */
-  public void setTextContent( String arg0 ) throws DOMException
-  {
-    m_document.setTextContent( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Node#setUserData(java.lang.String, java.lang.Object, org.w3c.dom.UserDataHandler)
-   */
-  public Object setUserData( String arg0, Object arg1, UserDataHandler arg2 )
-  {
-    return m_document.setUserData( arg0, arg1, arg2 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#setXmlStandalone(boolean)
-   */
-  public void setXmlStandalone( boolean arg0 ) throws DOMException
-  {
-    m_document.setXmlStandalone( arg0 );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.w3c.dom.Document#setXmlVersion(java.lang.String)
-   */
-  public void setXmlVersion( String arg0 ) throws DOMException
-  {
-    m_document.setXmlVersion( arg0 );
-  }
-
-  public TypeInfo getSchemaTypeInfo( )
-  {
-    return getGMLElement().getSchemaTypeInfo();
-  }
-
-  public void setIdAttribute( String arg0, boolean arg1 ) throws DOMException
-  {
-    getGMLElement().setIdAttribute( arg0, arg1 );
-  }
-
-  public void setIdAttributeNS( String arg0, String arg1, boolean arg2 ) throws DOMException
-  {
-    getGMLElement().setIdAttributeNS( arg0, arg1, arg2 );
-  }
-
-  public void setIdAttributeNode( Attr arg0, boolean arg1 ) throws DOMException
-  {
-    getGMLElement().setIdAttributeNode( arg0, arg1 );
   }
 }

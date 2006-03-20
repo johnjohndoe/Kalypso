@@ -48,8 +48,8 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 public class NullComparisonData extends AbstractComparisonData
 {
-  @Override
-  public boolean verify( ) throws FilterDialogException
+
+  public boolean verify() throws FilterDialogException
   {
     if( propertyName == null )
       throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );

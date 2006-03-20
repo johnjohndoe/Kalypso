@@ -63,7 +63,7 @@ public abstract class AbstractRepository implements IRepository
 
   private boolean m_readOnly;
 
-  private final List<IRepositoryListener> m_listeners;
+  private final List m_listeners;
 
   private final Properties m_properties;
 
@@ -76,7 +76,7 @@ public abstract class AbstractRepository implements IRepository
     m_conf = conf;
     m_readOnly = readOnly;
 
-    m_listeners = new Vector<IRepositoryListener>();
+    m_listeners = new Vector();
     m_properties = new Properties();
   }
 
@@ -192,8 +192,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
-  public String toString( )
+  public String toString()
   {
     final String desc = getDescription();
     if( desc != null && desc.length() > 0 )

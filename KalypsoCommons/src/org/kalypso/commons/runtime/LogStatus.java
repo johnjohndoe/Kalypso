@@ -76,7 +76,6 @@ public class LogStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
-  @Override
   public boolean isMultiStatus()
   {
     return true;
@@ -85,12 +84,11 @@ public class LogStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#getChildren()
    */
-  @Override
   public IStatus[] getChildren()
   {
     if( m_children == null )
     {
-      final ArrayList<String> lines = new ArrayList<String>();
+      final ArrayList lines = new ArrayList();
 
       BufferedReader reader = null;
       try

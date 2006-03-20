@@ -114,7 +114,7 @@ public class FileCopyVisitor implements FileVisitor
             return false;
 
           // falls die Dateien wirklich gleich sind, nichts tun
-          if( targetLastModified == lastModified && targetFile.length() == file.length() )
+          if( targetLastModified == lastModified /*&& targetFile.length() == file.length()*/ )
             return false;
         }
 
@@ -127,5 +127,4 @@ public class FileCopyVisitor implements FileVisitor
 
     return true;
   }
-
 }

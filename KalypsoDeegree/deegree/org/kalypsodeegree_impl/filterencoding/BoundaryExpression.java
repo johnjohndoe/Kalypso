@@ -11,17 +11,16 @@ import org.kalypsodeegree.model.feature.Feature;
 public class BoundaryExpression extends Expression_Impl implements Expression
 {
 
-  private String m_value = null;
+  private String value = null;
 
-  public BoundaryExpression( String value1 )
+  public BoundaryExpression( String m_value )
   {
-    this.m_value = value1;
+    this.value = m_value;
   }
 
-  @Override
   public StringBuffer toXML()
   {
-    return new StringBuffer( m_value.toString() );
+    return new StringBuffer( value.toString() );
   }
 
   public Object evaluate( Feature feature ) throws FilterEvaluationException
@@ -29,7 +28,7 @@ public class BoundaryExpression extends Expression_Impl implements Expression
     Double returnValue = null;
     try
     {
-      returnValue = new Double( m_value );
+      returnValue = new Double( value );
     }
     catch( NumberFormatException e )
     {
@@ -40,11 +39,11 @@ public class BoundaryExpression extends Expression_Impl implements Expression
 
   public String getValue()
   {
-    return m_value;
+    return value;
   }
 
-  public void setValue( String value )
+  public void setValue( String m_value )
   {
-    m_value = value;
+    this.value = m_value;
   }
 }

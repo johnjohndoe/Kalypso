@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -61,20 +60,17 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.ObjectFactory;
-import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
-import org.kalypso.template.obsdiagview.TypeDirection;
 import org.kalypso.template.obsdiagview.TypeObservation;
-import org.kalypso.template.obsdiagview.TypePosition;
-import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
+import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
 import org.xml.sax.InputSource;
 
 /**
@@ -88,24 +84,22 @@ public class DiagViewUtils
 
   private final static ObjectFactory ODT_OF = new ObjectFactory();
 
-  private final static JAXBContext ODT_JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   /**
    * Not to be instanciated
    */
-  private DiagViewUtils( )
+  private DiagViewUtils()
   {
-    // empty
+  // empty
   }
 
   /**
    * Saves the given template (binding). Closes the stream.
    */
-  public static void saveDiagramTemplateXML( final Obsdiagview xml, final OutputStream outs ) throws JAXBException
+  public static void saveDiagramTemplateXML( final ObsdiagviewType xml, final OutputStream outs ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
+      final Marshaller m = ODT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -118,11 +112,11 @@ public class DiagViewUtils
   /**
    * Saves the given template (binding). Closes the writer.
    */
-  public static void saveDiagramTemplateXML( final Obsdiagview tpl, final Writer writer ) throws JAXBException
+  public static void saveDiagramTemplateXML( final ObsdiagviewType tpl, final Writer writer ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
+      final Marshaller m = ODT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( tpl, writer );
     }
@@ -137,7 +131,7 @@ public class DiagViewUtils
    * 
    * @return diagram template object parsed from the file
    */
-  public static Obsdiagview loadDiagramTemplateXML( final InputStream ins ) throws JAXBException
+  public static ObsdiagviewType loadDiagramTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {
@@ -154,7 +148,7 @@ public class DiagViewUtils
    * 
    * @return diagram template object parsed from the file
    */
-  public static Obsdiagview loadDiagramTemplateXML( final Reader reader ) throws JAXBException
+  public static ObsdiagviewType loadDiagramTemplateXML( final Reader reader ) throws JAXBException
   {
     try
     {
@@ -171,9 +165,9 @@ public class DiagViewUtils
    * 
    * @return diagram template object parsed from the file
    */
-  private static Obsdiagview loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
+  private static ObsdiagviewType loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final Obsdiagview baseTemplate = (Obsdiagview) ODT_JC.createUnmarshaller().unmarshal( ins );
+    final ObsdiagviewType baseTemplate = (ObsdiagviewType)ODT_OF.createUnmarshaller().unmarshal( ins );
 
     return baseTemplate;
   }
@@ -183,18 +177,18 @@ public class DiagViewUtils
    * 
    * @return xml binding object (ready for marshalling for instance)
    */
-  public static Obsdiagview buildDiagramTemplateXML( final DiagView view )
+  public static ObsdiagviewType buildDiagramTemplateXML( final DiagView view ) throws JAXBException
   {
-    final Obsdiagview xmlTemplate = ODT_OF.createObsdiagview();
+    final ObsdiagviewType xmlTemplate = ODT_OF.createObsdiagview();
 
-    final Legend xmlLegend = ODT_OF.createObsdiagviewLegend();
+    final LegendType xmlLegend = ODT_OF.createObsdiagviewTypeLegendType();
     xmlLegend.setTitle( view.getLegendName() );
     xmlLegend.setVisible( view.isShowLegend() );
 
     xmlTemplate.setLegend( xmlLegend );
     xmlTemplate.setTitle( view.getTitle() );
 
-    final List<TypeAxis> xmlAxes = xmlTemplate.getAxis();
+    final List xmlAxes = xmlTemplate.getAxis();
 
     final DiagramAxis[] diagramAxes = view.getDiagramAxes();
     for( int i = 0; i < diagramAxes.length; i++ )
@@ -203,26 +197,26 @@ public class DiagViewUtils
 
       final TypeAxis xmlAxis = ODT_OF.createTypeAxis();
       xmlAxis.setDatatype( axis.getDataType() );
-      xmlAxis.setDirection( TypeDirection.fromValue( axis.getDirection() ) );
+      xmlAxis.setDirection( axis.getDirection() );
       xmlAxis.setId( axis.getIdentifier() );
       xmlAxis.setInverted( axis.isInverted() );
       xmlAxis.setLabel( axis.getLabel() );
-      xmlAxis.setPosition( TypePosition.fromValue( axis.getPosition() ) );
+      xmlAxis.setPosition( axis.getPosition() );
       xmlAxis.setUnit( axis.getUnit() );
 
       xmlAxes.add( xmlAxis );
     }
-
+    
     xmlTemplate.setFeatures( StringUtils.join( view.getEnabledFeatures(), ';' ) );
 
     int ixCurve = 1;
 
-    final List<TypeObservation> xmlThemes = xmlTemplate.getObservation();
+    final List xmlThemes = xmlTemplate.getObservation();
     final Map map = ObsView.mapItems( view.getItems() );
     for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
-      final Map.Entry entry = (Entry) itThemes.next();
-      final IObservation obs = (IObservation) entry.getKey();
+      final Map.Entry entry = (Entry)itThemes.next();
+      final IObservation obs = (IObservation)entry.getKey();
       if( obs == null )
         continue;
 
@@ -230,12 +224,12 @@ public class DiagViewUtils
       xmlTheme.setLinktype( "zml" );
       xmlTheme.setHref( obs.getHref() );
 
-      final List<TypeCurve> xmlCurves = xmlTheme.getCurve();
+      final List xmlCurves = xmlTheme.getCurve();
 
-      final Iterator itCurves = ((List) entry.getValue()).iterator();
+      final Iterator itCurves = ( (List)entry.getValue() ).iterator();
       while( itCurves.hasNext() )
       {
-        final DiagViewCurve curve = (DiagViewCurve) itCurves.next();
+        final DiagViewCurve curve = (DiagViewCurve)itCurves.next();
 
         final TypeCurve xmlCurve = ODT_OF.createTypeCurve();
         xmlCurve.setId( "C" + ixCurve++ );
@@ -243,7 +237,7 @@ public class DiagViewUtils
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
 
-        final List<TypeAxisMapping> xmlMappings = xmlCurve.getMapping();
+        final List xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
         for( int i = 0; i < mappings.length; i++ )
@@ -279,7 +273,8 @@ public class DiagViewUtils
    * 
    * @return diagram axis
    */
-  public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit, final boolean isKey )
+  public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit,
+      final boolean isKey )
   {
     final String direction = isKey == true ? DiagramAxis.DIRECTION_HORIZONTAL : DiagramAxis.DIRECTION_VERTICAL;
     String position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
@@ -289,7 +284,7 @@ public class DiagViewUtils
 
     if( axisType.equals( TimeserieConstants.TYPE_HOURS ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
-
+    
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
@@ -303,7 +298,7 @@ public class DiagViewUtils
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false);
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
@@ -329,20 +324,21 @@ public class DiagViewUtils
    *          compared to each href found in the template. If it is found, then the href is ignored and the
    *          corresponding observation isn't loaded.
    */
-  public static IStatus applyXMLTemplate( final DiagView view, final Obsdiagview xml, final URL context, final boolean synchron, final String ignoreHref )
+  public static IStatus applyXMLTemplate( final DiagView view, final ObsdiagviewType xml, final URL context,
+      final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
 
     view.setTitle( xml.getTitle() );
     view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() );
     view.setShowLegend( xml.getLegend() == null ? false : xml.getLegend().isVisible() );
-
+    
     // features-list is optional
     if( xml.getFeatures() != null )
     {
       // features list specified, so clear before enabling the ones sepcified
       view.clearFeatures();
-
+      
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
@@ -353,18 +349,18 @@ public class DiagViewUtils
     {
       for( final Iterator it = xml.getAxis().iterator(); it.hasNext(); )
       {
-        final TypeAxis baseAxis = (TypeAxis) it.next();
+        final TypeAxis baseAxis = (TypeAxis)it.next();
 
         view.addAxis( new DiagramAxis( baseAxis ) );
       }
     }
 
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List stati = new ArrayList();
 
     final List list = xml.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
-      final TypeObservation tobs = (TypeObservation) it.next();
+      final TypeObservation tobs = (TypeObservation)it.next();
 
       // check, if href is ok
       final String href = tobs.getHref();
@@ -382,12 +378,11 @@ public class DiagViewUtils
 
     return StatusUtilities.createStatus( stati, "Diagrammvorlage konnte nicht vollständig aktualisiert werden" );
   }
-
+  
   /**
    * Return the first axis of the mappings list which is not a key axis.
    * 
-   * @param mappings
-   *          array of obs-diag axes mappings
+   * @param mappings array of obs-diag axes mappings
    * @return obs axis (not a key axis) or null if not found
    */
   public static IAxis getValueAxis( final AxisMapping[] mappings )
@@ -397,7 +392,7 @@ public class DiagViewUtils
       if( !mappings[i].getObservationAxis().isKey() )
         return mappings[i].getObservationAxis();
     }
-
+    
     return null;
   }
 }

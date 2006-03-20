@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.compare.internal.ResizableDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -44,7 +44,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -66,7 +66,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  * 
  * @author schlienger (24.05.2005)
  */
-public class ObservationViewerDialog extends Dialog
+public class ObservationViewerDialog extends ResizableDialog
 {
   private ObservationViewer m_viewer;
 
@@ -95,12 +95,13 @@ public class ObservationViewerDialog extends Dialog
 
   final String[] m_axisTypes;
 
-  Object m_input = null;
+  private Object m_input = null;
 
-  public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable, boolean withChart, final int buttonControls, final String[] axisTypes )
+  public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable,
+      boolean withChart, final int buttonControls, final String[] axisTypes )
   {
-    super( parent );
-    setShellStyle( getShellStyle() | SWT.RESIZE );
+    super( parent, null );
+
     m_withHeader = withHeaderForm;
     m_withMetaDataTable = withMetaDataAndTable;
     m_withChart = withChart;
@@ -110,8 +111,8 @@ public class ObservationViewerDialog extends Dialog
 
   public ObservationViewerDialog( final Shell parent )
   {
-    super( parent );
-    setShellStyle( getShellStyle() | SWT.RESIZE );
+    super( parent, null );
+
     m_withHeader = true;
     m_withMetaDataTable = true;
     m_withChart = true;
@@ -122,14 +123,13 @@ public class ObservationViewerDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite) super.createDialogArea( parent );
-    // composite.setLayout( new FillLayout() );
-    composite.setLayout( new GridLayout() );
+    final Composite composite = (Composite)super.createDialogArea( parent );
+    composite.setLayout( new FillLayout() );
 
-    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable, createButtonControls() );
+    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable,
+        createButtonControls() );
     updateViewer();
     // TODO label
     getShell().setText( "Zeitreihenlink-Editor" );
@@ -148,7 +148,7 @@ public class ObservationViewerDialog extends Dialog
     updateViewer();
   }
 
-  private void updateViewer( )
+  private void updateViewer()
   {
     if( m_viewer != null )
     {
@@ -160,12 +160,12 @@ public class ObservationViewerDialog extends Dialog
   /**
    * @return buttoncontrols
    */
-  private ButtonControl[] createButtonControls( )
+  private ButtonControl[] createButtonControls()
   {
-    final List<ButtonControl> result = new ArrayList<ButtonControl>();
+    final List result = new ArrayList();
     final IAxis[] axis = TimeserieUtils.createDefaultAxes( m_axisTypes, true );
 
-    if( (m_buttonControls & BUTTON_REMOVE) == BUTTON_REMOVE )
+    if( ( m_buttonControls & BUTTON_REMOVE ) == BUTTON_REMOVE )
     {
       final SelectionListener removeListener = new SelectionListener()
       {
@@ -176,12 +176,12 @@ public class ObservationViewerDialog extends Dialog
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         }
       };
       result.add( new ButtonControl( removeListener, "loeschen", "Zeitreihe loeschen", SWT.PUSH ) );
     }
-    if( (m_buttonControls & BUTTON_NEW) == BUTTON_NEW )
+    if( ( m_buttonControls & BUTTON_NEW ) == BUTTON_NEW )
     {
       final SelectionListener newListener = new SelectionListener()
       {
@@ -212,12 +212,12 @@ public class ObservationViewerDialog extends Dialog
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         }
       };
       result.add( new ButtonControl( newListener, "neu", "Neue Zeitreihe anlegen", SWT.PUSH ) );
     }
-    if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
+    if( ( m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE ) == BUTTON_NEW_IDEAL_LANDUSE )
     {
       final SelectionListener newListener = new SelectionListener()
       {
@@ -248,12 +248,12 @@ public class ObservationViewerDialog extends Dialog
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         }
       };
       result.add( new ButtonControl( newListener, "neu", "Neue Vegetationsperiode anlegen", SWT.PUSH ) );
     }
-    if( (m_buttonControls & BUTTON_EXEL_IMPORT) == BUTTON_EXEL_IMPORT )
+    if( ( m_buttonControls & BUTTON_EXEL_IMPORT ) == BUTTON_EXEL_IMPORT )
     {
       final SelectionListener exelImportListener = new SelectionListener()
       {
@@ -262,20 +262,22 @@ public class ObservationViewerDialog extends Dialog
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
           Object content = clipboard.getContents( TextTransfer.getInstance() );
           if( content != null && content instanceof String )
-            setInput( ZmlFactory.createZMLFromClipboardString( ((IObservation) m_input).getName(), (String) content, axis ) );
-          // else
-          // TODO messagebox
+            setInput( ZmlFactory.createZMLFromClipboardString( ( (IObservation)m_input ).getName(), (String)content,
+                axis ) );
+          else
+            ; // TODO messagebox
           clipboard.dispose();
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher", "Aus Zwischenspeicher importieren", SWT.PUSH ) );
+      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher",
+          "Aus Zwischenspeicher importieren", SWT.PUSH ) );
     }
-    if( (m_buttonControls & BUTTON_EXEL_EXPORT) == BUTTON_EXEL_EXPORT )
+    if( ( m_buttonControls & BUTTON_EXEL_EXPORT ) == BUTTON_EXEL_EXPORT )
     {
       final SelectionListener exelExportListener = new SelectionListener()
       {
@@ -287,8 +289,10 @@ public class ObservationViewerDialog extends Dialog
           {
             try
             {
-              final String content = ZmlFactory.createClipboardStringFrom( (IObservation) input, null );
-              clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
+              final String content = ZmlFactory.createClipboardStringFrom( (IObservation)input, null );
+              clipboard.setContents( new Object[]
+              { content }, new Transfer[]
+              { TextTransfer.getInstance() } );
             }
             catch( SensorException e1 )
             {
@@ -300,18 +304,19 @@ public class ObservationViewerDialog extends Dialog
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher", "In Zwischenspeicher exportieren", SWT.PUSH ) );
+      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher",
+          "In Zwischenspeicher exportieren", SWT.PUSH ) );
     }
-    return result.toArray( new ButtonControl[result.size()] );
+    return (ButtonControl[])result.toArray( new ButtonControl[result.size()] );
   }
 
   /**
    * @return input
    */
-  public Object getInput( )
+  public Object getInput()
   {
     if( m_viewer != null )
       return m_viewer.getInput();

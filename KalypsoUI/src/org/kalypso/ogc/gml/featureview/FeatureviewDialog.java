@@ -54,10 +54,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -73,20 +73,21 @@ public class FeatureviewDialog extends Dialog
 
   private static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
 
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection m_changes = new ArrayList();
 
   private final GMLWorkspace m_workspace;
 
   private final ICommandTarget m_target;
 
-  public FeatureviewDialog( final GMLWorkspace workspace, final ICommandTarget target, final Shell parentShell, final FeatureComposite featureComposite )
+  public FeatureviewDialog( final GMLWorkspace workspace, final ICommandTarget target, final Shell parentShell,
+      final FeatureComposite featureComposite )
   {
     super( parentShell );
     m_workspace = workspace;
     m_target = target;
     m_featureComposite = featureComposite;
 
-    final Collection<FeatureChange> changes = m_changes;
+    final Collection changes = m_changes;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       public void featureChanged( final FeatureChange change )
@@ -95,9 +96,9 @@ public class FeatureviewDialog extends Dialog
         updateButtons();
       }
 
-      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
-        // TODO: stack dialogs
+      // TODO: stack dialogs
       }
     } );
 
@@ -107,26 +108,24 @@ public class FeatureviewDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( final Composite parent )
   {
     getShell().setText( "Feature editieren" );
 
     final Feature feature = m_featureComposite.getFeature();
-    final IFeatureType featureType = feature.getFeatureType();
+    final FeatureType featureType = feature.getFeatureType();
 
     final Group panel = new Group( parent, SWT.NONE );
-    panel.setText( featureType.getQName().getLocalPart() + " - " + feature.getId() );
+    panel.setText( featureType.getName() + " - " + feature.getId() );
     panel.setLayout( new GridLayout() );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final FeatureComposite featureComposite = m_featureComposite;
     final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
     {
-      @Override
-      protected Control createContents( final Composite scrollParent, final int style )
+      protected Control createContents( final Composite scrollParent, int style )
       {
-        return (Composite) featureComposite.createControl( scrollParent, style );
+        return (Composite)featureComposite.createControl( scrollParent, style );
       }
     };
     creator.createControl( panel, SWT.V_SCROLL, SWT.NONE );
@@ -138,7 +137,6 @@ public class FeatureviewDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected void createButtonsForButtonBar( Composite parent )
   {
     super.createButtonsForButtonBar( parent );
@@ -152,32 +150,31 @@ public class FeatureviewDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
    */
-  @Override
   protected void buttonPressed( int buttonId )
   {
     switch( buttonId )
     {
-      case APPLY_ID:
-        applyPressed();
-        break;
+    case APPLY_ID:
+      applyPressed();
+      break;
 
-      case RESET_ID:
-        resetPressed();
-        break;
+    case RESET_ID:
+      resetPressed();
+      break;
 
-      default:
-        super.buttonPressed( buttonId );
+    default:
+      super.buttonPressed( buttonId );
     }
   }
 
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     c.addAll( m_changes );
   }
 
-  private void applyPressed( )
+  private void applyPressed()
   {
-    final FeatureChange[] changesArray = m_changes.toArray( new FeatureChange[m_changes.size()] );
+    final FeatureChange[] changesArray = (FeatureChange[])m_changes.toArray( new FeatureChange[m_changes.size()] );
     m_changes.clear();
 
     if( m_workspace != null )
@@ -186,7 +183,7 @@ public class FeatureviewDialog extends Dialog
     updateButtons();
   }
 
-  private void resetPressed( )
+  private void resetPressed()
   {
     m_changes.clear();
     m_featureComposite.updateControl();
@@ -196,8 +193,7 @@ public class FeatureviewDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  @Override
-  protected void okPressed( )
+  protected void okPressed()
   {
     applyPressed();
 
@@ -209,15 +205,14 @@ public class FeatureviewDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
    */
-  @Override
-  protected void cancelPressed( )
+  protected void cancelPressed()
   {
     m_featureComposite.dispose();
 
     super.cancelPressed();
   }
 
-  protected void updateButtons( )
+  protected void updateButtons()
   {
     final boolean enable = m_changes.size() != 0;
     getButton( IDialogConstants.OK_ID ).setEnabled( enable );

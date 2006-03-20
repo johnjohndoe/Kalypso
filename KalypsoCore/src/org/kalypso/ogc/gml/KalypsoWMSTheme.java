@@ -81,7 +81,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
@@ -138,17 +138,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
 
-  /** type name */
-
-  public static final String TYPE_NAME = "wms";
-
   private int m_lastWidth;
 
   private int m_lastHeight;
 
-  final protected static ISchedulingRule m_jobMutexRule = new MutexRule();
+  final protected static ISchedulingRule m_jobMutexRule = new MutexSchedulingRule();
 
-  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
+      final CS_CoordinateSystem localSRS )
   {
     super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
@@ -162,26 +159,26 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     {
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
       final URL url = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
-      // final URL url = new URL( service + "?SERVICE=WMS&REQUEST=GetCapabilities" );
+      //      final URL url = new URL( service + "?SERVICE=WMS&REQUEST=GetCapabilities" );
       final URLConnection c = url.openConnection();
       NetWorker.configureProxy( c );
       c.addRequestProperty( "SERVICE", "WMS" );
 
       c.addRequestProperty( "REQUEST", "GetCapabilities" );
 
-      // create capabilites from the request
+      //create capabilites from the request
       // TODO check that this does not wait forever, if there is no connection
       final Reader reader = new InputStreamReader( c.getInputStream() );
       m_wmsCaps = wmsCapFac.createCapabilities( reader );
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
 
-      // match the local with the remote coordiante system
+      //match the local with the remote coordiante system
       final CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localSRS, m_wmsCaps, m_layers.split( "," ) );
       if( !crs[0].equals( m_localSRS ) )
         m_remoteSRS = crs[0];
       else
         m_remoteSRS = m_localSRS;
-      // set max extent for Map Layer
+      //set max extent for Map Layer
 
       // set max envelope
       final GM_Envelope maxEnvRemoteSRS = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteSRS );
@@ -202,11 +199,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox,
+      final boolean selected )
   {
     m_requestedEnvLocalSRS = bbox;
-    m_lastWidth = (int) g.getClip().getBounds().getWidth();
-    m_lastHeight = (int) g.getClip().getBounds().getHeight();
+    m_lastWidth = (int)g.getClip().getBounds().getWidth();
+    m_lastHeight = (int)g.getClip().getBounds().getHeight();
     if( selected ) // image can not be selected
       return;
 
@@ -225,21 +223,21 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       }
     }
 
-    // the image is only updated when the wish bbox is ok
-    // if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
-    // {
-    // GM_Envelope remoteEnv = null;
-    // try
-    // {
-    // GeoTransformer gt = new GeoTransformer( m_remoteCSR );
-    // remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
-    // WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, geoTransform, g );
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
-    // }
+    //the image is only updated when the wish bbox is ok
+    //    if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
+    //    {
+    //      GM_Envelope remoteEnv = null;
+    //      try
+    //      {
+    //        GeoTransformer gt = new GeoTransformer( m_remoteCSR );
+    //        remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
+    //        WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, geoTransform, g );
+    //      }
+    //      catch( Exception e )
+    //      {
+    //        e.printStackTrace();
+    //      }
+    //    }
   }
 
   public void updateImage( final GeoTransform geoTransformToLocalSRS, GM_Envelope envRequestLocalSRS ) throws Exception
@@ -252,10 +250,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     if( m_lockRequestEnvLocalSRS != null && m_lockRequestEnvLocalSRS.equals( envRequestLocalSRS ) )
       return;
     // lock it now
-    final GM_Envelope targetEnvLocalSRS = (GM_Envelope) envRequestLocalSRS.clone();
+    final GM_Envelope targetEnvLocalSRS = (GM_Envelope)envRequestLocalSRS.clone();
     m_lockRequestEnvLocalSRS = targetEnvLocalSRS;
 
-    final String id = "KalypsoWMSRequest" + getName() + Long.toString( (new Date()).getTime() );
+    final String id = "KalypsoWMSRequest" + getName() + Long.toString( ( new Date() ).getTime() );
     final HashMap parameterMap = createGetMapRequestParameter();
     final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
     final int width = m_lastWidth;
@@ -266,10 +264,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       {
         if( isObsolete( targetEnvLocalSRS ) )
           return;
-        if( !(responseEvent instanceof OGCWebServiceEvent) )
+        if( !( responseEvent instanceof OGCWebServiceEvent ) )
           return;
-        final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
-        if( !(response instanceof WMSGetMapResponse) )
+        final OGCWebServiceResponse response = ( (OGCWebServiceEvent)responseEvent ).getResponse();
+        if( !( response instanceof WMSGetMapResponse ) )
           return;
         if( isObsolete( targetEnvLocalSRS ) )
           return;
@@ -279,21 +277,22 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           /**
            * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
            */
-          @Override
           protected IStatus run( IProgressMonitor monitor )
           {
             try
             {
-              final RenderedImage resultImage = (RenderedImage) ((WMSGetMapResponse) response).getMap();
+              final RenderedImage resultImage = (RenderedImage)( (WMSGetMapResponse)response ).getMap();
               if( resultImage == null )
-                return StatusUtilities.createErrorStatus( "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
+                return StatusUtilities.createErrorStatus( "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName()
+                    + "\n das Thema sollte unsichtbar geschaltet werden" );
               final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
               setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
               return Status.OK_STATUS;
             }
             catch( Exception e )
             {
-              return StatusUtilities.statusFromThrowable( e, "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
+              return StatusUtilities.statusFromThrowable( e, "Fehler bei laden vom WMS "
+                  + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
             }
           }
         };
@@ -304,13 +303,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
       private boolean isObsolete( GM_Envelope envLocalSRS )
       {
-        return m_requestedEnvLocalSRS == null || !(m_requestedEnvLocalSRS.equals( envLocalSRS ));
+        return m_requestedEnvLocalSRS == null || !( m_requestedEnvLocalSRS.equals( envLocalSRS ) );
       }
     };
 
-    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, // source
-        request, // request
-        null, // message
+    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, //source
+        request, //request
+        null, //message
         client );
 
     m_remoteWMS.doService( ogcWSEvent );
@@ -319,9 +318,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /**
    * @throws Exception
    */
-  private HashMap<String, String> createGetMapRequestParameter( ) throws Exception
+  private HashMap createGetMapRequestParameter() throws Exception
   {
-    final HashMap<String, String> wmsParameter = new HashMap<String, String>();
+    final HashMap wmsParameter = new HashMap();
     wmsParameter.put( "SERVICE", "WMS" );
     wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
@@ -339,16 +338,16 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     wmsParameter.put( "HEIGHT", "" + m_lastHeight );
     wmsParameter.put( "SRS", m_remoteSRS.getName() );
 
-    // if( m_authentification )
-    // {
-    // if(m_pass == null || m_user == null )
-    // return;
-    // final String pw = m_user + ":" + m_pass;
-    // final String epw = "Basic " + ( new BASE64Encoder() ).encode(
+    //    if( m_authentification )
+    //    {
+    //      if(m_pass == null || m_user == null )
+    //        return;
+    //      final String pw = m_user + ":" + m_pass;
+    //      final String epw = "Basic " + ( new BASE64Encoder() ).encode(
     // pw.getBytes() );
     //
-    // wmsParameter.put("Proxy-Authorization", epw );
-    // }
+    //      wmsParameter.put("Proxy-Authorization", epw );
+    //    }
 
     final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
     final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( m_requestedEnvLocalSRS, m_localSRS );
@@ -358,6 +357,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   }
 
   /**
+   * 
    * @param image
    * @param targetEnvLocalSRS
    * @param width
@@ -365,7 +365,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    * @param geoTransform
    * @throws Exception
    */
-  protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width, final int height, final GeoTransform geoTransform ) throws Exception
+  protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width,
+      final int height, final GeoTransform geoTransform ) throws Exception
   {
 
     try
@@ -392,23 +393,24 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // do nothing (no graphics to dispose)
+  //do nothing (no graphics to dispose)
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox()
   {
     return m_maxEnvLocalSRS;
   }
 
   /**
+   * 
    * @return source key
    */
-  public String getSource( )
+  public String getSource()
   {
     return m_source;
   }
@@ -417,15 +419,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    * @param pointOfInterest
    * @param format
    * @throws Exception
+   *  
    */
-  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
+  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format,
+      final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
   {
     // check if nothing to request
     if( m_maxEnvLocalSRS == null )
       return;
 
-    final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + Long.toString( (new Date()).getTime() );
-    final HashMap<String, String> parameterMap = createGetMapRequestParameter();
+    final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + Long.toString( ( new Date() ).getTime() );
+    final HashMap parameterMap = createGetMapRequestParameter();
     parameterMap.put( "REQUEST", "GetFeatureInfo" );
     parameterMap.put( "QUERY_LAYERS", m_layers );
     if( format != null && format.length() > 0 )
@@ -437,31 +441,32 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     System.out.print( "?" );
     for( Iterator iter = set.iterator(); iter.hasNext(); )
     {
-      final String key = (String) iter.next();
-      final String value = parameterMap.get( key );
+      final String key = (String)iter.next();
+      final String value = (String)parameterMap.get( key );
       System.out.print( key + "=" + value + "&" );
     }
     System.out.println();
-    final WMSFeatureInfoRequest getFeatureInfoRequest = WMSProtocolFactory.createGetFeatureInfoRequest( id, parameterMap );
+    final WMSFeatureInfoRequest getFeatureInfoRequest = WMSProtocolFactory.createGetFeatureInfoRequest( id,
+        parameterMap );
     final OGCWebServiceClient client = new OGCWebServiceClient()
     {
       public void write( Object responseEvent )
       {
-        if( !(responseEvent instanceof OGCWebServiceEvent) )
+        if( !( responseEvent instanceof OGCWebServiceEvent ) )
           return;
-        final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
-        if( !(response instanceof WMSFeatureInfoResponse) )
+        final OGCWebServiceResponse response = ( (OGCWebServiceEvent)responseEvent ).getResponse();
+        if( !( response instanceof WMSFeatureInfoResponse ) )
           return;
         try
         {
-          final WMSFeatureInfoResponse featureInfoResponse = (WMSFeatureInfoResponse) response;
+          final WMSFeatureInfoResponse featureInfoResponse = (WMSFeatureInfoResponse)response;
           final StringBuffer result = new StringBuffer();
           final String featureInfo = featureInfoResponse.getFeatureInfo();
           if( featureInfo != null )
           {
-            // String xsl="";
+            //              String xsl="";
             //              
-            // XMLHelper.xslTransform(new InputSource(featureInfo), null);
+            //            XMLHelper.xslTransform(new InputSource(featureInfo), null);
             result.append( featureInfo );
           }
           else
@@ -477,33 +482,34 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
         }
         catch( Exception e )
         {
-          final Document wmsException = ((WMSFeatureInfoResponse) response).getException();
+          final Document wmsException = ( (WMSFeatureInfoResponse)response ).getException();
           if( wmsException != null )
             System.out.println( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ) );
         }
       }
     };
 
-    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, // source
-        getFeatureInfoRequest, // request
-        null, // message
+    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, //source
+        getFeatureInfoRequest, //request
+        null, //message
         client );
 
     m_remoteWMS.doService( ogcWSEvent );
   }
 
-  public boolean isSupportingGetFeatureInfoRequest( )
+  public boolean isSupportingGetFeatureInfoRequest()
   {
     final Operation operation = m_wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
     return operation != null;
   }
 
   /**
+   * 
    * @return supported formats
    */
-  public synchronized String[] getFeatureInfoRequestFormats( )
+  public synchronized String[] getFeatureInfoRequestFormats()
   {
-    final List<String> result = new ArrayList<String>();
+    final List result = new ArrayList();
     final Operation operation = m_wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
     final Format[] formats = operation.getFormats();
     for( int i = 0; i < formats.length; i++ )
@@ -512,6 +518,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       if( format.getName() != null )
         result.add( format.getName() );
     }
-    return result.toArray( new String[result.size()] );
+    return (String[])result.toArray( new String[result.size()] );
   }
 }

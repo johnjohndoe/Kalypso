@@ -32,19 +32,18 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
 
@@ -70,16 +69,15 @@ public class CloneUtilities
    * @return cloned object
    * @throws JAXBException
    */
-  public static Object clone( final Object value, final JAXBContext jc ) throws JAXBException
+  public static Object clone( Object value, ObjectFactory factory ) throws JAXBException
   {
     // marshall it
-    
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+    final Marshaller marshaller = factory.createMarshaller();
     final StringWriter tmpBuffer = new StringWriter();
     marshaller.marshal( value, tmpBuffer );
 
     // unmarshall it
-    final Unmarshaller unmarshaller = jc.createUnmarshaller();
+    final Unmarshaller unmarshaller = factory.createUnmarshaller();
     StringReader reader = new StringReader( tmpBuffer.toString() );
     final InputSource source = new InputSource(reader);
     return unmarshaller.unmarshal( source );
@@ -89,8 +87,8 @@ public class CloneUtilities
   {
     Object[] properties = featureToClone.getProperties();
     Object[] clonedProperties = new Object[properties.length];
-    IFeatureType featureType = featureToClone.getFeatureType();
-    IPropertyType[] featureTypeProperties = featureType.getProperties();
+    FeatureType featureType = featureToClone.getFeatureType();
+    FeatureTypeProperty[] featureTypeProperties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       Object property = properties[i];
@@ -103,14 +101,14 @@ public class CloneUtilities
 
   }
 
-  public static Object cloneFeatureProperty( Object featureProperty, IPropertyType property )
+  public static Object cloneFeatureProperty( Object featureProperty, FeatureTypeProperty property )
       throws CloneNotSupportedException
   {
     final Class clazz = featureProperty.getClass();
-    final ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz );
+    final ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz.getName() );
     
     if( typeHandler == null )
-      return FeatureFactory.createFeatureProperty( property,featureProperty );
+      return FeatureFactory.createFeatureProperty( property.getName(), featureProperty );
 
     if( typeHandler instanceof IMarshallingTypeHandler )
       return ( (IMarshallingTypeHandler)typeHandler ).cloneObject( featureProperty );

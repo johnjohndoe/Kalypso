@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -19,7 +19,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 /**
  * Eine gefilterte FeatureListe.
  * 
- * Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType entsprechen. Andererseits ist die
+ * Die Liste zeigt nach aussen nur die Features, die einem bestimmten FeatureType entsprechen. Andererseits ist die
  * Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste ändern auch die Originalliste.
  * 
  * @author belger
@@ -32,10 +32,10 @@ public class FilteredFeatureList implements FeatureList
 
   private final CollectorVisitor m_collector = new CollectorVisitor();
 
-  public FilteredFeatureList( final FeatureList original, final String typeLocalName, final boolean acceptIfSubstituting )
+  public FilteredFeatureList( final FeatureList original, final String typename, final boolean acceptIfSubstituting )
   {
     m_original = original;
-    m_filterVisitor = new FeatureTypeVisitor(null, null, typeLocalName, acceptIfSubstituting );
+    m_filterVisitor = new FeatureTypeVisitor( null, typename, acceptIfSubstituting );
   }
 
   /**
@@ -380,8 +380,9 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    */
-  public IRelationType getParentFeatureTypeProperty()
+  public FeatureTypeProperty getParentFeatureTypeProperty()
   {
+
     return m_original.getParentFeatureTypeProperty();
   }
 }

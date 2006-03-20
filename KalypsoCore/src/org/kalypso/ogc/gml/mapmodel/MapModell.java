@@ -46,9 +46,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.contribs.java.awt.IHighlightColors;
+import org.kalypso.contribs.java.awt.DefaultHighlightColors;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -67,9 +67,9 @@ public class MapModell implements IMapModell
 
   private final static Boolean THEME_DISABLED = Boolean.valueOf( false );
 
-  private final Vector<IKalypsoTheme> m_themes = new Vector<IKalypsoTheme>();
+  private final Vector m_themes = new Vector();
 
-  private final Map<IKalypsoTheme, Boolean> m_enabledThemeStatus = new HashMap<IKalypsoTheme, Boolean>();
+  private final Map m_enabledThemeStatus = new HashMap();
 
   private final CS_CoordinateSystem m_coordinatesSystem;
 
@@ -77,15 +77,23 @@ public class MapModell implements IMapModell
 
   private IProject m_project;
 
+  private final IHighlightColors m_highlightColors;
+
   public MapModell( final CS_CoordinateSystem crs, final IProject project )
+  {
+    this( crs, project, new DefaultHighlightColors() );
+  }
+
+  public MapModell( final CS_CoordinateSystem crs, final IProject project, final IHighlightColors highlightColors )
   {
     m_coordinatesSystem = crs;
     m_project = project;
+    m_highlightColors = highlightColors;
   }
 
   public void dispose()
   {
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     m_themes.clear();
     for( int i = 0; i < themes.length; i++ )
       themes[i].dispose();
@@ -137,7 +145,7 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme[] getAllThemes()
   {
-    return m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    return (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
   }
 
   public CS_CoordinateSystem getCoordinatesSystem()
@@ -149,7 +157,7 @@ public class MapModell implements IMapModell
       final boolean selected )
   {
     // directly access themes in order to avoid synchronization problems
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     // paint themes in reverse order
     for( int i = themes.length; i > 0; i-- )
     {
@@ -161,7 +169,7 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme getTheme( final int pos )
   {
-    return m_themes.elementAt( pos );
+    return (IKalypsoTheme)m_themes.elementAt( pos );
   }
 
   public int getThemeSize()
@@ -195,7 +203,7 @@ public class MapModell implements IMapModell
 
   public void removeTheme( int pos )
   {
-    removeTheme( m_themes.elementAt( pos ) );
+    removeTheme( (IKalypsoTheme)m_themes.elementAt( pos ) );
   }
 
   public void removeTheme( IKalypsoTheme theme )
@@ -248,7 +256,6 @@ public class MapModell implements IMapModell
         }
       }
     }
-
     return result;
   }
 
@@ -284,18 +291,10 @@ public class MapModell implements IMapModell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getHighlightColors()
    */
-  public IKalypsoFeatureTheme getScrabLayer()
+  public IHighlightColors getHighlightColors()
   {
-    IKalypsoTheme[] allThemes = getAllThemes();
-    for( int i = 0; i < allThemes.length; i++ )
-    {
-      IKalypsoTheme theme = allThemes[i];
-      if( theme instanceof ScrabLayerFeatureTheme )
-        return (IKalypsoFeatureTheme)theme;
-    }
-    return null;
+    return m_highlightColors;
   }
-
 }

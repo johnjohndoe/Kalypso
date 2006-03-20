@@ -4,8 +4,6 @@ import java.net.URL;
 import java.text.ParseException;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.types.ITypeHandler;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.w3c.dom.Node;
 
 /**
@@ -43,5 +41,4 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   
   /** Creeates an instance of my type from a string */
   public Object parseType( final String text ) throws ParseException;
-
 }

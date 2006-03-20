@@ -76,7 +76,8 @@ public class TableViewColumn extends ObsViewItem
   /**
    * Constructor with default position
    */
-  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format )
+  public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format )
   {
     this( view, provider, name, isEditable, width, keyAxis, valueAxis, format, DEFAULT_POSITION );
   }
@@ -84,7 +85,9 @@ public class TableViewColumn extends ObsViewItem
   /**
    * Full Constructor
    */
-  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format, final int position )
+  public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format,
+      final int position )
   {
     super( view, provider, name );
 
@@ -99,17 +102,17 @@ public class TableViewColumn extends ObsViewItem
     m_position = position;
   }
 
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     return m_isEditable;
   }
 
-  public int getWidth( )
+  public int getWidth()
   {
     return m_width;
   }
 
-  public boolean isDirty( )
+  public boolean isDirty()
   {
     return m_dirty;
   }
@@ -136,28 +139,26 @@ public class TableViewColumn extends ObsViewItem
       getObservation().fireChangedEvent( eventSource );
   }
 
-  public Class getColumnClass( )
+  public Class getColumnClass()
   {
     return m_valueAxis.getDataClass();
   }
 
-  public IAxis getAxis( )
+  public IAxis getAxis()
   {
     return m_valueAxis;
   }
 
-  public IAxis getKeyAxis( )
+  public IAxis getKeyAxis()
   {
     return m_keyAxis;
   }
 
-  @Override
-  public boolean isShown( )
+  public boolean isShown()
   {
     return m_shown;
   }
 
-  @Override
   public void setShown( boolean shown )
   {
     if( shown != m_shown )
@@ -171,17 +172,17 @@ public class TableViewColumn extends ObsViewItem
   /**
    * @return the format-specification (non-null).
    */
-  public String getFormat( )
+  public String getFormat()
   {
     return m_format;
   }
 
-  public int getPosition( )
+  public int getPosition()
   {
     return m_position;
   }
 
-  public boolean isDefaultPosition( )
+  public boolean isDefaultPosition()
   {
     return m_position == DEFAULT_POSITION;
   }
@@ -189,7 +190,6 @@ public class TableViewColumn extends ObsViewItem
   /**
    * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
    */
-  @Override
   public boolean shouldBeHidden( final List hiddenTypes )
   {
     return hiddenTypes.contains( m_valueAxis.getType() );

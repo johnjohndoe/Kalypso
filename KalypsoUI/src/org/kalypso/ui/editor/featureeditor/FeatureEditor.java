@@ -112,7 +112,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
   public void dispose()
   {
     m_commandTarget.dispose();
@@ -125,7 +124,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
    */
-  @Override
   public boolean isSaveAsAllowed()
   {
     return false;
@@ -134,7 +132,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
    */
-  @Override
   public void doSaveAs()
   {
     throw new UnsupportedOperationException();
@@ -143,7 +140,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
-  @Override
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !( input instanceof IStorageEditorInput ) )
@@ -157,7 +153,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
    */
-  @Override
   protected final void setInput( final IEditorInput input )
   {
     if( !( input instanceof IStorageEditorInput ) )
@@ -171,7 +166,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   public void doSave( final IProgressMonitor monitor )
   {
     try
@@ -190,7 +184,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#isDirty()
    */
-  @Override
   public boolean isDirty()
   {
     return m_commandTarget.isDirty();
@@ -199,7 +192,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
   public void setFocus()
   {
   // nix
@@ -208,7 +200,6 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     parent.setLayout( new GridLayout() );
@@ -227,7 +218,6 @@ public class FeatureEditor extends EditorPart
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         loadInput( input, monitor );

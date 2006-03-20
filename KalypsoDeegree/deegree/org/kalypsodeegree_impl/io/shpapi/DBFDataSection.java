@@ -62,11 +62,13 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
-import java.util.Locale;
+
+import com.braju.format.Format;
 
 /**
  * Class representing a record of the data section of a dBase III/IV file <BR>
  * at the moment only the daata types character ("C") and numeric ("N") are supported
+ * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 28.04.00 ap: constructor declared and implemented <BR>
@@ -75,6 +77,8 @@ import java.util.Locale;
  * 03.05.00 ap: method setRecord(ArrayList recData) modified <BR>
  * 03.05.00 ap: method setRecord(int index, ArrayList recData) declared and implemented <BR>
  * 03.05.00 ap: method getDataSection() modified <BR>
+ * 
+ * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 03.05.2000
@@ -83,18 +87,20 @@ import java.util.Locale;
 
 public class DBFDataSection
 {
+
   // length of one record in bytes
   private int recordlength = 0;
 
   private final FieldDescriptor[] fieldDesc;
 
-  private ArrayList<ByteContainer> data = new ArrayList<ByteContainer>();
+  private ArrayList data = new ArrayList();
 
   /**
    * constructor
    */
   public DBFDataSection( FieldDescriptor[] fieldDesc )
   {
+
     this.fieldDesc = fieldDesc;
 
     // calculate length of the data section
@@ -137,7 +143,7 @@ public class DBFDataSection
 
     ByteContainer datasec = new ByteContainer( recordlength );
 
-    if( (index < 0) || (index > data.size()) )
+    if( ( index < 0 ) || ( index > data.size() ) )
       throw new DBaseException( "invalid index: " + index );
 
     if( recData.size() != this.fieldDesc.length )
@@ -160,60 +166,61 @@ public class DBFDataSection
       switch( fddata[11] )
       {
 
-        // if data type is character
-        case (byte) 'C':
-          if( recdata != null && !(recdata instanceof String) )
-            throw new DBaseException( "invalid data type at field: " + i );
-          if( recdata == null )
-          {
-            b = new byte[0];
-          }
+      // if data type is character
+      case (byte)'C':
+        if( recdata != null && !( recdata instanceof String ) )
+          throw new DBaseException( "invalid data type at field: " + i );
+        if( recdata == null )
+        {
+          b = new byte[0];
+        }
+        else
+        {
+          b = ( (String)recdata ).getBytes();
+        }
+        if( b.length > fddata[16] )
+          throw new DBaseException( "string contains too many characters " + (String)recdata );
+        for( int j = 0; j < b.length; j++ )
+          datasec.data[offset + j] = b[j];
+        for( int j = b.length; j < fddata[16]; j++ )
+          datasec.data[offset + j] = 0x20;
+        break;
+      case (byte)'N':
+        if( recdata != null && !( recdata instanceof Number ) )
+          throw new DBaseException( "invalid data type at field: " + i );
+
+        final int fieldLength = fddata[16];
+        if( recdata == null )
+        {
+          b = new byte[fieldLength];
+          for( int j = 0; j < fieldLength; j++ )
+            b[j] = ' ';
+        }
+        else
+        {
+          // todo: performance: would be probably to create the format-string only once
+          // create format:
+          final int decimalcount = fddata[17];
+
+          String pattern;
+          if( decimalcount == 0 )
+            pattern = "%" + fieldLength + "d";
           else
-          {
-            b = ((String) recdata).getBytes();
-          }
-          if( b.length > fddata[16] )
-            throw new DBaseException( "string contains too many characters " + (String) recdata );
-          for( int j = 0; j < b.length; j++ )
-            datasec.data[offset + j] = b[j];
-          for( int j = b.length; j < fddata[16]; j++ )
-            datasec.data[offset + j] = 0x20;
-          break;
-        case (byte) 'N':
-          if( recdata != null && !(recdata instanceof Number) )
-            throw new DBaseException( "invalid data type at field: " + i );
+            pattern = "%" + fieldLength + "." + decimalcount + "f";
 
-          final int fieldLength = fddata[16];
-          if( recdata == null )
-          {
-            b = new byte[fieldLength];
-            for( int j = 0; j < fieldLength; j++ )
-              b[j] = ' ';
-          }
-          else
-          {
-            // todo: performance: would be probably to create the format-string only once
-            // create format:
-            final int decimalcount = fddata[17];
-
-            String pattern;
-            if( decimalcount == 0 )
-              pattern = "%" + fieldLength + "d";
-            else
-              pattern = "%" + fieldLength + "." + decimalcount + "f";
-
-            final String format = String.format( Locale.US, pattern, recdata );
-            b = format.getBytes();
-          }
-          if( b.length > fddata[16] )
-            throw new DBaseException( "string contains too many characters " + recdata );
-          for( int j = 0; j < b.length; j++ )
-            datasec.data[offset + j] = b[j];
-          for( int j = b.length; j < fddata[16]; j++ )
-            datasec.data[offset + j] = 0x0;
-          break;
-        default:
-          throw new DBaseException( "data type not supported" );
+          final String format = Format.sprintf( pattern, new Object[]
+          { recdata } );
+          b = format.getBytes();
+        }
+        if( b.length > fddata[16] )
+          throw new DBaseException( "string contains too many characters " + recdata );
+        for( int j = 0; j < b.length; j++ )
+          datasec.data[offset + j] = b[j];
+        for( int j = b.length; j < fddata[16]; j++ )
+          datasec.data[offset + j] = 0x0;
+        break;
+      default:
+        throw new DBaseException( "data type not supported" );
 
       }
 
@@ -229,7 +236,7 @@ public class DBFDataSection
   /**
    * method: public byte[] getDataSection() returns the data section as a byte array.
    */
-  public byte[] getDataSection( )
+  public byte[] getDataSection()
   {
 
     // allocate memory for all datarecords on one array + 1 byte
@@ -244,7 +251,7 @@ public class DBFDataSection
     for( int i = 0; i < data.size(); i++ )
     {
 
-      ByteContainer bc = data.get( i );
+      ByteContainer bc = (ByteContainer)data.get( i );
 
       for( int k = 0; k < recordlength; k++ )
       {
@@ -260,7 +267,7 @@ public class DBFDataSection
   /**
    * method: public int getNoOfRecords() returns the number of records within the container
    */
-  public int getNoOfRecords( )
+  public int getNoOfRecords()
   {
 
     return data.size();

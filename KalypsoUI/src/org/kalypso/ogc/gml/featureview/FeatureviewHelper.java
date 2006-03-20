@@ -42,33 +42,32 @@ package org.kalypso.ogc.gml.featureview;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.Validator;
 
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.Checkbox;
+import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.template.featureview.GridData;
-import org.kalypso.template.featureview.GridLayout;
+import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridLayoutType;
 import org.kalypso.template.featureview.Group;
-import org.kalypso.template.featureview.Label;
+import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
-import org.kalypso.template.featureview.Table;
-import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.TableType;
+import org.kalypso.template.featureview.TextType;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -77,76 +76,86 @@ public class FeatureviewHelper
 {
   public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
-  public static final ObjectFactory FACTORY = new ObjectFactory();
-
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  private FeatureviewHelper( )
+  private FeatureviewHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp ) throws JAXBException
+  public static final ObjectFactory FACTORY = new ObjectFactory();
+
+  public static Unmarshaller UNMARSHALLER;
+
+  static
+  {
+    try
+    {
+      UNMARSHALLER = FACTORY.createUnmarshaller();
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private static void addDefaultFeatureControlTypeForProperty( final List controlList, final FeatureType featureType,
+      final FeatureTypeProperty ftp ) throws JAXBException
   {
     ControlType type = null;
     boolean addLabel = true;
-    final GridData griddata = FACTORY.createGridData();
-    final JAXBElement<GridData> jaxbgriddata = FACTORY.createGridData( griddata );
+    final GridDataType griddata = FACTORY.createGridData();
 
+    final String typename = ftp.getType();
     final String name = ftp.getName();
-    if( ftp instanceof IValuePropertyType )
+    if( "boundedBy".equals( name ) )
+      return;
+    else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date"
+        .indexOf( typename ) != -1 )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final Class clazz = vpt.getValueClass();
-      if( "boundedBy".equals( name ) )
-        return;
-      else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date".indexOf( clazz.getName() ) != -1 )
-      {
-        final Text editor = FACTORY.createText();
-        editor.setStyle( "SWT.NONE" );
-        editor.setEditable( true );
-        editor.setProperty( name );
+      final TextType editor = FACTORY.createText();
+      editor.setStyle( "SWT.NONE" );
+      editor.setEditable( true );
+      editor.setProperty( name );
 
-        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-        griddata.setHorizontalSpan( 1 );
-        griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalSpan( 1 );
+      griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
 
-        editor.setLayoutData( jaxbgriddata );
+      editor.setLayoutData( griddata );
 
-        type = editor;
-      }
-      else if( java.lang.Boolean.class==clazz)
-      {
-        final Checkbox checkbox = FACTORY.createCheckbox();
-        checkbox.setStyle( "SWT.NONE" );
-        checkbox.setEditable( true );
-        checkbox.setProperty( name );
-
-        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-        griddata.setHorizontalSpan( 1 );
-        griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
-        checkbox.setLayoutData( jaxbgriddata );
-
-        type = checkbox;
-      }
-      else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz) )
-      {
-        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
-        type = handler.createFeatureviewControl( name, FACTORY );
-
-        griddata.setHorizontalAlignment( "GridData.FILL" );
-        griddata.setGrabExcessHorizontalSpace( true );
-
-        griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
-
-        type.setLayoutData( jaxbgriddata );
-      }
+      type = editor;
     }
-    else if( ftp instanceof IRelationType )
+    else if( "java.lang.Boolean".equals( typename ) )
     {
-      if( ftp.isList() )
+      final CheckboxType checkbox = FACTORY.createCheckbox();
+      checkbox.setStyle( "SWT.NONE" );
+      checkbox.setEditable( true );
+      checkbox.setProperty( name );
+
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalSpan( 1 );
+      griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
+      checkbox.setLayoutData( griddata );
+
+      type = checkbox;
+    }
+    else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    {
+      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( typename );
+      type = handler.createFeatureviewControl( name, FACTORY );
+
+      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setGrabExcessHorizontalSpace( true );
+
+      griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
+
+      type.setLayoutData( griddata );
+    }
+    else if( "FeatureAssociationType".equals( typename ) )
+    {
+      if( featureType.getMaxOccurs( name ) != 1 )
       {
-        final Table table = FACTORY.createTable();
+        final TableType table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
         table.setProperty( name );
 
@@ -157,68 +166,74 @@ public class FeatureviewHelper
         griddata.setHorizontalSpan( 3 );
         griddata.setHeightHint( 200 );
 
-        table.setLayoutData( jaxbgriddata );
+        table.setLayoutData( griddata );
 
         type = table;
         addLabel = false;
       }
       else
       {
-        final Subcomposite compo = FACTORY.createSubcomposite();
-        compo.setStyle( "SWT.NONE" );
-        compo.setProperty( name );
+          final Subcomposite compo = FACTORY.createSubcomposite();
+          compo.setStyle( "SWT.NONE" );
+          compo.setProperty( name );
 
-        griddata.setHorizontalAlignment( "GridData.FILL" );
-        griddata.setVerticalAlignment( "GridData.FILL" );
-        griddata.setGrabExcessHorizontalSpace( true );
-        griddata.setGrabExcessVerticalSpace( true );
-        griddata.setHorizontalSpan( 2 );
+          griddata.setHorizontalAlignment( "GridData.FILL" );
+          griddata.setVerticalAlignment( "GridData.FILL" );
+          griddata.setGrabExcessHorizontalSpace( true );
+          griddata.setGrabExcessVerticalSpace( true );
+          griddata.setHorizontalSpan( 2 );
 
-        compo.setLayoutData( jaxbgriddata );
+          compo.setLayoutData( griddata );
 
-        final Group group = FACTORY.createGroup();
+          final Group group = FACTORY.createGroup();
 
-        final GridData groupdata = FACTORY.createGridData();
-        groupdata.setGrabExcessHorizontalSpace( true );
-        groupdata.setGrabExcessVerticalSpace( true );
-        groupdata.setHorizontalAlignment( "GridData.FILL" );
-        groupdata.setVerticalAlignment( "GridData.FILL" );
-        groupdata.setHorizontalSpan( 3 );
+          final GridDataType groupdata = FACTORY.createGridData();
+          groupdata.setGrabExcessHorizontalSpace( true );
+          groupdata.setGrabExcessVerticalSpace( true );
+          groupdata.setHorizontalAlignment( "GridData.FILL" );
+          groupdata.setVerticalAlignment( "GridData.FILL" );
+          groupdata.setHorizontalSpan( 3 );
 
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
-        final String text = annotation == null ? name : annotation.getLabel();
-        final String tooltip = annotation == null ? null : annotation.getTooltip();
+          //        final String lang = Locale.getDefault().getLanguage();
+          // TODO: ugly! use the eclipse locale settings
+          final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+              IKalypsoPreferences.LANGUAGE );
+          final Annotation annotation = ftp.getAnnotation( lang );
+          final String text = annotation == null ? name : annotation.getLabel();
+          final String tooltip = annotation == null ? null : annotation.getTooltip();
 
-        group.setLayoutData( FACTORY.createGridData( groupdata ) );
-        group.setText( text );
-        group.setTooltip( tooltip );
-        group.setStyle( "SWT.NONE" );
+          group.setLayoutData( groupdata );
+          group.setText( text );
+          group.setTooltip( tooltip );
+          group.setStyle( "SWT.NONE" );
 
-        final GridLayout gridLayout = FACTORY.createGridLayout();
-        gridLayout.setNumColumns( 2 );
-        group.setLayout( FACTORY.createGridLayout( gridLayout ) );
+          final GridLayoutType gridLayout = FACTORY.createGridLayout();
+          gridLayout.setNumColumns( 2 );
+          group.setLayout( gridLayout );
 
-        group.getControl().add( FACTORY.createControl( compo ) );
+          group.getControl().add( compo );
 
-        type = group;
-        addLabel = false;
+          type = group;
+          addLabel = false;
       }
     }
 
     if( type == null )
     {
-      final Button button = FACTORY.createButton();
+      final ButtonType button = FACTORY.createButton();
       button.setStyle( "SWT.PUSH" );
       button.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-      button.setLayoutData( jaxbgriddata );
+      button.setLayoutData( griddata );
       griddata.setHorizontalSpan( 2 );
 
       type = button;
     }
 
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
+    //    final String lang = Locale.getDefault().getLanguage();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
+    final Annotation annotation = ftp.getAnnotation( lang );
     final String text = annotation == null ? name : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
@@ -230,43 +245,44 @@ public class FeatureviewHelper
     {
       cellCount++;
 
-      final Label label = FACTORY.createLabel();
+      final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
       label.setText( text );
       label.setTooltip( tooltip );
       label.setVisible( true );
 
-      final GridData labelGridData = FACTORY.createGridData();
+      final GridDataType labelGridData = FACTORY.createGridData();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-      label.setLayoutData( FACTORY.createGridData( labelGridData ) );
-      controlList.add( FACTORY.createLabel( label ) );
+      label.setLayoutData( labelGridData );
+
+      controlList.add( label );
     }
 
     if( type != null )
     {
-      final LayoutDataType layoutData = type.getLayoutData().getValue();
-      if( layoutData instanceof GridData )
-        cellCount += ((GridData) layoutData).getHorizontalSpan();
+      final LayoutDataType layoutData = type.getLayoutData();
+      if( layoutData instanceof GridDataType )
+        cellCount += ( (GridDataType)layoutData ).getHorizontalSpan();
 
-      controlList.add( FACTORY.createControl( type ) );
+      controlList.add( type );
     }
 
     for( int i = cellCount; i < 3; i++ )
     {
-      final Label label = FACTORY.createLabel();
+      final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
-      // label.setText( "" );
+      //      label.setText( "" );
       label.setVisible( false );
 
-      final GridData labelGridData = FACTORY.createGridData();
+      final GridDataType labelGridData = FACTORY.createGridData();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-      label.setLayoutData( FACTORY.createLayoutData( labelGridData ) );
+      label.setLayoutData( labelGridData );
 
-      controlList.add( FACTORY.createControl( label ) );
+      controlList.add( label );
     }
 
   }
@@ -277,7 +293,7 @@ public class FeatureviewHelper
    * @param type
    * @return featureview
    */
-  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type )
+  public static FeatureviewType createFeatureviewFromFeatureType( final FeatureType type )
   {
     try
     {
@@ -285,27 +301,28 @@ public class FeatureviewHelper
       featureview.setTypename( type.getName() );
       featureview.setStyle( "SWT.NONE" );
 
-      final GridLayout gridLayout = FACTORY.createGridLayout();
+      final GridLayoutType gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 3 );
-      featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
-      final GridData griddata = FACTORY.createGridData();
-      griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
-      griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
+      featureview.setLayout( gridLayout );
+      final GridDataType griddata = FACTORY.createGridData();
+      griddata.setGrabExcessHorizontalSpace( true );
+      griddata.setGrabExcessVerticalSpace( true );
       griddata.setHorizontalAlignment( "GridData.FILL" );
       griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
+      featureview.setLayoutData( griddata );
 
-      final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
+      final List controlList = featureview.getControl();
 
-      final IPropertyType[] properties = type.getProperties();
+      final FeatureTypeProperty[] properties = type.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        final IPropertyType ftp = properties[i];
-        addDefaultFeatureControlTypeForProperty( controlList, ftp );
+        final FeatureTypeProperty ftp = properties[i];
+
+        addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
       }
 
-      // final Validator validator = JC.createValidator();
-      // validator.validate( featureview );
+      final Validator validator = FACTORY.createValidator();
+      validator.validate( featureview );
 
       return featureview;
     }
@@ -323,27 +340,31 @@ public class FeatureviewHelper
    * @param type
    * @return featureview
    */
-  public static FeatureviewType createFeatureviewFromFeatureTypeProperty( final IFeatureType type, final IPropertyType ftp )
+  public static Featureview createFeatureviewFromFeatureTypeProperty( final FeatureType type,
+      final FeatureTypeProperty ftp )
   {
     try
     {
-      final FeatureviewType featureview = FACTORY.createFeatureviewType();
+      final Featureview featureview = FACTORY.createFeatureview();
       featureview.setTypename( type.getName() );
       featureview.setStyle( "SWT.NONE" );
 
-      final GridLayout gridLayout = FACTORY.createGridLayout();
+      final GridLayoutType gridLayout = FACTORY.createGridLayout();
       gridLayout.setNumColumns( 2 );
-      featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
-      final GridData griddata = FACTORY.createGridData();
+      featureview.setLayout( gridLayout );
+      final GridDataType griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setGrabExcessVerticalSpace( true );
       griddata.setHorizontalAlignment( "GridData.FILL" );
       griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
+      featureview.setLayoutData( griddata );
 
-      final List<JAXBElement< ? extends ControlType>> control = featureview.getControl();
+      final List controlList = featureview.getControl();
 
-      addDefaultFeatureControlTypeForProperty( control, ftp );
+      addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
+
+      final Validator validator = FACTORY.createValidator();
+      validator.validate( featureview );
 
       return featureview;
     }

@@ -63,7 +63,6 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -71,7 +70,9 @@ import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLParsingException;
@@ -81,6 +82,9 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
 public class ShapeFileImportDialog extends Dialog
@@ -118,7 +122,11 @@ public class ShapeFileImportDialog extends Dialog
 
   private Path m_stylePath;
 
+  private String m_styleName;
+
   private IWorkspaceRoot m_eclipseWorkspace = ResourcesPlugin.getWorkspace().getRoot();
+
+  private CS_CoordinateSystem m_coordinateSystem;
 
   private GMLWorkspace m_workspace;
 
@@ -134,10 +142,9 @@ public class ShapeFileImportDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( Composite parent )
   {
-    m_topComposite = (Composite) super.createDialogArea( parent );
+    m_topComposite = (Composite)super.createDialogArea( parent );
     m_topComposite.setFont( parent.getFont() );
 
     initializeDialogUnits( parent );
@@ -156,7 +163,7 @@ public class ShapeFileImportDialog extends Dialog
    */
   private void createStyleGroup( Composite composite )
   {
-    // style
+    //  style
     Group styleGroup = new Group( composite, SWT.NULL );
     styleGroup.setText( "Style" );
 
@@ -187,10 +194,58 @@ public class ShapeFileImportDialog extends Dialog
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        handleBrowseButton2Selected();
+
+        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+        { "sld" } );
+        dialog.open();
+        Object[] result = dialog.getResult();
+        if( result != null )
+        {
+          Path resultPath = (Path)result[0];
+          m_styleTextField.setText( resultPath.toString() );
+          m_stylePath = resultPath;
+          try
+          {
+            IPath basePath = m_eclipseWorkspace.getLocation();
+            String styleUrl = basePath.toFile().toURL() + m_stylePath.removeFirstSegments( 1 ).toString();
+            Reader reader = new InputStreamReader( ( new URL( styleUrl ) ).openStream() );
+            StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+            reader.close();
+            Layer[] layers = styledLayerDescriptor.getLayers();
+            Vector styleNameVector = new Vector();
+            for( int i = 0; i < layers.length; i++ )
+            {
+              Layer layer = layers[i];
+              Style[] styles = layer.getStyles();
+              for( int j = 0; j < styles.length; j++ )
+              {
+                styleNameVector.add( styles[j].getName() );
+              }
+            }
+            String[] styleNames = new String[styleNameVector.size()];
+            for( int k = 0; k < styleNameVector.size(); k++ )
+            {
+              styleNames[k] = (String)styleNameVector.get( k );
+            }
+            m_styleNameCombo.setItems( styleNames );
+            m_styleNameCombo.select( 0 );
+            m_styleName = styleNames[0];
+          }
+          catch( MalformedURLException e1 )
+          {
+            e1.printStackTrace();
+          }
+          catch( IOException ioEx )
+          {
+            ioEx.printStackTrace();
+          }
+          catch( XMLParsingException xmlEx )
+          {
+            xmlEx.printStackTrace();
+          }
+        }
       }
 
     } );
@@ -205,9 +260,11 @@ public class ShapeFileImportDialog extends Dialog
     m_styleNameCombo.setLayoutData( data5 );
     m_styleNameCombo.addSelectionListener( new SelectionAdapter()
     {
-      @Override
+
       public void widgetSelected( SelectionEvent e )
       {
+        m_styleName = m_styleNameCombo.getText();
+        //            validate();
       }
     } );
 
@@ -221,10 +278,25 @@ public class ShapeFileImportDialog extends Dialog
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        handleCheckDefaultStyleButtonSelected();
+        m_checkDefaultStyle = m_checkDefaultStyleButton.getSelection();
+        if( m_checkDefaultStyleButton.getSelection() )
+        {
+          m_styleLabel.setEnabled( false );
+          m_styleTextField.setEnabled( false );
+          m_browseButton2.setEnabled( false );
+          m_styleNameLabel.setEnabled( false );
+          m_styleNameCombo.setEnabled( false );
+        }
+        else
+        {
+          m_styleLabel.setEnabled( true );
+          m_styleTextField.setEnabled( true );
+          m_browseButton2.setEnabled( true );
+          m_styleNameLabel.setEnabled( true );
+          m_styleNameCombo.setEnabled( true );
+        }
       }
     } );
 
@@ -258,7 +330,7 @@ public class ShapeFileImportDialog extends Dialog
 
       public void modifyText( ModifyEvent e )
       {
-        // TODO Auto-generated method stub
+      // TODO Auto-generated method stub
 
       }
     } );
@@ -272,10 +344,18 @@ public class ShapeFileImportDialog extends Dialog
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
-        handleBrowseButtonSelected();
+        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+        { "shp" } );
+        dialog.open();
+        Object[] result = dialog.getResult();
+        if( result != null )
+        {
+          Path resultPath = (Path)result[0];
+          m_sourceFileText.setText( resultPath.toString() );
+          m_relativeSourcePath = resultPath;
+        }
       }
     } );
 
@@ -305,9 +385,9 @@ public class ShapeFileImportDialog extends Dialog
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
+        m_coordinateSystem = getCRS();
       }
     } );
 
@@ -321,12 +401,13 @@ public class ShapeFileImportDialog extends Dialog
     checkCRS.setItems( factory.getKnownCS() );
   }
 
-  protected KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  private KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, "Select resource", fileResourceExtensions, m_eclipseWorkspace );
+    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, "Select resource",
+        fileResourceExtensions, m_eclipseWorkspace );
   }
 
-  protected CS_CoordinateSystem getCRS( )
+  protected CS_CoordinateSystem getCRS()
   {
     return ConvenienceCSFactory.getInstance().getOGCCSByName( m_checkCRS.getText() );
   }
@@ -334,8 +415,7 @@ public class ShapeFileImportDialog extends Dialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  @Override
-  protected void okPressed( )
+  protected void okPressed()
   {
     try
     {
@@ -349,107 +429,29 @@ public class ShapeFileImportDialog extends Dialog
     super.okPressed();
   }
 
-  public File getShapeBaseFile( )
+  public File getShapeBaseFile()
   {
-    return new File( m_eclipseWorkspace.getLocation() + "/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.toString() ) );
+    return new File( m_eclipseWorkspace.getLocation() + "/"
+        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.toString() ) );
   }
 
-  public GM_Object getGeometry( )
+  public GM_Object getGeometry()
   {
-    final Feature root = m_workspace.getRootFeature();
-    final FeatureList featureLIST = (FeatureList) root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    final Feature fe = (Feature) featureLIST.get( 0 );
-    final IPropertyType geoPT = fe.getFeatureType().getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
-    return (GM_Object) fe.getProperty( geoPT );
+    Feature root = m_workspace.getRootFeature();
+    FeatureType featureType = root.getFeatureType();
+    FeatureAssociationTypeProperty property2 = (FeatureAssociationTypeProperty)featureType
+        .getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    int propertyPosition = property2.getAssociationFeatureType()
+        .getPropertyPosition( ShapeSerializer.PROPERTY_GEOMETRY );
+    FeatureList featureCollection = (FeatureList)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    Feature feature = (Feature)featureCollection.get( 0 );
+    GM_Object property = (GM_Object)feature.getProperty( propertyPosition );
+
+    return property;
   }
 
-  public GMLWorkspace getWorkspace( )
+  public GMLWorkspace getWorkspace()
   {
     return m_workspace;
-  }
-
-  protected void handleBrowseButton2Selected( )
-  {
-    KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } );
-    dialog.open();
-    Object[] result = dialog.getResult();
-    if( result != null )
-    {
-      Path resultPath = (Path) result[0];
-      m_styleTextField.setText( resultPath.toString() );
-      m_stylePath = resultPath;
-      try
-      {
-        IPath basePath = m_eclipseWorkspace.getLocation();
-        String styleUrl = basePath.toFile().toURL() + m_stylePath.removeFirstSegments( 1 ).toString();
-        Reader reader = new InputStreamReader( (new URL( styleUrl )).openStream() );
-        StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
-        reader.close();
-        Layer[] layers = styledLayerDescriptor.getLayers();
-        final Vector<String> styleNameVector = new Vector<String>();
-        for( int i = 0; i < layers.length; i++ )
-        {
-          Layer layer = layers[i];
-          Style[] styles = layer.getStyles();
-          for( int j = 0; j < styles.length; j++ )
-          {
-            styleNameVector.add( styles[j].getName() );
-          }
-        }
-        String[] styleNames = new String[styleNameVector.size()];
-        for( int k = 0; k < styleNameVector.size(); k++ )
-        {
-          styleNames[k] = styleNameVector.get( k );
-        }
-        m_styleNameCombo.setItems( styleNames );
-        m_styleNameCombo.select( 0 );
-      }
-      catch( MalformedURLException e1 )
-      {
-        e1.printStackTrace();
-      }
-      catch( IOException ioEx )
-      {
-        ioEx.printStackTrace();
-      }
-      catch( XMLParsingException xmlEx )
-      {
-        xmlEx.printStackTrace();
-      }
-    }
-  }
-
-  protected void handleCheckDefaultStyleButtonSelected( )
-  {
-    m_checkDefaultStyle = m_checkDefaultStyleButton.getSelection();
-    if( m_checkDefaultStyleButton.getSelection() )
-    {
-      m_styleLabel.setEnabled( false );
-      m_styleTextField.setEnabled( false );
-      m_browseButton2.setEnabled( false );
-      m_styleNameLabel.setEnabled( false );
-      m_styleNameCombo.setEnabled( false );
-    }
-    else
-    {
-      m_styleLabel.setEnabled( true );
-      m_styleTextField.setEnabled( true );
-      m_browseButton2.setEnabled( true );
-      m_styleNameLabel.setEnabled( true );
-      m_styleNameCombo.setEnabled( true );
-    }
-  }
-
-  protected void handleBrowseButtonSelected( )
-  {
-    KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } );
-    dialog.open();
-    Object[] result = dialog.getResult();
-    if( result != null )
-    {
-      Path resultPath = (Path) result[0];
-      m_sourceFileText.setText( resultPath.toString() );
-      m_relativeSourcePath = resultPath;
-    }
   }
 }

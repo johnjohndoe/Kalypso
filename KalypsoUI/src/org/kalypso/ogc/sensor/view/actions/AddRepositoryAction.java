@@ -75,7 +75,6 @@ public class AddRepositoryAction extends AbstractObservationChooserAction
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
   public void run()
   {
     final ListDialog dlg = new ListDialog( getShell() );
@@ -154,7 +153,6 @@ public class AddRepositoryAction extends AbstractObservationChooserAction
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#dispose()
      */
-    @Override
     public void dispose()
     {
       m_image.dispose();
@@ -165,7 +163,6 @@ public class AddRepositoryAction extends AbstractObservationChooserAction
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
-    @Override
     public Image getImage( Object element )
     {
       return m_image;

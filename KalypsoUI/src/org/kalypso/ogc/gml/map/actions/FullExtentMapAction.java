@@ -62,8 +62,7 @@ public class FullExtentMapAction extends AbstractCommandAction
    * @return command
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public ICommand runInternal( )
+  public ICommand runInternal()
   {
     final MapPanel mapPanel = getMapPanel();
     final IMapModell modell = mapPanel.getMapModell();

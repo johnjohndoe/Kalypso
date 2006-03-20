@@ -60,7 +60,6 @@ public class FeatureLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  @Override
   public void dispose()
   {
   // nix zu disposen
@@ -69,7 +68,6 @@ public class FeatureLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  @Override
   public Image getImage( final Object element )
   {
     final Feature feature = (Feature)element;
@@ -79,7 +77,6 @@ public class FeatureLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  @Override
   public String getText( final Object element )
   {
     final Feature feature = (Feature)element;

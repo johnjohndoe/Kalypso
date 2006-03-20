@@ -111,7 +111,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     final IAxis[] axisList = getAxisList();
     m_dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
     m_statusAxis = KalypsoStatusUtils.findStatusAxes( axisList );
-    final List<IAxis> valueAxis = new ArrayList<IAxis>();
+    final List valueAxis = new ArrayList();
     for( int i = 0; i < axisList.length; i++ )
     {
       IAxis axis = axisList[i];
@@ -126,7 +126,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       if( isValueAxis )
         valueAxis.add( axis );
     }
-    m_valueAxis = valueAxis.toArray( new IAxis[valueAxis.size()] );
+    m_valueAxis = (IAxis[])valueAxis.toArray( new IAxis[valueAxis.size()] );
     IAxisRange range = null;
     try
     {
@@ -365,14 +365,12 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return m_intervallModel.getCount();
   }
 
-  @Override
   public int hashCode()
   {
     return m_intervallModel.hashCode();
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_intervallModel.toString();
   }

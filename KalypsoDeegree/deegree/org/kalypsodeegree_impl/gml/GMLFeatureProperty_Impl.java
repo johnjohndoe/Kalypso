@@ -151,7 +151,7 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
 
     Element elem = ( (GMLFeature_Impl)value ).getAsElement();
 
-    XMLTools.insertNodeInto( elem, m_element );
+    XMLTools.insertNodeInto( elem, element );
 
     Debug.debugMethodEnd();
   }
@@ -167,6 +167,6 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
 
   public String toString()
   {
-    return DOMPrinter.nodeToString( m_element, "" );
+    return DOMPrinter.nodeToString( element, "" );
   }
 }

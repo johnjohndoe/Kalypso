@@ -65,7 +65,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.zml.Observation;
+import org.kalypso.zml.ObservationType;
 
 /**
  * Wizard for exporting a Repository ZML as a file in the local filesystem
@@ -98,7 +98,6 @@ public class ExportAsFileWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  @Override
   public void addPages()
   {
     super.addPages();
@@ -125,7 +124,6 @@ public class ExportAsFileWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPageControls( Composite pageContainer )
   {
     //super.createPageControls( pageContainer );
@@ -137,7 +135,6 @@ public class ExportAsFileWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
-  @Override
   public boolean performFinish()
   {
     final DateRange dateRange = m_page1.getDateRange();
@@ -146,7 +143,7 @@ public class ExportAsFileWizard extends Wizard
     FileOutputStream outs = null;
     try
     {
-      final Observation ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
+      final ObservationType ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
 
       outs = new FileOutputStream( new File( filePath ) );
       ZmlFactory.getMarshaller().marshal( ot, outs );
@@ -169,7 +166,6 @@ public class ExportAsFileWizard extends Wizard
     {
       final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
       {
-        @Override
         protected IStatus run( IProgressMonitor monitor )
         {
           try

@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -60,13 +61,11 @@ import org.kalypso.metadoc.IExportTarget;
 public abstract class AbstractExportTarget implements IExportTarget
 {
   private String m_name;
-
   private String m_desc;
-
   private ImageDescriptor m_imageDescriptor;
 
   /** contains the list of modes. If it is empty, all modes are supported */
-  private final Set<String> m_modes = new HashSet<String>();
+  private final Set m_modes = new HashSet();
 
   /** holder for the properties */
   private final Configuration m_properties = new BaseConfiguration();
@@ -76,6 +75,7 @@ public abstract class AbstractExportTarget implements IExportTarget
    *      java.lang.String, java.lang.Object)
    */
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
+      throws CoreException
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
@@ -86,13 +86,14 @@ public abstract class AbstractExportTarget implements IExportTarget
 
     final String iconLocation = config.getAttribute( "icon" );
     if( iconLocation != null )
-      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getNamespace(), iconLocation );
+      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getNamespace(),
+          iconLocation );
   }
 
   /**
    * @see org.kalypso.metadoc.IExportTarget#getName()
    */
-  public final String getName( )
+  public final String getName()
   {
     return m_name;
   }
@@ -100,7 +101,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#getDescription()
    */
-  public final String getDescription( )
+  public final String getDescription()
   {
     return m_desc;
   }
@@ -108,7 +109,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @see org.kalypso.metadoc.IExportTarget#getImage()
    */
-  public final ImageDescriptor getImage( )
+  public final ImageDescriptor getImage()
   {
     return m_imageDescriptor;
   }
@@ -132,7 +133,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @return the properties of this target. Should only be used internally, or by subclasses.
    */
-  protected Configuration getProperties( )
+  protected Configuration getProperties()
   {
     return m_properties;
   }

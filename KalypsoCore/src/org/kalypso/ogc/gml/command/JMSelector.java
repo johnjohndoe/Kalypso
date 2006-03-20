@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -70,13 +69,13 @@ public class JMSelector
    * //Operation operation=new SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new
    * ComplexFilter(operation);
    */
-  public List<Feature> select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus )
+  public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus )
   {
     try
     {
-      final List<Feature> testFE = new ArrayList<Feature>();
+      final List testFE = new ArrayList();
 
-      final List<Feature> features = list == null ? new ArrayList<Feature>() : list.query( env, new ArrayList<Feature>() );
+      final List features = list == null ? new ArrayList() : list.query( env, new ArrayList() );
       final Iterator containerIterator = features.iterator();
 
       while( containerIterator.hasNext() )
@@ -100,20 +99,22 @@ public class JMSelector
       e.printStackTrace();
     }
 
-    return new ArrayList<Feature>();
+    return new ArrayList();
   }
 
   /**
    * selects all features that intersects the submitted point
    */
-  public List<Feature> select( final GM_Position position, final FeatureList list )
+  public List select( final GM_Position position, final FeatureList list )
   {
-    final List<Feature> resultList = new ArrayList<Feature>();
-    final List<Feature> testFe = new ArrayList<Feature>();
+    final List resultList = new ArrayList();
+    final List testFe = new ArrayList();
 
-    final List<Feature> features = list.query( position, new ArrayList<Feature>() );
-    for( Feature feature : features )
+    final List features = list.query( position, new ArrayList() );
+    for( final Iterator containerIterator = features.iterator(); containerIterator.hasNext(); )
     {
+      final Feature feature = (Feature)containerIterator.next();
+
       try
       {
         if( feature.getDefaultGeometryProperty().contains( position ) )
@@ -137,12 +138,12 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle described by the position and the
    * radius.
    */
-  public List<Feature> select( final GM_Position pos, double r, final FeatureList list, boolean withinStatus )
+  public List select( final GM_Position pos, double r, final FeatureList list, boolean withinStatus )
   {
     final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
         .getY()
         + r );
-    final List<Feature> resultDE = select( env, list, withinStatus );
+    final List resultDE = select( env, list, withinStatus );
 
     return resultDE;
   }
@@ -174,41 +175,5 @@ public class JMSelector
       }
     }
     return result;
-  }
-
-  public GM_Position selectNearestHandel( GM_Object geom, GM_Position pos, double snapRadius )
-  {
-    GM_Position[] positions = null;
-    try
-    {
-      if( geom instanceof GM_Surface )
-      {
-        GM_Surface surface = (GM_Surface)geom;
-        positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
-      }
-      else if( geom instanceof GM_Curve )
-      {
-        GM_Curve curve = (GM_Curve)geom;
-        positions = curve.getAsLineString().getPositions();
-      }
-      else if( geom instanceof GM_Point )
-      {
-        GM_Point point = (GM_Point)geom;
-        positions = new GM_Position[]
-        { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
-      }
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-      //do nothing else
-    }
-    for( int i = 0; i < positions.length; i++ )
-    {
-      GM_Position position = positions[i];
-      if( position.getDistance( pos ) <= snapRadius )
-        return position;
-    }
-    return null;
   }
 }

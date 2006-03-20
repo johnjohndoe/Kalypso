@@ -43,7 +43,6 @@ package org.kalypso.ui.editorLauncher;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -57,10 +56,9 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
 import org.kalypso.template.types.LayerTypeUtilities;
 
 /**
@@ -97,14 +95,13 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
     {
       // ein default template erzeugen
       final ObjectFactory factory = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Layer layer = factory.createFeaturetemplateLayer();
+      final LayerType layer = factory.createFeaturetemplateTypeLayerType();
       LayerTypeUtilities.initLayerType( layer, file );
 
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc);
+      final Marshaller marshaller = factory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();

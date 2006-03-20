@@ -8,13 +8,13 @@ import java.text.SimpleDateFormat;
  * 
  * @author schlienger
  */
-public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
+public class StringValidityKeyFactory implements IKeyFactory
 {
   private final static String KEY_SEP = "@";
 
   private final static SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
-  public StringValidityKey createKey( final String string )
+  public Object createKey( final String string )
   {
     final String[] splits = string.split( KEY_SEP );
     try
@@ -29,9 +29,9 @@ public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
     }
   }
 
-  public String toString( final StringValidityKey key )
+  public String toString( final Object key )
   {
-    final StringValidityKey rtkey = key;
+    final StringValidityKey rtkey = (StringValidityKey)key;
     final StringBuffer sb = new StringBuffer();
     sb.append( rtkey.getString() ).append( KEY_SEP ).append( DF.format( rtkey.getValidity() ) );
 

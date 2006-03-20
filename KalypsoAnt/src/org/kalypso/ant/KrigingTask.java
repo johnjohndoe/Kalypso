@@ -49,7 +49,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
@@ -57,14 +56,13 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.CopyObservationMappingHelper;
 import org.kalypso.transformation.dwd.KrigingReader;
 import org.kalypso.transformation.dwd.SourceObservationProvider;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -205,7 +203,6 @@ public class KrigingTask extends Task
     m_sourceGMLObservationLinkProperty = sourceGMLObservationLinkProperty;
   }
 
-  @Override
   public void execute() throws BuildException
   {
     try
@@ -276,8 +273,8 @@ public class KrigingTask extends Task
 
       final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
 
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      final ObjectFactory o = new ObjectFactory();
+      final Marshaller marshaller = o.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       for( int i = 0; i < modelFeatures.length; i++ )
       {
@@ -289,13 +286,15 @@ public class KrigingTask extends Task
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
         final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
 
-        final TimeseriesLinkType copyLink = (TimeseriesLinkType)feature.getProperty( m_modellGMLTargetObservationlinkPropname );
+        final TimeseriesLink copyLink = (TimeseriesLink)feature.getProperty( m_modellGMLTargetObservationlinkPropname );
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, copyLink.getHref() );
       }
       final File result = new File( m_hrefGeneratesGml );
       final Writer resultWriter = new FileWriter( result );
       GmlSerializer.serializeWorkspace( resultWriter, resultWorkspace, "UTF-8" );
       IOUtils.closeQuietly( resultWriter );
+
+      //      System.out.println( "TEST: " + m_test );
     }
     catch( final Exception e )
     {

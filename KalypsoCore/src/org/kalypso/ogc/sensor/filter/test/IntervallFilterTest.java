@@ -46,22 +46,20 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.filters.IntervallFilterType;
+import org.kalypso.zml.filters.IntervallFilter;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.ZmlFilterType;
+import org.kalypso.zml.filters.ZmlFilter;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class IntervallFilterTest extends TestCase
@@ -81,19 +79,18 @@ public class IntervallFilterTest extends TestCase
       xlink.setHref( href );
 
       final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet(ObjectFactory.class);
-      final ZmlFilterType zmlFilter = fac.createZmlFilterType();
+      final ZmlFilter zmlFilter = fac.createZmlFilter();
       zmlFilter.setZml( xlink );
 
-      final IntervallFilterType intervallFilter = fac.createIntervallFilterType();
+      final IntervallFilter intervallFilter = fac.createIntervallFilter();
       intervallFilter.setAmount( 10 );
       intervallFilter.setCalendarField( "MINUTE" );
       intervallFilter.setMode( "sum" );
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
-      intervallFilter.setFilter( fac.createZmlFilter(zmlFilter) );
+      intervallFilter.setFilter( zmlFilter );
       writer = new StringWriter();
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      final Marshaller marshaller = fac.createMarshaller();
       marshaller.marshal( intervallFilter, writer );
       writer.close();
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );

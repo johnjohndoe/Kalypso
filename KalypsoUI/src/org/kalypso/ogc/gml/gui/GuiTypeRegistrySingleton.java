@@ -1,7 +1,7 @@
 package org.kalypso.ogc.gml.gui;
 
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.TypeRegistry_impl;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistry_impl;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden

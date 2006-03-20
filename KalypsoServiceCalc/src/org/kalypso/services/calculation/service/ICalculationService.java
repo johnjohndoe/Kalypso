@@ -40,9 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service;
 
+import java.rmi.Remote;
+
 import javax.activation.DataHandler;
 
 import org.kalypso.services.IKalypsoService;
+import org.kalypso.services.calculation.job.ICalcJob;
 
 /**
  * <p>
@@ -59,7 +62,7 @@ import org.kalypso.services.IKalypsoService;
  * 
  * @author belger
  */
-public interface ICalculationService extends IKalypsoService
+public interface ICalculationService extends Remote, IKalypsoService
 {
   public long getSchemaValidity( final String namespace ) throws CalcJobServiceException;
 

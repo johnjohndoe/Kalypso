@@ -1,12 +1,11 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * virtual featuretypes are not defined in schema
@@ -17,7 +16,7 @@ public class VirtualFeatureTypeRegistry
 {
   private final static VirtualFeatureTypeRegistry m_instance;
 
-  private final List<VirtualFeatureTypePropertyHandler> m_register = new ArrayList<VirtualFeatureTypePropertyHandler>();
+  private final List m_register = new ArrayList();
 
   // load default types
   static
@@ -40,9 +39,9 @@ public class VirtualFeatureTypeRegistry
 
   }
 
-  private VirtualFeatureTypeRegistry( )
+  private VirtualFeatureTypeRegistry()
   {
-    // singelton constructor
+  // singelton constructor
   }
 
   public void register( VirtualFeatureTypePropertyHandler property )
@@ -55,41 +54,43 @@ public class VirtualFeatureTypeRegistry
     m_register.remove( property );
   }
 
-  public VirtualFeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final IFeatureType ft )
+  public FeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final FeatureType ft )
   {
-    final List<VirtualFeatureTypeProperty> result = new ArrayList<VirtualFeatureTypeProperty>();
+    final List result = new ArrayList();
     for( Iterator iter = m_register.iterator(); iter.hasNext(); )
     {
-      final VirtualFeatureTypePropertyHandler vftp = (VirtualFeatureTypePropertyHandler) iter.next();
+      final VirtualFeatureTypePropertyHandler vftp = (VirtualFeatureTypePropertyHandler)iter.next();
       if( vftp.isDekoratorOf( ft ) )
       {
-        final VirtualFeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ft );
-        for( int i = 0; i < properties.length; i++ )
-          result.add( properties[i] );
-      }
-    }
-    return result.toArray( new VirtualFeatureTypeProperty[result.size()] );
-  }
-
-  public VirtualFeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final IPropertyType ftp )
-  {
-    final List<VirtualFeatureTypeProperty> result = new ArrayList<VirtualFeatureTypeProperty>();
-    for( Iterator iter = m_register.iterator(); iter.hasNext(); )
-    {
-      final VirtualFeatureTypePropertyHandler vftp = (VirtualFeatureTypePropertyHandler) iter.next();
-      if( vftp.isDekoratorOf( ftp ) )
-      {
-        final VirtualFeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ftp );
+        final FeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ft );
         for( int i = 0; i < properties.length; i++ )
         {
           result.add( properties[i] );
         }
       }
     }
-    return result.toArray( new VirtualFeatureTypeProperty[result.size()] );
+    return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
   }
 
-  public static VirtualFeatureTypeRegistry getInstance( )
+  public FeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final FeatureTypeProperty ftp )
+  {
+    final List result = new ArrayList();
+    for( Iterator iter = m_register.iterator(); iter.hasNext(); )
+    {
+      final VirtualFeatureTypePropertyHandler vftp = (VirtualFeatureTypePropertyHandler)iter.next();
+      if( vftp.isDekoratorOf( ftp ) )
+      {
+        final FeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ftp );
+        for( int i = 0; i < properties.length; i++ )
+        {
+          result.add( properties[i] );
+        }
+      }
+    }
+    return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
+  }
+
+  public static VirtualFeatureTypeRegistry getInstance()
   {
     return m_instance;
   }

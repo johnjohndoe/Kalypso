@@ -64,15 +64,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.Mapper;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.gml.GMLCoordinates;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLException;
@@ -87,7 +78,11 @@ import org.kalypsodeegree.gml.GMLMultiPolygon;
 import org.kalypsodeegree.gml.GMLPoint;
 import org.kalypsodeegree.gml.GMLPolygon;
 import org.kalypsodeegree.gml.GMLProperty;
+import org.kalypsodeegree.model.feature.DeegreeFeature;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -100,12 +95,16 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Element;
 
 /**
  * class containing factory methods for creating GML-Objects from DOM-Elements and GM_XXXX geometries.
+ * 
  * <p>
  * ----------------------------------------------------------
  * </p>
@@ -186,27 +185,27 @@ public class GMLFactory
 
     if( geo instanceof GM_Point )
     {
-      geom = createGMLPoint( (GM_Point) geo, doc );
+      geom = createGMLPoint( (GM_Point)geo, doc );
     }
     else if( geo instanceof GM_Curve )
     {
-      geom = createGMLLineString( (GM_Curve) geo, doc );
+      geom = createGMLLineString( (GM_Curve)geo, doc );
     }
     else if( geo instanceof GM_Surface )
     {
-      geom = createGMLPolygon( (GM_Surface) geo, doc );
+      geom = createGMLPolygon( (GM_Surface)geo, doc );
     }
     else if( geo instanceof GM_MultiPoint )
     {
-      geom = createGMLMultiPoint( (GM_MultiPoint) geo, doc );
+      geom = createGMLMultiPoint( (GM_MultiPoint)geo, doc );
     }
     else if( geo instanceof GM_MultiCurve )
     {
-      geom = createGMLMultiLineString( (GM_MultiCurve) geo, doc );
+      geom = createGMLMultiLineString( (GM_MultiCurve)geo, doc );
     }
     else if( geo instanceof GM_MultiSurface )
     {
-      geom = createGMLMultiPolygon( (GM_MultiSurface) geo, doc );
+      geom = createGMLMultiPolygon( (GM_MultiSurface)geo, doc );
     }
 
     Debug.debugMethodEnd();
@@ -226,7 +225,8 @@ public class GMLFactory
     Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
-    gmlCo.setCoordinates( geo.getX() + "," + geo.getY() + ((geo.getCoordinateDimension() == 3) ? "," + geo.getZ() : "") );
+    gmlCo.setCoordinates( geo.getX() + "," + geo.getY()
+        + ( ( geo.getCoordinateDimension() == 3 ) ? "," + geo.getZ() : "" ) );
     gmlCo.setCoordinateSeperator( ',' );
     gmlCo.setDecimalSeperator( '.' );
     gmlCo.setTupleSeperator( ' ' );
@@ -275,7 +275,7 @@ public class GMLFactory
       for( int i = 0; i < ls.getNumberOfPoints(); i++ )
       {
         GM_Position pt = ls.getPositionAt( i );
-        sb.append( pt.getX() + "," + pt.getY() + ((pt.getAsArray().length == 3) ? "," + pt.getZ() : "") + " " );
+        sb.append( pt.getX() + "," + pt.getY() + ( ( pt.getAsArray().length == 3 ) ? "," + pt.getZ() : "" ) + " " );
       }
     }
     catch( Exception e )
@@ -561,6 +561,43 @@ public class GMLFactory
   }
 
   /**
+   * creates a GMLFeature from a XML Element
+   * 
+   * Andreas: wird nicht benutzt, kann weg?
+   */
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature ) throws GMLException
+  {
+    Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
+
+    final GMLFeature gmlF = doc.createGMLFeature( feature.getFeatureType() );
+
+    final FeatureType ft = feature.getFeatureType();
+    final FeatureTypeProperty[] ftp = ft.getProperties();
+    final Object[] properties = feature.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      GMLProperty prop = null;
+
+      if( properties[i] instanceof GM_Object )
+      {
+        prop = doc.createGMLGeoProperty( ftp[i], (GM_Object)properties[i] );
+      }
+      else
+      {
+        if( properties[i] != null )
+          prop = doc.createGMLProperty( ftp[i], properties[i].toString() );
+        else
+          prop = doc.createGMLProperty( ftp[i], "" );
+      }
+
+      gmlF.addProperty( prop );
+    }
+
+    Debug.debugMethodEnd();
+    return gmlF;
+  }
+
+  /**
    * creates an empty GMLFeatureCollection
    * 
    * @deprecated
@@ -576,12 +613,12 @@ public class GMLFactory
 
     final GMLFeature gmlFeature = doc.createGMLFeature( feature.getFeatureType() );
 
-    final IFeatureType ft = feature.getFeatureType();
+    final FeatureType ft = feature.getFeatureType();
 
-    final IPropertyType[] ftp = ft.getProperties();
+    final FeatureTypeProperty[] ftp = ft.getProperties();
     final Object[] properties = feature.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      addGMLProperties( doc, context, gmlFeature, properties[i], ftp[i], ftp[i].getMinOccurs() );
+      addGMLProperties( doc, context, gmlFeature, properties[i], ftp[i], ft.getMinOccurs( i ) );
 
     final String id = feature.getId();
     if( id != null )
@@ -589,33 +626,32 @@ public class GMLFactory
     return gmlFeature;
   }
 
-  private static void addGMLProperties( final GMLDocument doc, URL context, final GMLFeature gmlFeature, final Object value, final IPropertyType ftp, final int min ) throws GMLException
+  private static void addGMLProperties( final GMLDocument doc, URL context, final GMLFeature gmlFeature,
+      final Object value, final FeatureTypeProperty ftp, final int min ) throws GMLException
   {
 
-    // // marshalling
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
-    final GMLProperty prop;
+    // marshalling
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton
+        .getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
+
+    GMLProperty prop = null;
     if( value instanceof List )
     {
-      final Iterator iterator = ((List) value).iterator();
+      final Iterator iterator = ( (List)value ).iterator();
       while( iterator.hasNext() )
         addGMLProperties( doc, context, gmlFeature, iterator.next(), ftp, min );
-      return;
     }
     else if( value == null )
     {
-      if( min > 0 && !(ftp instanceof IRelationType) )
+      if( min > 0 && !( ftp instanceof FeatureAssociationTypeProperty ) )
         prop = doc.createGMLProperty( ftp, "" );
-      else
-        prop = null;
     }
     else if( typeHandler != null )
     {
-      final QName qName = ftp.getQName();
-      final Element element = doc.createElementNS( qName.getNamespaceURI(), qName.getLocalPart() );
+      final Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
       try
       {
-        // TODO give context not null
+        //      TODO give context not null
         typeHandler.marshall( value, element, context );
       }
       catch( TypeRegistryException e )
@@ -626,37 +662,86 @@ public class GMLFactory
     }
     else if( value instanceof GM_Object )
     {
-      throw new UnsupportedOperationException( "this is deprecated" );
-      // TODO remove clause
-      // prop = doc.createGMLGeoProperty( ftp, (GM_Object) value );
+      prop = doc.createGMLGeoProperty( ftp, (GM_Object)value );
     }
     else if( value instanceof Feature )
     {
-      final Feature fe = (Feature) value;
+      final Feature fe = (Feature)value;
       final GMLFeature gmlFe = createGMLFeature( doc, fe, context );
       prop = doc.createGMLProperty( ftp, gmlFe.getAsElement() );
     }
-    else if( value instanceof String && ftp instanceof IRelationType )
+    else if( value instanceof String && ftp instanceof FeatureAssociationTypeProperty )
     {
       // gmlproperty of featureassociation must be created with featuretype
-      String href = value.toString(); // fid
+      String href = value.toString(); //fid
       if( href != null && href.length() > 0 )
         prop = doc.createGMLProperty( ftp, href );
-      else
-        prop = null;
-    }
-    else if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      // prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value ) );
-      // TODO integrate typehandler !!
-      IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
-      prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value ) );
     }
     else
-      prop = null;
+      prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value ) );
 
+    // TODO integrate typehandler ??
     if( prop != null )
       gmlFeature.addProperty( prop );
   }
 }
+
+/*
+ * Changes to this class. What the people haven been up to:
+ * 
+ * $Log$
+ * Revision 1.21  2005/07/29 08:33:20  huebsch
+ * *** empty log message ***
+ * Revision 1.20 2005/06/29 10:41:17 belger *** empty log message ***
+ * 
+ * Revision 1.19 2005/06/23 23:13:27 belger Refaktoring TypeHandler FeatureView Layout noch schöner
+ * 
+ * Revision 1.18 2005/06/20 14:07:46 belger Formatierung Revision 1.17 2005/06/15 15:16:58 doemming *** empty log
+ * message ***
+ * 
+ * Revision 1.16 2005/06/05 22:43:54 doemming *** empty log message *** Revision 1.15 2005/05/03 11:38:52 belger ***
+ * empty log message ***
+ * 
+ * Revision 1.14 2005/03/13 12:52:15 belger *** empty log message ***
+ * 
+ * Revision 1.13 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.12 2005/03/04 15:05:04 doemming *** empty log message ***
+ * 
+ * Revision 1.11 2005/02/28 13:34:14 doemming *** empty log message *** Revision 1.10 2005/02/15 17:52:53 belger ***
+ * empty log message ***
+ * 
+ * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message *** Revision 1.8 2005/01/18 12:50:42 doemming *** empty
+ * log message ***
+ * 
+ * Revision 1.7 2004/11/22 01:29:50 doemming *** empty log message ***
+ * 
+ * Revision 1.6 2004/10/07 19:28:24 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:58 doemming ***
+ * empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.9 2004/04/07
+ * 06:43:48 poth no message
+ * 
+ * Revision 1.8 2004/03/29 10:37:13 poth no message
+ * 
+ * Revision 1.7 2004/02/18 14:55:25 poth no message
+ * 
+ * Revision 1.6 2004/01/22 07:49:29 poth no message
+ * 
+ * Revision 1.5 2003/05/15 09:37:40 poth no message
+ * 
+ * Revision 1.4 2003/04/23 15:44:39 poth no message
+ * 
+ * Revision 1.3 2003/04/17 11:23:45 axel_schaefer wrong debug-end message in createGMLGeometry(Element)
+ * 
+ * Revision 1.2 2002/10/21 08:19:02 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:01:03 poth no message
+ * 
+ * Revision 1.10 2002/08/19 15:59:29 ap no message
+ * 
+ * Revision 1.9 2002/08/05 16:11:02 ap no message
+ * 
+ * Revision 1.8 2002/08/01 08:56:56 ap no message
+ *  
+ */

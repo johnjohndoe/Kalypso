@@ -78,7 +78,6 @@ public class GmlLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
@@ -132,7 +131,6 @@ public class GmlLoader extends AbstractLoader
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
-  @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
       throws LoaderException
   {
@@ -148,7 +146,6 @@ public class GmlLoader extends AbstractLoader
       {
         final SetContentHelper thread = new SetContentHelper()
         {
-          @Override
           protected void write( final OutputStreamWriter writer ) throws Throwable
           {
             GmlSerializer.serializeWorkspace( writer, workspace );

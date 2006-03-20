@@ -60,7 +60,6 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
   /**
    * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
    */
-  @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
     super.setActiveEditor( targetEditor );

@@ -84,10 +84,10 @@ public class ObservationTableModel extends AbstractTableModel
   private ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
   /** the shared model is sorted, it contains all key values */
-  private final TreeSet<Object> m_sharedModel = new TreeSet<Object>();
+  private final TreeSet m_sharedModel = new TreeSet();
 
   /** it contains all the "value" columns */
-  private final List<TableViewColumn> m_columns = new ArrayList<TableViewColumn>();
+  private final List m_columns = new ArrayList();
 
   /** the shared axis is the axis which is common to all "value" columns */
   private IAxis m_sharedAxis = null;
@@ -104,7 +104,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      final TableViewColumn[] cols = m_columns.toArray( new TableViewColumn[m_columns.size()] );
+      final Object[] cols = m_columns.toArray();
 
       int i = 0;
 
@@ -142,7 +142,10 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      if( col == null || !col.isShown() )
+      // test if column index is -1, in that case do nothing. This might happen when
+      // concurrent updates are done on the table: a column is being removed despite
+      // the fact it's not there (anymore).
+      if( col == null || !col.isShown() || pos == -1 )
         return;
 
       final IAxis keyAxis = col.getKeyAxis();
@@ -224,8 +227,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
-  @Override
-  public Class<?> getColumnClass( int columnIndex )
+  public Class getColumnClass( int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -235,14 +237,13 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return m_sharedAxis.getDataClass();
 
-      return m_columns.get( columnIndex - 1 ).getColumnClass();
+      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) ).getColumnClass();
     }
   }
 
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnName(int)
    */
-  @Override
   public String getColumnName( int columnIndex )
   {
     synchronized( m_columns )
@@ -253,7 +254,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
 
-      return m_columns.get( columnIndex - 1 ).getName();
+      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) ).getName();
     }
   }
 
@@ -295,7 +296,7 @@ public class ObservationTableModel extends AbstractTableModel
 
         try
         {
-          final TableViewColumn col = m_columns.get( columnIndex - 1 );
+          final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
           final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
@@ -326,7 +327,6 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
    */
-  @Override
   public boolean isCellEditable( int rowIndex, int columnIndex )
   {
     synchronized( m_columns )
@@ -336,14 +336,13 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return false;
 
-      return m_columns.get( columnIndex - 1 ).isEditable();
+      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) ).isEditable();
     }
   }
 
   /**
    * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
    */
-  @Override
   public void setValueAt( Object aValue, int rowIndex, int columnIndex )
   {
     synchronized( m_columns )
@@ -358,7 +357,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return;
 
-      final TableViewColumn col = m_columns.get( columnIndex - 1 );
+      final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
 
       try
       {
@@ -419,7 +418,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( column == 0 )
         return EMPTY_RENDERING_RULES;
 
-      final TableViewColumn col = m_columns.get( column - 1 );
+      final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
       try
       {
         final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
@@ -475,7 +474,7 @@ public class ObservationTableModel extends AbstractTableModel
 
       m_columns.remove( col );
 
-      final ArrayList<TableViewColumn> cols = new ArrayList<TableViewColumn>( m_columns );
+      final ArrayList cols = new ArrayList( m_columns );
       clearColumns();
 
       for( Iterator it = cols.iterator(); it.hasNext(); )
@@ -507,7 +506,7 @@ public class ObservationTableModel extends AbstractTableModel
 
     synchronized( m_columns )
     {
-      final TableViewColumn col = m_columns.get( column - 1 );
+      final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
       return TimeserieUtils.getNumberFormat( col.getFormat() );
     }
   }
@@ -517,12 +516,15 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @author schlienger
    */
-  private static class ColOrderNameComparator implements Comparator<TableViewColumn>
+  private static class ColOrderNameComparator implements Comparator
   {
     public final static ColOrderNameComparator INSTANCE = new ColOrderNameComparator();
 
-    public int compare( final TableViewColumn col1, final TableViewColumn col2 )
+    public int compare( final Object o1, final Object o2 )
     {
+      final TableViewColumn col1 = (TableViewColumn)o1;
+      final TableViewColumn col2 = (TableViewColumn)o2;
+
       return col1.getName().compareTo( col2.getName() );
     }
   }
@@ -532,12 +534,15 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @author schlienger
    */
-  private static class ColOrderIndexComparator implements Comparator<TableViewColumn>
+  private static class ColOrderIndexComparator implements Comparator
   {
     public final static ColOrderIndexComparator INSTANCE = new ColOrderIndexComparator();
 
-    public int compare( final TableViewColumn col1, final TableViewColumn col2 )
+    public int compare( final Object o1, final Object o2 )
     {
+      final TableViewColumn col1 = (TableViewColumn)o1;
+      final TableViewColumn col2 = (TableViewColumn)o2;
+
       return col1.getPosition() - col2.getPosition();
     }
   }

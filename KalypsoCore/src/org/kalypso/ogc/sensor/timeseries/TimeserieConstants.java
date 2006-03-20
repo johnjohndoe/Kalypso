@@ -135,7 +135,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_GKR = "Rechtswert";
 
   public final static String MD_GKH = "Hochwert";
-
+  
   public final static String MD_COORDSYS = "Koordinatensystem";
 
   public final static String MD_ALARM_1 = "Alarmstufe 1";

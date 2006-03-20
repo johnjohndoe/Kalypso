@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,16 +53,14 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.PropertyType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author belger
@@ -72,35 +71,35 @@ public class StringModifier implements IFeatureModifier
 
   private final NumberFormat NUMBER_FORMAT;
 
-  private final IValuePropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
   private final IGuiTypeHandler m_guiTypeHandler;
 
   private final IMarshallingTypeHandler m_marshallingTypeHandler;
 
-  public StringModifier( final IValuePropertyType ftp )
+  public StringModifier( final FeatureTypeProperty ftp )
   {
-    NUMBER_FORMAT = getNumberFormat( (PropertyType)ftp );
+    NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
-
+    //    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    //    d.setDecimalFormatSymbols( dfs );
     // wen need both registered type handler types
     final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = (IGuiTypeHandler) guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+    m_guiTypeHandler = (IGuiTypeHandler)guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
 
     final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp
+        .getType() );
   }
 
-  public NumberFormat getNumberFormat( final PropertyType ftp )
+  public NumberFormat getNumberFormat( FeatureTypeProperty ftp )
   {
-    // HACK: TODO: either put this into the IGuiTypeHandler or
-    // maybe even in the appinfo of the schema
+    // HACK
     final String namespace = ftp.getNamespace();
     final String name = ftp.getName();
     final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
 //    ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
-    
     if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
     {
       if( "flaech".equals( name ) )
@@ -108,7 +107,7 @@ public class StringModifier implements IFeatureModifier
     }
     if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
     {
-      if( "m_perkm".equals( name )|| "area".equals( name ))
+      if( "m_perkm".equals( name ) )
         return expFormat;
     }
     return normalFormat;
@@ -117,9 +116,9 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   /**
@@ -130,7 +129,7 @@ public class StringModifier implements IFeatureModifier
     if( m_ftp == null )
       return null;
 
-    final Object data = f.getProperty( m_ftp );
+    final Object data = f.getProperty( m_ftp.getName() );
 
     return toText( data );
   }
@@ -176,24 +175,25 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    final Class clazz = m_ftp.getValueClass();
+    final String typeName = m_ftp.getType();
     if( m_guiTypeHandler != null )
       return m_marshallingTypeHandler.parseType( text );
-    else if( clazz == java.lang.String.class )
+    else if( typeName.equals( "java.lang.String" ) )
       return text;
-    else if( clazz == Boolean.class )
+    else if( typeName.equals( "java.lang.Boolean" ) )
       return new Boolean( text );
-    else if( clazz == Date.class )
+    else if( typeName.equals( "java.util.Date" ) )
       return DATE_FORMATTER.parse( text );
-    else if( clazz == Double.class )
+    else if( typeName.equals( "java.lang.Double" ) )
       // allways use NumberUtils to parse double, so to allow input of '.' or ','
       return new Double( NumberUtils.parseDouble( text ) );
-    else if( clazz == Integer.class )
+    else if( typeName.equals( "java.lang.Integer" ) )
       return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
-    else if( clazz == Float.class )
+    else if( typeName.equals( "java.lang.Float" ) )
       return new Float( NumberUtils.parseDouble( text ) );
-    else if( clazz == Long.class )
+    else if( typeName.equals( "java.lang.Long" ) )
       return new Long( NUMBER_FORMAT.parse( text ).longValue() );
+
     return null;
   }
 
@@ -229,7 +229,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty( )
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }

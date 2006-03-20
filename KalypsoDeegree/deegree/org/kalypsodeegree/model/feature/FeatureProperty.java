@@ -61,8 +61,6 @@
 
 package org.kalypsodeegree.model.feature;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-
 /**
  * 
  * the interface describes a property entry of a feature
@@ -78,34 +76,30 @@ import org.kalypso.gmlschema.property.IPropertyType;
 public interface FeatureProperty
 {
   /**
-   * returns the type of the property
-   */
-  public IPropertyType getPropertyType();
-  
-  /**
-   * @deprecated
    * returns the name of the property
    */
-  @Deprecated
   public String getName();
+
+  /**
+   * sets the name of the property
+   */
+  public void setName( final String name );
 
   /**
    * returns the value of the property
    */
   public Object getValue();
 
+  /**
+   * sets the value of the property
+   */
+  public void setValue( final Object value );
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.9  2006/02/27 12:43:10  devgernot
- * *** empty log message ***
- *
- * Revision 1.8  2006/02/09 18:16:23  doemming
- * *** empty log message ***
- *
  * Revision 1.7  2005/06/29 10:41:17  belger
  * *** empty log message ***
  * Revision 1.6 2005/06/20 14:07:46 belger Formatierung Revision 1.5 2005/03/08 11:01:10

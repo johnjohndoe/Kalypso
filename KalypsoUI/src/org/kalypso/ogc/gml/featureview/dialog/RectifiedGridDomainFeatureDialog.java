@@ -14,9 +14,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -65,9 +64,9 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
 
   private final Feature m_feature;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public RectifiedGridDomainFeatureDialog( final Feature feature, final IPropertyType ftp )
+  public RectifiedGridDomainFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -76,13 +75,13 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
     GridDialog gridDialog = new GridDialog( shell );
     final int open = gridDialog.open();
     if( open == Window.OK )
     {
-      // System.out.println("Window.OK");
+      //System.out.println("Window.OK");
     }
     return open;
   }
@@ -90,22 +89,22 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
-    // no changes
+  //no changes
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel( )
+  public String getLabel()
   {
     return "...";
   }
 
-  public RectifiedGridDomain getRectifiedGridDomain( )
+  public RectifiedGridDomain getRectifiedGridDomain()
   {
-    return (RectifiedGridDomain) m_feature.getProperty( m_ftp);
+    return (RectifiedGridDomain)m_feature.getProperty( m_ftp.getName() );
   }
 
   class GridDialog extends Dialog
@@ -117,12 +116,12 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       setShellStyle( getShellStyle() | SWT.RESIZE );
     }
 
-    @Override
     protected Control createDialogArea( final Composite parent )
     {
       getShell().setText( "RectifiedGridDomain properties" );
 
-      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL
+          | SWT.BORDER );
 
       // don't forget this line!
       scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );

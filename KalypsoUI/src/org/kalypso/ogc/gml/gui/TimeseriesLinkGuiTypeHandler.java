@@ -42,11 +42,9 @@ package org.kalypso.ogc.gml.gui;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -55,15 +53,16 @@ import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.TextType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -73,10 +72,10 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
 {
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public IFeatureDialog createFeatureDialog( final GMLWorkspace workspace, final Feature feature,
-      final IPropertyType ftp )
+      final FeatureTypeProperty ftp )
   {
     return new TimeserieLinkFeatureDialog( workspace, feature, ftp );
   }
@@ -84,7 +83,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public Class getValueClass()
+  public String getClassName()
   {
     return ObservationLinkHandler.CLASS_NAME;
   }
@@ -92,7 +91,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName()
+  public String getTypeName()
   {
     return ObservationLinkHandler.TYPE_NAME;
   }
@@ -100,7 +99,6 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  @Override
   public String getText( final Object element )
   {
     if( element == null )
@@ -115,56 +113,48 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory )
+  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException
   {
-    final CompositeType composite = factory.createCompositeType();
+    final CompositeType composite = factory.createComposite();
 
     final GridLayout layout = factory.createGridLayout();
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 0 );
-    composite.setLayout( factory.createLayout( layout ) );
+    composite.setLayout( layout );
     composite.setStyle( "SWT.NONE" );
 
     // Text
-    final Text text = factory.createText();
+    final TextType text = factory.createText();
     text.setStyle( "SWT.NONE" );
     text.setProperty( propertyName );
 
-    final GridData textData = factory.createGridData();
+    final GridDataType textData = factory.createGridData();
     textData.setHorizontalAlignment( "GridData.BEGINNING" );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
-    text.setLayoutData( factory.createLayoutData( textData ) );
+    text.setLayoutData( textData );
 
     // Knopf
-    final Button button = factory.createButton();
-    final GridData buttonData = factory.createGridData();
+    final ButtonType button = factory.createButton();
+    final GridDataType buttonData = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData(factory.createLayoutData( buttonData ) );
+    button.setLayoutData( buttonData );
 
-    final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
-    control.add(factory.createControl(text ));
-    control.add( factory.createControl(button ));
+    final List children = composite.getControl();
+    children.add( text );
+    children.add( button );
 
     return composite;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return true;
+    return new ButtonModifier( workspace, ftp, selectionManager, fcl );
   }
 }

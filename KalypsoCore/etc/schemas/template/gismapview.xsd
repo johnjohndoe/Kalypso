@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org">
+<xs:schema targetNamespace="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org" xmlns="gismapview.template.kalypso.org" xmlns:awt="awt.util.kalypso.org">
 	
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	<xs:import namespace="awt.util.kalypso.org" schemaLocation="../util/awt.xsd"/>
 
 	<xs:element name="gismapview">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="extent" type="kalypso:extentType" minOccurs="0"/>
+				<xs:element name="highlightColors" type="HighlightColorType" minOccurs="0"/>
 				<xs:element name="layers">
 					<xs:complexType>
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -19,4 +21,14 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:complexType name="HighlightColorType">
+		<xs:sequence>
+			<xs:element name="fillColor" type="awt:color" minOccurs="0"/>
+			<xs:element name="textColor" type="awt:color" minOccurs="0"/>
+			<xs:element name="lineColor" type="awt:color" minOccurs="0"/>
+			<xs:element name="borderColor" type="awt:color" minOccurs="0"/>
+			<xs:element name="backgroundColor" type="awt:color" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

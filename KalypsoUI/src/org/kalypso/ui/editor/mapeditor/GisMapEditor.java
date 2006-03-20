@@ -87,7 +87,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gistableview.Gistableview.Layer;
+import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
@@ -98,9 +98,11 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * <p>
  * Eclipse-Editor zum editieren der GML-Gis-Templates.
  * </p>
+ * 
  * <p>
  * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
+ * 
  * <p>
  * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
  * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
@@ -120,7 +122,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private boolean m_disposed = false;
 
-  public GisMapEditor( )
+  public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
@@ -149,7 +151,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
@@ -167,7 +168,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return super.getAdapter( adapter );
   }
 
-  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     if( m_mapModell == null )
@@ -204,7 +204,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       System.out.println( e.getLocalizedMessage() );
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,
+          "XML-Vorlagendatei konnte nicht erstellt werden." ) );
     }
     finally
     {
@@ -227,7 +228,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
@@ -257,21 +257,21 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
 
-    // add drag and drop support
-    // int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    // Transfer[] transfers = new Transfer[]
-    // {
-    // LocalSelectionTransfer.getInstance(),
-    // PluginTransfer.getInstance() };
-    // m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
-    // transfers = new Transfer[]
-    // { LocalSelectionTransfer.getInstance() };
-    // m_dropAdapter = new GmlTreeDropAdapter( this );
-    // m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
+    //  add drag and drop support
+    //    int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+    //    Transfer[] transfers = new Transfer[]
+    //    {
+    //        LocalSelectionTransfer.getInstance(),
+    //        PluginTransfer.getInstance() };
+    //    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+    //    transfers = new Transfer[]
+    //    { LocalSelectionTransfer.getInstance() };
+    //    m_dropAdapter = new GmlTreeDropAdapter( this );
+    //    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
   }
 
-  @Override
-  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
+  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
+      throws Exception, CoreException
   {
     if( m_disposed )
       return;
@@ -289,7 +289,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IProject project;
     if( input instanceof IFileEditorInput )
     {
-      final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
+      final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
       context = ResourceUtilities.createURL( inputFile );
       project = inputFile.getProject();
     }
@@ -301,7 +301,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( !m_disposed )
     {
-      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
+      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
+          .getCoordinatesSystem(), project, m_selectionManager );
       setMapModell( mapModell );
 
       GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
@@ -324,17 +325,18 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       m_outlinePage.setMapModell( m_mapModell );
   }
 
-  public void showProperties( final Layer layer )
+  public void showProperties( final LayerType layer )
   {
     // TODO
-    MessageDialog.openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
+    MessageDialog
+        .openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
     layer.getClass();
   }
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
    */
-  public MapPanel getMapPanel( )
+  public MapPanel getMapPanel()
   {
     return m_mapPanel;
   }
@@ -344,8 +346,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     m_mapModell.saveTheme( theme, monitor );
   }
 
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_disposed = true;
 
@@ -359,17 +360,14 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     super.dispose();
   }
 
-  public IContentOutlinePage getOutlineView( )
-  {
-    return m_outlinePage;
-  }
-
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
+    return new IExportableObject[]
+    { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt(
+        ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
   }
 
   /**
@@ -378,9 +376,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
+        "icons/util/img_props.gif" );
     final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc );
 
-    return new IWizardPage[] { page };
+    return new IWizardPage[]
+    { page };
   }
 }

@@ -19,7 +19,7 @@ public final class Unit implements Serializable
   /**
    * Pool of units.
    */
-  private static final Map<Unit, Unit> pool = new HashMap<Unit, Unit>();
+  private static final Map pool = new HashMap();
 
   /**
    * Unit of angle.
@@ -74,7 +74,7 @@ public final class Unit implements Serializable
     synchronized( pool )
     {
       final Unit unit = new Unit( symbol );
-      final Unit current = pool.get( unit );
+      final Unit current = (Unit)pool.get( unit );
       if( current != null )
         return current;
       pool.put( unit, unit );
@@ -124,7 +124,6 @@ public final class Unit implements Serializable
   /**
    * Returns a string representation of this unit's symbol.
    */
-  @Override
   public String toString()
   {
     return symbol;
@@ -133,7 +132,6 @@ public final class Unit implements Serializable
   /**
    * Returns a hash code value.
    */
-  @Override
   public int hashCode()
   {
     return symbol.hashCode();
@@ -143,7 +141,6 @@ public final class Unit implements Serializable
    * Compare this unit symbol with the specified object for equality. Only symbols are compared; other parameters are
    * ignored.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object instanceof Unit )

@@ -32,13 +32,14 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -59,7 +60,7 @@ public class RelationCircleFinder
     m_testFeature = testFeature;
   }
 
-  public List[] findCircle( )
+  public List[] findCircle()
   {
     return findCircle( m_testFeature, new ArrayList() );
   }
@@ -83,38 +84,35 @@ public class RelationCircleFinder
       else
       {
         final List[] lists = findCircle( linkFeature, newList );
-        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                            // java.util.Arrays: check if this is ok
+        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
       }
     }
-    return (List[]) result.toArray( new List[result.size()] );
+    return (List[])result.toArray( new List[result.size()] );
   }
 
   private Feature[] getLinkedFeatures( Feature feature )
   {
     List result = new ArrayList();
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      IPropertyType property = properties[i];
-      if( property instanceof IRelationType )
+      FeatureTypeProperty property = properties[i];
+      if( property instanceof FeatureAssociationTypeProperty )
       {
-        final IRelationType linkPT = (IRelationType) property;
-        if( property.isList() )
+        if( featureType.getMaxOccurs( property.getName() ) == 1 )
         {
-          final Feature[] links = m_workspace.resolveLinks( feature, linkPT );
-          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                          // java.util.Arrays: check if this is ok
-        }
-        else
-        {
-          final Feature link = m_workspace.resolveLink( feature, linkPT );
+          Feature link = m_workspace.resolveLink( feature, property.getName() );
           if( link != null )
             result.add( link );
         }
+        else
+        {
+          Feature[] links = m_workspace.resolveLinks( feature, property.getName() );
+          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
+        }
       }
     }
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 }

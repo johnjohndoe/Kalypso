@@ -83,7 +83,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
     m_commandTarget = commandTarget;
   }
 
-  public void dispose( )
+  public void dispose()
   {
     m_contentProvider.dispose();
     m_labelProvider.dispose();
@@ -109,7 +109,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    * @return control
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
-  public Control getControl( )
+  public Control getControl()
   {
     return m_viewer.getControl();
   }
@@ -117,7 +117,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell( )
+  public IMapModell getMapModell()
   {
     return m_mapModel;
   }
@@ -141,7 +141,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
     {
       m_viewer.getControl().getDisplay().syncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           if( m_viewer.getContentProvider() != null )
             m_viewer.setInput( modell );
@@ -165,7 +165,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
         return;
 
       final StructuredViewer viewer = m_viewer;
-      final TableTree tt = (TableTree) m_viewer.getControl();
+      final TableTree tt = (TableTree)m_viewer.getControl();
       if( tt.isDisposed() )
         return;
 
@@ -173,7 +173,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
       tt.getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           try
           {
@@ -182,7 +182,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
               final TableTreeItem item = items[i];
 
               if( !item.isDisposed() )
-                item.setChecked( mm.isThemeEnabled( (IKalypsoTheme) item.getData() ) );
+                item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
             }
 
             // und die ganze view refreshen!
@@ -202,24 +202,24 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    */
   public void widgetSelected( final SelectionEvent e )
   {
-    final TableTreeItem ti = (TableTreeItem) e.item;
+    final TableTreeItem ti = (TableTreeItem)e.item;
     final Object data = ti.getData();
-    // if( data instanceof IKalypsoTheme )
-    // {
-    // if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
-    // {
-    // m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
-    // null );
-    // m_mapModel.activateTheme( (IKalypsoTheme)data );
-    // // todo: maybe create MultiCommand (eg. activate and enable )
-    // }
-    // }
+    //    if( data instanceof IKalypsoTheme )
+    //    {
+    //      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
+    //      {
+    //        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
+    //            null );
+    //        m_mapModel.activateTheme( (IKalypsoTheme)data );
+    //        // todo: maybe create MultiCommand (eg. activate and enable )
+    //      }
+    //    }
 
-    if( (e.detail & SWT.CHECK) != 0 )
+    if( ( e.detail & SWT.CHECK ) != 0 )
     {
       if( data instanceof IKalypsoTheme )
       {
-        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme) data, ti.getChecked() );
+        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme)data, ti.getChecked() );
         m_commandTarget.postCommand( command, null );
       }
     }
@@ -230,14 +230,14 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-    //
+  //
   }
 
   /**
    * @return object
    * @see org.eclipse.jface.viewers.IInputProvider#getInput()
    */
-  public Object getInput( )
+  public Object getInput()
   {
     return null;
   }
@@ -253,7 +253,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
     return m_viewer.getSelection();
   }
@@ -274,9 +274,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
     m_viewer.setSelection( selection );
   }
 
-  public IStructuredContentProvider getContentProvider( )
+  public IStructuredContentProvider getContentProvider()
   {
-    return (IStructuredContentProvider) m_viewer.getContentProvider();
+    return (IStructuredContentProvider)m_viewer.getContentProvider();
   }
 
   /**

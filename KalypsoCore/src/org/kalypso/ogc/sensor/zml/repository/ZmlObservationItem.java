@@ -65,7 +65,6 @@ public class ZmlObservationItem extends FileItem
   /**
    * @see org.kalypso.repository.file.FileItem#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class anotherClass )
   {
     try

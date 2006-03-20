@@ -42,6 +42,7 @@ package org.kalypso.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -69,8 +70,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
    * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to manipulate various
    * types of preferences. Each field editor knows how to save and restore itself.
    */
-  @Override
-  public void createFieldEditors( )
+  public void createFieldEditors()
   {
     addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
         "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
@@ -91,7 +91,15 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
 
     addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:",
         getFieldEditorParent() ) );
+    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1, new String[][]
+    {
+        {
+            "&Deutsch",
+            "de" },
+        {
+            "&English",
 
+            "en" } }, getFieldEditorParent() ) );
 
     //
     //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
@@ -113,8 +121,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   /**
    * @see org.eclipse.jface.preference.IPreferencePage#performOk()
    */
-  @Override
-  public boolean performOk( )
+  public boolean performOk()
   {
     final boolean result = super.performOk();
 

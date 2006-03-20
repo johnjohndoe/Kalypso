@@ -64,9 +64,9 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureException;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.xml.XMLTools;
@@ -113,7 +113,7 @@ public class GMLFeatureAdapter
     String id = feature.getId();
     pw.print( "<" + prefix + featName + " fid=\"" + id + "\">" );
 
-    IPropertyType[] ftp = feature.getFeatureType().getProperties();
+    FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
       String name = ftp[i].getName();

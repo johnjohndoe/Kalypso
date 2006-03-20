@@ -110,8 +110,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  @Override
-  public String getDescription( )
+  public String getDescription()
   {
     return m_root.toString();
   }

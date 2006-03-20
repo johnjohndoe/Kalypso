@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
 public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
   /** maps dates to markers */
-  private final Set<ILabelMarker> m_markers = new TreeSet<ILabelMarker>();
+  private final Set m_markers = new TreeSet();
 
   // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle
   // Systemzeit
@@ -72,15 +72,15 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
    *      boolean, boolean, int, int)
    */
-  @Override
-  public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column )
+  public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+      int row, int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
     // TRICKY: sometimes it comes here but value is not a date. This must be
     // a threading problem. The workaround is to return null. I'm not sure
     // if that'll always work correctly though.
-    if( !(value instanceof Date) )
+    if( !( value instanceof Date ) )
       return null;
 
     label.setText( df.format( value ) );
@@ -90,7 +90,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
       // maybe mark this item
       for( final Iterator it = m_markers.iterator(); it.hasNext(); )
       {
-        final ILabelMarker marker = (ILabelMarker) it.next();
+        final ILabelMarker marker = (ILabelMarker)it.next();
         if( marker.validates( value ) )
           marker.apply( label );
         else
@@ -123,7 +123,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   /**
    * Clears all markers
    */
-  public void clearMarkers( )
+  public void clearMarkers()
   {
     m_markers.clear();
   }

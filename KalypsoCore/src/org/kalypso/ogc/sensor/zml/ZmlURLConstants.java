@@ -46,11 +46,9 @@ public interface ZmlURLConstants
   public final static String MD_OCS_ID = "OCS-ID";
 
   /** Specification-Tags for the Zml-Request in the URL */
-//  public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
-//
-//  public final static String TAG_REQUEST2 = "</request>";
-    public final static String TAG_REQUEST = "request";
+  public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
 
+  public final static String TAG_REQUEST2 = "</request>";
 
   /** Filter-Tags for the Zml-Filter in the URL */
   public static final String TAG_FILTER1 = "<filter>";

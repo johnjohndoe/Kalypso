@@ -1,16 +1,16 @@
 package org.kalypso.services.metadoc.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
-import javax.jws.WebService;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -23,9 +23,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypso.services.metadoc.DocumentBean;
 import org.kalypso.services.metadoc.IMetaDocService;
-import org.kalypso.services.metadoc.PrepareBean;
 
 /**
  * Serverside business for the metadoc framework.
@@ -39,11 +37,9 @@ import org.kalypso.services.metadoc.PrepareBean;
  * 
  * @author schlienger
  */
-@WebService
 public class KalypsoMetaDocService implements IMetaDocService
 {
   private final static String PROP_COMMITER = "COMMITER";
-
   private final static String PROP_COMMITER_DIR = "COMMITER.DIR";
 
   private final File m_tmpDir;
@@ -57,7 +53,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   /**
    * Constructs service instance
    */
-  public KalypsoMetaDocService( ) throws MetaDocException
+  public KalypsoMetaDocService() throws RemoteException
   {
     m_logger = Logger.getLogger( KalypsoMetaDocService.class.getName() );
 
@@ -79,7 +75,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   /**
    * Initialize this service
    */
-  private final void init( ) throws MetaDocException
+  private final void init() throws RemoteException
   {
     InputStream stream = null;
     try
@@ -92,13 +88,14 @@ public class KalypsoMetaDocService implements IMetaDocService
 
       // try to instanciate our commiter
       final String className = m_props.getProperty( PROP_COMMITER );
-      m_commiter = (IMetaDocCommiter) ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass().getClassLoader() );
+      m_commiter = (IMetaDocCommiter)ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass()
+          .getClassLoader() );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "init", e );
 
-      throw new MetaDocException( "Exception in init()", e );
+      throw new RemoteException( "Exception in init()", e );
     }
     finally
     {
@@ -106,52 +103,65 @@ public class KalypsoMetaDocService implements IMetaDocService
     }
   }
 
-  public PrepareBean prepareNewDocument( final String username ) throws MetaDocException
+  /**
+   * @see org.kalypso.services.metadoc.IMetaDocService#prepareNewDocument(java.lang.String)
+   */
+  public Map prepareNewDocument( final String username ) throws RemoteException
   {
-    final String user = (username == null || username.length() == 0) ? "Autor" : username;
+    final String user = ( username == null || username.length() == 0 ) ? "Autor" : username;
 
     try
     {
-      final HashMap<Object, Object> metadata = new HashMap<Object, Object>();
+      final Map metadata = new HashMap();
 
       m_props.put( IMetaDocCommiter.KEY_AUTOR, user );
 
       m_commiter.prepareMetainf( m_props, metadata );
 
-      return new PrepareBean( metadata );
+      return metadata;
     }
     catch( final MetaDocException e )
     {
       m_logger.log( Level.WARNING, "Error while preparing new document", e );
-      throw e;
+      throw new RemoteException( "Error while preparing new document", e );
     }
   }
 
-  public void commitNewDocument( final DocumentBean docBean, final DataHandler data ) throws MetaDocException
+  /**
+   * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
+   *      java.lang.String, java.lang.String, java.lang.String, java.util.Map)
+   */
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
+      final String documentIdentifier, final String documentCategory, final Map metadataExtensions )
+      throws RemoteException
   {
     try
     {
       // fix: delete the whitespace from the preferredFilename
-      final File docFile = File.createTempFile( "document", StringUtils.deleteWhitespace( docBean.getPreferredFilename() ), m_tmpDir );
+      final File docFile = File
+          .createTempFile( "document", StringUtils.deleteWhitespace( preferredFilename ), m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       final Configuration mdConf;
-      if( docBean.getMetadataExtensions() != null )
-        mdConf = new MapConfiguration( docBean.getMetadataExtensions() );
+      if( metadataExtensions != null )
+        mdConf = new MapConfiguration( metadataExtensions );
       else
         mdConf = new BaseConfiguration();
 
-      m_commiter.commitDocument( m_props, docBean.getMetadata(), docFile, docBean.getDocumentIdentifier(), docBean.getDocumentCategory(), mdConf );
+      m_commiter.commitDocument( m_props, metadata, docFile, documentIdentifier, documentCategory, mdConf );
     }
-    catch( final IOException e )
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "commitNewDocument", e );
 
-      throw new MetaDocException( "commitNewDocument", e );
+      throw new RemoteException( "commitNewDocument", e );
     }
   }
 
-  public int getServiceVersion( )
+  /**
+   * @see org.kalypso.services.IKalypsoService#getServiceVersion()
+   */
+  public int getServiceVersion()
   {
     return 0;
   }

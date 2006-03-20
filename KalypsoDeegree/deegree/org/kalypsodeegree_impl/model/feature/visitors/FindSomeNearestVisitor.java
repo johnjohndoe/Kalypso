@@ -9,7 +9,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -79,7 +78,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
       result = geoProps[0];
     }
     else if( m_geometryProperty != null )
-      result = (GM_Object)feature.getProperty(m_geometryProperty );
+      result = (GM_Object)feature.getProperty( m_geometryProperty );
     else
       result = feature.getDefaultGeometryProperty();
     return result;

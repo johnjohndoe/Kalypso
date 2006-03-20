@@ -57,7 +57,7 @@ public class LayerTableSorter extends ViewerSorter
 
   private boolean m_bInverse = false;
 
-  public LayerTableSorter( )
+  public LayerTableSorter()
   {
     super();
   }
@@ -67,12 +67,12 @@ public class LayerTableSorter extends ViewerSorter
     super( cola );
   }
 
-  public final String getPropertyName( )
+  public final String getPropertyName()
   {
     return m_propertyName;
   }
 
-  public final boolean isInverse( )
+  public final boolean isInverse()
   {
     return m_bInverse;
   }
@@ -87,28 +87,17 @@ public class LayerTableSorter extends ViewerSorter
     m_propertyName = propertyName;
   }
 
-  @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final Feature kf1 = (Feature) e1;
-    final Feature kf2 = (Feature) e2;
+    final Feature kf1 = (Feature)e1;
+    final Feature kf2 = (Feature)e2;
 
     final String propertyName = getPropertyName();
     if( propertyName == null )
       return 0;
 
-    final Object o1;
-    final Object o2;
-    if( kf1.getFeatureType().getProperty( propertyName ) == null )
-    {
-      o1 = kf1.getId();
-      o2 = kf2.getId();
-    }
-    else
-    {
-      o1 = kf1.getProperty( propertyName );
-      o2 = kf2.getProperty( propertyName );
-    }
+    final Object o1 = kf1.getProperty( propertyName );
+    final Object o2 = kf2.getProperty( propertyName );
 
     final int sign = isInverse() ? -1 : 1;
     if( o1 == o2 )
@@ -117,25 +106,24 @@ public class LayerTableSorter extends ViewerSorter
       return sign;
     if( o2 == null )
       return -sign;
-    if( o1 instanceof String && o2 instanceof String )
-      return sign * ((String) o1).compareTo( (String) o2 );
-    else if( o1 instanceof Integer && o2 instanceof Integer )
-      return sign * ((Integer) o1).compareTo( (Integer) o2 );
-    else if( o1 instanceof Double && o2 instanceof Double )
-      return sign * ((Double) o1).compareTo( (Double) o2 );
-    else if( o1 instanceof Long && o2 instanceof Long )
-      return sign * ((Long) o1).compareTo( (Long) o2 );
-    else if( o1 instanceof Float && o1 instanceof Float )
-      return sign * ((Float) o1).compareTo( (Float) o2 );
-    else if( o1 instanceof Date && o2 instanceof Date )
-      return sign * ((Date) o1).compareTo( (Date) o2 );
+    if( o1 instanceof String )
+      return sign * ( (String)o1 ).compareTo( o2 );
+    else if( o1 instanceof Integer )
+      return sign * ( (Integer)o1 ).compareTo( o2 );
+    else if( o1 instanceof Double )
+      return sign * ( (Double)o1 ).compareTo( o2 );
+    else if( o1 instanceof Long )
+      return sign * ( (Long)o1 ).compareTo( o2 );
+    else if( o1 instanceof Float )
+      return sign * ( (Float)o1 ).compareTo( o2 );
+    else if( o1 instanceof Date )
+      return sign * ( (Date)o1 ).compareTo( o2 );
 
     return 0;
   }
 
-  @Override
   public boolean isSorterProperty( Object element, String property )
   {
-    return property.equals( m_propertyName );
+    return true;
   }
 }

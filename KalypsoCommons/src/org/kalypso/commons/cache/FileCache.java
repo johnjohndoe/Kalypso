@@ -28,20 +28,20 @@ import org.kalypso.commons.serializer.ISerializer;
  * 
  * @author schlienger
  */
-public class FileCache<K>
+public class FileCache
 {
   private final static String INDEX_FILE = ".filecache";
 
-  private final Comparator< ? super K> m_kc;
+  private final Comparator m_kc;
 
   private final ISerializer m_ser;
 
   private final File m_directory;
 
   /** maps the keys to files */
-  private final Map<K, File> m_index;
+  private final Map m_index;
 
-  private final IKeyFactory<K> m_keyFactory;
+  private final IKeyFactory m_keyFactory;
 
   /**
    * Constructor
@@ -55,7 +55,7 @@ public class FileCache<K>
    * @param directory
    *          location of the index file and of all other files used for caching
    */
-  public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer ser, final File directory )
+  public FileCache( final IKeyFactory kFact, final Comparator kc, final ISerializer ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
       throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
@@ -65,20 +65,19 @@ public class FileCache<K>
     m_ser = ser;
     m_directory = directory;
 
-    m_index = new TreeMap<K, File>( m_kc );
+    m_index = new TreeMap( m_kc );
 
     readIndexFile();
   }
 
-  @Override
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     m_index.clear();
 
     super.finalize();
   }
 
-  private final void readIndexFile( )
+  private final void readIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
     if( !indexFile.exists() )
@@ -98,7 +97,7 @@ public class FileCache<K>
           final String keySpec = items[0];
           final String fileName = items[1];
 
-          final K key = m_keyFactory.createKey( keySpec );
+          final Object key = m_keyFactory.createKey( keySpec );
           final File file = new File( m_directory, fileName );
 
           m_index.put( key, file );
@@ -118,7 +117,7 @@ public class FileCache<K>
     }
   }
 
-  private void writeIndexFile( )
+  private void writeIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
 
@@ -127,11 +126,11 @@ public class FileCache<K>
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( indexFile ) ) );
 
-      for( final Iterator<Entry<K, File>> it = m_index.entrySet().iterator(); it.hasNext(); )
+      for( final Iterator it = m_index.entrySet().iterator(); it.hasNext(); )
       {
-        final Map.Entry<K, File> entry = it.next();
+        final Map.Entry entry = (Entry)it.next();
         final String keySpec = m_keyFactory.toString( entry.getKey() );
-        final String fileName = entry.getValue().getName();
+        final String fileName = ( (File)entry.getValue() ).getName();
 
         writer.write( keySpec );
         writer.write( ";" );
@@ -150,7 +149,7 @@ public class FileCache<K>
     }
   }
 
-  public void addObject( final K key, final Object object )
+  public void addObject( final Object key, final Object object )
   {
     final File file;
     OutputStream os = null;
@@ -158,7 +157,7 @@ public class FileCache<K>
     try
     {
       if( m_index.containsKey( key ) )
-        file = m_index.get( key );
+        file = (File)m_index.get( key );
       else
         file = File.createTempFile( "cache", ".item", m_directory );
 
@@ -182,7 +181,7 @@ public class FileCache<K>
 
   public Object getObject( final Object key )
   {
-    final File file = m_index.get( key );
+    final File file = (File)m_index.get( key );
     if( file == null )
       return null;
 
@@ -205,7 +204,7 @@ public class FileCache<K>
     }
   }
 
-  public int size( )
+  public int size()
   {
     return m_index.size();
   }
@@ -214,7 +213,7 @@ public class FileCache<K>
   {
     if( m_index.containsKey( key ) )
     {
-      final File file = m_index.get( key );
+      final File file = (File)m_index.get( key );
       file.delete();
 
       m_index.remove( key );
@@ -223,11 +222,11 @@ public class FileCache<K>
     }
   }
 
-  public void clear( )
+  public void clear()
   {
     for( final Iterator it = m_index.values().iterator(); it.hasNext(); )
     {
-      final File file = (File) it.next();
+      final File file = (File)it.next();
       file.delete();
     }
 
@@ -246,19 +245,11 @@ public class FileCache<K>
    * @param key
    * @return null if not found
    */
-  @SuppressWarnings("unchecked")
-  public Object getRealKey( final K key )
+  public Object getRealKey( final Object key )
   {
     if( m_index.containsKey( key ) )
     {
-      final Class< ? > componentType;
-      if( key.getClass().isArray() )
-        componentType = key.getClass().getComponentType();
-      else
-        componentType = key.getClass();
-      final K[] keys = m_index.keySet().toArray( (K[]) java.lang.reflect.Array.newInstance( componentType, m_index.size() ) );
-      // final K[] keys = m_index.keySet().toArray( (K[])java.lang.reflect.Array
-      // .newInstance(K, m_index.size()) );
+      final Object[] keys = m_index.keySet().toArray();
       final int ix = Arrays.binarySearch( keys, key, m_kc );
       return keys[ix];
     }

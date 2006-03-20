@@ -46,21 +46,21 @@ public class ZipDiffObject extends AbstractDiffObject
 
   private final ZipFile m_zipFile;
 
-  private final Hashtable<String, ZipEntry> m_pathes = new Hashtable<String, ZipEntry>();
+  private final Hashtable m_pathes = new Hashtable();
 
   /**
    * @throws IOException
    * @throws ZipException
    *  
    */
-  public ZipDiffObject( final File zipFile ) throws ZipException, IOException
+  public ZipDiffObject( File zipFile ) throws ZipException, IOException
   {
     m_zipFile = new ZipFile( zipFile );
     final Enumeration enumeration = m_zipFile.entries();
     while( enumeration.hasMoreElements() )
     {
       final ZipEntry entry = (ZipEntry)enumeration.nextElement();
-      final String key = entry.getName().replaceAll( "\\\\", "/" ).replaceFirst( "^/", "" );
+      String key = entry.getName().replaceAll( "\\\\", "/" ).replaceFirst( "^/", "" );
       m_pathes.put( key, entry );
     }
   }
@@ -78,7 +78,6 @@ public class ZipDiffObject extends AbstractDiffObject
    * 
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
-  @Override
   public IDiffComparator getDiffComparator( final String path )
   {
     final ZipEntry entry = getEntry( path );
@@ -107,7 +106,7 @@ public class ZipDiffObject extends AbstractDiffObject
    */
   private ZipEntry getEntry( String path )
   {
-    return m_pathes.get( path );
+    return (ZipEntry)m_pathes.get( path );
   }
 
   /**
@@ -127,7 +126,7 @@ public class ZipDiffObject extends AbstractDiffObject
    */
   public String[] getPathes()
   {
-    return m_pathes.keySet().toArray( new String[m_pathes.size()] );
+    return (String[])m_pathes.keySet().toArray( new String[m_pathes.size()] );
   }
 
 }

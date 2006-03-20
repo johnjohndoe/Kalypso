@@ -59,7 +59,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -72,7 +71,6 @@ import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -101,9 +99,10 @@ import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
-import org.kalypso.zml.AxisType.ValueArray;
-import org.kalypso.zml.AxisType.ValueLink;
-import org.kalypso.zml.request.Request;
+import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.AxisType.ValueArrayType;
+import org.kalypso.zml.AxisType.ValueLinkType;
+import org.kalypso.zml.request.RequestType;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
 
@@ -123,7 +122,6 @@ import org.xml.sax.InputSource;
 public class ZmlFactory
 {
   private final static ObjectFactory OF = new ObjectFactory();
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -253,7 +251,7 @@ public class ZmlFactory
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
       // url handling.
-      return  parseXML( new InputSource( inputStream ), identifier, url );
+      return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( final IOException e )
     {
@@ -318,7 +316,7 @@ public class ZmlFactory
 
     // axes and values
     final List tmpList = obs.getAxis();
-    final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( tmpList.size() );
+    final Map valuesMap = new HashMap( tmpList.size() );
 
     final String data = obs.getData(); // data is optional and can be null
 
@@ -404,7 +402,7 @@ public class ZmlFactory
       return baseObs;
 
     // check if a request based proxy can be created
-    final Request requestType = RequestFactory.parseRequest( href );
+    final RequestType requestType = RequestFactory.parseRequest( href );
     if( requestType != null )
       return new RequestObservationProxy( ObservationRequest.createWith( requestType ), baseObs );
 
@@ -431,12 +429,12 @@ public class ZmlFactory
   private static IZmlValues createValues( final URL context, final AxisType axisType, final IParser parser,
       final String data ) throws ParserException, MalformedURLException, IOException
   {
-    final ValueArray va = axisType.getValueArray();
+    final ValueArrayType va = axisType.getValueArray();
     if( va != null )
       return new ZmlArrayValues( va, parser );
 
     // loader for linked values, here we specify where base location is
-    final ValueLink vl = axisType.getValueLink();
+    final ValueLinkType vl = axisType.getValueLink();
     if( vl != null )
       return new ZmlLinkValues( vl, parser, context, data );
 
@@ -446,7 +444,7 @@ public class ZmlFactory
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     return createXML( obs, args, null );
   }
@@ -457,7 +455,7 @@ public class ZmlFactory
    * @param timezone
    *          the timezone into which dates should be converted before serialized
    */
-  public static Observation createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
+  public static ObservationType createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
       throws FactoryException
   {
     try
@@ -465,13 +463,13 @@ public class ZmlFactory
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
 
-      final Observation obsType = OF.createObservation();
+      final ObservationType obsType = OF.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
-      final List<MetadataType> metadataList = metadataListType.getMetadata();
+      final List metadataList = metadataListType.getMetadata();
       for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
         final Map.Entry entry = (Entry)it.next();
@@ -502,7 +500,7 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      final List<AxisType> axisList = obsType.getAxis();
+      final List axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
@@ -518,7 +516,7 @@ public class ZmlFactory
           axisType.setType( axes[i].getType() );
           axisType.setKey( axes[i].isKey() );
 
-          final ValueArray valueArrayType = OF.createAxisTypeValueArray();
+          final ValueArrayType valueArrayType = OF.createAxisTypeValueArrayType();
 
           valueArrayType.setSeparator( ";" );
           valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
@@ -609,7 +607,7 @@ public class ZmlFactory
 
   public static Marshaller getMarshaller() throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+    final Marshaller marshaller = OF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     return marshaller;
@@ -617,7 +615,7 @@ public class ZmlFactory
 
   private static Unmarshaller getUnmarshaller() throws JAXBException
   {
-    final Unmarshaller unmarshaller = JC.createUnmarshaller();
+    final Unmarshaller unmarshaller = OF.createUnmarshaller();
 
     return unmarshaller;
   }
@@ -643,7 +641,7 @@ public class ZmlFactory
     OutputStream outs = null;
     try
     {
-      final Observation xml = createXML( obs, null );
+      final ObservationType xml = createXML( obs, null );
 
       outs = new FileOutputStream( file );
 
@@ -673,7 +671,7 @@ public class ZmlFactory
   public static Object createZMLFromClipboardString( final String name, final String content, final IAxis[] axis )
   {
     final String[] rows = content.split( "\\n" );
-    final List<Object[]> collector = new ArrayList<Object[]>();
+    final List collector = new ArrayList();
     for( int i = 0; i < rows.length; i++ )
     {
       final String row = rows[i];
@@ -756,14 +754,14 @@ public class ZmlFactory
     final int count = values.getCount();
     // actually just the first key axis is relevant in our case
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
-    final List<IAxis> list = new ArrayList<IAxis>();
+    List list = new ArrayList();
     list.add( keyAxes[0] );
     for( int i = 0; i < axes.length; i++ )
     {
       if( axes[i] != keyAxes[0] )
         list.add( axes[i] );
     }
-    final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
+    final IAxis[] sortedAxes = (IAxis[])list.toArray( new IAxis[list.size()] );
     for( int row = 0; row < count; row++ )
     {
       for( int col = 0; col < sortedAxes.length; col++ )

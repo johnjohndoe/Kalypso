@@ -89,7 +89,8 @@ public class TranProLinFilter extends AbstractObservationFilter
    *          unchanged status)
    * @param axisTypes
    */
-  public TranProLinFilter( final Date dateBegin, final Date dateEnd, final String operator, final double operandBegin, final double operandEnd, final int statusToMerge, final String axisTypes )
+  public TranProLinFilter( final Date dateBegin, final Date dateEnd, final String operator, final double operandBegin,
+      final double operandEnd, final int statusToMerge, final String axisTypes )
   {
     m_dateBegin = dateBegin;
     m_dateEnd = dateEnd;
@@ -98,14 +99,13 @@ public class TranProLinFilter extends AbstractObservationFilter
     m_statusToMerge = statusToMerge;
     m_axisTypes = axisTypes;
     m_operation = MathOperationFactory.createMathOperation( operator );
-    if( dateBegin != null && dateEnd != null && (dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd )) )
+    if( dateBegin != null && dateEnd != null && ( dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd ) ) )
       throw new IllegalArgumentException( "Anfangsdatum und Enddatum sind nicht gültig: " + dateBegin + " - " + dateEnd );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  @Override
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     final ITuppleModel outerSource = super.getValues( args );
@@ -138,26 +138,28 @@ public class TranProLinFilter extends AbstractObservationFilter
       }
       // try to assume from base tuppel model if needed
       if( dateBegin == null )
-        dateBegin = (Date) outerSource.getElement( 0, dateAxis );
+        dateBegin = (Date)outerSource.getElement( 0, dateAxis );
       if( dateEnd == null )
-        dateEnd = (Date) outerSource.getElement( outerSourceCount - 1, dateAxis );
+        dateEnd = (Date)outerSource.getElement( outerSourceCount - 1, dateAxis );
 
-      // // iterate first time to know the real bounds
-      // Date tranpolinBegin = null;
-      // Date tranpolinEnd = null;
-      // for( int i = 0; i < values.getCount(); i++ )
-      // {
-      // final Date date = (Date)values.getElement( i, dateAxis );
+      //      // iterate first time to know the real bounds
+      //      Date tranpolinBegin = null;
+      //      Date tranpolinEnd = null;
+      //      for( int i = 0; i < values.getCount(); i++ )
+      //      {
+      //        final Date date = (Date)values.getElement( i, dateAxis );
       //
-      // if( date.compareTo( dateBegin ) >= 0 && tranpolinBegin == null )
-      // tranpolinBegin = date;
+      //        if( date.compareTo( dateBegin ) >= 0 && tranpolinBegin == null )
+      //          tranpolinBegin = date;
       //
-      // if( date.compareTo( dateEnd ) <= 0 )
-      // tranpolinEnd = date;
-      // }
+      //        if( date.compareTo( dateEnd ) <= 0 )
+      //          tranpolinEnd = date;
+      //      }
 
-      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0, outerSourceCount );
-      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd, sourceIndexBegin, outerSourceCount );
+      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
+          outerSourceCount );
+      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd,
+          sourceIndexBegin, outerSourceCount );
 
       if( sourceIndexEnd > outerSourceCount - 1 )
       {
@@ -169,15 +171,15 @@ public class TranProLinFilter extends AbstractObservationFilter
       final long distTime = dateEnd.getTime() - dateBegin.getTime();
 
       // sort axis
-      final List<IAxis> axesListToCopy = new ArrayList<IAxis>();
-      final List<IAxis> axesListToTransform = new ArrayList<IAxis>();
-      final List<IAxis> axesListStatus = new ArrayList<IAxis>();
+      final List axesListToCopy = new ArrayList();
+      final List axesListToTransform = new ArrayList();
+      final List axesListStatus = new ArrayList();
       for( int i = 0; i < axes.length; i++ )
       {
         final IAxis axis = axes[i];
         if( axis.getDataClass() == Date.class ) // always copy date axis
           continue;
-        // axesListToCopy.add( axis );
+        //          axesListToCopy.add( axis );
         else if( KalypsoStatusUtils.isStatusAxis( axis ) ) // special status axis
           axesListStatus.add( axis );
         else if( m_axisTypes == null || m_axisTypes.indexOf( axis.getType() ) > -1 ) // transform axis
@@ -185,33 +187,36 @@ public class TranProLinFilter extends AbstractObservationFilter
         else
           axesListToCopy.add( axis ); // copy axis
       }
-      final IAxis[] axesStatus = axesListStatus.toArray( new IAxis[axesListStatus.size()] );
-      final IAxis[] axesCopy = axesListToCopy.toArray( new IAxis[axesListToCopy.size()] );
-      final IAxis[] axesTransform = axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
+      final IAxis[] axesStatus = (IAxis[])axesListStatus.toArray( new IAxis[axesListStatus.size()] );
+      final IAxis[] axesCopy = (IAxis[])axesListToCopy.toArray( new IAxis[axesListToCopy.size()] );
+      final IAxis[] axesTransform = (IAxis[])axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
       final Date[] targetDates = new Date[targetMaxRows];
       for( int row = sourceIndexBegin; row < sourceIndexEnd + 1; row++ )
-        targetDates[row] = (Date) outerSource.getElement( row, dateAxis );
+        targetDates[row] = (Date)outerSource.getElement( row, dateAxis );
 
       final ITuppleModel innerSource;
       // find inner source to initialize inner target model
       if( outerSource instanceof WQTuppleModel )
       {
-        final WQTuppleModel wqTuppleModel = (WQTuppleModel) outerSource;
+        final WQTuppleModel wqTuppleModel = (WQTuppleModel)outerSource;
         innerSource = wqTuppleModel.getBaseModel();
       }
       else
         innerSource = outerSource;
 
       // initialize inner target
-      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource.getPositionFor( dateAxis ) );
+      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource
+          .getPositionFor( dateAxis ) );
       final SimpleTuppleModel innerTarget = new SimpleTuppleModel( innerSource.getAxisList(), vallues );
 
       // initialize outer target
       final ITuppleModel outerTarget;
       if( outerSource instanceof WQTuppleModel )
       {
-        final WQTuppleModel wqTuppleModel = (WQTuppleModel) outerSource;
-        outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel.getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel.getConverter() );
+        final WQTuppleModel wqTuppleModel = (WQTuppleModel)outerSource;
+        outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel
+            .getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel
+            .getConverter(), wqTuppleModel.getDestAxisPos(), wqTuppleModel.getDestStatusAxisPos() );
       }
       else
         outerTarget = innerTarget;
@@ -221,10 +226,10 @@ public class TranProLinFilter extends AbstractObservationFilter
       int targetRow = 0;
       for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd + 1; sourceRow++ )
       {
-        final Date date = (Date) outerSource.getElement( sourceRow, dateAxis );
+        final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
 
         final long hereTime = date.getTime() - dateBegin.getTime();
-        final double hereCoeff = m_operandBegin + deltaOperand * ((double) hereTime / (double) distTime);
+        final double hereCoeff = m_operandBegin + deltaOperand * ( (double)hereTime / (double)distTime );
 
         // copy
         for( int t = 0; t < axesCopy.length; t++ )
@@ -234,28 +239,30 @@ public class TranProLinFilter extends AbstractObservationFilter
           outerTarget.setElement( targetRow, value, axis );
         }
         // transform
-        // for( int t = 0; t < axesTransform.length; t++ )
-        // {
-        // final IAxis axis = axesTransform[t];
-        // final Object value = outerSource.getElement( sourceRow, axis );
-        // outerTarget.setElement( targetRow, value, axis );
-        // }
+        //        for( int t = 0; t < axesTransform.length; t++ )
+        //        {
+        //          final IAxis axis = axesTransform[t];
+        //          final Object value = outerSource.getElement( sourceRow, axis );
+        //          outerTarget.setElement( targetRow, value, axis );
+        //        }
 
         // status
         for( int t = 0; t < axesStatus.length; t++ )
         {
           final IAxis axis = axesStatus[t];
-          final Number oldValue = (Number) outerSource.getElement( sourceRow, axis );
-          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
+          final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
+          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(),
+              m_statusToMerge ) );
           outerTarget.setElement( targetRow, newValue, axis );
         }
 
-        // transform
+        //transform
         for( int t = 0; t < axesTransform.length; t++ )
         {
           final IAxis axis = axesTransform[t];
-          Number value = (Number) outerSource.getElement( sourceRow, axis );
-          value = new Double( m_operation.calculate( new double[] { value.doubleValue(), hereCoeff } ) );
+          Number value = (Number)outerSource.getElement( sourceRow, axis );
+          value = new Double( m_operation.calculate( new double[]
+          { value.doubleValue(), hereCoeff } ) );
           // important to set transformed last, as there may
           // be dependencies to other axes
           // (e.g. WQ-Transformation)

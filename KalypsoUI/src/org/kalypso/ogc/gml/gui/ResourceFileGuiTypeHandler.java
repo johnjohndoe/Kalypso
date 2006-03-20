@@ -29,11 +29,10 @@
  */
 package org.kalypso.ogc.gml.gui;
 
-import javax.xml.namespace.QName;
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -41,66 +40,59 @@ import org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * 
  * @author Nadja Peiler
  */
 public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
   {
     return new ResourceFileDialog( workspace, feature, ftp );
   }
 
-  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory )
+  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory ) throws JAXBException
   {
-    final Button button = factory.createButton();
-    final GridData griddata = factory.createGridData();
+    final ButtonType button = factory.createButton();
+    final GridDataType griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( factory.createGridData( griddata ) );
+    button.setLayoutData( griddata );
 
     return button;
   }
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( workspace, ftp,  selectionManager, fcl );
   }
 
-  @Override
   public String getText( Object element )
   {
     if( element == null )
       return "";
 
-    final String href = ((IFile) element).getFullPath().toString();
+    final String href = ( (IFile)element ).getFullPath().toString();
     return href == null ? "" : href;
   }
 
-  public Class getValueClass( )
+  public String getClassName()
   {
     return ResourceFileTypeHandler.CLASSNAME;
   }
 
-  public QName[] getTypeName( )
+  public String getTypeName()
   {
-    return ResourceFileTypeHandler.QNAME;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return false;
+    return ResourceFileTypeHandler.TYPENAME;
   }
 }

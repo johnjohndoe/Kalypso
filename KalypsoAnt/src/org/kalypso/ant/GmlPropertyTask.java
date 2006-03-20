@@ -59,11 +59,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * Loads (ant-)properties from a gml.
  * 
  * <pre>
- *    &lt;gmlProperty file=&quot;${calc.url}/.calculation&quot;&gt;
- *      &lt;property name=&quot;startsim&quot; featurepath=&quot;&quot;/&gt;
- *      &lt;property name=&quot;stopsim&quot; featurepath=&quot;&quot;/&gt;
- *      &lt;property name=&quot;startforecast&quot; featurepath=&quot;&quot;/&gt;
- *   &lt;/gmlProperty&gt;
+ *  <gmlProperty file="${calc.url}/.calculation">
+ *    <property name="startsim" featurepath=""/>
+ *    <property name="stopsim" featurepath=""/>
+ *    <property name="startforecast" featurepath=""/>
+ * </gmlProperty>
  * </pre>
  * 
  * @author belger
@@ -71,13 +71,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class GmlPropertyTask extends Task
 {
   private final PropertyAdder m_propertyAdder = new PropertyAdder( this );
-
-  private final List<Property> m_properties = new LinkedList<Property>();
+  
+  private final List m_properties = new LinkedList();
 
   /** URL from where to read the gml */
   private URL m_gmlURL;
 
-  public final URL getGmlURL( )
+  public final URL getGmlURL()
   {
     return m_gmlURL;
   }
@@ -87,7 +87,7 @@ public class GmlPropertyTask extends Task
     m_gmlURL = gmlURL;
   }
 
-  public Property createProperty( )
+  public Property createProperty()
   {
     final Property p = new Property();
     m_properties.add( p );
@@ -97,23 +97,20 @@ public class GmlPropertyTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
-  @Override
-  public void execute( ) throws BuildException
+  public void execute() throws BuildException
   {
     // validieren
     final URL gmlURL = getGmlURL();
     if( gmlURL == null )
       throw new BuildException( "Property 'gmlURL' must be set." );
 
-    final Project project2 = getProject();
-    if( project2 != null )
-      project2.log( "Lade properties aus gml: " + gmlURL, Project.MSG_DEBUG );
+    getProject().log( "Lade properties aus gml: " + gmlURL, Project.MSG_DEBUG );
 
     try
     {
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
       for( final Iterator iter = m_properties.iterator(); iter.hasNext(); )
-        addProperty( workspace, (Property) iter.next() );
+        addProperty( workspace, (Property)iter.next() );
     }
     catch( final BuildException be )
     {
@@ -140,7 +137,7 @@ public class GmlPropertyTask extends Task
 
     final String featureID = property.getFeatureID();
     final String featurePath = property.getFeaturePath();
-    if( (featureID == null || featureID.length() == 0) && featurePath == null )
+    if( ( featureID == null || featureID.length() == 0 ) && featurePath == null )
       throw new BuildException( "Neither 'featureID' nor 'featurePath' is set." );
 
     // find feature
@@ -155,7 +152,7 @@ public class GmlPropertyTask extends Task
     {
       final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
       if( featureFromPath instanceof Feature )
-        f = (Feature) featureFromPath;
+        f = (Feature)featureFromPath;
       else
         throw new BuildException( "No feature found with path: " + featurePath );
     }
@@ -165,7 +162,7 @@ public class GmlPropertyTask extends Task
     {
       // special handling for Date
       // just write time in millies since 1970
-      final Date dateValue = (Date) value;
+      final Date dateValue = (Date)value;
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final Date date;
@@ -185,14 +182,12 @@ public class GmlPropertyTask extends Task
       m_propertyAdder.addProperty( name, value.toString(), null );
     else
     {
-      final Project project2 = getProject();
-      if( project2 != null )
-        project2.log( "No value for feature with id " + f.getId() + " in property: " + featureProperty, Project.MSG_DEBUG );
+      getProject().log( "No value for feature with id " + f.getId() + " in property: " + featureProperty,
+          Project.MSG_DEBUG );
       final String defaultValue = property.getDefaultValue();
       if( defaultValue != null )
       {
-        if( project2 != null )
-          project2.log( "Using defualt value: " + defaultValue, Project.MSG_DEBUG );
+        getProject().log( "Using defualt value: " + defaultValue, Project.MSG_DEBUG );
         m_propertyAdder.addProperty( name, defaultValue, null );
       }
     }
@@ -223,7 +218,7 @@ public class GmlPropertyTask extends Task
     /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
     private String m_dateoffsetfield;
 
-    public final Integer getDateoffset( )
+    public final Integer getDateoffset()
     {
       return m_dateoffset;
     }
@@ -233,7 +228,7 @@ public class GmlPropertyTask extends Task
       m_dateoffset = dateoffset;
     }
 
-    public final String getDateoffsetfield( )
+    public final String getDateoffsetfield()
     {
       return m_dateoffsetfield;
     }
@@ -243,7 +238,7 @@ public class GmlPropertyTask extends Task
       m_dateoffsetfield = dateoffsetfield;
     }
 
-    public final String getFeatureID( )
+    public final String getFeatureID()
     {
       return m_featureID;
     }
@@ -253,7 +248,7 @@ public class GmlPropertyTask extends Task
       m_featureID = featureID;
     }
 
-    public final String getFeaturePath( )
+    public final String getFeaturePath()
     {
       return m_featurePath;
     }
@@ -263,7 +258,7 @@ public class GmlPropertyTask extends Task
       m_featurePath = featurePath;
     }
 
-    public final String getFeatureProperty( )
+    public final String getFeatureProperty()
     {
       return m_featureProperty;
     }
@@ -273,7 +268,7 @@ public class GmlPropertyTask extends Task
       m_featureProperty = featureProperty;
     }
 
-    public final String getName( )
+    public final String getName()
     {
       return m_name;
     }
@@ -288,7 +283,7 @@ public class GmlPropertyTask extends Task
       m_defaultValue = defaultValue;
     }
 
-    public final String getDefaultValue( )
+    public final String getDefaultValue()
     {
       return m_defaultValue;
     }

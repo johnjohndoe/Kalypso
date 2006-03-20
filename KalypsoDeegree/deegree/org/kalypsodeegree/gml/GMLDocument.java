@@ -64,13 +64,15 @@ package org.kalypsodeegree.gml;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
+ * 
+ * 
  * <p>
  * ----------------------------------------------------------
  * </p>
@@ -81,20 +83,18 @@ import org.w3c.dom.Element;
  */
 public interface GMLDocument extends Document
 {
-  public Document getDocument( );
+  public Document getDocument();
 
   /**
    * returns the location of the schema the document based on
-   * 
-   * @param context
-   *          context or <code>null</code> for unknown context
+   * @param context context or <code>null</code> for unknown context
    */
-  public URL getSchemaLocation( final URL context ) throws MalformedURLException;
+  public URL getSchemaLocation(final URL context) throws MalformedURLException;
 
   /**
    * returns the location of the schema the document based on as string
    */
-  public String getSchemaLocationName( );
+  public String getSchemaLocationName();
 
   /**
    * sets the location of schema the document based on
@@ -109,7 +109,7 @@ public interface GMLDocument extends Document
   /**
    * returns the name spaces used within the document
    */
-  public GMLNameSpace[] getNameSpaces( );
+  public GMLNameSpace[] getNameSpaces();
 
   /**
    * @see #getNameSpaces()
@@ -119,7 +119,7 @@ public interface GMLDocument extends Document
   /**
    * returns the root element of the document as GMLFeatureCollection.
    */
-  public GMLFeatureCollection getRoot( );
+  public GMLFeatureCollection getRoot();
 
   /**
    * @see #getRoot()
@@ -131,49 +131,74 @@ public interface GMLDocument extends Document
   /**
    * returns true if the document is valid against the referenced schemas
    */
-  public boolean isValid( );
+  public boolean isValid();
 
   /**
    * creates a GMLFeature that doesn't contain a property and that hasn't an id.
    */
-  public GMLFeature createGMLFeature( final IFeatureType featureType );
+  public GMLFeature createGMLFeature( final FeatureType featureType );
 
   /**
    * creates a GMLFeature.
    */
-  public GMLFeature createGMLFeature( final IFeatureType featureType, final String id, GMLProperty[] properties ) throws GMLException;
+  public GMLFeature createGMLFeature( final FeatureType featureType, final String id, GMLProperty[] properties )
+      throws GMLException;
 
   public GMLFeatureCollection createGMLFeatureCollection( final String collectionName );
 
   /**
    * factory method to create a GMLProperty. the property that will be return doesn't contain a value.
    */
-  public GMLProperty createGMLProperty( final IPropertyType ftp );
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp );
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final Element propertyValue );
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Element propertyValue );
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final String attributeValue );
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final String attributeValue );
 
-  public GMLProperty createGMLProperty( final IPropertyType ftp, final Object customObject ) throws GMLException;
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException;
 
-  public GMLProperty createGMLGeoProperty( final IPropertyType ftp, final GM_Object geometry ) throws GMLException;
+  public GMLProperty createGMLGeoProperty( final FeatureTypeProperty ftp, final GM_Object geometry )
+      throws GMLException;
 
   /* #GMLSchema lnkGMLSchema; */
 }
 /*
- * Changes to this class. What the people haven been up to: $Log$
- * Changes to this class. What the people haven been up to: Revision 1.14  2006/02/09 18:16:25  doemming
- * Changes to this class. What the people haven been up to: *** empty log message ***
- * Changes to this class. What the people haven been up to: Revision 1.13 2005/12/20 15:04:33
- * doemming *** empty log message *** Revision 1.12.2.1 2005/12/20 12:04:47 doemming *** empty log message *** Revision
- * 1.12 2005/06/20 14:07:44 belger Formatierung Revision 1.11 2005/03/08 11:01:10 doemming *** empty log message ***
- * Revision 1.10 2005/02/28 13:34:14 doemming *** empty log message *** Revision 1.9 2005/02/08 18:43:59 belger ***
- * empty log message *** Revision 1.8 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.7 2004/11/23
- * 12:57:44 belger *** empty log message *** Revision 1.6 2004/11/22 01:29:50 doemming *** empty log message ***
- * Revision 1.5 2004/11/01 15:38:01 belger *** empty log message *** Revision 1.4 2004/10/31 18:34:01 belger *** empty
- * log message *** Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:51
- * doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming *** empty log message *** Revision 1.2
- * 2004/04/27 15:40:15 poth no message Revision 1.1.1.1 2002/09/25 16:01:45 poth no message Revision 1.2 2002/08/19
- * 15:59:20 ap no message Revision 1.1 2002/04/04 16:17:15 ap no message Revision 1.3 2001/11/23 10:40:53 axel as: CVS
- * change-log comment added
+ * Changes to this class. What the people haven been up to:
+ * 
+ * $Log$
+ * Revision 1.12.2.1  2005/12/20 12:04:47  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.12  2005/06/20 14:07:44  belger
+ * Formatierung
+ * Revision 1.11 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.10 2005/02/28 13:34:14 doemming *** empty log message ***
+ * 
+ * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message ***
+ * 
+ * Revision 1.8 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.7 2004/11/23 12:57:44 belger *** empty log message ***
+ * 
+ * Revision 1.6 2004/11/22 01:29:50 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/11/01 15:38:01 belger *** empty log message ***
+ * 
+ * Revision 1.4 2004/10/31 18:34:01 belger *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * empty log message *** Revision 1.2 2004/04/27 15:40:15 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:01:45 poth no message
+ * 
+ * Revision 1.2 2002/08/19 15:59:20 ap no message
+ * 
+ * Revision 1.1 2002/04/04 16:17:15 ap no message
+ * 
+ * Revision 1.3 2001/11/23 10:40:53 axel as: CVS change-log comment added
+ * 
+ *  
  */

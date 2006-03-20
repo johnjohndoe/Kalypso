@@ -31,14 +31,17 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.zml.obslink.ObjectFactory;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -50,13 +53,13 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
   private FeatureChange m_change;
 
   private final GMLWorkspace m_workspace;
 
-  public TimeserieLinkFeatureDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
+  public TimeserieLinkFeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -69,7 +72,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
-    final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp );
+    final TimeseriesLinkType tslink = (TimeseriesLinkType)m_feature.getProperty( m_ftp.getName() );
     dialog.setContext( m_workspace.getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() );
 
@@ -77,15 +80,22 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     FeatureChange fChange = null;
     if( open == Window.OK )
     {
-      final String href = (String) dialog.getInput();
+      final String href = (String)dialog.getInput();
       if( href == null )
-        fChange = new FeatureChange( m_feature, m_ftp, null );
+        fChange = new FeatureChange( m_feature, m_ftp.getName(), null );
       else if( href != null && href.length() > 0 )
       {
         final ObjectFactory linkFactory = new ObjectFactory();
-        final TimeseriesLinkType link = linkFactory.createTimeseriesLinkType();
-        link.setHref( href );
-        fChange = new FeatureChange( m_feature, m_ftp, link );
+        try
+        {
+          final TimeseriesLink link = linkFactory.createTimeseriesLink();
+          link.setHref( href );
+          fChange = new FeatureChange( m_feature, m_ftp.getName(), link );
+        }
+        catch( JAXBException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
     m_change = fChange;
@@ -95,7 +105,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     if( m_change != null )
       c.add( m_change );
@@ -104,7 +114,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel( )
+  public String getLabel()
   {
     return "...";
   }

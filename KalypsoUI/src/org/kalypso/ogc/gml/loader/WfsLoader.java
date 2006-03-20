@@ -7,8 +7,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -33,6 +31,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * 
  * @author Kuepferle, v.Doemming
  */
 public class WfsLoader extends AbstractLoader
@@ -56,7 +55,6 @@ public class WfsLoader extends AbstractLoader
    * @param context
    *          the URL form the map context (here the path to the associated gmt file)
    */
-  @Override
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     BufferedInputStream inputStream = null;
@@ -71,7 +69,8 @@ public class WfsLoader extends AbstractLoader
       final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ), new QName( featureType ), targetCRS, filter, maxFeature );
+      final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ),
+          featureType, targetCRS, filter, maxFeature );
 
       return new CommandableWorkspace( workspace );
     }
@@ -88,7 +87,7 @@ public class WfsLoader extends AbstractLoader
     }
   }
 
-  public String getDescription( )
+  public String getDescription()
   {
     return "WFS Layer";
   }
@@ -97,15 +96,18 @@ public class WfsLoader extends AbstractLoader
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
-  @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
     // TODO implementation of a transactional WFS
     if( data instanceof CommandableWorkspace )
     {
       Display display = new Display();
-      MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS", (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), "Sollen die Daten Lokal gespeichrt werden?", MessageDialog.QUESTION, new String[] {
-          "Ja", "Nein" }, 0 );
+      MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
+          MessageDialog.QUESTION, new String[]
+          {
+              "Ja",
+              "Nein" }, 0 );
       int result = md.open();
       try
       {
@@ -115,15 +117,16 @@ public class WfsLoader extends AbstractLoader
           SaveAsDialog dialog = new SaveAsDialog( new Shell( display ) );
           dialog.open();
           IPath targetPath = root.getLocation().append( dialog.getResult() );
-          // IFile file = root.getFile( targetPath );
+          //          IFile file = root.getFile( targetPath );
           FileWriter fw = new FileWriter( targetPath.toFile().toString() );
-          GmlSerializer.serializeWorkspace( fw, (GMLWorkspace) data );
+          GmlSerializer.serializeWorkspace( fw, (GMLWorkspace)data );
           ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, monitor );
         }
         else if( result == 1 )
         {
 
-          MessageDialog.openError( new Shell( display ), "Operation not supported", "Saving a feature at a remote location is not supported" );
+          MessageDialog.openError( new Shell( display ), "Operation not supported",
+              "Saving a feature at a remote location is not supported" );
         }
 
       }

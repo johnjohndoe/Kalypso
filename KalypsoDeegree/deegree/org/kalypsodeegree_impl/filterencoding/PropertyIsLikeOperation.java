@@ -76,55 +76,56 @@ import org.w3c.dom.Element;
 public class PropertyIsLikeOperation extends ComparisonOperation
 {
 
-  private PropertyName m_propertyName;
+  private PropertyName propertyName;
 
-  private Literal m_literal;
+  private Literal literal;
 
   // attributes of <PropertyIsLike>
-  private char m_wildCard;
+  private char wildCard;
 
-  private char m_singleChar;
+  private char singleChar;
 
-  private char m_escapeChar;
+  private char escapeChar;
 
-  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard, char singleChar, char escapeChar )
+  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard, char singleChar,
+      char escapeChar )
   {
     super( OperationDefines.PROPERTYISLIKE );
-    m_propertyName = propertyName;
-    m_literal = literal;
-    m_wildCard = wildCard;
-    m_singleChar = singleChar;
-    m_escapeChar = escapeChar;
+    this.propertyName = propertyName;
+    this.literal = literal;
+    this.wildCard = wildCard;
+    this.singleChar = singleChar;
+    this.escapeChar = escapeChar;
   }
 
-  public char getWildCard( )
+  public char getWildCard()
   {
-    return m_wildCard;
+    return wildCard;
   }
 
-  public char getSingleChar( )
+  public char getSingleChar()
   {
-    return m_singleChar;
+    return singleChar;
   }
 
-  public char getEscapeChar( )
+  public char getEscapeChar()
   {
-    return m_escapeChar;
+    return escapeChar;
   }
 
   public void setWildCard( char wildCard )
   {
-    this.m_wildCard = wildCard;
+    this.wildCard = wildCard;
   }
 
   public void setSingleChar( char singleChar )
   {
-    this.m_singleChar = singleChar;
+    this.singleChar = singleChar;
   }
 
   public void setEscapeChar( char escapeChar )
   {
-    this.m_escapeChar = escapeChar;
+    this.escapeChar = escapeChar;
   }
 
   /**
@@ -145,8 +146,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( children.getLength() != 2 )
       throw new FilterConstructionException( "'PropertyIsLike' requires exactly 2 elements!" );
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
-    Literal literal = (Literal) Literal.buildFromDOM( children.item( 1 ) );
+    PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( children.item( 0 ) );
+    Literal literal = (Literal)Literal.buildFromDOM( children.item( 1 ) );
 
     // determine the needed attributes
     String wildCard = element.getAttribute( "wildCard" );
@@ -167,40 +168,43 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( escapeChar.length() != 1 )
       throw new FilterConstructionException( "escape-Attribute must be exactly one character!" );
 
-    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar.charAt( 0 ), escapeChar.charAt( 0 ) );
+    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar.charAt( 0 ), escapeChar
+        .charAt( 0 ) );
   }
 
   /**
    * returns the name of the property that shall be compared to the literal
    */
-  public PropertyName getPropertyName( )
+  public PropertyName getPropertyName()
   {
-    return m_propertyName;
+    return propertyName;
   }
 
   public void setPropertyName( PropertyName propName )
   {
-    m_propertyName = propName;
+    propertyName = propName;
   }
 
   /**
    * returns the literal the property shall be compared to
    */
-  public Literal getLiteral( )
+  public Literal getLiteral()
   {
-    return m_literal;
+    return literal;
   }
 
   public void setLiteral( Literal literal )
   {
-    this.m_literal = literal;
+    this.literal = literal;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
-    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( m_wildCard ).append( "\" singleChar=\"" ).append( m_singleChar ).append( "\" escape=\"" ).append( m_escapeChar ).append( "\">" ).append( m_propertyName.toXML() ).append( m_literal.toXML() );
+    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( wildCard ).append(
+        "\" singleChar=\"" ).append( singleChar ).append( "\" escape=\"" ).append( escapeChar ).append( "\">" ).append(
+        propertyName.toXML() ).append( literal.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
@@ -221,8 +225,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     Object value2 = null;
     try
     {
-      value1 = m_propertyName.evaluate( feature );
-      value2 = m_literal.getValue();
+      value1 = propertyName.evaluate( feature );
+      value2 = literal.getValue();
       if( value1 == null || value2 == null )
         return false;
       return matches( value2.toString(), value1.toString() );
@@ -266,17 +270,17 @@ public class PropertyIsLikeOperation extends ComparisonOperation
       if( escapeMode )
       {
         // just append every character (except the escape character)
-        if( c != m_escapeChar )
+        if( c != escapeChar )
           sb.append( c );
         escapeMode = false;
       }
       else
       {
         // escapeChar means: switch to escapeMode
-        if( c == m_escapeChar )
+        if( c == escapeChar )
           escapeMode = true;
         // wildCard / singleChar means: prefix ends here
-        else if( c == m_wildCard || c == m_singleChar )
+        else if( c == wildCard || c == singleChar )
         {
           specialChar = c;
           break;
@@ -292,7 +296,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( !buffer.startsWith( prefix ) )
       return false;
 
-    if( specialChar == m_wildCard )
+    if( specialChar == wildCard )
     {
       // the prefix is terminated by a wildcard-character
       pattern = pattern.substring( skip + 1, pattern.length() );
@@ -304,7 +308,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
           return true;
       }
     }
-    else if( specialChar == m_singleChar )
+    else if( specialChar == singleChar )
     {
       // the prefix is terminated by a singlechar-character
       pattern = pattern.substring( skip + 1, pattern.length() );

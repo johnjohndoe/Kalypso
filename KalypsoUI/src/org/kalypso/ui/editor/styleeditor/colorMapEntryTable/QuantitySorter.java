@@ -47,16 +47,16 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 public class QuantitySorter extends ViewerSorter
 {
 
-  public QuantitySorter( )
+  public QuantitySorter()
   {
     super();
   }
 
-  @Override
   public int compare( Viewer viewer, Object o1, Object o2 )
   {
-    final ColorMapEntry entry1 = (ColorMapEntry) o1;
-    final ColorMapEntry entry2 = (ColorMapEntry) o2;
+
+    ColorMapEntry entry1 = (ColorMapEntry)o1;
+    ColorMapEntry entry2 = (ColorMapEntry)o2;
 
     return compareQuantities( entry1, entry2 );
 
@@ -65,7 +65,7 @@ public class QuantitySorter extends ViewerSorter
   private int compareQuantities( ColorMapEntry entry1, ColorMapEntry entry2 )
   {
     double test = entry1.getQuantity() - entry2.getQuantity();
-    int result = test < 0 ? -1 : (test > 0) ? 1 : 0;
+    int result = test < 0 ? -1 : ( test > 0 ) ? 1 : 0;
     return result;
   }
 

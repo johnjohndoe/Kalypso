@@ -52,12 +52,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -77,7 +76,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private final IFeatureModifier m_modifier;
 
-  public TextFeatureControl( final GMLWorkspace workspace, final Feature feature, final IValuePropertyType ftp )
+  public TextFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     super( workspace, feature, ftp );
 
@@ -101,7 +100,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     m_text.addFocusListener( new FocusAdapter()
     {
-      @Override
       public void focusLost( final FocusEvent e )
       {
         fireFeatureChange( getChange() );
@@ -113,7 +111,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetDefaultSelected( SelectionEvent e )
       {
         fireFeatureChange( getChange() );
@@ -180,10 +177,10 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     setValid( true );
   }
 
-  @Override
   public String toString()
   {
     return m_modifier.getLabel( getFeature() );
+//    return m_modifier.getValue( getFeature() ).toString();
   }
 
   protected FeatureChange getChange()
@@ -197,13 +194,13 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     final String text = m_currentValue;
 
     final Object newData = m_modifier.parseInput( getFeature(), text );
-    
-    final IPropertyType pt = getFeatureTypeProperty();
-    final Object oldData = feature.getProperty( pt );
+
+    final String name = getFeatureTypeProperty().getName();
+    final Object oldData = feature.getProperty( name );
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( ( newData == null && oldData != null ) || ( newData != null && !m_modifier.equals( newData, oldData ) ) )
-      return new FeatureChange( feature, pt, newData );
+      return new FeatureChange( feature, name, newData );
 
     return null;
   }

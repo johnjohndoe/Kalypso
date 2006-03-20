@@ -64,8 +64,9 @@ import java.util.HashMap;
 
 /**
  * Defines codes and constants for easy coping with the different kinds of Expressions (both XML-Entities &
- * JavaObjects). Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non
- * static way
+ * JavaObjects).
+ * 
+ * Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non static way
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -92,12 +93,12 @@ public class ExpressionDefines
   public static final int UNKNOWN = -1;
 
   /** used to associate names with the expressions */
-  private static HashMap<String, ExpressionInfo> names = new HashMap<String, ExpressionInfo>();
+  private static HashMap names = new HashMap();
 
   /** used to associate ids (Integers) with the expressions */
-  private static HashMap<Integer, ExpressionInfo> ids = new HashMap<Integer, ExpressionInfo>();
+  private static HashMap ids = new HashMap();
 
-  public ExpressionDefines( )
+  public ExpressionDefines()
   {
     addExpression( EXPRESSION, "Expression" );
     addExpression( PROPERTYNAME, "PropertyName" );
@@ -123,10 +124,10 @@ public class ExpressionDefines
    */
   public int getIdByName( final String name )
   {
-    final ExpressionInfo expression = names.get( name.toLowerCase() );
+    final ExpressionInfo expression = (ExpressionInfo)names.get( name.toLowerCase() );
     if( expression == null )
       return UNKNOWN;
-    return expression.m_id;
+    return expression.id;
   }
 
   /**
@@ -136,22 +137,22 @@ public class ExpressionDefines
    */
   public String getNameById( int id )
   {
-    final ExpressionInfo expression = ids.get( new Integer( id ) );
+    final ExpressionInfo expression = (ExpressionInfo)ids.get( new Integer( id ) );
     if( expression == null )
       return null;
-    return expression.m_name;
+    return expression.name;
   }
 
   private static final class ExpressionInfo
   {
-    public final int m_id;
+    public final int id;
 
-    public final String m_name;
+    public final String name;
 
     public ExpressionInfo( final int id, final String name )
     {
-      m_id = id;
-      m_name = name;
+      this.id = id;
+      this.name = name;
     }
   }
 }

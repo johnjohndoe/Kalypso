@@ -29,10 +29,9 @@
  */
 package org.kalypso.ogc.gml.gui;
 
-import javax.xml.namespace.QName;
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -40,11 +39,12 @@ import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -62,9 +62,9 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
   {
     return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
   }
@@ -73,61 +73,50 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory )
+  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory ) throws JAXBException
   {
 
-    final Button button = factory.createButton();
-    final GridData griddata = factory.createGridData();
+    final ButtonType button = factory.createButton();
+    final GridDataType griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( factory.createLayoutData( griddata ) );
+    button.setLayoutData( griddata );
 
     return button;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( workspace, ftp, selectionManager, fcl );
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public Class getValueClass( )
+  public String getClassName()
   {
-    return m_typeHandler.getValueClass();
+    return m_typeHandler.getClassName();
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public String getTypeName()
   {
     return m_typeHandler.getTypeName();
   }
 
-  @Override
   public String getText( Object o )
   {
-    // final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
-    // if( o == null )
-    // return prefix + "-";
-    // return prefix + ( (IObservation)o ).getName();
+    //    final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
+    //    if( o == null )
+    //      return prefix + "-";
+    //    return prefix + ( (IObservation)o ).getName();
     return "<Editieren...>";
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return true;
   }
 }

@@ -76,7 +76,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     m_context = context;
   }
 
-  @Override
   public boolean equals( Object obj )
   {
     if( m_obs == null )
@@ -133,7 +132,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.getValues( args );
   }
 
-  @Override
   public int hashCode()
   {
     if( m_obs == null )
@@ -158,8 +156,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     m_obs.setValues( values );
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );

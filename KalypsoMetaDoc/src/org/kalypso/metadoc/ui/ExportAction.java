@@ -70,8 +70,7 @@ public class ExportAction extends Action
     m_target = target;
   }
 
-  @Override
-  public void run( )
+  public void run()
   {
     final IExportableObjectFactory factory = (IExportableObjectFactory)m_part
         .getAdapter( IExportableObjectFactory.class );

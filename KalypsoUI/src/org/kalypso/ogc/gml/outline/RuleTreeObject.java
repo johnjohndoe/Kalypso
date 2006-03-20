@@ -90,8 +90,7 @@ public class RuleTreeObject
     return m_rule;
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     if( m_rule == null )
       return "<no styles set>";

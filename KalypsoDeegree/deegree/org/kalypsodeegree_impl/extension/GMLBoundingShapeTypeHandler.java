@@ -2,8 +2,6 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -25,19 +23,19 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public Class getValueClass( )
+  public String getClassName()
   {
-    return GM_Envelope.class;
+    return GM_Envelope.class.getName().toString();
   }
 
-  private final QName[] m_typeNames = new QName[] { new QName( XMLHelper.GMLSCHEMA_NS, "BoundingShapeType" ) };
+  private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "BoundingShapeType";
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public String getTypeName()
   {
-    return m_typeNames;
+    return m_nameSpaceURI;
   }
 
   /**
@@ -46,7 +44,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
    */
   public void marshall( final Object object, final Node node, URL context )
   {
-    final GM_Envelope envelope = (GM_Envelope) object;
+    final GM_Envelope envelope = (GM_Envelope)object;
 
     // TODO: bloed: warum muss man hier manuell die ganzen prefixes setzen
     // sollte das nicht der XML Schreiber erledigen??
@@ -125,7 +123,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname( )
+  public String getShortname()
   {
     return "Bounding Shape";
   }
@@ -135,7 +133,7 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
    */
   public Object cloneObject( Object objectToClone )
   {
-    final GM_Envelope env = (GM_Envelope) objectToClone;
+    final GM_Envelope env = (GM_Envelope)objectToClone;
     GM_Position min = env.getMin();
     GM_Position max = env.getMax();
     double[] maxAsArray = max.getAsArray();
@@ -151,14 +149,6 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return false;
   }
 
 }

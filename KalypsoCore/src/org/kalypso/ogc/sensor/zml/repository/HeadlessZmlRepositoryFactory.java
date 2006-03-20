@@ -56,7 +56,6 @@ public class HeadlessZmlRepositoryFactory extends FileRepositoryFactory
    * @see org.kalypso.repository.file.FileRepositoryFactory#createRepository(java.lang.String, java.lang.String,
    *      java.lang.String, boolean, java.io.FileFilter)
    */
-  @Override
   public FileRepository createRepository( String conf, String location, String id, boolean ro, FileFilter filter )
   {
     return new ZmlObservationRepository( getClass().getName(), conf, location, id, ro, filter );

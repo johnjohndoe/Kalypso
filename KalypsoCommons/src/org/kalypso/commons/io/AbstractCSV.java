@@ -55,7 +55,7 @@ import java.util.Vector;
  */
 public abstract class AbstractCSV implements ITabledValues
 {
-  protected final Vector<String[]> m_lines = new Vector<String[]>();
+  protected final Vector m_lines = new Vector();
 
   protected final int m_startLine;
 
@@ -112,7 +112,7 @@ public abstract class AbstractCSV implements ITabledValues
     if( getLines() == 0 )
       return 0;
 
-    return m_lines.get( 0 ).length;
+    return ( (String[])m_lines.get( 0 ) ).length;
   }
 
   /**
@@ -120,7 +120,7 @@ public abstract class AbstractCSV implements ITabledValues
    */
   public String getItem( final int row, final int col )
   {
-    return m_lines.get( row )[col];
+    return ( (String[])m_lines.get( row ) )[col];
   }
 
   /**
@@ -128,7 +128,7 @@ public abstract class AbstractCSV implements ITabledValues
    */
   public void setItem( final int row, final int col, String element )
   {
-    m_lines.get( row )[col] = element;
+    ( (String[])m_lines.get( row ) )[col] = element;
   }
 
   /**

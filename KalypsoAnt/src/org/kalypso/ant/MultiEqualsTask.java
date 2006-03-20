@@ -50,6 +50,7 @@ import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.XmlProperty;
 
 /**
  * This task allows to set mutliple properties depending on the result of comparing two strings.
@@ -101,10 +102,10 @@ public class MultiEqualsTask extends Task
   private String m_arg1;
   private String m_arg2;
 
-  private List<PropertyToSet> m_properties = new ArrayList<PropertyToSet>( 5 );
+  private List m_properties = new ArrayList( 5 );
 
   /** List of added ant-properties */
-  private final Map<String, String> m_addedAttributes = new HashMap<String, String>();
+  private final Map m_addedAttributes = new HashMap();
 
   /** Adds a property to set */
   public void addConfiguredProperty( final PropertyToSet property )
@@ -127,7 +128,6 @@ public class MultiEqualsTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
-  @Override
   public void execute() throws BuildException
   {
     if( m_arg1 == null )
@@ -172,7 +172,7 @@ public class MultiEqualsTask extends Task
       // when we read them, though (instead of keeping them
       // outside of the project and batch adding them at the end)
       // to allow other properties to reference them.
-      value = m_addedAttributes.get( name ) + "," + value;
+      value = (String)m_addedAttributes.get( name ) + "," + value;
       getProject().setProperty( name, value );
     }
     else

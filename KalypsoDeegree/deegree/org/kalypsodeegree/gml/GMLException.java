@@ -62,18 +62,57 @@
 package org.kalypsodeegree.gml;
 
 /**
- * @author Flowsad
+ * 
+ * 
+ * <p>
+ * -----------------------------------------------------
+ * </p>
+ * 
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+ * @version $Revision$ $Date$
  */
+
 public class GMLException extends Exception
 {
 
-  public GMLException( final String message )
+  private String message = "org.kalypsodeegree.gml.GMLException";
+
+  public GMLException( String message )
   {
-    super( message );
+    this.message = message;
   }
 
-  public GMLException( final String message, final Throwable cause )
+  public String toString()
   {
-    super( message, cause );
+    return message + "\n" + getLocalizedMessage();
   }
+
 }
+
+/*
+ * Changes to this class. What the people haven been up to:
+ * 
+ * $Log$
+ * Revision 1.6  2005/06/20 14:07:44  belger
+ * Formatierung
+ * Revision 1.5 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * empty log message *** Revision 1.2 2004/02/09 07:57:01 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:01:45 poth no message
+ * 
+ * Revision 1.3 2002/08/19 15:59:20 ap no message
+ * 
+ * Revision 1.2 2002/04/23 07:56:57 ap no message
+ * 
+ * Revision 1.1 2002/04/04 16:17:15 ap no message
+ * 
+ * Revision 1.2 2001/11/23 10:40:53 axel as: CVS change-log comment added
+ * 
+ *  
+ */

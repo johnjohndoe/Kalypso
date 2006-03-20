@@ -41,7 +41,7 @@ public class DiffLogger implements IDiffLogger
 
   private final ILogger m_logger;
 
-  private Stack<StringBuffer> m_buffers = new Stack<StringBuffer>();
+  private Stack m_buffers = new Stack();
 
   public DiffLogger( ILogger logger )
   {
@@ -94,7 +94,7 @@ public class DiffLogger implements IDiffLogger
       m_logger.log( message );
     else
     {
-      StringBuffer buffer = m_buffers.peek();
+      StringBuffer buffer = (StringBuffer)m_buffers.peek();
       if( buffer.length() > 0 )
         buffer.append( "\n" );
       buffer.append( message );
@@ -106,7 +106,7 @@ public class DiffLogger implements IDiffLogger
    */
   public void block()
   {
-    final StringBuffer stringBuffer = new StringBuffer();
+    StringBuffer stringBuffer = new StringBuffer();
     m_buffers.push( stringBuffer );
   }
 
@@ -115,7 +115,7 @@ public class DiffLogger implements IDiffLogger
    */
   public void unblock( boolean keepLastLog )
   {
-    final StringBuffer buffer = m_buffers.pop();
+    final StringBuffer buffer = (StringBuffer)m_buffers.pop();
     if( keepLastLog )
       innerLog( buffer.toString() );
   }

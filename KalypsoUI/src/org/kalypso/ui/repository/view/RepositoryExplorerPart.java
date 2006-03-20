@@ -94,7 +94,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IPropertySheetPage.class )
@@ -128,7 +127,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     removeSelectionChangedListener( this );
@@ -139,7 +137,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     m_chooser = new ObservationChooser( parent, getViewSite() );
@@ -153,7 +150,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
-  @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
@@ -164,7 +160,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
   public void setFocus()
   {
   // noch nix
@@ -182,7 +177,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
-  @Override
   public void saveState( final IMemento memento )
   {
     if( m_chooser == null )

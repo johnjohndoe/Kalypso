@@ -41,8 +41,7 @@
 
 package org.kalypso.services.user.client;
 
-import java.util.List;
-import java.util.Properties;
+import java.rmi.RemoteException;
 import java.util.logging.Logger;
 
 import javax.xml.rpc.ServiceException;
@@ -56,10 +55,8 @@ import org.kalypso.auth.ui.KalypsoLoginDialog;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.KalypsoUser;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.services.user.impl.KalypsoUserService;
-import org.kalypso.services.user.impl.ScenarioBean;
-import org.kalypso.services.user.impl.UserRightsException_Exception;
-import org.kalypso.services.user.impl.ScenarioBean.Props.Entry;
+import org.kalypso.services.proxy.IUserService;
+import org.kalypso.services.proxy.ScenarioBean;
 
 /**
  * @author schlienger
@@ -71,20 +68,19 @@ public class UserServiceAuthenticator implements IAuthenticator
   /**
    * @see org.kalypso.auth.login.IAuthenticator#authenticate(org.eclipse.swt.widgets.Shell)
    */
-  public IKalypsoUser authenticate( final Shell shell ) throws ServiceException, InterruptedException, UserRightsException_Exception
+  public IKalypsoUser authenticate( final Shell shell ) throws ServiceException, RemoteException, InterruptedException
   {
-    final KalypsoUserService srv = KalypsoServiceUserClientPlugin.getDefault().getUserServiceProxy();
+    final IUserService srv = KalypsoServiceUserClientPlugin.getDefault().getUserServiceProxy();
 
-    final List<ScenarioBean> beans = srv.getScenarios();
+    final ScenarioBean[] beans = srv.getScenarios();
 
     IScenario scenario = Scenario.DEFAULT_SCENARIO;
     final IScenario[] scenarios;
-    if( beans.size() > 0 )
+    if( beans.length > 0 )
     {
-      scenarios = new IScenario[beans.size()];
-      int i=0;
-      for( ScenarioBean sceBean: beans )
-        scenarios[i++] = new Scenario( sceBean.getId(), beanProps2Properties( sceBean.getProps() ) );
+      scenarios = new IScenario[beans.length];
+      for( int i = 0; i < scenarios.length; i++ )
+        scenarios[i] = new Scenario( beans[i].getId(), beans[i].getProps() );
     }
     else
       scenarios = new IScenario[]
@@ -111,7 +107,7 @@ public class UserServiceAuthenticator implements IAuthenticator
           if( askForLogin )
           {
             // using authentication
-            final String[] rights = srv.getRightsWithAuth( username, dlg.getPassword() ).toArray( new String[0]);
+            final String[] rights = srv.getRights2( username, dlg.getPassword(), scenario.getId() );
             if( rights == null )
               Logger.getLogger( getClass().getName() ).info(
                   "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
@@ -125,7 +121,7 @@ public class UserServiceAuthenticator implements IAuthenticator
           else
           {
             // using single sign on
-            final String[] rights = srv.getRights( username ).toArray( new String[0] );
+            final String[] rights = srv.getRights( username, scenario.getId() );
             if( rights == null )
               Logger.getLogger( getClass().getName() ).info(
                   "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
@@ -144,23 +140,12 @@ public class UserServiceAuthenticator implements IAuthenticator
     else
     {
       // using single sign on
-      final String[] rights = srv.getRights( username ).toArray( new String[0] );
+      final String[] rights = srv.getRights( username, scenario.getId() );
       if( rights != null && rights.length > 0 )
         return new KalypsoUser( username, rights, scenario.getId(), scenarios );
     }
 
     // throw an exception to indicate error state
     throw new IllegalStateException( "Authentifizierung fehlgeschlagen" );
-  }
-  
-  private final static Properties beanProps2Properties( ScenarioBean.Props props )
-  {
-    final Properties properties = new Properties();
-    
-    final List<Entry> entries = props.getEntry();
-    for( Entry entry : entries )
-      properties.put( entry.getKey(), entry.getValue() );
-    
-    return properties;
   }
 }

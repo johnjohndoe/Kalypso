@@ -109,7 +109,6 @@ public abstract class SetContentHelper
 
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
-        @Override
         protected void runIntern() throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;

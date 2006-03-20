@@ -7,8 +7,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
@@ -17,6 +15,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -26,9 +25,9 @@ public class FeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
 
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection m_changes = new ArrayList();
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
   private ICommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -40,7 +39,7 @@ public class FeatureDialog implements IFeatureDialog
    * FeatureDialog that shows a property of a feature to edit, usually the property is type of FeatureAssociationType
    * and maxOccurs is greater than 1, so ist a table inside
    */
-  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureSelectionManager selectionManager )
+  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -92,7 +91,7 @@ public class FeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     c.addAll( m_changes );
   }
@@ -103,6 +102,6 @@ public class FeatureDialog implements IFeatureDialog
   public String getLabel()
   {
     // TODO: use annotations
-    return m_feature.getFeatureType().getQName().getLocalPart();
+    return m_feature.getFeatureType().getName();
   }
 }

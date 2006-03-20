@@ -61,8 +61,6 @@
 
 package org.kalypsodeegree.gml;
 
-import javax.xml.namespace.QName;
-
 import org.w3c.dom.Element;
 
 /**
@@ -138,16 +136,11 @@ public interface GMLProperty
   public Object getAttributeValue( String nameSpace, String attributeValue );
 
   public Element getElement();
-
-  public QName getQName( );
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.9  2006/02/09 18:16:24  doemming
- * *** empty log message ***
- *
  * Revision 1.8  2005/06/20 14:07:44  belger
  * Formatierung
  * Revision 1.7 2005/03/08 11:01:10 doemming *** empty log message ***

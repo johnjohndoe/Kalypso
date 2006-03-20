@@ -56,8 +56,7 @@ public class CollapseAllAction extends AbstractObservationChooserAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     getViewer().collapseAll();
   }

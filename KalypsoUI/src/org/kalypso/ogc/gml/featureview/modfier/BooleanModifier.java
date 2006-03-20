@@ -45,11 +45,10 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -60,13 +59,13 @@ public class BooleanModifier implements IFeatureModifier
 
   private Image m_uncheckedImage = null;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public BooleanModifier( final IValuePropertyType ftp )
+  public BooleanModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
 
-    if( !(java.lang.Boolean.class==ftp.getValueClass() )) 
+    if( !"java.lang.Boolean".equals( ftp.getType() ) )
       throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" );
   }
 
@@ -75,7 +74,7 @@ public class BooleanModifier implements IFeatureModifier
    */
   public Object getValue( final Feature f )
   {
-    final Object property = f.getProperty( m_ftp);
+    final Object property = f.getProperty( m_ftp.getName() );
     if( property == null )
       return Boolean.FALSE;
 
@@ -113,7 +112,7 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty()
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }

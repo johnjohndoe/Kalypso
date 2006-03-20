@@ -65,7 +65,7 @@ public interface IMetaDocCommiter
    *          the metadata that must be prepared, meaning filled with all the required keys for which the user must give
    *          a value. Default values can also directly be provided
    */
-  public void prepareMetainf( final Properties serviceProps, final Map<Object, Object> metadata ) throws MetaDocException;
+  public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException;
 
   /**
    * Commits the document described by the metadata.
@@ -83,7 +83,7 @@ public interface IMetaDocCommiter
    * @param metadataExtensions
    *          some additional metadata that might be used by commiters
    */
-  public void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File doc,
+  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
       final String identifier, final String documentCategory, final Configuration metadataExtensions )
       throws MetaDocException;
 }

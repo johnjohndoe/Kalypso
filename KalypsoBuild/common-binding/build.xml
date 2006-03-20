@@ -7,7 +7,9 @@ Common build file for all binding projects.
 The following targets are defined here:
 - clean: cleans all generated stuff
 - init
+- compile: compiles the sources
 - generate: runs xjc against the schemas to generate the source files
+- deploy: builds a jar
 
 It is designed to be imported using the following syntax:
 
@@ -15,9 +17,9 @@ It is designed to be imported using the following syntax:
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<project name="commonbinding" default="generate">
+<project name="commonbinding" default="deploy">
 
-	<!-- define following properties in importing script
+  <!-- define following properties in importing script
 	
 	<property name="project" value="full path of the project..." />
 	<property name="project-name" value="will be used for naming the jar containing the bindings..." />
@@ -30,51 +32,56 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     </patternset>
 
 	-->
-	
-	<dirname property="commonbinding.basedir" file="${ant.file.commonbinding}" />
-	<property file="${commonbinding.basedir}/../common.properties" />
 
-	<property name="gen.srcbind" value="${project}/srcbind" />
+  <property name="build" value="${java.io.tmpdir}/${project-name}TmpDir" />
+  <property name="build.source" value="${build}/src" />
+	<!--
+  		uncommend this if you want to see the generated source,
+  		also modify compile task not to delete sources after compiling
+      <property name="build.source" value="${project}/src-generated" />
+     -->
+       
+    <property name="build.compile" value="${build}/compile" />
 
-	<path id="binding.classpath">
-		<fileset dir="${jwsdp}">
-			<include name="jaxb/lib/*.jar" />
-			<include name="jwsdp-shared/lib/*.jar" />
-		</fileset>
-	</path>
+  <property name="dest.file.name" value="${project-name}.jar" />
+    <property name="jwsdpDir" value="${workspace}/JWSDPInstallation/jwsdp" />
+    <!--
+    <property name="jwsdpDir" value="${workspace}/JWSDP_1.6_Installation/jwsdp" />
+    -->
+  <path id="cpref">
+    <fileset dir="${jwsdpDir}">
+      <include name="jaxb/lib/*.jar" />
+      <include name="jwsdp-shared/lib/*.jar" />
+    </fileset>
+  </path>
 
-	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="binding.classpath" />
+  <taskdef name="xjc"
+           classname="com.sun.tools.xjc.XJCTask"
+           classpathref="cpref"
+  />
 
-	<target name="init" description="erzeugt die Build-Verzeichnisse">
-		<mkdir dir="${gen.srcbind}" />
-	</target>
+  <target name="init" description="erzeugt die Build-Verzeichnisse">
+    <mkdir dir="${build.source}" />
+    <mkdir dir="${build.compile}" />
+  </target>
 
-	<target name="clean" description="cleans it up - totally">
-		<delete includeemptydirs="true">
-			<fileset dir="${gen.srcbind}" includes="**/*" />
-		</delete>
-	</target>
+  <target name="clean" description="cleans it up - totally">
+    <delete includeemptydirs="true">
+      <fileset dir="${build}" includes="**/*" />
+    </delete>
+  </target>
 
-	<target name="generate" depends="init" description="erzeugt die sourcen">
-		<echo message="Generating binding sources für ${project}" />
-<!--
-	<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
--->
-		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true" stackSize="50mb">
-			
-			<schema dir="${project}">
-				<patternset refid="binding.schemata" />
-			</schema>
+  <target  name="generate" depends="init" description="erzeugt die sourcen">
+    <echo  message="Generating binding sources für ${project-name}" />
 
-<!--
-			<classpath>
-			      <pathelement path="${classpath}"/>
-			      <pathelement location="lib/helper.jar"/>
-			    </classpath>
--->
-			<!-- use depends ??
+    <xjc target="${build.source}"  extension="true" removeoldoutput="true">
+      <schema dir="${project}">         
+          <patternset refid="binding.schemata"/>
+      </schema>
+	  <!-- use depends ??
+	  	<depends> </depends>
 	  -->
-			<!-- Important Note: the produces element specifies the
+      <!-- Important Note: the produces element specifies the
 			files from which the generate-process is depending. If 
 			the files are up-to-date (compared to the schemas) then
 			nothing is done. It is only when changes are discovered
@@ -93,13 +100,37 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			it here because if makes the whole deploy process much
 			faster!
 			-->
-		</xjc>
-	</target>
-	
-	<target name="compile" depends="generate">
-		<echo message="Compiling binding sources for ${project-name}" />
-		<javac srcdir="${gen.srcbind}" destdir="${project.bin}" classpathref="binding.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
-	</target>
+      <produces file="${project}/lib/${dest.file.name}" />
+    </xjc>
+  </target>
+
+  <target name="compile"
+          depends="generate"
+          description="compiles the generated sources"
+  >
+    <echo message="Compiling binding classes" />
+    <javac debug="${flag-debug}"
+           destdir="${build.compile}"
+           optimize="${flag-optimize}"
+           srcdir="${build.source}"
+           classpathref="cpref"
+    />
+    
+    <!-- danach immer die sourcen löschen, da 'removeoldoutput' nicht alles löscht -->
+    <echo message="Deleting generated source files" />
+    <delete includeemptydirs="true">
+         <fileset dir="${build.source}" includes="**/*" />
+    </delete>
+
+  </target>
+
+  <target name="deploy" depends="compile" description="package jar">
+    <echo message="Packaging binding classes" />
+    <jar destfile="${project}/lib/${dest.file.name}"
+         basedir="${build.compile}"
+         includes="**/*"
+    />
+  </target>
 
 </project>
 

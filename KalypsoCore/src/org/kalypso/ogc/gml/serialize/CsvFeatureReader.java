@@ -3,32 +3,30 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
- * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
- * wie gelesen wird, wird per {@link #addInfo(IPropertyType, CSVInfo)}übergeben.
+ * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
+ * 
+ * Die Information, welche Spalte wie gelesen wird, wird per {@link #addInfo(FeatureTypeProperty, CSVInfo)}übergeben.
  * 
  * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind. Alternativ wäre aber auch super, wenn das
  *       auch automatisch anhand der 1.Zeile ginge
+ * 
  * @todo Koordinatensystem berücksichtigen
+ * 
  * @author belger
  */
 public final class CsvFeatureReader
@@ -50,35 +48,36 @@ public final class CsvFeatureReader
   }
 
   /** featureTypeProperty -> cvsinfo */
-  private Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
+  private Map m_infos = new LinkedHashMap();
 
-  public final void addInfo( final IPropertyType ftp, final CSVInfo info )
+  public final void addInfo( final FeatureTypeProperty ftp, final CSVInfo info )
   {
     m_infos.put( ftp, info );
   }
 
-  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter,
+      final int lineskip ) throws IOException, CsvException
   {
-    final List<Feature> list = new ArrayList<Feature>();
-    final IFeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
+    final List list = new ArrayList();
+    final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
 
     // featurelist erzeugen
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
-    // final List flist = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    // flist.addAll( list );
+    final List flist = (List)rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    flist.addAll( list );
 
-    final GMLSchema schema = null;
-    final URL context = null;
-    final String schemaLocation = null;
-    return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation );
+    return new GMLWorkspace_Impl( new FeatureType[]
+    {
+        rootFeature.getFeatureType(),
+        ft }, rootFeature, null, null, null, new HashMap() );
   }
 
-  private IFeatureType loadCSVIntoList( final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment,
+      final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
-    // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
-    // HashMap() );
-    final IFeatureType featureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
+    final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray( new FeatureTypeProperty[0] );
+    final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null,
+        new HashMap() );
 
     final LineNumberReader lnr = new LineNumberReader( reader );
     int skippedlines = 0;
@@ -102,33 +101,33 @@ public final class CsvFeatureReader
     return featureType;
   }
 
-  private Feature createFeatureFromTokens( final String index, final String[] tokens, final IFeatureType featureType ) throws CsvException
+  private Feature createFeatureFromTokens( final String index, final String[] tokens, final FeatureType featureType )
+      throws CsvException
   {
-    final IPropertyType[] properties = featureType.getProperties();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
     for( int i = 0; i < data.length; i++ )
     {
-      final IPropertyType ftp = properties[i];
-      if( !(ftp instanceof IValuePropertyType) )
-        continue;
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final CSVInfo info = m_infos.get( ftp );
+      final FeatureTypeProperty ftp = properties[i];
+      final CSVInfo info = (CSVInfo)m_infos.get( ftp );
 
       // check column numbers
       for( int j = 0; j < info.columns.length; j++ )
       {
         final int colNumber = info.columns[j];
         if( colNumber >= tokens.length )
-          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getQName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
+          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '"
+              + ftp.getName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
       }
 
-      data[i] = parseColumns( vpt.getValueClass(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
+      data[i] = parseColumns( ftp.getType(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
     }
 
     return FeatureFactory.createFeature( index, featureType, data );
   }
 
-  private static Object parseColumns( final Class type, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
+  private static Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens,
+      final boolean ignoreFormatExceptions ) throws CsvException
   {
     try
     {
@@ -137,10 +136,10 @@ public final class CsvFeatureReader
         input[i] = tokens[columns[i]];
 
       final Object data = FeatureUtils.createFeaturePropertyFromStrings( type, format, input );
-
+      
       if( data == null )
         throw new CsvException( "Unbekannter Datentyp: " + type );
-
+      
       return data;
     }
     catch( final NumberFormatException nfe )

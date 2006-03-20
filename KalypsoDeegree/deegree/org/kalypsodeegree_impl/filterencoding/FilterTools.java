@@ -67,6 +67,8 @@ import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
+ * 
+ * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -97,41 +99,41 @@ public class FilterTools
     }
 
     // used as LIFO-queue
-    Stack<Operation> operations = new Stack<Operation>();
+    Stack operations = new Stack();
     operations.push( filter.getOperation() );
 
     while( !operations.isEmpty() )
     {
       // get the first element of the queue
-      Operation operation = operations.pop();
+      Operation operation = (Operation)operations.pop();
 
       switch( operation.getOperatorId() )
       {
-        case OperationDefines.BBOX:
+      case OperationDefines.BBOX:
+      {
+        // found BBOX
+        objects[0] = ( (SpatialOperation)operation ).getBoundingBox();
+        break;
+      }
+      case OperationDefines.AND:
+      {
+        ArrayList arguments = ( (LogicalOperation)operation ).getArguments();
+
+        for( int i = 0; i < arguments.size(); i++ )
         {
-          // found BBOX
-          objects[0] = ((SpatialOperation) operation).getBoundingBox();
-          break;
+          operations.push( arguments.get( i ) );
+
+          //                        if ( ( (Operation)arguments.get( i ) ).getOperatorId() ==
+          // OperationDefines.BBOX ) {
+          //                            // remove the BBOX-Operation from the AND-tree
+          //                            System.out.println( "Removing: " + i );
+          //                            arguments.remove( i );
+          //                            break;
+          //                        }
         }
-        case OperationDefines.AND:
-        {
-          ArrayList<Operation> arguments = ((LogicalOperation) operation).getArguments();
 
-          for( int i = 0; i < arguments.size(); i++ )
-          {
-            operations.push( arguments.get( i ) );
-
-            // if ( ( (Operation)arguments.get( i ) ).getOperatorId() ==
-            // OperationDefines.BBOX ) {
-            // // remove the BBOX-Operation from the AND-tree
-            // System.out.println( "Removing: " + i );
-            // arguments.remove( i );
-            // break;
-            // }
-          }
-
-          break;
-        }
+        break;
+      }
       }
 
       // BBOX found?
@@ -144,7 +146,7 @@ public class FilterTools
     // special case: Filter contains only the BBOX-Operation
     if( filter.getOperation().getOperatorId() == OperationDefines.BBOX )
     {
-      // objects[1] = null;
+      //objects[1] = null;
     }
 
     Debug.debugMethodEnd();

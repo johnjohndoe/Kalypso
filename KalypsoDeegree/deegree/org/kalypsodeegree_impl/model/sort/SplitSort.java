@@ -7,11 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -27,15 +27,15 @@ public class SplitSort implements FeatureList
 
   private final Feature m_parentFeature;
 
-  private final IRelationType m_parentFeatureTypeProperty;
+  private final FeatureTypeProperty m_parentFeatureTypeProperty;
 
-  public SplitSort( Feature parentFeature, IRelationType parentFTP )
+  public SplitSort( Feature parentFeature, FeatureTypeProperty parentFTP )
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
   }
 
-  public SplitSort( final Feature parentFeature, IRelationType parentFTP, final GM_Envelope env )
+  public SplitSort( final Feature parentFeature, FeatureTypeProperty parentFTP, final GM_Envelope env )
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
@@ -416,7 +416,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    */
-  public IRelationType getParentFeatureTypeProperty()
+  public FeatureTypeProperty getParentFeatureTypeProperty()
   {
     return m_parentFeatureTypeProperty;
   }

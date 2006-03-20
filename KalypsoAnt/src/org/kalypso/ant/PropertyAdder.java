@@ -46,6 +46,7 @@ import java.util.Map;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.XmlProperty;
 
 /**
  * Helper class to add properties within an ant task.
@@ -54,7 +55,7 @@ import org.apache.tools.ant.Task;
  */
 public class PropertyAdder
 {
-  private final Map<String, String> m_addedAttributes = new HashMap<String, String>();
+  private final Map m_addedAttributes = new HashMap();
   private final Task m_task;
 
   public PropertyAdder( final Task task )
@@ -74,8 +75,8 @@ public class PropertyAdder
       msg += ( "(id=" + id + ")" );
 
     final Project project = m_task.getProject();
-    if(project!=null)
-      project.log( msg, Project.MSG_DEBUG );
+
+    m_task.log( msg, Project.MSG_DEBUG );
 
     if( m_addedAttributes.containsKey( name ) )
     {
@@ -87,7 +88,7 @@ public class PropertyAdder
       // when we read them, though (instead of keeping them
       // outside of the project and batch adding them at the end)
       // to allow other properties to reference them.
-      value = m_addedAttributes.get( name ) + "," + value;
+      value = (String)m_addedAttributes.get( name ) + "," + value;
       project.setProperty( name, value );
     }
     else

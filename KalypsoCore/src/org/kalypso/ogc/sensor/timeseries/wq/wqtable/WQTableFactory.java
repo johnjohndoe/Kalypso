@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -20,7 +18,6 @@ import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.commons.serializer.ISerializer;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 
@@ -31,16 +28,14 @@ import org.xml.sax.InputSource;
  */
 public class WQTableFactory implements ISerializer
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+  private static ObjectFactory m_objectFactory = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  private WQTableFactory( )
+  private WQTableFactory()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
-  public static WQTableFactory getInstance( )
+  public static WQTableFactory getInstance()
   {
     return new WQTableFactory();
   }
@@ -52,10 +47,8 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final Unmarshaller unm = JC.createUnmarshaller();
-      final Object unmarshal = unm.unmarshal( ins );
-      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unmarshal;
-      final RatingTableList xmlTableList = element.getValue();
+      final Unmarshaller unm = m_objectFactory.createUnmarshaller();
+      final RatingTableList xmlTableList = (RatingTableList)unm.unmarshal( ins );
 
       return xmlTableList;
     }
@@ -80,7 +73,7 @@ public class WQTableFactory implements ISerializer
       int iTable = 0;
       for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
       {
-        final RatingTable xmlTable = (RatingTable) it.next();
+        final RatingTable xmlTable = (RatingTable)it.next();
 
         final Date validity = xmlTable.getValidity().getTime();
         final int offset = xmlTable.getOffset();
@@ -119,16 +112,14 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      
-      final RatingTableList xmlTables = OF.createRatingTableList();
-      
+      final RatingTableList xmlTables = m_objectFactory.createTables();
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
       final WQTable[] tables = wqset.getTables();
       for( int i = 0; i < tables.length; i++ )
       {
-        final RatingTable xmlTable = OF.createRatingTable();
+        final RatingTable xmlTable = m_objectFactory.createRatingTable();
         final Calendar cal = Calendar.getInstance();
         cal.setTime( tables[i].getValidity() );
         xmlTable.setValidity( cal );
@@ -144,12 +135,11 @@ public class WQTableFactory implements ISerializer
         xmlTables.getTable().add( xmlTable );
       }
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+      final Marshaller marshaller = m_objectFactory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+
       final StringWriter writer = new StringWriter();
-      final JAXBElement<RatingTableList> ratingTable = OF.createTables(xmlTables);
-      marshaller.marshal(ratingTable, writer );
+      marshaller.marshal( xmlTables, writer );
 
       return writer.toString();
     }
@@ -184,7 +174,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final String xml = createXMLString( (WQTableSet) object );
+      final String xml = createXMLString( (WQTableSet)object );
       os.write( xml.getBytes() );
     }
     catch( final Exception e ) // WQException, IOException

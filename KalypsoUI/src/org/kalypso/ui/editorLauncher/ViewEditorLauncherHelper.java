@@ -77,12 +77,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class ViewEditorLauncherHelper
 {
-  private ViewEditorLauncherHelper( )
+  private ViewEditorLauncherHelper()
   {
-    // never instantiate this class
+  // never instantiate this class
   }
 
-  public static void showTemplateDialog( final IPath filePath, final FileFilter fileFilter, final IDefaultTemplateLauncher[] defaultTemplates )
+  public static void showTemplateDialog( final IPath filePath, final FileFilter fileFilter,
+      final IDefaultTemplateLauncher[] defaultTemplates )
   {
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot root = workspace.getRoot();
@@ -105,10 +106,10 @@ public class ViewEditorLauncherHelper
       e.printStackTrace();
     }
 
-    final ArrayList<IFile> allTemplates = new ArrayList<IFile>();
+    final ArrayList allTemplates = new ArrayList();
 
     // virtuelle Vorlagen hinzufügen
-    final Map<IFile, IDefaultTemplateLauncher> defaultTemplateMap = new HashMap<IFile, IDefaultTemplateLauncher>();
+    final Map defaultTemplateMap = new HashMap();
     for( int i = 0; i < defaultTemplates.length; i++ )
     {
       // pseudo file erzeugen, damit der LabelProvider was schönes erzeugt
@@ -131,7 +132,8 @@ public class ViewEditorLauncherHelper
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
     dialog.setEmptyListMessage( "Es konnten keine Ansichten für diesen Dateityp ermittelt werden." );
-    dialog.setMessage( "Diese Datei ist keine Ansichtsvorlage.\nSie können eine vorhandene Ansicht auswählen\noder eine Standardansicht für die enthaltenen Daten generieren." );
+    dialog
+        .setMessage( "Diese Datei ist keine Ansichtsvorlage.\nSie können eine vorhandene Ansicht auswählen\noder eine Standardansicht für die enthaltenen Daten generieren." );
     dialog.setMultipleSelection( true );
     dialog.setTitle( "Ansichtsauswahl" );
     dialog.setEmptySelectionMessage( "Wählen Sie mindestens eine Vorlage." );
@@ -150,13 +152,13 @@ public class ViewEditorLauncherHelper
       {
         try
         {
-          final IFile template = (IFile) templates[i];
+          final IFile template = (IFile)templates[i];
 
           // wars ein Default? dann extra behandeln
           IEditorInput input = null;
           IEditorDescriptor editorDescription = null;
 
-          final IDefaultTemplateLauncher defaultTemplate = defaultTemplateMap.get( template );
+          final IDefaultTemplateLauncher defaultTemplate = (IDefaultTemplateLauncher)defaultTemplateMap.get( template );
           if( defaultTemplate != null )
           {
             editorDescription = defaultTemplate.getEditor();

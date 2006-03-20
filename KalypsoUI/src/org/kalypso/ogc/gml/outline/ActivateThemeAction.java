@@ -63,7 +63,6 @@ public class ActivateThemeAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     final Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
@@ -78,13 +77,11 @@ public class ActivateThemeAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
     refresh();
   }
 
-  @Override
   protected void refresh()
   {
     boolean bEnable = false;

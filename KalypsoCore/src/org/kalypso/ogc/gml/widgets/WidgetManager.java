@@ -70,7 +70,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   private Point m_lastMoved = null;
 
-  private final List<IWidgetChangeListener> m_widgetChangeListener = new ArrayList<IWidgetChangeListener>();
+  private final List m_widgetChangeListener = new ArrayList();
 
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
@@ -91,12 +91,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       switch( e.getButton() )
       {
       case MouseEvent.BUTTON1:
-      {
-        if( e.getClickCount() == 1 )
-          actualWidget.leftClicked( e.getPoint() );
-        else if( e.getClickCount() == 2 )
-          actualWidget.doubleClickedLeft( e.getPoint() );
-      }
+        actualWidget.leftClicked( e.getPoint() );
         break;
 
       case MouseEvent.BUTTON2:
@@ -104,12 +99,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
         break;
 
       case MouseEvent.BUTTON3:
-      {
-        if( e.getClickCount() == 1 )
-          actualWidget.rightClicked( e.getPoint() );
-        else if( e.getClickCount() == 2 )
-          actualWidget.doubleClickedRight( e.getPoint() );
-      }
+        actualWidget.rightClicked( e.getPoint() );
         break;
 
       default:
@@ -236,7 +226,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     fireWidgetChangeEvent( newWidget );
   }
 
-  public void addWidgetChangeListener( final IWidgetChangeListener listener )
+  public void addWidgetChangeListener( IWidgetChangeListener listener )
   {
     m_widgetChangeListener.add( listener );
   }
@@ -248,7 +238,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   private void fireWidgetChangeEvent( IWidget newWidget )
   {
-    final IWidgetChangeListener[] listener = m_widgetChangeListener.toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
+    final IWidgetChangeListener[] listener = (IWidgetChangeListener[])m_widgetChangeListener
+        .toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
     for( int i = 0; i < listener.length; i++ )
       listener[i].widgetChanged( newWidget );
   }

@@ -12,49 +12,38 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.lang.MultiException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author doemming
+ *  
  */
 public class FeatureHelper
 {
-  public static IPropertyType getPT( Feature feature, String propName )
-  {
-    final IPropertyType[] properties = feature.getFeatureType().getProperties();
-
-    for( int i = 0; i < properties.length; i++ )
-    {
-      final IPropertyType type = properties[i];
-      if( propName.equals( type.getQName().getLocalPart() ) )
-        return type;
-    }
-    return null;
-  }
-
   public static boolean booleanIsTrue( Feature feature, String propName, boolean defaultStatus )
   {
-    final Object property = feature.getProperty( propName );
+    Object property = feature.getProperty( propName );
     if( property != null && property instanceof Boolean )
-      return ((Boolean) property).booleanValue();
+      return ( (Boolean)property ).booleanValue();
     return defaultStatus;
   }
 
-  public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern, String defaultValue )
+  public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern,
+      String defaultValue )
   {
-    final Object property = feature.getProperty( propName );
+    Object property = feature.getProperty( propName );
     if( property != null && property instanceof Date )
     {
       DateFormat dateFormat = new SimpleDateFormat( simpleDateFormatPattern );
-      return dateFormat.format( (Date) property );
+      return dateFormat.format( (Date)property );
     }
     return defaultValue;
 
@@ -62,30 +51,32 @@ public class FeatureHelper
 
   public static double getAsDouble( Feature feature, String propName, double defaultValue )
   {
-    final Object value = feature.getProperty( propName );
+    Object value = feature.getProperty( propName );
     if( value == null )
       return defaultValue;
     if( value instanceof String )
-      return Double.valueOf( (String) value ).doubleValue();
+      return Double.valueOf( (String)value ).doubleValue();
     // should be a Double
-    return ((Double) value).doubleValue();
+    return ( (Double)value ).doubleValue();
   }
 
-  public static String getAsString( Feature feature, String propName )
+  public static String getAsString( Feature nodeFE, String property )
   {
-    final Object value = feature.getProperty( propName );
     // TODO use numberformat
+    Object value = nodeFE.getProperty( property );
     if( value == null )
       return null;
     if( value instanceof String )
-      return (String) value;
+      return (String)value;
     return value.toString();
   }
 
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>
-   * Die Properties werden dabei anhand der übergebenen {@link Properties}zugeordnet. Es gilt:
+   * Die Properties werden dabei anhand der übergebenen {@link Properties}zugeordnet.
+   * 
+   * Es gilt:
    * <ul>
    * <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett kopiert.</li>
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
@@ -93,6 +84,7 @@ public class FeatureHelper
    * </ul>
    * 
    * @throws CloneNotSupportedException
+   * 
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
    * @throws NullPointerException
@@ -100,29 +92,34 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           Noch sind nicht alle Typen implementiert
    */
-  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws CloneNotSupportedException
+  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature,
+      final Properties propertyMap ) throws CloneNotSupportedException
   {
+    final FeatureType sourceType = sourceFeature.getFeatureType();
+    final FeatureType targetType = targetFeature.getFeatureType();
+
     for( final Iterator pIt = propertyMap.entrySet().iterator(); pIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) pIt.next();
-      final String sourceProp = (String) entry.getKey();
-      final String targetProp = (String) entry.getValue();
+      final Map.Entry entry = (Entry)pIt.next();
+      final String sourceProp = (String)entry.getKey();
+      final String targetProp = (String)entry.getValue();
 
-      final IValuePropertyType sourceFTP = (IValuePropertyType) getPT( sourceFeature, sourceProp );
-      final IValuePropertyType targetFTP = (IValuePropertyType) getPT( targetFeature, targetProp );
+      final FeatureTypeProperty sourceFTP = sourceType.getProperty( sourceProp );
+      final FeatureTypeProperty targetFTP = targetType.getProperty( targetProp );
 
       if( sourceFTP == null )
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-      if( !sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
+      if( !sourceFTP.getType().equals( targetFTP.getType() ) )
+        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp
+            + "' and '" + targetProp + "'" );
 
-      final Object object = sourceFeature.getProperty( sourceFTP );
+      final Object object = sourceFeature.getProperty( sourceProp );
 
-      final Object newobject = cloneData( object, sourceFTP.getValueClass() );
+      final Object newobject = cloneData( object, sourceFTP.getType() );
 
-      targetFeature.setProperty( FeatureFactory.createFeatureProperty( targetFTP, newobject ) );
+      targetFeature.setProperty( FeatureFactory.createFeatureProperty( targetProp, newobject ) );
     }
   }
 
@@ -131,7 +128,7 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Object object, Class clazz ) throws CloneNotSupportedException
+  public static Object cloneData( final Object object, final String type ) throws CloneNotSupportedException
   {
     if( object == null )
       return null;
@@ -148,32 +145,32 @@ public class FeatureHelper
 
     // if we have an IMarhsallingTypeHandler, it will do the clone for us.
     final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) typeRegistry.getTypeHandlerForClassName( clazz );
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
     if( typeHandler != null )
       return typeHandler.cloneObject( object );
 
     // TODO: delete these lines AFTEr we have checked that it is still working
-    // if( object instanceof GM_Point )
-    // {
-    // final GM_Point point = (GM_Point)object;
-    // // todo: is there a universal clone-method for GM_Geometries?
-    // final GM_Position position = point.getPosition();
-    // final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
-    // return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
-    // }
+    //    if( object instanceof GM_Point )
+    //    {
+    //      final GM_Point point = (GM_Point)object;
+    //      // todo: is there a universal clone-method for GM_Geometries?
+    //      final GM_Position position = point.getPosition();
+    //      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
+    //      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
+    //    }
 
-    throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + clazz.getName() + "' nicht kopieren." );
+    throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
   }
 
-  public static boolean isCompositionLink( Feature srcFE, IRelationType linkProp, Feature destFE )
+  public static boolean isCompositionLink( Feature srcFE, String linkPropName, Feature destFE )
   {
-    final Object property = srcFE.getProperty( linkProp );
+    final Object property = srcFE.getProperty( linkPropName );
     if( property == null )
       return false;
-    if( linkProp.isList() )
+    if( srcFE.getFeatureType().isListProperty( linkPropName ) )
     {
       // list:
-      final List list = (List) property;
+      final List list = (List)property;
       return list.contains( destFE );
     }
     // no list:
@@ -183,12 +180,12 @@ public class FeatureHelper
   /**
    * @return position of link or -1 if relation does not exists
    */
-  public static int getPositionOfAssoziation( Feature srcFE, IRelationType linkProp, Feature destFE )
+  public static int getPositionOfAssoziation( Feature srcFE, String linkPropName, Feature destFE )
   {
-    if( !(linkProp.isList()) )
+    if( !srcFE.getFeatureType().isListProperty( linkPropName ) )
       return 0;
 
-    final List list = (List) srcFE.getProperty( linkProp );
+    final List list = (List)srcFE.getProperty( linkPropName );
     int pos = -1;
     pos = list.indexOf( destFE );
     if( pos > -1 )
@@ -202,16 +199,25 @@ public class FeatureHelper
       return new Feature[] {};
     if( object instanceof Feature )
     {
-      return new Feature[] { (Feature) object };
+      return new Feature[]
+      { (Feature)object };
     }
     else if( object instanceof FeatureList )
     {
-      return ((FeatureList) object).toFeatures();
+      return ( (FeatureList)object ).toFeatures();
     }
     else
     {
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
     }
+  }
+
+  /**
+   * TODO change String argument to <code>class</code> type
+   */
+  public static boolean isGeometryType( String type )
+  {
+    return type.startsWith( GM_Object.class.getPackage().getName() );
   }
 
   /**
@@ -222,12 +228,12 @@ public class FeatureHelper
    */
   public static boolean hasCollections( Feature f )
   {
-    IFeatureType featureType = f.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      IPropertyType property = properties[i];
-      if( property.isList() )
+      FeatureTypeProperty property = properties[i];
+      if( featureType.isListProperty( property.getName() ) )
         return true;
     }
     return false;
@@ -237,61 +243,79 @@ public class FeatureHelper
   public static int[] getPositionOfAllAssociations( Feature feature )
   {
     ArrayList res = new ArrayList();
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      IPropertyType property = properties[i];
-      if( property instanceof IRelationType )
+      FeatureTypeProperty property = properties[i];
+      if( property instanceof FeatureAssociationTypeProperty )
       {
         res.add( new Integer( i ) );
       }
     }
-    Integer[] positions = (Integer[]) res.toArray( new Integer[res.size()] );
+    Integer[] positions = (Integer[])res.toArray( new Integer[res.size()] );
     return ArrayUtils.toPrimitive( positions );
   }
 
-  public static IRelationType[] getAllAssociations( Feature feature )
+  public static FeatureAssociationTypeProperty[] getAllAssociations( Feature feature )
   {
     final ArrayList res = new ArrayList();
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
+    final FeatureType featureType = feature.getFeatureType();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      final IPropertyType property = properties[i];
-      if( property instanceof IRelationType )
+      final FeatureTypeProperty property = properties[i];
+      if( property instanceof FeatureAssociationTypeProperty )
         res.add( property );
     }
-    return (IRelationType[]) res.toArray( new IRelationType[res.size()] );
+    return (FeatureAssociationTypeProperty[])res.toArray( new FeatureAssociationTypeProperty[res.size()] );
   }
 
   public static boolean isCollection( Feature f )
   {
-
-    final IFeatureType featureType = f.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
+    
+    final FeatureType featureType = f.getFeatureType();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
 
     if( properties.length > 1 )
       return false;
-
+    
     for( int i = 0; i < properties.length; i++ )
     {
-      final IPropertyType property = properties[i];
-      if( property.isList() )
+      final FeatureTypeProperty property = properties[i];
+      if( featureType.isListProperty( property.getName() ) )
         return true;
     }
     return false;
   }
 
-  public static IFeatureType[] getFeatureTypeFromCollection( Feature f )
+  public static boolean isFeatuerTypeInFeatureCollection( Feature feature, FeatureType ftToCheckFor )
   {
-    final IFeatureType featureType = f.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
-    final IPropertyType property = featureType.getProperty( properties[0].getQName() );
+    if( isCollection( feature ) )
+    {
+      FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)feature.getProperties()[0];
+      FeatureType[] associationFeatureTypes = property.getAssociationFeatureTypes();
+      for( int i = 0; i < associationFeatureTypes.length; i++ )
+      {
+        FeatureType type = associationFeatureTypes[i];
+        if( type.equals( ftToCheckFor ) )
+          return true;
+      }
+    }
+    return false;
+  }
 
-    IFeatureType[] afT = null;
-    if( property instanceof IRelationType )
-      afT = ((IRelationType) property).getTargetFeatureTypes( null, false );
+  public static FeatureType[] getFeatureTypeFromCollection( Feature f )
+  {
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    FeatureTypeProperty property = featureType.getProperty( properties[0].getName() );
+
+    FeatureType[] afT = null;
+    if( property instanceof FeatureAssociationTypeProperty )
+    {
+      afT = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
+    }
     return afT;
   }
 
@@ -308,8 +332,7 @@ public class FeatureHelper
     for( int i = 0; i < strings.length; i++ )
     {
       final String[] splits = strings[i].split( "-" );
-
-      String value = (String) f.getProperty( splits[1] );
+      String value = (String)f.getProperty( splits[1] );
       if( value == null )
         value = splits[1];
 
@@ -329,7 +352,7 @@ public class FeatureHelper
   public static void copySimpleProperties( final Feature srcFE, final Feature targetFE ) throws MultiException
   {
     final MultiException multiException = new MultiException();
-    final IPropertyType[] srcFTPs = srcFE.getFeatureType().getProperties();
+    final FeatureTypeProperty[] srcFTPs = srcFE.getFeatureType().getProperties();
     for( int i = 0; i < srcFTPs.length; i++ )
     {
       try
@@ -346,21 +369,21 @@ public class FeatureHelper
   }
 
   /**
+   * 
    * @param srcFE
    * @param targetFE
    * @param property
    * @throws CloneNotSupportedException
    */
-  public static void copySimpleProperty( Feature srcFE, Feature targetFE, IPropertyType property ) throws CloneNotSupportedException
+  public static void copySimpleProperty( Feature srcFE, Feature targetFE, FeatureTypeProperty property )
+      throws CloneNotSupportedException
   {
-    if( property instanceof IValuePropertyType )
+    if( !( property instanceof FeatureAssociationTypeProperty ) )
     {
-      final IValuePropertyType pt = (IValuePropertyType) property;
-      final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = cloneData( valueOriginal, pt.getValueClass() );
-      targetFE.setProperty( pt, cloneValue );
+      final Object valueOriginal = srcFE.getProperty( property.getName() );
+      final Object cloneValue;
+      cloneValue = cloneData( valueOriginal, property.getType() );
+      targetFE.setProperty( property.getName(), cloneValue );
     }
   }
-
- 
 }

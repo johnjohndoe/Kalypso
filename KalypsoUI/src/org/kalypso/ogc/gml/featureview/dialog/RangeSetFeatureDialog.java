@@ -11,9 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -62,9 +61,9 @@ public class RangeSetFeatureDialog implements IFeatureDialog
 
   private final Feature m_feature;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public RangeSetFeatureDialog( final Feature feature, final IPropertyType ftp )
+  public RangeSetFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -83,7 +82,7 @@ public class RangeSetFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
   //  no changes allowed
   }
@@ -110,7 +109,6 @@ public class RangeSetFeatureDialog implements IFeatureDialog
       setShellStyle( getShellStyle() | SWT.RESIZE );
     }
 
-    @Override
     protected Control createDialogArea( final Composite parent )
     {
       getShell().setText( "RangeSet properties" );

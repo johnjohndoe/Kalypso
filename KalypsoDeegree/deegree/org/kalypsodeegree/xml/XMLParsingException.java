@@ -113,13 +113,11 @@ public class XMLParsingException extends Exception
     st = e.getMessage() + sb.toString();
   }
 
-  @Override
   public String toString()
   {
     return message + "\n" + st;
   }
 
-  @Override
   public String getMessage()
   {
     return message;

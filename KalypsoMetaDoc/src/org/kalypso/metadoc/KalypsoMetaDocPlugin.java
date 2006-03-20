@@ -1,30 +1,26 @@
 package org.kalypso.metadoc;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.plugin.*;
 import org.kalypso.metadoc.impl.MetadocExtensions;
 import org.osgi.framework.BundleContext;
+import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class KalypsoMetaDocPlugin extends AbstractUIPlugin
 {
-  // The shared instance.
+  //The shared instance.
   private static KalypsoMetaDocPlugin plugin;
-
-  // Resource bundle.
+  //Resource bundle.
   private ResourceBundle resourceBundle;
-
   private IExportTarget[] m_targets;
 
   /**
    * The constructor.
    */
-  public KalypsoMetaDocPlugin( )
+  public KalypsoMetaDocPlugin()
   {
     super();
     plugin = this;
@@ -41,7 +37,6 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
-  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
@@ -50,7 +45,6 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
   /**
    * This method is called when the plug-in is stopped
    */
-  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );
@@ -59,7 +53,7 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoMetaDocPlugin getDefault( )
+  public static KalypsoMetaDocPlugin getDefault()
   {
     return plugin;
   }
@@ -72,7 +66,7 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
     ResourceBundle bundle = KalypsoMetaDocPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return ( bundle != null ) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -83,17 +77,17 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle( )
+  public ResourceBundle getResourceBundle()
   {
     return resourceBundle;
   }
 
-  public static String getId( )
+  public static String getId()
   {
     return getDefault().getBundle().getSymbolicName();
   }
 
-  public IExportTarget[] getTargets( ) throws CoreException
+  public IExportTarget[] getTargets() throws CoreException
   {
     if( m_targets == null )
       m_targets = MetadocExtensions.retrieveTargets();

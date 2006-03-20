@@ -892,11 +892,11 @@ public class XMLTools
    */
   public static Document mergeSchemas( Document[] schemas ) throws Exception
   {
-    final StringBuffer content = new StringBuffer();
-    final ArrayList<String> attributes = new ArrayList<String>();
-    final ArrayList<String> imports = new ArrayList<String>();
-    final HashMap<String, Object> nodes = new HashMap<String, Object>();
-    
+
+    StringBuffer content = new StringBuffer();
+    ArrayList attributes = new ArrayList();
+    ArrayList imports = new ArrayList();
+    HashMap nodes = new HashMap();
     String schemaNS = null;
 
     // merge schemas into one schema
@@ -908,8 +908,8 @@ public class XMLTools
       // add attributes to the root element
       for( int j = 0; j < nnm.getLength(); j++ )
       {
-        final Attr attr = (Attr)nnm.item( j );
-        final String a = attr.getName() + "=\"" + attr.getValue() + "\" ";
+        Attr attr = (Attr)nnm.item( j );
+        String a = attr.getName() + "=\"" + attr.getValue() + "\" ";
 
         if( !attributes.contains( a ) && !attr.getName().equals( "targetNamespace" ) )
         {
@@ -1014,7 +1014,9 @@ public class XMLTools
     for( int i = 0; i < children.getLength(); i++ )
     {
       if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
-        list.addElement( (Element) children.item( i ) );
+      {
+        list.elements.add( children.item( i ) );
+      }
     }
 
     return list;

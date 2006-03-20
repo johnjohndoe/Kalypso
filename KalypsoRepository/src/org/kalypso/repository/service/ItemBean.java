@@ -53,7 +53,7 @@ public class ItemBean implements Serializable
 
   private String m_name;
 
-  public ItemBean( )
+  public ItemBean()
   {
     this( "", "" );
   }
@@ -70,7 +70,7 @@ public class ItemBean implements Serializable
     m_name = name;
   }
 
-  public String getId( )
+  public String getId()
   {
     return m_id;
   }
@@ -80,7 +80,7 @@ public class ItemBean implements Serializable
     m_id = id;
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -93,10 +93,12 @@ public class ItemBean implements Serializable
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  public boolean equals( ItemBean other )
+  public boolean equals( Object obj )
   {
-    if( other == null )
+    if( obj == null || !( obj instanceof ItemBean ) )
       return false;
+
+    final ItemBean other = (ItemBean)obj;
 
     return m_id.equals( other.getId() );
   }

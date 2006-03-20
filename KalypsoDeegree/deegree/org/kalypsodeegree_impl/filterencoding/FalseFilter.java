@@ -60,13 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.io.ByteArrayInputStream;
-
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Abstract superclass representing <Filter>elements (as defined in the Filter DTD). A <Filter>element either consists
@@ -94,35 +89,12 @@ public class FalseFilter implements Filter
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer();
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
     sb.append( "<False/>" );
     sb.append( "</ogc:Filter>\n" );
     return sb;
-  }
-
-  /**
-   * @see org.kalypsodeegree.filterencoding.Filter#clone(org.kalypsodeegree.filterencoding.Filter)
-   */
-
-  @Override
-  public Filter clone( ) throws CloneNotSupportedException
-  {
-    StringBuffer buffer = toXML();
-    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
-    Document asDOM = null;
-    try
-    {
-      asDOM = XMLHelper.getAsDOM( input, true );
-      Element element = asDOM.getDocumentElement();
-      return AbstractFilter.buildFromDOM( element );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    throw new CloneNotSupportedException();
   }
 }

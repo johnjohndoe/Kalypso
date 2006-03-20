@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.outline;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.net.URL;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -62,14 +61,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -83,7 +79,8 @@ public class SaveStyleAction extends AbstractOutlineAction
 {
   private final Shell shell;
 
-  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer )
+  public SaveStyleAction( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
     shell = outlineViewer.getControl().getShell();
@@ -93,16 +90,15 @@ public class SaveStyleAction extends AbstractOutlineAction
    * @see org.eclipse.jface.action.Action#run()
    */
 
-  @Override
-  public void run( )
+  public void run()
   {
-    Object o = ((IStructuredSelection) getOutlineviewer().getSelection()).getFirstElement();
+    Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
     if( o instanceof ThemeStyleTreeObject )
     {
-      final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
+      final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+        KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
         saveUserStyle( kalypsoStyle, shell );
       }
     }
@@ -110,32 +106,10 @@ public class SaveStyleAction extends AbstractOutlineAction
 
   public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
   {
-    File knownFilename = null;
-    if( userStyle instanceof GisTemplateUserStyle )
-    {
-      try
-      {
-        GisTemplateUserStyle tus = (GisTemplateUserStyle) userStyle;
-        final PoolableObjectType poolKey = tus.getPoolKey();
-        final URL context = poolKey.getContext();
-        String location = poolKey.getLocation();
-        final UrlResolver resolver = new UrlResolver();
-        final URL url = resolver.resolveURL( context, location );
-        final IFile file = ResourceUtilities.findFileFromURL( url );
-        knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
-      }
-      catch( Exception e1 )
-      {
-        e1.printStackTrace();
-      }
-    }
-
-    final String[] filterExtension = { "*.sld" };
+    String[] filterExtension =
+    { "*.sld" };
     FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
-
-    if( knownFilename != null )
-      saveDialog.setFileName( knownFilename.getAbsolutePath() );
     String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
     sldContents += userStyle.exportAsXML();
     sldContents += "</NamedLayer></StyledLayerDescriptor>";
@@ -143,10 +117,10 @@ public class SaveStyleAction extends AbstractOutlineAction
     try
     {
       sld = SLDFactory.createSLD( sldContents );
-      final String filename = saveDialog.open();
+      String filename = saveDialog.open();
       if( filename != null )
       {
-        Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+        Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
         final Source source = new DOMSource( doc );
         File file = null;
         if( filename.indexOf( "." ) == -1 )
@@ -154,13 +128,11 @@ public class SaveStyleAction extends AbstractOutlineAction
         else
           file = new File( filename );
         IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
-
         if( iFile != null )
         {
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
           final SetContentHelper thread = new SetContentHelper()
           {
-            @Override
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
 
@@ -190,16 +162,16 @@ public class SaveStyleAction extends AbstractOutlineAction
     }
     catch( Exception e )
     {
+      // TODO error handling
       e.printStackTrace();
     }
   }
 
-  @Override
-  protected final void refresh( )
+  protected final void refresh()
   {
     boolean bEnable = false;
 
-    final IStructuredSelection s = (IStructuredSelection) getOutlineviewer().getSelection();
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof ThemeStyleTreeObject )
       bEnable = true;

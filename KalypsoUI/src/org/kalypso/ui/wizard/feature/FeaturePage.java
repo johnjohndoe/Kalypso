@@ -52,12 +52,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeaturePage extends WizardPage
 {
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection m_changes = new ArrayList();
 
   private FeatureComposite m_featureComposite;
 
@@ -110,7 +110,7 @@ public class FeaturePage extends WizardPage
         applyFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
       // TODO: open modal dialog?
       }
@@ -133,7 +133,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  @Override
   public void dispose()
   {
     if( m_featureComposite != null )
@@ -143,7 +142,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
-  @Override
   public boolean isPageComplete()
   {
     return m_featureComposite.isValid();
@@ -152,7 +150,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
-  @Override
   public boolean canFlipToNextPage()
   {
     if( m_overrideCanFlipToNextPage )
@@ -161,8 +158,8 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public Collection<FeatureChange> getChanges()
+  public Collection getChanges()
   {
-    return new ArrayList<FeatureChange>( m_changes );
+    return new ArrayList( m_changes );
   }
 }

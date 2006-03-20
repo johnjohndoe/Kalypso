@@ -60,8 +60,7 @@ public class FeatureIDData extends AbstractData
     this.featureId = m_featureId.trim();
   }
 
-  @Override
-  public boolean verify( ) throws FilterDialogException
+  public boolean verify() throws FilterDialogException
   {
     if( featureId == null || featureId.trim().length() == 0 )
       throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );

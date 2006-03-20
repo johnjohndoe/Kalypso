@@ -37,10 +37,10 @@ import java.util.Map;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -56,7 +56,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    * setExpandedElements doesn't work, which
    * will lead to an unusable gui.
    */
-  private Map<Object,Object> m_parentHash = new HashMap<Object,Object>();
+  private Map m_parentHash = new HashMap();
 
   private TreeViewer m_viewer;
 
@@ -77,7 +77,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   private Object[] getChildrenInternal( final Object parentElement )
   {
-    final List<Object> result = new ArrayList<Object>();
+    final List result = new ArrayList();
     if( parentElement instanceof GMLWorkspace )
     {
       return new Object[]
@@ -85,14 +85,14 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     }
     if( parentElement instanceof Feature )
     {
-      final IPropertyType[] properties = ( (Feature)parentElement ).getFeatureType().getProperties();
+      final FeatureTypeProperty[] properties = ( (Feature)parentElement ).getFeatureType().getProperties();
 
       for( int i = 0; i < properties.length; i++ )
       {
-        final IPropertyType property = properties[i];
-        if( property instanceof IRelationType )
+        final FeatureTypeProperty property = properties[i];
+        if( property instanceof FeatureAssociationTypeProperty )
           result.add( new FeatureAssociationTypeElement( (Feature)parentElement,
-              (IRelationType)property ) );
+              (FeatureAssociationTypeProperty)property ) );
 
         if( GeometryUtilities.isGeometry( property ) )
           result.add( property );
@@ -103,15 +103,15 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     if( parentElement instanceof FeatureAssociationTypeElement )
     {
       final Feature parentFeature = ( (FeatureAssociationTypeElement)parentElement ).getParentFeature();
-      final IRelationType ftp = ( (FeatureAssociationTypeElement)parentElement )
+      final FeatureAssociationTypeProperty ftp = ( (FeatureAssociationTypeElement)parentElement )
           .getAssociationTypeProperty();
-      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp);
+      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp.getName() );
       for( int i = 0; i < features.length; i++ )
       {
         final Feature feature = features[i];
         if( feature != null )
         {
-          if( m_workspace.isAggrigatedLink( parentFeature, ftp,i ) )
+          if( m_workspace.isAggrigatedLink( parentFeature, ftp.getName(), i ) )
             result.add( new LinkedFeatureElement2( feature ) );
           else
             result.add( feature );
@@ -193,16 +193,15 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     return parent.getParentFeature();
   }
 
-  public IRelationType getParentFeatureProperty( final Feature feature )
+  public String getParentFeatureProperty( final Feature feature )
   {
     final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
     if( parent == null )
       return null;
     
-    return parent.getAssociationTypeProperty();
+    return parent.getAssociationTypeProperty().getName();
   }
 
-  
   public void expandElement( final Object element )
   {
     if( element == null )

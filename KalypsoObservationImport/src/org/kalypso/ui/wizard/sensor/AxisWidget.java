@@ -134,7 +134,6 @@ public class AxisWidget extends Composite
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  @Override
   public void dispose()
   {
     super.dispose();

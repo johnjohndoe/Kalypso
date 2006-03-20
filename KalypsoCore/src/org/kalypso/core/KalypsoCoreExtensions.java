@@ -63,9 +63,10 @@ public class KalypsoCoreExtensions
   private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor";
 
   /** id -> config-element */
-  private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
+  private static Map THE_VISITOR_MAP = null;
 
-  public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
+  public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties )
+      throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -73,7 +74,7 @@ public class KalypsoCoreExtensions
     if( THE_VISITOR_MAP == null )
     {
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      THE_VISITOR_MAP = new HashMap( configurationElements.length );
       for( int i = 0; i < configurationElements.length; i++ )
       {
         final IConfigurationElement element = configurationElements[i];
@@ -85,10 +86,10 @@ public class KalypsoCoreExtensions
     if( !THE_VISITOR_MAP.containsKey( id ) )
       return null;
 
-    final IConfigurationElement element = THE_VISITOR_MAP.get( id );
-    final FeatureVisitor visitor = (FeatureVisitor) element.createExecutableExtension( "class" );
+    final IConfigurationElement element = (IConfigurationElement)THE_VISITOR_MAP.get( id );
+    final FeatureVisitor visitor = (FeatureVisitor)element.createExecutableExtension( "class" );
     if( visitor instanceof IPropertiesFeatureVisitor )
-      ((IPropertiesFeatureVisitor) visitor).init( properties );
+      ( (IPropertiesFeatureVisitor)visitor ).init( properties );
 
     return visitor;
   }

@@ -1,3 +1,32 @@
+package org.kalypso.ui.wizard.sensor;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.List;
+
+import javax.xml.bind.Marshaller;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IImportWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.ide.IDE;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.ObjectFactory;
+import org.kalypso.zml.ObservationType;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,48 +67,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizard.sensor;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.ide.IDE;
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.ObjectFactory;
-import org.kalypso.zml.Observation;
 
 public class ImportObservationWizard extends Wizard implements IImportWizard
 {
-  private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   private ImportObservationSelectionWizardPage m_page1 = null;
 
   private IStructuredSelection m_selection;
 
   private ImportObservationAxisMappingWizardPage m_page2;
 
-  public ImportObservationWizard( )
+  public ImportObservationWizard()
   {
     super();
     setHelpAvailable( false );
@@ -107,8 +104,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
-  @Override
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
     m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" );
@@ -124,8 +120,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performCancel()
    */
-  @Override
-  public boolean performCancel( )
+  public boolean performCancel()
   {
     return true;
   }
@@ -133,12 +128,11 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
-  @Override
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     try
     {
-      final ObservationImportSelection selection = (ObservationImportSelection) m_page1.getSelection();
+      final ObservationImportSelection selection = (ObservationImportSelection)m_page1.getSelection();
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
@@ -153,7 +147,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final IObservation targetObservation;
       final ITuppleModel tuppelModelTarget;
       final int countTarget;
-      if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
+      if( fileTarget.exists() && ( selection.isAppend() || selection.isRetainMetadata() ) )
       {
         targetObservation = m_page2.getTargetObservation( fileTarget.toURL() );
         tuppelModelTarget = targetObservation.getValues( null );
@@ -175,10 +169,12 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
         // w/q specials...
         if( tuppelModelTarget instanceof WQTuppleModel )
         {
-          final WQTuppleModel wq = (WQTuppleModel) (tuppelModelTarget);
+          final WQTuppleModel wq = (WQTuppleModel)( tuppelModelTarget );
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
           final ITuppleModel model = new SimpleTuppleModel( axesNew, newValues );
-          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter() );
+          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(),
+              wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq
+                  .getDestStatusAxisPos() );
         }
         else
         {
@@ -224,13 +220,16 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew, newTuppelModel );
-      final Observation type = ZmlFactory.createXML( newObservation, null );
+      IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew,
+          newTuppelModel );
+      ObservationType type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 
-      final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
+      final ObjectFactory zmlFac = new ObjectFactory();
+
+      final Marshaller marshaller = zmlFac.createMarshaller();
       // use IResource
-      final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
+      FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
       OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );

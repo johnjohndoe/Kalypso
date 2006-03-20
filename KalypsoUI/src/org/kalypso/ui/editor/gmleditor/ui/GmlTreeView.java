@@ -6,10 +6,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,9 +34,6 @@ import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -73,8 +70,6 @@ import org.xml.sax.InputSource;
  */
 public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener
 {
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   protected GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
 
   protected GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
@@ -89,7 +84,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
+  private final ObjectFactory m_factory = new ObjectFactory();
+
+  private final List m_selectionListeners = new ArrayList( 5 );
 
   private TreeViewer m_treeViewer = null;
 
@@ -137,22 +134,22 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected void handleGlobalSelectionChanged( final IFeatureSelection selection )
   {
-    final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
-    final Feature[] selectedFeatures = filterSelectedFeatures( m_treeViewer.getSelection() );
-    final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
-    if( !isEqual )
+    final TreeViewer treeViewer = m_treeViewer;
+    treeViewer.getControl().getDisplay().syncExec( new Runnable()
     {
-      final TreeViewer treeViewer = m_treeViewer;
-      treeViewer.getControl().getDisplay().syncExec( new Runnable()
+      public void run()
       {
-        public void run( )
+        final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
+        final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
+        final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
+        if( !isEqual )
         {
           treeViewer.setSelection( selection, true );
           for( int i = 0; i < globalFeatures.length; i++ )
             m_contentProvider.expandElement( m_contentProvider.getParent( globalFeatures[i] ) );
         }
-      } );
-    }
+      }
+    } );
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )
@@ -163,7 +160,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final Object input = m_treeViewer.getInput();
     if( input instanceof CommandableWorkspace )
     {
-      final CommandableWorkspace workspace = (CommandableWorkspace) input;
+      final CommandableWorkspace workspace = (CommandableWorkspace)input;
 
       // remove all feature of my workspace from the selection manager
       final CollectorVisitor visitor = new CollectorVisitor();
@@ -175,7 +172,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       {
         final Feature feature = features[i];
         final Feature parent = m_contentProvider.getParentFeature( feature );
-        final IRelationType parentProperty = m_contentProvider.getParentFeatureProperty( feature );
+        final String parentProperty = m_contentProvider.getParentFeatureProperty( feature );
 
         toAdd[i] = new EasyFeatureWrapper( workspace, feature, parent, parentProperty );
       }
@@ -186,25 +183,26 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  private Feature[] filterSelectedFeatures( final ISelection selection )
+  protected Feature[] filterSelectedFeatures( final ISelection selection )
   {
-    final Object[] selectedTreeItems = ((IStructuredSelection) selection).toArray();
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final Object[] selectedTreeItems = ( (IStructuredSelection)selection ).toArray();
+    final List selectedFeatures = new ArrayList();
     for( int i = 0; i < selectedTreeItems.length; i++ )
     {
       final Object treeElement = selectedTreeItems[i];
-      Feature feature = null;
+      Object feature = null;
       if( treeElement instanceof LinkedFeatureElement2 )
-        feature = ((LinkedFeatureElement2) treeElement).getDecoratedFeature();
+        feature = ( (LinkedFeatureElement2)treeElement ).getDecoratedFeature();
       else if( treeElement instanceof Feature )
-        feature = (Feature) treeElement;
+        feature = treeElement;
       if( feature != null && !selectedFeatures.contains( feature ) )
         selectedFeatures.add( feature );
     }
-    return selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
+    final Feature[] features = (Feature[])selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
+    return features;
   }
 
-  private void createViewerPart( )
+  private void createViewerPart()
   {
     final GridLayout layout = new GridLayout();
     layout.numColumns = 1;
@@ -220,11 +218,15 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_treeViewer.setLabelProvider( m_labelProvider );
     m_treeViewer.setUseHashlookup( true );
 
-    // add drag and drop support
+    //add drag and drop support
     int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), PluginTransfer.getInstance() };
-    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener() );
-    transfers = new Transfer[] { LocalSelectionTransfer.getInstance() };
+    Transfer[] transfers = new Transfer[]
+    {
+        LocalSelectionTransfer.getInstance(),
+        PluginTransfer.getInstance() };
+    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+    transfers = new Transfer[]
+    { LocalSelectionTransfer.getInstance() };
     m_dropAdapter = new GmlTreeDropAdapter( this );
     m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
 
@@ -244,11 +246,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       {
         if( event.getSelection() instanceof IStructuredSelection )
         {
-          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+          final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
           final Object obj = selection.getFirstElement();
           if( obj instanceof LinkedFeatureElement2 )
           {
-            final Feature feature = ((LinkedFeatureElement2) obj).getDecoratedFeature();
+            final Feature feature = ( (LinkedFeatureElement2)obj ).getDecoratedFeature();
             final StructuredSelection ss = new StructuredSelection( feature );
             treeViewer.setSelection( ss, true );
             treeViewer.expandToLevel( feature, 1 );
@@ -259,7 +261,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     } );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     m_disposed = true;
     m_composite.dispose();
@@ -276,7 +278,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
+      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent)modellEvent;
       final Feature[] parentFeature = structureEvent.getParentFeatures();
 
       if( !m_composite.isDisposed() )
@@ -284,7 +286,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         final TreeViewer treeViewer = m_treeViewer;
         m_composite.getDisplay().asyncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             if( parentFeature == null )
               treeViewer.refresh();
@@ -318,7 +320,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  public CommandableWorkspace getWorkspace( )
+  public CommandableWorkspace getWorkspace()
   {
     return m_workspace;
   }
@@ -347,14 +349,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_eventProvider.fireModellEvent( event );
   }
 
-  protected TreeViewer getTreeViewer( )
+  protected TreeViewer getTreeViewer()
   {
     return m_treeViewer;
   }
 
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
-    return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
+    return new TreeFeatureSelection( (IStructuredSelection)m_treeViewer.getSelection() );
   }
 
   /**
@@ -371,14 +373,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         m_workspace = null;
       }
 
-      m_workspace = ((CommandableWorkspace) newValue);
+      m_workspace = ( (CommandableWorkspace)newValue );
       if( m_workspace != null )
         m_workspace.addModellListener( this );
 
       final TreeViewer treeViewer = m_treeViewer;
       treeViewer.getControl().getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           treeViewer.setInput( m_workspace );
         }
@@ -391,7 +393,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    // TODO: release workspace
+  // TODO: release workspace
   }
 
   protected void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
@@ -399,11 +401,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     monitor.beginTask( "Ansicht laden", 1000 );
     try
     {
-      final Unmarshaller unmarshaller = JC.createUnmarshaller();
+      final Unmarshaller unmarshaller = m_factory.createUnmarshaller();
 
       final InputSource is = new InputSource( r );
 
-      m_gisTreeview = (Gistreeview) unmarshaller.unmarshal( is );
+      m_gisTreeview = (Gistreeview)unmarshaller.unmarshal( is );
       final LayerType input = m_gisTreeview.getInput();
       final String href = input.getHref();
       final String linktype = input.getLinktype();
@@ -426,7 +428,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     monitor.beginTask( "Baumansicht speichern", 1000 );
     try
     {
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
+      final Validator validator = m_factory.createValidator();
+      validator.validate( m_gisTreeview );
+
+      final Marshaller marshaller = m_factory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       marshaller.marshal( m_gisTreeview, writer );
@@ -467,9 +472,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_treeViewer.setSelection( selection );
   }
 
-  private final void fireSelectionChanged( )
+  private final void fireSelectionChanged()
   {
-    final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
+    final ISelectionChangedListener[] listenersArray = (ISelectionChangedListener[])m_selectionListeners
+        .toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
     for( int i = 0; i < listenersArray.length; i++ )
@@ -477,7 +483,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
-        public void run( )
+        public void run()
         {
           l.selectionChanged( e );
         }
@@ -504,7 +510,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       return m_contentProvider.getParentFeature( feature );
     }
 
-    public IRelationType getParentFeatureProperty( final Feature feature )
+    public String getParentFeatureProperty( final Feature feature )
     {
       return m_contentProvider.getParentFeatureProperty( feature );
     }
@@ -512,7 +518,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
      */
-    public EasyFeatureWrapper[] getAllFeatures( )
+    public EasyFeatureWrapper[] getAllFeatures()
     {
       return FeatureSelectionHelper.createEasyWrappers( this );
     }
@@ -520,7 +526,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
      */
-    public IFeatureSelectionManager getSelectionManager( )
+    public IFeatureSelectionManager getSelectionManager()
     {
       return m_selectionManager;
     }
@@ -528,7 +534,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
      */
-    public Feature getFocusedFeature( )
+    public Feature getFocusedFeature()
     {
       // the tree doesn't support focused features
       return null;
@@ -537,7 +543,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
      */
-    public IPropertyType getFocusedProperty( )
+    public String getFocusedProperty()
     {
       // the tree doesn't support focused features
       return null;
@@ -547,7 +553,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypso.util.pool.IPoolListener#isDisposed()
    */
-  public boolean isDisposed( )
+  public boolean isDisposed()
   {
     return m_disposed;
   }

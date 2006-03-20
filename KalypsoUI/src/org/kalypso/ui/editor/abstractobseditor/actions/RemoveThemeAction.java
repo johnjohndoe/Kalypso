@@ -67,8 +67,7 @@ public class RemoveThemeAction extends FullAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     final ObsViewItem[] items = m_page.getSelectedItems();
 

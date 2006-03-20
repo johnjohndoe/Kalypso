@@ -62,8 +62,6 @@ package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
 
-import javax.xml.namespace.QName;
-
 import org.kalypsodeegree.gml.GMLBox;
 import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLFeature;
@@ -562,11 +560,12 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * @see org.kalypsodeegree.gml.GMLFeature#getQName()
+   * 
+   * @see java.lang.Object#toString()
    */
-  public QName getQName( )
+  public String toString()
   {
-    return new QName(getNamespaceURI(),getLocalName());
+    return DOMPrinter.nodeToString( element, "" );
   }
 }
 
@@ -574,9 +573,6 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.12  2006/02/09 18:16:22  doemming
- * *** empty log message ***
- *
  * Revision 1.11  2005/06/20 14:07:46  belger
  * Formatierung
  * Revision 1.10 2005/05/17 16:40:33 belger *** empty log message ***

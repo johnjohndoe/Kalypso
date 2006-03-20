@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author belger
  */
-@Deprecated
 public interface ITransformation
 {
   void setProperties( final Properties props );

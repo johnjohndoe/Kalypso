@@ -55,9 +55,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
-import org.kalypso.services.observation.client.KalypsoServiceObsClientPlugin;
-import org.kalypso.services.sensor.impl.KalypsoObservationService;
+import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.simulation.ui.wizards.calculation.modelpages.CommitPrognoseFeatureVisitor;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -91,13 +90,12 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
       final IProgressMonitor monitor ) throws InvocationTargetException
   {
     try
     {
-      final KalypsoObservationService srv = KalypsoServiceObsClientPlugin.getDefault().getObservationServiceProxy();
+      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 
       return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
     }
@@ -110,7 +108,6 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#statusFromVisitor(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
-  @Override
   protected IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
     final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
@@ -123,7 +120,6 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
-  @Override
   protected void validateInput()
   {}
 

@@ -63,7 +63,6 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 
 /**
@@ -81,26 +80,39 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 class FeatureProperty_Impl implements FeatureProperty, Serializable
 {
 
-  private final Object m_value;
+  private String name = "";
 
-  private IPropertyType m_propertyType;
+  private Object value = null;
+
+  /**
+   * default constructor
+   */
+  FeatureProperty_Impl()
+  {}
 
   /**
    * constructor for complete initializing the FeatureProperty
    */
-  FeatureProperty_Impl(IPropertyType propertyType, Object value )
+  FeatureProperty_Impl( String name, Object value )
   {
-    m_propertyType=propertyType;
-    m_value=value;
+    setName( name );
+    setValue( value );
   }
 
   /**
-   * @deprecated use getQName
    * returns the name of the property
    */
   public String getName()
   {
-    return m_propertyType.getQName().getLocalPart();
+    return name;
+  }
+
+  /**
+   * sets the name of the property
+   */
+  public void setName( String name )
+  {
+    this.name = name;
   }
 
   /**
@@ -108,15 +120,54 @@ class FeatureProperty_Impl implements FeatureProperty, Serializable
    */
   public Object getValue()
   {
-    return m_value;
+    return value;
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureProperty#getPropertyType()
+   * sets the value of the property
    */
-  public IPropertyType getPropertyType( )
+  public void setValue( Object value )
   {
-    return m_propertyType;
+    this.value = value;
+  }
+
+  public String toString()
+  {
+    String ret = null;
+    ret = "name = " + name + "\n";
+    ret += "value = " + value + "\n";
+    return ret;
   }
 
 }
+/*
+ * Changes to this class. What the people haven been up to:
+ * 
+ * $Log$
+ * Revision 1.7  2005/06/20 14:07:45  belger
+ * Formatierung
+ * Revision 1.6 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2004/10/11 14:44:28 doemming *** empty log message *** Revision 1.3 2004/10/07 14:09:16 doemming ***
+ * empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision 1.3 2004/08/31 14:09:26 doemming ***
+ * empty log message *** Revision 1.2 2004/02/09 07:59:57 poth no message
+ * 
+ * Revision 1.1.1.1 2002/09/25 16:00:38 poth no message
+ * 
+ * Revision 1.4 2002/08/15 10:00:00 ap no message
+ * 
+ * Revision 1.3 2002/05/21 16:05:51 ap no message
+ * 
+ * Revision 1.2 2002/04/05 09:41:40 ap no message
+ * 
+ * Revision 1.1 2002/04/04 16:22:41 ap no message
+ * 
+ * Revision 1.2 2001/10/15 14:48:19 ap no message
+ * 
+ * Revision 1.1 2001/10/05 15:19:43 ap no message
+ *  
+ */
