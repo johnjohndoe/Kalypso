@@ -156,8 +156,12 @@ public class CopyObservationMappingHelper
       sources = new CopyObservationFeatureVisitor.Source[]
       { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
       };
+    // REMARK: forecastForm and forecastTo where formerly not set which resultet in
+    // strange behaviour: run from the runtime workspace, the forecast range
+    // was set, from the deployed application it was not, however both used
+    // exactly the same plugins. Setting it here succeeded however.
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer, null );
+        RESULT_TS_OUT_PROP, sources, new Properties(), forecastStart, end, writer, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
     logger.log( stringWriter.toString() );
   }

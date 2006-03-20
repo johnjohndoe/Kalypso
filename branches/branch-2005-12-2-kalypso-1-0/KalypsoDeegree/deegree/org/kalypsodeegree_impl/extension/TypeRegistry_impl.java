@@ -28,11 +28,16 @@ public class TypeRegistry_impl implements ITypeRegistry
     final String typeName = typeHandler.getTypeName();
     final String className = typeHandler.getClassName();
 
-    if( m_typeMap.containsKey( typeName ) )
-      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
-
-    if( m_classMap.containsKey( className ) )
-      throw new TypeRegistryException( "Classname wurde bereits registriert: " + className );
+// WORKAROUND: Auskommentiert, weil es mal passiert ist, dass der Calculation Service zweimal
+// sinatntiiert wurde. Diese führte natürlich zu einer exception hier.
+// Ausserdem ist gar kein Problem, wenn der TypeHandler zweimal instantiiert wird.
+// Better: Do not use the Singleton Pattern. Problem you have to give it all the chain down to
+// where it is needed (here the Schema-Parser). Solution: maybe use dependency-injection
+//    if( m_typeMap.containsKey( typeName ) )
+//      throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
+//
+//    if( m_classMap.containsKey( className ) )
+//      throw new TypeRegistryException( "Classname wurde bereits registriert: " + className );
 
     m_typeMap.put( typeName, typeHandler );
     m_classMap.put( className, typeHandler );
