@@ -35,6 +35,14 @@
          ================================= -->
     <target name="calculationProperties">
 		<property name="HOURS_OF_DAY" value="11"/>
+    	
+        <!-- define the requests -->
+        <property name="requestN"
+                  value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
+        <!-- define the filters -->
+        <!-- N: sum-intervallFilter -->
+        <property name="filterN"
+                  value="${requestN}&lt;filter&gt;&lt;intervallFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; mode=&quot;sum&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
 
     	<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
@@ -46,6 +54,7 @@
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 		
 		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
+    	<!-- Simulations- bzw. Regelbetrieb -->
 		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
 			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
 			<property name="wiski_vergangenheit_link" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
@@ -97,12 +106,24 @@
 		</kalypso.copyObservation>
 
 		<!-- Niederschlagsstationen (Messung) -->
-		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_niederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}" tokens="featureName-name">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/>
+		<!-- alter filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;   interpolationFilter   amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot;                       forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/> -->
+        <!-- neuer filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;   intervallFilter       amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; mode=&quot;sum&quot;                             defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;                                    xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/> -->
+		<kalypso.copyObservation 
+			gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_niederschlag.gml" 
+			featurePath="WiskiMember" 
+			context="${calc.url}" 
+			targetObservation="lokal" 
+			forecastfrom="${startforecast}" 
+			forecastto="${stopsim_120}" 
+			tokens="featureName-name">
+			<source property="${wiski_vergangenheit_link}" 
+				from="${startsim}" 
+				to="${startforecast}" 
+				filter="${filterN}" />
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
-
-		<!-- Speichervolumen (Messung)-->
+		
+ 		<!-- Speichervolumen (Messung)-->
 		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_volumen.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}" tokens="featureName-name">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,V&lt;/axes&gt;&lt;statusAxes&gt;V&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
