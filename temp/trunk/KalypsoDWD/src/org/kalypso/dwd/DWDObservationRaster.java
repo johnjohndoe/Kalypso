@@ -46,7 +46,7 @@ public class DWDObservationRaster
 
   private final int m_dwdKey;
 
-  private final SortedMap m_valueHash = new TreeMap(); // (date,double[])
+  private final SortedMap<Date, double[]> m_valueHash = new TreeMap<Date, double[]>();
 
   private final int m_maxCells;
 
@@ -76,30 +76,30 @@ public class DWDObservationRaster
     {
       m_valueHash.put( date, new double[m_maxCells] );
     }
-    final double[] values = (double[])m_valueHash.get( date );
+    final double[] values = m_valueHash.get( date );
     values[cellPos] = value;
   }
 
   public double getValueFor( Date date, int cellPos )
   {
-    final double[] values = (double[])m_valueHash.get( date );
+    final double[] values = m_valueHash.get( date );
     return values[cellPos];
   }
 
   public Date[] getDates()
   {
-    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
-    return (Date[])sort.toArray( new Date[sort.size()] );
+    final SortedSet<Date> sort = new TreeSet<Date>( m_valueHash.keySet() );
+    return sort.toArray( new Date[sort.size()] );
   }
 
   public Date[] getDates( Date min, Date max )
   {
-    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
+    final SortedSet<Date> sort = new TreeSet<Date>( m_valueHash.keySet() );
     if( min == null )
-      min = (Date)sort.first();
+      min = sort.first();
     if( max == null )
-      max = (Date)sort.last();
-    final SortedSet result = sort.subSet( min, max );
-    return (Date[])result.toArray( new Date[result.size()] );
+      max = sort.last();
+    final SortedSet<Date> result = sort.subSet( min, max );
+    return result.toArray( new Date[result.size()] );
   }
 }

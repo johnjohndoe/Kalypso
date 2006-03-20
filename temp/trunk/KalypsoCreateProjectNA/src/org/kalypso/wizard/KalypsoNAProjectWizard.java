@@ -112,7 +112,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
 
-  final HashMap m_IDMap = new HashMap();
+  final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
   // static final IFeatureType m_dummyFeatureType = FeatureFactory.createFeatureType( "Gewässer", "wizard.kalypso.na",
   // //$NON-NLS-1$ //$NON-NLS-2$

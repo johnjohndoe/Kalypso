@@ -82,18 +82,20 @@ public class KalypsoNewNAProjectPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
+  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
     // tricky, the kalypsoGisPlugin initializes the GMLSchemaCatalog, and we need this !
     // do not remove next line until better solution is found
     // TODO
-    KalypsoGisPlugin default1 = KalypsoGisPlugin.getDefault();
+    /*KalypsoGisPlugin default1 = */KalypsoGisPlugin.getDefault();
   }
 
   /**
    * This method is called when the plug-in is stopped
    */
+  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );

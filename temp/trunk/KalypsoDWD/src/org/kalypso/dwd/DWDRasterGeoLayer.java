@@ -189,7 +189,7 @@ public class DWDRasterGeoLayer
       // FeatureVisitor.DEPTH_INFINITE );
       // get the next 5 points and make a boundingbox out of this
       final Feature[] result = visitor.getResult();
-      List points = new ArrayList();
+      final List<GM_Point> points = new ArrayList<GM_Point>();
       for( int i = 0; i < result.length; i++ )
       {
         final GM_Point p = (GM_Point)result[i].getProperty( GEO_PROP_POINT );
@@ -202,8 +202,7 @@ public class DWDRasterGeoLayer
         points.add( GeometryFactory.createGM_Point( newPos, p.getCoordinateSystem() ) );
       }
 
-      GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( (GM_Point[])points.toArray( new GM_Point[points
-          .size()] ), point.getCoordinateSystem() );
+      GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), point.getCoordinateSystem() );
       GM_Object convexHull;
       try
       {
@@ -220,7 +219,7 @@ public class DWDRasterGeoLayer
 
   public RasterPart[] getPositions( GM_Surface geometry )
   {
-    final List result = new ArrayList();
+    final List<RasterPart> result = new ArrayList<RasterPart>();
     final FeatureList fList = (FeatureList)m_workspace.getRootFeature().getProperty( "cellMember" );
     final List list = fList.query( geometry.getEnvelope(), null );
     for( Iterator iter = list.iterator(); iter.hasNext(); )
@@ -237,7 +236,7 @@ public class DWDRasterGeoLayer
         result.add( new RasterPart( pos.intValue(), partArea ) );
       }
     }
-    return (RasterPart[])result.toArray( new RasterPart[result.size()] );
+    return result.toArray( new RasterPart[result.size()] );
   }
 
   public int getNumberOfCells()

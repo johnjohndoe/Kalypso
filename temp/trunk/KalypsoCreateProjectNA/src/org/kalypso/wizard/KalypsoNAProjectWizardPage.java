@@ -152,7 +152,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   private URL fileURL;
 
   // mapping
-  private HashMap mapping;
+  private HashMap<Object, Object> mapping;
 
   private int maxSourceComboWidth;
 
@@ -517,7 +517,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   private void handleOKSelection( )
   {
     Control[] cArray = sourceGroup.getChildren();
-    mapping = new HashMap();
+    mapping = new HashMap<Object, Object>();
     for( int i = 0; i < cArray.length; i++ )
     {
       Control c = cArray[i];
@@ -537,7 +537,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   public HashMap getMapping( )
   {
-    HashMap map = new HashMap();
+    HashMap<Object, Object> map = new HashMap<Object, Object>();
     Control[] cArray = sourceGroup.getChildren();
     for( int i = 0; i < cArray.length; i++ )
     {

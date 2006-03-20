@@ -109,10 +109,10 @@ public class KalypsoNAProjectPreferences extends WizardPage
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
     IFeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
     int maxOccursSoil = catchmentFT.getProperty( SOIL_FT_NAME ).getMaxOccurs();
-    ArrayList noSoilLayer = new ArrayList();
+    ArrayList<String> noSoilLayer = new ArrayList<String>();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
-    m_soilCombo.setItems( (String[]) noSoilLayer.toArray( new String[maxOccursSoil] ) );
+    m_soilCombo.setItems( noSoilLayer.toArray( new String[maxOccursSoil] ) );
     m_soilCombo.select( 1 );
     GridData soilComboGridData = new GridData();
     soilComboGridData.widthHint = 50;
@@ -145,10 +145,10 @@ public class KalypsoNAProjectPreferences extends WizardPage
     m_channelCombo.setLayout( new GridLayout() );
     IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KM_CHANNEL );
     int maxOccursKM = kmChannelFT.getProperty( KMCHANNEL_MEMBER ).getMaxOccurs();
-    ArrayList noKMDischarge = new ArrayList();
+    ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )
       noKMDischarge.add( String.valueOf( i ) );
-    m_channelCombo.setItems( (String[]) noKMDischarge.toArray( new String[maxOccursKM] ) );
+    m_channelCombo.setItems( noKMDischarge.toArray( new String[maxOccursKM] ) );
     GridData channelComboGridData = new GridData();
     channelComboGridData.widthHint = 50;
     channelComboGridData.horizontalAlignment = GridData.END;

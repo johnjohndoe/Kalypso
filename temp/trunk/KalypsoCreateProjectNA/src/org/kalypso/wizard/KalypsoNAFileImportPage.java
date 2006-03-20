@@ -220,6 +220,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         //if (validateFileField())
@@ -232,6 +233,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         Button w = (Button)e.widget;

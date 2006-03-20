@@ -68,7 +68,7 @@ public class DWDFileCopyServlet extends HttpServlet
    */
   public final static String PARAM_DEST_UPDATE = "dest_update";
 
-  private static final Logger LOG = Logger.getLogger( DWDFileCopyServlet.class.getName() );
+  protected static final Logger LOG = Logger.getLogger( DWDFileCopyServlet.class.getName() );
 
   private Timer[] m_timers = new Timer[0];
 
@@ -88,6 +88,7 @@ public class DWDFileCopyServlet extends HttpServlet
     LOG.info( "Constructor called" );
   }
 
+  @Override
   public void init() throws ServletException
   {
     super.init();
@@ -157,6 +158,7 @@ public class DWDFileCopyServlet extends HttpServlet
     }
   }
 
+  @Override
   public void destroy()
   {
     LOG.info( "Stopping... Cancelling " + m_timers.length + " timer(s)..." );
@@ -193,6 +195,7 @@ public class DWDFileCopyServlet extends HttpServlet
       m_destUpdate = destUpdate;
     }
 
+    @Override
     public void run()
     {
       final File file = DWDRasterHelper.getNewestFile( m_srcDir, m_srcPrefix, m_dateFormat, m_srcDel );

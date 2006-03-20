@@ -41,6 +41,7 @@
 
 package org.kalypso.dwd.schema;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -59,7 +60,8 @@ public class UrlCatalogDWD extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
    */
-  protected void fillCatalog( final Class myClass, final Map catalog )
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "v0.1/dwdGeoLayer.xsd" ) );
   }

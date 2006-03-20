@@ -108,13 +108,13 @@ public class DWDRaster
 
   final Date m_date;
 
-  final Vector m_data;
+  final Vector<Double> m_data;
 
   public DWDRaster( final Date date, final int key )
   {
     m_key = key;
     m_date = date;
-    m_data = new Vector();
+    m_data = new Vector<Double>();
   }
 
   public int getKey()
@@ -139,7 +139,7 @@ public class DWDRaster
 
   public double getValueAt( int index )
   {
-    return ( (Double)m_data.elementAt( index ) ).doubleValue();
+    return m_data.elementAt( index ).doubleValue();
   }
 
   public Date getDate()
