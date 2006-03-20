@@ -95,7 +95,7 @@ public class RiskContextModel
    */
   public Hashtable getLanduseList()
   {
-    Hashtable landuseList = new Hashtable();
+    Hashtable<Object, Integer> landuseList = new Hashtable<Object, Integer>();
     Feature landuseCollection = (Feature)rootFeature.getProperty( "LanduseCollectionMember" );
     Object landuseMemberList = landuseCollection.getProperty( "LanduseMember" );
     if( landuseMemberList instanceof List )
@@ -120,7 +120,7 @@ public class RiskContextModel
    */
   public Hashtable getRiskClassKeyList()
   {
-    Hashtable riskClassKeyList = new Hashtable();
+    Hashtable<String, Integer> riskClassKeyList = new Hashtable<String, Integer>();
     Feature riskClassCollection = (Feature)rootFeature.getProperty( "RiskClassCollectionMember" );
     List riskClassList = (List)riskClassCollection.getProperty( "RiskClassMember" );
     for( int i = 0; i < riskClassList.size(); i++ )

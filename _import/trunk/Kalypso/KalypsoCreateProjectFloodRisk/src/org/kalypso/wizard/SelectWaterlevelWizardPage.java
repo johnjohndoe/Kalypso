@@ -91,11 +91,11 @@ public class SelectWaterlevelWizardPage extends WizardPage
 {
   private Composite m_topLevel;
 
-  Table waterlevelTable;
+  protected Table waterlevelTable;
 
   protected Integer selectedIndex = null;
 
-  Vector waterlevelGrids = new Vector();
+  protected Vector<File> waterlevelGrids = new Vector<File>();
 
   protected File waterlevelFile;
 
@@ -195,6 +195,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
     waterlevelTable.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         int[] selection = waterlevelTable.getSelectionIndices();
@@ -221,6 +222,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     add.addSelectionListener( new SelectionAdapter()
     {
 
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         //System.out.println( "Add..." );
@@ -253,6 +255,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     {
 
       //  Remove the selection and refresh the table
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         //System.out.println( "Delete..." );
@@ -294,6 +297,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
     csCombo.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         selectedCoordinateSystemName = csCombo.getText();
@@ -405,9 +409,9 @@ public class SelectWaterlevelWizardPage extends WizardPage
       super( parentShell );
     }
 
+    @Override
     protected Control createDialogArea( Composite parent )
     {
-
       parent.getShell().setText( "Überschwemmungsfläche hinzufügen..." );
 
       Composite topLevel = new Composite( parent, SWT.NONE );
@@ -449,6 +453,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
       button.addSelectionListener( new SelectionAdapter()
       {
+        @Override
         public void widgetSelected( SelectionEvent e )
         {
           String filePath = chooseFile( m_file, new String[]

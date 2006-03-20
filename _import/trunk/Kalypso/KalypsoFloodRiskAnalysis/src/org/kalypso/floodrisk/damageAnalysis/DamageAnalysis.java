@@ -77,7 +77,7 @@ public class DamageAnalysis
       Hashtable damageFunctions ) throws Exception
   {
     System.out.println( "Calculate DamagePercentageGrids..." );
-    TreeMap damagePercentageGrids = new TreeMap();
+    TreeMap<Double, RectifiedGridCoverage> damagePercentageGrids = new TreeMap<Double, RectifiedGridCoverage>();
     Iterator it = waterlevelGrids.keySet().iterator();
     while( it.hasNext() )
     {
@@ -113,12 +113,12 @@ public class DamageAnalysis
         .getOrigin( null ), waterlevelGrid.getGridDomain().getOffset(), waterlevelGrid.getGridDomain().getGridRange() );
     Vector waterlevel_rangeSetData = waterlevelGrid.getRangeSet().getRangeSetData();
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector damagePercentage_rangeSetData = new Vector();
+    Vector<Vector<Double>> damagePercentage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < waterlevel_rangeSetData.size(); i++ )
     {
       Vector waterlevel_rowData = (Vector)waterlevel_rangeSetData.get( i );
       Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector damagePercentage_rowData = new Vector();
+      Vector<Double> damagePercentage_rowData = new Vector<Double>();
       for( int j = 0; j < waterlevel_rowData.size(); j++ )
       {
         if( waterlevel_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
@@ -172,7 +172,7 @@ public class DamageAnalysis
       RectifiedGridCoverage administrationUnitGrid, Hashtable assets ) throws Exception
   {
     System.out.println( "Calculate DamageGrids..." );
-    TreeMap damageGrids = new TreeMap();
+    TreeMap<Double, RectifiedGridCoverage> damageGrids = new TreeMap<Double, RectifiedGridCoverage>();
     Iterator it = damagePercentageGrids.keySet().iterator();
     while( it.hasNext() )
     {
@@ -220,13 +220,13 @@ public class DamageAnalysis
     Vector damagePercentage_rangeSetData = damagePercentageGrid.getRangeSet().getRangeSetData();
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
     Vector administrationUnit_rangeSetData = administrationUnitGrid.getRangeSet().getRangeSetData();
-    Vector damage_rangeSetData = new Vector();
+    Vector<Vector<Double>> damage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < damagePercentage_rangeSetData.size(); i++ )
     {
       Vector damagePercentage_rowData = (Vector)damagePercentage_rangeSetData.get( i );
       Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
       Vector administrationUnit_rowData = (Vector)administrationUnit_rangeSetData.get( i );
-      Vector damage_rowData = new Vector();
+      Vector<Double> damage_rowData = new Vector<Double>();
       for( int j = 0; j < damagePercentage_rowData.size(); j++ )
       {
         if( damagePercentage_rowData.get( j ) != null && landuse_rowData.get( j ) != null
@@ -293,12 +293,12 @@ public class DamageAnalysis
         null ), damagePercentageGrid.getGridDomain().getOffset(), damagePercentageGrid.getGridDomain().getGridRange() );
     Vector damagePercentage_rangeSetData = damagePercentageGrid.getRangeSet().getRangeSetData();
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector damage_rangeSetData = new Vector();
+    Vector<Vector<Double>> damage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < damagePercentage_rangeSetData.size(); i++ )
     {
       Vector damagePercentage_rowData = (Vector)damagePercentage_rangeSetData.get( i );
       Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector damage_rowData = new Vector();
+      Vector<Double> damage_rowData = new Vector<Double>();
       for( int j = 0; j < damagePercentage_rowData.size(); j++ )
       {
         if( damagePercentage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )
@@ -347,7 +347,7 @@ public class DamageAnalysis
   public static Vector calculateTempGridsAnnualDamage( TreeMap damageGrids ) throws Exception
   {
     System.out.println( "Calculate TempGrids..." );
-    Vector tempGrids = new Vector();
+    Vector<RectifiedGridCoverage> tempGrids = new Vector<RectifiedGridCoverage>();
     Object[] keys = damageGrids.keySet().toArray();
     for( int i = 0; i < keys.length; i++ )
     {
@@ -366,12 +366,12 @@ public class DamageAnalysis
             .getGridDomain().getOffset(), grid.getGridDomain().getGridRange() );
         Vector grid_rangeSetData = grid.getRangeSet().getRangeSetData();
         Vector nextGrid_rangeSetData = nextGrid.getRangeSet().getRangeSetData();
-        Vector tempGrid_rangeSetData = new Vector();
+        Vector<Vector<Double>> tempGrid_rangeSetData = new Vector<Vector<Double>>();
         for( int j = 0; j < grid_rangeSetData.size(); j++ )
         {
           Vector grid_rowData = (Vector)grid_rangeSetData.get( j );
           Vector nextGrid_rowData = (Vector)nextGrid_rangeSetData.get( j );
-          Vector tempGrid_rowData = new Vector();
+          Vector<Double> tempGrid_rowData = new Vector<Double>();
           for( int k = 0; k < grid_rowData.size(); k++ )
           {
             if( grid_rowData.get( k ) == null && nextGrid_rowData.get( k ) == null )
@@ -429,11 +429,11 @@ public class DamageAnalysis
     RectifiedGridDomain annualDamage_gridDomain = new RectifiedGridDomain( firstGrid.getGridDomain().getOrigin( null ),
         firstGrid.getGridDomain().getOffset(), firstGrid.getGridDomain().getGridRange() );
     Vector firstGrid_rangeSetData = firstGrid.getRangeSet().getRangeSetData();
-    Vector annualDamageGrid_rangeSetData = new Vector();
+    Vector<Vector<Double>> annualDamageGrid_rangeSetData = new Vector<Vector<Double>>();
     for( int j = 0; j < firstGrid_rangeSetData.size(); j++ )
     {
       Vector firstGrid_rowData = (Vector)firstGrid_rangeSetData.get( j );
-      Vector annualDamageGrid_rowData = new Vector();
+      Vector<Double> annualDamageGrid_rowData = new Vector<Double>();
       for( int k = 0; k < firstGrid_rowData.size(); k++ )
       {
         if( firstGrid_rowData.get( k ) != null )

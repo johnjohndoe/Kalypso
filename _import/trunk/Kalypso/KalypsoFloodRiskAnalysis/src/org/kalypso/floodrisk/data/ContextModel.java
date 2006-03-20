@@ -49,7 +49,6 @@ import java.util.List;
 
 import org.kalypso.floodrisk.mathTool.ParseFunction;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -97,7 +96,7 @@ public class ContextModel
    */
   public Hashtable getLanduseList()
   {
-    Hashtable landuseList = new Hashtable();
+    Hashtable<Object, Integer> landuseList = new Hashtable<Object, Integer>();
     Feature landuseCollection = (Feature)rootFeature.getProperty( "LanduseCollectionMember" );
     Object landuseMemberList = landuseCollection.getProperty( "LanduseMember" );
     if( landuseMemberList instanceof List )
@@ -123,10 +122,10 @@ public class ContextModel
    */
   public Hashtable getAdministrationUnitList()
   {
-    Hashtable administrationUnitList = null;
+    Hashtable<Object, Integer> administrationUnitList = null;
     if( rootFeature.getProperty( "AdministrationUnitCollectionMember" ) != null )
     {
-      administrationUnitList = new Hashtable();
+      administrationUnitList = new Hashtable<Object, Integer>();
       Feature administrationUnitCollection = (Feature)rootFeature.getProperty( "AdministrationUnitCollectionMember" );
       Object administrationUnitMemberList = administrationUnitCollection.getProperty( "AdministrationUnitMember" );
       if( administrationUnitMemberList instanceof List )
@@ -153,7 +152,7 @@ public class ContextModel
    */
   public Hashtable getDamageFunctionList()
   {
-    Hashtable damageFunctionList = new Hashtable();
+    Hashtable<String, ParseFunction> damageFunctionList = new Hashtable();
     Feature damageFunctionMappingCollection = (Feature)rootFeature
         .getProperty( "DamageFunctionMappingCollectionMember" );
     Object mappingList = damageFunctionMappingCollection.getProperty( "DamageFunctionMappingMember" );
@@ -192,7 +191,7 @@ public class ContextModel
    */
   public Hashtable getAssetValueList()
   {
-    Hashtable assetValueList = new Hashtable();
+    Hashtable<String, Double> assetValueList = new Hashtable<String, Double>();
     Feature assetValueMappingCollection = (Feature)rootFeature.getProperty( "AssetValueMappingCollectionMember" );
     Object mappingList = assetValueMappingCollection.getProperty( "AssetValueMappingMember" );
     if( mappingList instanceof List )

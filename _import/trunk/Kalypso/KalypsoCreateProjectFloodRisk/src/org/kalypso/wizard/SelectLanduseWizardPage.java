@@ -175,6 +175,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         String filePath = chooseFile( m_file, new String[]
@@ -215,6 +216,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     csCombo.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         selectedCoordinateSystemName = csCombo.getText();
@@ -248,19 +250,21 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     landusePropCombo.setEnabled( false );
     landusePropCombo.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         propertyName = landusePropCombo.getText();
       }
     } );
 
-    Label dummyLabel2 = new Label( group, SWT.NONE );
+    /*Label dummyLabel2 = */new Label( group, SWT.NONE );
 
     //line 4: check autogenerateLanduseCollection
     final Button checkButton = new Button( group, SWT.CHECK );
     checkButton.setSelection( check );
     checkButton.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         check = checkButton.getSelection();
@@ -427,6 +431,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose()
   {
     super.dispose();

@@ -85,6 +85,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
    * 
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
+  @Override
   public void addPages()
   {
     try
@@ -116,6 +117,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
    * 
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
 
