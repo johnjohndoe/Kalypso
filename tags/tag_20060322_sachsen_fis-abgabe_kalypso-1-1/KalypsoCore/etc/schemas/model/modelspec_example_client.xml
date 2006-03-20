@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
+.\modelspec.xsd" typeID="copy">
+	<input id="MODEL" path="model.gml" relativeToCalcCase="false"/>
+	<input id="KALIB" path="kalib.gml" relativeToCalcCase="true"/>
+	
+	<output id="LOG" path="Ergebnise/rechnung.log"/>
+</modeldata>
