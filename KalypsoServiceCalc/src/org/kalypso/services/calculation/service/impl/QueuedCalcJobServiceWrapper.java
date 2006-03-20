@@ -62,6 +62,7 @@ import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -74,6 +75,8 @@ import org.kalypso.services.common.ServiceConfig;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -112,6 +115,10 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       registry.registerTypeHandler( new ObservationLinkHandler() );
       registry.registerTypeHandler( new DiagramTypeHandler() );
 
+      registry.registerTypeHandler( new RangeSetTypeHandler() );
+      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+      registry.registerTypeHandler( new ResourceFileTypeHandler() );
+      
       // TODO TODO TODO: refaktor this shit!
       registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
       registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
@@ -134,11 +141,19 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
       final String[] taAxis = new String[]
       { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM, };
+      final String[] wtKcLaiAxis = new String[]
+                                              {
+                                                  TimeserieConstants.TYPE_DATE,
+                                                  TimeserieConstants.TYPE_LAI,
+                                                  TimeserieConstants.TYPE_WT,
+                                                  TimeserieConstants.TYPE_KC };
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,
+          "KCWTLAI" );
       registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
-
+      registry.registerTypeHandler( wtKcLaiInline );
     }
     catch( final Exception e )
     {
