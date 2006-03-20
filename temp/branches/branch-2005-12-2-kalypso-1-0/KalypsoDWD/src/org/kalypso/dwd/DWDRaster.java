@@ -72,7 +72,6 @@ import java.util.Vector;
  * Spalte 1- 8 : Gitterwert 1 z.B. 4908634 bedeutet 49.08634 Grad geogr. Breite 9-16 : Gitterwert 2 4908878 49.08878
  * Aufbau_LMFiles.txt
  */
-
 public class DWDRaster
 {
   /**
