@@ -57,7 +57,7 @@
       </informaltable>
     </section>
 
-    <section>
+    <section id="sst_psicompact_code">
       <title>Quellcode</title>
 
 		<para>Die Implementierung in Kalypso basiert auf dem IRepository-Framework
@@ -79,8 +79,8 @@
 		<para>In der Datei
 			<filename>org/kalypso/psiadapter/resources/config.ini</filename> sind
 			manche Einstellungen konfigurierbar, u.a. die Implementierungsklasse des
-			PSICompact.java Interface - die Eigenschaft PSI_CLASS definiert, welche
-			Klasse geladen werden soll:
+			<filename>PSICompact.java</filename> Interface - die Eigenschaft
+			<emphasis>PSI_CLASS</emphasis> definiert, welche Klasse geladen werden soll:
 			<programlisting>
 PSI_CLASS=de.psi.go.lhwz.PSICompactImpl</programlisting>
 		</para>
@@ -103,7 +103,7 @@ PSI_CLASS=de.psi.go.lhwz.PSICompactImpl</programlisting>
         </listitem>
       </itemizedlist>
 
-      <para>Diese Jars sind im Projekt KalypsoPSICompactAdapter abgelegt. Da
+      <para>Diese Jars sind im Projekt KalypsoAdapterPSICompact abgelegt. Da
       Tomcat im Sicherheitsmodus gestartet wird, sind entsprechende Einträge
       für die PSICompact-Codebase notwendig. Die Datei catalina.policy
       beinhaltet einen speziellen Bereich für PSICompact (siehe
@@ -113,17 +113,92 @@ PSI_CLASS=de.psi.go.lhwz.PSICompactImpl</programlisting>
     <section>
       <title>Zeitreihen</title>
 
-		<para>Zeitreihen werden aus unterschiedlichen Archiven je nach Datentyp (z.B.
-			Wasserstand, Niederschlag) gelesen. Die Klasse
-			<filename>PSICompactRepositoryFactory</filename> im Package
-			<filename>org.kalypso.psiadapter.repository</filename> hat eine
-			Methode, welche das richtige PSICompact-Archiv zu einem Datentyp
-			liefert.</para>
+		<para>Zur Zeit werden alle Werte aus der Archivtyp
+			<emphasis>PSICompact.ARC_MIN15</emphasis> (15 Minuten-Archiv) geholt und
+			zurück geschrieben. Beim zurückschreiben wird eine Zeitreihe so ergänzt, dass
+			bevor sie anfängt, und nachdem sie aufhört, vordefinierte Werte angehängt
+			werden (Zeiträume:
+			<emphasis>[t(0) - X Tage, t(0)[ und ]t(n), t(n) + X Tage]</emphasis> ). Dies
+			erlaubt dem Überschreiben ältere Ergebnisse in PSICompact so dass die
+			Internet-Darstellung (IMS) richtig erfolgt (siehe
+			<xref linkend="fig_overwrite_psicompact"/>)).
+			
+			<figure id="fig_overwrite_psicompact">
+				<title>Überschreibung der Werte</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="img/sst/sachsen/overwrite-psicompact.png"
+							scale="75"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
+		
+		<para>Wie die Werte überschrieben werden kann anhand der folgende Eigenschaften
+			aus der Konfigurationsdatei (Siehe
+			<xref linkend="sst_psicompact_code"/>) des KalypsoAdapterPSICompact frei
+			definierbar:
+			
+			<glosslist>
+				<glossentry>
+					<glossterm>OVERWRITE_CALENDAR_FIELD</glossterm>
+					
+					<glossdef>
+						<para>der Kalender-Field im Sinne von
+							<filename>java.util.Calendar</filename> worauf die
+							AMOUNT_BEFORE und AMOUNT_AFTER sich beziehen</para>
+					</glossdef>
+				</glossentry>
+				
+				<glossentry>
+					<glossterm>OVERWRITE_AMOUNT_BEFORE</glossterm>
+					
+					<glossdef>
+						<para>Anzahl an Zeit-Einheiten die vor der Begin einer Zeitreihe
+							mit OVERWRITE_VALUE überschrieben werden, bevor die
+							Zeitreihe in PSICompact zurückgeschrieben wird</para>
+					</glossdef>
+				</glossentry>
+				
+				<glossentry>
+					<glossterm>OVERWRITE_AMOUNT_AFTER</glossterm>
+					
+					<glossdef>
+						<para>Anzahl an Zeit-Einheiten die nach der Ende einer Zeitreihe
+							mit OVERWRITE_VALUE überschrieben werden, bevor die
+							Zeitreihe in PSICompact zurückgeschrieben wird</para>
+					</glossdef>
+				</glossentry>
+				
+				<glossentry>
+					<glossterm>OVERWRITE_STEP</glossterm>
+					
+					<glossdef>
+						<para>Der Step, mit welchem die Vorhersage rausgeschrieben wird
+							Die Einheit ist OVERWRITE_CALENDAR_FIELD</para>
+					</glossdef>
+				</glossentry>
+				
+				<glossentry>
+					<glossterm>OVERWRITE_VALUE</glossterm>
+					
+					<glossdef>
+						<para>Überschreibungswert um die Zeitreihe so zu markieren,
+							dass keine Darstellung der entsprechende Werte bei
+							Betrachtung im Web (Informationsmanagementsystem)
+							erfolgt (Eingabe in SI Einheiten)</para>
+					</glossdef>
+				</glossentry>
+			</glosslist>
+		</para>
 
-      <para>PSICompact liefert definierte Statuswerte zu den Werten einer
-      Zeitreihe. Diese müssen auf die innerhalb von Kalypso benutzten Stati
-      abgebildet werden. Die Umwandlung der Status-Information erfolgt beim
-      Abruf der Daten aus PSICompact in folgender Weise:</para>
+		<para>PSICompact liefert definierte Statuswerte zu den Werten einer Zeitreihe.
+			Diese müssen auf die innerhalb von Kalypso benutzten Stati abgebildet werden.
+			Die Umwandlung der Status-Information erfolgt beim Abruf der Daten aus
+			PSICompact in folgender Weise:
+		</para>
 
       <table>
         <title>Status-Tabelle</title>
