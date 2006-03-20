@@ -164,14 +164,6 @@
           </row>
 
           <row>
-            <entry>Ausdehnung</entry>
-
-            <entry>[m<superscript>2</superscript>]</entry>
-
-            <entry>Fläche des Einzugsgebiets (nicht benutzt)</entry>
-          </row>
-
-          <row>
             <entry>Vorhersagegenauigkeit</entry>
 
             <entry>cm/Tag</entry>
@@ -190,21 +182,12 @@
           </row>
 
           <row>
-            <entry>Niederschlag_gemessen</entry>
+            <entry>Niederschlag_rechnung</entry>
 
             <entry>Zeitreihenlink</entry>
 
-            <entry>Verknüpfung mit gemessener Niederschlagszeitreihe auf dem
-            Server</entry>
-          </row>
-
-          <row>
-            <entry>Wasserstand_gemessenEingang</entry>
-
-            <entry>Zeitreihenlink</entry>
-
-            <entry>Verknüpfung mit Wasserstandsganglinie auf dem
-            Server</entry>
+            <entry>Verknüpfung auf Gebietsniederschlag (Vergangenheit und
+            Zukunft)</entry>
           </row>
 
           <row>
@@ -830,7 +813,7 @@
         <para>Zur Zeit sind lediglich die Wasserstände und die gemessenen bzw.
         vorhergesagten Niederschläge über PSICompact abrufbar. Die
         vorgegebenen Abflüsse sind im Modell mit auf dem KALYPSO-Server
-        abgelegten Dateien (KALYPSO Datei-Repository im Pfad ) verknüpft,
+        abgelegten Dateien (KALYPSO Datei-Repository im Pfad) verknüpft,
         welche die historischen Daten des Hochwasserereignisses vom April 2004
         enthalten. Wird ein anderer Zeitraum gewählt (Hochwasservorhersage)
         werden die benötigten Zeitreihen mit Nullwerten befüllt, die Daten

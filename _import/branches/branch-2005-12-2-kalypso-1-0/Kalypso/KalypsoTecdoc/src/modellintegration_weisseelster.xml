@@ -73,7 +73,7 @@
               <glossterm><filename>/Modell_Karten/Ombrometer.gmt</filename></glossterm>
 
               <glossdef>
-                <para>Kartenansicht des Gesamtmodells</para>
+                <para>Kartenansicht der Niederschlagsmessstationen</para>
               </glossdef>
             </glossentry>
           </glosslist></para>
@@ -426,7 +426,7 @@
         <para>Im Vorhersagemodus hat der Anwender die Möglichkeit, im
         Vorhersage-Assistenten für eine Berechnung, eine Parameter-Optimierung
         zu benutzen. Der Rechendienst erkennt dies durch einen Eintrag in den
-        Steuerdateien <filename>.control_*.gml</filename>.</para>
+        Steuerdateien <filename>.nacontrol_*.gml</filename>.</para>
 
         <para>Ist die Optimierung gewünscht, werden im Unterschied zur
         Modellrechnung ohne Parameter-Optimierung keine Korrekturparameter auf
