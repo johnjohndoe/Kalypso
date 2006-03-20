@@ -29,7 +29,7 @@
   den LDAP-Eigenschaften eines Benutzers, mehr Information dazu erhalten Sie
   in der Technischen Dokumentation des IMS) ausgewertet. Ist das Flag gesetzt,
   darf sich der Benutzer nur im Simulationsbetrieb anmelden. Sonst darf er
-  sich im Normalbetrieb und im Simulationsbetrieb anmelden.</para>
+  sich im Regelbetrieb und im Simulationsbetrieb anmelden.</para>
 
   <para>Das Java-SDK bietet standardmäßig Klassen und Methoden an, um auf
   einen Verzeichnisdienst zugreifen zu können. Es werden also keine besonderen
@@ -70,7 +70,7 @@ LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de
 LDAP_CREDENTIALS=geheim</programlisting></para>
 
   <section>
-    <title>Szenarien: Normalbetrieb und Simulationsbetrieb</title>
+    <title>Szenarien: Regelbetrieb und Simulationsbetrieb</title>
 
     <para>Die Variable <emphasis>SCENARIO_INI_LIST</emphasis> gibt an, welche
     sog. INI-Dateien (Konfigurationsdateien) für die Parametrisierung der

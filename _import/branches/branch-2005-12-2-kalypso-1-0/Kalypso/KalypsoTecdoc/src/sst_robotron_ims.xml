@@ -134,7 +134,7 @@
 
         <glossdef>
           <para>Die Information, ob es sich um eine simulierte Vorhersage
-          handelt (Unterscheidung zwischen Normalbetrieb und
+          handelt (Unterscheidung zwischen Regelbetrieb und
           Simulationsbetrieb).</para>
         </glossdef>
       </glossentry>
