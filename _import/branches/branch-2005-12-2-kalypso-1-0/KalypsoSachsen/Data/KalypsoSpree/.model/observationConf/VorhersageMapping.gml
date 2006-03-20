@@ -218,13 +218,13 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583280.P3_MW" ns1:type="simple" linktype="zml"/>
       </out5ObservationLink>
       <local1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD.zml"/>
       </local1>
       <local2>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_unten.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_unten.zml"/>
       </local2>
       <local3>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTEND_oben.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml"/>
       </local3>
     </MappingObservation>
   </mappingMember>

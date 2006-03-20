@@ -524,7 +524,7 @@
       </TalsperreMember>
       <TalsperreMember>
         <Talsperre fid="TS_BAUTZEN">
-          <Name>Bautzen UP 1</Name>
+          <Name>Bautzen</Name>
           <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="EPSG:31469">
