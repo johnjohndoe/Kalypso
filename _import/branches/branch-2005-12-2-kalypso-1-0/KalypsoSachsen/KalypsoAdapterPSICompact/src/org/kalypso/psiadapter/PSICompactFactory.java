@@ -51,6 +51,11 @@ public final class PSICompactFactory
   private static final String OVERWRITE_AMOUNT_AFTER = "OVERWRITE_AMOUNT_AFTER";
 
   /**
+   * Der Step, mit welchem die Vorhersage rausgeschrieben wird Die Einheit ist OVERWRITE_CALENDAR_FIELD
+   */
+  private static final String OVERWRITE_STEP = "OVERWRITE_STEP";
+
+  /**
    * Überschreibungswert um die Zeitreihe so zu markieren, dass keine Darstellung der entsprechende Werte bei
    * Betrachtung im Web (Informationsmanagementsystem) erfolgt
    */
@@ -120,7 +125,7 @@ public final class PSICompactFactory
   {
     return getProperties().getProperty( "RIGHT_" + psiRight );
   }
-  
+
   public final static double getOverwriteValue()
   {
     return Double.parseDouble( getProperties().getProperty( OVERWRITE_VALUE ) );
@@ -130,12 +135,17 @@ public final class PSICompactFactory
   {
     return Integer.parseInt( getProperties().getProperty( OVERWRITE_AMOUNT_BEFORE ) );
   }
-  
+
   public final static int getOverwriteAmountAfter()
   {
     return Integer.parseInt( getProperties().getProperty( OVERWRITE_AMOUNT_AFTER ) );
   }
-  
+
+  public final static int getOverwriteStep()
+  {
+    return Integer.parseInt( getProperties().getProperty( OVERWRITE_STEP ) );
+  }
+
   public final static int getOverwriteCalendarField()
   {
     return CalendarUtilities.getCalendarField( getProperties().getProperty( OVERWRITE_CALENDAR_FIELD ) );

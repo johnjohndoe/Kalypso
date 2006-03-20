@@ -1,12 +1,10 @@
 package org.kalypso.psiadapter.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
+import org.kalypso.commons.conversion.units.NoConverter;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -17,10 +15,13 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -40,6 +41,8 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
  */
 public class PSICompactObservationItem implements IObservation
 {
+//  private final Logger m_logger = Logger.getLogger( getClass().getName() );
+
   private final String m_name;
 
   private final String m_identifier;
@@ -286,18 +289,38 @@ public class PSICompactObservationItem implements IObservation
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
-    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, m_vc );
-        
+    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, NoConverter.getInstance() );
+
     if( model.getCount() > 0 )
     {
-    // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
-    // überschrieben werden --> sonst Internet Darstellung kann misst sein
-      final ArchiveData[] data = extendForOverwrite( model.getData() );
-      
+      final ArchiveData[] data = extendForOverwrite( model );
+
+      // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
+      // überschrieben werden --> sonst Internet Darstellung kann misst sein
+      final StringBuffer msg = new StringBuffer();
+
+      msg.append( "Werte nach PSICompact geschrieben in Zeitreihe mit ID: " );
+      msg.append( m_objectInfo.getId() );
+      msg.append( '\n' );
+      for( int i = 0; i < data.length; i++ )
+      {
+        final PSICompact.ArchiveData dataItem = data[i];
+        msg.append( dataItem.getTimestamp() );
+        msg.append( " - " );
+        msg.append( dataItem.getValue() );
+        msg.append( " - " );
+        msg.append( dataItem.getStatus() );
+        msg.append( '\n' );
+      }
+      msg.append( '\n' );
+      msg.append( '\n' );
+
       try
       {
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15,
             data[0].getTimestamp(), data );
+        
+//        m_logger.info( msg.toString() );
 
         // this observation has changed
         m_evtPrv.fireChangedEvent( null );
@@ -308,46 +331,39 @@ public class PSICompactObservationItem implements IObservation
       }
     }
   }
-  
+
   /**
-   * Erweitert die Zeitreihe damit sie mit Überschreibungswerte versehen wird.
+   * Interpolates and extends the model data according to configuration.
+   * 
+   * @throws SensorException
    */
-  private ArchiveData[] extendForOverwrite( ArchiveData[] data )
+  private ArchiveData[] extendForOverwrite( final PSICompactTuppleModel model ) throws SensorException
   {
+    final ArchiveData[] data = model.getData();
+
+    final int overwriteCalendarField = PSICompactFactory.getOverwriteCalendarField();
+    final int overwriteStep = PSICompactFactory.getOverwriteStep();
+
     final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
     cal.setTime( data[0].getTimestamp() );
-    cal.add( PSICompactFactory.getOverwriteCalendarField(), -PSICompactFactory.getOverwriteAmountBefore() );
+    cal.add( overwriteCalendarField, -PSICompactFactory.getOverwriteAmountBefore() );
     final Date begin = cal.getTime();
-    
+
     cal.setTime( data[data.length - 1].getTimestamp() );
-    cal.add( PSICompactFactory.getOverwriteCalendarField(), PSICompactFactory.getOverwriteAmountAfter() );
+    cal.add( overwriteCalendarField, PSICompactFactory.getOverwriteAmountAfter() );
     final Date end = cal.getTime();
 
-    final List list = new ArrayList( data.length * 2 );
+    double overwriteValue = m_vc.convert( PSICompactFactory
+        .getOverwriteValue() );
+    final InterpolationFilter filter = new InterpolationFilter( overwriteCalendarField, overwriteStep, true, overwriteValue, PSICompact.STATUS_OK );
+    final SimpleObservation observation = new SimpleObservation( null, "", "", false, null, new MetadataList(), model
+        .getAxisList(), model );
 
-    final double value = PSICompactFactory.getOverwriteValue();
-    
-    // insert overwrite values until begin is reached
-    cal.setTime( begin );
-    while( cal.getTime().before( data[0].getTimestamp() ) )
-    {
-      list.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_UNDEF, value ) );
-      cal.add( Calendar.MINUTE, 15 );
-    }
-    
-    // insert original values
-    list.addAll( Arrays.asList( data ) );
-    
-    // insert overwrite values until end is reached
-    cal.setTime( data[data.length - 1].getTimestamp() );
-    cal.add( Calendar.MINUTE, 15 );
-    while( cal.getTime().before( end ) )
-    {
-      list.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_UNDEF, value ) );
-      cal.add( Calendar.MINUTE, 15 );
-    }
-    
-    return (ArchiveData[])list.toArray( new ArchiveData[list.size()] );
+    filter.initFilter( null, observation, null );
+
+    final ITuppleModel newValues = filter.getValues( new ObservationRequest( begin, end ) );
+    final PSICompactTuppleModel newModel = PSICompactTuppleModel.copyModel( newValues, m_vc );
+    return newModel.getData();
   }
 
   /**

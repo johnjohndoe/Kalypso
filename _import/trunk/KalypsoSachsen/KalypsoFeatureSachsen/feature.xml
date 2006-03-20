@@ -4,8 +4,7 @@
       label="KalypsoFeatureSachsen"
       version="1.0.0"
       provider-name="kalypso.org"
-      plugin="org.kalypso.product"
-      >
+      plugin="org.kalypso.product">
 
    <install-handler/>
 
@@ -31,8 +30,8 @@
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.help"/>
+      <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.externaltools"/>
@@ -109,12 +108,6 @@
          version="1.4"/>
 
    <plugin
-         id="org.kalypso.manual"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
@@ -176,6 +169,12 @@
 
    <plugin
          id="org.kalypso.services.metadoc.client"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.manual.sachsen"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
