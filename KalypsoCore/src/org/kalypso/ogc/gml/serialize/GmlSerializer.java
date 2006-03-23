@@ -192,7 +192,7 @@ public final class GmlSerializer
     saxFac.setNamespaceAware( true );
     final SAXParser saxParser = saxFac.newSAXParser();
     final XMLReader xmlReader = saxParser.getXMLReader();
-    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader );
+    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, context );
     xmlReader.setContentHandler( contentHandler );
     xmlReader.parse( inputSource );
 
@@ -209,7 +209,7 @@ public final class GmlSerializer
     saxFac.setNamespaceAware( true );
     final SAXParser saxParser = saxFac.newSAXParser();
     final XMLReader xmlReader = saxParser.getXMLReader();
-    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, schemaURLHint, useGMLSchemaCache );
+    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, schemaURLHint, useGMLSchemaCache, null );
     xmlReader.setContentHandler( contentHandler );
     xmlReader.parse( new InputSource( inputStream ) );
     final GMLSchema schema = contentHandler.getGMLSchema();

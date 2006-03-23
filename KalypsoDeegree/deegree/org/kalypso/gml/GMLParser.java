@@ -77,7 +77,7 @@ public class GMLParser
     saxFac.setNamespaceAware( true );
     final SAXParser saxParser = saxFac.newSAXParser();
     final XMLReader xmlReader = saxParser.getXMLReader();
-    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader );
+    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader ,gmlURL);
     xmlReader.setContentHandler( contentHandler );
     final InputSource source = new InputSource( gmlURL.openStream() );
     xmlReader.parse( source );

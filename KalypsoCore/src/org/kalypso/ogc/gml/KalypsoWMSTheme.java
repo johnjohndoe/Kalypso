@@ -221,7 +221,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       catch( Exception e )
       {
         // simply do not paint it
-        e.printStackTrace();
       }
     }
 
@@ -352,6 +351,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
     final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
     final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( m_requestedEnvLocalSRS, m_localSRS );
+    if(targetEnvRemoteSRS.getMax().getX()-targetEnvRemoteSRS.getMin().getX()<=0)
+      throw new Exception("invalid bbox");
+    if(targetEnvRemoteSRS.getMax().getY()-targetEnvRemoteSRS.getMin().getY()<=0)
+      throw new Exception("invalid bbox");
     final String targetEnvRemoteSRSstring = WMSHelper.env2bboxString( targetEnvRemoteSRS );
     wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
     return wmsParameter;

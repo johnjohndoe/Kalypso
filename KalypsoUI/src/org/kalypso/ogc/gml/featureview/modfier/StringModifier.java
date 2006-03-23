@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -80,7 +79,7 @@ public class StringModifier implements IFeatureModifier
 
   public StringModifier( final IValuePropertyType ftp )
   {
-    NUMBER_FORMAT = getNumberFormat( (PropertyType)ftp );
+    NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
 
     // wen need both registered type handler types
@@ -91,16 +90,16 @@ public class StringModifier implements IFeatureModifier
     m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
   }
 
-  public NumberFormat getNumberFormat( final PropertyType ftp )
+  public NumberFormat getNumberFormat( final IPropertyType ftp )
   {
     // HACK: TODO: either put this into the IGuiTypeHandler or
     // maybe even in the appinfo of the schema
-    final String namespace = ftp.getNamespace();
-    final String name = ftp.getName();
+    final String namespace = ftp.getQName().getNamespaceURI();
+    final String name = ftp.getQName().getLocalPart();
     final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
-//    ##0.000E0
+    // ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
-    
+
     if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
     {
       if( "flaech".equals( name ) )
@@ -108,7 +107,7 @@ public class StringModifier implements IFeatureModifier
     }
     if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
     {
-      if( "m_perkm".equals( name )|| "area".equals( name ))
+      if( "m_perkm".equals( name ) || "area".equals( name ) )
         return expFormat;
     }
     return normalFormat;
