@@ -76,7 +76,7 @@
             </row>
 
             <row>
-              <entry>Ant 1.6</entry>
+              <entry>ANT 1.6</entry>
 
               <entry>Steuerung des Build-Prozesses</entry>
             </row>
@@ -110,7 +110,7 @@
     vorgenommen.</para>
 
     <para>Das Erzeugen der verschiedenen Versionen des Anwenderhandbuchs
-    (html, EclipseHelp, PDF) wurde komplett per Ant-Skript automatisiert. Es
+    (html, EclipseHelp, PDF) wurde komplett per ANT-Skript automatisiert. Es
     ist lediglich dafür zu sorgen, dass sich das zur Umwandlung von LaTeX noch
     PDF benötigte Programm pdflatex.exe (im Umfang der Miktex-Distribution
     enthalten) im aktuellen Programmpfad befindet sowie dass alle von DB2Latex
@@ -517,7 +517,7 @@
 
                 <entry>Library</entry>
 
-                <entry>Bereitstellung von Ant-Tasks für die Integration als
+                <entry>Bereitstellung von ANT-Tasks für die Integration als
                 Jar in KalypsoUI</entry>
               </row>
 
@@ -587,13 +587,13 @@
     <title>Kompilation</title>
 
     <para>Unter Benutzung von Eclipse wird der Quellcode inkrementell
-    kompiliert. Für das Deployment werden Ant-Skripte benutzt, die den
+    kompiliert. Für das Deployment werden ANT-Skripte benutzt, die den
     Quellcode separat kompilieren.</para>
 
-    <para>Die Ant-Skripte sind nach dem Standard aus dem KalypsoBuild-Plugin
+    <para>Die ANT-Skripte sind nach dem Standard aus dem KalypsoBuild-Plugin
     aufgebaut und verfügen über die gleichen Targets. Manche Projekte
     benötigen generierte Klassen für das sog. XML-Binding. Dies wird auch
-    durch entsprechende Targets in den Ant-Skripten berücksichtigt.</para>
+    durch entsprechende Targets in den ANT-Skripten berücksichtigt.</para>
   </section>
 
   <section id="deployment">
@@ -602,7 +602,7 @@
     <para vendor="sachsen-anhalt">Aus der Entwicklungsumgebung ist es möglich,
     die unterschiedlichen Dienste zu deployen. Das
     KalypsoConfSachsenAnhalt-Projekt deckt diese Aspekte ab und stellt
-    unterschiedliche übergeordnete Ant-Skripte zur Automatisierung des
+    unterschiedliche übergeordnete ANT-Skripte zur Automatisierung des
     Deploy-Prozess zur Verfügung.</para>
 
     <para>Man kann:</para>

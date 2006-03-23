@@ -27,7 +27,444 @@
   <filename>KalypsoModelTubig</filename> zusammengefasst. Neben der
   Implementation des Rechendienstes befinden sich dort alle für die Berechnung
   benötigten weiteren Resourcen (ausführbare Dateien m_*.exe, unveränderbare
-  Parameterdateien, usw.) und auch die Modellspezifikation.</para>
+  Parameterdateien, usw.).</para>
 
-  <para>Alle Daten zur clientseitigen Modellierung, also </para>
+  <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
+  Modelldaten usw., befinden sich im Datenprojekt
+  <filename>KalypsoBode</filename> bzw. <filename>KalypsoIlse</filename> der
+  Programmquellen. Diese Projekte dienen jeweils als Modellprojekt unter dem
+  Namen <quote>Bode</quote> bzw. <quote>Ilse</quote> als Vorhersagemodell der
+  eigentlichen Installation.</para>
+
+  <section>
+    <title>Modellspezifikation und Grunddaten</title>
+
+    <para>Die Verzeichnisstruktur der Modellprojekte
+    <filename>KalypsoIlse</filename> und <filename>KalypsoBode</filename> ist
+    gemäß <xref linkend="abschn_5_1" /> aufgebaut. Da zur
+    Niederschlagsprognose keine DWD-Rasterdaten herangezogen werden, entfällt
+    allerdings das Verzeichnis <filename>/.model/dwd</filename>.</para>
+
+    <para>Die GML-Applikationsschemata wurden wie empfohlen in den
+    Programmquellen des Modell-Plugins im Paket
+    <filename>org/kalypso/lhwsachsenanhalt/tubig/schemata</filename>
+    abgelegt.</para>
+
+    <para>Das Grundmodell wurde unter dem Namen
+    <filename>modell.gml</filename> im Hauptverzeichnis des jeweiligen
+    Modellprojektes gespeichert. Durch Doppelklick auf die GML-Datei kann man
+    sich einen Überblick über die Struktur der Modelldaten in Form einer
+    Baumansicht verschaffen. Nach dem Öffnen der Ansicht erscheint eine
+    (Baum-) Strukturansicht des Modells, welche unter anderem auch das
+    Bearbeiten der einzelnen Modellelemente erlaubt (siehe <xref
+    linkend="fig_modellintegration_bode_ueberblick" />).</para>
+
+    <figure id="fig_modellintegration_bode_ueberblick">
+      <title>Überblick Modelldaten Bode</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/modellintegration/sachsen-anhalt/modellbaum_bode.png"
+                     scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Wie aus der Baumansicht hervorgeht, besteht das Bode-Modell aus drei
+    Listen (Collections), welche unterhalb des Wurzelelements (root)
+    angeordnet sind:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Die Liste der Pegel (PegelCollectionAssociation) enthält alle
+        Pegel und deren Parameter. Innerhalb der Pegel wird zwischen
+        Wasserlaufmodellen, Niederschlagsgebieten und einfachen Pegeln
+        unterschieden.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Liste der Ombrometer (OmbrometerCollectionAssociation)
+        enthält die Niederschlagsmessstationen des
+        Gebietsniederschlagsmodells.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Liste der Speicher (SpeicherCollectionAssociation) enthält
+        die im Modell abgebildeten Speicherbauwerke und deren
+        Parameter.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Beim Ilse-Modell enthält die Liste der Pegel nur
+    Niederschlagsgebiete und die Liste der Speicher ist leer.</para>
+
+    <para>Im Folgenden werden die einzelnen Modellparameter und Spalten der
+    Modelltabellen erläutert. Die Eingabe der Parameter erfolgt entweder über
+    die entsprechenden Ansichten im KALYPSO-Modeler (Expertenmodus) oder im
+    Vorhersage-Assistenten.</para>
+
+    <para>Wasserlaufmodelle und Niederschlagsgebiete sind Erweiterungen zu den
+    einfachen Pegeln. D. h. alle Parameter der einfachen Pegel (siehe <xref
+    linkend="tbl_paramsPegelTubig" />) sind auch Parameter von
+    Wasserlaufmodellen und Niederschlagsgebieten.</para>
+
+    <table id="tbl_paramsPegelTubig">
+      <title>Parameter der einfachen Pegel (Pegel)</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name des Pegels</entry>
+          </row>
+
+          <row>
+            <entry>Ort</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage des Pegels</entry>
+          </row>
+
+          <row>
+            <entry>Messstellennummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Messstellennummer</entry>
+          </row>
+
+          <row>
+            <entry>Kurz_Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Kurz-Name des Pegels für den Rechenkern</entry>
+          </row>
+
+          <row>
+            <entry>istEingabePegel</entry>
+
+            <entry>Ja / Nein</entry>
+
+            <entry>Gehen die gemessenen Wasserstandswerte als Eingangswerte in
+            das Modell ein?</entry>
+          </row>
+
+          <row>
+            <entry>istErgebnisPegel</entry>
+
+            <entry>Ja / Nein</entry>
+
+            <entry>Sind die berechneten Wasserstandswerte Ergebnisse des
+            Modells für die Berichts- und Zeitreihenablage?</entry>
+          </row>
+
+          <row>
+            <entry>Ganglinie_gemessen</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Wasserstandsganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Ganglinie_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Wasserstandsganglinie</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Aus den zusätzlichen Parametern für die Wasserlaufmodelle (siehe
+    <xref linkend="tbl_paramsWLMTubig" />) wird für den entsprechenden Pegel
+    die Parameterdatei für das Wasserlaufmodell
+    (<filename>wlm_&lt;Kurz_Name&gt;.par</filename>) generiert.</para>
+
+    <table id="tbl_paramsWLMTubig">
+      <title>zusätzliche Parameter der Wasserlaufmodelle
+      (WasserlaufModell)</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Kommentar</entry>
+
+            <entry>Text</entry>
+
+            <entry>Kommentar für die Parameterdatei (*.wlm) des
+            Wasserlaufmodells</entry>
+          </row>
+
+          <row>
+            <entry>Parameter Aufteilungsfunktion Flussbett/Vorland
+            (XAW)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Parameter Aufteilungsfunktion Flussbett/Vorland
+            (XEW)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Rückgangskoeffizient Flussbettbereich in h (FK1)</entry>
+
+            <entry>[h]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Rückgangskoeffizient Ausuferungsbereich in h (FK2)</entry>
+
+            <entry>[h]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Anzahl Linearspeicher Flussbereich (NN1)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Anzahl Linearspeicher Ausuferungsbereich (NN2)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Laufzeit</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Standard Laufzeit</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Parameter Funktion Anzahl Linearspeicher Flussbett
+            (DM1)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+
+          <row>
+            <entry>Parameter Funktion Anzahl Linearspeicher Vorland
+            (DM2)</entry>
+
+            <entry>[-]</entry>
+
+            <entry>-</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Die zusätzlichen Parametern für die Niederschlagsgebiete (siehe
+    <xref linkend="tbl_paramsNSGTubig" />) werden für die Berechnung des
+    Gebietsniederschlagsmodells benötigt.</para>
+
+    <table id="tbl_paramsNSGTubig">
+      <title>zusätzliche Parameter der Niederschlagsgebiete
+      (Niederschlagsgebiet)</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Gebiet</entry>
+
+            <entry>Polygon</entry>
+
+            <entry>Grenze des Einzugsgebiets (wird zur Zeit nicht
+            verwendet)</entry>
+          </row>
+
+          <row>
+            <entry>Niederschlag</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit der Niederschlagsganglinie</entry>
+          </row>
+
+          <row>
+            <entry>gewichtung</entry>
+
+            <entry>-</entry>
+
+            <entry>Liste von Gewichtungselementen zur Zuordnung der
+            Niederschlagsstationen für das Gebietsniederschlagsmodell</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>Spezifikation der Rechenvarianten</title>
+
+    <para>Die Rechenvarianten wurden gemäß <xref
+    linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
+    <xref linkend="tab-modellintegration-tubig-rechenvariante" /> zeigt den
+    konkreten Aufbau für Bode und Ilse.</para>
+
+    <table id="tab-modellintegration-spree-rechenvariante">
+      <title>Aufbau einer Rechenvariante des Bode- bzw. Ilse-Modells</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="2*" />
+
+        <colspec align="left" colwidth="2*" />
+
+        <colspec align="left" colwidth="2*" />
+
+        <thead>
+          <row>
+            <entry align="center">Pfade relativ zur Rechenvariante</entry>
+
+            <entry align="center">Beschreibung</entry>
+
+            <entry align="center">Entstehung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry><filename>.calculation</filename></entry>
+
+            <entry>Steuerparameter der Berechnung</entry>
+
+            <entry>Kopie der Datei
+            <filename>/KalypsoBode/.model/.calculation.template</filename>
+            bzw.
+            <filename>/KalypsoIlse/.model/.calculation.template</filename>
+            unter Ersetzung/Bearbeitung der Parameter.</entry>
+          </row>
+
+          <row>
+            <entry><filename>createCalcCase.log</filename></entry>
+
+            <entry>Log-Datei zur Erstellung der Rechenvariante</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry><filename>Info_Rechenvariante.gft</filename></entry>
+
+            <entry>Ansichtsvorlage für die Steuerparameter</entry>
+
+            <entry>Kopie der Datei
+            <filename>/KalypsoBode/.templates/Modell\Info_Rechenvariante.gft</filename>
+            bzw.
+            <filename>/KalypsoIlse/.templates/Modell\Info_Rechenvariante.gft</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>modell.gml</filename></entry>
+
+            <entry>GML-Datei der Modelldaten der Rechenvariante</entry>
+
+            <entry>Kopie der Grunddaten des Modells
+            (<filename>/KalypsoBode/modell.gml</filename> bzw.
+            <filename>/KalypsoIlse/modell.gml</filename>)</entry>
+          </row>
+
+          <row>
+            <entry><filename>updateCalcCase.log</filename></entry>
+
+            <entry>Log-Datei zum Abholen/Aktualisieren der Zeitreihen,
+            insbesondere Meldungen zur Gültigkeit der Zeitreihenwerte</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry><filename>Zeitreihen/*.zml</filename></entry>
+
+            <entry>Eingangszeitreihen der Berechnung</entry>
+
+            <entry>KALYPSO-Zeitreihendienst</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
 </section>

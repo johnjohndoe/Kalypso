@@ -573,8 +573,8 @@
     <section>
       <title>Deployment der Dienste</title>
 
-      <para vendor="sachsen-anhalt">Um die KALYPSO Dienste deployen zu können,
-      ist das Ant-Skript im Verzeichnis
+      <para vendor="sachsen-anhalt">Um die KALYPSO-Dienste deployen zu können,
+      ist das ANT-Skript im Verzeichnis
       <filename>deployable-server-kunde</filename> im
       KalypsoConfSachsenAnhalt-Projekt erforderlich.</para>
 
@@ -582,7 +582,7 @@
 
       <para>In <filename>webapps/webdav</filename> ist die Datei
       <filename>Kalypso-client.ini</filename> zwingend erforderlich. Sie wird
-      normalerweise beim Deploy über das Ant-Skript angelegt. Eine Überprüfung
+      normalerweise beim Deploy über das ANT-Skript angelegt. Eine Überprüfung
       des Dateiinhaltes ist ratsam, da die URLs mit den eingesetzten Services
       übereinstimmen müssen.</para>
 
@@ -591,7 +591,7 @@
       aktuelle DWD-Vorhersage aus dem IMS in das
       <filename>webdav/dwd</filename> Verzeichnis. Damit steht die
       DWD-Vorhersage für die KALYPSO-Clients zur Verfügung. Sie finden ein
-      Ant-Target in der <filename>build.xml</filename> im Projekt
+      ANT-Target in der <filename>build.xml</filename> im Projekt
       <filename>KalypsoDWD</filename>, um die Servlet-Applikation zu
       erstellen.</para>
     </section>

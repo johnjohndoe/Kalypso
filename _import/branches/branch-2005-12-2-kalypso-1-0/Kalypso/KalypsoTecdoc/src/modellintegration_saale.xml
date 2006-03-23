@@ -21,6 +21,11 @@
   <filename>KalypsoModelSaale</filename> zusammengefasst. Neben der
   Implementation des Rechendienstes befinden sich dort alle für die Berechnung
   benötigten weiteren Resourcen (ausführbare Dateien hwvor.exe, snow.exe,
-  unveränderbare Parameterdateien, usw.) und auch die
-  Modellspezifikation.</para>
+  unveränderbare Parameterdateien, usw.).</para>
+
+  <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
+  Modelldaten usw., befinden sich im Datenprojekt
+  <filename>KalypsoSaale</filename> der Programmquellen. Das gleiche Projekt
+  dient als Modellprojekt unter dem Namen <quote>Saale</quote> als
+  Vorhersagemodell der eigentlichen Installation.</para>
 </section>

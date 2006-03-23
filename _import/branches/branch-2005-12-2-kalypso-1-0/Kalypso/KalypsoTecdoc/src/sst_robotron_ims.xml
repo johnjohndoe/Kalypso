@@ -151,7 +151,7 @@
         <glossterm>station_id</glossterm>
 
         <glossdef>
-          <para>Der Stationskennziffer, wenn es sich um ein Dokument handelt,
+          <para>Die Stationskennziffer, wenn es sich um ein Dokument handelt,
           das nur einen Pegel oder Speicher betrifft. Wenn das Dokument eine
           Übersicht darstellt, ist diese Eigenschaft leer.</para>
         </glossdef>
@@ -174,8 +174,7 @@
   <filename>TOMCAT_HOME/webapps/webdav/srvconf/IMetaDocService</filename>.
   Hier folgt ein Beispiel:</para>
 
-  <para><programlisting>
-# classname of the document commiter
+  <para><programlisting># classname of the document commiter
 COMMITER=org.kalypso.robotronadapter.RobotronMetaDocCommiter
 
 # Robotron Dokumentenablage
