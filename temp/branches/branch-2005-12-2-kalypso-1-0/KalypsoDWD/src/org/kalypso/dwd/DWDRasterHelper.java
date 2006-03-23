@@ -81,7 +81,6 @@ public class DWDRasterHelper
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
 
-
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
    * 
@@ -180,10 +179,10 @@ public class DWDRasterHelper
   {
     switch( dwdKey )
     {
-      case DWDRaster.KEY_RAIN:
-        return TimeserieConstants.TYPE_RAINFALL;
-      case DWDRaster.KEY_TEMP:
-        return TimeserieConstants.TYPE_TEMPERATURE;
+    case DWDRaster.KEY_RAIN:
+      return TimeserieConstants.TYPE_RAINFALL;
+    case DWDRaster.KEY_TEMP:
+      return TimeserieConstants.TYPE_TEMPERATURE;
     }
     return null;
   }
@@ -199,6 +198,7 @@ public class DWDRasterHelper
       DWDRaster xRaster = null;
       DWDRaster yRaster = null;
       final double factor = DWDRasterHelper.getFactorForDwdKey( DWDRaster.KEY_100000_LAT );
+      final double offset = DWDRasterHelper.getOffsetForDwdKey( DWDRaster.KEY_100000_LAT );
       while( ( line = reader.readLine() ) != null )
       {
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
@@ -213,20 +213,20 @@ public class DWDRasterHelper
           raster = new DWDRaster( date, key );
           continue;
         }
-        
+
         final String[] values = ( line.trim() ).split( " +", 13 );
 
         if( raster != null )
         {
           for( int i = 0; i < values.length; i++ )
-            raster.addValue( Double.parseDouble( values[i] ) * factor );
+            raster.addValue( ( Double.parseDouble( values[i] ) + offset ) * factor );
         }
       }
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
         yRaster = raster;
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LON )
         xRaster = raster;
-      
+
       return new DWDRasterGeoLayer( targetEpsg, xRaster, yRaster );
     }
     finally
@@ -235,33 +235,49 @@ public class DWDRasterHelper
     }
   }
 
+  /** Each value read from the raster is multiplied with this factor (applied AFTER the offset) */
   private static double getFactorForDwdKey( final int dwdKey )
   {
     switch( dwdKey )
     {
-      case DWDRaster.KEY_HEIGHT: // [m]
-      case DWDRaster.KEY_BEDECKUNG: // [%]
-        return 1;
-      case DWDRaster.KEY_TAU: // [GradC]
-        return 1d / 10d;
-      case DWDRaster.KEY_TEMP: // [GradC]
-      case DWDRaster.KEY_RAIN: // [mm]
-      case DWDRaster.KEY_SNOW: // [mm]
-      case DWDRaster.KEY_WINDM: // [m/s]
-      case DWDRaster.KEY_WINDZ: // [m/s]
-        return 1d / 100d;
-      case DWDRaster.KEY_100000_LAT: //[grad]
-      case DWDRaster.KEY_100000_LON: //[grad]
-        return 1d / 100000d;
+    case DWDRaster.KEY_HEIGHT: // [m]
+    case DWDRaster.KEY_BEDECKUNG: // [%]
+      return 1;
+    case DWDRaster.KEY_TAU: // [GradC]
+    case DWDRaster.KEY_TEMP: // [Kelvin]
+      return 1d / 10d;
+    case DWDRaster.KEY_RAIN: // [mm]
+    case DWDRaster.KEY_SNOW: // [mm]
+    case DWDRaster.KEY_WINDM: // [m/s]
+    case DWDRaster.KEY_WINDZ: // [m/s]
+      return 1d / 100d;
+    case DWDRaster.KEY_100000_LAT: //[grad]
+    case DWDRaster.KEY_100000_LON: //[grad]
+      return 1d / 100000d;
     }
     return 1; // unknown
+  }
+
+  /** This offset is added to each value read from the raster (applied BEFORE the factor) */
+  private static double getOffsetForDwdKey( final int dwdKey )
+  {
+    switch( dwdKey )
+    {
+    case DWDRaster.KEY_TEMP: // [Kelvin]
+      return -2731.5;
+
+    default:
+      return 0; // unknown
+    }
   }
 
   public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells )
       throws Exception
   {
     LineNumberReader reader = null;
-    final double factor = getFactorForDwdKey( dwdKey );
+    final double factor = DWDRasterHelper.getFactorForDwdKey( dwdKey );
+    final double offset = DWDRasterHelper.getOffsetForDwdKey( dwdKey );
+
     try
     {
       reader = new LineNumberReader( new InputStreamReader( url.openStream() ) );
@@ -309,31 +325,31 @@ public class DWDRasterHelper
           continue;
         switch( lmVersion )
         {
-          case 1:
-            final String[] values;
-            values = ( line.trim() ).split( " +", 13 );
-            for( int i = 0; i < values.length; i++ )
+        case 1:
+          final String[] values;
+          values = ( line.trim() ).split( " +", 13 );
+          for( int i = 0; i < values.length; i++ )
+          {
+            final double value = Double.parseDouble( values[i] );
+            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
+            cellpos++;
+          }
+          break;
+        case 2:
+          values = ( line.trim() ).split( " +" );
+          for( int i = 0; i < values.length; i++ )
+          {
+            final double value = Double.parseDouble( values[i] );
+            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
+            cellpos++;
+            if( cellpos >= maxCells )
             {
-              double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, value * factor );
-              cellpos++;
+              long time = date.getTime(); // add one hour
+              date = new Date( time + 1000l * 60l * 60l );
+              cellpos = 0;
             }
-            break;
-          case 2:
-            values = ( line.trim() ).split( " +" );
-            for( int i = 0; i < values.length; i++ )
-            {
-              double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, value * factor );
-              cellpos++;
-              if( cellpos >= maxCells )
-              {
-                long time = date.getTime(); // add one hour
-                date = new Date( time + 1000l * 60l * 60l );
-                cellpos = 0;
-              }
-            }
-            break;
+          }
+          break;
         }
       }
       return raster;
@@ -382,7 +398,7 @@ public class DWDRasterHelper
         final String newLine;
         if( matcher.matches() )
         {
-          newLine = " " + strDate + matcher.group(1);
+          newLine = " " + strDate + matcher.group( 1 );
           count++;
         }
         else
