@@ -25,7 +25,7 @@ public class KelvinCelsiusConverter implements IValueConverter
   /**
    * @see org.kalypso.commons.conversion.units.IValueConverter#convert(double)
    */
-  public double convert( double value )
+  public double convert( final double value )
   {
     return value - 273.15;
   }
@@ -33,7 +33,7 @@ public class KelvinCelsiusConverter implements IValueConverter
   /**
    * @see org.kalypso.commons.conversion.units.IValueConverter#reverse(double)
    */
-  public double reverse( double value )
+  public double reverse( final double value )
   {
     return value + 273.15;
   }
