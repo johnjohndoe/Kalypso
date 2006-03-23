@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:syn="http://www.tuhh.de/synthN" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/synthN" elementFormDefault="qualified" version="0.6">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
+	<element name="SynthN" type="syn:synthNType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>synthetische Niederschläge</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>synthetic Precipitation</label>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="synthNType">
+		<complexContent>
+			<extension base="syn:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="synthNMember" type="syn:SynthNAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>exists of</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NonGeometricAbstractFeatureType" abstract="true">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="SynthNAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="syn:StatN"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="StatN" type="syn:StatNType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Regionsliste</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>region list</label>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="StatNType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="statNParameterMember" type="syn:StatNParameterAssociationType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>hat</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>has</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StatNParameterAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="syn:StatNParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="StatNParameter" type="syn:StatNParameterType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>stat. N.</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>stat. P.</label>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="StatNParameterType">
+		<complexContent>
+			<extension base="syn:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="statNDiag" type="zmlinline:ZmlInlineTNType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Diagramm</label>
+								<tooltip>Diagramm statistischer Niederschlag</tooltip>
+								<description>Niederschlagsmenge abhängig von der bisherigen Niederschlagsdauer</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>diagram</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="xjah" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wiederkehrwahrscheinlichkeit</label>
+								<tooltip>Wiederkehrwahrscheinlichkeit</tooltip>
+								<description>Wiederkehrwahrscheinlichkeit des synthetischen Niederschlagereignisses [1/a]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>synth. P.</label>
+								<tooltip>synthetic Presipitation</tooltip>
+								<description>calculation based on synthetic precipitation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

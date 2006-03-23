@@ -1011,13 +1011,13 @@ siehe bodenkorrekturmember...
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Entnahme GW</label>
-								<tooltip>Entnahmemenge Grundwasser [m^3/h]</tooltip>
-								<description>kontinuierliche Entnahmemenge aus dem flachen Grundwasserspeicher [m^3/h]</description>
+								<tooltip>Entnahmemenge Grundwasser [m^3/s]</tooltip>
+								<description>kontinuierliche Entnahmemenge aus dem flachen Grundwasserspeicher [m^3/s]</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Withdrawal GW</label>
-								<tooltip>Withdrawal quantity of groundwater [m^3/h]</tooltip>
-								<description>continuous withdrawal from the flat groundwater storage [m^3/h]</description>
+								<tooltip>Withdrawal quantity of groundwater [m^3/s]</tooltip>
+								<description>continuous withdrawal from the flat groundwater storage [m^3/s]</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -1149,6 +1149,20 @@ siehe bodenkorrekturmember...
 								<label>Coeff. RETOB,RETINT</label>
 								<tooltip>Optimization coefficient retention constant of overlandflow (natural area) and interflow</tooltip>
 								<description>Optimization coefficient retention constant of overlandflow (natural area) and interflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="synthZR" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>synth. N.</label>
+								<tooltip>synthetischer Niederschlag</tooltip>
+								<description>Auswahl des Niederschlags aus dem Datenpool der synthetischen Niederschläge</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>synth. P.</label>
+								<tooltip>synthetic precipitation</tooltip>
+								<description>choice of precipitation from pool of synthetic precipitation</description>
 							</documentation>
 						</annotation>
 					</element>

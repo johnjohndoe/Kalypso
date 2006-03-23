@@ -41,16 +41,19 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -66,6 +69,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -147,8 +151,8 @@ public class CatchmentManager extends AbstractManager
       HashMap<String, String> col2 = new HashMap<String, String>();
       createProperties( col2, line, 9 );
       final Feature bodenkorrekturFE = createFeature( m_bodenKorrekturFT );
-//      Collection collection = col2.values();
-      setParsedProperties( bodenkorrekturFE, col2,null);
+      // Collection collection = col2.values();
+      setParsedProperties( bodenkorrekturFE, col2, null );
       list.add( bodenkorrekturFE );
     }
     // 10-11
@@ -272,7 +276,15 @@ public class CatchmentManager extends AbstractManager
 
     // 3
     StringBuffer b = new StringBuffer();
-    b.append( "n " + getNiederschlagEingabeDateiString( feature, m_conf ) );
+    if( m_conf.getPns().equals( true ) )
+    {
+      b.append( "s " );
+    }
+    else
+    {
+      b.append( "n " );
+    }
+    b.append( getNiederschlagEingabeDateiString( feature, m_conf ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature, m_conf ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
 
@@ -280,8 +292,6 @@ public class CatchmentManager extends AbstractManager
     b.append( getTemperaturEingabeDateiString( feature, m_conf ) );
     b.append( " " );
     b.append( getVerdunstungEingabeDateiString( feature, m_conf ) );
-    // b.append( "std.tmp" );
-    // b.append( " std.ver\n" );
     b.append( "\n" );
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
     // Zeitflächenfunktion
@@ -313,7 +323,7 @@ public class CatchmentManager extends AbstractManager
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
 
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "izkn_vers" );
-    final Feature nodeFeVers = workSpace.resolveLink( feature,rt);
+    final Feature nodeFeVers = workSpace.resolveLink( feature, rt );
     if( nodeFeVers == null )
       buf.append( "    0" );
     else
@@ -332,7 +342,7 @@ public class CatchmentManager extends AbstractManager
     {
       Feature fe = (Feature) iter.next();
       if( banf != null )
-        fe.setProperty(  "banf", banf  );
+        fe.setProperty( "banf", banf );
       asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + "\n" );
     }
     // 10-11
@@ -350,7 +360,7 @@ public class CatchmentManager extends AbstractManager
     for( Iterator iterator = gwList.iterator(); iterator.hasNext(); )
     {
       final Feature fe = (Feature) iterator.next();
-      final IRelationType rt2 = (IRelationType) fe.getFeatureType().getProperty("ngwzu");
+      final IRelationType rt2 = (IRelationType) fe.getFeatureType().getProperty( "ngwzu" );
       final Feature linkedFE = workSpace.resolveLink( fe, rt2 );
 
       if( linkedFE == null )
@@ -388,8 +398,8 @@ public class CatchmentManager extends AbstractManager
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) );
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) );
     // tiefengrundwasser
-    final IRelationType rt1 = (IRelationType) feature.getFeatureType().getProperty("izkn" );
-    final Feature nodeFeGW = workSpace.resolveLink( feature, rt1);
+    final IRelationType rt1 = (IRelationType) feature.getFeatureType().getProperty( "izkn" );
+    final Feature nodeFeGW = workSpace.resolveLink( feature, rt1 );
 
     if( nodeFeGW == null )
       buffer.append( " 0\n" );
@@ -442,8 +452,16 @@ public class CatchmentManager extends AbstractManager
 
   public static String getEingabeDateiString( Feature feature, NAConfiguration conf, String propName, String axisType )
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( propName );
-    final String key = propName + link.getHref();
+    final String key;
+    if( propName.equals( "synthZR" ) )
+    {
+      key = (String) feature.getProperty( propName );
+    }
+    else
+    {
+      final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( propName );
+      key = propName + link.getHref();
+    }
     if( !m_fileMap.containsKey( key ) )
     {
       final int asciiID = conf.getIdManager().getAsciiID( feature );
@@ -455,18 +473,12 @@ public class CatchmentManager extends AbstractManager
 
   public static String getNiederschlagEingabeDateiString( Feature feature, NAConfiguration conf )
   {
+    if( conf.getPns().equals( true ) )
+    {
+      return getEingabeDateiString( feature, conf, "synthZR", TimeserieConstants.TYPE_RAINFALL );
+    }
     return getEingabeDateiString( feature, conf, "niederschlagZR", TimeserieConstants.TYPE_RAINFALL );
-    // final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-    // final String href = link.getHref();
-    // if( !m_fileMap.containsKey( href ) )
-    // {
-    // int asciiID = conf.getIdManager().getAsciiID( feature );
-    // final String name = "C_" + Integer.toString( asciiID ).trim() + ".niederschlag";
-    // m_fileMap.put( href, name );
-    // }
-    // return (String)m_fileMap.get( href );
 
-    // return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
   }
 
   public static String getTemperaturEingabeDateiString( Feature feature, NAConfiguration conf )
@@ -474,10 +486,7 @@ public class CatchmentManager extends AbstractManager
     if( feature.getProperty( "temperaturZR" ) != null )
       return getEingabeDateiString( feature, conf, "temperaturZR", TimeserieConstants.TYPE_TEMPERATURE );
     return STD_TEMP_FILENAME;
-    // int asciiID = conf.getIdManager().getAsciiID( feature );
-    // if( feature.getProperty( "temperaturZR" ) != null )
-    // return "C_" + Integer.toString( asciiID ).trim() + ".tmp";
-    // return STD_TEMP_FILENAME;
+
   }
 
   /**
@@ -513,5 +522,62 @@ public class CatchmentManager extends AbstractManager
     // int asciiID = conf.getIdManager().getAsciiID( feature );
     // if( feature.getProperty( "verdunstungZR" ) != null )
     // return "C_" + Integer.toString( asciiID ).trim() + ".ver";
+  }
+
+  public static void WriteSynthNFile( File targetFileN, Feature feature, GMLWorkspace synthNWorkspace, NAConfiguration conf ) throws Exception
+  {
+    final List statNList = new ArrayList();
+    StringBuffer buffer = new StringBuffer();
+    Double annualityKey = conf.getAnnuality();
+    // Kostra-Kachel/ synth. N gebietsabhängig
+    String synthNKey = (String) feature.getProperty( "synthZR" );
+    statNList.addAll( Arrays.asList( synthNWorkspace.getFeatures( conf.getstatNFT() ) ) );
+    final Iterator iter = statNList.iterator();
+    while( iter.hasNext() )
+    {
+      final Feature statNFE = (Feature) iter.next();
+      if( statNFE.getProperty( "name" ) != null )
+      {
+        if( ((statNFE.getProperty( "name" )).toString()).equals( synthNKey ) )
+        {
+          List statNParameterList = (List) statNFE.getProperty( "statNParameterMember" );
+          Iterator iter1 = statNParameterList.iterator();
+          while( iter1.hasNext() )
+          {
+            final Feature fe = (Feature) iter1.next();
+            String annuality = Double.toString( (Double) fe.getProperty( "xjah" ) );
+            if( annuality.equals( annualityKey.toString() ) )
+            {
+              Object tnProp = fe.getProperty( "statNDiag" );
+              if( tnProp instanceof IObservation )
+              {
+                IObservation observation = (IObservation) tnProp;
+                IAxis[] axisList = observation.getAxisList();
+                IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_HOURS );
+                IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RAINFALL );
+                ITuppleModel values = observation.getValues( null );
+                int count = values.getCount();
+                buffer.append( annualityKey.toString() + " " + Integer.toString( count ) + "\n" );
+                if( count > 20 )
+                  throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl (20) \n Niederschlag:" + synthNKey + "\n Wiederkehrwahrscheinlichkeit: "
+                      + annualityKey );
+                for( int row = 0; row < count; row++ )
+                {
+                  Double hoursValue = (Double) values.getElement( row, hoursAxis );
+                  Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
+                  buffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" );
+                  final FileWriter writer = new FileWriter( targetFileN );
+                  writer.write( buffer.toString() );
+                  IOUtils.closeQuietly( writer );
+                }
+              }
+              else
+                System.out.println( "Es existiert kein synthetischer Niederschlag für : " + synthNKey + ", Wiederkehrintervall: " + annualityKey );
+            }
+          }
+        }
+      }
+    }
+
   }
 }

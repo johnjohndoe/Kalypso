@@ -55,12 +55,11 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * @author doemming
- *  
  */
 public class NAConfiguration
 {
 
-  //  private final URL m_schemaURL;
+  // private final URL m_schemaURL;
 
   private final File m_catchmentFile;
 
@@ -100,6 +99,8 @@ public class NAConfiguration
 
   private final IFeatureType m_bodartFT;
 
+  private final IFeatureType m_statNFT;
+
   private Date m_simulationForecast;
 
   private Date m_simulationStart;
@@ -108,7 +109,7 @@ public class NAConfiguration
 
   private String m_rootNodeId;
 
-  //  private final URL m_metaSchemaURL;
+  // private final URL m_metaSchemaURL;
 
   private final File m_hydrotopFile;
 
@@ -120,9 +121,9 @@ public class NAConfiguration
 
   private final File m_nutzungDir;
 
-  //  private final URL m_parameterSchemaURL;
+  // private final URL m_parameterSchemaURL;
   //
-  //  private final URL m_hydrotopSchemaUrl;
+  // private final URL m_hydrotopSchemaUrl;
 
   private final URL m_parameterFormatURL;
 
@@ -134,7 +135,16 @@ public class NAConfiguration
 
   private String m_szenarioID = "";
 
-  private NaNodeResultProvider m_nodeResultProvider=null;
+  private NaNodeResultProvider m_nodeResultProvider = null;
+
+  private Boolean m_pns;
+
+  private Double m_annuality;
+
+  private Double m_duration;
+
+  private String m_precipitationForm;
+
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -144,6 +154,7 @@ public class NAConfiguration
 
     final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
     final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
+    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
@@ -152,13 +163,14 @@ public class NAConfiguration
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
     m_bodartFT = paraSchema.getFeatureType( "SoilLayer" );
+    m_statNFT = synthNSchema.getFeatureType( "StatN" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
     // TODO WernerCatchment und JessicaCatchment vergleichen mit
     // kalypsoNa-sourcecode
-    //    m_catchmentFormatURL =
+    // m_catchmentFormatURL =
     // getClass().getResource("formats/JessicaCatchment.txt" );
     m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
@@ -167,8 +179,8 @@ public class NAConfiguration
     m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" );
 
     // ASCII
-    ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
-    ( new File( asciiBaseDir, "hydro.top" ) ).mkdirs();
+    (new File( asciiBaseDir, "inp.dat" )).mkdirs();
+    (new File( asciiBaseDir, "hydro.top" )).mkdirs();
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
     m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" );
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
@@ -192,97 +204,102 @@ public class NAConfiguration
     return new NAConfiguration( asciiBaseDir, null, modelURL );
   }
 
-  //  public URL getSchemaURL()
-  //  {
-  //    return m_schemaURL;
-  //  }
+  // public URL getSchemaURL()
+  // {
+  // return m_schemaURL;
+  // }
 
-  public URL getChannelFormatURL()
+  public URL getChannelFormatURL( )
   {
     return m_ChannelFormatURL;
   }
 
-  public File getChannelFile()
+  public File getChannelFile( )
   {
     return m_channelFile;
   }
 
-  public URL getCatchmentFormatURL()
+  public URL getCatchmentFormatURL( )
   {
     return m_catchmentFormatURL;
   }
 
-  public File getCatchmentFile()
+  public File getCatchmentFile( )
   {
     return m_catchmentFile;
   }
 
-  public File getZFTFile()
+  public File getZFTFile( )
   {
     return m_zftFile;
   }
 
-  public URL getNetFormatURL()
+  public URL getNetFormatURL( )
   {
     return m_netFormatURL;
   }
 
-  public File getNetFile()
+  public File getNetFile( )
   {
     return m_netFile;
   }
 
-  public URL getRHBFormatURL()
+  public URL getRHBFormatURL( )
   {
     return m_rhbFormatURL;
   }
 
-  public File getRHBFile()
+  public File getRHBFile( )
   {
     return m_rhbFile;
   }
 
-  public URL getControlSchemaURL()
+  public URL getControlSchemaURL( )
   {
     return m_controlSchemaURL;
   }
 
-  public URL getGMLModelURL()
+  public URL getGMLModelURL( )
   {
     return m_gmlModelURL;
   }
 
-  public File getAsciiBaseDir()
+  public File getAsciiBaseDir( )
   {
     return m_asciiBaseDir;
   }
 
-  public File getGmlBaseDir()
+  public File getGmlBaseDir( )
   {
     return m_gmlBaseDir;
   }
 
-  public IFeatureType getNodeFT()
+  public IFeatureType getNodeFT( )
   {
     return m_nodeFT;
   }
 
-  public IFeatureType getCatchemtFT()
+  public IFeatureType getCatchemtFT( )
   {
     return m_catchmentFT;
   }
 
-  public IFeatureType getKmChannelFT()
+  public IFeatureType getKmChannelFT( )
   {
     return m_kmChannelFT;
   }
+  
+  public IFeatureType getstatNFT( )
+  {
+    return m_statNFT;
+  }
 
-  public IFeatureType getVChannelFT()
+  public IFeatureType getVChannelFT( )
   {
     return m_vChannelFT;
   }
 
-  public IFeatureType getStChannelFT()
+  public IFeatureType getStChannelFT( )
   {
     return m_stChannelFT;
   }
@@ -302,22 +319,22 @@ public class NAConfiguration
     m_simulationEnd = simulationEnd;
   }
 
-  public Date getSimulationStart()
+  public Date getSimulationStart( )
   {
     return m_simulationStart;
   }
 
-  public Date getSimulationEnd()
+  public Date getSimulationEnd( )
   {
     return m_simulationEnd;
   }
 
-  public Date getSimulationForecastStart()
+  public Date getSimulationForecastStart( )
   {
     return m_simulationForecast;
   }
 
-  public String getRootNodeId()
+  public String getRootNodeId( )
   {
     return m_rootNodeId;
   }
@@ -327,57 +344,57 @@ public class NAConfiguration
     m_rootNodeId = rootNodeID;
   }
 
-  //  public URL getMetaSchemaURL()
-  //  {
-  //    return m_metaSchemaURL;
-  //  }
+  // public URL getMetaSchemaURL()
+  // {
+  // return m_metaSchemaURL;
+  // }
 
-  public File getHydrotopFile()
+  public File getHydrotopFile( )
   {
     return m_hydrotopFile;
   }
 
-  //  public URL getParameterSchemaURL()
-  //  {
-  //    return m_parameterSchemaURL;
-  //  }
+  // public URL getParameterSchemaURL()
+  // {
+  // return m_parameterSchemaURL;
+  // }
 
-  //  public URL getHydrotopSchemaUrl()
-  //  {
-  //    return m_hydrotopSchemaUrl;
-  //  }
+  // public URL getHydrotopSchemaUrl()
+  // {
+  // return m_hydrotopSchemaUrl;
+  // }
 
-  public URL getHydrotopFormatURL()
+  public URL getHydrotopFormatURL( )
   {
     return m_hydrotopFormatURL;
   }
 
-  public URL getParameterFormatURL()
+  public URL getParameterFormatURL( )
   {
     return m_parameterFormatURL;
   }
 
-  public File getBodentypFile()
+  public File getBodentypFile( )
   {
     return m_bodentypFile;
   }
 
-  public File getBodenartFile()
+  public File getBodenartFile( )
   {
     return m_bodenartFile;
   }
 
-  public File getSchneeFile()
+  public File getSchneeFile( )
   {
     return m_schneeFile;
   }
 
-  public File getNutzungDir()
+  public File getNutzungDir( )
   {
     return m_nutzungDir;
   }
 
-  public IFeatureType getBodartFT()
+  public IFeatureType getBodartFT( )
   {
     return m_bodartFT;
   }
@@ -390,12 +407,17 @@ public class NAConfiguration
     m_minutesTimeStep = minutesTimeStep;
   }
 
-  public int getMinutesOfTimeStep()
+  public void setPrecipitationForm( Boolean pns )
+  {
+    m_pns = pns;
+  }
+
+  public int getMinutesOfTimeStep( )
   {
     return m_minutesTimeStep;
   }
 
-  public IDManager getIdManager()
+  public IDManager getIdManager( )
   {
     return m_idManager;
   }
@@ -410,7 +432,7 @@ public class NAConfiguration
     m_szenarioID = szenarioID;
   }
 
-  public String getScenarioID()
+  public String getScenarioID( )
   {
     return m_szenarioID;
   }
@@ -423,8 +445,50 @@ public class NAConfiguration
     m_nodeResultProvider = nodeResultProvider;
   }
 
-  public NaNodeResultProvider getNodeResultProvider()
+  public NaNodeResultProvider getNodeResultProvider( )
   {
     return m_nodeResultProvider;
   }
+
+  public void setAnnuality( Double annuality )
+  {
+    m_annuality = annuality;
+    
+  }
+
+  public void setDuration( Double duration )
+  {
+    m_duration = duration;
+   
+  }
+
+  public void setForm( String precipitationForm )
+  {
+    m_precipitationForm = precipitationForm;
+   
+    
+  }
+
+  public Boolean getPns( )
+  {
+    return m_pns;
+  }
+
+  public String getPrecipitationForm( )
+  {
+    return m_precipitationForm;
+  }
+
+  public Double getAnnuality( )
+  {
+    return m_annuality;
+  }
+
+  public Double getDuration( )
+  {
+    return m_duration;
+  }
+
+  
+
 }

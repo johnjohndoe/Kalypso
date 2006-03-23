@@ -313,7 +313,7 @@ public class NetFileManager extends AbstractManager
   /*
    *  
    */
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     // to remove yellow thing ;-)
     nodeResultProvider.getClass();
@@ -347,7 +347,8 @@ public class NetFileManager extends AbstractManager
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
-      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], m_conf ) );
+    
+      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace,synthNWorkspace, channelFEs[i], m_conf ) );
 
     // find dependencies
     // dependency: node - node

@@ -74,11 +74,9 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -237,7 +235,6 @@ public class NAModellConverter
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
     m_idleLanduseManager = new IdleLanduseManager( m_parameterSchema, m_conf );
-
     m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager, m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
   }
 
@@ -246,12 +243,12 @@ public class NAModellConverter
     return m_parseManager;
   }
 
-  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
+  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
 
     AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, nodeResultProvider );
+    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace, nodeResultProvider );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
 
@@ -303,7 +300,6 @@ public class NAModellConverter
       m_nutzManager.writeFile( parameterWorkspace );
 
     }
-
   }
 
   public static Feature modelAsciiToFeature( NAConfiguration conf ) throws Exception
@@ -318,9 +314,9 @@ public class NAModellConverter
     return main.getParseManager().parameterAsciiToFeature();
   }
 
-  public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
+  public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     NAModellConverter main = new NAModellConverter( conf );
-    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
+    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
   }
 }

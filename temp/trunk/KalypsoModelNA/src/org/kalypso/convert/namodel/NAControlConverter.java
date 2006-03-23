@@ -69,8 +69,7 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace,
-      GMLWorkspace modellWorkspace ) throws IOException
+  public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace, GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
     final File startDir = new File( projectPath, "start" );
@@ -82,7 +81,7 @@ public class NAControlConverter
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
     writeFalstart( conf, startFile, b1 );
-    //write it
+    // write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
     writer1.close();
@@ -91,7 +90,7 @@ public class NAControlConverter
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( conf, controlFE, b );
     appendResultInformation( modellWorkspace, controlWorkspace, b, conf.getIdManager() );
-    //write it
+    // write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
     writer.close();
@@ -122,7 +121,7 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( "vet" ) ) + "       Evapotranspiration         .vet\n" );
     b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe Hydrotope          .hyd\n" );
     // if "2": output of *.txt and *.bil
-    if( ( (Boolean)( controlFE.getProperty( "bil" ) ) ).booleanValue() )
+    if( ((Boolean) (controlFE.getProperty( "bil" ))).booleanValue() )
       b.append( "2" + "       Abflussbilanz              .bil\n" );
     else
       b.append( "n" + "       Abflussbilanz              .bil\n" );
@@ -132,25 +131,24 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( "sup" ) ) + "       Speicherueberlauf          .sup\n" );
   }
 
-  private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace,
-      final StringBuffer b, final IDManager idManager )
+  private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )
   {
     // knoten
     final IFeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
-    //    boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
-    //        "resultForRootNodeOnly", true );
-    final String rootNodeID = (String)controlWorkspace.getRootFeature().getProperty( "rootNode" );
+    // boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
+    // "resultForRootNodeOnly", true );
+    final String rootNodeID = (String) controlWorkspace.getRootFeature().getProperty( "rootNode" );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       // fuer root node immer ein ergebnis generieren
       if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
         b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
-      //        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
+      // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
       else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
         b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
-      //        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
+      // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
     // teilgebiete
@@ -160,7 +158,7 @@ public class NAControlConverter
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], "generateResult", false ) )
         b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" );
-      //        b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
+      // b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
     // TODO startwerte fuer die kurzzeitsimulation
@@ -170,7 +168,7 @@ public class NAControlConverter
   private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
   {
 
-    String system = "we";//"sys";
+    String system = "we";// "sys";
     String zustand = "nat";
     SimpleDateFormat format = new SimpleDateFormat( "yyyy MM dd HH" );
 
@@ -179,17 +177,44 @@ public class NAControlConverter
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
-    b
-        .append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-    b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator
-        + startFile.getName() + "\n" );
+    if( conf.getPns().equals( true ) )
+    {
+      String preFormText = conf.getPrecipitationForm();
+      int preForm = 0;
+      if( preFormText.equals( "Blockregen" ) )
+      {
+        preForm = 1;
+      }
+      else if( preFormText.equals( "linksschiefer Regen" ) )
+      {
+        preForm = 2;
+      }
+      else if( preFormText.equals( "Zentralregen" ) )
+      {
+        preForm = 3;
+      }
+      else if( preFormText.equals( "rechtsschiefer Regen" ) )
+      {
+        preForm = 4;
+      }
+      else
+        System.out.println( "Falsche Wahl der synthetische Niederschlagsform!" );
+      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" );
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + conf.getAnnuality().toString() + " " + conf.getDuration().toString() + " " + Integer.toString( preForm ) + " " + "start" + File.separator
+          + startFile.getName() + "\n" );
+    }
+    else
+    {
+      b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
+      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" );
+    }
   }
 
   private static String getBoolean( Object object )
   {
-    if( object == null || ( !( object instanceof Boolean ) ) )
+    if( object == null || (!(object instanceof Boolean)) )
       return "n";
-    boolean flag = ( (Boolean)object ).booleanValue();
+    boolean flag = ((Boolean) object).booleanValue();
     if( flag )
       return "j";
     return "n";
