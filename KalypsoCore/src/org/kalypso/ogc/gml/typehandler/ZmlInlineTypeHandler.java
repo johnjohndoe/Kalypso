@@ -210,6 +210,11 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   {
     final public static String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
   }
+  
+  public interface TN extends IObservation
+  {
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_RAINFALL};
+  }
 
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
