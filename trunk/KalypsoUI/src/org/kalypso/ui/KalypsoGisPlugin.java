@@ -562,6 +562,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, ZmlInlineTypeHandler.TN.class );
       if( marshallingRegistry != null )
       {
         TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
@@ -570,12 +571,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         marshallingRegistry.registerTypeHandler( wvqInline );
         marshallingRegistry.registerTypeHandler( taInline );
         marshallingRegistry.registerTypeHandler( wtKcLaiInline );
+        marshallingRegistry.registerTypeHandler( tnInline );
       }
       if( guiRegistry != null )
       {
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
         guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
         guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       }
