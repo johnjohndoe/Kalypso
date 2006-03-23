@@ -75,23 +75,23 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * channel written in capital letter in the middle.
  * 
  * <pre>
- *                              Node-----&gt;-----Node
- *                                |              |
- *                                V              V
- *                                |              |
- *             Catchment---&gt;---CHANNEL        Channel (downstream)
- *                 |              |           
- *                 |              V           
- *                 V              |           
- *                 |             Node
- *                 |              |
- *              Catchment         V
- *                 |              |
- *                 V           Channel (downstream)
- *                 |
- *              Channel (downstream)
- *           
- *           
+ *                                       Node-----&gt;-----Node
+ *                                         |              |
+ *                                         V              V
+ *                                         |              |
+ *                      Catchment---&gt;---CHANNEL        Channel (downstream)
+ *                          |              |           
+ *                          |              V           
+ *                          V              |           
+ *                          |             Node
+ *                          |              |
+ *                       Catchment         V
+ *                          |              |
+ *                          V           Channel (downstream)
+ *                          |
+ *                       Channel (downstream)
+ *                    
+ *                    
  * </pre>
  */
 public class NetElement
@@ -118,12 +118,15 @@ public class NetElement
 
   // private static String[] m_netAsciiFormat;
 
+  private final GMLWorkspace m_synthNWorkspace;
+
   private final GMLWorkspace m_workspace;
 
   private final NAConfiguration m_conf;
 
-  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE, NAConfiguration conf )
+  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, GMLWorkspace synthNWorkspace, Feature channelFE, NAConfiguration conf )
   {
+    m_synthNWorkspace = synthNWorkspace;
     m_channelFE = channelFE;
     m_manager = manager;
     m_workspace = modellWorkspace;
@@ -175,9 +178,9 @@ public class NetElement
   public void generateTimeSeries( ) throws IOException, Exception
   {
 
-    final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
-    final IRelationType rt = (IRelationType) catchemtFT.getProperty( "entwaesserungsStrangMember" );
-    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchemtFT, rt );
+    final IFeatureType catchmentFT = m_manager.m_conf.getCatchemtFT();
+    final IRelationType rt = (IRelationType) catchmentFT.getProperty( "entwaesserungsStrangMember" );
+    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
       final NAConfiguration conf = m_manager.m_conf;
@@ -190,42 +193,50 @@ public class NetElement
       if( !parent.exists() )
         parent.mkdirs();
 
-      // N
-      if( !targetFileN.exists() )
+      if( conf.getPns().equals( true ) )
       {
-        final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( "niederschlagZR" );
-        final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
-        final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" );
-        final FileWriter writer = new FileWriter( targetFileN );
-        NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
-        IOUtils.closeQuietly( writer );
+        if( !targetFileN.exists() )
+          CatchmentManager.WriteSynthNFile( targetFileN, feature, m_synthNWorkspace, conf );
       }
-      // T
-      if( !targetFileT.exists() )
+      else
       {
-        final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( "temperaturZR" );
-        if( linkT != null )
+        // N
+        if( !targetFileN.exists() )
         {
-          final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
-          final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
-          final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" );
-          final FileWriter writer = new FileWriter( targetFileT );
-          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
+          final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( "niederschlagZR" );
+          final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
+          final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" );
+          final FileWriter writer = new FileWriter( targetFileN );
+          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
           IOUtils.closeQuietly( writer );
         }
-      }
-      // V
-      if( !targetFileV.exists() )
-      {
-        final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( "verdunstungZR" );
-        if( linkV != null )
+        // T
+        if( !targetFileT.exists() )
         {
-          final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
-          final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
-          final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" );
-          final FileWriter writer = new FileWriter( targetFileV );
-          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" );
-          IOUtils.closeQuietly( writer );
+          final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( "temperaturZR" );
+          if( linkT != null )
+          {
+            final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
+            final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
+            final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" );
+            final FileWriter writer = new FileWriter( targetFileT );
+            NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
+            IOUtils.closeQuietly( writer );
+          }
+        }
+        // V
+        if( !targetFileV.exists() )
+        {
+          final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( "verdunstungZR" );
+          if( linkV != null )
+          {
+            final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
+            final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
+            final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" );
+            final FileWriter writer = new FileWriter( targetFileV );
+            NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" );
+            IOUtils.closeQuietly( writer );
+          }
         }
       }
     }

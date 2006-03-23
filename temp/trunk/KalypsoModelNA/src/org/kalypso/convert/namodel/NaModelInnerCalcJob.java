@@ -491,6 +491,14 @@ public class NaModelInnerCalcJob implements ISimulation
     // model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
+    //  model Parameter
+    final GMLWorkspace synthNWorkspace;
+    if( dataProvider.hasID( NaModelConstants.IN_SYNTHN_ID ) )
+      synthNWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_SYNTHN_ID ) );
+    else
+      synthNWorkspace = null;
+
+
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
       hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
@@ -539,6 +547,16 @@ public class NaModelInnerCalcJob implements ISimulation
     // choose simulation kernel
     chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
 
+    // choose precipitation form and parameters
+    conf.setPrecipitationForm( (Boolean) metaFE.getProperty( "pns" ) );
+    if( conf.getPns().equals(true) )
+    {
+      conf.setAnnuality((Double) metaFE.getProperty( "xjah" ) );
+      conf.setDuration((Double) metaFE.getProperty( "xwahl2" ) );
+      conf.setForm((String) metaFE.getProperty( "ipver" ) );
+      
+    }
+    
     // set rootnode
     conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
@@ -550,7 +568,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // generate modell files
     NAModellConverter main = new NAModellConverter( conf );
-    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
+    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
 
     // create temperatur und verdunstung timeseries
     final File klimaDir = new File( tmpDir, "klima.dat" );
@@ -822,7 +840,7 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
-    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4beta" ))
+    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4beta" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
