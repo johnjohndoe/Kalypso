@@ -44,6 +44,7 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -97,11 +98,14 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   private ToStringContentHandler m_exceptionContentHandler = null;
 
+  private final URL m_context;
+
   /**
    * uses GMLSchemaCatalog
    */
-  public GMLContentHandler( XMLReader xmlReader )
+  public GMLContentHandler( XMLReader xmlReader, final URL context )
   {
+    m_context = context;
     m_xmlReader = xmlReader;
     m_featureParser = new FeatureParser( this );
     m_propParser = new PropertyParser();
@@ -109,11 +113,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     m_useSchemaCatalog = true;
   }
 
-  public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog )
+  public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context )
   {
     m_xmlReader = xmlReader;
     m_schemaLocationHint = schemaLocationHint;
     m_useSchemaCatalog = useGMLSchemaCatalog;
+    m_context = context;
     m_featureParser = new FeatureParser( this );
     m_propParser = new PropertyParser();
   }
@@ -443,7 +448,13 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         {
           // TODO use context
           final String locationURI = strings[1];
-          schemaLocationURL = new URL( locationURI );
+          if( m_context != null )
+          {
+            UrlResolver resolver = new UrlResolver();
+            schemaLocationURL = resolver.resolveURL( m_context, locationURI );
+          }
+          else
+            schemaLocationURL = new URL( locationURI );
           if( m_useSchemaCatalog )
             schema = GMLSchemaCatalog.getSchema( schemaLocationURL );
           else

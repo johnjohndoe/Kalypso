@@ -20,7 +20,8 @@ Export-Package: org.kalypso.ui,
  org.kalypso.ui.wizard.shape,
  org.kalypso.ui.wizard.wfs,
  org.kalypso.ui.wizard.wfs.test,
- org.kalypso.ui.wizard.wms
+ org.kalypso.ui.wizard.wms,
+ org.kalypso.ui.gazetter.view
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.ui;visibility:=reexport,
