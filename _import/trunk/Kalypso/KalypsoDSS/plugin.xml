@@ -48,7 +48,7 @@
          point="org.eclipse.ui.perspectives">
        <perspective
             class="org.kalypso.dss.planerclient.perspectives.KalypsoDssPlanerClientPhaseOnePerspectiveFactory"
-            fixed="true"
+            fixed="false"
             icon="icons/sample.gif"
             id="org.kalypso.dss.planerclient.perspectiv.phase.one"
             name="Kalypso Planer-Client Phase 1"/>

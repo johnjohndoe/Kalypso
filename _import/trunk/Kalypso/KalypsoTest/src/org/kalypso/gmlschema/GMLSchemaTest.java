@@ -101,14 +101,19 @@ public class GMLSchemaTest extends TestCase
     try
     {
       loadAndTestSchema( // 
-          getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+          getClass().getResource( "resources/plangebiet/plangebiet.xsd" ),// schemalocationURL
+          getClass().getResource( "resources/plangebiet/plangebiet.txt" ) // testresource to compare
           , false );
-
-      loadAndTestSchema( // 
-          getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
-          , false );
+//
+//      loadAndTestSchema( // 
+//          getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
+//          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+//          , false );
+//
+//      loadAndTestSchema( // 
+//          getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
+//          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
+//          , false );
 
     }
     catch( Exception e )
@@ -147,7 +152,7 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-//        System.out.println( buffer.toString() );
+        System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }
