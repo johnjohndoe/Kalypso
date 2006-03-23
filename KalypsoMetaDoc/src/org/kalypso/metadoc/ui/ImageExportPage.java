@@ -53,11 +53,17 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -80,11 +86,15 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   public final static String CONF_IMAGE_HEIGHT = ImageExportPage.class.getName() + ".IMAGE_HEIGHT"; //$NON-NLS-1$
 
+  private static final String CONF_IMAGE_RATIO = ImageExportPage.class.getName() + ".IMAGE_RATIO"; //$NON-NLS-1$
+
   private final static String STORE_FORMAT_ID = CONF_IMAGE_FORMAT;
 
   private final static String STORE_WIDTH_ID = CONF_IMAGE_WIDTH;
 
   private final static String STORE_HEIGHT_ID = CONF_IMAGE_HEIGHT;
+
+  private static final String STORE_IMAGE_RATIO_ID = CONF_IMAGE_RATIO;
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 100;
 
@@ -98,6 +108,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   private Text m_heighttext;
 
+  private final double m_heigthToWithImageRatio;
+
   private ComboViewer m_combo;
 
   private ISelectionChangedListener m_formatSelListener = new ISelectionChangedListener()
@@ -108,12 +120,25 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
   };
 
-  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage )
+  private SelectionListener m_selectionListener = new SelectionAdapter()
+  {
+
+    @Override
+    public void widgetSelected( SelectionEvent e )
+    {
+      updateConf();
+    }
+  };
+
+  private Button m_keepImageRatio;
+
+  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, double hintImageRatio )
   {
     super( pageName, title, titleImage );
 
     m_conf = conf;
     m_conf.addListener( this ); // removed in dispose()
+    m_heigthToWithImageRatio = hintImageRatio;
   }
 
   /**
@@ -126,6 +151,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     if( m_combo != null )
       m_combo.removeSelectionChangedListener( m_formatSelListener );
+    if( m_keepImageRatio != null )
+      m_keepImageRatio.removeSelectionListener( m_selectionListener );
 
     super.dispose();
   }
@@ -159,11 +186,17 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     optionsGroup.setText( "Export Optionen" );
     optionsGroup.setFont( font );
 
-    final ModifyListener updateModifyListener = new ModifyListener()
+    final FocusListener updateModifyListener = new FocusListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void focusLost( FocusEvent e )
       {
         updateConf();
+      }
+
+      public void focusGained( FocusEvent e )
+      {
+        // only update when focus is lost
+
       }
     };
 
@@ -172,7 +205,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     m_widthtext = new Text( optionsGroup, SWT.BORDER );
     m_widthtext.setFont( font );
-    m_widthtext.addModifyListener( updateModifyListener );
+    m_widthtext.addFocusListener( updateModifyListener );
 
     final GridData widthdata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     widthdata.widthHint = SIZING_TEXT_FIELD_WIDTH;
@@ -183,7 +216,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     m_heighttext = new Text( optionsGroup, SWT.BORDER );
     m_heighttext.setFont( font );
-    m_heighttext.addModifyListener( updateModifyListener );
+    m_heighttext.addFocusListener( updateModifyListener );
 
     final GridData heightdata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     heightdata.widthHint = SIZING_TEXT_FIELD_WIDTH;
@@ -202,6 +235,16 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     final GridData combodata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     combodata.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_combo.getControl().setLayoutData( combodata );
+
+    final Label ratioLabel = new Label( optionsGroup, SWT.NONE );
+    ratioLabel.setText( "Verhältnis beibehalten:" );
+
+    if( m_heigthToWithImageRatio > 0 )
+    {
+      m_keepImageRatio = new Button( optionsGroup, SWT.CHECK );
+      m_keepImageRatio.addSelectionListener( m_selectionListener );
+      m_keepImageRatio.setToolTipText( "Fixiert das Breiten- zu Höhenverhältnis aus der aktiven Karte,relative zur Breite" );
+    }
   }
 
   protected void updateConf( )
@@ -226,13 +269,17 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     if( indexOf != -1 )
       m_conf.setProperty( FileExportTarget.CONF_FILEEXPORT_EXTENSION, EXTENSIONS[indexOf] );
 
+    boolean selection = m_keepImageRatio.getSelection();
+    m_conf.setProperty( CONF_IMAGE_RATIO, selection );
+    if( selection )
+      msg = "";
     setErrorMessage( msg.length() == 0 ? null : msg );
     setPageComplete( msg.length() == 0 );
 
     saveWidgetValues();
   }
 
-  protected void updateControls( final String key )
+  private void updateControls( final String key )
   {
     if( key.equals( CONF_IMAGE_WIDTH ) || key == null )
     {
@@ -256,6 +303,15 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
       if( !format.equals( oldFormat ) )
         m_combo.setSelection( new StructuredSelection( format ) );
     }
+    if( key.equals( CONF_IMAGE_RATIO ) || key == null )
+    {
+      boolean selection = m_conf.getBoolean( CONF_IMAGE_RATIO );
+      if( selection && m_keepImageRatio != null )
+      {
+        Integer width = NumberUtils.parseQuietInteger( m_widthtext.getText() );
+        m_heighttext.setText( String.valueOf( (int) (width.intValue() / m_heigthToWithImageRatio) ) );
+      }
+    }
   }
 
   /**
@@ -272,10 +328,12 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
         final int width = settings.getInt( STORE_WIDTH_ID );
         final int height = settings.getInt( STORE_HEIGHT_ID );
         final String format = settings.get( STORE_FORMAT_ID );
+        final boolean ratio = settings.getBoolean( STORE_IMAGE_RATIO_ID );
 
         m_widthtext.setText( "" + width );
         m_heighttext.setText( "" + height );
         m_combo.setSelection( new StructuredSelection( format ) );
+        m_keepImageRatio.setSelection( ratio );
       }
       catch( final Exception e )
       {
@@ -292,6 +350,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
       settings.put( STORE_WIDTH_ID, m_conf.getInt( CONF_IMAGE_WIDTH, 0 ) );
       settings.put( STORE_HEIGHT_ID, m_conf.getInt( CONF_IMAGE_HEIGHT, 0 ) );
       settings.put( STORE_FORMAT_ID, m_conf.getString( CONF_IMAGE_FORMAT, FORMATS[0] ) );
+      settings.put( STORE_IMAGE_RATIO_ID, m_conf.getBoolean( CONF_IMAGE_RATIO, true ) );
     }
   }
 
