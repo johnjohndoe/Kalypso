@@ -57,7 +57,7 @@
     Baumansicht verschaffen. Nach dem Öffnen der Ansicht erscheint eine
     (Baum-) Strukturansicht des Modells, welche unter anderem auch das
     Bearbeiten der einzelnen Modellelemente erlaubt (siehe <xref
-    linkend="fig_modellintegration_saale_ueberblick" />).</para>
+    linkend="fig_modellintegration_bode_ueberblick" />).</para>
 
     <figure id="fig_modellintegration_bode_ueberblick">
       <title>Überblick Modelldaten Bode</title>
@@ -421,9 +421,11 @@
           <row>
             <entry><filename>createCalcCase.log</filename></entry>
 
-            <entry>Log-Datei zur Erstellung der Rechenvariante</entry>
+            <entry>Log-Datei des ANT-Launches zur Erstellung der
+            Rechenvariante</entry>
 
-            <entry></entry>
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>createCalcCase.launch</filename></entry>
           </row>
 
           <row>
@@ -448,12 +450,34 @@
           </row>
 
           <row>
+            <entry><filename>niederschlagsmodell.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zur Ermittlung des
+            Gebietsniederschlags</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>gebietsniederschlag.launch</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>runCalculation.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zum Ausführen der
+            Berechnung</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>runCalculation.launch</filename></entry>
+          </row>
+
+          <row>
             <entry><filename>updateCalcCase.log</filename></entry>
 
-            <entry>Log-Datei zum Abholen/Aktualisieren der Zeitreihen,
-            insbesondere Meldungen zur Gültigkeit der Zeitreihenwerte</entry>
+            <entry>Log-Datei des ANT-Launches zum Abholen/Aktualisieren der
+            Zeitreihen, insbesondere Meldungen zur Gültigkeit der
+            Zeitreihenwerte</entry>
 
-            <entry></entry>
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>updateCalcCase.launch</filename></entry>
           </row>
 
           <row>

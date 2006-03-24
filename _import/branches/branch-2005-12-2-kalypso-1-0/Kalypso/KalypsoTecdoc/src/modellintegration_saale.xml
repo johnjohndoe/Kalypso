@@ -48,7 +48,7 @@
     einzelnen Modellelemente erlaubt (siehe <xref
     linkend="fig_modellintegration_saale_ueberblick" />). Die </para>
 
-    <figure id="fig_modellintegration_bode_ueberblick">
+    <figure id="fig_modellintegration_saale_ueberblick">
       <title>Überblick Modelldaten Saale</title>
 
       <mediaobject>
@@ -97,9 +97,560 @@
     Vorhersage-Assistenten.</para>
 
     <para>Niederschlagsgebiete sind Erweiterungen zu den einfachen Pegeln. D.
-    h. alle Parameter der einfachen Pegel (siehe <xref
-    linkend="tbl_paramsPegelSaale" />) sind auch Parameter von
-    Niederschlagsgebieten.</para>
+    h. alle Parameter der einfachen Pegel sind auch Parameter von
+    Niederschlagsgebieten. Die Liste der Parameter ist relativ lang, in der
+    <xref linkend="tbl_paramsPegelSaale" /> werden nur die Parameter
+    beschrieben, die spezifisch für KALYPSO sind. Die restlichen Parameter
+    sind in der ursprünglichen Modelldokumentation beschrieben.</para>
+
+    <!--Hier Verweis auf entsprechende Datei-->
+
+    <table id="tbl_paramsPegelSaale">
+      <title>Parameter der einfachen Pegel (Pegel)</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Pegelnummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Pegelnummer</entry>
+          </row>
+
+          <row>
+            <entry>Pegelname</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name des Pegels</entry>
+          </row>
+
+          <row>
+            <entry>Gewässername</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name des Gewässers an dem der Pegel liegt</entry>
+          </row>
+
+          <row>
+            <entry>TS-Steuerungs-Gruppe</entry>
+
+            <entry>Text</entry>
+
+            <entry>Merkmal zur Gruppierung der Pegel in speziellen Seiten des
+            Vorhersage-Assistenten</entry>
+          </row>
+
+          <row>
+            <entry>Zwischengebiet ... reserve10</entry>
+
+            <entry></entry>
+
+            <entry>diverse Pegelparameter, Beschreibung in ursprünglicher
+            Modelldokumentation</entry>
+          </row>
+
+          <row>
+            <entry>location</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage des Pegels</entry>
+          </row>
+
+          <row>
+            <entry>Durchfluss</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Durchflussganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Durchfluss_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Durchflussganglinie</entry>
+          </row>
+
+          <row>
+            <entry>istErgebnisPegel</entry>
+
+            <entry>Ja / Nein</entry>
+
+            <entry>Sind die berechneten Wasserstandswerte Ergebnisse des
+            Modells für die Berichts- und Zeitreihenablage?</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Die zusätzlichen Parameter für die Niederschlagsgebiete (siehe <xref
+    linkend="tbl_paramsNSGSaale" />) werden für die Berechnung des
+    Gebietsniederschlagsmodells und das jeweilige Niederschlag-Abfluss-Modell
+    benötigt.</para>
+
+    <table id="tbl_paramsNSGSaale">
+      <title>zusätzliche Parameter der Niederschlagsgebiete (Gebiet)</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>AE ... H36</entry>
+
+            <entry></entry>
+
+            <entry>diverse Niederschlagsgebietsparameter, Beschreibung in
+            ursprünglicher Modelldokumentation</entry>
+          </row>
+
+          <row>
+            <entry>gewichtung</entry>
+
+            <entry>-</entry>
+
+            <entry>Liste von Gewichtungselementen zur Zuordnung der
+            Niederschlagsstationen für das Gebietsniederschlagsmodell</entry>
+          </row>
+
+          <row>
+            <entry>Niederschlag</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit der Niederschlagsganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Schnee</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit der Ganglinie der Abschmelzsummen</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>Spezifikation der Rechenvarianten</title>
+
+    <para>Die Rechenvarianten wurden gemäß <xref
+    linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
+    <xref linkend="tab-modellintegration-saale-rechenvariante" /> zeigt den
+    konkreten Aufbau für das Saale-Modell.</para>
+
+    <table id="tab-modellintegration-saale-rechenvariante">
+      <title>Aufbau einer Rechenvariante des Saale-Modells</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="4*" />
+
+        <colspec align="left" colwidth="5*" />
+
+        <colspec align="left" colwidth="10*" />
+
+        <thead>
+          <row>
+            <entry align="center">Pfade relativ zur Rechenvariante</entry>
+
+            <entry align="center">Beschreibung</entry>
+
+            <entry align="center">Entstehung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry><filename>.calculation</filename></entry>
+
+            <entry>Steuerparameter der Berechnung</entry>
+
+            <entry>Kopie der Datei
+            <filename>/KalypsoSaale/.model/.calculation.template</filename>
+            unter Ersetzung/Bearbeitung der Parameter.</entry>
+          </row>
+
+          <row>
+            <entry><filename>calculation.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zum Ausführen der
+            Berechnung</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>runCalculation.launch</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>create.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zur Erstellung der
+            Rechenvariante</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>createCalcCase.launch</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>gebietsniederschlag.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zur Ermittlung des
+            Gebietsniederschlags</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>gebietsniederschlag.launch</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Info_Rechenvariante.gft</filename></entry>
+
+            <entry>Ansichtsvorlage für die Steuerparameter</entry>
+
+            <entry>Kopie der Datei
+            <filename>/KalypsoSaale/.templates/Modell/Info_Rechenvariante.gft</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>modell.gml</filename></entry>
+
+            <entry>GML-Datei der Modelldaten der Rechenvariante</entry>
+
+            <entry>Kopie der Grunddaten des Modells
+            (<filename>/KalypsoSaale/modell.gml</filename>)</entry>
+          </row>
+
+          <row>
+            <entry><filename>update.log</filename></entry>
+
+            <entry>Log-Datei des ANT-Launches zum Abholen/Aktualisieren der
+            Zeitreihen, insbesondere Meldungen zur Gültigkeit der
+            Zeitreihenwerte</entry>
+
+            <entry>Nach Aktivieren des ANT-Launches
+            <filename>updateCalcCase.launch</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Durchfluss/*.zml</filename></entry>
+
+            <entry>Durchflusszeitreihen (Eingangszeitreihen der
+            Berechnung)</entry>
+
+            <entry>KALYPSO-Zeitreihendienst </entry>
+          </row>
+
+          <row>
+            <entry><filename>dwd/*.txt</filename></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry><filename>Ergebnisse/</filename></entry>
+
+            <entry>Ergebnisse einer Berechnung (Zeitreihen und LOG-Dateien des
+            Rechenkerns)</entry>
+
+            <entry>KALYPSO-Berechnungsdienst</entry>
+          </row>
+
+          <row>
+            <entry><filename>Karten/*.gmt</filename></entry>
+
+            <entry>diverse Ansichtsvorlagen für Karten</entry>
+
+            <entry>Kopie der Dateien
+            <filename>/KalypsoSaale/.templates/Modell/Karten/*.gmt</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Niederschlag/*.zml</filename></entry>
+
+            <entry>Gebietsniederschlagszeitreihen</entry>
+
+            <entry>Gebietsniederschlagsmodell</entry>
+          </row>
+
+          <row>
+            <entry><filename>Ombrometer/*.zml</filename></entry>
+
+            <entry>Niederschlagszeitreihen (Messwerte der Ombrometer)</entry>
+
+            <entry>KALYPSO-Zeitreihendienst </entry>
+          </row>
+
+          <row>
+            <entry><filename>Parameter/*.gtt</filename></entry>
+
+            <entry>diverse Ansichtsvorlagen für Tabellen. Diese Tabellen
+            dienen der Information über Modellparameter bzw. zum Editieren
+            derselben</entry>
+
+            <entry>Kopie der Dateien
+            <filename>/KalypsoSaale/.templates/Modell/Parameter/*.gtt</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Schnee/*.zml</filename></entry>
+
+            <entry>Abschmelzsummenzeitreihen</entry>
+
+            <entry>Gebietsniederschlagsmodell</entry>
+          </row>
+
+          <row>
+            <entry><filename>Speicherinhalt/*.zml</filename></entry>
+
+            <entry>Volumenzeitreihen der Speicher</entry>
+
+            <entry>KALYPSO-Zeitreihendienst </entry>
+          </row>
+
+          <row>
+            <entry><filename>Steuerung/*.gft</filename></entry>
+
+            <entry>Feature(Element)vorlagen für die Steuerung der diversen
+            Talsperren bzw. der optionalen Teilmodelle (Schwarze und Weiße
+            Elster)</entry>
+
+            <entry>Kopie der Dateien
+            <filename>/KalypsoSaale/.templates/Modell/Steuerung/*.gft</filename></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <section>
+      <title>Launches und ANT-Skripte</title>
+
+      <para>Der Modellablauf wird mit Hilfe der in der Datei
+      <filename>/KalypsoSaale/.model/launch/build.xml</filename> enthaltenen
+      ANT-Targets gesteuert.</para>
+
+      <para>Die bereitgestellten ANT-Targets umfassen neben den in <xref
+      linkend="sec-modellintegration-allgemein" /> beschriebenen vier Launches
+      (Erstellen einer neuen Rechenvariante, Aktualisieren einer
+      Rechenvariante, Berechnung einer Rechenvariante und Ablage der
+      Prognosezeitreihen) noch einen Launch zur Berechnung des
+      Gebietsniederschlagsmodells. Dieser wird aus dem jeweiligen
+      Vorhersage-Assistenten aufgerufen.</para>
+
+      <section>
+        <title>Erstellen einer neuen Rechenvariante
+        (<filename>createCalcCase.launch</filename>)</title>
+
+        <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
+        (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
+        Steuerparameter <filename>.calculation</filename> (siehe <xref
+        linkend="sec_pktCalculation" />) wird mit Standardwerten belegt. Die
+        eigentlichen Modelldaten befinden sich in der Datei
+        <filename>modell.gml</filename> und stellen eine reine Kopie der
+        Grunddaten dar
+        (<filename>/KalypsoSaale/.templates/Modell/modell.gml</filename>).</para>
+      </section>
+
+      <section>
+        <title>Aktualisieren einer Rechenvariante
+        (<filename>updateCalcCase.launch</filename>)</title>
+
+        <para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
+        zusammengestellt:</para>
+
+        <informaltable>
+          <tgroup cols="3">
+            <colspec align="left" colwidth="3*" />
+
+            <colspec align="left" colwidth="5*" />
+
+            <colspec align="left" colwidth="3*" />
+
+            <thead>
+              <row>
+                <entry align="center">Datenart</entry>
+
+                <entry align="center">Unterverzeichnis von
+                <filename>Zeitreihen</filename></entry>
+
+                <entry align="center">Herkunft</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Gebietsniederschläge</entry>
+
+                <entry><filename>Gebietsniederschlag</filename></entry>
+
+                <entry>Berechnung via Gebietsniederschlagsmodell</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Niederschläge</entry>
+
+                <entry><filename>Gebietsniederschlag/Messung_Stationen</filename></entry>
+
+                <entry>WISKI</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Wasserstände</entry>
+
+                <entry><filename>Pegel/Messung</filename></entry>
+
+                <entry>WISKI (bzw. aus einer ZML-Vorlage)</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Speicherinhalte</entry>
+
+                <entry><filename>Speicher/Messung</filename></entry>
+
+                <entry>WISKI</entry>
+              </row>
+
+              <row>
+                <entry>Speicherabgaben</entry>
+
+                <entry><filename>Speicherabgaben</filename> (Zeitreihenbereich
+                bis zum Start der Vorhersage)</entry>
+
+                <entry>WISKI</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>Die Zuordnungen zwischen Zeitreihen der Rechenvariante und
+        Zeitreihen in WISKI bzw. dateibasierten ZML-Vorlagen befinden sich in
+        den Zuordnungsdateien
+        <filename>/KalypsoSaale/.templates/.WISKI_Konfig/wiskiimport_*.gml</filename>.</para>
+      </section>
+
+      <section>
+        <title>Berechnung einer Rechenvariante
+        (<filename>runCalculation.launch</filename>)</title>
+
+        <para>Die vom Rechenkern benötigten Daten werden zusammengestellt und
+        an den Berechnungsdienst gesandt. Die zurückgebenen Ergebnisse werden
+        in die Rechenvariante übernommen, vorher werden ggf. bereits
+        bestehende Ergebnisse gelöscht.</para>
+      </section>
+
+      <section>
+        <title>Ablage der Prognosezeitreihen
+        (<filename>exportVorhersagen.launch</filename>)</title>
+
+        <para>Entsprechend der Zuordnungen in den Dateien
+        <filename>/KalypsoSaale/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
+        bzw.
+        <filename>/KalypsoIlse/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
+        werden Prognosezeitreihen nach WISKI geschrieben.</para>
+      </section>
+
+      <section>
+        <title>Berechnung Gebietsniederschlag
+        (<filename>gebietsniederschlag.launch</filename>)</title>
+
+        <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
+        einem speziellen Target namens <quote>gebietsniederschlag</quote> des
+        ANT-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
+        sowie bei expliziter Neuberechnung des Gebietsniederschlags in der
+        ersten Seite des Vorhersageassistenten aufgerufen wird.</para>
+
+        <para>Die Vergangenheitswerte werden über eine lineare Gewichtung aus
+        den gemessenen Niederschlägen hergeleitet. Die Gewichtung wurde als
+        Relation im GML-Applikationsschema modelliert und hängt als Parameter
+        <quote>gewichtung</quote> direkt an den Elementen
+        <quote>Niederschlagsgebiet</quote> des Datenmodells
+        (<filename>modell.gml</filename>).</para>
+      </section>
+    </section>
+
+    <section id="sec_pktCalculation">
+      <title>Die Datei <filename>.calculation</filename></title>
+
+      <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
+      serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
+      (Speicherort siehe <xref linkend="sec_modelSpecTubig" />) spezifiziert
+      und enthält neben Informationen zum Szenario der Rechenvariante,
+      Steuerparametern (Start der Simulation, Start der Vorhersage, derzeit
+      gewählte Berechnungsart) noch weitere Metadaten, um eine Rechenvariante
+      ausführlich beschreiben zu können. Diese sind:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>der Ersteller der Rechenvariante (Default-Wert ist der
+          Login-Name)</para>
+        </listitem>
+
+        <listitem>
+          <para>eine (Kurz-)beschreibung der Rechenvariante</para>
+        </listitem>
+
+        <listitem>
+          <para>ein Kommentar zur Rechenvariante</para>
+        </listitem>
+
+        <listitem>
+          <para>das Erstellungsdatum der Rechenvariante (Default-Wert ist die
+          Systemzeit bei Anlegen der Rechenvariante)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Um eine ansprechende Darstellung der Szenario-Information,
+      Steuerparameter und Metadaten im Dialog <menuchoice>
+          <guilabel>Rechenvariante</guilabel>
+
+          <guimenuitem>Neu</guimenuitem>
+        </menuchoice> sowie im Vorhersage-Assistenten zu erhalten, wurde eine
+      Ansichtsvorlage für die Steuerdatei unter
+      <filename>/KalypsoSaale/.model/.calculation.view</filename> bzw.
+      <filename>/KalypsoIlse/.model/.calculation.view</filename> abgelegt. Die
+      Berechnungsart kann beim Anlegen einer Rechenvariante nicht ausgewählt
+      werden und wird deshalb zu diesem Zeitpunkt auch nicht angezeigt. In
+      jeder Rechenvariante befindet sich noch eine Vorlagendatei
+      <filename>Info_Rechenvariante.gft</filename>, die ggf. noch zusätzlich
+      die Berechnungsart anzeigt und auch deren Auswahl ermöglicht (betrifft
+      nur das Bode-Modell).</para>
+    </section>
   </section>
 
   <section>
