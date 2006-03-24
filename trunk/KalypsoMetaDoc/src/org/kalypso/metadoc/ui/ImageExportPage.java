@@ -55,8 +55,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -132,6 +130,14 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   private Button m_keepImageRatio;
 
+  /**
+   * Same as {@link #ImageExportPage(IPublishingConfiguration, String, String, ImageDescriptor, 0)}
+   */
+  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage )
+  {
+    this( conf, pageName, title, titleImage, 0 );
+  }
+  
   public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, double hintImageRatio )
   {
     super( pageName, title, titleImage );
@@ -279,7 +285,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     saveWidgetValues();
   }
 
-  private void updateControls( final String key )
+  protected void updateControls( final String key )
   {
     if( key.equals( CONF_IMAGE_WIDTH ) || key == null )
     {
