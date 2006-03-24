@@ -7,6 +7,8 @@
   kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
   einschließlich Talsperrenberechnung.</para>
 
+  <!--Ein bisschen was zu SNOW schreiben im nächsten para-->
+
   <para>Zur Integration des Saale-Modells in KALYPSO-Enterprise wurde das
   bestehende Programm durch die Firma GFE Consult GmbH so angepasst, dass ein
   oberflächenloser Betrieb des Rechenkerns möglich ist. Desweitern wurde
@@ -29,7 +31,7 @@
   dient als Modellprojekt unter dem Namen <quote>Saale</quote> als
   Vorhersagemodell der eigentlichen Installation.</para>
 
-  <section>
+  <section id="sec_modelSpecSaale">
     <title>Modellspezifikation und Grunddaten</title>
 
     <para>Die Verzeichnisstruktur des Modellprojekts
@@ -54,14 +56,14 @@
       <mediaobject>
         <imageobject>
           <imagedata fileref="img/modellintegration/sachsen-anhalt/modellbaum_saale.png"
-                     scale="70" />
+                     scale="85" />
         </imageobject>
       </mediaobject>
     </figure>
 
     <para>Wie aus der Baumansicht hervorgeht, besteht das Saale-Modell aus
     vier Listen (Collections), welche unterhalb des Wurzelelements (root)
-    angeordnet sind (in der Abbildung werden nur einige Listeneinträge
+    angeordnet sind (in der Abbildung werden jeweils nur einige Listeneinträge
     exemplarisch angezeigt):</para>
 
     <itemizedlist>
@@ -276,15 +278,17 @@
     <xref linkend="tab-modellintegration-saale-rechenvariante" /> zeigt den
     konkreten Aufbau für das Saale-Modell.</para>
 
+    <!--Diese Tabelle ist länger als eine Seite :-) Lass Dir was einfallen-->
+
     <table id="tab-modellintegration-saale-rechenvariante">
       <title>Aufbau einer Rechenvariante des Saale-Modells</title>
 
       <tgroup cols="3">
+        <colspec align="left" colwidth="3*" />
+
         <colspec align="left" colwidth="4*" />
 
         <colspec align="left" colwidth="5*" />
-
-        <colspec align="left" colwidth="10*" />
 
         <thead>
           <row>
@@ -404,7 +408,7 @@
           <row>
             <entry><filename>Niederschlag/*.zml</filename></entry>
 
-            <entry>Gebietsniederschlagszeitreihen</entry>
+            <entry>Niederschlagszeitreihen (Gebietsniederschlag)</entry>
 
             <entry>Gebietsniederschlagsmodell</entry>
           </row>
@@ -506,8 +510,7 @@
               <row>
                 <entry align="center">Datenart</entry>
 
-                <entry align="center">Unterverzeichnis von
-                <filename>Zeitreihen</filename></entry>
+                <entry align="center">Unterverzeichnis</entry>
 
                 <entry align="center">Herkunft</entry>
               </row>
@@ -515,9 +518,25 @@
 
             <tbody>
               <row>
+                <entry>gemessener Durchfluss</entry>
+
+                <entry><filename>Durchfluss</filename></entry>
+
+                <entry>WISKI (bzw. aus einer ZML-Vorlage)</entry>
+              </row>
+
+              <row>
+                <entry>DWD-Vorhersagedaten</entry>
+
+                <entry><filename>dwd</filename></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
                 <entry>Gebietsniederschläge</entry>
 
-                <entry><filename>Gebietsniederschlag</filename></entry>
+                <entry><filename>Niederschlag</filename></entry>
 
                 <entry>Berechnung via Gebietsniederschlagsmodell</entry>
               </row>
@@ -525,32 +544,23 @@
               <row>
                 <entry>gemessene Niederschläge</entry>
 
-                <entry><filename>Gebietsniederschlag/Messung_Stationen</filename></entry>
+                <entry><filename>Ombrometer</filename></entry>
 
                 <entry>WISKI</entry>
               </row>
 
               <row>
-                <entry>gemessene Wasserstände</entry>
+                <entry>Abschmelzsummen</entry>
 
-                <entry><filename>Pegel/Messung</filename></entry>
+                <entry><filename>Schnee</filename></entry>
 
-                <entry>WISKI (bzw. aus einer ZML-Vorlage)</entry>
+                <entry>WISKI</entry>
               </row>
 
               <row>
                 <entry>gemessene Speicherinhalte</entry>
 
-                <entry><filename>Speicher/Messung</filename></entry>
-
-                <entry>WISKI</entry>
-              </row>
-
-              <row>
-                <entry>Speicherabgaben</entry>
-
-                <entry><filename>Speicherabgaben</filename> (Zeitreihenbereich
-                bis zum Start der Vorhersage)</entry>
+                <entry><filename>Speicherinhalt</filename></entry>
 
                 <entry>WISKI</entry>
               </row>
@@ -580,14 +590,12 @@
 
         <para>Entsprechend der Zuordnungen in den Dateien
         <filename>/KalypsoSaale/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
-        bzw.
-        <filename>/KalypsoIlse/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
         werden Prognosezeitreihen nach WISKI geschrieben.</para>
       </section>
 
       <section>
         <title>Berechnung Gebietsniederschlag
-        (<filename>gebietsniederschlag.launch</filename>)</title>
+        (<filename>niederschlagsmodell.launch</filename>)</title>
 
         <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
@@ -599,8 +607,10 @@
         den gemessenen Niederschlägen hergeleitet. Die Gewichtung wurde als
         Relation im GML-Applikationsschema modelliert und hängt als Parameter
         <quote>gewichtung</quote> direkt an den Elementen
-        <quote>Niederschlagsgebiet</quote> des Datenmodells
+        <quote>Gebiet</quote> des Datenmodells
         (<filename>modell.gml</filename>).</para>
+
+        <!--Tja, und hier noch viel Bla bla zu den Abschmelzsummen etc.-->
       </section>
     </section>
 
@@ -609,11 +619,10 @@
 
       <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
       serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
-      (Speicherort siehe <xref linkend="sec_modelSpecTubig" />) spezifiziert
-      und enthält neben Informationen zum Szenario der Rechenvariante,
-      Steuerparametern (Start der Simulation, Start der Vorhersage, derzeit
-      gewählte Berechnungsart) noch weitere Metadaten, um eine Rechenvariante
-      ausführlich beschreiben zu können. Diese sind:</para>
+      (Speicherort siehe <xref linkend="sec_modelSpecSaale" />) spezifiziert
+      und enthält neben Informationen zum Szenario der Rechenvariante, einem
+      Steuerparameter (Start der Vorhersage) noch weitere Metadaten, um eine
+      Rechenvariante ausführlich beschreiben zu können. Diese sind:</para>
 
       <itemizedlist>
         <listitem>
@@ -642,21 +651,17 @@
           <guimenuitem>Neu</guimenuitem>
         </menuchoice> sowie im Vorhersage-Assistenten zu erhalten, wurde eine
       Ansichtsvorlage für die Steuerdatei unter
-      <filename>/KalypsoSaale/.model/.calculation.view</filename> bzw.
-      <filename>/KalypsoIlse/.model/.calculation.view</filename> abgelegt. Die
-      Berechnungsart kann beim Anlegen einer Rechenvariante nicht ausgewählt
-      werden und wird deshalb zu diesem Zeitpunkt auch nicht angezeigt. In
-      jeder Rechenvariante befindet sich noch eine Vorlagendatei
-      <filename>Info_Rechenvariante.gft</filename>, die ggf. noch zusätzlich
-      die Berechnungsart anzeigt und auch deren Auswahl ermöglicht (betrifft
-      nur das Bode-Modell).</para>
+      <filename>/KalypsoSaale/.model/.calculation.view</filename> abgelegt.
+      Sie hat den gleichen Aufbau wie die Vorlagendatei
+      <filename>Info_Rechenvariante.gft</filename> im Verzeichnis der
+      Rechenvariante.</para>
     </section>
   </section>
 
   <section>
     <title>Modell-Plugin</title>
 
-    <para></para>
+    <para><!--Tja Gernot, das musst Du wohl selber schreiben :-)))--></para>
   </section>
 
   <section>

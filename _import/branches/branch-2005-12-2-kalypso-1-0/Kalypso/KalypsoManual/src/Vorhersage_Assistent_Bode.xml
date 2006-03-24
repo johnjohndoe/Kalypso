@@ -626,13 +626,12 @@
       der Benutzer durch einen mehrstufigen Dialog geführt. Nach einer Auswahl
       der abzulegenden Berichtskomponenten werden Zusatzinformationen
       (Metadaten) angezeigt, die zusätzlich mit in die Dokumentenablage
-      übergeben werden: Dokumententyp (<guilabel>doctyp</guilabel>),
-      Erstelldatum (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
-      (<guilabel>gueltigdat</guilabel>), Autor (<guilabel>autor</guilabel>),
-      Ersteller (<guilabel>ersteller</guilabel>), Szenario
-      (<guilabel>simulation</guilabel>) und Messstellennummer
-      (<guilabel>station_id</guilabel>). Vom Benutzer ist hier lediglich das
-      Gültigkeitsdatum anzupassen.</para>
+      übergeben werden: Autor (<guilabel>autor</guilabel>), Ersteller
+      (<guilabel>ersteller</guilabel>), Erstelldatum
+      (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
+      (<guilabel>gueltigdat</guilabel>) und Beschreibung
+      (<guilabel>description</guilabel>). Vom Benutzer sind hier das
+      Gültigkeitsdatum und die Beschreibung anzupassen.</para>
 
       <para>Die Ablage folgender Berichtskomponenten ist konfiguriert:</para>
 
@@ -821,13 +820,12 @@
       der Benutzer durch einen mehrstufigen Dialog geführt. Nach einer Auswahl
       der abzulegenden Berichtskomponenten werden Zusatzinformationen
       (Metadaten) angezeigt, die zusätzlich mit in die Dokumentenablage
-      übergeben werden: Dokumententyp (<guilabel>doctyp</guilabel>),
-      Erstelldatum (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
-      (<guilabel>gueltigdat</guilabel>), Autor (<guilabel>autor</guilabel>),
-      Ersteller (<guilabel>ersteller</guilabel>), Szenario
-      (<guilabel>simulation</guilabel>) und Messstellennummer
-      (<guilabel>station_id</guilabel>). Vom Benutzer ist hier lediglich das
-      Gültigkeitsdatum anzupassen.</para>
+      übergeben werden: Autor (<guilabel>autor</guilabel>), Ersteller
+      (<guilabel>ersteller</guilabel>), Erstelldatum
+      (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
+      (<guilabel>gueltigdat</guilabel>) und Beschreibung
+      (<guilabel>description</guilabel>). Vom Benutzer sind hier das
+      Gültigkeitsdatum und die Beschreibung anzupassen.</para>
 
       <para>Die Ablage folgender Berichtskomponenten ist konfiguriert:</para>
 

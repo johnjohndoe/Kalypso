@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="modell-tubig" vendor="sachsen-anhalt">
-  <title>Modellintegration Tubig (Bode/Ilse)</title>
+  <title>Modellintegration Bode/Ilse (Tubig)</title>
 
   <para>Die Hochwasservorhersagemodelle für die Einzugsgebiete von Bode bzw.
   Ilse beruhen auf dem Programm WinPRO der Thiele + Büttner
@@ -383,17 +383,20 @@
     <para>Die Rechenvarianten wurden gemäß <xref
     linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
     <xref linkend="tab-modellintegration-tubig-rechenvariante" /> zeigt den
-    konkreten Aufbau für Bode und Ilse.</para>
+    konkreten Aufbau für Bode und Ilse. Zur besseren Lesbarkeit wird In der
+    Tabelle eine allgemeine Schreibweise für die Verzeichnisse
+    <filename>/KalysoBode</filename> bzw. <filename>/KalypsoIlse</filename>
+    gewählt: <filename>/KalypsoTubig</filename>.</para>
 
     <table id="tab-modellintegration-tubig-rechenvariante">
       <title>Aufbau einer Rechenvariante des Bode- bzw. Ilse-Modells</title>
 
       <tgroup cols="3">
+        <colspec align="left" colwidth="3*" />
+
         <colspec align="left" colwidth="4*" />
 
         <colspec align="left" colwidth="5*" />
-
-        <colspec align="left" colwidth="10*" />
 
         <thead>
           <row>
@@ -412,9 +415,7 @@
             <entry>Steuerparameter der Berechnung</entry>
 
             <entry>Kopie der Datei
-            <filename>/KalypsoBode/.model/.calculation.template</filename>
-            bzw.
-            <filename>/KalypsoIlse/.model/.calculation.template</filename>
+            <filename>/KalypsoTubig/.model/.calculation.template</filename>
             unter Ersetzung/Bearbeitung der Parameter.</entry>
           </row>
 
@@ -434,9 +435,7 @@
             <entry>Ansichtsvorlage für die Steuerparameter</entry>
 
             <entry>Kopie der Datei
-            <filename>/KalypsoBode/.templates/Modell/Info_Rechenvariante.gft</filename>
-            bzw.
-            <filename>/KalypsoIlse/.templates/Modell/Info_Rechenvariante.gft</filename></entry>
+            <filename>/KalypsoTubig/.templates/Modell/Info_Rechenvariante.gft</filename></entry>
           </row>
 
           <row>
@@ -445,8 +444,7 @@
             <entry>GML-Datei der Modelldaten der Rechenvariante</entry>
 
             <entry>Kopie der Grunddaten des Modells
-            (<filename>/KalypsoBode/modell.gml</filename> bzw.
-            <filename>/KalypsoIlse/modell.gml</filename>)</entry>
+            (<filename>/KalypsoTubig/modell.gml</filename>)</entry>
           </row>
 
           <row>
@@ -486,9 +484,7 @@
             <entry>diverse Ansichtsvorlagen für Karten</entry>
 
             <entry>Kopie der Dateien
-            <filename>/KalypsoBode/.templates/Modell/Karten/*.gmt</filename>
-            bzw.
-            <filename>/KalypsoIlse/.templates/Modell/Karten/*.gmt</filename></entry>
+            <filename>/KalypsoTubig/.templates/Modell/Karten/*.gmt</filename></entry>
           </row>
 
           <row>
@@ -507,9 +503,7 @@
             derselben</entry>
 
             <entry>Kopie der Dateien
-            <filename>/KalypsoBode/.templates/Modell/Parameter/*.gtt</filename>
-            bzw.
-            <filename>/KalypsoIlse/.templates/Modell/Parameter/*.gtt</filename></entry>
+            <filename>/KalypsoTubig/.templates/Modell/Parameter/*.gtt</filename></entry>
           </row>
 
           <row>
@@ -518,9 +512,7 @@
             <entry>diverse Ansichtsvorlagen für Zeitreihentabellen</entry>
 
             <entry>Kopie der Dateien
-            <filename>/KalypsoBode/.templates/Modell/Zeitreihen/*.ott</filename>
-            bzw.
-            <filename>/KalypsoIlse/.templates/Modell/Zeitreihen/*.ott</filename></entry>
+            <filename>/KalypsoTubig/.templates/Modell/Zeitreihen/*.ott</filename></entry>
           </row>
 
           <row>
@@ -670,7 +662,7 @@
 
       <section>
         <title>Berechnung Gebietsniederschlag
-        (<filename>gebietsniederschlag.launch</filename>)</title>
+        (<filename>niederschlagsmodell.launch</filename>)</title>
 
         <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
@@ -739,7 +731,61 @@
   <section>
     <title>Modell-Plugin</title>
 
-    <para></para>
+    <para>Die serverseitige Berechnung wird wie oben beschrieben über ein
+    ANT-Skript (<filename>runCalculation.launch</filename>) angestoßen. Es
+    werden alle Dateien der Rechenvariante bis auf die Vorlagen
+    übertragen.</para>
+
+    <para>Zur Berechnung wird der KALYPSO-Berechnungsdienst mit der Typ-ID des
+    Modells (hier <quote>TubigV1.0</quote>) angestoßen. Der Dienst aktiviert
+    anhand der ID die entsprechende Implementierung des Interface
+    <interfacename>org.Kalypso.services.calculation.job.ICalcJob</interfacename>,
+    im Falle des Bode- bzw. Ilse-Modells die Klasse
+    <interfacename>org.kalypso.lhwzsachsen.tubig.TubigCalcJob</interfacename>
+    im Projekt <filename>KalypsoModelTubig</filename> der Programmquellen. Wie
+    oben bereits beschrieben wurde, sind alle Modell-spezifischen
+    Programmierungen und die für das Anstoßen des Rechenkerns benötigten Daten
+    in diesem Projekt zusammengefasst.</para>
+
+    <para>Der implementierte Berechnungsdienst geht für jede Berechnung wie
+    folgt vor:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Es wird ein temporäres Verzeichnis <quote>calc</quote>
+        angelegt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Es wird der Rechenkern (ausführbare Programme m_*.exe und
+        unveränderbare Parameterdateien) in dieses Verzeichnis kopiert. Diese
+        Daten finden sich gesammelt im Paket
+        <filename>/KalypsoModelTubig/src/org/kalypso/lhwsachsenanhalt/tubig/resources/rechenkern</filename>.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die vom Client übergebenen Daten der Rechenvariante werden in
+        die Formate des Rechenkerns konvertiert und auch im temporären
+        Verzeichnis abgelegt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die zum Modell (Bode oder Ilse) und ggf. gewählter Rechenart
+        zugehörige Batch-Datei des Rechenkerns wird in einem Batch-Interpreter
+        gestartet.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Ergebnisdaten der Berechnung, welche sich jetzt ebenfalls im
+        temporären Verzeichnis befinden, werden in die vom Client benötigten
+        Formate übertragen und können jetzt vom Client abgerufen
+        werden.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Neben den konvertierten Zeitreihendaten werden auch LOG-Daten des
+    Rechenkerns zurück zum Client übertragen, was eine eventuelle Fehlersuche
+    erleichtert.</para>
   </section>
 
   <section>
