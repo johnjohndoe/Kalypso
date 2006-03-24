@@ -731,7 +731,8 @@
       verwendet:</para>
 
       <section>
-        <title>Erstellen einer Rechenvariante</title>
+        <title>Erstellen einer Rechenvariante
+        (<filename>createCalcCase.launch</filename>)</title>
 
         <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
         (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
@@ -743,7 +744,8 @@
       </section>
 
       <section>
-        <title>Aktualisieren einer Rechenvariante</title>
+        <title>Aktualisieren einer Rechenvariante
+        (<filename>updateCalcCase.launch</filename>)</title>
 
         <para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
         zusammengestellt:</para>
@@ -826,16 +828,23 @@
       </section>
 
       <section>
-        <title>Aktualisieren einer Rechenvariante, nach der Berechnung</title>
+        <title>Berechnung einer Rechenvariante
+        (<filename>runCalculation.launch</filename>)</title>
 
-        <para>Die Modelldaten der Rechenvariante
-        (<filename>calcCase.gml</filename>) werden durch die von der
-        Berechnung geänderten Modelldaten (optimierte Bodenfeuchten,
+        <para>Die vom Rechenkern benötigten Daten werden zusammengestellt und
+        an den Berechnungsdienst gesandt. Die zurückgebenen Ergebnisse werden
+        in die Rechenvariante übernommen, vorher werden ggf. bereits
+        bestehende Ergebnisse gelöscht.</para>
+
+        <para>Darüber hinaus werden Modelldaten der Rechenvariante
+        (<filename>calcCase.gml</filename>) durch die von der Berechnung
+        geänderten Modelldaten (optimierte Bodenfeuchten,
         <filename>Ergebnisse/calcCase.gml</filename>) ersetzt.</para>
       </section>
 
       <section>
-        <title>Berechnung Gebietsniederschlag</title>
+        <title>Berechnung Gebietsniederschlag
+        (<filename>gebietsniederschlag.launch</filename>)</title>
 
         <para>Die Umsetzung des Gebietsniederschlagsmodell findet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
@@ -856,6 +865,15 @@
         <quote>Gewichtungselement</quote> direkt an den
         Einzugsgebietselementen des Datenmodells
         (<filename>modell.gml</filename>).</para>
+      </section>
+
+      <section>
+        <title>Ablage der Prognosezeitreihen
+        (<filename>exportVorhersagen.launch</filename>)</title>
+
+        <para>Entsprechend der Zuordnungen in den Dateien
+        <filename>/KalypsoSpree/.model/observationConf/*Mapping.gml</filename>
+        werden Prognosezeitreihen nach PSICompact geschrieben.</para>
       </section>
     </section>
 
@@ -914,10 +932,9 @@
   <section>
     <title>Modell-Plugin</title>
 
-    <para>Zur Berechnung einer Rechenvariante wurde clientseitig die Datei
-    <filename>/KalypsoSpree/.model/modelspec.xml</filename> angelegt, welche
-    die Dateien beschreibt, die zur Berechnung an den KALYPSO-Rechendienst
-    übertragen werden. Im Fall des Spree-Modells werden alle Dateien der
+    <para>Der Anstoss der serverseitigen Berechnung wird wie oben beschrieben
+    über ein ANT-Skript (<filename>runCalculation.launch</filename>)
+    bewerkstelligt. Im Fall des Spree-Modells werden alle Dateien der
     Rechenvariante bis auf die Vorlagen übertragen.</para>
 
     <para>Zur Berechnung wird der KALYPSO-Berechnungsdienst mit der Typ-ID des

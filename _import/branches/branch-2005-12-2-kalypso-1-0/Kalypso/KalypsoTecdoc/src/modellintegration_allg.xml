@@ -388,8 +388,6 @@
   <section>
     <title>Modell-Plugin</title>
 
-    <!--ist modelspec.xml noch aktuell? Launch-Target runCalculation der build.xml GERNOT: nein, geht über den ant-task kalypso.runCalculation-->
-
     <para>Nachdem die Modellstruktur und die grundsätzlichen Aktionen zur
     Erzeugung und Behandlung von Rechenvarianten definiert sind, beginnt jetzt
     die Kapselung des Rechenkerns in Form eines Modell-Plugins.</para>
