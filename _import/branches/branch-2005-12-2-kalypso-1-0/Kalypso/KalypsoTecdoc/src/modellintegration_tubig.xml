@@ -25,9 +25,9 @@
   <para>Die zur Integration der Modelle nötige Programmierung ist innerhalb
   der Programmquellen vollständig im Projekt
   <filename>KalypsoModelTubig</filename> zusammengefasst. Neben der
-  Implementation des Rechendienstes befinden sich dort alle für die Berechnung
-  benötigten weiteren Resourcen (ausführbare Dateien m_*.exe, unveränderbare
-  Parameterdateien, usw.).</para>
+  Implementierung des Rechendienstes befinden sich dort alle für die
+  Berechnung benötigten weiteren Ressourcen (ausführbare Dateien m_*.exe,
+  unveränderbare Parameterdateien, usw.).</para>
 
   <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
   Modelldaten usw., befinden sich im Datenprojekt
@@ -36,11 +36,11 @@
   Namen <quote>Bode</quote> bzw. <quote>Ilse</quote> als Vorhersagemodell der
   eigentlichen Installation.</para>
 
-  <section>
+  <section id="sec_modelSpecTubig">
     <title>Modellspezifikation und Grunddaten</title>
 
     <para>Die Verzeichnisstruktur der Modellprojekte
-    <filename>KalypsoIlse</filename> und <filename>KalypsoBode</filename> ist
+    <filename>KalypsoBode</filename> und <filename>KalypsoIlse</filename> ist
     gemäß <xref linkend="abschn_5_1" /> aufgebaut. Da zur
     Niederschlagsprognose keine DWD-Rasterdaten herangezogen werden, entfällt
     allerdings das Verzeichnis <filename>/.model/dwd</filename>.</para>
@@ -57,7 +57,7 @@
     Baumansicht verschaffen. Nach dem Öffnen der Ansicht erscheint eine
     (Baum-) Strukturansicht des Modells, welche unter anderem auch das
     Bearbeiten der einzelnen Modellelemente erlaubt (siehe <xref
-    linkend="fig_modellintegration_bode_ueberblick" />).</para>
+    linkend="fig_modellintegration_saale_ueberblick" />).</para>
 
     <figure id="fig_modellintegration_bode_ueberblick">
       <title>Überblick Modelldaten Bode</title>
@@ -76,10 +76,10 @@
 
     <itemizedlist>
       <listitem>
-        <para>Die Liste der Pegel (PegelCollectionAssociation) enthält alle
-        Pegel und deren Parameter. Innerhalb der Pegel wird zwischen
-        Wasserlaufmodellen, Niederschlagsgebieten und einfachen Pegeln
-        unterschieden.</para>
+        <para>Die Liste der Pegel (PegelCollectionAssociation) enthält die im
+        Modell abgebildeten Pegel und deren Parameter. Innerhalb der Pegel
+        wird zwischen Wasserlaufmodellen, Niederschlagsgebieten und einfachen
+        Pegeln unterschieden.</para>
       </listitem>
 
       <listitem>
@@ -321,8 +321,8 @@
       </tgroup>
     </table>
 
-    <para>Die zusätzlichen Parametern für die Niederschlagsgebiete (siehe
-    <xref linkend="tbl_paramsNSGTubig" />) werden für die Berechnung des
+    <para>Die zusätzlichen Parameter für die Niederschlagsgebiete (siehe <xref
+    linkend="tbl_paramsNSGTubig" />) werden für die Berechnung des
     Gebietsniederschlagsmodells benötigt.</para>
 
     <table id="tbl_paramsNSGTubig">
@@ -385,15 +385,15 @@
     <xref linkend="tab-modellintegration-tubig-rechenvariante" /> zeigt den
     konkreten Aufbau für Bode und Ilse.</para>
 
-    <table id="tab-modellintegration-spree-rechenvariante">
+    <table id="tab-modellintegration-tubig-rechenvariante">
       <title>Aufbau einer Rechenvariante des Bode- bzw. Ilse-Modells</title>
 
       <tgroup cols="3">
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="4*" />
 
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="5*" />
 
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="10*" />
 
         <thead>
           <row>
@@ -432,9 +432,9 @@
             <entry>Ansichtsvorlage für die Steuerparameter</entry>
 
             <entry>Kopie der Datei
-            <filename>/KalypsoBode/.templates/Modell\Info_Rechenvariante.gft</filename>
+            <filename>/KalypsoBode/.templates/Modell/Info_Rechenvariante.gft</filename>
             bzw.
-            <filename>/KalypsoIlse/.templates/Modell\Info_Rechenvariante.gft</filename></entry>
+            <filename>/KalypsoIlse/.templates/Modell/Info_Rechenvariante.gft</filename></entry>
           </row>
 
           <row>
@@ -457,14 +457,281 @@
           </row>
 
           <row>
-            <entry><filename>Zeitreihen/*.zml</filename></entry>
+            <entry><filename>Karten/*.gmt</filename></entry>
 
-            <entry>Eingangszeitreihen der Berechnung</entry>
+            <entry>diverse Ansichtsvorlagen für Karten</entry>
 
-            <entry>KALYPSO-Zeitreihendienst</entry>
+            <entry>Kopie der Dateien
+            <filename>/KalypsoBode/.templates/Modell/Karten/*.gmt</filename>
+            bzw.
+            <filename>/KalypsoIlse/.templates/Modell/Karten/*.gmt</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Log-Dateien/*.*</filename></entry>
+
+            <entry>LOG-Dateien des Rechenkerns</entry>
+
+            <entry>KALYPSO-Berechnungsdienst</entry>
+          </row>
+
+          <row>
+            <entry><filename>Parameter/*.gtt</filename></entry>
+
+            <entry>diverse Ansichtsvorlagen für Tabellen. Diese Tabellen
+            dienen der Information über Modellparameter bzw. zum Editieren
+            derselben</entry>
+
+            <entry>Kopie der Dateien
+            <filename>/KalypsoBode/.templates/Modell/Parameter/*.gtt</filename>
+            bzw.
+            <filename>/KalypsoIlse/.templates/Modell/Parameter/*.gtt</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Zeitreihen/*.ott</filename></entry>
+
+            <entry>diverse Ansichtsvorlagen für Zeitreihentabellen</entry>
+
+            <entry>Kopie der Dateien
+            <filename>/KalypsoBode/.templates/Modell/Zeitreihen/*.ott</filename>
+            bzw.
+            <filename>/KalypsoIlse/.templates/Modell/Zeitreihen/*.ott</filename></entry>
+          </row>
+
+          <row>
+            <entry><filename>Zeitreihen/*/*.zml</filename> bzw.
+            <filename>Zeitreihen/*/*/*.zml</filename></entry>
+
+            <entry>Zeitreihen-Dateien (Eingangszeitreihen und
+            Berechnungsergebnisse)</entry>
+
+            <entry>KALYPSO-Zeitreihendienst und
+            KALYPSO-Berechnungsdienst</entry>
           </row>
         </tbody>
       </tgroup>
     </table>
+
+    <section>
+      <title>Launches und ANT-Skripte</title>
+
+      <para>Der Modellablauf wird mit Hilfe der in der Datei
+      <filename>/KalypsoBode/.model/launch/build.xml</filename> bzw.
+      <filename>/KalypsoIlse/.model/launch/build.xml</filename> enthaltenen
+      ANT-Targets gesteuert.</para>
+
+      <para>Die bereitgestellten ANT-Targets umfassen neben den in <xref
+      linkend="sec-modellintegration-allgemein" /> beschriebenen vier Launches
+      (Erstellen einer neuen Rechenvariante, Aktualisieren einer
+      Rechenvariante, Berechnung einer Rechenvariante und Ablage der
+      Prognosezeitreihen) noch einen Launch zur Berechnung des
+      Gebietsniederschlagsmodells. Dieser wird aus dem jeweiligen
+      Vorhersage-Assistenten aufgerufen.</para>
+
+      <section>
+        <title>Erstellen einer neuen Rechenvariante
+        (<filename>createCalcCase.launch</filename>)</title>
+
+        <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
+        (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
+        Steuerparameter <filename>.calculation</filename> (siehe <xref
+        linkend="sec_pktCalculation" />) wird mit Standardwerten belegt. Die
+        eigentlichen Modelldaten befinden sich in der Datei
+        <filename>modell.gml</filename> und stellen eine reine Kopie der
+        Grunddaten dar
+        (<filename>/KalypsoBode/.templates/Modell/modell.gml</filename> bzw.
+        <filename>/KalypsoIlse/.templates/Modell/modell.gml</filename>).</para>
+      </section>
+
+      <section>
+        <title>Aktualisieren einer Rechenvariante
+        (<filename>updateCalcCase.launch</filename>)</title>
+
+        <para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
+        zusammengestellt:</para>
+
+        <informaltable>
+          <tgroup cols="3">
+            <colspec align="left" colwidth="3*" />
+
+            <colspec align="left" colwidth="5*" />
+
+            <colspec align="left" colwidth="3*" />
+
+            <thead>
+              <row>
+                <entry align="center">Datenart</entry>
+
+                <entry align="center">Unterverzeichnis von
+                <filename>Zeitreihen</filename></entry>
+
+                <entry align="center">Herkunft</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Gebietsniederschläge</entry>
+
+                <entry><filename>Gebietsniederschlag</filename></entry>
+
+                <entry>Berechnung via Gebietsniederschlagsmodell</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Niederschläge</entry>
+
+                <entry><filename>Gebietsniederschlag/Messung_Stationen</filename></entry>
+
+                <entry>WISKI</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Wasserstände</entry>
+
+                <entry><filename>Pegel/Messung</filename></entry>
+
+                <entry>WISKI (bzw. aus einer ZML-Vorlage)</entry>
+              </row>
+
+              <row>
+                <entry>gemessene Speicherinhalte</entry>
+
+                <entry><filename>Speicher/Messung</filename></entry>
+
+                <entry>WISKI</entry>
+              </row>
+
+              <row>
+                <entry>Speicherabgaben</entry>
+
+                <entry><filename>Speicherabgaben</filename> (Zeitreihenbereich
+                bis zum Start der Vorhersage)</entry>
+
+                <entry>WISKI</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>Die Zuordnungen zwischen Zeitreihen der Rechenvariante und
+        Zeitreihen in WISKI bzw. dateibasierten ZML-Vorlagen befinden sich in
+        den Zuordnungsdateien
+        <filename>/KalypsoBode/.templates/.WISKI_Konfig/wiskiimport_*.gml</filename>
+        bzw.
+        <filename>/KalypsoIlse/.templates/.WISKI_Konfig/wiskiimport_*.gml</filename>.</para>
+      </section>
+
+      <section>
+        <title>Berechnung einer Rechenvariante
+        (<filename>runCalculation.launch</filename>)</title>
+
+        <para>Die vom Rechenkern benötigten Daten werden zusammengestellt und
+        an den Berechnungsdienst gesandt. Die zurückgebenen Ergebnisse werden
+        in die Rechenvariante übernommen, vorher werden ggf. bereits
+        bestehende Ergebnisse gelöscht.</para>
+      </section>
+
+      <section>
+        <title>Ablage der Prognosezeitreihen
+        (<filename>exportVorhersagen.launch</filename>)</title>
+
+        <para>Entsprechend der Zuordnungen in den Dateien
+        <filename>/KalypsoBode/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
+        bzw.
+        <filename>/KalypsoIlse/.templates/.WISKI_Konfig/wiskiexport_*.gml</filename>
+        werden Prognosezeitreihen nach WISKI geschrieben.</para>
+      </section>
+
+      <section>
+        <title>Berechnung Gebietsniederschlag
+        (<filename>gebietsniederschlag.launch</filename>)</title>
+
+        <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
+        einem speziellen Target namens <quote>gebietsniederschlag</quote> des
+        ANT-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
+        sowie bei expliziter Neuberechnung des Gebietsniederschlags in der
+        ersten Seite des Vorhersageassistenten aufgerufen wird.</para>
+
+        <para>Die Vergangenheitswerte werden über eine lineare Gewichtung aus
+        den gemessenen Niederschlägen hergeleitet. Die Gewichtung wurde als
+        Relation im GML-Applikationsschema modelliert und hängt als Parameter
+        <quote>gewichtung</quote> direkt an den Elementen
+        <quote>Niederschlagsgebiet</quote> des Datenmodells
+        (<filename>modell.gml</filename>).</para>
+      </section>
+    </section>
+
+    <section id="sec_pktCalculation">
+      <title>Die Datei <filename>.calculation</filename></title>
+
+      <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
+      serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
+      (Speicherort siehe <xref linkend="sec_modelSpecTubig" />) spezifiziert
+      und enthält neben Informationen zum Szenario der Rechenvariante,
+      Steuerparametern (Start der Simulation, Start der Vorhersage, derzeit
+      gewählte Berechnungsart) noch weitere Metadaten, um eine Rechenvariante
+      ausführlich beschreiben zu können. Diese sind:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>der Ersteller der Rechenvariante (Default-Wert ist der
+          Login-Name)</para>
+        </listitem>
+
+        <listitem>
+          <para>eine (Kurz-)beschreibung der Rechenvariante</para>
+        </listitem>
+
+        <listitem>
+          <para>ein Kommentar zur Rechenvariante</para>
+        </listitem>
+
+        <listitem>
+          <para>das Erstellungsdatum der Rechenvariante (Default-Wert ist die
+          Systemzeit bei Anlegen der Rechenvariante)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Um eine ansprechende Darstellung der Szenario-Information,
+      Steuerparameter und Metadaten im Dialog <menuchoice>
+          <guilabel>Rechenvariante</guilabel>
+
+          <guimenuitem>Neu</guimenuitem>
+        </menuchoice> sowie im Vorhersage-Assistenten zu erhalten, wurde eine
+      Ansichtsvorlage für die Steuerdatei unter
+      <filename>/KalypsoBode/.model/.calculation.view</filename> bzw.
+      <filename>/KalypsoIlse/.model/.calculation.view</filename> abgelegt. Die
+      Berechnungsart kann beim Anlegen einer Rechenvariante nicht ausgewählt
+      werden und wird deshalb zu diesem Zeitpunkt auch nicht angezeigt. In
+      jeder Rechenvariante befindet sich noch eine Vorlagendatei
+      <filename>Info_Rechenvariante.gft</filename>, die ggf. noch zusätzlich
+      die Berechnungsart anzeigt und auch deren Auswahl ermöglicht (betrifft
+      nur das Bode-Modell). </para>
+    </section>
+  </section>
+
+  <section>
+    <title>Modell-Plugin</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>Konfiguration des Vorhersage-Assistenten</title>
+
+    <para>Die Konfiguration des Vorhersage-Assistenten für die Modelle Bode
+    und Ilse befindet sich wie in <xref linkend="sec_konfigAssi" /> gefordert
+    in der Datei <filename>/KalypsoBode/.model/calcWizard.xml</filename> bzw.
+    <filename>/KalypsoIlse/.model/calcWizard.xml</filename>. Der Ablauf des
+    jeweiligen Assistenten ist im Benutzerhandbuch beschrieben und in der
+    Konfigurationsdatei kommentiert.</para>
+
+    <para>Die Konfigurationsdatei <filename>calcWizard.xml</filename> verweist
+    ihrerseits auf eine Reihe von Ansichtsvorlagen zur Darstellung der
+    Modelldaten innerhalb des Assistenten. Diese sind sämtlich im Verzeichnis
+    <filename>/KalypsoBode/.templates/.wizard</filename> bzw. <filename>
+    /KalypsoIlse/.templates/.wizard</filename> abgelegt.</para>
   </section>
 </section>

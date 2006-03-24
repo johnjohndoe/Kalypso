@@ -19,13 +19,107 @@
   <para>Die zur Integration des Modells nötige Programmierung ist innerhalb
   der Programmquellen vollständig im Projekt
   <filename>KalypsoModelSaale</filename> zusammengefasst. Neben der
-  Implementation des Rechendienstes befinden sich dort alle für die Berechnung
-  benötigten weiteren Resourcen (ausführbare Dateien hwvor.exe, snow.exe,
-  unveränderbare Parameterdateien, usw.).</para>
+  Implementierung des Rechendienstes befinden sich dort alle für die
+  Berechnung benötigten weiteren Ressourcen (ausführbare Dateien hwvor.exe,
+  snow.exe, unveränderbare Parameterdateien, usw.).</para>
 
   <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
   Modelldaten usw., befinden sich im Datenprojekt
   <filename>KalypsoSaale</filename> der Programmquellen. Das gleiche Projekt
   dient als Modellprojekt unter dem Namen <quote>Saale</quote> als
   Vorhersagemodell der eigentlichen Installation.</para>
+
+  <section>
+    <title>Modellspezifikation und Grunddaten</title>
+
+    <para>Die Verzeichnisstruktur des Modellprojekts
+    <filename>KalypsoSaale</filename> ist gemäß <xref linkend="abschn_5_1" />
+    aufgebaut. Die GML-Applikationsschemata wurden wie empfohlen in den
+    Programmquellen des Modell-Plugins im Paket
+    <filename>org/kalypso/lhwsachsenanhalt/saale/schemata</filename>
+    abgelegt.</para>
+
+    <para>Das Grundmodell wurde unter dem Namen
+    <filename>modell.gml</filename> im Hauptverzeichnis des Modellprojektes
+    gespeichert. Durch Doppelklick auf die GML-Datei kann man sich einen
+    Überblick über die Struktur der Modelldaten in Form einer Baumansicht
+    verschaffen. Nach dem Öffnen der Ansicht erscheint eine (Baum-)
+    Strukturansicht des Modells, welche unter anderem auch das Bearbeiten der
+    einzelnen Modellelemente erlaubt (siehe <xref
+    linkend="fig_modellintegration_saale_ueberblick" />). Die </para>
+
+    <figure id="fig_modellintegration_bode_ueberblick">
+      <title>Überblick Modelldaten Saale</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/modellintegration/sachsen-anhalt/modellbaum_saale.png"
+                     scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Wie aus der Baumansicht hervorgeht, besteht das Saale-Modell aus
+    vier Listen (Collections), welche unterhalb des Wurzelelements (root)
+    angeordnet sind (in der Abbildung werden nur einige Listeneinträge
+    exemplarisch angezeigt):</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Die Liste der Pegel (PegelCollectionAssociation) enthält die im
+        Modell abgebildeten Pegel und deren Parameter. Innerhalb der Pegel
+        wird zwischen Niederschlagsgebieten und einfachen Pegeln
+        unterschieden.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Liste der Wasserlaufmodelle (WLMCollectionAssociation)
+        enthält die Parameter zu den einzelnen im Modell abgebildeten
+        Wasserlaufmodellen.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Liste der Speicher (SpeicherCollectionAssociation) enthält
+        die im Modell abgebildeten Speicherbauwerke und deren
+        Parameter.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Liste der Ombrometer (OmbrometerCollectionAssociation)
+        enthält die Niederschlagsmessstationen des
+        Gebietsniederschlagsmodells.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Im Folgenden werden die einzelnen Modellparameter und Spalten der
+    Modelltabellen erläutert. Die Eingabe der Parameter erfolgt entweder über
+    die entsprechenden Ansichten im KALYPSO-Modeler (Expertenmodus) oder im
+    Vorhersage-Assistenten.</para>
+
+    <para>Niederschlagsgebiete sind Erweiterungen zu den einfachen Pegeln. D.
+    h. alle Parameter der einfachen Pegel (siehe <xref
+    linkend="tbl_paramsPegelSaale" />) sind auch Parameter von
+    Niederschlagsgebieten.</para>
+  </section>
+
+  <section>
+    <title>Modell-Plugin</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>Konfiguration des Vorhersage-Assistenten</title>
+
+    <para>Die Konfiguration des Vorhersage-Assistenten für das Saale-Modell
+    befindet sich wie in <xref linkend="sec_konfigAssi" /> gefordert in der
+    Datei <filename>/KalypsoSaale/.model/calcWizard.xml</filename>. Der Ablauf
+    des Assistenten ist im Benutzerhandbuch beschrieben und in der
+    Konfigurationsdatei kommentiert.</para>
+
+    <para>Die Konfigurationsdatei <filename>calcWizard.xml</filename> verweist
+    ihrerseits auf eine Reihe von Ansichtsvorlagen zur Darstellung der
+    Modelldaten innerhalb des Assistenten. Diese sind sämtlich im Verzeichnis
+    <filename>/KalypsoSaale/.templates/.wizard</filename> abgelegt.</para>
+  </section>
 </section>

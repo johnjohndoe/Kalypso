@@ -278,7 +278,7 @@
       Eclipse-Dokumentation.</para>
 
       <para>Bisher werden bei KALYPSO ausschließlich die durch Eclipse bereits
-      vordefinierten Ant-Launches benutzt, welche das Starten von Ant-Skripten
+      vordefinierten ANT-Launches benutzt, welche das Starten von ANT-Skripten
       beschreiben. Daneben existieren aber auch vordefinierte Typen zum
       Starten externer Programme und Java-Anwendungen.</para>
 
@@ -338,10 +338,10 @@
       beliebige selbstbenannte Launches aufgerufen werden, dies ist abhängig
       von der konkreten Konfiguration des Modells. Ein typischer Fall ist zum
       Beispiel der Aufruf der Neuberechnung eines Gebietsniederschlagsmodell
-      aus dem Asistenten.</para>
+      aus dem Assistenten.</para>
 
       <para>Damit die Skripte <quote>wissen</quote>, um welche Rechenvariante
-      es sich beim Aufruf handelt, werden im Falle von Ant-Launches eine Reihe
+      es sich beim Aufruf handelt, werden im Falle von ANT-Launches eine Reihe
       von vordefinierten Variablen gesetzt, die innerhalb des Skriptes
       verwendet werden können. Folgende vordefinierte Variablen werden zur
       Zeit benutzt:</para>
