@@ -32,14 +32,19 @@ public class PointRemove implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    if (hint!=null) hint.setPointsChanged();
-    
-    m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
-    
-    if (m_profil.removePoint( m_point ))
+    if( hint != null )
+      hint.setPointsChanged();
 
-    return new PointAdd( m_profil, m_pointBefore, m_point );
-    else return new IllegalChange("Punkt bei "+" kann nicht gelöscht werden");
+    m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
+
+    if( m_profil.removePoint( m_point ) )
+
+      return new PointAdd( m_profil, m_pointBefore, m_point );
+    else
+    {
+      final double b = m_point.getValueFor( POINT_PROPERTY.BREITE );
+      return new IllegalChange( "Punkt bei [" + Double.toString( b ) + "] kann nicht gelöscht werden" );
+    }
   }
 
   /**
@@ -47,7 +52,7 @@ public class PointRemove implements IProfilChange
    */
   public Object getObject( )
   {
-        return m_point;
+    return m_point;
   }
 
   /**
@@ -55,7 +60,7 @@ public class PointRemove implements IProfilChange
    */
   public POINT_PROPERTY getPointProperty( )
   {
-       return null;
+    return null;
   }
 
   /**
@@ -63,8 +68,7 @@ public class PointRemove implements IProfilChange
    */
   public Double getValue( )
   {
-        return null;
+    return null;
   }
 
-  
 }
