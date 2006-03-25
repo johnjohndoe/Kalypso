@@ -107,7 +107,8 @@ public class WFSCapabilitiesFromDOM implements IWFSCapabilities
       m_ftLayers = new IWFSLayer[ftQNames.length];
       for( int i = 0; i < ftQNames.length; i++ )
       {
-        m_ftLayers[i] = new WFSLayer( ftQNames[i], ftQNames[i].getLocalPart() );
+        URL url = WFSUtilities.createDescribeFeatureTypeRequestURL( this, ftQNames[i] );
+        m_ftLayers[i] = new WFSLayer( ftQNames[i], ftQNames[i].getLocalPart(), url );
       }
     }
     catch( Exception e )

@@ -290,10 +290,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           if( m_gisTemplateUserStyles.isEmpty() )
           {
             final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
-            final UserStyle style = defaultStyleFactory.createUserStyle( getFeatureType(), " - generierter Standard-Stil -" );
-            // DO not use xml-tags in this names please
-            final GisTemplateUserStyle kus = new GisTemplateUserStyle( style, "default" );
-            addStyle( kus );
+            final IFeatureType featureType = getFeatureType();
+            if( featureType != null )
+            {
+              final UserStyle style = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
+              // DO not use xml-tags in this names please
+              final GisTemplateUserStyle kus = new GisTemplateUserStyle( style, "default" );
+              addStyle( kus );
+            }
           }
           m_loaded = true;
         }

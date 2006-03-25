@@ -38,21 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public abstract class MathOperation extends Operation implements IOperation
 {
-  public QName getQName( );
+  public MathOperation( String pattern )
+  {
+    super( pattern );
+  }
 
-  public String getTitle( );
+  public Object operate( Object value1, Object value2 ) throws FeaturePathException
+  {
+    final double n1;
+    if( value1 instanceof Number )
+      n1 = ((Number) value1).doubleValue();
+    else if( value1 instanceof String )
+      n1 = Double.valueOf( (String) value1 );
+    else
+      throw new FeaturePathException();
+    final double n2;
+    if( value2 instanceof Number )
+      n2 = ((Number) value2).doubleValue();
+    else if( value1 instanceof String )
+      n2 = Double.valueOf( (String) value2 );
+    else
+      throw new FeaturePathException();
+    return mathOperate( n1, n2 );
+  }
 
-  public IFeatureType getFeatureType( );
-
+  public abstract Object mathOperate( double n1, double n2 );
 }

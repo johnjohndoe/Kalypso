@@ -38,21 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public class XElementFormAttribute implements IXElement
 {
-  public QName getQName( );
+  private String m_attribute;
 
-  public String getTitle( );
+  public XElementFormAttribute( String condition )
+  {
+    m_attribute = condition.replaceFirst( "@", "" ).trim();
+  }
 
-  public IFeatureType getFeatureType( );
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate(org.kalypsodeegree.model.feature.Feature)
+   */
+  public Object evaluate(GMLWorkspace contextWS, Feature contextFE )
+  {
+    if( "fid".equals( m_attribute ) )
+      return contextFE.getId();
+    if( "id".equals( m_attribute ) )
+      return contextFE.getId();
+    return "";
+  }
 
 }

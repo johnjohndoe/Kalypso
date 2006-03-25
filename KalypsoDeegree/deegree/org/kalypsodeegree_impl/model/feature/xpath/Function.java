@@ -38,21 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public abstract class Function implements IFunction
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  private final String m_name;
 
-  public IFeatureType getFeatureType( );
+  private Pattern m_pattern;
+
+  public Function(final  String name )
+  {
+    m_name = name;
+    m_pattern = Pattern.compile( "^(.*" + m_name + ")\\((.*?)\\)" );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getPattern()
+   */
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getArgument(java.util.regex.Matcher,
+   *      org.kalypsodeegree_impl.model.feature.path.Cond)
+   */
+  public String getArgument( Matcher matcher, Cond cond )
+  {
+    final String prefix = matcher.group( 1 );
+    String condition = cond.getCond();
+    final String argument = condition.substring( prefix.length() +1, condition.length() - 1 );
+    return argument;
+  }
+
+  public Pattern getPattern( )
+  {
+    return m_pattern;
+  }
 
 }

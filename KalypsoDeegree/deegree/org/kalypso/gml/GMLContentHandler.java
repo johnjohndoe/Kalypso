@@ -151,7 +151,14 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );
       return;
     }
+    // deegree1
     if( localName != null && localName.endsWith( "Exception" ) )
+    {
+      m_exceptionContentHandler = new ToStringContentHandler();
+      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
+      return;
+    }
+    if( localName != null && localName.equals( "ServiceExceptionReport" ) )
     {
       m_exceptionContentHandler = new ToStringContentHandler();
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );

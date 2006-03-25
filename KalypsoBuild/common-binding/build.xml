@@ -60,7 +60,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 <!--
 	<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
 -->
-		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true" stackSize="50mb">
+		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true" >
+			<!-- stackSize="60mb"> -->
 			
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />

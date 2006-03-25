@@ -45,6 +45,8 @@ public class WfsLoader extends AbstractLoader
 
   public final static String KEY_MAXFEATURE = "MAXFEATURE";
 
+  public static final String KEY_FEATURETYPENAMESPACE = "FEATURETYPE_NAMESPACE";
+
   public static final int MAXFEATURE_UNBOUNDED = -1;
 
   /**
@@ -67,11 +69,17 @@ public class WfsLoader extends AbstractLoader
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
       final String baseURLAsString = sourceProps.getProperty( KEY_URL );
       final String featureType = sourceProps.getProperty( KEY_FEATURETYPE );
+      final String featureTypeNS = sourceProps.getProperty( KEY_FEATURETYPENAMESPACE );
       final String filter = sourceProps.getProperty( KEY_FILTER );
       final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ), new QName( featureType ), targetCRS, filter, maxFeature );
+      final QName qNameFT;
+      if( featureTypeNS != null && featureTypeNS.length() > 0 )
+        qNameFT = new QName( featureTypeNS, featureType );
+      else
+        qNameFT = new QName( featureType );
+      final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ), qNameFT, targetCRS, filter, maxFeature );
 
       return new CommandableWorkspace( workspace );
     }

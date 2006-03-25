@@ -1293,7 +1293,8 @@ public class StyleFactory
     {
       geom = new Geometry_Impl( geometryPropertyName, null );
     }
-    return new PointSymbolizer_Impl( graphic, geom, min, max );
+    final PointSymbolizer_Impl pointSymbolizer = new PointSymbolizer_Impl( graphic, geom, min, max );
+    return pointSymbolizer;
   }
 
   /**
