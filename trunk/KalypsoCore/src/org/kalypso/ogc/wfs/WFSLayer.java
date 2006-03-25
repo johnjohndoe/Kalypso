@@ -40,7 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.wfs;
 
+import java.net.URL;
+
 import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * @author doemming
@@ -52,10 +59,15 @@ public class WFSLayer implements IWFSLayer
 
   private final String m_title;
 
-  public WFSLayer( QName qName, String title )
+  private final URL m_describeFeatureTypeURL;
+
+  private GMLSchema m_gmlSchema = null;
+
+  public WFSLayer( final QName qName, final String title, final URL describeFeatureTypeURL )
   {
     m_qName = qName;
     m_title = title;
+    m_describeFeatureTypeURL = describeFeatureTypeURL;
   }
 
   /**
@@ -72,6 +84,26 @@ public class WFSLayer implements IWFSLayer
   public String getTitle( )
   {
     return m_title;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSLayer#getFeatureType()
+   */
+  public IFeatureType getFeatureType( )
+  {
+    if( m_gmlSchema == null )
+    {
+      try
+      {
+        m_gmlSchema = GMLSchemaFactory.createGMLSchema( m_describeFeatureTypeURL );
+      }
+      catch( GMLSchemaException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    return m_gmlSchema.getFeatureType( m_qName );
   }
 
 }

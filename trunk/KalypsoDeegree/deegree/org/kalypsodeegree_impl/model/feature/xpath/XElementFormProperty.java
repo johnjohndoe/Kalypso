@@ -38,21 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public class XElementFormProperty implements IXElement
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  private final String m_propName;
 
-  public IFeatureType getFeatureType( );
+  public XElementFormProperty( String condition )
+  {
+    m_propName = condition.trim();
+  }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  public Object evaluate( GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException
+  {
+    final IPropertyType property = contextFE.getFeatureType().getProperty( m_propName );
+    if( property == null )
+      return null;
+    return contextFE.getProperty( property );
+  }
 }

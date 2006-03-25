@@ -38,21 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import java.util.regex.Pattern;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public abstract class Operation implements IOperation
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  private Pattern m_pattern;
 
-  public IFeatureType getFeatureType( );
+  public Operation( String pattern )
+  {
+    m_pattern = Pattern.compile( pattern );
+  }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IOperation#getPattern()
+   */
+  public Pattern getPattern( )
+  {
+    return m_pattern;
+  }
 }

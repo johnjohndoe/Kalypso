@@ -44,6 +44,7 @@ import java.util.Stack;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -70,9 +71,13 @@ public class FeatureParser
     final String fid;
     // GMLContentHandler.print( atts );
     // TODO check for alternatives xml:id gml:fid
-    final int index = atts.getIndex( "fid" );
-    if( index >= 0 )
-      fid = atts.getValue( index );
+    final int fIDIndex = atts.getIndex( "fid" );
+    final int gmlIDindex = atts.getIndex(NS.GML2, "id");
+//    final int gmlIDindex = atts.getIndex("id");
+    if( fIDIndex >= 0 )
+      fid = atts.getValue( fIDIndex );
+    else if(gmlIDindex>=0)
+      fid = atts.getValue( gmlIDindex );
     else
       fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
                   // conflict with other ids

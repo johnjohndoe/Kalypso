@@ -40,7 +40,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   // private final String m_schemaNamespace;
 
   /** id -> feature */
-  final Map m_indexMap = new HashMap();
+  final Map<String,Feature> m_indexMap = new HashMap<String,Feature>();
 
   private final IFeatureType[] m_featureTypes;
 
@@ -54,7 +54,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature getFeature( final String id )
   {
-    return (Feature) m_indexMap.get( id );
+    return m_indexMap.get( id );
   }
 
   // schema , featureTypes, rootFeature, context
@@ -416,7 +416,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Object getFeatureFromPath( final String featurePath )
   {
-    return new FeaturePath( featurePath ).getFeature( this );
+    try
+    {
+      final FeaturePath fPath = new FeaturePath( featurePath );
+      return fPath.getFeature( this );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**

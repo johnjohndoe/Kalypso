@@ -6,14 +6,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -85,10 +89,10 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        String[] layers = m_importWFSPage.getSelectedFeatureNames();
+        IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
         for( int i = 0; i < layers.length; i++ )
         {
-          String layer = layers[i];
+          IWFSLayer layer = layers[i];
           final Filter filter = m_importWFSPage.getFilter( layer );
 
           final String xml;
@@ -104,17 +108,26 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           // the top feature of the GMLWorkspace
           // it must be implemented to only set the name of the feature
           // (relative path of feature)
-          final String featurePath = "featureMember[" + layer + "]";
 
           final StringBuffer source = new StringBuffer();
+          final QName qNameFT = layer.getQName();
           source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUrl() );
-          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( layer );
+          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( qNameFT.getLocalPart() );
+          final String namespaceURI = qNameFT.getNamespaceURI();
+          if( namespaceURI != null && namespaceURI.length() > 0 )
+            source.append( "#" ).append( WfsLoader.KEY_FEATURETYPENAMESPACE ).append( "=" ).append( namespaceURI );
+
           if( xml != null )
             source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml );
           final int maxfeatures = 5000;
           if( maxfeatures != WfsLoader.MAXFEATURE_UNBOUNDED )
             source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) );
-          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, layer, "wfs", featurePath, source.toString() );
+
+          // final String[] featurePathes= GMLSchemaUtilities.createFeaturePathes(layer.getFeatureType());
+          // final String featurePath = "featureMember[" + layer.getQName().getLocalPart() + "]";
+          final String featurePath = "//*";//
+
+          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, layer.getTitle(), "wfs", featurePath, source.toString() );
           m_outlineviewer.postCommand( command, null );
         }
       }

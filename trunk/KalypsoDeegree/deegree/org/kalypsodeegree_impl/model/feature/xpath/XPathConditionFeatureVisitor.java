@@ -38,21 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public class XPathConditionFeatureVisitor implements FeatureVisitor
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  private final IXElement m_conditionXElement;
 
-  public IFeatureType getFeatureType( );
+  private final FeatureVisitor m_visitor;
+
+  private final GMLWorkspace m_gmlWorkspace;
+
+  public XPathConditionFeatureVisitor( GMLWorkspace gmlWorkspace, IXElement conditionXElement, FeatureVisitor visitor )
+  {
+    m_gmlWorkspace = gmlWorkspace;
+    m_conditionXElement = conditionXElement;
+    // TODO Auto-generated constructor stub
+    m_visitor = visitor;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean visit( Feature f )
+  {
+    try
+    {
+      if( (Boolean) m_conditionXElement.evaluate( m_gmlWorkspace, f ) )
+      {
+        return m_visitor.visit( f );
+      }
+    }
+    catch( FeaturePathException e )
+    {
+      // TODO Auto-generated catch block
+      // invalid xpath-condition
+      e.printStackTrace();
+    }
+    // TODO check return: true or false
+    return true;
+  }
 
 }

@@ -115,7 +115,8 @@ public class CalendarFeatureDialog implements IFeatureDialog
   public String getLabel()
   {
     final Date date = getDate();
-
+    if(date==null)
+      return "";
     return m_dateFormat.format( date );
   }
 }

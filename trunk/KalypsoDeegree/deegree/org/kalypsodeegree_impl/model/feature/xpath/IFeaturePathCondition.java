@@ -38,21 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public interface IFeaturePathCondition
 {
-  public QName getQName( );
+  public boolean isAsBoolean( );
 
-  public String getTitle( );
+  public int getAsInteger( );
 
-  public IFeatureType getFeatureType( );
-
+  public String getAsString( );
 }

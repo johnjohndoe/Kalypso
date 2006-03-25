@@ -38,21 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public class XElementFromOperation implements IXElement
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  private final IXElement m_operand1;
 
-  public IFeatureType getFeatureType( );
+  private final IXElement m_operand2;
+
+  private final IOperation m_operation;
+
+  public XElementFromOperation( final IXElement operand1, final IOperation operation, final IXElement operand2 )
+  {
+    m_operand1 = operand1;
+    m_operation = operation;
+    m_operand2 = operand2;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate()
+   */
+  public Object evaluate( GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException
+  {
+    final Object value1 = m_operand1.evaluate( contextWS, contextFE );
+    final Object value2 = m_operand2.evaluate( contextWS, contextFE );
+    return m_operation.operate( value1, value2 );
+  }
 
 }

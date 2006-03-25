@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.wfs;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ import org.deegree.services.wfs.capabilities.FeatureTypeList;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 
 /**
- * @author FlowsAd
+ * @author doemming
  */
 public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
 {
@@ -140,7 +141,16 @@ public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
         final String name = ft.getName();
         final String title = ft.getTitle();
         QName qName = new QName( name );
-        list.add( new WFSLayer( qName, title ) );
+        URL url = null;
+        try
+        {
+          url = WFSUtilities.createDescribeFeatureTypeRequestURL( this, qName );
+        }
+        catch( MalformedURLException e )
+        {
+          e.printStackTrace();
+        }
+        list.add( new WFSLayer( qName, title, url ) );
       }
       m_layers = list.toArray( new IWFSLayer[list.size()] );
     }
@@ -156,4 +166,5 @@ public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
   {
     return m_capabilities.getCapability().getRequest().getGetFeature().getResultFormat();
   }
+
 }

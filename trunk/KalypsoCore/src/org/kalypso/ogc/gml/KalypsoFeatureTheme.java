@@ -76,37 +76,23 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final HashMap<KalypsoUserStyle, StyleDisplayMap> m_styleDisplayMap = new HashMap<KalypsoUserStyle, StyleDisplayMap>();
 
-  private final IFeatureType m_featureType;
+  private IFeatureType m_featureType = null;
 
-  protected final FeatureList m_featureList;
+  protected FeatureList m_featureList = null;
 
   private final IFeatureSelectionManager m_selectionManager;
+
+  private final String m_featurePath;
 
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager )
   {
     super( name );
 
     m_workspace = workspace;
+    m_featurePath = featurePath;
     m_selectionManager = selectionManager;
 
-    final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
-    if( featureFromPath instanceof FeatureList )
-    {
-      m_featureType = workspace.getFeatureTypeFromPath( featurePath );
-      m_featureList = (FeatureList) featureFromPath;
-    }
-    else if( featureFromPath instanceof Feature )
-    {
-      m_featureList = new SplitSort( null, null );
-      m_featureList.add( featureFromPath );
-      m_featureType = ((Feature) featureFromPath).getFeatureType();
-    }
-    else
-    {
-      m_featureList = new SplitSort( null, null );
-      m_featureType = null;
-      // throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
-    }
+    m_featureType = getFeatureType();
 
     m_workspace.addModellListener( this );
   }
@@ -134,9 +120,54 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_workspace;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
+   */
   public IFeatureType getFeatureType( )
   {
+    init();
     return m_featureType;
+  }
+
+  public void init( )
+  {
+    if( m_featureType != null )
+      return; // allready initialized
+    final IFeatureType ft;
+    final FeatureList fl;
+
+    final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
+    if( featureFromPath instanceof FeatureList )
+    {
+      fl = (FeatureList) featureFromPath;
+      // guess featureType:
+      if( !fl.isEmpty() )
+      {
+        final Object object = fl.get( 0 );
+        if( object instanceof Feature )
+          ft = ((Feature) object).getFeatureType();
+        else
+          ft = null;
+      }
+      else
+        ft = null;
+    }
+    else if( featureFromPath instanceof Feature )
+    {
+      fl = new SplitSort( null, null );
+      fl.add( featureFromPath );
+      ft = ((Feature) featureFromPath).getFeatureType();
+    }
+    else
+    {
+      fl = new SplitSort( null, null );
+      ft = null;
+      // throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
+    }
+    m_featureList = fl;
+    m_featureType = ft;
+    // TODO change concept to support multiple featuretypes ...
+
   }
 
   /**

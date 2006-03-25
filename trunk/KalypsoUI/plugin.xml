@@ -54,6 +54,14 @@
             id="org.kalypso.ui.editor.FeatureEditor">
       </editor>
       <editor
+            class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor"
+            contributorClass="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditorActionBarContributor"
+            default="true"
+            extensions="xsd"
+            icon="icons/sample.gif"
+            id="org.kalypso.ogc.gml.editor.GMLSchemaEditor"
+            name="GMLSchemaEditor"/>
+      <editor
             name="%Extension.Editor.GML"
             default="true"
             extensions="gmv"

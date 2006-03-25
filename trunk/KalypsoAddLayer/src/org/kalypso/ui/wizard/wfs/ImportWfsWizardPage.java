@@ -41,22 +41,25 @@
 package org.kalypso.ui.wizard.wfs;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.deegree.services.wfs.capabilities.WFSCapabilities;
-import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -72,7 +75,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -81,6 +83,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.wfs.IWFSCapabilities;
+import org.kalypso.ogc.wfs.IWFSLayer;
+import org.kalypso.ogc.wfs.WFSUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.filterencoding.Filter;
 
@@ -107,15 +112,15 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected static final String bufferDefault = "10";
 
-  private HashMap<String, IFeatureType> m_featureTypes = new HashMap<String, IFeatureType>();
+  // private HashMap<String, IFeatureType> m_featureTypes = new HashMap<String, IFeatureType>();
 
-  private List m_listLeftSide;
+  private ListViewer m_listLeftSide;
 
   private Button m_addLayer;
 
   private Button m_removeLayer;
 
-  private List m_listRightSide;
+  private ListViewer m_listRightSide;
 
   private Group m_layerGroup;
 
@@ -129,17 +134,17 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Label m_labelUrl;
 
-  private static final int MIN_LIST_WITH = 150;
+  // private static final int MIN_LIST_WITH = 150;
+  //
+  // private static final int MIN_DIALOG_WIDTH = 400;
+  //
+  // private static final int MIN_LIST_HIGHT = 150;
 
-  private static final int MIN_DIALOG_WIDTH = 400;
-
-  private static final int MIN_LIST_HIGHT = 150;
-
-  private WFSCapabilities m_wfsCapabilites = null;
+  private IWFSCapabilities m_wfsCapabilites = null;
 
   private Button m_addFilterButton;
 
-  private HashMap<Object, Filter> m_filter = new HashMap<Object, Filter>();
+  private HashMap<IWFSLayer, Filter> m_filter = new HashMap<IWFSLayer, Filter>();
 
   private final SelectionListener m_urlSelectionListener = new SelectionListener()
   {
@@ -208,10 +213,10 @@ public class ImportWfsWizardPage extends WizardPage
     }
   };
 
-  private final SelectionListener m_leftSelectionListener = new SelectionAdapter()
+  private final ISelectionChangedListener m_leftSelectionListener = new ISelectionChangedListener()
   {
-    @Override
-    public void widgetSelected( final SelectionEvent e )
+
+    public void selectionChanged( SelectionChangedEvent event )
     {
       updateButtons();
     }
@@ -244,18 +249,12 @@ public class ImportWfsWizardPage extends WizardPage
     }
   };
 
-  private final SelectionListener m_rightSelectionListener = new SelectionAdapter()
+  private final ISelectionChangedListener m_rightSelectionListener = new ISelectionChangedListener()
   {
-    @Override
-    public void widgetSelected( SelectionEvent e )
+    public void selectionChanged( SelectionChangedEvent event )
     {
       updateButtons();
-    }
 
-    @Override
-    public void widgetDefaultSelected( SelectionEvent e )
-    {
-      updateButtons();
     }
   };
 
@@ -267,16 +266,48 @@ public class ImportWfsWizardPage extends WizardPage
     }
   };
 
+  final static ILabelProvider labelProvider = new LabelProvider()
+  {
+    @Override
+    public String getText( Object element )
+    {
+      if( element instanceof IWFSLayer )
+        return ((IWFSLayer) element).getTitle();
+      return "...";
+    }
+  };
+
+  final static IStructuredContentProvider contentProvider = new IStructuredContentProvider()
+  {
+
+    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+    {
+      // TODO Auto-generated method stub
+    }
+
+    public void dispose( )
+    {
+      // TODO Auto-generated method stub
+    }
+
+    public Object[] getElements( Object input )
+    {
+      if( input instanceof List )
+        return ((List) input).toArray();
+      return null;
+    }
+  };
+
   private Composite m_leftsideButtonC;
 
-  private Label m_authLabel;
-
-  private final IMapModell m_mapModel;
+  // private Label m_authLabel;
+  //
+  // private final IMapModell m_mapModel;
 
   public ImportWfsWizardPage( String pageName, IMapModell model )
   {
     super( pageName );
-    m_mapModel = model;
+    // m_mapModel = model;
     setTitle( "Web Feature Service einbinden" );
     setMessage( "Web Feature Service Daten einbinden." );
     setPageComplete( false );
@@ -285,7 +316,7 @@ public class ImportWfsWizardPage extends WizardPage
   public ImportWfsWizardPage( String pageName, String title, ImageDescriptor titleImage, IMapModell model )
   {
     super( pageName, title, titleImage );
-    m_mapModel = model;
+    // m_mapModel = model;
     setPageComplete( false );
   }
 
@@ -393,18 +424,27 @@ public class ImportWfsWizardPage extends WizardPage
     m_layerGroup.setLayout( gridLayout );
     m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    m_listLeftSide = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    m_listLeftSide.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_listLeftSide.addSelectionListener( m_leftSelectionListener );
+    // = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+    m_listLeftSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    m_listLeftSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_listLeftSide.setLabelProvider( labelProvider );
+    m_listLeftSide.setContentProvider( contentProvider );
+    
+    m_listLeftSide.addSelectionChangedListener( m_leftSelectionListener );
+    // addSelectionListener( m_leftSelectionListener );
 
     m_addLayer = new Button( m_layerGroup, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     m_addLayer.setToolTipText( "Hinzufügen eines Themas zur Kartenansicht" );
     m_addLayer.addSelectionListener( m_addButtonSelectionListener );
     m_addLayer.setEnabled( false );
-    m_listRightSide = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
-    m_listRightSide.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_listRightSide.addSelectionListener( m_rightSelectionListener );
+    m_listRightSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
+    m_listRightSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_listRightSide.setLabelProvider( labelProvider );
+    m_listRightSide.setContentProvider( contentProvider );
+    
+    m_listRightSide.addSelectionChangedListener( m_rightSelectionListener );
     m_leftsideButtonC = new Composite( m_layerGroup, SWT.NULL );
     m_leftsideButtonC.setLayout( new GridLayout() );
     m_leftsideButtonC.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -503,10 +543,10 @@ public class ImportWfsWizardPage extends WizardPage
    */
   public void widgetSelected( SelectionEvent e )
   {
-    Button b;
+    // Button b;
     if( e.widget instanceof Button )
     {
-      b = (Button) e.widget;
+      // b = (Button) e.widget;
       // if( b.equals( getDefault ) )
       // {
       // // allow get was clicked
@@ -555,48 +595,52 @@ public class ImportWfsWizardPage extends WizardPage
     }
   }
 
-  private WFSCapabilities getCapabilites( ) throws MalformedURLException, IOException, Exception
+  private IWFSCapabilities getCapabilites( ) throws MalformedURLException, IOException, Exception
   {
 
-    final URL urlGetCap = new URL( getUrl().toString().trim() + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-    final URLConnection conGetCap = urlGetCap.openConnection();
-    conGetCap.addRequestProperty( "SERVICE", "WFS" );
-    conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-    conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-    InputStream isGetCap = conGetCap.getInputStream();
-    return WFSCapabilitiesFactory.createCapabilities( new InputStreamReader( isGetCap ) );
+    final URL urlGetCap = new URL( getUrl().toString().trim() );
+    // + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+    // final URLConnection conGetCap = urlGetCap.openConnection();
+    // conGetCap.addRequestProperty( "SERVICE", "WFS" );
+    // conGetCap.addRequestProperty( "VERSION", "1.0.0" );
+    // conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
+    return WFSUtilities.getCapabilites( urlGetCap );
+    // InputStream isGetCap = conGetCap.getInputStream();
+    // return WFSCapabilitiesFactory.createCapabilities( new InputStreamReader( isGetCap ) );
   }
 
-  /**
-   * This method returns the layer names in a sorted array
-   * 
-   * @return an array of strings sorted alphabetically
-   */
-  private String[] getLayerNamesFromCapabilities( )
-  {
-    if( m_wfsCapabilites != null )
-    {
-      TreeSet<String> list = new TreeSet<String>();
-      org.deegree.services.wfs.capabilities.FeatureType[] featureTypes = m_wfsCapabilites.getFeatureTypeList().getFeatureTypes();
-      for( int i = 0; i < featureTypes.length; i++ )
-      {
-        list.add( featureTypes[i].getName() );
-      }
-      return list.toArray( new String[list.size()] );
-    }
-    return new String[0];
-  }
+  // /**
+  // * This method returns the layer names in a sorted array
+  // *
+  // * @return an array of strings sorted alphabetically
+  // */
+  // private String[] getLayerNamesFromCapabilities( )
+  // {
+  // if( m_wfsCapabilites != null )
+  // {
+  // final TreeSet<String> list = new TreeSet<String>();
+  // final IWFSLayer[] featureTypes = m_wfsCapabilites.getFeatureTypes();
+  // // org.deegree.services.wfs.capabilities.FeatureType[] featureTypes =
+  // // m_wfsCapabilites.getFeatureTypeList().getFeatureTypes();
+  // for( int i = 0; i < featureTypes.length; i++ )
+  // {
+  // list.add( featureTypes[i].getTitle() );
+  // }
+  // return list.toArray( new String[list.size()] );
+  // }
+  // return new String[0];
+  // }
 
-  public String[] getSelectedFeatureNames( )
-  {
-    return m_listRightSide.getItems();
-  }
+  // public String[] getSelectedFeatureNames( )
+  // {
+  // return m_listRightSide.getItems();
+  // }
 
-  public IFeatureType[] getSelectedFeatureTypes( ) throws Exception
-  {
-    String[] selectedFeatureNames = getSelectedFeatureNames();
-    return getFeatureTypes( selectedFeatureNames );
-  }
+  // public IFeatureType[] getSelectedFeatureTypes( ) throws Exception
+  // {
+  // String[] selectedFeatureNames = getSelectedFeatureNames();
+  // return getFeatureTypes( selectedFeatureNames );
+  // }
 
   public URL getUrl( ) throws MalformedURLException
   {
@@ -610,43 +654,41 @@ public class ImportWfsWizardPage extends WizardPage
    *          name of layer to get the IFeatureType
    * @return returns a hash set of feature type properties that is passed trough <em>clazz</em> parameter.
    */
-  private IFeatureType[] getFeatureTypes( String[] layer )
-
-  {
-    HashSet<IFeatureType> res = new HashSet<IFeatureType>();
-    GMLSchema featureTypeSchema = null;
-    for( int i = 0; i < layer.length; i++ )
-    {
-      final String l = layer[i];
-      if( !m_featureTypes.containsKey( l ) )
-      {
-        try
-        {
-          final URL url = new URL( getUrl().toString().trim() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
-          // featureTypeSchema = GMLSchemaCatalog.getSchema( url );
-          // TODO HACK
-          featureTypeSchema = GMLSchemaCatalog.getSchema( "http://bsu.hamburg.de/huis" );
-          final IFeatureType featureType = featureTypeSchema.getFeatureType( l );
-          if( featureType != null )
-            m_featureTypes.put( l, featureType );
-          else if( l.indexOf( ":" ) >= 0 )
-          {
-            final String hackName = l.replaceAll( "^.+:", "" );
-            m_featureTypes.put( l, featureTypeSchema.getFeatureType( hackName ) );
-          }
-        }
-        catch( Exception e )
-        {
-          setMessage( e.getMessage() );
-          setPageComplete( false );
-        }
-      }
-      final IFeatureType featureType = m_featureTypes.get( l );
-      res.add( featureType );
-    }
-    return res.toArray( new IFeatureType[res.size()] );
-  }
-
+  // private IFeatureType[] getFeatureTypes( String[] layer )
+  //
+  // {
+  // HashSet<IFeatureType> res = new HashSet<IFeatureType>();
+  // GMLSchema featureTypeSchema = null;
+  // for( int i = 0; i < layer.length; i++ )
+  // {
+  // final String l = layer[i];
+  // if( !m_featureTypes.containsKey( l ) )
+  // {
+  // try
+  // {
+  // final URL url = new URL( getUrl().toString().trim() +
+  // "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
+  // featureTypeSchema = GMLSchemaCatalog.getSchema( url );
+  // final IFeatureType featureType = featureTypeSchema.getFeatureType( l );
+  // if( featureType != null )
+  // m_featureTypes.put( l, featureType );
+  // else if( l.indexOf( ":" ) >= 0 )
+  // {
+  // final String hackName = l.replaceAll( "^.+:", "" );
+  // m_featureTypes.put( l, featureTypeSchema.getFeatureType( hackName ) );
+  // }
+  // }
+  // catch( Exception e )
+  // {
+  // setMessage( e.getMessage() );
+  // setPageComplete( false );
+  // }
+  // }
+  // final IFeatureType featureType = m_featureTypes.get( l );
+  // res.add( featureType );
+  // }
+  // return res.toArray( new IFeatureType[res.size()] );
+  // }
   /**
    * @throws Exception,
    *           OperationNotSupportedException
@@ -682,14 +724,13 @@ public class ImportWfsWizardPage extends WizardPage
   {
     m_addLayer.removeSelectionListener( m_addButtonSelectionListener );
     m_removeLayer.removeSelectionListener( m_removeButtonSelectionListener );
-    m_listLeftSide.removeSelectionListener( m_leftSelectionListener );
-    m_listRightSide.removeSelectionListener( m_rightSelectionListener );
+    m_listLeftSide.removeSelectionChangedListener( m_leftSelectionListener );
+    m_listRightSide.removeSelectionChangedListener( m_rightSelectionListener );
   }
 
-  public Filter getFilter( String layerName )
+  public Filter getFilter( IWFSLayer wfsLayer )
   {
-    IFeatureType featureType = getFeatureType( layerName );
-    return m_filter.get( featureType );
+    return m_filter.get( wfsLayer );
   }
 
   protected void reloadServer( )
@@ -717,22 +758,26 @@ public class ImportWfsWizardPage extends WizardPage
       setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes" );
       setPageComplete( false );
     }
-    String[] layerNames = getLayerNamesFromCapabilities();
-    m_listLeftSide.setItems( layerNames );
+    final IWFSLayer[] featureTypes = m_wfsCapabilites.getFeatureTypes();
+    final List<IWFSLayer> list = Arrays.asList( featureTypes );
+    m_listLeftSide.setInput( list );
+    m_listRightSide.setInput( new ArrayList<IWFSLayer>() );
     updateButtons();
   }
 
   protected void addButtonPressed( )
   {
-    String[] selection = m_listLeftSide.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) m_listLeftSide.getSelection();
     if( selection != null )
     {
-      final String[] original = m_listRightSide.getItems();
-      for( int i = 0; i < selection.length; i++ )
+      final Object[] original = selection.toArray();
+      for( int i = 0; i < original.length; i++ )
       {
-        final String item = selection[i];
-        if( !ArrayUtils.contains( original, item ) )
-          m_listRightSide.add( item );
+        IWFSLayer wfsFT = (IWFSLayer) original[i];
+        final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+        input.add( wfsFT );
+        m_listRightSide.add( wfsFT );
+        // if( !ArrayUtils.contains( original, item ) )
       }
       updateButtons();
     }
@@ -740,16 +785,17 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void removeButtonPressed( )
   {
-    String[] selection = m_listRightSide.getSelection();
+    IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
     if( selection != null )
     {
-      String[] list = m_listRightSide.getItems();
-      for( int i = 0; i < selection.length; i++ )
+      Object[] list = selection.toArray();
+      for( int i = 0; i < list.length; i++ )
       {
-        String item = selection[i];
-        if( ArrayUtils.contains( list, item ) )
-          m_listRightSide.remove( item );
-
+        final IWFSLayer wfsFT = (IWFSLayer) list[i];
+        final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+        input.remove( wfsFT );
+        m_listRightSide.remove( wfsFT );
+        // if( ArrayUtils.contains( list, wfsFT ) )
       }
       updateButtons();
     }
@@ -758,33 +804,46 @@ public class ImportWfsWizardPage extends WizardPage
   protected void filterPressed( )
   {
     // the add filter button is only enabled if the selection size == 1
-    IFeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
-    Filter filter = m_filter.get( ft );
+    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final IWFSLayer wfsFT = (IWFSLayer) selection.getFirstElement();
+    final Filter filter = m_filter.get( wfsFT );
+    final IFeatureType ft = wfsFT.getFeatureType();
     final FilterDialog dialog = new FilterDialog( getShell(), ft, null, filter, null, false );
     int open = dialog.open();
     if( open == Window.OK )
     {
-      m_filter.put( ft, dialog.getFilter() );
+      m_filter.put( wfsFT, dialog.getFilter() );
     }
     revalidatePage();
   }
 
   protected void revalidatePage( )
   {
-    setPageComplete( m_listRightSide.getItemCount() > 0 );
+    final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+    setPageComplete( input != null && !input.isEmpty() );
   }
 
   void updateButtons( )
   {
-    m_addFilterButton.setEnabled( m_listRightSide.getSelectionCount() == 1 );
-    m_removeLayer.setEnabled( m_listRightSide.getSelectionCount() > 0 );
-    m_addLayer.setEnabled( m_listLeftSide.getSelectionCount() > 0 );
+
+    m_addFilterButton.setEnabled( ((IStructuredSelection) m_listRightSide.getSelection()).size() == 1 );
+    m_removeLayer.setEnabled( ((IStructuredSelection) m_listRightSide.getSelection()).size() > 0 );
+    m_addLayer.setEnabled( ((IStructuredSelection) m_listLeftSide.getSelection()).size() > 0 );
     revalidatePage();
   }
 
-  private IFeatureType getFeatureType( String layerName )
+  public IWFSLayer[] getChoosenFeatureLayer( )
   {
-    IFeatureType[] featureTypes = getFeatureTypes( new String[] { layerName } );
-    return featureTypes[0];
+    final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+    if( input == null )
+      return new IWFSLayer[0];
+    return input.toArray( new IWFSLayer[input.size()] );
+
   }
+
+  // private IFeatureType getFeatureType( String layerName )
+  // {
+  // IFeatureType[] featureTypes = getFeatureTypes( new String[] { layerName } );
+  // return featureTypes[0];
+  // }
 }

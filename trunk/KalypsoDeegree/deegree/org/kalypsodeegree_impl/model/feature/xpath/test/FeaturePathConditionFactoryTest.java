@@ -38,21 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath.test;
 
-import javax.xml.namespace.QName;
+import junit.framework.TestCase;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree_impl.model.feature.xpath.Cond;
+import org.kalypsodeegree_impl.model.feature.xpath.FeaturePathConditionFactory;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public class FeaturePathConditionFactoryTest extends TestCase
 {
-  public QName getQName( );
+  public void testIt( ) throws Exception
+  {
+    try
+    {
+     
+      FeaturePathConditionFactory factory = new FeaturePathConditionFactory();
+      final String test = "[@fid = 'test' and name() = 'FeatureType' or position() = 3 * ( 5 + 2 )]";
+      System.out.println( "test: " + test );
+      Cond cond = new Cond(test);
+      factory.create( cond);
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
 
-  public String getTitle( );
-
-  public IFeatureType getFeatureType( );
-
+    
+  }
 }

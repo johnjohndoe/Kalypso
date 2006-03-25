@@ -38,21 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypsodeegree_impl.model.feature.xpath;
 
-import javax.xml.namespace.QName;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public interface IWFSLayer
+public interface IFunction
 {
-  public QName getQName( );
 
-  public String getTitle( );
+  public Pattern getPattern( );
 
-  public IFeatureType getFeatureType( );
+  public Object evaluate( GMLWorkspace contectWS, Feature contextFE, IXElement argumentXEelement ) throws FeaturePathException;
+
+  public String getArgument( Matcher matcher, Cond cond );
 
 }

@@ -80,7 +80,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * class for transforming deegree geometries to new coordinate reference systems.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -100,7 +99,6 @@ final public class GeoTransformer
    * Creates a new GeoTransformer object.
    * 
    * @param targetCS
-   * 
    * @throws Exception
    */
   public GeoTransformer( String targetCS ) throws Exception
@@ -114,7 +112,6 @@ final public class GeoTransformer
    * Creates a new GeoTransformer object.
    * 
    * @param targetCS
-   * 
    * @throws Exception
    */
   public GeoTransformer( CoordinateSystem targetCS ) throws Exception
@@ -127,7 +124,6 @@ final public class GeoTransformer
    * Creates a new GeoTransformer object.
    * 
    * @param targetCS
-   * 
    * @throws Exception
    */
   public GeoTransformer( CS_CoordinateSystem targetCS ) throws Exception
@@ -157,7 +153,7 @@ final public class GeoTransformer
   /**
    * returns the target CRS of the <tt>GeoTransformer</tt>
    */
-  public CS_CoordinateSystem getTargetCS()
+  public CS_CoordinateSystem getTargetCS( )
   {
     return targetOGCCS;
   }
@@ -171,33 +167,33 @@ final public class GeoTransformer
 
     ConvenienceTransformFactory ctf = null;
     ctf = ConvenienceTransformFactory.getInstance();
-    if( cs.equals( targetCS ) )
+    if( cs == null || cs.equals( targetCS ) )
       return geo;
     MathTransform trans = ctf.getTransform( cs, targetCS );
 
     if( geo instanceof GM_Point )
     {
-      geo = transformPoint( (GM_Point)geo, trans );
+      geo = transformPoint( (GM_Point) geo, trans );
     }
     else if( geo instanceof GM_Curve )
     {
-      geo = transformCurve( (GM_Curve)geo, trans );
+      geo = transformCurve( (GM_Curve) geo, trans );
     }
     else if( geo instanceof GM_Surface )
     {
-      geo = transformSurface( (GM_Surface)geo, trans );
+      geo = transformSurface( (GM_Surface) geo, trans );
     }
     else if( geo instanceof GM_MultiPoint )
     {
-      geo = transformMultiPoint( (GM_MultiPoint)geo, trans );
+      geo = transformMultiPoint( (GM_MultiPoint) geo, trans );
     }
     else if( geo instanceof GM_MultiCurve )
     {
-      geo = transformMultiCurve( (GM_MultiCurve)geo, trans );
+      geo = transformMultiCurve( (GM_MultiCurve) geo, trans );
     }
     else if( geo instanceof GM_MultiSurface )
     {
-      geo = transformMultiSurface( (GM_MultiSurface)geo, trans );
+      geo = transformMultiSurface( (GM_MultiSurface) geo, trans );
     }
 
     return geo;
@@ -226,7 +222,7 @@ final public class GeoTransformer
     double[] dout = new double[din.length];
     try
     {
-      //TODO 3.dimension
+      // TODO 3.dimension
       if( din.length < 3 )
         trans.transform( din, 0, dout, 0, din.length - 1 );
       else
@@ -346,7 +342,7 @@ final public class GeoTransformer
 
     for( int i = 0; i < geo.getSize(); i++ )
     {
-      curves[i] = (GM_Curve)transformCurve( geo.getCurveAt( i ), trans );
+      curves[i] = (GM_Curve) transformCurve( geo.getCurveAt( i ), trans );
     }
 
     geo = GeometryFactory.createGM_MultiCurve( curves );
@@ -366,7 +362,7 @@ final public class GeoTransformer
 
     for( int i = 0; i < geo.getSize(); i++ )
     {
-      surfaces[i] = (GM_Surface)transformSurface( geo.getSurfaceAt( i ), trans );
+      surfaces[i] = (GM_Surface) transformSurface( geo.getSurfaceAt( i ), trans );
     }
 
     geo = GeometryFactory.createGM_MultiSurface( surfaces );
@@ -388,7 +384,7 @@ final public class GeoTransformer
       double[] din = pos[k].getAsArray();
       double[] dout = new double[din.length];
 
-      //TODO 3.dimension
+      // TODO 3.dimension
       if( din.length < 3 )
         trans.transform( din, 0, dout, 0, din.length - 1 );
       else
@@ -415,7 +411,6 @@ final public class GeoTransformer
    * @param envelope
    * @param sourceCRS
    *          CRS of the envelope
-   * 
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, String sourceCRS ) throws Exception
@@ -436,7 +431,6 @@ final public class GeoTransformer
    * @param envelope
    * @param sourceCRS
    *          CRS of the envelope
-   * 
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, CoordinateSystem sourceCRS ) throws Exception
@@ -456,23 +450,22 @@ final public class GeoTransformer
    * @param envelope
    * @param sourceCRS
    *          CRS of the envelope
-   * 
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, CS_CoordinateSystem sourceCRS ) throws Exception
   {
-    //    Debug.debugMethodBegin( this, "transformPositions" );
+    // Debug.debugMethodBegin( this, "transformPositions" );
     //
     final GM_Surface asSurface = GeometryFactory.createGM_Surface( envelope, sourceCRS );
     return transform( asSurface ).getEnvelope();
-    //    GM_Point min = GeometryFactory.createGM_Point( envelope.getMin().getX(), envelope.getMin().getY(), sourceCRS );
-    //    GM_Point max = GeometryFactory.createGM_Point( envelope.getMax().getX(), envelope.getMax().getY(), sourceCRS );
-    //    min = (GM_Point)transform( min );
-    //    max = (GM_Point)transform( max );
-    //    // create bounding box with coordinates in the EPSG:4326 reference system
-    //    envelope = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY() );
+    // GM_Point min = GeometryFactory.createGM_Point( envelope.getMin().getX(), envelope.getMin().getY(), sourceCRS );
+    // GM_Point max = GeometryFactory.createGM_Point( envelope.getMax().getX(), envelope.getMax().getY(), sourceCRS );
+    // min = (GM_Point)transform( min );
+    // max = (GM_Point)transform( max );
+    // // create bounding box with coordinates in the EPSG:4326 reference system
+    // envelope = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY() );
     //
-    //    Debug.debugMethodEnd();
-    //    return envelope;
+    // Debug.debugMethodEnd();
+    // return envelope;
   }
 }

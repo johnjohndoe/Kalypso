@@ -30,6 +30,8 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -44,6 +46,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -75,7 +78,7 @@ public class WFSUtilities
     }
     catch( Exception e )
     {
-      e.printStackTrace();
+      // e.printStackTrace();
       multiExcepts.addException( e );
     }
     try
@@ -185,12 +188,13 @@ public class WFSUtilities
         // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
 
-        // // Hack for testing
+        // Hack for testing
         // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
-        // final OutputStream outStream = new FileOutputStream( tmpFile );
-        // StreamUtilities.streamCopy( inputStream, outStream );
-        // IOUtils.closeQuietly( inputStream );
-        // IOUtils.closeQuietly( outStream );
+//        final File tmpFile = new File( "C:/TMP/gml.gml" );
+//        final OutputStream outStream = new FileOutputStream( tmpFile );
+//        StreamUtilities.streamCopy( inputStream, outStream );
+//        IOUtils.closeQuietly( inputStream );
+//        IOUtils.closeQuietly( outStream );
 
         final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
