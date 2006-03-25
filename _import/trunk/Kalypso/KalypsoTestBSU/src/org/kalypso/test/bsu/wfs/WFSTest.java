@@ -39,7 +39,6 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
-import org.kalypso.gmlschema.GMLSchemaTest;
 import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSUtilities;
@@ -117,9 +116,9 @@ public class WFSTest extends TestCase
   public void testXPlanung( )
   {
     // PROXY litzu135.lit.hamburg.de:8080
-    System.setProperty( "proxySet", "true" );
-    System.setProperty( "proxyHost", "litzu135.lit.hamburg.de" );
-    System.setProperty( "proxyPort", "8080" );
+    // System.setProperty( "proxySet", "true" );
+    // System.setProperty( "proxyHost", "litzu135.lit.hamburg.de" );
+    // System.setProperty( "proxyPort", "8080" );
 
     final String baseURLAsString = "http://212.23.140.234/xplanung/ogcwebservice";
     final List<QName> ignoreFT = new ArrayList<QName>();

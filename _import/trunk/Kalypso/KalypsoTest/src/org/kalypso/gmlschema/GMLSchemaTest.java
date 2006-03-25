@@ -100,20 +100,17 @@ public class GMLSchemaTest extends TestCase
   {
     try
     {
+
       loadAndTestSchema( // 
-          getClass().getResource( "resources/plangebiet/plangebiet.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/plangebiet/plangebiet.txt" ) // testresource to compare
-          , false );
-//
-//      loadAndTestSchema( // 
-//          getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
-//          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
-//          , false );
-//
-//      loadAndTestSchema( // 
 //          getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
-//          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
-//          , false );
+          getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
+          getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
+          , false );
+
+      loadAndTestSchema( // 
+          getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
+          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+          , false );
 
     }
     catch( Exception e )
@@ -126,14 +123,14 @@ public class GMLSchemaTest extends TestCase
   public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
     System.out.println( " test " + schemaLocationURL.toString() );
-    final GMLSchema schema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
+    final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
 
-    if( schema != null )
+    if( gmlSchema != null )
     {
       final StringBuffer buffer = new StringBuffer();
       final ITreeContentProviderVisitor visitor = new PrintVisitor( new GMLSchemaLabelProvider(), buffer );
-      final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( schema, true );
-      provider.accept( schema, visitor, 0 );
+      final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
+      provider.accept( gmlSchema, visitor, 0 );
       if( writeCompareFile )
       {
         File file = null;
@@ -152,7 +149,7 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        System.out.println( buffer.toString() );
+//        System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }

@@ -34,7 +34,6 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -45,12 +44,15 @@ public class DSSUrlCatalog extends AbstractUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
+  @Override
   protected void fillCatalog( Class myClass, Map catalog )
   {
-    //   these are defines in UrlCatalogNA now.
-    catalog.put( "http://www.xplanung.de/bplangml", getClass()
-        .getResource( "resources/v0.1/BPlan-Minimal_measures.xsd" ) );
-    //    catalog.put( "http://www.tuhh.de/kalypsoDSS", getClass().getResource( "resources/v0.1/measures.xsd" ) );
+    // these are defines in UrlCatalogNA now.
+    // catalog.put( "http://www.xplanung.de/bplangml", getClass()
+    // .getResource( "resources/v0.1/BPlan-Minimal_measures.xsd" ) );
+    catalog.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ) );
+
+    // catalog.put( "http://www.tuhh.de/kalypsoDSS", getClass().getResource( "resources/v0.1/measures.xsd" ) );
   }
 
 }
