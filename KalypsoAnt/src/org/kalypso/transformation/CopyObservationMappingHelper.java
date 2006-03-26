@@ -54,10 +54,8 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * Helper class to generate a gml that can be used for converting timeseries. The generated gml includes a list map
  * features. Each map feature has a input-TimeseriesLink and output-TimeseriesLink. The resulting gml can be used as
- * input for the CopyObservationTask.
- * 
- * TODO also add a geometry property to the map feature, so that this gml can be also used with a mapview (e.g. in a
- * wizard), where the user can select the timeseries from the map.
+ * input for the CopyObservationTask. TODO also add a geometry property to the map feature, so that this gml can be also
+ * used with a mapview (e.g. in a wizard), where the user can select the timeseries from the map.
  * 
  * @author doemming
  */
@@ -70,7 +68,6 @@ public class CopyObservationMappingHelper
   public static final String RESULT_TS_OUT_PROP = "outObservationLink";
 
   /**
-   * 
    * @param context
    *          that should be used by the workspace
    * @return GMLWorkspace that represents the mapping
@@ -82,12 +79,11 @@ public class CopyObservationMappingHelper
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
     final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
-    final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT, true );
-    return new GMLWorkspace_Impl(schema, schema.getAllFeatureTypes(), rootFE, context, null);
+    final Feature rootFE = FeatureFactory.createFeature( null, "1", mapColFT, true );
+    return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null );
   }
 
   /**
-   * 
    * @param workspace
    *          the mapping will be added to the given workspace, usually a workspace created by this class
    * @param inHref
@@ -101,20 +97,21 @@ public class CopyObservationMappingHelper
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
     final IFeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
-    final Feature mapFE = workspace.createFeature( mapFT );
+    final Feature rootFeature = workspace.getRootFeature();
+    final Feature mapFE = workspace.createFeature( rootFeature, mapFT );
     // in
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     inLink.setHref( inHref );
-    final IPropertyType pt = FeatureHelper.getPT(mapFE, CopyObservationMappingHelper.RESULT_TS_IN_PROP);
-    mapFE.setProperty(pt, inLink);
+    final IPropertyType pt = FeatureHelper.getPT( mapFE, CopyObservationMappingHelper.RESULT_TS_IN_PROP );
+    mapFE.setProperty( pt, inLink );
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
-    final IPropertyType pt2 = FeatureHelper.getPT(mapFE, RESULT_TS_OUT_PROP);
-    mapFE.setProperty( pt2,outLink );
-    final IRelationType pt3 = (IRelationType) FeatureHelper.getPT(mapFE, RESULT_LIST_PROP);
-    workspace.addFeatureAsComposition( workspace.getRootFeature(), pt3, 0, mapFE );
+    final IPropertyType pt2 = FeatureHelper.getPT( mapFE, RESULT_TS_OUT_PROP );
+    mapFE.setProperty( pt2, outLink );
+    final IRelationType pt3 = (IRelationType) FeatureHelper.getPT( mapFE, RESULT_LIST_PROP );
+    workspace.addFeatureAsComposition( rootFeature, pt3, 0, mapFE );
   }
 
   /**
@@ -136,8 +133,7 @@ public class CopyObservationMappingHelper
    * @param end
    *          end of forecast periode
    */
-  public static void runMapping( final GMLWorkspace workspace, final UrlResolver resolver, final URL srcContext,
-      final ILogger logger, Date from, Date forecastStart, Date end, boolean keepForecast )
+  public static void runMapping( final GMLWorkspace workspace, final UrlResolver resolver, final URL srcContext, final ILogger logger, Date from, Date forecastStart, Date end, boolean keepForecast )
   {
     final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter( stringWriter );
@@ -147,18 +143,14 @@ public class CopyObservationMappingHelper
       // Note: the order is important for the ForecastFilter!
       // so we put the target-obs in the first place since it is
       // the first element that will be backed by the forecast-filter
-      sources = new CopyObservationFeatureVisitor.Source[]
-      {
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ), // forecast
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ), // forecast
           new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ) // measured
       };
     }
     else
-      sources = new CopyObservationFeatureVisitor.Source[]
-      { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
       };
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer, null );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
     logger.log( stringWriter.toString() );
   }

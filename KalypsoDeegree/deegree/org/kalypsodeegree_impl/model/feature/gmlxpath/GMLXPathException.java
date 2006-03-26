@@ -38,15 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 /**
+ * Exception that can be thrown when creating or processing invalid GMLXPathes
+ * 
  * @author doemming
  */
-public interface IXElement
+public class GMLXPathException extends Exception
 {
-  public Object evaluate(GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException;
+
+  public GMLXPathException( )
+  {
+    super();
+  }
+
+  public GMLXPathException( String message )
+  {
+
+    super( message );
+  }
+
+  public GMLXPathException( Throwable throwable )
+  {
+    super( throwable );
+  }
+
+  public GMLXPathException( String message, Throwable throwable )
+  {
+    super( message, throwable );
+  }
 }

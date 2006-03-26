@@ -38,36 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
+
+import java.util.regex.Pattern;
 
 /**
+ * Interface representing a GMLXPathOperation
+ * 
  * @author doemming
  */
-public abstract class MathOperation extends Operation implements IOperation
+public interface IGMLXPathOperation
 {
-  public MathOperation( String pattern )
-  {
-    super( pattern );
-  }
 
-  public Object operate( Object value1, Object value2 ) throws FeaturePathException
-  {
-    final double n1;
-    if( value1 instanceof Number )
-      n1 = ((Number) value1).doubleValue();
-    else if( value1 instanceof String )
-      n1 = Double.valueOf( (String) value1 );
-    else
-      throw new FeaturePathException();
-    final double n2;
-    if( value2 instanceof Number )
-      n2 = ((Number) value2).doubleValue();
-    else if( value1 instanceof String )
-      n2 = Double.valueOf( (String) value2 );
-    else
-      throw new FeaturePathException();
-    return mathOperate( n1, n2 );
-  }
+  public Pattern getPattern( );
 
-  public abstract Object mathOperate( double n1, double n2 );
+  public Object operate( Object value1, Object value2 ) throws GMLXPathException;
 }

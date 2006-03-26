@@ -48,9 +48,9 @@ public final class FeatureHelperTest extends TestCase
     final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( new QName( NS, "sourceFT" ), sourceProps );
 
     // zwei features erzeugen
-    final Feature sourcefeature = FeatureFactory.createFeature( "source", sourceFTP, new Object[] { "Hallo", new Double( 3.14 ), new Integer( 1 ) } );
+    final Feature sourcefeature = FeatureFactory.createFeature( null, "source", sourceFTP, new Object[] { "Hallo", new Double( 3.14 ), new Integer( 1 ) } );
 
-    final Feature targetfeature = FeatureFactory.createDefaultFeature( "test", sourceFTP, false );
+    final Feature targetfeature = FeatureFactory.createDefaultFeature( null, "test", sourceFTP, false );
 
     // mapping erzeugen
     final Properties mapping = new Properties();

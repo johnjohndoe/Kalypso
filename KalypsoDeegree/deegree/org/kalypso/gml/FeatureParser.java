@@ -64,7 +64,11 @@ public class FeatureParser
     m_provider = provider;
   }
 
-  public void createFeature( String uri, String localName, Attributes atts )
+  /**
+   * @param parent
+   *          feature or workspace
+   */
+  public void createFeature( Object parent, String uri, String localName, Attributes atts )
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );
@@ -72,16 +76,16 @@ public class FeatureParser
     // GMLContentHandler.print( atts );
     // TODO check for alternatives xml:id gml:fid
     final int fIDIndex = atts.getIndex( "fid" );
-    final int gmlIDindex = atts.getIndex(NS.GML2, "id");
-//    final int gmlIDindex = atts.getIndex("id");
+    final int gmlIDindex = atts.getIndex( NS.GML2, "id" );
+    // final int gmlIDindex = atts.getIndex("id");
     if( fIDIndex >= 0 )
       fid = atts.getValue( fIDIndex );
-    else if(gmlIDindex>=0)
+    else if( gmlIDindex >= 0 )
       fid = atts.getValue( gmlIDindex );
     else
       fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
-                  // conflict with other ids
-    final Feature feature = new Feature_Impl( featureType, fid, false );
+    // conflict with other ids
+    final Feature feature = new Feature_Impl( parent, featureType, fid, false );
     // System.out.println( " | created Feature " + fid + " " + featureType.getQName() );
     m_stackFE.push( feature );
   }

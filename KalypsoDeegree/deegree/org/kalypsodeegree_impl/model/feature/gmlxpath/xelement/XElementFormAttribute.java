@@ -38,52 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * XElement to handle attribute xpath elements<br>
+ * 
  * @author doemming
  */
-public class XPathConditionFeatureVisitor implements FeatureVisitor
+public class XElementFormAttribute extends AbstractXElement
 {
+  private String m_attribute;
 
-  private final IXElement m_conditionXElement;
-
-  private final FeatureVisitor m_visitor;
-
-  private final GMLWorkspace m_gmlWorkspace;
-
-  public XPathConditionFeatureVisitor( GMLWorkspace gmlWorkspace, IXElement conditionXElement, FeatureVisitor visitor )
+  public XElementFormAttribute( String condition )
   {
-    m_gmlWorkspace = gmlWorkspace;
-    m_conditionXElement = conditionXElement;
-    // TODO Auto-generated constructor stub
-    m_visitor = visitor;
+    m_attribute = condition.replaceFirst( "@", "" ).trim();
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
-  public boolean visit( Feature f )
+  @Override
+  public Object evaluateOther( Object context, boolean featureTypeLevel )
   {
-    try
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateFeature(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public Object evaluateFeature( Feature contextFE, boolean featureTypeLevel )
+  {
+    if( featureTypeLevel )
     {
-      if( (Boolean) m_conditionXElement.evaluate( m_gmlWorkspace, f ) )
-      {
-        return m_visitor.visit( f );
-      }
+      if( "fid".equals( m_attribute ) )
+        return contextFE.getId();
+      if( "id".equals( m_attribute ) )
+        return contextFE.getId();
     }
-    catch( FeaturePathException e )
-    {
-      // TODO Auto-generated catch block
-      // invalid xpath-condition
-      e.printStackTrace();
-    }
-    // TODO check return: true or false
-    return true;
+    // TODO once units of measure are supported here, its here to implement it for xPath
+    return "";
   }
 
 }

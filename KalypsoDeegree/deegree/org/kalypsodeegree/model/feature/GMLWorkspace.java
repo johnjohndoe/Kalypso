@@ -97,7 +97,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public String getSchemaNamespace();
 
-  public Feature createFeature( IFeatureType type );
+  public Feature createFeature(Feature parent, IFeatureType type );
 
   public Feature getParentFeature( Feature toFindParentFrom );
 

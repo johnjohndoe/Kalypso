@@ -38,24 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFormAttribute;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFormPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFormString;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFromFunction;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.XElementFromOperation;
 
 /**
+ * Factory to create XElements that a part of complied GMLXPathes
+ * 
  * @author doemming
  */
-public class FeaturePathConditionFactory
+public class XElementFactory
 {
-  private IOperation[] m_operations;
+  private IGMLXPathOperation[] m_operations;
 
-  final IFunction[] m_functions;
+  final IGMLXPathFunction[] m_functions;
 
-  public FeaturePathConditionFactory( )
+  public XElementFactory( )
   {
 
     // 12 +
@@ -73,7 +81,7 @@ public class FeaturePathConditionFactory
     // 2 or
     // 1 div
     // 0 mod
-    final IOperation op1 = new Operation( "(.+)( mod )(.+)" )
+    final IGMLXPathOperation op1 = new GMLXPathOperation( "(.+)( mod )(.+)" )
     {
       // "mod";
       public Object operate( Object value1, Object value2 )
@@ -83,7 +91,7 @@ public class FeaturePathConditionFactory
       }
     };
 
-    final IOperation op2 = new Operation( "(.+)( div )(.+)" )
+    final IGMLXPathOperation op2 = new GMLXPathOperation( "(.+)( div )(.+)" )
     {
       public Object operate( Object value1, Object value2 )
       {
@@ -92,7 +100,7 @@ public class FeaturePathConditionFactory
       }
     };
 
-    final IOperation op3 = new Operation( "(.+)( or )(.+)" )
+    final IGMLXPathOperation op3 = new GMLXPathOperation( "(.+)( or )(.+)" )
     {
       public Object operate( Object value1, Object value2 )
       {
@@ -110,7 +118,7 @@ public class FeaturePathConditionFactory
       }
     };
 
-    final IOperation op4 = new Operation( "(.+)( and )(.+)" )
+    final IGMLXPathOperation op4 = new GMLXPathOperation( "(.+)( and )(.+)" )
     {
       public Object operate( Object value1, Object value2 )
       {
@@ -127,7 +135,7 @@ public class FeaturePathConditionFactory
         return b1 && b2;
       }
     };
-    final IOperation op5 = new MathOperation( "(.+)( >= )(.+)" )
+    final IGMLXPathOperation op5 = new GMLXPathMathOperation( "(.+)( >= )(.+)" )
     {
 
       @Override
@@ -137,7 +145,7 @@ public class FeaturePathConditionFactory
       }
 
     };
-    final IOperation op6 = new MathOperation( "(.+)( <= )(.+)" )
+    final IGMLXPathOperation op6 = new GMLXPathMathOperation( "(.+)( <= )(.+)" )
     {
 
       @Override
@@ -146,7 +154,7 @@ public class FeaturePathConditionFactory
         return n1 <= n2;
       }
     };
-    final IOperation op7 = new MathOperation( "(.+)( > )(.+)" )
+    final IGMLXPathOperation op7 = new GMLXPathMathOperation( "(.+)( > )(.+)" )
     {
 
       @Override
@@ -155,7 +163,7 @@ public class FeaturePathConditionFactory
         return n1 > n2;
       }
     };
-    final IOperation op8 = new MathOperation( "(.+)( < )(.+)" )
+    final IGMLXPathOperation op8 = new GMLXPathMathOperation( "(.+)( < )(.+)" )
     {
 
       @Override
@@ -164,11 +172,11 @@ public class FeaturePathConditionFactory
         return n1 >= n2;
       }
     };
-    final IOperation op9 = new MathOperation( "(.+)( != )(.+)" )
+    final IGMLXPathOperation op9 = new GMLXPathMathOperation( "(.+)( != )(.+)" )
     {
 
       @Override
-      public Object operate( Object value1, Object value2 ) throws FeaturePathException
+      public Object operate( Object value1, Object value2 ) throws GMLXPathException
       {
         if( value1 instanceof String && value2 instanceof String )
           return !value1.equals( value2 );
@@ -183,11 +191,11 @@ public class FeaturePathConditionFactory
         return n1 != n2;
       }
     };
-    final IOperation op10 = new MathOperation( "(.+)( = )(.+)" )
+    final IGMLXPathOperation op10 = new GMLXPathMathOperation( "(.+)( = )(.+)" )
     {
 
       @Override
-      public Object operate( Object value1, Object value2 ) throws FeaturePathException
+      public Object operate( Object value1, Object value2 ) throws GMLXPathException
       {
         if( value1 instanceof String && value2 instanceof String )
           return value1.equals( value2 );
@@ -202,7 +210,7 @@ public class FeaturePathConditionFactory
         return n1 == n2;
       }
     };
-    IOperation op11 = new MathOperation( "(.+)( \\\\* )(.+)" )
+    IGMLXPathOperation op11 = new GMLXPathMathOperation( "(.+)( \\\\* )(.+)" )
     {
 
       @Override
@@ -212,7 +220,7 @@ public class FeaturePathConditionFactory
       }
 
     };
-    IOperation op12 = new MathOperation( "(.+)( - )(.+)" )
+    IGMLXPathOperation op12 = new GMLXPathMathOperation( "(.+)( - )(.+)" )
     {
       @Override
       public Object mathOperate( double n1, double n2 )
@@ -220,7 +228,7 @@ public class FeaturePathConditionFactory
         return n1 - n2;
       }
     };
-    IOperation op13 = new MathOperation( "(.+)( \\\\+ )(.+)" )
+    IGMLXPathOperation op13 = new GMLXPathMathOperation( "(.+)( \\\\+ )(.+)" )
     {
       @Override
       public Object mathOperate( double n1, double n2 )
@@ -230,81 +238,87 @@ public class FeaturePathConditionFactory
 
     };
 
-    final IFunction f1 = new Function( "not" )
+    final IGMLXPathFunction f1 = new AbstractGMLXPathFunction( "not" )
     {
 
-      public Boolean evaluate( GMLWorkspace contextWS, Feature contextFE, IXElement element ) throws FeaturePathException
+      public Boolean evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
-        Object object = element.evaluate( contextWS, contextFE );
+        Object object = argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
         if( object instanceof String )
           return !Boolean.parseBoolean( (String) object );
         return null;
       }
     };
-    final IFunction f2 = new Function( "name" )
+    final IGMLXPathFunction f2 = new AbstractGMLXPathFunction( "name" )
     {
 
-      public String evaluate( GMLWorkspace contextWS, Feature contextFE, IXElement element ) throws FeaturePathException
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         final Feature fe;
-        if( element != null )
-          fe = (Feature) element.evaluate( contextWS, contextFE );
+        if( argumentXEelement != null )
+          fe = (Feature) argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
         else
           fe = contextFE;
         return fe.getFeatureType().getQName().getLocalPart();
       }
     };
-    final IFunction f3 = new Function( "position" )
+    final IGMLXPathFunction f3 = new AbstractGMLXPathFunction( "position" )
     {
-
-      public String evaluate( GMLWorkspace contextWS, Feature context, IXElement element )
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel )
       {
         throw new UnsupportedOperationException();
       }
     };
-    final IFunction f4 = new Function( "id" )
+    final IGMLXPathFunction f4 = new AbstractGMLXPathFunction( "id" )
     {
 
-      public Object evaluate( GMLWorkspace contextWS, Feature contextFE, IXElement element ) throws FeaturePathException
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
-        final String fId = (String) element.evaluate( contextWS, contextFE );
-        return contextWS.getFeature( fId );
+        final GMLWorkspace workspace = contextFE.getWorkspace();
+        final String fId = (String) argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
+        final Feature feature = workspace.getFeature( fId );
+        return feature;
       }
     };
 
-    m_operations = new IOperation[] { op1, op2, op3, op4, op5, op6, op7, op8, op9, op10, op11, op12, op13 };
-    m_functions = new IFunction[] { f1, f2, f3, f4 };
+    m_operations = new IGMLXPathOperation[] { op1, op2, op3, op4, op5, op6, op7, op8, op9, op10, op11, op12, op13 };
+    m_functions = new IGMLXPathFunction[] { f1, f2, f3, f4 };
   }
 
-  public IXElement create( final Cond cond )
+  public IXElement create( final String string )
   {
+    final GMLXPathString cond = new GMLXPathString( string );
+    return create( cond );
+  }
+
+  public IXElement create( final GMLXPathString cond )
+  {
+
     final String condition = cond.getCond();
     final String marked = cond.getMarked();
     // operations...
     for( int i = 0; i < m_operations.length; i++ )
     {
-      final IOperation operation = m_operations[i];
+      final IGMLXPathOperation operation = m_operations[i];
       final Pattern pattern = operation.getPattern();
       final Matcher matcher = pattern.matcher( marked );
       if( matcher.matches() )
       {
-        final int gc = matcher.groupCount(); // TODO sollte 4 sein
         final String preMarked = matcher.group( 1 );
         final String pre = condition.substring( 0, preMarked.length() );
-        final Cond preCond = new Cond( pre );
         // matcher.group(2) is operation
         final String postMarked = matcher.group( 3 );
         final String post = condition.substring( condition.length() - postMarked.length() );
-        final Cond postCond = new Cond( post );
-        final IXElement preXElement = create( preCond );
-        final IXElement postXElement = create( postCond );
+
+        final IXElement preXElement = create( pre );
+        final IXElement postXElement = create( post );
         return new XElementFromOperation( preXElement, operation, postXElement );
       }
     }
     // functions
     for( int i = 0; i < m_functions.length; i++ )
     {
-      final IFunction function = m_functions[i];
+      final IGMLXPathFunction function = m_functions[i];
       final Pattern p = function.getPattern();
       final Matcher matcher = p.matcher( marked );
       if( matcher.matches() )
@@ -312,21 +326,21 @@ public class FeaturePathConditionFactory
         final String argument = function.getArgument( matcher, cond );
         if( argument != null && argument.length() > 0 )
         {
-          final IXElement element = create( new Cond( argument ) );
+          final IXElement element = create( argument );
           return new XElementFromFunction( function, element );
         }
         return new XElementFromFunction( function );
       }
     }
     // attributes
-    String markedTrim= marked.trim();
+    String markedTrim = marked.trim();
     if( markedTrim.startsWith( "@" ) )
-      return new XElementFormAttribute(condition);
+      return new XElementFormAttribute( condition );
     // other xpathes
     // strings
     if( markedTrim.startsWith( "'" ) )
       return new XElementFormString( condition );
-    return new XElementFormProperty( condition );
+    return new XElementFormPath( condition );
   }
 
 }

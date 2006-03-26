@@ -38,24 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
 /**
+ * xelement that represents a string-xpath element
+ * 
  * @author doemming
  */
-public interface IFunction
+public class XElementFormString implements IXElement
 {
+  private String m_string;
 
-  public Pattern getPattern( );
+  public XElementFormString( String condition )
+  {
+    final String string = condition.trim();
+    if( string.charAt( 0 ) != '\'' && string.charAt( string.length() - 1 ) != '\'' )
+      throw new UnsupportedOperationException();
+    m_string = string.substring( 1, string.length() - 1 );
+  }
 
-  public Object evaluate( GMLWorkspace contectWS, Feature contextFE, IXElement argumentXEelement ) throws FeaturePathException;
-
-  public String getArgument( Matcher matcher, Cond cond );
-
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object, boolean)
+   */
+  public Object evaluate( Object context, boolean featureTypeLevel )
+  {
+    return m_string;
+  }
 }

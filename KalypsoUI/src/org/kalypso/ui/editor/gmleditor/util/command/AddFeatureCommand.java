@@ -96,7 +96,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    newFeature = m_workspace.createFeature( m_type );
+    newFeature = m_workspace.createFeature( m_parentFeature, m_type );
     if( m_props != null )
       addProperties();
     addFeature();

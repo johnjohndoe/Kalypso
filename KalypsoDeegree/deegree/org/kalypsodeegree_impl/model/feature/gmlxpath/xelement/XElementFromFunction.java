@@ -38,35 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.IGMLXPathFunction;
 
 /**
+ * xelement that represents a functional-xpath element
+ * 
  * @author doemming
  */
-public class XElementFormProperty implements IXElement
+public class XElementFromFunction extends AbstractXElement
 {
 
-  private final String m_propName;
+  private final IGMLXPathFunction m_function;
 
-  public XElementFormProperty( String condition )
+  private final IXElement m_argumentXElement;
+
+  public XElementFromFunction( IGMLXPathFunction function )
   {
-    m_propName = condition.trim();
+    this( function, null );
+  }
+
+  public XElementFromFunction( IGMLXPathFunction function, IXElement argumentXElement )
+  {
+    m_function = function;
+    m_argumentXElement = argumentXElement;
+
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
-  public Object evaluate( GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException
+  @Override
+  public Object evaluateOther( Object context, boolean featureTypeLevel ) throws GMLXPathException
   {
-    final IPropertyType property = contextFE.getFeatureType().getProperty( m_propName );
-    if( property == null )
-      return null;
-    return contextFE.getProperty( property );
+    if( context instanceof GMLWorkspace )
+    {
+      final GMLWorkspace gmlWorkspace = (GMLWorkspace) context;
+      return evaluateFeature( gmlWorkspace.getRootFeature(), featureTypeLevel );
+    }
+    return null;
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateFeature(org.kalypsodeegree.model.feature.Feature,
+   *      boolean)
+   */
+  @Override
+  public Object evaluateFeature( Feature contextFeature, boolean featureTypeLevel ) throws GMLXPathException
+  {
+    return m_function.evaluate( contextFeature, m_argumentXElement, featureTypeLevel );
+  }
+
 }

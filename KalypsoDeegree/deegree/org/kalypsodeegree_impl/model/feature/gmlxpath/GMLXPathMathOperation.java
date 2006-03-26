@@ -38,39 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 /**
+ * Abstract GMLXPathOperation intended to be subclassed by implementors of methematical XPath operations
+ * 
  * @author doemming
  */
-public class XElementFromFunction implements IXElement
+public abstract class GMLXPathMathOperation extends GMLXPathOperation implements IGMLXPathOperation
 {
-
-  private final IFunction m_function;
-
-  private final IXElement m_argumentXElement;
-
-  public XElementFromFunction( IFunction function )
+  public GMLXPathMathOperation( String pattern )
   {
-    this( function, null );
+    super( pattern );
   }
 
-  public XElementFromFunction( IFunction function, IXElement argumentXElement )
+  public Object operate( Object value1, Object value2 ) throws GMLXPathException
   {
-    m_function = function;
-    m_argumentXElement = argumentXElement;
-
+    final double n1;
+    if( value1 instanceof Number )
+      n1 = ((Number) value1).doubleValue();
+    else if( value1 instanceof String )
+      n1 = Double.valueOf( (String) value1 );
+    else
+      throw new GMLXPathException();
+    final double n2;
+    if( value2 instanceof Number )
+      n2 = ((Number) value2).doubleValue();
+    else if( value1 instanceof String )
+      n2 = Double.valueOf( (String) value2 );
+    else
+      throw new GMLXPathException();
+    return mathOperate( n1, n2 );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate(org.kalypsodeegree.model.feature.Feature)
-   */
-  public Object evaluate(GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException
-  {
-    return m_function.evaluate( contextWS, contextFE, m_argumentXElement );
-  }
-
+  public abstract Object mathOperate( double n1, double n2 );
 }

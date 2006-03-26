@@ -38,16 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
+
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.IGMLXPathOperation;
 
 /**
+ * xelement that represents a operation xpath element
+ * 
  * @author doemming
  */
-public interface IFeaturePathCondition
+public class XElementFromOperation implements IXElement
 {
-  public boolean isAsBoolean( );
 
-  public int getAsInteger( );
+  private final IXElement m_operand1;
 
-  public String getAsString( );
+  private final IXElement m_operand2;
+
+  private final IGMLXPathOperation m_operation;
+
+  public XElementFromOperation( final IXElement operand1, final IGMLXPathOperation operation, final IXElement operand2 )
+  {
+    m_operand1 = operand1;
+    m_operation = operation;
+    m_operand2 = operand2;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object, boolean)
+   */
+  public Object evaluate( Object context, boolean featureTypeLevel ) throws GMLXPathException
+  {
+    final Object value1 = m_operand1.evaluate( context, featureTypeLevel );
+    final Object value2 = m_operand2.evaluate( context, featureTypeLevel );
+    return m_operation.operate( value1, value2 );
+  }
+
 }

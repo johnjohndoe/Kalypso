@@ -85,23 +85,23 @@ public class CloneUtilities
     return unmarshaller.unmarshal( source );
   }
 
-  public static Feature clone( Feature featureToClone ) throws CloneNotSupportedException
-  {
-    Object[] properties = featureToClone.getProperties();
-    Object[] clonedProperties = new Object[properties.length];
-    IFeatureType featureType = featureToClone.getFeatureType();
-    IPropertyType[] featureTypeProperties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      Object property = properties[i];
-
-      if( property != null )
-        clonedProperties[i] = cloneFeatureProperty( property, featureTypeProperties[i] );
-
-    }
-    return FeatureFactory.createFeature( featureToClone.getId(), featureType, clonedProperties );
-
-  }
+//  public static Feature clone( Feature featureToClone ) throws CloneNotSupportedException
+//  {
+//    Object[] properties = featureToClone.getProperties();
+//    Object[] clonedProperties = new Object[properties.length];
+//    IFeatureType featureType = featureToClone.getFeatureType();
+//    IPropertyType[] featureTypeProperties = featureType.getProperties();
+//    for( int i = 0; i < properties.length; i++ )
+//    {
+//      Object property = properties[i];
+//
+//      if( property != null )
+//        clonedProperties[i] = cloneFeatureProperty( property, featureTypeProperties[i] );
+//
+//    }
+//    return FeatureFactory.createFeature( featureToClone.getId(), featureType, clonedProperties );
+//
+//  }
 
   public static Object cloneFeatureProperty( Object featureProperty, IPropertyType property )
       throws CloneNotSupportedException

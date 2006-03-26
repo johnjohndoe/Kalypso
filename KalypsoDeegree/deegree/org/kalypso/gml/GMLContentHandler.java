@@ -203,7 +203,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     switch( m_status )
     {
       case FIRST_FEATURE:
-        m_featureParser.createFeature( uri, localName, atts );
+        m_featureParser.createFeature( null, uri, localName, atts );
         m_rootFeature = m_featureParser.getCurrentFeature();
         m_status = START_PROPERTY_END_FEATURE;
         break;
@@ -247,7 +247,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final Feature parentFE = m_featureParser.getCurrentFeature();
         if( pt instanceof IRelationType )
         {
-          m_featureParser.createFeature( uri, localName, atts );
+          m_featureParser.createFeature( parentFE, uri, localName, atts );
           final Feature childFE = m_featureParser.getCurrentFeature();
           FeatureUtils.addChild( parentFE, (IRelationType) pt, childFE );
           m_status = START_PROPERTY_END_FEATURE;

@@ -38,32 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import java.util.regex.Pattern;
 
 /**
+ * Abstract GMLXPathOperation intended to be subclassed by implementors of XPathOperations
+ * 
  * @author doemming
  */
-public class XElementFormString implements IXElement
+public abstract class GMLXPathOperation implements IGMLXPathOperation
 {
-  private String m_string;
 
-  public XElementFormString( String condition )
+  private Pattern m_pattern;
+
+  public GMLXPathOperation( String pattern )
   {
-    final String string = condition.trim();
-    if( string.charAt( 0 ) != '\'' && string.charAt( string.length() - 1 ) != '\'' )
-      throw new UnsupportedOperationException();
-    m_string = string.substring( 1, string.length() - 1 );
+    m_pattern = Pattern.compile( pattern );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypsodeegree_impl.model.feature.path.IOperation#getPattern()
    */
-  public Object evaluate(GMLWorkspace contextWS, Feature contextFE )
+  public Pattern getPattern( )
   {
-    return m_string;
+    return m_pattern;
   }
-
 }

@@ -105,7 +105,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class ShapeFile
 {
-  private DBaseFile dbf = null;
+  private DBaseFile m_dbf = null;
 
   private SHP2WKS shpwks = new SHP2WKS();
 
@@ -139,7 +139,7 @@ public class ShapeFile
    */
   public ShapeFile( String url ) throws IOException
   {
-    this.m_url = url;
+    m_url = url;
 
     /*
      * initialize the MainFile
@@ -151,7 +151,7 @@ public class ShapeFile
      */
     try
     {
-      dbf = new DBaseFile( url, shp.getFileShapeType() );
+      m_dbf = new DBaseFile( url, shp.getFileShapeType() );
     }
     catch( final IOException e )
     {
@@ -220,9 +220,9 @@ public class ShapeFile
 
     shp.close();
 
-    if( dbf != null )
+    if( m_dbf != null )
     {
-      dbf.close();
+      m_dbf.close();
     }
 
     if( rti != null )
@@ -317,9 +317,9 @@ public class ShapeFile
   /**
    * Same as {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
    */
-  public Feature getFeatureByRecNo( int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( Feature parent, int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
   {
-    return getFeatureByRecNo( RecNo, false );
+    return getFeatureByRecNo( parent, RecNo, false );
   }
 
   /**
@@ -329,14 +329,14 @@ public class ShapeFile
    * @param allowNull
    *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
-  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( Feature parent, int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    final Feature feature = dbf.getFRow( RecNo, allowNull );
+    final Feature feature = m_dbf.getFRow( parent, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
     final IPropertyType pt = feature.getFeatureType().getProperty( "GEOM" );
     feature.setProperty( pt, geo );
@@ -561,7 +561,7 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return dbf.getProperties();
+    return m_dbf.getProperties();
   }
 
   /**
@@ -575,7 +575,7 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return dbf.getDataTypes();
+    return m_dbf.getDataTypes();
   }
 
   /**
@@ -589,7 +589,7 @@ public class ShapeFile
 
     for( int i = 0; i < properties.length; i++ )
     {
-      retval[i] = dbf.getDataLength( properties[i] );
+      retval[i] = m_dbf.getDataLength( properties[i] );
     }
 
     return retval;
@@ -606,7 +606,7 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return dbf.getDataTypes( fields );
+    return m_dbf.getDataTypes( fields );
   }
 
   /**
@@ -620,7 +620,7 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return dbf.getRow( rowNo );
+    return m_dbf.getRow( rowNo );
   }
 
   private int getGeometryType( final Feature feature )
@@ -737,7 +737,7 @@ public class ShapeFile
 
     // allocate memory for fielddescriptors
     final FieldDescriptor[] fieldDesc = fieldList.toArray( new FieldDescriptor[fieldList.size()] );
-    dbf = new DBaseFile( m_url, fieldDesc );
+    m_dbf = new DBaseFile( m_url, fieldDesc );
   }
 
   public void writeShape( final Feature[] features ) throws Exception
@@ -791,7 +791,7 @@ public class ShapeFile
       // write the ArrayList (properties) to the dbase file
       try
       {
-        dbf.setRecord( vec );
+        m_dbf.setRecord( vec );
       }
       catch( DBaseException db )
       {
@@ -970,12 +970,17 @@ public class ShapeFile
       bytearray = null;
     }
 
-    dbf.writeAllToFile();
+    m_dbf.writeAllToFile();
 
     // Header schreiben
     shp.writeHeader( offset, shptype, shpmbr );
 
     Debug.debugMethodEnd();
 
+  }
+
+  public IFeatureType getFeatureType( )
+  {
+    return m_dbf.getFeatureType();
   }
 }

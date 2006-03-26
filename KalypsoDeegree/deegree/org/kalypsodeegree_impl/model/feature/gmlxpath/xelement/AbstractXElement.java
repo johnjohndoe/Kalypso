@@ -38,13 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
+ * abstract Class intended to be subclassed by implementors of XElements
+ * 
  * @author doemming
- *
  */
-public class FeaturePathException extends Exception
+public abstract class AbstractXElement implements IXElement
 {
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object)
+   */
+  public Object evaluate( Object context, boolean featureTypeLevel ) throws GMLXPathException
+  {
+    if( context instanceof Feature )
+      return evaluateFeature( (Feature) context, featureTypeLevel );
+    return evaluateOther( context, featureTypeLevel );
+  }
 
+  public abstract Object evaluateOther( Object context, boolean featureTypeLevel ) throws GMLXPathException;
+
+  public abstract Object evaluateFeature( Feature contextFeature, boolean featureTypeLevel ) throws GMLXPathException;
 }

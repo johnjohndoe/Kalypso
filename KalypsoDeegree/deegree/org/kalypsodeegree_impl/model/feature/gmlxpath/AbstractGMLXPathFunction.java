@@ -38,17 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Abstract GMLXPathFunction<br>
+ * inteded to be subclasses by implementors of GMLXPathFunctions
+ * 
  * @author doemming
  */
-public interface IOperation
+public abstract class AbstractGMLXPathFunction implements IGMLXPathFunction
 {
 
-  public Pattern getPattern( );
+  private final String m_name;
 
-  public Object operate( Object value1, Object value2 ) throws FeaturePathException;
+  private Pattern m_pattern;
+
+  public AbstractGMLXPathFunction( final String name )
+  {
+    m_name = name;
+    m_pattern = Pattern.compile( "^(.*" + m_name + ")\\((.*?)\\).*" );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getArgument(java.util.regex.Matcher,
+   *      org.kalypsodeegree_impl.model.feature.path.Cond)
+   */
+  public String getArgument( Matcher matcher, GMLXPathString cond )
+  {
+    final String condition = cond.getCond();
+    final int start = matcher.start( 2 );
+    final int end = matcher.end( 2 );
+    final String argument = condition.substring( start, end );
+    return argument;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.IFunction#getPattern()
+   */
+  public Pattern getPattern( )
+  {
+    return m_pattern;
+  }
+
 }
