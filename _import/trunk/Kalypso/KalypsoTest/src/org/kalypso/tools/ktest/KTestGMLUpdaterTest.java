@@ -173,7 +173,7 @@ public class KTestGMLUpdaterTest extends TestCase
 
           final TimeseriesLinkType psiEcht = (TimeseriesLinkType) CloneUtilities.clone( berechnet, JC );
           psiEcht.setHref( psiIDEcht );
-          final Feature mapFeature = mappingWorkspace.createFeature( mappingFT );
+          final Feature mapFeature = mappingWorkspace.createFeature(mapColFE, mappingFT );
           mapFeature.setProperty( "name", pegelName );
           mapFeature.setProperty( "point", point );
           mapFeature.setProperty( "local1", gemessen );

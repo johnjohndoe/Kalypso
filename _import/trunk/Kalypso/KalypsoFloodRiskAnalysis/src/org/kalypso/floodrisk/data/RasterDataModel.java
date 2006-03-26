@@ -132,7 +132,7 @@ public class RasterDataModel
     String rgcFeatureTypePropertyName = "RectifiedGridCoverageMember";
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null,"RasterDataModel0", rootFeatureType );
     IPropertyType ftp_rgc = rootFeature.getFeatureType().getProperty( rgcFeatureTypePropertyName );
     // create feature: RectifiedGridCoverage
     Object[] properties = new Object[]
@@ -142,7 +142,7 @@ public class RasterDataModel
         null,
         grid.getGridDomain(),
         grid.getRangeSet() };
-    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
+    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature(rootFeature, "RectifiedGridCoverage0",
         ( (IRelationType)ftp_rgc ).getTargetFeatureTypes(schema,false)[0], properties );
     rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc, rectifiedGridCoverageFeature ) );
 

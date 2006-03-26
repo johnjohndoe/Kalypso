@@ -292,7 +292,7 @@ public class CreateFloodRiskProjectJob extends Job
       gismapview.setExtent( extent );
       gismapview.setLayers( layers );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       FileWriter fw = new FileWriter( path );
       marshaller.marshal( gismapview, fw );
@@ -418,7 +418,7 @@ public class CreateFloodRiskProjectJob extends Job
     final IFeatureType[] types = schema.getAllFeatureTypes();
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( rootFeatureTypeName + "0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null, rootFeatureTypeName + "0", rootFeatureType );
     IPropertyType ftp_feature = rootFeatureType.getProperty( featureTypePropertyName );
 
     // create features: Feature
@@ -435,7 +435,7 @@ public class CreateFloodRiskProjectJob extends Job
         landuseTypeSet.add( propertyValue );
       }
       Object[] properties = new Object[] { "", "", null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
-      final Feature feature = FeatureFactory.createFeature( "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureTypes( null, false )[0], properties );
+      final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureTypes( null, false )[0], properties );
       rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_feature, feature ) );
     }
 
@@ -486,11 +486,11 @@ public class CreateFloodRiskProjectJob extends Job
     {
       final String landusePropertyName = (String) it.next();
       // contextModel
-      final Feature landuseFeature = contextModel.createFeature( ftLanduse );
+      final Feature landuseFeature = contextModel.createFeature( parentFeature, ftLanduse );
       landuseFeature.setProperty( featureProperty, landusePropertyName );
       contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
       // riskContextModel
-      Feature landuseFeature_risk = riskContextModel.createFeature( ftLanduse_risk );
+      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, ftLanduse_risk );
       landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty( featureProperty, landusePropertyName ) );
       riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyName, 0, landuseFeature_risk );
     }
@@ -609,24 +609,25 @@ public class CreateFloodRiskProjectJob extends Job
     // create rootFeature
     String rootFeatureName = "WaterlevelData";
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( "WaterlevelData0", rootFeatureType );
-    final IRelationType waterlevelMember= (IRelationType) rootFeatureType.getProperty("WaterlevelMember");
+    Feature rootFeature = FeatureFactory.createFeature( null, "WaterlevelData0", rootFeatureType );
+    final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( "WaterlevelMember" );
     // create waterlevelFeature(s)
     String waterlevelFeatureName = "Waterlevel";
     IFeatureType waterlevelFeatureType = schema.getFeatureType( waterlevelFeatureName );
-    final IPropertyType featureProperty= waterlevelFeatureType.getProperty("WaterlevelRasterData");
+    final IPropertyType featureProperty = waterlevelFeatureType.getProperty( "WaterlevelRasterData" );
     int identifier = 0;
     for( int i = 0; i < targetFiles.size(); i++ )
     {
-      final Feature waterlevelFeature = FeatureFactory.createFeature( waterlevelFeatureName + identifier, waterlevelFeatureType );
+      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName + identifier, waterlevelFeatureType );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
-      waterlevelFeature.setProperty(featureProperty, waterlevelFile  );
+      waterlevelFeature.setProperty( featureProperty, waterlevelFile );
+      // TODO use utility methodes for next:
       rootFeature.addProperty( FeatureFactory.createFeatureProperty( waterlevelMember, waterlevelFeature ) );
       identifier = identifier + 1;
     }
 
     // create workspace
-    final GMLWorkspace workspace = new GMLWorkspace_Impl(schema, types, rootFeature, waterlevelDataFile.toURL(), "" );
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "" );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( waterlevelDataFile );

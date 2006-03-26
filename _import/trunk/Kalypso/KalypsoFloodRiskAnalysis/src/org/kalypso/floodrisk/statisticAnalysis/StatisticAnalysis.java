@@ -64,12 +64,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
- * 
  * StatisticAnalysis
  * <p>
- * Methods for calculating statistics
- * 
- * created by
+ * Methods for calculating statistics created by
  * 
  * @author Nadja Peiler (15.06.2005)
  */
@@ -84,11 +81,10 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid )
-      throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid ) throws Exception
   {
     Hashtable statistics = null;
-    //control Geometries
+    // control Geometries
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
 
     statistics = new Hashtable();
@@ -100,8 +96,8 @@ public class StatisticAnalysis
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
     for( int i = 0; i < damage_rangeSetData.size(); i++ )
     {
-      Vector damage_rowData = (Vector)damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
+      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
 
       for( int j = 0; j < damage_rowData.size(); j++ )
       {
@@ -109,9 +105,9 @@ public class StatisticAnalysis
         {
           try
           {
-            double damagePerSquaremeter = ( (Double)damage_rowData.get( j ) ).doubleValue();
+            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
             double damage = damagePerSquaremeter * cellArea;
-            Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
+            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
 
             if( !statistics.containsKey( landuseKey ) )
             {
@@ -123,10 +119,10 @@ public class StatisticAnalysis
             }
             else
             {
-              Vector actualStatisticVector = (Vector)statistics.get( landuseKey );
-              double actualDamage = ( (Double)actualStatisticVector.get( 0 ) ).doubleValue();
-              double actualMinValue = ( (Double)actualStatisticVector.get( 1 ) ).doubleValue();
-              double actualMaxValue = ( (Double)actualStatisticVector.get( 2 ) ).doubleValue();
+              Vector actualStatisticVector = (Vector) statistics.get( landuseKey );
+              double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+              double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+              double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
               actualDamage = actualDamage + damage;
               if( actualMinValue > damagePerSquaremeter )
               {
@@ -148,11 +144,11 @@ public class StatisticAnalysis
             System.out.println( e );
           }
         }
-      }//for j
+      }// for j
       /*
        * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
        */
-    }//for i
+    }// for i
     return statistics;
   }
 
@@ -167,8 +163,7 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid,
-      RectifiedGridCoverage landuseGrid, RectifiedGridCoverage templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
     Hashtable statistics = null;
     // control Geometries
@@ -186,9 +181,9 @@ public class StatisticAnalysis
     Double data = new Double( 1 );
     for( int i = 0; i < template_rangeSetData.size(); i++ )
     {
-      Vector damage_rowData = (Vector)damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector template_rowData = (Vector)template_rangeSetData.get( i );
+      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+      Vector template_rowData = (Vector) template_rangeSetData.get( i );
 
       for( int j = 0; j < template_rowData.size(); j++ )
       {
@@ -200,9 +195,9 @@ public class StatisticAnalysis
             {
               try
               {
-                double damagePerSquaremeter = ( (Double)damage_rowData.get( j ) ).doubleValue();
+                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
                 double damage = damagePerSquaremeter * cellArea;
-                Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
+                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
 
                 if( !statistics.containsKey( landuseKey ) )
                 {
@@ -214,10 +209,10 @@ public class StatisticAnalysis
                 }
                 else
                 {
-                  Vector actualStatisticVector = (Vector)statistics.get( landuseKey );
-                  double actualDamage = ( (Double)actualStatisticVector.get( 0 ) ).doubleValue();
-                  double actualMinValue = ( (Double)actualStatisticVector.get( 1 ) ).doubleValue();
-                  double actualMaxValue = ( (Double)actualStatisticVector.get( 2 ) ).doubleValue();
+                  Vector actualStatisticVector = (Vector) statistics.get( landuseKey );
+                  double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+                  double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+                  double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
                   actualDamage = actualDamage + damage;
                   if( actualMinValue > damagePerSquaremeter )
                   {
@@ -241,11 +236,11 @@ public class StatisticAnalysis
             }
           }
         }
-      }//for j
+      }// for j
       /*
        * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
        */
-    }//for i
+    }// for i
     return statistics;
   }
 
@@ -260,12 +255,10 @@ public class StatisticAnalysis
    * @param statisticDataURL
    *          URL of resultFile
    * @throws Exception
-   *  
    */
-  public static void exportStatisticAsXML( Hashtable statistics, Hashtable landuseTypeList, URL statisticDataURL )
-      throws Exception
+  public static void exportStatisticAsXML( Hashtable statistics, Hashtable landuseTypeList, URL statisticDataURL ) throws Exception
   {
-    //  load schema
+    // load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );
 
     // create feature and workspace gml
@@ -278,56 +271,47 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", rootFT );
+    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT );
     // create Collection
     final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-    Feature collection = FeatureFactory.createFeature( "Collection0", collFT );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName), collection ) );
+    Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName ), collection ) );
     // create landuseFeatures
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
     while( it.hasNext() )
     {
-      Integer key = (Integer)it.next();
-      Vector statisticsVector = (Vector)statistics.get( key );
-      Double sum = (Double)statisticsVector.get( 0 );
-      Double min = (Double)statisticsVector.get( 1 );
-      Double max = (Double)statisticsVector.get( 2 );
+      Integer key = (Integer) it.next();
+      Vector statisticsVector = (Vector) statistics.get( key );
+      Double sum = (Double) statisticsVector.get( 0 );
+      Double min = (Double) statisticsVector.get( 1 );
+      Double max = (Double) statisticsVector.get( 2 );
       Iterator iterator = landuseTypeList.keySet().iterator();
       String landuse = null;
       while( iterator.hasNext() )
       {
-        landuse = (String)iterator.next();
-        Integer actualKey = (Integer)landuseTypeList.get( landuse );
+        landuse = (String) iterator.next();
+        Integer actualKey = (Integer) landuseTypeList.get( landuse );
         if( actualKey.equals( key ) )
         {
           break;
         }
       }
-      Object[] properties =
-      {
-          "",
-          "",
-          null,
-          landuse,
-          min,
-          max,
-          sum };
-      Feature landuseFeature = FeatureFactory.createFeature( "Landuse" + landuseTypeList.get( landuse ), schema
-          .getFeatureType( landuseFeatureName ), properties );
-      collection.addProperty( FeatureFactory.createFeatureProperty(collFT.getProperty(landusePropertyName), landuseFeature ) );
+      Object[] properties = { "", "", null, landuse, min, max, sum };
+      Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties );
+      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName ), landuseFeature ) );
       int mode = BigDecimal.ROUND_HALF_EVEN;
-      System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
-          + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue=" + Number.round( max.doubleValue(), 4, mode ) );
+      System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
+          + Number.round( max.doubleValue(), 4, mode ) );
       sumAll = sumAll + sum.doubleValue();
     }
-    collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName), new Double( sumAll ) ) );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty), new Double( sumAll ) ) );
+    collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName ), new Double( sumAll ) ) );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty ), new Double( sumAll ) ) );
     System.out.println( "Total damage= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
 
-    //  create workspace
+    // create workspace
     IFeatureType[] types = schema.getAllFeatureTypes();
-    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "");
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );
@@ -344,8 +328,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid,
-      RectifiedGridCoverage administrationUnitGrid ) throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid ) throws Exception
   {
     Hashtable statistics = null;
     // control Geometries
@@ -362,19 +345,19 @@ public class StatisticAnalysis
     Vector administrationUnit_rangeSetData = administrationUnitGrid.getRangeSet().getRangeSetData();
     for( int i = 0; i < damage_rangeSetData.size(); i++ )
     {
-      Vector damage_rowData = (Vector)damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector administrationUnit_rowData = (Vector)administrationUnit_rangeSetData.get( i );
+      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
       for( int j = 0; j < damage_rowData.size(); j++ )
       {
         if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
         {
           try
           {
-            double damagePerSquaremeter = ( (Double)damage_rowData.get( j ) ).doubleValue();
+            double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
             double damage = damagePerSquaremeter * cellArea;
-            Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
-            Integer administrationUnitKey = new Integer( ( (Double)administrationUnit_rowData.get( j ) ).intValue() );
+            Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+            Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
             if( !statistics.containsKey( administrationUnitKey ) )
             {
               Hashtable statistics_landuse = new Hashtable();
@@ -387,7 +370,7 @@ public class StatisticAnalysis
             }
             else
             {
-              Hashtable statistics_landuse = (Hashtable)statistics.get( administrationUnitKey );
+              Hashtable statistics_landuse = (Hashtable) statistics.get( administrationUnitKey );
               if( !statistics_landuse.containsKey( landuseKey ) )
               {
                 Vector statisticVector = new Vector();
@@ -398,10 +381,10 @@ public class StatisticAnalysis
               }
               else
               {
-                Vector actualStatisticVector = (Vector)statistics_landuse.get( landuseKey );
-                double actualDamage = ( (Double)actualStatisticVector.get( 0 ) ).doubleValue();
-                double actualMinValue = ( (Double)actualStatisticVector.get( 1 ) ).doubleValue();
-                double actualMaxValue = ( (Double)actualStatisticVector.get( 2 ) ).doubleValue();
+                Vector actualStatisticVector = (Vector) statistics_landuse.get( landuseKey );
+                double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+                double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+                double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
                 actualDamage = actualDamage + damage;
                 if( actualMinValue > damagePerSquaremeter )
                 {
@@ -424,11 +407,11 @@ public class StatisticAnalysis
             System.out.println( e );
           }
         }
-      }//for j
+      }// for j
       /*
        * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
        */
-    }//for i
+    }// for i
     return statistics;
   }
 
@@ -444,9 +427,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid,
-      RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid,
-      RectifiedGridCoverage templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
     Hashtable statistics = null;
     // control Geometries
@@ -466,10 +447,10 @@ public class StatisticAnalysis
     Double data = new Double( 1 );
     for( int i = 0; i < template_rangeSetData.size(); i++ )
     {
-      Vector damage_rowData = (Vector)damage_rangeSetData.get( i );
-      Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector administrationUnit_rowData = (Vector)administrationUnit_rangeSetData.get( i );
-      Vector template_rowData = (Vector)template_rangeSetData.get( i );
+      Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
+      Vector landuse_rowData = (Vector) landuse_rangeSetData.get( i );
+      Vector administrationUnit_rowData = (Vector) administrationUnit_rangeSetData.get( i );
+      Vector template_rowData = (Vector) template_rangeSetData.get( i );
 
       for( int j = 0; j < template_rowData.size(); j++ )
       {
@@ -477,15 +458,14 @@ public class StatisticAnalysis
         {
           if( template_rowData.get( j ).equals( data ) )
           {
-            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null
-                && administrationUnit_rowData != null )
+            if( damage_rowData.get( j ) != null && landuse_rowData.get( j ) != null && administrationUnit_rowData != null )
             {
               try
               {
-                double damagePerSquaremeter = ( (Double)damage_rowData.get( j ) ).doubleValue();
+                double damagePerSquaremeter = ((Double) damage_rowData.get( j )).doubleValue();
                 double damage = damagePerSquaremeter * cellArea;
-                Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
-                Integer administrationUnitKey = new Integer( ( (Double)administrationUnit_rowData.get( j ) ).intValue() );
+                Integer landuseKey = new Integer( ((Double) landuse_rowData.get( j )).intValue() );
+                Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
                 if( !statistics.containsKey( administrationUnitKey ) )
                 {
                   Hashtable statistics_landuse = new Hashtable();
@@ -498,7 +478,7 @@ public class StatisticAnalysis
                 }
                 else
                 {
-                  Hashtable statistics_landuse = (Hashtable)statistics.get( administrationUnitKey );
+                  Hashtable statistics_landuse = (Hashtable) statistics.get( administrationUnitKey );
                   if( !statistics_landuse.containsKey( landuseKey ) )
                   {
                     Vector statisticVector = new Vector();
@@ -509,10 +489,10 @@ public class StatisticAnalysis
                   }
                   else
                   {
-                    Vector actualStatisticVector = (Vector)statistics_landuse.get( landuseKey );
-                    double actualDamage = ( (Double)actualStatisticVector.get( 0 ) ).doubleValue();
-                    double actualMinValue = ( (Double)actualStatisticVector.get( 1 ) ).doubleValue();
-                    double actualMaxValue = ( (Double)actualStatisticVector.get( 2 ) ).doubleValue();
+                    Vector actualStatisticVector = (Vector) statistics_landuse.get( landuseKey );
+                    double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
+                    double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
+                    double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
                     actualDamage = actualDamage + damage;
                     if( actualMinValue > damagePerSquaremeter )
                     {
@@ -537,11 +517,11 @@ public class StatisticAnalysis
             }
           }
         }
-      }//for j
+      }// for j
       /*
        * System.out.println(i + " rows of " + damage_rangeSetData.size() + " calculated");
        */
-    }//for i
+    }// for i
 
     return statistics;
   }
@@ -561,12 +541,10 @@ public class StatisticAnalysis
    *          URL of resultFile
    * @throws IOException
    * @throws GmlSerializeException
-   *  
    */
-  public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList,
-      Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException
+  public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList, Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException
   {
-    //  load schema
+    // load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );
 
     // create feature and workspace gml
@@ -580,7 +558,7 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( "StatisticData0", rootFT );
+    Feature rootFeature = FeatureFactory.createFeature(null, "StatisticData0", rootFT );
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -589,76 +567,66 @@ public class StatisticAnalysis
     int numOfFeat = 0;
     while( it.hasNext() )
     {
-      Integer administrationUnitKey = (Integer)it.next();
-      Hashtable statistics_landuse = (Hashtable)statistics.get( administrationUnitKey );
+      Integer administrationUnitKey = (Integer) it.next();
+      Hashtable statistics_landuse = (Hashtable) statistics.get( administrationUnitKey );
       Iterator it1 = statistics_landuse.keySet().iterator();
       double sum_adminUnit = 0;
       Iterator iter = administrationUnitList.keySet().iterator();
       String adminUnit = null;
       while( iter.hasNext() )
       {
-        adminUnit = (String)iter.next();
-        Integer actualKey = (Integer)administrationUnitList.get( adminUnit );
+        adminUnit = (String) iter.next();
+        Integer actualKey = (Integer) administrationUnitList.get( adminUnit );
         if( actualKey.equals( administrationUnitKey ) )
         {
           break;
         }
       }
       // create Collection
-      final IFeatureType collFT = schema
-          .getFeatureType( collectionFeatureName );
-      Feature collection = FeatureFactory.createFeature( "Collection" + numOfCol, collFT );
-      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( namePropertyName), adminUnit ) );
-      rootFeature.addProperty( FeatureFactory.createFeatureProperty(rootFT.getProperty( collectionPropertyName), collection ) );
+      final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
+      Feature collection = FeatureFactory.createFeature(rootFeature, "Collection" + numOfCol, collFT );
+      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( namePropertyName ), adminUnit ) );
+      rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName ), collection ) );
 
       System.out.println( adminUnit + ": " );
-      //create landuse-features
+      // create landuse-features
       while( it1.hasNext() )
       {
-        Integer landuseKey = (Integer)it1.next();
-        Vector statisticsVector = (Vector)statistics_landuse.get( landuseKey );
-        Double sum = (Double)statisticsVector.get( 0 );
+        Integer landuseKey = (Integer) it1.next();
+        Vector statisticsVector = (Vector) statistics_landuse.get( landuseKey );
+        Double sum = (Double) statisticsVector.get( 0 );
         sum_adminUnit = sum_adminUnit + sum.doubleValue();
-        Double min = (Double)statisticsVector.get( 1 );
-        Double max = (Double)statisticsVector.get( 2 );
+        Double min = (Double) statisticsVector.get( 1 );
+        Double max = (Double) statisticsVector.get( 2 );
         Iterator iterator = landuseTypeList.keySet().iterator();
         String landuse = null;
         while( iterator.hasNext() )
         {
-          landuse = (String)iterator.next();
-          Integer actualKey = (Integer)landuseTypeList.get( landuse );
+          landuse = (String) iterator.next();
+          Integer actualKey = (Integer) landuseTypeList.get( landuse );
           if( actualKey.equals( landuseKey ) )
           {
             break;
           }
         }
-        Object[] properties =
-        {
-            "",
-            "",
-            null,
-            landuse,
-            min,
-            max,
-            sum };
-        Feature landuseFeature = FeatureFactory.createFeature( "Landuse" + numOfFeat, schema
-            .getFeatureType( landuseFeatureName ), properties );
+        Object[] properties = { "", "", null, landuse, min, max, sum };
+        Feature landuseFeature = FeatureFactory.createFeature( collection,"Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties );
         numOfFeat = numOfFeat + 1;
-        collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName), landuseFeature ) );
+        collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName ), landuseFeature ) );
         int mode = BigDecimal.ROUND_HALF_EVEN;
-        System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
-            + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue=" + Number.round( max.doubleValue(), 4, mode ) );
+        System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
+            + Number.round( max.doubleValue(), 4, mode ) );
       }
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) );
-      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty(sumPropertyName), new Double( sum_adminUnit ) ) );
+      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName ), new Double( sum_adminUnit ) ) );
       sumAll = sumAll + sum_adminUnit;
       numOfCol = numOfCol + 1;
     }
     System.out.println( "Total Damage=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty(rootFT.getProperty( overallSumProperty), new Double( sumAll ) ) );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty ), new Double( sumAll ) ) );
 
-    //  create workspace
+    // create workspace
     final IFeatureType[] types = schema.getAllFeatureTypes();
     final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" );
 

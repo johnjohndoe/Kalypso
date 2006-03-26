@@ -109,7 +109,7 @@ public class AddGeometrieToMeasureActionDelegate implements IActionDelegate
         {
           ftFromDialog = dialog.getSelectedFeatureTypes();
           IFeatureType ft = ftFromDialog[0];
-          final Feature newFeature = measures.createFeature( ft );
+//          final Feature newFeature = measures.createFeature(  ft );
 
           final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
           final IRelationType rPT = (IRelationType) measureRootFeature.getFeatureType().getProperty( KalypsoDSSPlugin.MEASUER_MEMBER );

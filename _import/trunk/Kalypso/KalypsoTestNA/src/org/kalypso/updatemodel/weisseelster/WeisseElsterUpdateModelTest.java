@@ -121,7 +121,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
       final Object geoValue = modelFeature.getProperty( "Ort" );
 
       // createFeature
-      final Feature mapFeature = mapWorkspace.createFeature( mapFT );
+      final Feature mapFeature = mapWorkspace.createFeature(mapRootFeature, mapFT );
       final IRelationType linkFT = (IRelationType) mapRootFeature.getFeatureType().getProperty("mappingMember");
       mapWorkspace.addFeatureAsComposition(mapRootFeature, linkFT,0, mapFeature);
       //set props

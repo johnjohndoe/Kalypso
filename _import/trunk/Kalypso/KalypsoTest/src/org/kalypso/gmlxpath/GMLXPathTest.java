@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.featurepath;
+package org.kalypso.gmlxpath;
 
 import java.net.URL;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -49,11 +50,13 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author doemming
  */
-public class FeaturePathTest extends TestCase
+public class GMLXPathTest extends TestCase
 {
   /**
    * @see junit.framework.TestCase#setUp()
@@ -68,17 +71,29 @@ public class FeaturePathTest extends TestCase
   private String[] getXPathes( )
   {
     return new String[] {// 
-        "featureMember[BPlan]",// test deprecated1
-        "featureMember[ name() = 'BPlan' ]",// 
-        "featureMember[ @id = 'a816c00e0109e45d440e00000037a018' ]",// 
-        "#fid#a816c00e010a02356c64000000086e20",// test deprecated2
-        "id( 'a816c00e010a02356c64000000086e20' )",// 
-        "featureMember",// 
-        // "//*[ name() = 'WasserrechtlicheFestsetzungsFlaeche' ]",//
+    // 
+        // tested:
+
+        "id( 'a816c00e010a02356c64000000086e20' )",//
+        "id( 'a816c00e010a02356c64000000086e20' ) /name",//
+        "FeatureCollection/featureMember/BPlan[ @fid = 'c013800d0109e45d440e00000037a018' ]/gkz",//
+        "FeatureCollection/featureMember",//
+        "FeatureCollection/featureMember/BPlan[ @fid = 'c013800d0109e45d440e00000037a018' ]",//
+    // 
+    // not tested:
+    // "featureMember[BPlan]",// test deprecated1
+    // "./FeatureCollection/featureMember",//
+    // "/FeatureCollection/featureMember",//
+    // "/FeatureCollection/featureMember[ name() = 'BPlan' ]",//
+    // "featureMember[ @id = 'a816c00e0109e45d440e00000037a018' ]",//
+    // "#fid#a816c00e010a02356c64000000086e20",// test deprecated2
+    // "id( 'a816c00e010a02356c64000000086e20' )",//
+    // "featureMember",//
+    // "//*[ name() = 'WasserrechtlicheFestsetzungsFlaeche' ]",//
     };
   }
 
-  public void testXPathes( ) throws Exception
+  public void testGMLXPathes( ) throws Exception
   {
     try
     {
@@ -89,22 +104,32 @@ public class FeaturePathTest extends TestCase
       {
         final String xPath = pathes[i];
         System.out.println( "\ntesting: " + xPath );
-        final Object featureFromPath = workspace.getFeatureFromPath( xPath );
+        final GMLXPath featureXPath = new GMLXPath( xPath );
+        final Object featureFromPath = GMLXPathUtilities.query( featureXPath, workspace );
         if( featureFromPath == null )
         {
-          System.out.println( "result=null" + xPath );
+          System.out.println( "result=null" );
           continue;
         }
-        System.out.println( "resultType : " + featureFromPath.getClass().getName() );
-        if( featureFromPath instanceof Feature )
+        // System.out.println( "resultType : " + featureFromPath.getClass().getName() );
+        else if( featureFromPath instanceof Feature )
         {
           final Feature fe = (Feature) featureFromPath;
-          System.out.println( "1 x " + fe.getFeatureType().getQName() + "#" + fe.getId() );
+          System.out.println( "Feature: " + fe.getFeatureType().getQName() + "#" + fe.getId() );
         }
         else if( featureFromPath instanceof FeatureList )
         {
           final FeatureList feList = (FeatureList) featureFromPath;
-          System.out.println( feList.size() + " x " );
+          System.out.println( "FeatureList: " + feList.size() + " x " );
+        }
+        else if( featureFromPath instanceof List )
+        {
+          final List list = (List) featureFromPath;
+          System.out.println( "List: " + list.size() + " x " );
+        }
+        else
+        {
+          System.out.println( featureFromPath.getClass().getSimpleName() + ": '" + featureFromPath.toString() + "'" );
         }
       }
     }
