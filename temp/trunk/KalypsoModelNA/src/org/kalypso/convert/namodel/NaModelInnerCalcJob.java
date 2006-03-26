@@ -491,13 +491,12 @@ public class NaModelInnerCalcJob implements ISimulation
     // model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
-    //  model Parameter
+    // model Parameter
     final GMLWorkspace synthNWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_SYNTHN_ID ) )
       synthNWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_SYNTHN_ID ) );
     else
       synthNWorkspace = null;
-
 
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
@@ -549,14 +548,14 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // choose precipitation form and parameters
     conf.setPrecipitationForm( (Boolean) metaFE.getProperty( "pns" ) );
-    if( conf.getPns().equals(true) )
+    if( conf.getPns().equals( true ) )
     {
-      conf.setAnnuality((Double) metaFE.getProperty( "xjah" ) );
-      conf.setDuration((Double) metaFE.getProperty( "xwahl2" ) );
-      conf.setForm((String) metaFE.getProperty( "ipver" ) );
-      
+      conf.setAnnuality( (Double) metaFE.getProperty( "xjah" ) );
+      conf.setDuration( (Double) metaFE.getProperty( "xwahl2" ) );
+      conf.setForm( (String) metaFE.getProperty( "ipver" ) );
+
     }
-    
+
     // set rootnode
     conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
@@ -679,7 +678,7 @@ public class NaModelInnerCalcJob implements ISimulation
         final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
         for( int j = 0; j < channelFEs.length; j++ )
         {
-          final Feature newEndNodeFE = workspace.createFeature( nodeFT );
+          final Feature newEndNodeFE = workspace.createFeature( channelFEs[j], nodeFT );
           workspace.setFeatureAsComposition( channelFEs[j], downStreamNodeMemberRT, newEndNodeFE, true );
         }
         // add as zufluss
@@ -761,11 +760,11 @@ public class NaModelInnerCalcJob implements ISimulation
     final Feature nodeColFE = workspace.getFeatures( workspace.getFeatureType( "NodeCollection" ) )[0];
 
     // add to collections:
-    final Feature newChannelFE1 = workspace.createFeature( vChannelFT );
+    final Feature newChannelFE1 = workspace.createFeature( channelColFE, vChannelFT );
     workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE1 );
-    final Feature newChannelFE3 = workspace.createFeature( vChannelFT );
+    final Feature newChannelFE3 = workspace.createFeature( channelColFE, vChannelFT );
     workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
-    final Feature newNodeFE2 = workspace.createFeature( nodeFT );
+    final Feature newNodeFE2 = workspace.createFeature( nodeColFE, nodeFT );
     workspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
     final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
 
@@ -802,7 +801,7 @@ public class NaModelInnerCalcJob implements ISimulation
         continue;
       final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
-      final Feature newChannelFE = workspace.createFeature( vChannelFT );
+      final Feature newChannelFE = workspace.createFeature( catchmentFE, vChannelFT );
       // set new relation: catchment -> new V-channel
       try
       {

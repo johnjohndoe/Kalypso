@@ -379,7 +379,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT, true );
+      Feature targetFeature = FeatureFactory.createFeature( rootFeature, sourceFeature.getId(), hydFT, true );
       final IPropertyType flaechPT = hydFT.getProperty( "area" );
       final IPropertyType fakVersPT = hydFT.getProperty( "corrSealing" );
       Iterator it = mapping.keySet().iterator();
@@ -484,7 +484,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final String fid = getId( idColKey, sourceFeature, "TG" );
-      final Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
+      final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, fid, modelFT, true );
       final IPropertyType flaechPT = modelFT.getProperty( "flaech" );
       final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" );
       Iterator it = mapping.keySet().iterator();
@@ -509,7 +509,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
         final IRelationType bodFtProp = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" ); //$NON-NLS-1$
         final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureTypes( null, false )[0];
-        Feature newFeature = m_modelWS.createFeature( bodenKorrekturFT );
+        Feature newFeature = m_modelWS.createFeature( targetFeature, bodenKorrekturFT );
         try
         {
 
@@ -545,7 +545,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final String fid = getId( idColKey, sourceFeature, "K" );
-      Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
+      Feature targetFeature = FeatureFactory.createFeature( nodeCollectionFE, fid, modelFT, true );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -604,14 +604,14 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         {
 
           IFeatureType vFT = getFeatureType( "VirtualChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( fid, vFT, true );
+          targetFeature = FeatureFactory.createFeature( channelCollectionFE, fid, vFT, true );
           break;
         }
         case 1:
         {
 
           IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
+          targetFeature = FeatureFactory.createFeature( channelCollectionFE, fid, kmFT, true );
 
           IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( "KMParameterMember" );
           final List list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
@@ -620,7 +620,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           for( int j = 0; j < channelNo; j++ )
           {
             final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureTypes( null, false )[0];
-            final Feature newFeature = m_modelWS.createFeature( kmParameterFT );
+            final Feature newFeature = m_modelWS.createFeature( targetFeature, kmParameterFT );
             try
             {
               m_modelWS.addFeatureAsComposition( targetFeature, parameterMemberRT, j, newFeature ); //$NON-NLS-1$
@@ -636,7 +636,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         case 2:
         {
           IFeatureType storageFT = getFeatureType( "StorageChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( fid, storageFT, true );
+          targetFeature = FeatureFactory.createFeature( channelCollectionFE, fid, storageFT, true );
           break;
         }
         case 3:
