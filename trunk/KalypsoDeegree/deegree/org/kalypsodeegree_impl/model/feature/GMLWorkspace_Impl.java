@@ -40,7 +40,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   // private final String m_schemaNamespace;
 
   /** id -> feature */
-  final Map<String,Feature> m_indexMap = new HashMap<String,Feature>();
+  final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
 
   private final IFeatureType[] m_featureTypes;
 
@@ -68,7 +68,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // m_nsMap = nsMap;
 
     m_rootFeature = feature;
-
+    if( m_rootFeature != null )
+      m_rootFeature.setWorkspace( this );
     try
     {
       accept( new RegisterVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
@@ -363,6 +364,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // if( m_indexMap.containsKey( id ) )
       // System.out.println( "Workspace already contains a feature with id: " +
       // id );
+      // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
+      // System.out.println( "found" );
       m_indexMap.put( id, f );
       return true;
     }
@@ -467,10 +470,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public Feature createFeature( IFeatureType type )
+  public Feature createFeature( Feature parent, IFeatureType type )
   {
-    String newId = createFeatureId( type );
-    return FeatureFactory.createFeature( newId, type, false );
+    final String newId = createFeatureId( type );
+    return FeatureFactory.createFeature( parent, newId, type, false );
   }
 
   private String createFeatureId( IFeatureType type )

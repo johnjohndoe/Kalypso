@@ -98,7 +98,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_mapModell.removeModellListener( this );
   }
@@ -106,7 +106,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -163,10 +163,10 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     if( modellEvent != null && modellEvent.isType( ModellEvent.LEGEND_UPDATED ) )
       return;
     m_Image = null;
-    //updateLegend();
+    // updateLegend();
   }
 
-  private void updateLegend()
+  private void updateLegend( )
   {
     final List<Image> stylesCol = new ArrayList<Image>();
 
@@ -177,7 +177,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
       if( m_mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
 
         final UserStyle[] styles = featureTheme.getStyles();
         final IFeatureType ft = featureTheme.getFeatureType();
@@ -208,8 +208,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
       return;
 
     // draw bufferedImage...
-    final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(),
-        BufferedImage.TYPE_INT_RGB );
+    final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(), BufferedImage.TYPE_INT_RGB );
     final Graphics g = tmpImage.getGraphics();
     g.setPaintMode();
     g.setColor( backColor );
@@ -245,10 +244,9 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
-    final Feature feature = FeatureFactory.createFeature( "legende", ft, false );
+    final Feature feature = FeatureFactory.createFeature( null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
-    DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
-    { style }, null );
+    DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );
     for( int i = 0; i < des.length; i++ )
     {
       DisplayElement de = des[i];
@@ -260,7 +258,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox()
+  public GM_Envelope getBoundingBox( )
   {
     return null;
   }
@@ -268,7 +266,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
-  public String getType()
+  public String getType( )
   {
     return "";
   }

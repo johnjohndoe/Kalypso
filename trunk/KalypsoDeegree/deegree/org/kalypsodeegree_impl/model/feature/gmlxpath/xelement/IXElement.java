@@ -38,28 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
-import java.util.regex.Pattern;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
+ * Interface that represents a part of a compiled GMLXPath expression
+ * 
  * @author doemming
  */
-public abstract class Operation implements IOperation
+public interface IXElement
 {
-
-  private Pattern m_pattern;
-
-  public Operation( String pattern )
-  {
-    m_pattern = Pattern.compile( pattern );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IOperation#getPattern()
-   */
-  public Pattern getPattern( )
-  {
-    return m_pattern;
-  }
+  public Object evaluate( Object context, boolean featureTypeLevel ) throws GMLXPathException;
 }

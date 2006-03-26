@@ -176,7 +176,7 @@ public class ShapeSerializer
           data[datacount++] = kalypsoFeature.getProperty( (String) entry.getValue() );
         }
 
-        final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );
+        final Feature feature = FeatureFactory.createFeature( null, "" + i, shapeFeatureType, data );
 
         shapeFeatures.add( feature );
       }
@@ -198,7 +198,7 @@ public class ShapeSerializer
     try
     {
       final ShapeFile sf = new ShapeFile( fileBase );
-      final IFeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
+      final IFeatureType featureType = sf.getFeatureType();
 
       final Feature rootFeature = createShapeRootFeature( featureType );
       final List<Feature> list = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
@@ -208,7 +208,7 @@ public class ShapeSerializer
       final int count = sf.getRecordNum();
       for( int i = 0; i < count; i++ )
       {
-        final Feature fe = sf.getFeatureByRecNo( i + 1, true );
+        final Feature fe = sf.getFeatureByRecNo( rootFeature, i + 1, true );
         GMLHelper.setCrs( fe, sourceCrs );
         if( fe != null )
           list.add( fe );
@@ -243,39 +243,39 @@ public class ShapeSerializer
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, new IFeatureType[] { ft }, 0, IRelationType.UNBOUND_OCCURENCY );
 
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
-    final IFeatureType collectionFT =GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
 
-    return FeatureFactory.createFeature( "root", collectionFT, true );
+    return FeatureFactory.createFeature( null, "root", collectionFT, true );
   }
 
-  public static Collection readFeaturesFromDbf( final String basename )
-  {
-    Collection<Feature> features = null;
-    try
-    {
-      // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
-      // ist das immer so?
-      final DBaseFile dbf = new DBaseFile( basename, 1 );
-
-      final int recordNum = dbf.getRecordNum();
-      features = new ArrayList<Feature>( recordNum );
-      for( int i = 0; i < recordNum; i++ )
-      {
-        final Feature feature = dbf.getFRow( i + 1, true );
-        features.add( feature );
-      }
-
-      dbf.close();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( DBaseException e )
-    {
-      e.printStackTrace();
-    }
-
-    return features;
-  }
+  // public static Collection readFeaturesFromDbf( final String basename )
+  // {
+  // Collection<Feature> features = null;
+  // try
+  // {
+  // // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
+  // // ist das immer so?
+  // final DBaseFile dbf = new DBaseFile( basename, 1 );
+  //
+  // final int recordNum = dbf.getRecordNum();
+  // features = new ArrayList<Feature>( recordNum );
+  // for( int i = 0; i < recordNum; i++ )
+  // {
+  // final Feature feature = dbf.getFRow( i + 1, true );
+  // features.add( feature );
+  // }
+  //
+  // dbf.close();
+  // }
+  // catch( IOException e )
+  // {
+  // e.printStackTrace();
+  // }
+  // catch( DBaseException e )
+  // {
+  // e.printStackTrace();
+  // }
+  //
+  // return features;
+  // }
 }

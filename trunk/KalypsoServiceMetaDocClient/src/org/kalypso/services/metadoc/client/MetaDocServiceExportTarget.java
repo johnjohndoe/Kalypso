@@ -312,7 +312,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     // final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap()
     // );
 
-    return FeatureFactory.createFeature( "0", ft, fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
+    return FeatureFactory.createFeature( null, "0", ft, fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
   }
 
   /**

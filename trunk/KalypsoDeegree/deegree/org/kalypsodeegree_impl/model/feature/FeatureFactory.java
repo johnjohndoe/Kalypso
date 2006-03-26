@@ -130,9 +130,9 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( String id, IFeatureType featureType, Object[] properties )
+  public static Feature createFeature( Feature parent, String id, IFeatureType featureType, Object[] properties )
   {
-    return new Feature_Impl( featureType, id, properties );
+    return new Feature_Impl( parent, featureType, id, properties );
   }
 
   /**
@@ -140,9 +140,9 @@ public class FeatureFactory
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties ( e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( String id, IFeatureType featureType, boolean initializeWithDefaults )
+  public static Feature createFeature( Feature parent, String id, IFeatureType featureType, boolean initializeWithDefaults )
   {
-    return new Feature_Impl( featureType, id, initializeWithDefaults );
+    return new Feature_Impl( parent, featureType, id, initializeWithDefaults );
   }
 
   /**
@@ -150,9 +150,9 @@ public class FeatureFactory
    *             <code>Feature createFeature( String id, IFeatureType featureType, boolean initializeWithDefaults )</code>
    *             instead
    */
-  public static Feature createFeature( String id, IFeatureType featureType )
+  public static Feature createFeature( Feature parent, String id, IFeatureType featureType )
   {
-    return new Feature_Impl( featureType, id );
+    return new Feature_Impl( parent, featureType, id );
   }
 
   /**
@@ -168,9 +168,9 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( final String id, final IFeatureType featureType, final FeatureProperty[] properties )
+  public static Feature createFeature( Feature parent, final String id, final IFeatureType featureType, final FeatureProperty[] properties )
   {
-    final Feature result = createFeature( id, featureType, false );
+    final Feature result = createFeature( parent, id, featureType, false );
     for( int i = 0; i < properties.length; i++ )
     {
       if( featureType.getProperty( properties[i].getName() ) != null )
@@ -179,7 +179,7 @@ public class FeatureFactory
     return result;
   }
 
-  public static Feature createFeature( final GMLFeature gmlFeature, final IFeatureType featureTypes[], final URL context, final IUrlResolver urlResolver ) throws Exception
+  public static Feature createFeature( Feature parent, final GMLFeature gmlFeature, final IFeatureType featureTypes[], final URL context, final IUrlResolver urlResolver ) throws Exception
   {
     final QName featureName = gmlFeature.getQName();
 
@@ -201,7 +201,7 @@ public class FeatureFactory
     final GMLProperty[] gmlProps = gmlFeature.getProperties();
 
     final String id = gmlFeature.getId();
-    final Feature feature = new Feature_Impl( featureType, id, false );
+    final Feature feature = new Feature_Impl( parent, featureType, id, false );
 
     // every gmlProp should fit to a featurePropertyType
     for( int p = 0; p < gmlProps.length; p++ )
@@ -217,7 +217,7 @@ public class FeatureFactory
       // throw new Exception( "property '" + propName + "' not defined in
       // schema" );
       //
-      Object o = wrap( ftp, gmlProp, context, urlResolver );
+      Object o = wrap( feature, ftp, gmlProp, context, urlResolver );
 
       if( ftp.isList() )
         ((List) feature.getProperty( propertyPosition )).add( o );
@@ -230,11 +230,11 @@ public class FeatureFactory
   }
 
   /** Creates default feature, used by LegendView */
-  public static Feature createDefaultFeature( final String id, final IFeatureType ft, final boolean createGeometry )
+  public static Feature createDefaultFeature( Feature parent, final String id, final IFeatureType ft, final boolean createGeometry )
   {
     final IPropertyType[] propTypes = ft.getProperties();
     final FeatureProperty[] props = createDefaultFeatureProperty( propTypes, createGeometry );
-    final Feature feature = FeatureFactory.createFeature( id, ft, props );
+    final Feature feature = FeatureFactory.createFeature( parent, id, ft, props );
     return feature;
   }
 
@@ -258,17 +258,17 @@ public class FeatureFactory
     return (FeatureProperty[]) results.toArray( new FeatureProperty[results.size()] );
   }
 
-  private static Object wrap( IPropertyType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver ) throws Exception
+  private static Object wrap( Feature parent, IPropertyType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver ) throws Exception
   {
     if( ftp instanceof IRelationType )
-      return wrapXLink( (IRelationType) ftp, gmlProperty, context, urlResolver );
+      return wrapXLink( parent, (IRelationType) ftp, gmlProperty, context, urlResolver );
     if( ftp instanceof IValuePropertyType )
       return wrapNOXLink( (IValuePropertyType) ftp, gmlProperty, context, urlResolver );
     throw new UnsupportedOperationException();
     // this shozld not happen
   }
 
-  private static Object wrapXLink( IRelationType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver )
+  private static Object wrapXLink( Feature parent, IRelationType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver )
   {
     final Object value = gmlProperty.getPropertyValue();
     Object result = null;
@@ -281,7 +281,7 @@ public class FeatureFactory
 
       try
       {
-        result = createFeature( (GMLFeature) value, linkFTs, context, urlResolver );
+        result = createFeature( parent, (GMLFeature) value, linkFTs, context, urlResolver );
       }
       catch( final Exception e )
       {

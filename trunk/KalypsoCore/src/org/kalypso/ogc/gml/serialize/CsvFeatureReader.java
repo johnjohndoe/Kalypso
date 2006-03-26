@@ -60,10 +60,16 @@ public final class CsvFeatureReader
   public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
     final List<Feature> list = new ArrayList<Feature>();
-    final IFeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
+
+    final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
+    // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
+    // HashMap() );
+    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
+
+    final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
+    loadCSVIntoList( rootFeature, ft, list, reader, comment, delemiter, lineskip );
 
     // featurelist erzeugen
-    final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
     // final List flist = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     // flist.addAll( list );
 
@@ -73,12 +79,12 @@ public final class CsvFeatureReader
     return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation );
   }
 
-  private IFeatureType loadCSVIntoList( final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  private void loadCSVIntoList( Feature parent, IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
-    // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
-    // HashMap() );
-    final IFeatureType featureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
+    // final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
+    // // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
+    // // HashMap() );
+    // final IFeatureType featureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
 
     final LineNumberReader lnr = new LineNumberReader( reader );
     int skippedlines = 0;
@@ -97,12 +103,12 @@ public final class CsvFeatureReader
         continue;
 
       final String[] tokens = line.split( delemiter );
-      list.add( createFeatureFromTokens( "" + lnr.getLineNumber(), tokens, featureType ) );
+      list.add( createFeatureFromTokens( parent, "" + lnr.getLineNumber(), tokens, ft ) );
     }
-    return featureType;
+    return;
   }
 
-  private Feature createFeatureFromTokens( final String index, final String[] tokens, final IFeatureType featureType ) throws CsvException
+  private Feature createFeatureFromTokens( Feature parent, final String index, final String[] tokens, final IFeatureType featureType ) throws CsvException
   {
     final IPropertyType[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
@@ -125,7 +131,7 @@ public final class CsvFeatureReader
       data[i] = parseColumns( vpt.getValueClass(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
     }
 
-    return FeatureFactory.createFeature( index, featureType, data );
+    return FeatureFactory.createFeature( parent, index, featureType, data );
   }
 
   private static Object parseColumns( final Class type, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException

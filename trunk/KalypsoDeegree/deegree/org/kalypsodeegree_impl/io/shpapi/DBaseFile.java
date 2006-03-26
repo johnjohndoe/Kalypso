@@ -95,6 +95,12 @@ import org.kalypsodeegree_impl.tools.TimeTools;
  */
 public class DBaseFile
 {
+
+  public IFeatureType getFeatureType( )
+  {
+    return m_featureType;
+  }
+
   private static String NS_SHAPEFILE = "namespace";
 
   private ArrayList colHeader = new ArrayList();
@@ -104,7 +110,7 @@ public class DBaseFile
   private DBFDataSection dataSection = null;
 
   // feature type of the dbase table + a GM_Object as last field
-  private IFeatureType featureType = null;
+  private IFeatureType m_featureType = null;
 
   // Hashtable to contain info abouts in the table
   private Hashtable column_info = new Hashtable();
@@ -166,7 +172,7 @@ public class DBaseFile
   public DBaseFile( String url, int defaultFileShapeType ) throws IOException
   {
     fname = url;
-    m_prefix=fname.replaceAll(".+[/|\\\\]","");
+    m_prefix = fname.replaceAll( ".+[/|\\\\]", "" );
     m_defaultFileShapeType = defaultFileShapeType;
     // creates rafDbf
     rafDbf = new RandomAccessFile( url + _dbf, "r" );
@@ -325,7 +331,7 @@ public class DBaseFile
       colHeader.add( col_name );
     } // end for
 
-    featureType = createFeatureType();
+    m_featureType = createFeatureType();
   } // end of initDBaseFile
 
   /**
@@ -346,8 +352,7 @@ public class DBaseFile
     final ITypeHandler floatTH = registry.getTypeHandlerForClassName( Float.class );
     final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
     final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
-    
-    
+
     final ITypeHandler byteArrayOutputStreamTH = registry.getTypeHandlerForClassName( ByteArrayOutputStream.class );
 
     for( int i = 0; i < colHeader.size(); i++ )
@@ -653,7 +658,7 @@ public class DBaseFile
    * @param allowNull
    *          if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
-  public Feature getFRow( int rowNo, boolean allowNull ) throws DBaseException
+  public Feature getFRow( Feature parent, int rowNo, boolean allowNull ) throws DBaseException
   {
     goTop();
 
@@ -743,9 +748,9 @@ public class DBaseFile
         fp[i] = allowNull ? null : "";
       }
     }
-//    final String prefix = featureType.getQName().getLocalPart();
-   
-    return FeatureFactory.createFeature( m_prefix + rowNo, featureType, fp );
+    // final String prefix = featureType.getQName().getLocalPart();
+
+    return FeatureFactory.createFeature( parent,m_prefix + rowNo, m_featureType, fp );
   }
 
   /**

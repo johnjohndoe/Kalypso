@@ -28,6 +28,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class Feature_Impl implements Feature
 {
+  private Object m_parent = null;
+
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 
   private GM_Envelope m_envelope = INVALID_ENV;
@@ -46,15 +48,18 @@ public class Feature_Impl implements Feature
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
    * 
+   * @param parent
+   *          either a parent Feature or a GMLWorkspace
    * @deprecated use Constructor:
    *             <code>Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )</code>
    *             instead.
    */
   @Deprecated
-  protected Feature_Impl( final IFeatureType ft, final String id )
+  protected Feature_Impl( final Feature parent, final IFeatureType ft, final String id )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
+    m_parent = parent;
     m_featureType = ft;
     m_id = id;
     // initialize
@@ -88,10 +93,11 @@ public class Feature_Impl implements Feature
    *          set <code>true</code> when generating from UserInterface <br>
    *          set <code>false</code> when generating from GML or so.
    */
-  public Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )
+  public Feature_Impl( final Object parent, final IFeatureType ft, final String id, boolean initializeWithDefaults )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
+    m_parent = parent;
     m_featureType = ft;
     m_id = id;
 
@@ -121,11 +127,12 @@ public class Feature_Impl implements Feature
     }
   }
 
-  protected Feature_Impl( IFeatureType ft, String id, Object[] propValues )
+  protected Feature_Impl( final Object parent, IFeatureType ft, String id, Object[] propValues )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
 
+    m_parent = parent;
     m_featureType = ft;
     m_id = id;
     m_properties = propValues;
@@ -412,4 +419,50 @@ public class Feature_Impl implements Feature
     setProperty( pt, value );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
+   */
+  public GMLWorkspace getWorkspace( )
+  {
+    if( m_parent instanceof GMLWorkspace )
+      return (GMLWorkspace) m_parent;
+    if( m_parent instanceof Feature )
+      return ((Feature) m_parent).getWorkspace();
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParent()
+   */
+  public Feature getParent( )
+  {
+    if( m_parent instanceof Feature )
+      return (Feature) m_parent;
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  public void setWorkspace( GMLWorkspace workspace )
+  {
+    if( m_parent == null || m_parent == workspace )
+      m_parent = workspace;
+    else
+      throw new UnsupportedOperationException( "is not a root feature" );
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    final StringBuffer buffer = new StringBuffer( "Feature " );
+    if( m_featureType != null )
+      buffer.append( m_featureType.getQName().getLocalPart() );
+    if( m_id != null )
+      buffer.append( "#" + m_id );
+    return buffer.toString();
+  }
 }

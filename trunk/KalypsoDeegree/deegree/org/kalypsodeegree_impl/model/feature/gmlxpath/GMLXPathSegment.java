@@ -38,38 +38,74 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
 
 /**
+ * each GMLXPathSegment represents the parts of the gmlxPath between two '/' <br>
+ * 
  * @author doemming
  */
-public class XElementFromOperation implements IXElement
+final class GMLXPathSegment
 {
 
-  private final IXElement m_operand1;
+  private final static XElementFactory m_fac = new XElementFactory();
 
-  private final IXElement m_operand2;
+  private final IXElement m_addressXElement;
 
-  private final IOperation m_operation;
+  private final IXElement m_conditionXElement;
 
-  public XElementFromOperation( final IXElement operand1, final IOperation operation, final IXElement operand2 )
+  private final String m_segment;
+
+  public GMLXPathSegment( final Feature feature )
   {
-    m_operand1 = operand1;
-    m_operation = operation;
-    m_operand2 = operand2;
+    this( "id( '" + feature.getId() + "' )" );
+  }
+
+  public GMLXPathSegment( final String segmentString )
+  {
+    m_segment = segmentString;
+    int index = segmentString.indexOf( "[" );
+    final String address;
+    final String condition;
+    if( index < 0 )
+    {
+      address = segmentString;
+      condition = null;
+    }
+    else
+    {
+      address = segmentString.substring( 0, index );
+      condition = segmentString.substring( index );
+    }
+    m_addressXElement = m_fac.create( address );
+    if( condition != null )
+    {
+      m_conditionXElement = m_fac.create( condition );
+    }
+    else
+      m_conditionXElement = null;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IXElement#evaluate()
+   * @see java.lang.Object#toString()
    */
-  public Object evaluate( GMLWorkspace contextWS, Feature contextFE ) throws FeaturePathException
+  @Override
+  public String toString( )
   {
-    final Object value1 = m_operand1.evaluate( contextWS, contextFE );
-    final Object value2 = m_operand2.evaluate( contextWS, contextFE );
-    return m_operation.operate( value1, value2 );
+    return m_segment;
+  }
+
+  public IXElement getAddressXElement( )
+  {
+    return m_addressXElement;
+  }
+
+  public IXElement getConditionXElement( )
+  {
+    return m_conditionXElement;
   }
 
 }

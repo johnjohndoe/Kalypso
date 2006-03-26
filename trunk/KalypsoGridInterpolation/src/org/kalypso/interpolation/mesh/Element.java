@@ -68,7 +68,7 @@ public class Element
       crs = cs;
     }
     GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
-    final Feature f = FeatureFactory.createFeature( eleNo, m_featureType, false );
+    final Feature f = FeatureFactory.createFeature( null, eleNo, m_featureType, false );
 
     FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( m_featureType.getProperty( "GEOM" ), surface );
     f.addProperty( geoProperty );
@@ -82,7 +82,7 @@ public class Element
   {
     if( crs == null )
       throw new GM_Exception( "No coordinate system defined! Element can not be created" );
-    final Feature f = FeatureFactory.createFeature( eleNo, m_featureType, false );
+    final Feature f = FeatureFactory.createFeature( null, eleNo, m_featureType, false );
     final FeatureProperty geomProperty = FeatureFactory.createFeatureProperty( m_featureType.getProperty( "GEOM" ), geom );
     f.addProperty( geomProperty );
     this.feature = f;

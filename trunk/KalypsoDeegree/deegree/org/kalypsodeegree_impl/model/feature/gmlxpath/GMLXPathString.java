@@ -38,9 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
-public class Cond
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
+
+/**
+ * representation of Strings in GMLXPath expressions, used temporary by GMLXPath-compiler
+ * 
+ * @author doemming
+ */
+public class GMLXPathString
 {
   private final String m_condition;
 
@@ -48,11 +55,11 @@ public class Cond
 
   private IXElement m_xElement = null;
 
-  private static FeaturePathConditionFactory m_fac = new FeaturePathConditionFactory();
+  private static XElementFactory m_fac = new XElementFactory();
 
   private static int m_bID = 0;
 
-  public Cond( String condition )
+  protected GMLXPathString( String condition )
   {
     condition = condition.replaceAll( "^\\[", "" );
     condition = condition.replaceAll( "\\]$", "" );
@@ -78,7 +85,7 @@ public class Cond
     m_marked = buffer.toString();
   }
 
-  private Cond( String condition, String marked )
+  private GMLXPathString( String condition, String marked )
   {
     m_condition = condition;
     m_marked = marked;
@@ -110,18 +117,18 @@ public class Cond
     }
     if( start > 0 && end > 0 )
     {
-      final Cond preCond;
+      final GMLXPathString preCond;
       if( start > 0 )
-        preCond = new Cond( m_condition.substring( 0, start ) );
+        preCond = new GMLXPathString( m_condition.substring( 0, start ) );
       else
         preCond = null;
 
-      final Cond braketCond = new Cond( m_condition.substring( start + 1, end ) );
-      final IXElement element = m_fac.create( braketCond );
+      final String braketString = m_condition.substring( start + 1, end );
+      final IXElement element = m_fac.create( braketString );
 
-      final Cond postCond;
+      final GMLXPathString postCond;
       if( end + 1 < m_condition.length() )
-        postCond = new Cond( m_condition.substring( end + 1 ) );
+        postCond = new GMLXPathString( m_condition.substring( end + 1 ) );
       else
         postCond = null;
 
@@ -142,7 +149,8 @@ public class Cond
         newCondintion.append( postCond.getCond() );
         newMarked.append( postCond.getMarked() );
       }
-      final Cond cond = new Cond( newCondintion.toString(), newMarked.toString() );
+      final GMLXPathString cond = new GMLXPathString( newCondintion.toString(), newMarked.toString() );
+
       m_xElement = m_fac.create( cond );
     }
     else
@@ -180,7 +188,6 @@ public class Cond
   @Override
   public String toString( )
   {
-    // TODO Auto-generated method stub
     return m_condition + "\n" + m_marked;
   }
 

@@ -38,45 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.xpath;
+package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
+
 /**
+ * Interface representing a GMLXPathFunction
+ * 
  * @author doemming
  */
-public abstract class Function implements IFunction
+public interface IGMLXPathFunction
 {
 
-  private final String m_name;
+  public Pattern getPattern( );
 
-  private Pattern m_pattern;
+  public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException;
 
-  public Function(final  String name )
-  {
-    m_name = name;
-    m_pattern = Pattern.compile( "^(.*" + m_name + ")\\((.*?)\\)" );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getPattern()
-   */
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.path.IFunction#getArgument(java.util.regex.Matcher,
-   *      org.kalypsodeegree_impl.model.feature.path.Cond)
-   */
-  public String getArgument( Matcher matcher, Cond cond )
-  {
-    final String prefix = matcher.group( 1 );
-    String condition = cond.getCond();
-    final String argument = condition.substring( prefix.length() +1, condition.length() - 1 );
-    return argument;
-  }
-
-  public Pattern getPattern( )
-  {
-    return m_pattern;
-  }
+  public String getArgument( Matcher matcher, GMLXPathString cond );
 
 }
