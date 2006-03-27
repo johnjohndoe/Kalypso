@@ -88,6 +88,11 @@ public interface IProfilPoint
       return m_parameters.get( PARAMETER.LABEL ).toString();
     }
 
+    public POINT_PROPERTY[] getDependencies( )
+    {
+      return null;
+    }
+
     @SuppressWarnings("unchecked")
     private final HashMap<Object, Object> m_parameters = new HashMap();
 

@@ -50,5 +50,10 @@
               description="DoppelterPunkt"
               id="pasche.doppelterpunkt"
               type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.BewuchsRule"
+              description="Bewuchs"
+              id="pasche.bewuchs"
+              type="Pasche"/>
    </extension>
 </plugin>
