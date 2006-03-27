@@ -64,8 +64,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   private final Set m_markers = new TreeSet();
 
   // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle
-  // Systemzeit
-  // im TableView angezeit!!!
+  // Systemzeit im TableView angezeit!!!
   private final static DateFormat df = DateFormat.getDateTimeInstance();
 
   /**
@@ -77,7 +76,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   {
     final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
-    // TRICKY: sometimes it comes here but value is not a date. This must be
+    // WORKAROUND: sometimes it comes here but value is not a date. This must be
     // a threading problem. The workaround is to return null. I'm not sure
     // if that'll always work correctly though.
     if( !( value instanceof Date ) )

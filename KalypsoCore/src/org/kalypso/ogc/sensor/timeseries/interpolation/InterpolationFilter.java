@@ -261,7 +261,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       // optionally remember the last interpolated values in order
       // to fill them till the end of the new model
       Object[] lastValidTupple = null;
-      if( m_fillLastWithValid )
+      if( m_fillLastWithValid && intModel.getCount() > 0 )
       {
         final int pos = intModel.getCount() - 1;
 
