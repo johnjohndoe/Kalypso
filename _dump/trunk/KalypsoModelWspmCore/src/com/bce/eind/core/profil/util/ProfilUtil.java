@@ -10,6 +10,7 @@ import java.util.List;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.IProfilPoints;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
@@ -25,12 +26,14 @@ public class ProfilUtil
   {
     if( profil == null )
       return null;
-    final IProfilPoint leftP = (pointBefore == null) ? profil.getPoints().getFirst() : pointBefore;
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final IProfilPoint leftP = ((pointBefore == null)&&(!points.isEmpty())) ? points.getFirst() : pointBefore;
     try
     {
       final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
       return splitSegment( leftP, rightP );
     }
+
     catch( ProfilDataException e )
     {
       // should never happen

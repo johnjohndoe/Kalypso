@@ -49,27 +49,17 @@ public class ProfilChangesTest extends TestCase
   {
     final IProfil p = ProfilFactory.createProfil();
     final ArrayList<String> metaData = new ArrayList<String>();
-    for(int i = 0;i < 13;i++)
+    for( int i = 0; i < 13; i++ )
     {
-      metaData.add("");
+      metaData.add( "" );
     }
-    IProfilChange change = new ProfilPropertyEdit(p,PROFIL_PROPERTY.METASTRINGS,metaData);
-    change.doChange(null);
+    IProfilChange change = new ProfilPropertyEdit( p, PROFIL_PROPERTY.METASTRINGS, metaData );
+    change.doChange( null );
     final IProfilChange[] changes = new IProfilChange[1];
     final ProfilChangeHint hint = new ProfilChangeHint();
 
-    changes[0] = new PointAdd( p, null, null );
-    changes[0].doChange( hint );
-    final IProfilPoint firstPkt = p.getPoints().getFirst();
-    changes[0] = new PointPropertyEdit( firstPkt, POINT_PROPERTY.HOEHE, 50.0 );
-    changes[0].doChange( hint );
-    changes[0] = new PointAdd( p, firstPkt, null );
-    changes[0].doChange( hint );
-    final IProfilPoint lastPkt = p.getPoints().getLast();
-    changes[0] = new PointPropertyEdit( lastPkt, POINT_PROPERTY.BREITE, 100.0 );
-    changes[0].doChange( hint );
-    changes[0] = new PointPropertyEdit( lastPkt, POINT_PROPERTY.HOEHE, 50.0 );
-    changes[0].doChange( hint );
+    final IProfilPoint firstPkt = p.addPoint( 0, 50.0 );
+    final IProfilPoint lastPkt = p.addPoint( 100.0, 50.0 );
 
     final IProfilPoint p3 = ProfilUtil.splitSegment( firstPkt, lastPkt );
     changes[0] = new PointPropertyEdit( p3, POINT_PROPERTY.HOEHE, 0.0 );
@@ -93,8 +83,6 @@ public class ProfilChangesTest extends TestCase
     final IProfilPoint p2 = ProfilUtil.splitSegment( p1, p3 );
     changes[0] = new PointAdd( p, p1, p2 );
     changes[0].doChange( hint );
-
- 
 
     changes[0] = new DeviderAdd( p, DEVIDER_TYP.DURCHSTROEMTE, p1 );
     changes[0].doChange( hint );
@@ -122,11 +110,15 @@ public class ProfilChangesTest extends TestCase
 
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( POINT_PROPERTY.RAUHEIT ) );
     assertEquals( "RauheitTyp:", RAUHEIT_TYP.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
-
+    final ArrayList<String> stringList = new ArrayList<String>();
+    stringList.add( "" );
+    stringList.add( "Einzeiliger Kommentar" );
+    stringList.add( "dritte Zeile" );
+    changes[0] = new ProfilPropertyEdit( p, PROFIL_PROPERTY.KOMMENTAR, stringList );
+    changes[0].doChange( hint );
     return p;
   }
 
- 
   public void addMoveDeleteBordvoll( final IProfil p ) throws Exception
   {
     final LinkedList<IProfilPoint> pktlst = p.getPoints();
@@ -160,19 +152,19 @@ public class ProfilChangesTest extends TestCase
   public void setGetDeleteBuilding( final IProfil p ) throws Exception
   {
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
-    IProfilChange change = new BuildingSet (p,building);
-    IProfilChange undoChange = change.doChange(null);
+    IProfilChange change = new BuildingSet( p, building );
+    IProfilChange undoChange = change.doChange( null );
 
     assertEquals( "neues Gebäude:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getPoints().getFirst();
-    change = new PointPropertyEdit(firstPkt,POINT_PROPERTY.UNTERKANTEBRUECKE ,1000.23456 );
-    change.doChange(null);
-    change = new BuildingEdit(building,BUILDING_PROPERTY.FORMBEIWERT, 0.5 );
-    change.doChange(null);
+    change = new PointPropertyEdit( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
+    change.doChange( null );
+    change = new BuildingEdit( building, BUILDING_PROPERTY.FORMBEIWERT, 0.5 );
+    change.doChange( null );
     assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE ) );
-    
-    undoChange.doChange(null);
+
+    undoChange.doChange( null );
     assertEquals( "kein Gebäude:", null, p.getBuilding() );
 
     try

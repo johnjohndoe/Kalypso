@@ -19,7 +19,7 @@ public class BewuchsRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null )
+    if(( profil == null )||(!profil.getProfilPoints().propertyExists(POINT_PROPERTY.BEWUCHS_AX)))
       return;
     try
     {
