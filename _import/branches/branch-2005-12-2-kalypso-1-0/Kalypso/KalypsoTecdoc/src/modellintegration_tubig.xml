@@ -16,10 +16,41 @@
   Programm durch die Firma Thiele + Büttner IG so angepasst, dass ein
   oberflächenloser Betrieb des Rechenkerns möglich ist. Desweiteren wurde der
   Programmteil zur Talsperrensteuerung als 32-Bit-Programm für Windows neu
-  programmiert.</para>
+  programmiert und ein Fehler korrigiert. Dadurch haben sich im Projektverlauf
+  folgende neue oder geänderte EXE- bzw. BAT-Dateien für den Rechenkern
+  ergeben:</para>
 
-  <para>Dieser Rechenkern ist serverseitig als Modell-Plugin in KALYPSO
-  integriert. Zur clientseitigen Integration wurde eine GML-basierte
+  <para><variablelist>
+      <varlistentry>
+        <term>oberflächenloser Betrieb</term>
+
+        <listitem>
+          <para>m_abschl.exe, M_add.exe, M_COPY.EXE, M_Delete.exe,
+          m_fehler.exe, M_Min.exe, M_mult.exe, M_pro.exe, m_spei2001.exe,
+          M_SUM.EXE, M_trans.exe, M_wlm.exe, M_zg.exe, M_zgpar.exe</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>32-Bit-Programm zur Talsperrensteuerung</term>
+
+        <listitem>
+          <para>M_BODESTEU.EXE, run4.bat, run5.bat, wobei M_VorSt.exe
+          entfällt</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Fehlerkorrektur</term>
+
+        <listitem>
+          <para>run3.bat</para>
+        </listitem>
+      </varlistentry>
+    </variablelist></para>
+
+  <para>Dieser aktualisierte Rechenkern ist serverseitig als Modell-Plugin in
+  KALYPSO integriert. Zur clientseitigen Integration wurde eine GML-basierte
   Modellspezifikation erstellt.</para>
 
   <para>Die zur Integration der Modelle nötige Programmierung ist innerhalb
@@ -724,7 +755,7 @@
       jeder Rechenvariante befindet sich noch eine Vorlagendatei
       <filename>Info_Rechenvariante.gft</filename>, die ggf. noch zusätzlich
       die Berechnungsart anzeigt und auch deren Auswahl ermöglicht (betrifft
-      nur das Bode-Modell). </para>
+      nur das Bode-Modell).</para>
     </section>
   </section>
 
