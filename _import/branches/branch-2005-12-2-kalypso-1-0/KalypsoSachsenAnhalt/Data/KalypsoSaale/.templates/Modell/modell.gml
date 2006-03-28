@@ -19549,8 +19549,8 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>21</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4433000.0,5701500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>

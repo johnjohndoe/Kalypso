@@ -1,4 +1,4 @@
-#Thu Mar 23 13:14:51 CET 2006
+#Thu Mar 23 13:43:01 CET 2006
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -64,6 +64,7 @@ encoding//Rechenl\u00E4ufe/test/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//.prognose/prognose14/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/Diagramm.odt=UTF-8
+encoding//.prognose/20060321_Belger/Niederschlag/572010.zml=UTF-8
 encoding//..BCE_intern/.HWVOR00_import/Stammdat=Cp1252
 encoding//.prognose/prognose7/calcCase.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/Anfangsvolumen.gtt=UTF-8
@@ -276,5 +277,6 @@ encoding//.prognose/Vorhersage-19-11-2004_17h24/Anfangsvolumen.gtt=UTF-8
 encoding//.templates/Modell/modell.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_GROEDI.zml=UTF-8
+encoding//.prognose/20060321_Belger/Niederschlag/576900.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/zeitreihen/Diagramm.odt=UTF-8
 encoding//.prognose/prognose11/calcCase.gml=UTF-8
