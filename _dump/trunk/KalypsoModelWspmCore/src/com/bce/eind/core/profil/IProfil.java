@@ -12,17 +12,36 @@ public interface IProfil
 {
   public static enum RAUHEIT_TYP
   {
-    ks, kst
+    ks,
+    kst
   };
 
   public static enum WEHR_TYP
   {
-    rundkronig, breitkronig, scharfkantig, Beiwert
+    rundkronig,
+    breitkronig,
+    scharfkantig,
+    Beiwert
   };
 
   public static enum PROFIL_PROPERTY
   {
-    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, RAUHEIT_TYP, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
+    /** ObjectTyp=List<String> */
+    KOMMENTAR,
+    /** ObjectTyp=String */
+    MEHRFELDBRUECKE,
+    /** ObjectTyp=List<String> */
+    METASTRINGS,
+    /** ObjectTyp=String */
+    STATION,
+    /** ObjectTyp=RAUHEIT_TYP */
+    RAUHEIT_TYP,
+    /** ObjectTyp=String */
+    STATUS,
+    /** ObjectTyp=String */
+    VERZWEIGUNGSKENNUNG,
+    /** ObjectTyp=String */
+    WASSERSPIEGEL
   }
 
   /**
@@ -48,8 +67,7 @@ public interface IProfil
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
 
   /**
-   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste
-   * als nächsten
+   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste als nächsten
    */
   public IProfilPoint findNearestPoint( final double breite );
 
@@ -63,7 +81,9 @@ public interface IProfil
    * @return
    */
   public IProfilPoint findPoint( final double breite, final double delta );
-  public IProfilPoint findPoint( final double breite, final double hoehe,final POINT_PROPERTY property );
+
+  public IProfilPoint findPoint( final double breite, final double hoehe, final POINT_PROPERTY property );
+
   /**
    * @param index
    * @param breite
@@ -101,7 +121,7 @@ public interface IProfil
 
   /**
    * @param key
-   *          Schlüsselwert einer Hashmap see IProfil.PROPERTY
+   *          Schlüsselwert einer Hashmap see IProfil.PROFIL_PROPERTY
    * @return Wert zu key oder null
    */
   public Object getProperty( Object key );
@@ -114,18 +134,15 @@ public interface IProfil
   public double[] getValuesFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
   /**
-   * Erzeugt einen neuen Punkt und fügt ihn in das Profil ein. Er wird genau in die Mitte des
-   * angegebenen Segments gesetzt, seine Werte interpoliert oder fortgesetzt.
+   * Erzeugt einen neuen Punkt und fügt ihn in das Profil ein. Er wird genau in die Mitte des angegebenen Segments
+   * gesetzt, seine Werte interpoliert oder fortgesetzt.
    */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
 
-  
   /**
-   * Fügt einen neuen Punkt ein. Wie {@link #insertPoint(IProfilPoint)}, nur Breite und Höhe sind
-   * bereits vorgegeben
+   * Fügt einen neuen Punkt ein. Wie {@link #insertPoint(IProfilPoint)}, nur Breite und Höhe sind bereits vorgegeben
    */
-  public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
-      final double hoehe ) throws ProfilDataException;
+  public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite, final double hoehe ) throws ProfilDataException;
 
   /**
    * Fügt einen bestehenden Punkt ein. return true wenn die Liste geändert wurde, sonst false.
@@ -135,8 +152,7 @@ public interface IProfil
    * @return
    * @throws ProfilDataException
    */
-  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
-      throws ProfilDataException;
+  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException;
 
   /**
    * @return Den Punkt vor dem Verschieben
@@ -150,7 +166,6 @@ public interface IProfil
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException;
 
- 
   /**
    * @param devider
    * @return den entfernten Trenner
@@ -171,7 +186,7 @@ public interface IProfil
 
   /**
    * @param key
-   *          eine HashMap see IProfil.PROPERTY
+   *          eine HashMap see IProfil.PROFIL_PROPERTY
    * @return den zugehörigen wert
    */
   public Object removeProperty( final Object key );
@@ -205,8 +220,7 @@ public interface IProfil
 
   public void setActiveProperty( POINT_PROPERTY activeProperty );
 
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp,
-      final boolean visible );
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible );
 
   public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp );
 }

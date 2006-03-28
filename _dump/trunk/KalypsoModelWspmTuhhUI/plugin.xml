@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.bce.eind.kalypso1d"
+   id="org.kalypso.eind.tuhh.stationaer"
    name="Profil Kalypso 1d"
    version="1.0.0"
    provider-name="bce.com"
-   class="org.bce.eind.kalypso1d.ProfilKalypso1DPlugin">
+   class="org.kalypso.eind.tuhh.stationaer.Kalypso1DTUHHPlugin">
    <runtime>
       <library name="kalypso1d.jar">
          <export name="*"/>
@@ -26,32 +26,32 @@
    <extension
          point="com.bce.eind.core.validatorrule">
       <rule
-            class="org.bce.eind.kalypso1d.rules.RuecksprungRule"
+            class="org.kalypso.eind.tuhh.stationaer.rules.RuecksprungRule"
             description="Rücksprung"
             id="pasche.ruecksprung"
             type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.TrennerRule"
+              class="org.kalypso.eind.tuhh.stationaer.rules.TrennerRule"
               description="Trennflächen"
               id="pasche.trenner"
               type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.BrueckeRule"
+              class="org.kalypso.eind.tuhh.stationaer.rules.BrueckeRule"
               description="Brücke"
               id="pasche.bruecke"
               type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.WehrRule"
+              class="org.kalypso.eind.tuhh.stationaer.rules.WehrRule"
               description="Wehr"
               id="pasche.wehr"
               type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.DoppelterPunktRule"
+              class="org.kalypso.eind.tuhh.stationaer.rules.DoppelterPunktRule"
               description="DoppelterPunkt"
               id="pasche.doppelterpunkt"
               type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.BewuchsRule"
+              class="org.kalypso.eind.tuhh.stationaer.rules.BewuchsRule"
               description="Bewuchs"
               id="pasche.bewuchs"
               type="Pasche"/>

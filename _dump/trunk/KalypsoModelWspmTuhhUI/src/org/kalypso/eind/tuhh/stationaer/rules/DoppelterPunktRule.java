@@ -1,4 +1,4 @@
-package org.bce.eind.kalypso1d.rules;
+package org.kalypso.eind.tuhh.stationaer.rules;
 
 import java.util.List;
 

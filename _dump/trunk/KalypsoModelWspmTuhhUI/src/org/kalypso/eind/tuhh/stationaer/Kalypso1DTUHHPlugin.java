@@ -1,4 +1,4 @@
-package org.bce.eind.kalypso1d;
+package org.kalypso.eind.tuhh.stationaer;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -7,14 +7,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class ProfilKalypso1DPlugin extends AbstractUIPlugin {
+public class Kalypso1DTUHHPlugin extends AbstractUIPlugin {
 	//The shared instance.
-	private static ProfilKalypso1DPlugin plugin;
+	private static Kalypso1DTUHHPlugin plugin;
 	
 	/**
 	 * The constructor.
 	 */
-	public ProfilKalypso1DPlugin() {
+	public Kalypso1DTUHHPlugin() {
 		super();
 		plugin = this;
 	}
@@ -39,7 +39,7 @@ public class ProfilKalypso1DPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static ProfilKalypso1DPlugin getDefault() {
+	public static Kalypso1DTUHHPlugin getDefault() {
 		return plugin;
 	}
 
@@ -51,6 +51,6 @@ public class ProfilKalypso1DPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.bce.eind.kalypso1d", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.kalypso.eind.tuhh.stationaer", path);
 	}
 }
