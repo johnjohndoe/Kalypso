@@ -1,0 +1,3 @@
+Test-Rechenvarianten zur Verwendung mit dem Knopf "Simulation Debug" (aus Befehlsgruppe "Kalypso Simulation Debug")
+"Normale" Rechenvarianten mit Info über zu vergleichende Dateien (und die Grunddaten, mit denen verglichenwerden soll)
+Achtung: erst Kopieren und dann Test-Rechnung starten (weil bei manchen Rechnungen Eingangszeitreihen überschrieben werden)
