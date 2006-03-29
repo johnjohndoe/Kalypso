@@ -2,6 +2,48 @@
 <section id="robotron-ims" vendor="sachsen-anhalt">
   <title>Schnittstelle zum IMS: Dokumentenablage</title>
 
+	<para>Aus dem KALYPSO-Vorhersageassistent heraus können Pegel- und
+		Speichervorhersagen, Datenübersichten (z.B. Gebietsniederschlag),
+		Längsschnitte und Scheitelwerte in Form von Tabellen (Textdateien mit
+		Trennzeichen, z.B. im CSV-Format) und Diagrammen (Abbildung in Form eines Bildes
+		z.B. im PNG-Format). Diese Dokumente werden strukturiert im IMS abgelegt (Siehe
+		Abbildungen
+		<xref linked="abb_ims_dok_bode"/>,
+		<xref linked="abb_ims_dok_ilse"/> und
+		<xref linked="abb_ims_dok_saale"/>).</para>
+
+	<para>
+		<figure id="abb_ims_dok_bode">
+			<title>Struktur der Dokumentenablage für die Bode</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_bode.png"
+						format="PNG" scale="75"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<figure id="abb_ims_dok_ilse">
+			<title>Struktur der Dokumentenablage für die Ilse</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_ilse.png"
+						format="PNG" scale="75"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<figure id="abb_ims_dok_saale">
+			<title>Struktur der Dokumentenablage für die Saale</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_saale.png"
+						format="PNG" scale="75"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</para>
+
   <para>Die Schnittstelle basiert auf einem Webdienst-Methodenaufruf. Dazu
   wird Apache-Axis benutzt, in Gegensatz zu der in KALYPSO sonst übliche von
   Sun implementierten JAX-RPC Bibliothek.</para>

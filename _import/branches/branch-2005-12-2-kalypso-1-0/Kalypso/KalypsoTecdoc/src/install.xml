@@ -621,7 +621,50 @@
       <para>Das Setzen der System-Properties geschieht über eine spezielle
       <filename>Kalypso_server_start.bat</filename> beim Start des
       Applikation-Servers bzw. in den Registry-Einstellungen des
-      Tomcat-Dienstes, falls der Server als Dienst gestartet wird..</para>
+      Tomcat-Dienstes, falls der Server als Dienst gestartet wird.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Ausfallsicherheit</title>
+
+    <para>Die Ausfallsicherheit wird sowohl durch die Hardware als auch durch
+    die Software garantiert. Für die Einzelheiten der Hardware Konfiguration
+    verweisen wir sie auf die entsprechende Dokumentation bei Ihren System
+    Administrator. Hier gehen wir besonders auf die durch KALYPSO angebotene
+    serverseitige Ausfallsicherheit ein.</para>
+
+    <para vendor="sachsen-anhalt">Der KALYPSO Server ist sowohl in Magdeburg
+    (MD) als auch in Halle (HAL) installiert. Der System ist also an sich
+    redundant vorhanden, dies ermöglicht die Umstellung auf der andere
+    Standort, sollte es ein komplett Ausfall des Server geben. Dabei ist zu
+    beachten dass der Netzwerk der sog. Single-Point-Of-Failure repräsentiert:
+    ohne ihn funktionniert das Gesamtsystem nicht. In diesem Fall kann der
+    KALYPSO-Client trotzdem gestartet und benutzt werden,
+    Benutzerberechtigungen abfragen, Zeitreihen abrufen und züruckschreiben,
+    Modelldaten abgleichen und Dokumente in der Ablage abspeichern sind aber
+    unzulässige Funktionen.</para>
+
+	<para vendor="sachsen-anhalt">Folgende Tabelle (Siehe <xref
+			linkend="tbl_ausfall"/>) listet die mögliche Systemausfälle und die
+		entsprechende Maßnahmen.
+		<figure id="tbl_ausfall">
+			<title>Maßnahmen gegen Systemausfälle</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/sst/sachsen-anhalt/ausfall.png"
+						format="PNG" scale="40"/>
+				</imageobject>
+			</mediaobject>
+		</figure></para>
+
+    <section>
+      <title>W/Q-Umrechnungsdaten</title>
+
+      <para>Um eine bessere Ausfallsicherheit gegen WISKI zu gewährleisten
+      wurde speziell dafür einen Caching-Mechnismus der W/Q-Tabellen
+      entwickelt. Mehr Information dazu finden Sie in <xref
+      linkend="wiski_wq_cache" />.</para>
     </section>
   </section>
 </chapter>

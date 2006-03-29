@@ -286,7 +286,7 @@
     <filename>WiskiRepository.executeWiskiCall</filename>).</para>
   </section>
 
-  <section>
+  <section id="wiski_wq_cache">
     <title>Caching-Mechanismus von W/Q-artigen Beziehungen</title>
 
     <para>Um den Betrieb von KALYPSO auch beim Ausfall von WISKI zumindest

@@ -31,6 +31,17 @@
   darf sich der Benutzer nur im Simulationsbetrieb anmelden. Sonst darf er
   sich im Regelbetrieb und im Simulationsbetrieb anmelden.</para>
 
+	<para>Folgende Abbildung (Siehe
+		<xref linkend="abb_ims_user"/>) fasst diese Zuordnung zusammen.
+		<figure id="abb_ims_user">
+			<title>Zuordnung der Benutzerberechtigung in KALYPSO</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/sst/sachsen-anhalt/ims_user.png"
+						format="PNG" scale="40"/>
+				</imageobject>
+			</mediaobject></figure></para>
+
   <para>Das Java-SDK bietet standardmäßig Klassen und Methoden an, um auf
   einen Verzeichnisdienst zugreifen zu können. Es werden also keine besonderen
   Java-Bibliotheken benötigt.</para>
