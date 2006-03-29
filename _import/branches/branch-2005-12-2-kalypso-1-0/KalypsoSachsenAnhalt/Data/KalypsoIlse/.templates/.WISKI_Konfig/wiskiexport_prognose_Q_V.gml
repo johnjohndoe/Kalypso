@@ -15,9 +15,9 @@
 			<wiski_simulation_vergangenheit>
 				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href=""/>
 			</wiski_simulation_vergangenheit>
-			<wiski_simulation_zukunftt>
+			<wiski_simulation_zukunft>
 				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Ilse_SimProg.Durchfluss.444210"/>
-			</wiski_simulation_zukunftt>
+			</wiski_simulation_zukunft>
 		</Wiski>
 	</WiskiMember>
 	<WiskiMember> 

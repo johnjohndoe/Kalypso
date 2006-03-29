@@ -24,7 +24,7 @@
 				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode.Abgabe.579430"/>
 			</wiski_vergangenheit>
 			<wiski_simulation_vergangenheit>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode.Abgabe_Sim.579430"/>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode_Sim.Abgabe.579430"/>
 			</wiski_simulation_vergangenheit>
 		</Wiski>
 	</WiskiMember>

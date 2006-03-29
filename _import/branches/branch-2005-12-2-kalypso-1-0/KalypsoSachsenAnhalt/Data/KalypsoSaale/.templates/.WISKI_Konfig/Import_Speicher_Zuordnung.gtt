@@ -4,6 +4,7 @@
         <column alignment="16384" editable="true" format="" name="name" width="97"/>
         <column alignment="16384" editable="true" format="" name="lokal" width="138"/>
         <column alignment="16384" editable="true" format="" name="wiski_vergangenheit" width="295"/>
+        <column alignment="16384" editable="true" format="" name="wiski_simulation_vergangenheit" width="172"/>
     </layer>
 </gistableview>
 
