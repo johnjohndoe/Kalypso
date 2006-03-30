@@ -109,6 +109,8 @@
     </section>
   </section>
 
+  <!--ANFANG PROFILING Sachsen-->
+
   <section id="kalypso_installation" vendor="sachsen">
     <title>KALYPSO-Installation LHWZ Sachsen</title>
 
@@ -243,6 +245,10 @@
     </section>
   </section>
 
+  <!--ENDE PROFILING Sachsen-->
+
+  <!--ANFANG PROFILING Sachsen-Anhalt-->
+
   <section id="kalypso_installation" vendor="sachsen-anhalt">
     <title>KALYPSO-Installation HVZ Sachsen-Anhalt</title>
 
@@ -376,12 +382,12 @@
       </indexterm>
 
       <para>Die Installation des KALYPSO-Client erfolgte in der
-      Hochwasserzentrale auf einem zentralen Dateiserver, so dass pro
-      Arbeitsplatzrechner lediglich die Verknüpfung aus dem Startmenü bzw. vom
-      Desktop auf das Programm eingerichtet werden muss. Dabei muss zusätzlich
-      noch das lokale Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der
-      Erstellung des Benutzerhandbuches waren die Arbeitsplatzrechner der HVZ
-      bereits entsprechend eingerichtet.</para>
+      Hochwasservorhersagezentrale auf einem zentralen Dateiserver, so dass
+      pro Arbeitsplatzrechner lediglich die Verknüpfung aus dem Startmenü bzw.
+      vom Desktop auf das Programm eingerichtet werden muss. Dabei muss
+      zusätzlich noch das lokale Arbeitsverzeichnis angegeben werden. Zum
+      Zeitpunkt der Erstellung des Benutzerhandbuches waren die
+      Arbeitsplatzrechner der HVZ bereits entsprechend eingerichtet.</para>
 
       <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
       Einstellung findet sich in der Technischen Dokumentation.</para>
@@ -395,6 +401,8 @@
       Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
     </section>
   </section>
+
+  <!--ENDE PROFILING Sachsen-Anhalt-->
 
   <section id="kalypso_installation" vendor="hh_ingenieurbueros">
     <title>KALYPSO-Installation</title>
