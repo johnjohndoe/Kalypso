@@ -248,34 +248,42 @@ public class ShapeSerializer
     return FeatureFactory.createFeature( null, "root", collectionFT, true );
   }
 
-  // public static Collection readFeaturesFromDbf( final String basename )
-  // {
-  // Collection<Feature> features = null;
-  // try
-  // {
-  // // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
-  // // ist das immer so?
-  // final DBaseFile dbf = new DBaseFile( basename, 1 );
-  //
-  // final int recordNum = dbf.getRecordNum();
-  // features = new ArrayList<Feature>( recordNum );
-  // for( int i = 0; i < recordNum; i++ )
-  // {
-  // final Feature feature = dbf.getFRow( i + 1, true );
-  // features.add( feature );
-  // }
-  //
-  // dbf.close();
-  // }
-  // catch( IOException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // catch( DBaseException e )
-  // {
-  // e.printStackTrace();
-  // }
-  //
-  // return features;
-  // }
+  /** REMARK: we return a simple collection of features with no parent. Better we would return a GMLWorkspace. */
+  public static Collection<Feature> readFeaturesFromDbf( final String basename )
+  {
+    DBaseFile dbf = null;
+    try
+    {
+      // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
+      // ist das immer so?
+      dbf = new DBaseFile( basename, 1 );
+
+      final int recordNum = dbf.getRecordNum();
+      final Collection<Feature> features = new ArrayList<Feature>( recordNum );
+      for( int i = 0; i < recordNum; i++ )
+      {
+        final Feature feature = dbf.getFRow( null, i + 1, true );
+        features.add( feature );
+      }
+
+      return features;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
+    catch( final DBaseException e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
+    finally
+    {
+      if( dbf != null )
+        dbf.close();
+    }
+  }
 }
