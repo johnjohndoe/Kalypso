@@ -19,7 +19,7 @@
   </figure>
 
   <para>Serverseitig wird das Modell (bzw. der Rechenkern) über eine
-  feststehende Java-Schnittstelle implementiert, denn hier erfolgt die für den
+  feststehende Java-Schnittstelle implementiert.Hier erfolgt die für den
   jeweiligen Rechenkern spezifische Programmierung wie z.B.: Anstoßen des
   nativen Programms (.exe), Lesen und Schreiben der speziellen Formate.</para>
 
@@ -200,7 +200,7 @@
           <guimenuitem>Neu</guimenuitem>
         </menuchoice> angelegt werden. Das neue Projekt enthält lediglich die
       Datei <filename>.project</filename>, welche jetzt um die Zeile
-      <programlisting>&lt;nature&gt;org.kalypso.ui.ModelNature&lt;/nature&gt;</programlisting>Im
+      <programlisting>&lt;nature&gt;org.kalypso.ui.ModelNature&lt;/nature&gt;</programlisting>im
       Unterpunkt &lt;natures&gt; ergänzt werden muss, um es als
       KALYPSO-Modell-Projekt zu kennzeichnen. Neue Dateien und Verzeichnisse
       können im Projekt ebenfalls über den Menüpunkt <menuchoice>
@@ -423,11 +423,10 @@
     angemeldet werden und steht dann für Berechnungen des gewünschten
     Modelltyps zur Verfügung.</para>
 
-    <para>Die Modellspezifischen GML-Applikationsschemata werden ebenfalls
-    über den Berechnungsdienst an den KALYPSO-Client übergeben. Dazu müssen
-    diese in Form einer
-    <interfacename>IUrlCatalog</interfacename>-Implementierung in der
-    Konfigurationsdatei
+    <para>Die modellspezifischen GML-Applikationsschemata werden ebenfalls
+    über den Rechendienst an den KALYPSO-Client übergeben. Dazu müssen diese
+    in Form einer <interfacename>IUrlCatalog</interfacename>-Implementierung
+    in der Konfigurationsdatei
     <filename>webdav/srvconf/ICalculationService/classCatalog.properties</filename>
     angemeldet werden.</para>
   </section>
@@ -436,7 +435,7 @@
     <title>Konfiguration des Vorhersage-Assistenten</title>
 
     <para>Die bislang geschilderte Methode beschreibt ausschließlich die
-    Datenmodellierung und Integration im Expertenmodus.</para>
+    Datenmodellierung und die Integration im Expertenmodus.</para>
 
     <para>Um die Funktionen des Vorhersage-Assistenten zur vereinfachten
     Benutzerführung nutzen zu können, muss im Projektverzeichnis
@@ -446,9 +445,9 @@
     Parametrisierung.</para>
 
     <para>Eine Auflistung der bisher zur Verfügung stehenden Seiten-Typen
-    ergibt sich aus der Objekthirarchy sowie deren JavaDoc. Werden spezielle,
-    nicht vorhandene Seiten benötigt, können weitere durch Implementierung des
-    Java-Interfaces
+    ergibt sich aus der Objekthierarchie sowie deren JavaDoc. Werden
+    spezielle, nicht vorhandene Seiten benötigt, können weitere durch
+    Implementierung des Java-Interfaces
     <interfacename>org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage</interfacename>
     zum Programm hinzugefügt werden.</para>
 

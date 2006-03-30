@@ -413,7 +413,7 @@
               <entry>Plugin/Library</entry>
 
               <entry>Integration des Bode- und Ilsemodells in Form eines
-              Plugins für die lokale Benutzung, und in Form einer Library für
+              Plugins für die lokale Benutzung und in Form einer Library für
               die serverseitige Benutzung.</entry>
             </row>
 
@@ -488,8 +488,8 @@
 
       <para>Neben allgemeinen Code Konfigurationen werden spezielle
       Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
-      der Hochwasserzentrale Sachsen-Anhalt benötigt. <xref
-      linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf:</para>
+      der Hochwasservorhersagezentrale Sachsen-Anhalt benötigt. <xref
+      linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf.</para>
 
       <para><table id="tbl_develop_Konfig_Plugins">
           <title>Konfigurationsmanagement-Plugins</title>
@@ -542,8 +542,8 @@
 
                 <entry>Plugin</entry>
 
-                <entry>Optionales Plugin, wenn eingebunden besteht die
-                Möglichkeit die Modelle clientseitiges zu berechnen</entry>
+                <entry>Optionales Plugin, wenn eingebunden, besteht die
+                Möglichkeit, die Modelle clientseitig zu berechnen</entry>
               </row>
             </tbody>
           </tgroup>
@@ -620,14 +620,14 @@
       </listitem>
     </itemizedlist>
 
-    <para vendor="">Um den KALYPSO-Client deployen zu können wird das Eclipse
-    Feature (<filename
-    vendor="sachsen-anhalt">KalypsoFeatureSachsenAnhalt</filename><filename
-    vendor="sachsen">KalypsoFeatureSachsen</filename>) benutzt. Ein
-    Eclipse-Export als Feature ist direkt möglich. Somit werden die
-    zahlreichen KALYPSO-Plugins berücksichtigt. Einfaches Kopieren reicht um
-    die Applikation zu aktualisieren. Dies setzt aber voraus, dass eine
-    bestehende KALYPSO-Client Umgebung vorbereitet ist. Mehr dazu im <xref
+    <para vendor="">Das Eclipse-Feature <!--PROFILING ANFANG sachsen-anhalt--><filename
+    vendor="sachsen-anhalt">KalypsoFeatureSachsenAnhalt</filename><!--PROFILING ENDE und ANFANG sachsen--><filename
+    vendor="sachsen">KalypsoFeatureSachsen</filename><!--PROFILING ENDE-->
+    wird benutzt, um den KALYPSO-Client zu deployen. Ein Eclipse-Export als
+    Feature ist direkt möglich. Somit werden die zahlreichen KALYPSO-Plugins
+    berücksichtigt. Einfaches Kopieren reicht, um die Applikation zu
+    aktualisieren. Dies setzt aber voraus, dass eine bestehende
+    KALYPSO-Client-Umgebung vorbereitet ist. Mehr dazu im <xref
     linkend="chapter_3_installation" />.</para>
   </section>
 </chapter>

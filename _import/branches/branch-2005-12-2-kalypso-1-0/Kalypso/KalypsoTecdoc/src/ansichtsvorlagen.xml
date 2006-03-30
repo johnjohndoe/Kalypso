@@ -4,7 +4,7 @@
 
   <para>KALYPSO Enterprise ermöglicht eine Reihe verschiedener Ansichten auf
   die Daten eines Modells. Die Einstellungen einer Ansicht (welche Daten,
-  Darstellung, usw.) werden in Dateien bestimmter Formate, so genannter
+  Darstellung, usw.) werden in Dateien bestimmter Formate, sogenannten
   Ansichtsvorlagen, gespeichert.</para>
 
   <para>Alle Ansichtvorlagen sind Dateien im XML-Format, die jeweils durch ein
@@ -174,8 +174,8 @@
     kann.</para>
 
     <para>Die Referenzierung der eigentlichen Daten erfolgt über das
-    <emphasis>href</emphasis> Attribut jedes <emphasis>layer</emphasis>
-    -Elements. Das <emphasis>linktpye</emphasis> Attribut des Themas legt
+    <emphasis>href</emphasis>-Attribut jedes <emphasis>layer</emphasis>
+    -Elements. Das <emphasis>linktpye</emphasis>-Attribut des Themas legt
     fest, in welchem Format die Datendatei geladen wird. Zur Zeit können die
     Formate GML (gml) und ESRI Shape (shape) geladen werden.</para>
 
@@ -206,35 +206,35 @@
     -Element zulässig.</para>
 
     <para>Innerhalb des einzigen Themas wird bei der Tabelle angegeben, welche
-    Tabellenspalten angezeigt und nach welchem Attribut die GIS Elemente
+    Tabellenspalten angezeigt und nach welchem Attribut die GIS-Elemente
     sortiert werden sollen.</para>
   </section>
 
   <section>
     <title>GIS-Formularansicht</title>
 
-    <para>Die GIS-Formularansicht ist eine hochflexible Datenansicht eines GIS
-    Elements (Feature) in Form einer formularartigen Dialogmaske.</para>
+    <para>Die GIS-Formularansicht ist eine flexible Datenansicht eines
+    GIS-Elements (Feature) in Form einer formularartigen Dialogmaske.</para>
 
     <para>Grundlegend werden dabei die Attribute des angezeigten Elements in
     Form von Beschriftungen (Name des Attributs) und Texteingaben (Wert des
     Attributs) dargestellt.</para>
 
     <para>Das anzuzeigende GIS-Element wird wie bei Karten- und
-    Tabellenansicht über ein <emphasis>layer</emphasis> Element des XML
+    Tabellenansicht über ein <emphasis>layer</emphasis>-Element des XML
     angegeben. Auch hier gelten die gleichen Regeln wie im Fall der Karten-
     und Tabellenvorlagen. Im Gegensatz zu Karten- und Tabellenansicht kann
-    hier aber ein beliebiges GIS Element und nicht nur Listen von Elementen
+    hier aber ein beliebiges GIS-Element und nicht nur Listen von Elementen
     (Feature-Collections) angegeben werden.</para>
 
-    <para>In den folgenden <emphasis>view</emphasis> Elementen der Vorlage
+    <para>In den folgenden <emphasis>view</emphasis>-Elementen der Vorlage
     kann genau spezifiziert werden, wie die Darstellung der Attribute des
-    Elements erfolgen soll. Dabei bezieht sich ein <emphasis>view</emphasis>
-    Element stets auf den Datentyp (Feature-Type) des GIS-Elements. Fehlt für
-    einen Feature-Type die View-Definition, wird automatisch eine
-    Standardeinstellung generiert. Die Standardeinstellung stellt
-    typischerweise alle Attribute des Elements in einer vertikal angeordneten
-    Liste dar.</para>
+    Elements erfolgen soll. Dabei bezieht sich ein
+    <emphasis>view</emphasis>-Element stets auf den Datentyp (Feature-Type)
+    des GIS-Elements. Fehlt für einen Feature-Type die View-Definition, wird
+    automatisch eine Standardeinstellung generiert. Die Standardeinstellung
+    stellt typischerweise alle Attribute des Elements in einer vertikal
+    angeordneten Liste dar.</para>
   </section>
 
   <section>
@@ -292,7 +292,7 @@
     Datum keine Werte in der zugrunde liegenden Zeitreihe gibt.</para>
 
     <para>In der Vorlage werden Zeitreihenthemen gelistet. Jedes Thema
-    entspricht dabei einer Zeitreihe. Innerhalb jeden Themas werden die
+    entspricht dabei einer Zeitreihe. Innerhalb jedes Themas werden die
     Spalten angegeben, die angezeigt werden sollen. Eine Spalte wird jeweils
     mit einer Werteachse der Zeitreihe assoziiert.</para>
 
@@ -322,7 +322,8 @@
 
     <para>Zusätzlich muss im Fall des Diagramms angegeben werden, welche
     Diagrammachsen dargestellt werden sollen. Dies erfolgt über die
-    <quote>axis</quote> Elemente. Für jede Kurve kann nun einzeln angegeben
-    werden, auf welchen Achsen ihre Daten dargestellt werden sollen.</para>
+    <emphasis>axis</emphasis>-Elemente. Für jede Kurve kann nun einzeln
+    angegeben werden, auf welchen Achsen ihre Daten dargestellt werden
+    sollen.</para>
   </section>
 </chapter>

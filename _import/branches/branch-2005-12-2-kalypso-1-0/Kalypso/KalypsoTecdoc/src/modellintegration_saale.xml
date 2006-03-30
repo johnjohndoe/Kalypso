@@ -48,7 +48,7 @@
     verschaffen. Nach dem Öffnen der Ansicht erscheint eine (Baum-)
     Strukturansicht des Modells, welche unter anderem auch das Bearbeiten der
     einzelnen Modellelemente erlaubt (siehe <xref
-    linkend="fig_modellintegration_saale_ueberblick" />). Die </para>
+    linkend="fig_modellintegration_saale_ueberblick" />). Die</para>
 
     <figure id="fig_modellintegration_saale_ueberblick">
       <title>Überblick Modelldaten Saale</title>
@@ -100,7 +100,7 @@
 
     <para>Niederschlagsgebiete sind Erweiterungen zu den einfachen Pegeln. D.
     h. alle Parameter der einfachen Pegel sind auch Parameter von
-    Niederschlagsgebieten. Die Liste der Parameter ist relativ lang, in der
+    Niederschlagsgebieten. Die Liste der Parameter ist relativ lang. In der
     <xref linkend="tbl_paramsPegelSaale" /> werden nur die Parameter
     beschrieben, die spezifisch für KALYPSO sind. Die restlichen Parameter
     sind in der ursprünglichen Modelldokumentation beschrieben.</para>
@@ -108,7 +108,7 @@
     <!--Hier Verweis auf entsprechende Datei-->
 
     <table id="tbl_paramsPegelSaale">
-      <title>Parameter der einfachen Pegel (Pegel)</title>
+      <title>Parameter der einfachen Pegel (Pegel) im Saale-Modell</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -212,7 +212,8 @@
     benötigt.</para>
 
     <table id="tbl_paramsNSGSaale">
-      <title>zusätzliche Parameter der Niederschlagsgebiete (Gebiet)</title>
+      <title>zusätzliche Parameter der Niederschlagsgebiete (Gebiet) im
+      Saale-Modell</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -376,7 +377,7 @@
             <entry>Durchflusszeitreihen (Eingangszeitreihen der
             Berechnung)</entry>
 
-            <entry>KALYPSO-Zeitreihendienst </entry>
+            <entry>KALYPSO-Zeitreihendienst</entry>
           </row>
 
           <row>
@@ -393,7 +394,7 @@
             <entry>Ergebnisse einer Berechnung (Zeitreihen und LOG-Dateien des
             Rechenkerns)</entry>
 
-            <entry>KALYPSO-Berechnungsdienst</entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -418,7 +419,7 @@
 
             <entry>Niederschlagszeitreihen (Messwerte der Ombrometer)</entry>
 
-            <entry>KALYPSO-Zeitreihendienst </entry>
+            <entry>KALYPSO-Zeitreihendienst</entry>
           </row>
 
           <row>
@@ -445,7 +446,7 @@
 
             <entry>Volumenzeitreihen der Speicher</entry>
 
-            <entry>KALYPSO-Zeitreihendienst </entry>
+            <entry>KALYPSO-Zeitreihendienst</entry>
           </row>
 
           <row>
@@ -495,10 +496,13 @@
         <title>Aktualisieren einer Rechenvariante
         (<filename>updateCalcCase.launch</filename>)</title>
 
-        <para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
-        zusammengestellt:</para>
+        <para>Es werden alle Zeitreihendaten der Rechenvariante entsprechend
+        der <xref linkend="tbl_ZeitreihenSaale" /> zusammengestellt.</para>
 
-        <informaltable>
+        <table id="tbl_ZeitreihenSaale">
+          <title>Zusammenstellung von Zeitreihendaten für das
+          Saale-Modell</title>
+
           <tgroup cols="3">
             <colspec align="left" colwidth="3*" />
 
@@ -566,7 +570,7 @@
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
+        </table>
 
         <para>Die Zuordnungen zwischen Zeitreihen der Rechenvariante und
         Zeitreihen in WISKI bzw. dateibasierten ZML-Vorlagen befinden sich in
@@ -579,9 +583,9 @@
         (<filename>runCalculation.launch</filename>)</title>
 
         <para>Die vom Rechenkern benötigten Daten werden zusammengestellt und
-        an den Berechnungsdienst gesandt. Die zurückgebenen Ergebnisse werden
-        in die Rechenvariante übernommen, vorher werden ggf. bereits
-        bestehende Ergebnisse gelöscht.</para>
+        an den Rechendienst gesandt. Die zurückgebenen Ergebnisse werden in
+        die Rechenvariante übernommen, vorher werden ggf. bereits bestehende
+        Ergebnisse gelöscht.</para>
       </section>
 
       <section>
@@ -600,7 +604,7 @@
         <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
         ANT-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
-        sowie bei expliziter Neuberechnung des Gebietsniederschlags in der
+        sowie bei expliziter Neuberechnung des Gebietsniederschlags auf der
         ersten Seite des Vorhersageassistenten aufgerufen wird.</para>
 
         <para>Die Vergangenheitswerte werden über eine lineare Gewichtung aus
@@ -620,7 +624,7 @@
       <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
       serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
       (Speicherort siehe <xref linkend="sec_modelSpecSaale" />) spezifiziert
-      und enthält neben Informationen zum Szenario der Rechenvariante, einem
+      und enthält neben Informationen zum Szenario der Rechenvariante und zum
       Steuerparameter (Start der Vorhersage) noch weitere Metadaten, um eine
       Rechenvariante ausführlich beschreiben zu können. Diese sind:</para>
 
@@ -631,7 +635,7 @@
         </listitem>
 
         <listitem>
-          <para>eine (Kurz-)beschreibung der Rechenvariante</para>
+          <para>eine (Kurz-)Beschreibung der Rechenvariante</para>
         </listitem>
 
         <listitem>

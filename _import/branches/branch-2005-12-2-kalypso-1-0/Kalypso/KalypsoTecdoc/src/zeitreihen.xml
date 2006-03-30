@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="chapter_4_zeitreihen">
-  <title>Zeitreihen-Ablage</title>
+  <title>Zeitreihenablage</title>
 
   <section>
     <title>Grundprinzip</title>
@@ -61,13 +61,13 @@
     entwickelten XML <quote>Serialisierung von Observations</quote>)
     implementiert ist.</para>
 
-    <para>Für das FileRepository stehen die folgenden Factories (siehe Oben)
+    <para>Für das FileRepository stehen die folgenden Factories (siehe oben)
     zur Verfügung:</para>
 
     <orderedlist>
       <listitem>
-        <para>die HeadlessZmlRepositoryFactory: wird serverseitig benutzt weil
-        GUI-los (Headless).</para>
+        <para>die HeadlessZmlRepositoryFactory: wird serverseitig benutzt,
+        weil GUI-los (Headless).</para>
       </listitem>
 
       <listitem>
@@ -107,14 +107,14 @@
     Projekt <code><filename>KalypsoCore</filename></code>.</para>
 
     <para>Anhand von Filtern und bestehenden Repositories (wie z.B.
-    Datei-basiert oder aus der Zeitreihendatenbank) werden die synthetische
+    dateibasiert oder aus der Zeitreihendatenbank) werden die synthetischen
     Zeitreihen generiert. Die hierarchische Struktur ist frei
     definierbar.</para>
 
     <!--PROFILING ANFANG sachsen-anhalt,sachsen-->
 
     <para vendor="sachsen-anhalt,sachsen">Diese Art von Ablage wird im
-    Hochwasserzentrum zur Zeit. nicht eingesetzt.<!--PROFILING ENDE sachsen-anhalt, sachsen--></para>
+    Hochwasservorhersagezentrum zur Zeit nicht eingesetzt.<!--PROFILING ENDE sachsen-anhalt, sachsen--></para>
   </section>
 
   <section>
@@ -136,7 +136,7 @@
     <code><filename>KalypsoRepository</filename></code> Projekt.</para>
 
     <para>Der KALYPSO Zeitreihendienst kapselt die Zugriffe über einen
-    WebDienst zwischen KALYPSO-Client und Server. Er liefert die
+    WebDienst zwischen KALYPSO-Client und -Server. Er liefert die
     serverseitigen Repositories (deren Anzahl ist unbegrenzt) in Form eines
     einzigen Repositories, welches in die KALYPSO Oberfläche eingebunden
     werden kann.</para>

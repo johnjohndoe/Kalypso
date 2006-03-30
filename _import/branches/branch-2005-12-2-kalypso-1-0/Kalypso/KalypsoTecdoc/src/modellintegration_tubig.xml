@@ -4,8 +4,8 @@
 
   <para>Die Hochwasservorhersagemodelle für die Einzugsgebiete von Bode bzw.
   Ilse beruhen auf dem Programm WinPRO der Thiele + Büttner
-  Ingenieurgemeinschaft GbR. Für das Einzugsgebiet der Bode handelt es sich um
-  ein kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
+  Ingenieurgemeinschaft GbR (TUBIG). Für das Einzugsgebiet der Bode handelt es
+  sich um ein kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
   einschließlich Talsperrenberechnung und für das Einzugsgbiet der Ilse um ein
   Niederschlag-Abfluss-Modell. Aufgrund der großen softwaretechnischen
   Übereinstimmung zwischen den Modellen, wird die Modellintegration für Bode
@@ -140,7 +140,7 @@
     Wasserlaufmodellen und Niederschlagsgebieten.</para>
 
     <table id="tbl_paramsPegelTubig">
-      <title>Parameter der einfachen Pegel (Pegel)</title>
+      <title>Parameter der einfachen Pegel (Pegel) für Bode und Ilse</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -235,8 +235,8 @@
     (<filename>wlm_&lt;Kurz_Name&gt;.par</filename>) generiert.</para>
 
     <table id="tbl_paramsWLMTubig">
-      <title>zusätzliche Parameter der Wasserlaufmodelle
-      (WasserlaufModell)</title>
+      <title>zusätzliche Parameter der Wasserlaufmodelle (WasserlaufModell)
+      für Bode und Ilse</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -358,7 +358,7 @@
 
     <table id="tbl_paramsNSGTubig">
       <title>zusätzliche Parameter der Niederschlagsgebiete
-      (Niederschlagsgebiet)</title>
+      (Niederschlagsgebiet) für Bode und Ilse</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -414,7 +414,7 @@
     <para>Die Rechenvarianten wurden gemäß <xref
     linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
     <xref linkend="tab-modellintegration-tubig-rechenvariante" /> zeigt den
-    konkreten Aufbau für Bode und Ilse. Zur besseren Lesbarkeit wird In der
+    konkreten Aufbau für Bode und Ilse. Zur besseren Lesbarkeit wird in der
     Tabelle eine allgemeine Schreibweise für die Verzeichnisse
     <filename>/KalysoBode</filename> bzw. <filename>/KalypsoIlse</filename>
     gewählt: <filename>/KalypsoTubig</filename>.</para>
@@ -523,7 +523,7 @@
 
             <entry>LOG-Dateien des Rechenkerns</entry>
 
-            <entry>KALYPSO-Berechnungsdienst</entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -553,8 +553,7 @@
             <entry>Zeitreihen-Dateien (Eingangszeitreihen und
             Berechnungsergebnisse)</entry>
 
-            <entry>KALYPSO-Zeitreihendienst und
-            KALYPSO-Berechnungsdienst</entry>
+            <entry>KALYPSO-Zeitreihendienst und KALYPSO-Rechendienst</entry>
           </row>
         </tbody>
       </tgroup>
@@ -595,10 +594,13 @@
         <title>Aktualisieren einer Rechenvariante
         (<filename>updateCalcCase.launch</filename>)</title>
 
-        <para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
-        zusammengestellt:</para>
+        <para>Es werden alle Zeitreihendaten der Rechenvariante entsprechend
+        der <xref linkend="tbl_ZeitreihenTubig" /> zusammengestellt.</para>
 
-        <informaltable>
+        <table id="tbl_ZeitreihenTubig">
+          <title>Zusammenstellung von Zeitreihendaten für Bode und
+          Ilse</title>
+
           <tgroup cols="3">
             <colspec align="left" colwidth="3*" />
 
@@ -660,7 +662,7 @@
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
+        </table>
 
         <para>Die Zuordnungen zwischen Zeitreihen der Rechenvariante und
         Zeitreihen in WISKI bzw. dateibasierten ZML-Vorlagen befinden sich in
@@ -675,9 +677,9 @@
         (<filename>runCalculation.launch</filename>)</title>
 
         <para>Die vom Rechenkern benötigten Daten werden zusammengestellt und
-        an den Berechnungsdienst gesandt. Die zurückgebenen Ergebnisse werden
-        in die Rechenvariante übernommen, vorher werden ggf. bereits
-        bestehende Ergebnisse gelöscht.</para>
+        an den Rechendienst gesandt. Die zurückgebenen Ergebnisse werden in
+        die Rechenvariante übernommen, vorher werden ggf. bereits bestehende
+        Ergebnisse gelöscht.</para>
       </section>
 
       <section>
@@ -698,7 +700,7 @@
         <para>Die Umsetzung des Gebietsniederschlagsmodell befindet sich in
         einem speziellen Target namens <quote>gebietsniederschlag</quote> des
         ANT-Skriptes, welches bei der Aktualisierung einer Rechenvarianten
-        sowie bei expliziter Neuberechnung des Gebietsniederschlags in der
+        sowie bei expliziter Neuberechnung des Gebietsniederschlags auf der
         ersten Seite des Vorhersageassistenten aufgerufen wird.</para>
 
         <para>Die Vergangenheitswerte werden über eine lineare Gewichtung aus
@@ -716,7 +718,7 @@
       <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
       serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
       (Speicherort siehe <xref linkend="sec_modelSpecTubig" />) spezifiziert
-      und enthält neben Informationen zum Szenario der Rechenvariante,
+      und enthält neben Informationen zum Szenario der Rechenvariante und zu
       Steuerparametern (Start der Simulation, Start der Vorhersage, derzeit
       gewählte Berechnungsart) noch weitere Metadaten, um eine Rechenvariante
       ausführlich beschreiben zu können. Diese sind:</para>
@@ -728,7 +730,7 @@
         </listitem>
 
         <listitem>
-          <para>eine (Kurz-)beschreibung der Rechenvariante</para>
+          <para>eine (Kurz-)Beschreibung der Rechenvariante</para>
         </listitem>
 
         <listitem>
@@ -767,19 +769,19 @@
     werden alle Dateien der Rechenvariante bis auf die Vorlagen
     übertragen.</para>
 
-    <para>Zur Berechnung wird der KALYPSO-Berechnungsdienst mit der Typ-ID des
+    <para>Zur Berechnung wird der KALYPSO-Rechendienst mit der Typ-ID des
     Modells (hier <quote>TubigV1.0</quote>) angestoßen. Der Dienst aktiviert
     anhand der ID die entsprechende Implementierung des Interface
     <interfacename>org.Kalypso.services.calculation.job.ICalcJob</interfacename>,
     im Falle des Bode- bzw. Ilse-Modells die Klasse
     <interfacename>org.kalypso.lhwzsachsen.tubig.TubigCalcJob</interfacename>
     im Projekt <filename>KalypsoModelTubig</filename> der Programmquellen. Wie
-    oben bereits beschrieben wurde, sind alle Modell-spezifischen
+    oben bereits beschrieben wurde, sind alle modellspezifischen
     Programmierungen und die für das Anstoßen des Rechenkerns benötigten Daten
     in diesem Projekt zusammengefasst.</para>
 
-    <para>Der implementierte Berechnungsdienst geht für jede Berechnung wie
-    folgt vor:</para>
+    <para>Der implementierte Rechendienst geht für jede Berechnung wie folgt
+    vor:</para>
 
     <itemizedlist>
       <listitem>
@@ -801,8 +803,8 @@
       </listitem>
 
       <listitem>
-        <para>Die zum Modell (Bode oder Ilse) und ggf. gewählter Rechenart
-        zugehörige Batch-Datei des Rechenkerns wird in einem Batch-Interpreter
+        <para>Die zum Modell (Bode oder Ilse) und zur ggf. gewählten Rechenart
+        gehörige Batch-Datei des Rechenkerns wird in einem Batch-Interpreter
         gestartet.</para>
       </listitem>
 
@@ -814,9 +816,10 @@
       </listitem>
     </itemizedlist>
 
-    <para>Neben den konvertierten Zeitreihendaten werden auch LOG-Daten des
+    <para>Neben den konvertierten Zeitreihendaten werden auch LOG-Dateien des
     Rechenkerns zurück zum Client übertragen, was eine eventuelle Fehlersuche
-    erleichtert.</para>
+    erleichtert (Speicherort siehe <xref
+    linkend="tab-modellintegration-tubig-rechenvariante" />).</para>
   </section>
 
   <section>

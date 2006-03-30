@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <para vendor="sachsen-anhalt"> In diesem Kapitel werden die Schnittstellen zwischen
-	KALYPSO und den anderen Systemkomponenten des Hochwasservorhersagezentrums
-	beschrieben (Siehe auch Abbildung <xref linkend="abb_sst"/>). Dies sind:
-	<itemizedlist vendor="sachsen-anhalt">
+	KALYPSO und den anderen Systemkomponenten der Hochwasservorhersagezentrale Sachsen-Anhalt
+	beschrieben (siehe auch <xref linkend="abb_sst"/>). Dies sind:
+	<itemizedlist>
 		<listitem>
 			<para>WISKI Zeitreihenverwaltung</para>
 		</listitem>

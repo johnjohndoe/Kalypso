@@ -6,7 +6,7 @@
 
   <itemizedlist>
     <listitem>
-      <para>Vorhersage</para>
+      <para>Vorhersage,</para>
     </listitem>
 
     <listitem>
@@ -31,16 +31,17 @@
   darf sich der Benutzer nur im Simulationsbetrieb anmelden. Sonst darf er
   sich im Regelbetrieb und im Simulationsbetrieb anmelden.</para>
 
-	<para>Folgende Abbildung (Siehe
-		<xref linkend="abb_ims_user"/>) fasst diese Zuordnung zusammen.
-		<figure id="abb_ims_user">
-			<title>Zuordnung der Benutzerberechtigung in KALYPSO</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="img/sst/sachsen-anhalt/ims_user.png"
-						format="PNG" scale="40"/>
-				</imageobject>
-			</mediaobject></figure></para>
+  <para><xref linkend="abb_ims_user" /> fasst diese Zuordnung zusammen.
+  <figure id="abb_ims_user">
+      <title>Zuordnung der Benutzerberechtigung in KALYPSO</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/sst/sachsen-anhalt/ims_user.png"
+                     format="PNG" scale="40" />
+        </imageobject>
+      </mediaobject>
+    </figure></para>
 
   <para>Das Java-SDK bietet standardmäßig Klassen und Methoden an, um auf
   einen Verzeichnisdienst zugreifen zu können. Es werden also keine besonderen
@@ -48,14 +49,13 @@
 
   <para>Die Konfiguration der LDAP-Zugriffe und die allgemeinen Benutzer- und
   Szenario-Einstellungen werden in den Konfigurationsdateien, die im
-  Konfigurationsverzeichnis des Kalypso-Benutzerdienstes vorgenommen. Der Pfad
-  lautet:</para>
+  Konfigurationsverzeichnis des Kalypso-Benutzerdienstes abgelegt sind,
+  vorgenommen. Der Pfad lautet:</para>
 
   <para><filename>TOMCAT_HOME\webapps\webdav\srvconf\IUSerService</filename>.</para>
 
   <para>Hier folgt ein Beispiel für eine Konfigurationsdatei des
-  Benutzerdienstes. <programlisting>
-# classname of the user rights provider
+  Benutzerdienstes. <programlisting># classname of the user rights provider
 PROVIDER=org.kalypso.robotronadapter.RobotronRightsProvider
 
 # gibt an ob clients ein Login-Maske benutzen sollten damit
@@ -92,6 +92,6 @@ LDAP_CREDENTIALS=geheim</programlisting></para>
     Wasserzeichen (siehe Eigenschaft
     <emphasis>DIAG_BACKGROUND_IMAGE_URL</emphasis>) und Tabellen eine
     zusätzliche Kopfzeile (siehe Eigenschaft
-    <emphasis>TABLE_HEADER_IMAGE_URL</emphasis>) haben.</para>
+    <emphasis>TABLE_HEADER_IMAGE_URL</emphasis>) erhalten.</para>
   </section>
 </section>

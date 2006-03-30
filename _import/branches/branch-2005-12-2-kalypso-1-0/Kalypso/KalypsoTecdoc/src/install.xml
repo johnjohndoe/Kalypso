@@ -18,7 +18,7 @@
       allen Systemen unter einer Java Runtime Umgebung (ab Version. 1.4) und
       der Eclipse Plattform einsetzbar ist. Um allerdings die volle
       Funktionalität nutzen zu können (Anstossen des Grafikprogramms zum
-      Editieren von Ergebnisdaten) ist der Einsatz der Software unter Windows
+      Editieren von Ergebnisdaten), ist der Einsatz der Software unter Windows
       NT/2000/XP zwingend.</para>
     </section>
 
@@ -31,7 +31,7 @@
       <itemizedlist>
         <listitem>
           <para>der Rich-Client-Plattform von Eclipse (Eclipse-Plattform) +
-          spezifische Plugin der Eclipse SDK</para>
+          spezifische Plugins der Eclipse SDK</para>
         </listitem>
 
         <listitem>
@@ -59,7 +59,7 @@
       <filename>eclipse</filename> erstellen. Dort für jede Erweiterung (z.B.
       die Language-Packs, oder KALYPSO, usw.) eine Link-Datei erstellen mit
       Namen des entsprechenden Features (aber ohne ID-Teil '_X.Y.Z') und mit
-      folgendem Aufbau: <programlisting>path=... (mit Forwardslashes '/' getrennt)</programlisting>der
+      folgendem Aufbau: <programlisting>path=... (mit Forwardslashes '/' getrennt).</programlisting>Der
       Pfad muss zu dem Verzeichnis führen, in dem die Features und Plugins zu
       finden sind. Allerdings ist zu beachten, dass in diesem Verzeichnis
       dieselbe Verzeichnisstruktur wie im ursprünglichen Eclipse-Verzeichnis
@@ -76,7 +76,8 @@
 
       <para><guilabel><!--Folien zur Installation (Verzeichnisstruktur) aus der Schulung--></guilabel><!--PROFILING ANGANG sachsen-anhalt--></para>
 
-      <para vendor="sachsen-anhalt">Beispiel (in Magdeburg): <programlisting>\\smdhvzwapp\KalypsoClient\
+      <para vendor="sachsen-anhalt">Beispiel (Installation im HVZ in
+      Magdeburg): <programlisting>\\smdhvzwapp\KalypsoClient\
         .eclipseproduct
         features
         plugins
@@ -112,10 +113,10 @@
           </listitem>
         </itemizedlist></para>
 
-      <para>Zusätzlich zu dem Datenverzeichnis, erstellt KALYPSO automatisch
-      temporäre Dateien im .eclipse-Verzeichnis im Homeverzeichnis des
-      aktuellen Benutzers. Bei Start-Problemen von KALYPSO werden dort
-      Log-Dateien abgelegt.</para>
+      <para>Zusätzlich zu dem Datenverzeichnis erstellt KALYPSO automatisch
+      temporäre Dateien im <filename>.eclipse</filename>-Verzeichnis im
+      Homeverzeichnis des aktuellen Benutzers. Bei Start-Problemen von KALYPSO
+      werden dort Log-Dateien abgelegt.</para>
 
       <!--PROFILING ANGANG sachsen-anhalt-->
 
@@ -319,7 +320,7 @@
       replizierter Hardware für eine erhöhte Ausfallsicherheit.</para>
 
       <para>Aufgrund der Programmierung der KALYPSO-Dienste in der
-      Programmiersprache Java ist die Software auf allen Systemen, die eine
+      Programmiersprache Java, ist die Software auf allen Systemen, die eine
       Java Runtime Umgebung (ab Version 1.4.2) unterstützen,
       einsetzbar.</para>
 
@@ -356,7 +357,7 @@
 
       <!--PROFILING ANFANG sachsen-->
 
-      <!--Aufzählung machen, nur von welchen der folgenden Punkten genau?-->
+      <!--Aufzählung machen, nur von welchen der folgenden Punkten genau? (sieht im PDF komisch aus)-->
 
       <para>Im Verzeichnis j2sdk1.4.2_06 wird das JDK 1.4.2
       installiert.</para>
@@ -365,14 +366,14 @@
 
       <para>Das bin-Verzeichnis beinhaltet u.a. die Startskripts um Tomcat zu
       starten (optional in Debugmodus). Normalerweise wird aber Tomcat als
-      Betriebssystem Dienst konfiguriert und auch gestartet.</para>
+      Betriebssystem-Dienst konfiguriert und auch gestartet.</para>
 
-      <para>Im webapps-Verzeichnis werden die KALYPSO Dienste und die mit
+      <para>Im webapps-Verzeichnis werden die KALYPSO-Dienste und die mit
       Tomcat gelieferten Applikationen <filename>balancer</filename>,
       <filename>ROOT</filename> und <filename>webdav</filename>
       installiert.</para>
 
-      <para>Die WebDAV-Applikation stellt seinen Verzeichnis-basierten Inhalt
+      <para>Die WebDAV-Applikation stellt ihren verzeichnisbasierten Inhalt
       über das HTTP-Protokoll zur Verfügung und wird von KALYPSO für
       verschiedene Zwecke benutzt:</para>
 
@@ -403,8 +404,8 @@
       Probleme mit der Software feststellen.</para>
 
       <para>Das temp-Verzeichnis sollte ab und zu geprüft und eventuell
-      geleert werden. Dort werden temporäre Dateien wie z.B. Dienst
-      spezifische Log-Dateien abgespeichert.</para>
+      geleert werden. Dort werden temporäre Dateien wie z.B. dienstspezifische
+      Log-Dateien abgespeichert.</para>
 
       <para>Die anderen Verzeichnisse sind Tomcat-spezifisch, mehr
       Informationen dazu können in der Tomcat-Hilfe gefunden werden.</para>
@@ -609,7 +610,7 @@
 
         <listitem>
           <para>Kalypso.server.confdir: Pfad des
-          Konfigurationsverzeichnis</para>
+          Konfigurationsverzeichnis.</para>
         </listitem>
       </itemizedlist>
 
@@ -629,34 +630,34 @@
     <title>Ausfallsicherheit</title>
 
     <para>Die Ausfallsicherheit wird sowohl durch die Hardware als auch durch
-    die Software garantiert. Für die Einzelheiten der Hardware Konfiguration
-    verweisen wir sie auf die entsprechende Dokumentation bei Ihren System
-    Administrator. Hier gehen wir besonders auf die durch KALYPSO angebotene
-    serverseitige Ausfallsicherheit ein.</para>
+    die Software garantiert. Für die Einzelheiten der Hardware-Konfiguration
+    verweisen wir sie auf die entsprechende Dokumentation bei Ihrem
+    System-Administrator. Hier gehen wir besonders auf die durch KALYPSO
+    angebotene serverseitige Ausfallsicherheit ein.</para>
 
-    <para vendor="sachsen-anhalt">Der KALYPSO Server ist sowohl in Magdeburg
-    (MD) als auch in Halle (HAL) installiert. Der System ist also an sich
-    redundant vorhanden, dies ermöglicht die Umstellung auf der andere
-    Standort, sollte es ein komplett Ausfall des Server geben. Dabei ist zu
-    beachten dass der Netzwerk der sog. Single-Point-Of-Failure repräsentiert:
-    ohne ihn funktionniert das Gesamtsystem nicht. In diesem Fall kann der
-    KALYPSO-Client trotzdem gestartet und benutzt werden,
+    <para vendor="sachsen-anhalt">Der KALYPSO-Server ist sowohl in Magdeburg
+    (MD) als auch in Halle (HAL) installiert. Sollte ein Server komplett
+    ausfallen, erlaubt diese Redundanz eine Umstellung auf den anderen
+    Standort. Es ist zu beachten, dass das Netzwerk den sog.
+    <quote>Single-Point-Of-Failure</quote> repräsentiert: ohne Netzwerk
+    funktioniert das Gesamtsystem nicht. In diesem Fall kann der
+    KALYPSO-Client trotzdem gestartet und benutzt werden.
     Benutzerberechtigungen abfragen, Zeitreihen abrufen und züruckschreiben,
     Modelldaten abgleichen und Dokumente in der Ablage abspeichern sind aber
     unzulässige Funktionen.</para>
 
-	<para vendor="sachsen-anhalt">Folgende Tabelle (Siehe <xref
-			linkend="tbl_ausfall"/>) listet die mögliche Systemausfälle und die
-		entsprechende Maßnahmen.
-		<figure id="tbl_ausfall">
-			<title>Maßnahmen gegen Systemausfälle</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="img/sst/sachsen-anhalt/ausfall.png"
-						format="PNG" scale="40"/>
-				</imageobject>
-			</mediaobject>
-		</figure></para>
+    <para vendor="sachsen-anhalt">Folgende Tabelle (Siehe <xref
+    linkend="tbl_ausfall" />) listet die mögliche Systemausfälle und die
+    entsprechende Maßnahmen. <figure id="tbl_ausfall">
+        <title>Maßnahmen gegen Systemausfälle</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/sst/sachsen-anhalt/ausfall.png"
+                       format="PNG" scale="40" />
+          </imageobject>
+        </mediaobject>
+      </figure></para>
 
     <section>
       <title>W/Q-Umrechnungsdaten</title>

@@ -2,51 +2,47 @@
 <section id="robotron-ims" vendor="sachsen-anhalt">
   <title>Schnittstelle zum IMS: Dokumentenablage</title>
 
-	<para>Aus dem KALYPSO-Vorhersageassistent heraus können Pegel- und
-		Speichervorhersagen, Datenübersichten (z.B. Gebietsniederschlag),
-		Längsschnitte und Scheitelwerte in Form von Tabellen (Textdateien mit
-		Trennzeichen, z.B. im CSV-Format) und Diagrammen (Abbildung in Form eines Bildes
-		z.B. im PNG-Format). Diese Dokumente werden strukturiert im IMS abgelegt (Siehe
-		Abbildungen
-		<xref linked="abb_ims_dok_bode"/>,
-		<xref linked="abb_ims_dok_ilse"/> und
-		<xref linked="abb_ims_dok_saale"/>).</para>
+  <para>Aus dem KALYPSO-Vorhersageassistenten heraus können Pegel- und
+  Speichervorhersagen, Datenübersichten (z.B. Gebietsniederschlag),
+  Längsschnitte und Scheitelwerte in Form von Tabellen (Textdateien mit
+  Trennzeichen, z.B. im CSV-Format) und Diagramme (Abbildung in Form eines
+  Bildes z.B. im PNG-Format) exportiert werden. Diese Dokumente werden
+  strukturiert im IMS abgelegt (siehe Abbildungen <xref
+  linkend="abb_ims_dok_bode" />, <xref linkend="abb_ims_dok_ilse" /> und <xref
+  linkend="abb_ims_dok_saale" />).</para>
 
-	<para>
-		<figure id="abb_ims_dok_bode">
-			<title>Struktur der Dokumentenablage für die Bode</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_bode.png"
-						format="PNG" scale="75"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		
-		<figure id="abb_ims_dok_ilse">
-			<title>Struktur der Dokumentenablage für die Ilse</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_ilse.png"
-						format="PNG" scale="75"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		
-		<figure id="abb_ims_dok_saale">
-			<title>Struktur der Dokumentenablage für die Saale</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="img/sst/sachsen-anhalt/ims_dok_saale.png"
-						format="PNG" scale="75"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</para>
+  <para><figure id="abb_ims_dok_bode">
+      <title>Struktur der Dokumentenablage für die Bode</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/sst/sachsen-anhalt/ims_dok_bode.png"
+                     format="PNG" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure> <figure id="abb_ims_dok_ilse">
+      <title>Struktur der Dokumentenablage für die Ilse</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/sst/sachsen-anhalt/ims_dok_ilse.png"
+                     format="PNG" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure> <figure id="abb_ims_dok_saale">
+      <title>Struktur der Dokumentenablage für die Saale</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/sst/sachsen-anhalt/ims_dok_saale.png"
+                     format="PNG" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure></para>
 
   <para>Die Schnittstelle basiert auf einem Webdienst-Methodenaufruf. Dazu
-  wird Apache-Axis benutzt, in Gegensatz zu der in KALYPSO sonst übliche von
-  Sun implementierten JAX-RPC Bibliothek.</para>
+  wird Apache-Axis benutzt, im Gegensatz zu der in KALYPSO sonst üblichen und
+  von Sun implementierten JAX-RPC Bibliothek.</para>
 
   <para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und über das
   Ablageverzeichnis an das IMS weitergereicht. Der Aufbau dieser XML-Datei ist
@@ -68,7 +64,7 @@
 
         <glossdef>
           <para>Der Name des Autors der aktuellen Vorhersage. Der Name ist
-          standardmäßig der Name des Benutzers der sich am System angemeldet
+          standardmäßig der Name des Benutzers, der sich am System angemeldet
           hat. Der Benutzer kann den Wert dieser Eigenschaft im
           Export-Assistenten ändern, bevor das Dokument exportiert
           wird.</para>
@@ -90,10 +86,10 @@
         <glossterm>erstelldat</glossterm>
 
         <glossdef>
-          <para>Das Datum an dem das Dokument erstellt wurde. Als Standardwert
-          wird das aktuelle Datum gesetzt. Der Benutzer kann den Wert dieser
-          Eigenschaft im Export-Assistenten ändern, bevor das Dokument
-          exportiert wird.</para>
+          <para>Das Datum, an dem das Dokument erstellt wurde. Als
+          Standardwert wird das aktuelle Datum gesetzt. Der Benutzer kann den
+          Wert dieser Eigenschaft im Export-Assistenten ändern, bevor das
+          Dokument exportiert wird.</para>
         </glossdef>
       </glossentry>
 
@@ -101,10 +97,10 @@
         <glossterm>gueltigdat</glossterm>
 
         <glossdef>
-          <para>Das Datum bis zu dem das Dokument gültig ist. Als Standardwert
-          wird das aktuelle Datum gesetzt. Der Benutzer kann den Wert dieser
-          Eigenschaft im Export-Assistenten ändern, bevor das Dokument
-          exportiert wird.</para>
+          <para>Das Datum, bis zu dem das Dokument gültig ist. Als
+          Standardwert wird das aktuelle Datum gesetzt. Der Benutzer kann den
+          Wert dieser Eigenschaft im Export-Assistenten ändern, bevor das
+          Dokument exportiert wird.</para>
         </glossdef>
       </glossentry>
 
@@ -135,7 +131,7 @@
         <glossdef>
           <para>Ein eindeutiger Schlüssel, der das Dokument identifiziert.
           Diese Eigenschaft dient dem Überschreiben im IMS gleicher Dokumente
-          einer gleiche Vorhersage.</para>
+          einer gleichen Vorhersage.</para>
         </glossdef>
       </glossentry>
 

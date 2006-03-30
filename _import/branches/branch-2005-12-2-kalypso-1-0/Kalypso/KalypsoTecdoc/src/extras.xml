@@ -7,8 +7,8 @@
   <section id="dwd-vorhersage">
     <title>Integration der DWD-Vorhersage</title>
 
-    <para>Für die Prognoserechnung wird eine Niederschlagsvorhersage benötigt.
-    Die hier verwendete Vorhersage des DWD wird in einer Datei
+    <para>Für die Hochwasservorhersage wird eine Niederschlagsvorhersage
+    benötigt. Die hier verwendete Vorhersage des DWD wird in einer Datei
     (DWD-lm2-Format) geliefert. Es handelt sich um eine Datei mit mehreren
     Rastern, die eine Vorhersage über 48 Stunden beinhaltet.</para>
 
@@ -93,9 +93,9 @@
         <listitem>
           <para>Anzahl der Verzeichnisse, die für aktuelle DWD-Vorhersagen
           geprüft werden müssen (instances). Die Eingaben für alle anderen
-          Parameter sind davon abhängig: sobald der Anzahl größer als 1 ist,
-          müsse mit Semikolon getrennte Angaben für die anderen Parameter
-          gemacht werden.</para>
+          Parameter sind davon abhängig: sobald die Anzahl größer als eins
+          ist, müssen mit Semikolon getrennte Angaben für die anderen
+          Parameter gemacht werden.</para>
         </listitem>
 
         <listitem>
@@ -115,8 +115,8 @@
 
         <listitem>
           <para>Dateinamensformat der zu suchenden DWD-Vorhersage, damit das
-          Datum daraus gefiltert werden kann. Das Datum wird ausgewertet um
-          die aktuelle Vorhersage anhand dieses Datum zu erschliessen
+          Datum daraus gefiltert werden kann. Das Datum wird ausgewertet, um
+          die aktuelle Vorhersage anhand dieses Datums zu erschliessen
           (source_format).</para>
         </listitem>
 
@@ -136,12 +136,12 @@
           <para>Gibt an, ob die Zieldatei überarbeitet werden muss, damit die
           Daten konsistent bleiben. Im Normalfall ist dies nicht erforderlich,
           da die Daten übereinstimmen. Aber im Katastrophentestszenario werden
-          z.B. DWD-Vorhersagen der Vergangenheit als aktuelle Vorhersagen
+          z. B. DWD-Vorhersagen der Vergangenheit als aktuelle Vorhersagen
           geliefert, dabei stimmt das Datum aus dem Dateinamen nicht mit dem
-          Inhalt der Vorhersage überein: in der Datei sind noch die alte Daten
-          zu sehen. Wenn dieser Parameter aktiviert wird (true), wird also die
-          Datei überarbeitet und die darin enthaltene Daten mit dem aktuellen
-          Datum überschrieben (dest_update).</para>
+          Inhalt der Vorhersage überein: in der Datei sind noch die alten
+          Daten zu sehen. Wenn dieser Parameter aktiviert wird (true), wird
+          also die Datei überarbeitet und die darin enthaltenen Daten mit dem
+          aktuellen Datum überschrieben (dest_update).</para>
         </listitem>
       </orderedlist>
 
@@ -192,7 +192,7 @@
 
     <para>Bei <emphasis>project</emphasis>, <emphasis>calccase</emphasis> und
     <emphasis>workspace</emphasis> ist der Pfad immer relativ, und zwar zum
-    jeweiligen angegebenen Element: also Project, Workspace, oder
+    jeweils angegebenen Element: also Project, Workspace oder
     Rechenvariante.</para>
 
     <para>Bei <emphasis>file</emphasis> kann der Pfad relativ sein. In diesem

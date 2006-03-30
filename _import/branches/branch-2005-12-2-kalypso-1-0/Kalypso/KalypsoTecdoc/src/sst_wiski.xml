@@ -2,16 +2,16 @@
 <section id="wiski" vendor="sachsen-anhalt">
   <title>WISKI/WebDataProvider</title>
 
-  <para>Alle von KALYPSO benötigten Zeitreihendaten werden innerhalb des
-  Hochwasserzentrums von WISKI geliefert bzw. alle Ergebnisse in Form von
-  Zeitreihen nach WISKI zurück geschrieben. Der Zugriff auf die WISKI-Daten
-  erfolgt aus Sicht von KALPYSO über den von der Kisters AG gestellten
-  WISKI-WebDataProvider (WDP).</para>
+  <para>Alle von KALYPSO benötigten Zeitreihendaten werden innerhalb der
+  Hochwasservorhersagezentrale von WISKI geliefert bzw. alle Ergebnisse in
+  Form von Zeitreihen nach WISKI zurück geschrieben. Der Zugriff auf die
+  WISKI-Daten erfolgt aus Sicht von KALPYSO über den von der Kisters AG
+  gestellten WISKI-WebDataProvider (WDP).</para>
 
   <section>
     <title>Überblick</title>
 
-    <para>Entsprechend der beiden WISKI-Instanzen in Magdeburg und Halle sind
+    <para>Entsprechend den beiden WISKI-Instanzen in Magdeburg und Halle sind
     auch zwei WDP-Instanzen auf den Rechnern <filename>smdhvlapp</filename>
     und <filename>shalhvzlapp</filename> installiert. Der Aufruf erfolgt über
     Java-RMI (Remote Method Invocation), jeweils Port 10991.</para>
@@ -110,7 +110,7 @@
 
     <para>Die Schnittstelle wird nur serverseitig benutzt.</para>
 
-    <para>Die Firma Kisters hat die Funktionen des WDP über eine
+    <para>Die Firma Kisters AG hat die Funktionen des WDP über eine
     Java-Bilbiothek zur Verfügung gestellt. Aus dem Namensraum
     <classname>de.kisters.wiski.webdataprovider</classname> sind alle
     WDP-Klassen zu erreichen.</para>
@@ -180,9 +180,11 @@
     <para>WISKI liefert definierte Statuswerte zu den Werten einer Zeitreihe.
     Diese müssen auf die innerhalb von KALYPSO benutzten Stati abgebildet
     werden. Die Umwandlung der Status-Information erfolgt beim Abruf der Daten
-    aus WISKI in folgender Weise:</para>
+    aus WISKI entsprechend <xref linkend="tbl_11_06_zeitreihen" />.</para>
 
-    <informaltable id="tbl_11_06_zeitreihen">
+    <table id="tbl_11_06_zeitreihen">
+      <title>Umwandlung der Statuswerte für Zeitreihen WISKI - KALYPSO</title>
+
       <tgroup cols="2">
         <colspec align="left" colwidth="1*" />
 
@@ -230,7 +232,7 @@
           <row>
             <entry>COMPLETE</entry>
 
-            <entry>OK</entry>
+            <entry id="tbl_11_06_zeitreihen">OK</entry>
           </row>
 
           <row>
@@ -240,7 +242,7 @@
           </row>
         </tbody>
       </tgroup>
-    </informaltable>
+    </table>
 
     <para>Wenn Simulations-Zeitreihen von KALYPSO nach WISKI zurückgeschrieben
     werden, bekommen sie automatisch den Status GOOD.</para>
@@ -259,7 +261,7 @@
     WDP-Schnittstelle wird direkt vom KALYPSO-Observationdienst über einen
     festgelegten Benutzer (<quote>wdpuser</quote>) benutzt, ohne
     Authentifizierung gegen den tatsächlichen angemeldeten Benutzer. Das
-    heisst, der KALYPSO-Observationdienst meldet sich beim Start an dem WDP an
+    heißt, der KALYPSO-Observationdienst meldet sich beim Start an dem WDP an
     und meldet sich nur in bestimmten Fällen ab:</para>
 
     <itemizedlist>
@@ -302,7 +304,7 @@
     <para>Hierzu wurde speziell die
     <filename>WiskiObservationManipulator</filename>-Klasse erstellt. Sie wird
     vom <filename>KalypsoObservationDienst</filename> benutzt, über Reflektion
-    instanziert, und in der Konfigurationsdatei des Observationdienstes
+    instanziert und in der Konfigurationsdatei des Observationdienstes
     konfiguriert. Konfigurationsausschnitt:</para>
 
     <figure>
@@ -327,6 +329,6 @@
     <para>Damit die Zeitreihen einheitlich zwischen WISKI und KALYPSO
     angezeigt werden, wurde die Einstellung der Zeitzone (auch eine
     Eigenschaft der Konfiguration des Observationdienstes) auf GMT1 gesetzt.
-    WISKI arbeitet immer in Winterzeit.</para>
+    WISKI arbeitet <emphasis>immer</emphasis> in Winterzeit!</para>
   </section>
 </section>

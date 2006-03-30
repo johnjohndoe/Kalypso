@@ -3,7 +3,7 @@
   <title>Grafik-Programm</title>
 
   <para>Das Grafikprogramm ist ein Windows-Executable. Es erkennt viele
-  unterschiedliche Datenformate, KALYPSO-intern wird aber nur das
+  unterschiedliche Datenformate; KALYPSO-intern wird aber nur das
   ZML-block-inline Format verwendet (siehe <xref
   linkend="sec_modelldaten_ZML_block_inline" />).</para>
 
