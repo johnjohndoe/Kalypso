@@ -222,7 +222,7 @@ public class DBaseFile
     }
     catch( Exception ex )
     {
-      // shouldnt we do something here
+      // shouldnt we do something here?
     }
   }
 
