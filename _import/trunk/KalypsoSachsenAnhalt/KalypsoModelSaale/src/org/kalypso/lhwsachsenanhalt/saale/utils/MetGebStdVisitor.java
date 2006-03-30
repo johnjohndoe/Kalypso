@@ -264,7 +264,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       final String elementId = f.getId() + "-gewicht-" + count++;
 
       // neues Feature: 'GewichtungElement'
-      final Feature element = FeatureFactory.createFeature( elementId, elementType, new Object[]
+      final Feature element = FeatureFactory.createFeature( f, elementId, elementType, new Object[]
       {
           new Double( weight ),
           ombrometerHref } );
