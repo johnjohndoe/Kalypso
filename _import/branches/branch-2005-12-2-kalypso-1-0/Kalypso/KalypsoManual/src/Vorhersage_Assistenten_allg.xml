@@ -88,7 +88,7 @@
   und -ablage dienen, werden im Diagramm jeweils mehrere Datenarten angezeigt
   (siehe <xref linkend="gui-zml_diagramm_ansicht" />). Je nach dargestellter
   Datenart kann es unterhalb des Diagramms Optionsknöpfe geben, mit deren
-  Hilfe die Anzeige umgeschaltet werden kann (z.B. zwischen Wasserstand und
+  Hilfe die Anzeige umgeschaltet werden kann (<abbrev>z. B.</abbrev> zwischen Wasserstand und
   Abfluss). Diese Umschaltung betrifft dann auch ggf. vorhandene
   Tabellen.</para>
 
@@ -214,7 +214,7 @@
       <listitem>
         <para><guilabel>vorhandene Rechenvariante fortführen</guilabel>: im
         unteren Teil des Dialogs ist die bereits erzeugte Rechenvariante
-        auszuwählen, welche fortgeführt werden soll. Diese Option ist z.B. zu
+        auszuwählen, welche fortgeführt werden soll. Diese Option ist <abbrev>z. B.</abbrev> zu
         wählen, wenn Arbeiten an einer Rechenvariante noch nicht abgeschlossen
         sind, Daten ergänzt oder verändert werden sollen. Es wird dabei die
         urprüngliche Rechenvariante verändert.</para>

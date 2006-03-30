@@ -20,7 +20,7 @@
 
   <para>Serverseitig wird das Modell (bzw. der Rechenkern) über eine
   feststehende Java-Schnittstelle implementiert.Hier erfolgt die für den
-  jeweiligen Rechenkern spezifische Programmierung wie z.B.: Anstoßen des
+  jeweiligen Rechenkern spezifische Programmierung wie <abbrev>z. B.</abbrev>: Anstoßen des
   nativen Programms (.exe), Lesen und Schreiben der speziellen Formate.</para>
 
   <para>Clientseitig werden alle Modelle gleichermaßen behandelt, sie
@@ -67,7 +67,7 @@
           </listitem>
 
           <listitem>
-            <para>Erstellen der Konvertierungsroutinen für Modellformate (z.B.
+            <para>Erstellen der Konvertierungsroutinen für Modellformate (<abbrev>z. B.</abbrev>
             Zeitreihen)</para>
           </listitem>
 
@@ -97,7 +97,7 @@
           <listitem>
             <para>Aufbau des (Grund-)Modells gemäß zuvor definiertem
             GML-Applikationsschema, dabei evtl. Übernahme vorhandener
-            Modelldaten (z.B.: Parameterdateien)</para>
+            Modelldaten (<abbrev>z. B.</abbrev>: Parameterdateien)</para>
           </listitem>
 
           <listitem>
@@ -170,7 +170,7 @@
       rechtzeitig zu erkennen. Darüber hinaus können die Vorlagen natürlich
       auch zur Eingabe der Modellgrunddaten verwendet werden. Neben den
       (GIS-basierten) Modelldaten können weitere im Projekt abgelegte
-      GIS-Daten visualisiert werden (z.B. ESRI Shapes). Die Ablage der
+      GIS-Daten visualisiert werden (<abbrev>z. B.</abbrev> ESRI Shapes). Die Ablage der
       Modelldaten ist zwar im Wesentlichen frei wählbar, sollte aber dennoch
       nach einem festen Schema erfolgen (siehe <xref
       linkend="abschn_5_1" />).</para>
@@ -269,7 +269,7 @@
     <section>
       <title>ANT-Skripte und Launches</title>
 
-      <para>Das modellspezifische Verhalten z.B. beim Erstellen von
+      <para>Das modellspezifische Verhalten <abbrev>z. B.</abbrev> beim Erstellen von
       Rechenvarianten wird anhand von Eclipse-Launches definiert, welche im
       Projektverzeichnis unter <filename>.model/launch</filename> abgelegt
       werden. Ein <quote>Launch</quote> ist dabei ein allgemeiner

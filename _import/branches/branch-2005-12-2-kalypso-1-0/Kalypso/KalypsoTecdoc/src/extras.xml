@@ -136,7 +136,7 @@
           <para>Gibt an, ob die Zieldatei überarbeitet werden muss, damit die
           Daten konsistent bleiben. Im Normalfall ist dies nicht erforderlich,
           da die Daten übereinstimmen. Aber im Katastrophentestszenario werden
-          z. B. DWD-Vorhersagen der Vergangenheit als aktuelle Vorhersagen
+          <abbrev>z. B.</abbrev> DWD-Vorhersagen der Vergangenheit als aktuelle Vorhersagen
           geliefert, dabei stimmt das Datum aus dem Dateinamen nicht mit dem
           Inhalt der Vorhersage überein: in der Datei sind noch die alten
           Daten zu sehen. Wenn dieser Parameter aktiviert wird (true), wird

@@ -106,7 +106,7 @@
     <filename>etc/schemas/repository/virtualRepository.xsd</filename> im
     Projekt <code><filename>KalypsoCore</filename></code>.</para>
 
-    <para>Anhand von Filtern und bestehenden Repositories (wie z.B.
+    <para>Anhand von Filtern und bestehenden Repositories (wie <abbrev>z. B.</abbrev>
     dateibasiert oder aus der Zeitreihendatenbank) werden die synthetischen
     Zeitreihen generiert. Die hierarchische Struktur ist frei
     definierbar.</para>

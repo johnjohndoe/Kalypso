@@ -31,7 +31,7 @@
     Björnsen Beratende Ingenieure GmbH, welcher am Arbeitsbereich Wasserbau
     unter dem Namen Kalypso-NA ständig weiter entwickelt wird. Das
     Anwendungsgebiet des NA-Modells ist sowohl in der Prozessanalyse, der
-    Berechnung von Planungszuständen (wie z.B. Renaturierungen und Integration
+    Berechnung von Planungszuständen (wie <abbrev>z. B.</abbrev> Renaturierungen und Integration
     von Hochwasserentlastungsanlagen) und der Hochwasservorhersage im
     operativen Einsatz (Schutz vor Hochwasser durch Wasserstandsvorhersage) zu
     sehen. Das Modellkonzept beruht auf der Simulation der einzelnen
@@ -139,7 +139,7 @@
         </listitem>
 
         <listitem>
-          <para>Ermittlung der Teilgebiets und Strangdaten (z.B.
+          <para>Ermittlung der Teilgebiets und Strangdaten (<abbrev>z. B.</abbrev>
           Schneeparameter, Grundwasserparameter, Speicherkennwerte)</para>
         </listitem>
 
@@ -280,7 +280,7 @@
         Elemente entsprechend einer Namensgebung dem Zielobjekt
         <literal>name</literal> zugeordnet. Zusätzlich ist das Element
         <literal>description</literal> für eine allgemeine Beschreibung bzw.
-        einen wirklichen Namen (z.B. Pegelname) optional zu besetzen. Die
+        einen wirklichen Namen (<abbrev>z. B.</abbrev> Pegelname) optional zu besetzen. Die
         Flächen der Geometrieobjekte werden automatisch vom Programm ermittelt
         und müssen somit nicht zugeordnet werden. Da das Mapping unabhängig
         der Namensgebung der Quelle (Spaltenbezeichung in der Shape-Datei)
@@ -584,7 +584,7 @@
           <listitem>
             <para><filename>Knoten.gtt</filename></para>
 
-            <para>Parameter für die Modellknoten (z.B. Pegel)</para>
+            <para>Parameter für die Modellknoten (<abbrev>z. B.</abbrev> Pegel)</para>
           </listitem>
 
           <listitem>
@@ -801,7 +801,7 @@
         <para>Die Parameter können in den Karten,Tabellen sowie in der Feature
         (Element)- und Baumansicht geändert werden. Prinzipiell können alle
         einfachen Datentypen direkt in den entsprechenden Feldern editiert
-        werden. Bei komplizierteren Datentypen, wie z.B.
+        werden. Bei komplizierteren Datentypen, wie <abbrev>z. B.</abbrev>
         Zeitreihenverknüpfungen und Diagrammelementen erfolgt die Bearbeitung
         in einem Zusatzdialog.</para>
 
@@ -854,7 +854,7 @@
         <para><emphasis role="bold">Bearbeiten von
         Diagrammelementen</emphasis></para>
 
-        <para>Diagrammelemente, wie z.B. die Zeitflächenfunktion und die
+        <para>Diagrammelemente, wie <abbrev>z. B.</abbrev> die Zeitflächenfunktion und die
         Wasserstands-Abfluss-Volumenbeziehung eines Rückhaltebeckens, werden
         in der Kalypso-Oberfläche ähnlich zum Zeitreihenformat aufgefasst und
         auch mit dem Zeitreihenlink-Editor bearbeitet. Hierbei können die

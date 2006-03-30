@@ -48,8 +48,8 @@
         Karten-Ansicht können vorab definierte Kartenvorlagen - einschließlich
         der in der Vorlage referenzierten Geo-Informationen - im Lageplan
         visualisiert werden. Die Karten-Ansicht eignet sich für die
-        Darstellung von geografischen Modelldaten (z.B. Einzugsgebietsgrenzen)
-        sowie relevanten Hintergrundkarten (z.B. topografische
+        Darstellung von geografischen Modelldaten (<abbrev>z. B.</abbrev> Einzugsgebietsgrenzen)
+        sowie relevanten Hintergrundkarten (<abbrev>z. B.</abbrev> topografische
         Grundkarten).</para>
       </listitem>
 
@@ -75,7 +75,7 @@
 
       <listitem>
         <para><emphasis role="bold">Diagramm-Ansicht</emphasis>: Anhand der
-        Diagramm-Ansicht werden Zeitreihen (z.B. Wasserstandsganglinien oder
+        Diagramm-Ansicht werden Zeitreihen (<abbrev>z. B.</abbrev> Wasserstandsganglinien oder
         Niederschlagsmessreihen) als Ganglinie oder Blockdiagramm dargestellt.
         In der Diagramm-Ansicht können mehrere Zeitreihen zugleich angezeigt
         werden. Zur Bearbeitung von Zeitreihen wird das Grafikprogramm
@@ -98,7 +98,7 @@
     <xref linkend="grundfunktionen" />).</para>
 
     <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
-    Untermenü bzw. Werkzeuge in Form von Toolbars. Z.B. umfasst die
+    Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev> umfasst die
     Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen oder zum
     Zoomen innerhalb der Ansicht (siehe <xref
     linkend="ansichtssteuerung" />).</para>
@@ -121,7 +121,7 @@
       GIS-Tabelle (*.gtt), eine Zeitreihentabelle (*.ott) oder ein Diagramm
       (*.odt) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
       gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
-      den Vorlagentyp speziell konfigurierter Editor gewählt werden. Z.B. ist
+      den Vorlagentyp speziell konfigurierter Editor gewählt werden. <abbrev>Z. B.</abbrev> ist
       dies im Falle der Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
       linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
       Tabellen-Editor.</para>
@@ -146,7 +146,7 @@
 
       <para>Bei Doppelklick mit der linken Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
-      aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen (*.zml))
+      aufgerufen wurde. Bei bestimmten Dateitypen (<abbrev>z. B.</abbrev> Zeitreihen (*.zml))
       wird bei Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet.
       Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
       (Tabelle, Diagramm).</para>
@@ -168,7 +168,7 @@
       </indexterm>
 
       <para>Zur Bearbeitung von Modelldaten oder Zeitreihen ist das Arbeiten
-      mit mehreren Ansichten sinnvoll, sodass z.B. die geografischen
+      mit mehreren Ansichten sinnvoll, sodass <abbrev>z. B.</abbrev> die geografischen
       Informationen und Modelldaten in der Karten-Ansicht simultan mit der
       Tabellen-Ansicht angezeigt werden können. Dabei sind die Ansichten
       gekoppelt, d.h., der in der Tabelle selektierte Bezugspunkt bzw. das
@@ -215,7 +215,7 @@
       Hervorhebung des Ansichtsnamens (und des -rahmens) in der oberen
       Ansichtsleiste markiert.</para>
 
-      <para>Die geöffneten Ansichten können geschlossen werden, indem z.B. mit
+      <para>Die geöffneten Ansichten können geschlossen werden, indem <abbrev>z. B.</abbrev> mit
       der Maus auf das Kreuz neben dem Ansichtsnamen in der oberen
       Ansichtsleiste geklickt wird.</para>
 
@@ -512,7 +512,7 @@
         entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
         (siehe <xref linkend="pic_datenquelle_waehlen" />). Die Angaben, die
         im dann folgenden Dialog zu machen sind, hängen von der Art der
-        gewählten Datenquelle ab. So muss z.B. für das Einbinden einer
+        gewählten Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das Einbinden einer
         Shape-Datei eine entsprechende Datei im aktuellen Arbeitsverzeichnis
         ausgewählt und das Koordinatensystem, in dem die Daten abgelegt sind,
         angegeben werden. Zur Symbolisierung kann der Benutzer einen bereits
@@ -754,13 +754,13 @@
       Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
       möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
       handelt (Niederschlag, Abfluss, Wasserstand). Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (<abbrev>z. B.</abbrev>
       Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
       lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
       des Häkchens).</para>
 
       <para>Es besteht die Möglichkeit, bestimmte Achsentypen für alle
-      dargestellten Zeitreihen zu deaktivieren. Z.B. kann für alle
+      dargestellten Zeitreihen zu deaktivieren. <abbrev>Z. B.</abbrev> kann für alle
       dargestellten Zeitreihen die Darstellung des Abflusses unterdrückt
       werden. Hierzu klicken Sie auf die Schaltfläche <inlinemediaobject>
           <imageobject>
@@ -858,7 +858,7 @@
 
             <para>Die markierten Tabellenwerte werden in die Zwischenablage
             kopiert und können an anderer Stelle wieder eingefügt werden. Dies
-            betrifft auch den Austausch mit anderen Programmen (z.B. Microsoft
+            betrifft auch den Austausch mit anderen Programmen (<abbrev>z. B.</abbrev> Microsoft
             Excel). Die Auswahl ist spaltenübergreifend möglich.</para>
           </listitem>
 
@@ -1087,7 +1087,7 @@
         Spalte (hier Q) ist dabei gelb hinterlegt.</para>
 
         <para>Das gleiche gilt darüber hinaus auch für andere Wert-Beziehungen
-        wie z.B. Wasserstand-Volumen (W/V).</para>
+        wie <abbrev>z. B.</abbrev> Wasserstand-Volumen (W/V).</para>
       </section>
     </section>
 
@@ -1126,7 +1126,7 @@
       in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
       Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
       auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (<abbrev>z. B.</abbrev>
       Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
       lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
       des Häkchens).</para>

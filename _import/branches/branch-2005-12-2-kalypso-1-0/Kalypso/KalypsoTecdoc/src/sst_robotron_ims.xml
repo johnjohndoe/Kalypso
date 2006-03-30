@@ -3,10 +3,10 @@
   <title>Schnittstelle zum IMS: Dokumentenablage</title>
 
   <para>Aus dem KALYPSO-Vorhersageassistenten heraus können Pegel- und
-  Speichervorhersagen, Datenübersichten (z.B. Gebietsniederschlag),
+  Speichervorhersagen, Datenübersichten (<abbrev>z. B.</abbrev> Gebietsniederschlag),
   Längsschnitte und Scheitelwerte in Form von Tabellen (Textdateien mit
-  Trennzeichen, z.B. im CSV-Format) und Diagramme (Abbildung in Form eines
-  Bildes z.B. im PNG-Format) exportiert werden. Diese Dokumente werden
+  Trennzeichen, <abbrev>z. B.</abbrev> im CSV-Format) und Diagramme (Abbildung in Form eines
+  Bildes <abbrev>z. B.</abbrev> im PNG-Format) exportiert werden. Diese Dokumente werden
   strukturiert im IMS abgelegt (siehe Abbildungen <xref
   linkend="abb_ims_dok_bode" />, <xref linkend="abb_ims_dok_ilse" /> und <xref
   linkend="abb_ims_dok_saale" />).</para>

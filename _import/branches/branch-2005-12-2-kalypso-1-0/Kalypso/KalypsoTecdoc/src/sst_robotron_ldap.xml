@@ -87,7 +87,7 @@ LDAP_CREDENTIALS=geheim</programlisting></para>
     sog. INI-Dateien (Konfigurationsdateien) für die Parametrisierung der
     verschiedenen Betriebsmodi zuständig sind. Dort können die
     Darstellungseigenschaften der Kalypso-Benutzeroberfläche je nach Modus
-    angepasst werden. Im Simulationsbetrieb wird z. B. die Datei
+    angepasst werden. Im Simulationsbetrieb wird <abbrev>z. B.</abbrev> die Datei
     <filename>test.ini</filename> benutzt, diese legt fest, dass Diagramme ein
     Wasserzeichen (siehe Eigenschaft
     <emphasis>DIAG_BACKGROUND_IMAGE_URL</emphasis>) und Tabellen eine

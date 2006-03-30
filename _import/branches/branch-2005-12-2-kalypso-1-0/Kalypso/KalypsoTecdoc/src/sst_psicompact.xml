@@ -84,7 +84,7 @@
     gestellt. Die Implementierungsklasse dieses Interface wird über
     Java-Reflection instantiiert. Diese Flexibilität wurde geschaffen, um
     andere mögliche Implementierungen des PSICompact-Interface integrieren zu
-    können, wie dies z.B. mit der <filename>PSICompactImpl.java</filename> im
+    können, wie dies <abbrev>z. B.</abbrev> mit der <filename>PSICompactImpl.java</filename> im
     Projekt <filename>KalypsoPSICompactImpl</filename> der Fall ist.</para>
 
     <para>In der Datei

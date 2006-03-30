@@ -52,7 +52,7 @@
     <para>Der Server besteht aus einer Anzahl von Webdiensten, die in einem
     J2EE-Container (Apache Tomcat) installiert sind. Darüber hinaus können
     serverseitig noch verschiedene externe Programme installiert sein, welche
-    spezielle Datendienste bereitstellen (z.B.: Anbindung an externe
+    spezielle Datendienste bereitstellen (<abbrev>z. B.</abbrev>: Anbindung an externe
     Zeitreihendatenbank) oder welche für die hydrologischen bzw. hydraulischen
     Modellrechnungen benötigt werden (siehe <xref
     linkend="intro_Architektur" />).</para>

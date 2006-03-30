@@ -918,7 +918,7 @@
 
       <tip>
         <para>Zum Erstellen der Kopiervorlagen für die Ansichten der
-        Rechenvariante (z.B. <filename>Steuerparameter.gft</filename> oder
+        Rechenvariante (<abbrev>z. B.</abbrev> <filename>Steuerparameter.gft</filename> oder
         <filename>Bodenfeuchten.gtt</filename>) wurde im Verzeichnis
         <filename>/KalypsoSpree/.templates/calcCase/</filename> die Daten
         einer konkreten Rechenvariante abgelegt. Dadurch konnten die Vorlagen

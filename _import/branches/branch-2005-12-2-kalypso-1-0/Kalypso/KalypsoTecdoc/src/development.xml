@@ -352,13 +352,13 @@
         </listitem>
 
         <listitem>
-          <para>KalypsoObsService: verwaltet die operativen Daten (z.B.
+          <para>KalypsoObsService: verwaltet die operativen Daten (<abbrev>z. B.</abbrev>
           Zeitreihen),</para>
         </listitem>
 
         <listitem>
           <para>KalypsoMetaDocService: erlaubt die Veröffentlichung von
-          Dokumenten (z.B. Grafiken oder Tabellen),</para>
+          Dokumenten (<abbrev>z. B.</abbrev> Grafiken oder Tabellen),</para>
         </listitem>
 
         <listitem>

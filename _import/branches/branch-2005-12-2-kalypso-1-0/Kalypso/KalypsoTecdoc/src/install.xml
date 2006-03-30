@@ -56,7 +56,7 @@
       unterstützt.</para>
 
       <para>Vorgehensweise: Verzeichnis 'links' im Verzeichnis
-      <filename>eclipse</filename> erstellen. Dort für jede Erweiterung (z.B.
+      <filename>eclipse</filename> erstellen. Dort für jede Erweiterung (<abbrev>z. B.</abbrev>
       die Language-Packs, oder KALYPSO, usw.) eine Link-Datei erstellen mit
       Namen des entsprechenden Features (aber ohne ID-Teil '_X.Y.Z') und mit
       folgendem Aufbau: <programlisting>path=... (mit Forwardslashes '/' getrennt).</programlisting>Der
@@ -313,7 +313,7 @@
     <section>
       <title>Systemvoraussetzungen</title>
 
-      <para>Die Serveranwendung ist bereits auf einem handelsüblichen PC (z.B.
+      <para>Die Serveranwendung ist bereits auf einem handelsüblichen PC (<abbrev>z. B.</abbrev>
       Pentium 4, 512 MB RAM, 40 GB HDD) einsatzfähig. Um jedoch die
       System-Antwortzeit erheblich zu verbessern, empfehlen wir folgende
       Konfiguration: Dual Pentium 4, 2 GB RAM, 130 GB HDD, eventuell mit
@@ -404,7 +404,7 @@
       Probleme mit der Software feststellen.</para>
 
       <para>Das temp-Verzeichnis sollte ab und zu geprüft und eventuell
-      geleert werden. Dort werden temporäre Dateien wie z.B. dienstspezifische
+      geleert werden. Dort werden temporäre Dateien wie <abbrev>z. B.</abbrev> dienstspezifische
       Log-Dateien abgespeichert.</para>
 
       <para>Die anderen Verzeichnisse sind Tomcat-spezifisch, mehr

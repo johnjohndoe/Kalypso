@@ -192,9 +192,9 @@
 
         <para>Abhängig von der Datenart können die einzelnen Modellparameter
         in der Oberfläche dargestellt werden. Die Visualisierung der
-        geo-basierten Modelldaten (z.B. Einzugsgebiete, Gewässernetz,
+        geo-basierten Modelldaten (<abbrev>z. B.</abbrev> Einzugsgebiete, Gewässernetz,
         Pegelstandorte) kann auf Grundlage von Shape-Dateien in Karten
-        erfolgen. Die Modelldaten selbst (z.B. Einzugsgebietsfläche, Name
+        erfolgen. Die Modelldaten selbst (<abbrev>z. B.</abbrev> Einzugsgebietsfläche, Name
         eines Pegels) werden in Form von Tabellen dargestellt. Zur grafischen
         Darstellung von Zeitreihen ist eine Diagramm-Ansicht in der Oberfläche
         integriert (siehe <xref linkend="grundfunktionen" /> ).</para>

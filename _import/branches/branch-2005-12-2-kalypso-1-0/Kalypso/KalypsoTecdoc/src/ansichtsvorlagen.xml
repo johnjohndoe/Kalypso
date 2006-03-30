@@ -91,12 +91,12 @@
 
   <para>Allen Vorlagen ist gemein, dass in ihnen lediglich die Art der
   Darstellung gespeichert ist. Die eigentlichen Daten liegen in separaten
-  Datendateien (z.B. .shp, .gml, .zml) und werden aus den Vorlagen über
+  Datendateien (<abbrev>z. B.</abbrev> .shp, .gml, .zml) und werden aus den Vorlagen über
   URL-Verknüpfungen referenziert. Bei der Referenzierung der Datendateien sind
   sowohl relative als auch absolute URL-Angaben möglich. Relative Pfad-Angaben
   beziehen sich stets auf den Ort der Vorlagendatei.</para>
 
-  <para>Neben den üblichen URL-Protokollen wie z.B. file: und http: wurden für
+  <para>Neben den üblichen URL-Protokollen wie <abbrev>z. B.</abbrev> file: und http: wurden für
   die Modellverwaltung eigene Protokolle definiert. Folgende Protokolle werden
   unterstützt:</para>
 
@@ -181,7 +181,7 @@
 
     <para>Eine Besonderheit des Formates <emphasis>shape</emphasis> ist, dass
     in der Verknüpfung (<emphasis>href</emphasis>) des Themas zusätzlich das
-    Geokoordinatensystem der Shape-Datei angegeben werden kann, z.B.:
+    Geokoordinatensystem der Shape-Datei angegeben werden kann, <abbrev>z. B.</abbrev>:
     <programlisting>href="project:/Grunddaten/Shapes/gewässer#EPSG:31469"</programlisting></para>
 
     <para>Das Attribut <emphasis>featurePath</emphasis> des Themas beschreibt,
@@ -304,7 +304,7 @@
 
     <para>Neben der Themenliste können auch sogenannte RenderingRules
     (Darstellungsregeln) eingetragen sein. Diese Darstellungsregeln definieren
-    die Darstellung von Zusatzinformation wie z.B. <quote>Wert muss geprüft
+    die Darstellung von Zusatzinformation wie <abbrev>z. B.</abbrev> <quote>Wert muss geprüft
     werden</quote> oder <quote>Wert vom Benutzer geändert</quote> in Form von
     Farbe, Bild, Tooltips und/oder Zeichen.</para>
   </section>

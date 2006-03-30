@@ -75,7 +75,7 @@
     eingegeben werden. Der Benutzer erhält in diesem Fall automatisch
     Administratorrechte innerhalb von KALYPSO. Eine Auswahl des Betriebsmodus
     dagegen ist nicht vorgesehen. Diese Art der Anmeldung sollte nur dann
-    erfolgen, wenn z.B. das Programm zum ersten Mal gestartet wird und noch
+    erfolgen, wenn <abbrev>z. B.</abbrev> das Programm zum ersten Mal gestartet wird und noch
     konfiguriert werden muss (siehe <xref
     linkend="kalypso_installation" />).</para>
 
@@ -239,7 +239,7 @@
       das IMS. Berichtskomponenten aus Simulationsrechnungen erhalten einen
       zusätzlichen Metadateneintrag <quote>Simulation</quote>. Je nach Art der
       Berichtskomponente werden auch die Daten als Ergebnisse einer Simulation
-      gekennzeichnet. Z.B. erhalten Diagramme einer Simulation ein
+      gekennzeichnet. <abbrev>Z. B.</abbrev> erhalten Diagramme einer Simulation ein
       entsprechendes Wasserzeichen oder Titel.</para>
     </formalpara>
 
