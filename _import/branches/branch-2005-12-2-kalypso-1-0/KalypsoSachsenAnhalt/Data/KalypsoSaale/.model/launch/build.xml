@@ -15,13 +15,6 @@
 	<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
 	<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
 
-	<!-- 
-		Ein paar Requests und Filter die mehrfach verwendet werden 
-	-->
-	<property name="requestN" value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
-	<!-- N: sum-filter -->
-	<property name="filterN" value="${requestN}&lt;filter&gt;&lt;intervallFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
-
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
