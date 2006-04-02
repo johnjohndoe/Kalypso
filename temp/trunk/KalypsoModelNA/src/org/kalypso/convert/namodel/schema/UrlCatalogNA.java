@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -41,6 +41,7 @@
 
 package org.kalypso.convert.namodel.schema;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.convert.namodel.NaModelConstants;
@@ -60,7 +61,8 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
-  protected void fillCatalog( final Class myClass, final Map catalog )
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.6/control.xsd" ) );
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v0.6/namodell.xsd" ) );
