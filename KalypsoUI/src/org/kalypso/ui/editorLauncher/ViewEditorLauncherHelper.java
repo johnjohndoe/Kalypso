@@ -127,7 +127,8 @@ public class ViewEditorLauncherHelper
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
 
-    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, new WorkbenchLabelProvider() );
+    final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
+    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, workbenchLabelProvider );
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
     dialog.setEmptyListMessage( "Es konnten keine Ansichten für diesen Dateityp ermittelt werden." );
@@ -139,8 +140,10 @@ public class ViewEditorLauncherHelper
 
     // klappt nicht?
     dialog.setInitialSelections( allTemplates.toArray() );
+    final int dialogResult = dialog.open();
+    workbenchLabelProvider.dispose();
 
-    if( dialog.open() == Window.OK )
+    if( dialogResult == Window.OK )
     {
       final Object[] templates = dialog.getResult();
 

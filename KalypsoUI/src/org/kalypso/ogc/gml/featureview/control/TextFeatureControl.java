@@ -58,7 +58,6 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -77,9 +76,9 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private final IFeatureModifier m_modifier;
 
-  public TextFeatureControl( final GMLWorkspace workspace, final Feature feature, final IValuePropertyType ftp )
+  public TextFeatureControl( final Feature feature, final IValuePropertyType ftp )
   {
-    super( workspace, feature, ftp );
+    super( feature, ftp );
 
     m_modifier = new StringModifier( ftp );
   }

@@ -209,7 +209,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoServiceMetaDocClientPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
 
     final Feature feature = prepareFeature( configuration );
-    final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, null, feature, new FeatureSelectionManager2() )
+    final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, feature, new FeatureSelectionManager2() )
     {
       @Override
       protected void applyFeatureChange( FeatureChange fc )

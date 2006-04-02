@@ -89,9 +89,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
+  public ButtonFeatureControl( final Feature feature, final IPropertyType ftp )
   {
-    super( workspace, feature, ftp );
+    super( feature, ftp );
 
     // fake listener, which just informs my own listeners
     final IFeatureChangeListener listener = new IFeatureChangeListener()
@@ -107,10 +107,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       }
     };
 
-    m_dialog = chooseDialog( workspace, feature, ftp, listener );
+    m_dialog = chooseDialog( feature, ftp, listener );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener )
+  public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener )
   {
     // final String typename = ftp.getType();
     if( ftp instanceof IValuePropertyType )
@@ -123,7 +123,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
       {
         final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
-        return handler.createFeatureDialog( workspace, feature, ftp );
+        return handler.createFeatureDialog( feature, ftp );
       }
       // TODO: use GUITypeHandler for those two!
       if( RectifiedGridDomain.class == clazz )
@@ -148,6 +148,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       {
         if( ((String) property).length() < 1 )
           return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
+        final GMLWorkspace workspace = feature.getWorkspace();
         linkedFeature = workspace.getFeature( (String) property );
       }
       else if( property instanceof Feature )

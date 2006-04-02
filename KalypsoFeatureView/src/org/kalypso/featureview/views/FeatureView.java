@@ -1,3 +1,43 @@
+/*--------------- Kalypso-Header --------------------------------------------------------------------
+
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+ 
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.featureview.views;
 
 import java.util.Iterator;
@@ -22,6 +62,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -33,7 +74,6 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -85,25 +125,26 @@ public class FeatureView extends ViewPart implements ModellEventListener
   {
     public void featureChanged( final FeatureChange change )
     {
-      // we know that it is a commandable workspace
-      final CommandableWorkspace workspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
+      final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
       final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
 
-      m_target.setCommandManager( workspace );
+      m_target.setCommandManager( m_commandManager );
       m_target.postCommand( command, null );
     }
 
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
-      final CommandableWorkspace workspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
       // just show this feature in the view, don't change the selection this doesn't work
-      activateFeature( workspace, feature );
+      // don't change the command manager, changing the feature only work inside the same workspace
+      activateFeature( feature );
     }
   };
 
-  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin.getDefault().getSelectionManager() );
+  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, KalypsoCorePlugin.getDefault().getSelectionManager() );
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+
+  protected ICommandManager m_commandManager = null;
 
   private Group m_mainGroup;
 
@@ -121,7 +162,6 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private ISelectionListener m_selectionListener = new ISelectionListener()
   {
-
     public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
     {
       // controls of my feature composite may create events, don't react
@@ -148,7 +188,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   @Override
   public void dispose( )
   {
-    activateFeature( null, null ); // to unhook listeners
+    activateFeature( null ); // to unhook listeners
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
@@ -162,11 +202,14 @@ public class FeatureView extends ViewPart implements ModellEventListener
       final IFeatureSelection featureSel = (IFeatureSelection) selection;
 
       final Feature feature = featureFromSelection( featureSel );
-      activateFeature( featureSel.getWorkspace( feature ), feature );
-      return;
+      m_commandManager = featureSel.getWorkspace( feature );
+      activateFeature( feature );
     }
-
-    activateFeature( null, null );
+    else
+    {
+      m_commandManager = null;
+      activateFeature( null );
+    }
   }
 
   private Feature featureFromSelection( final IFeatureSelection featureSel )
@@ -193,7 +236,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_featureComposite.addChangeListener( m_fcl );
 
-    activateFeature( null, null );
+    activateFeature( null );
 
     final ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
     selectionChanged( selection );
@@ -208,24 +251,22 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_mainGroup.setFocus();
   }
 
-  protected void activateFeature( final CommandableWorkspace workspace, final Feature feature )
+  protected void activateFeature( final Feature feature )
   {
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
 
-    // TODO: check first, if there is anything to do, else
-    // we get a hour-glass everytime we select anything
+    final Feature oldFeature = m_featureComposite.getFeature();
+    final GMLWorkspace oldWorkspace = oldFeature == null ? null : oldFeature.getWorkspace();
+    final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
+    if( oldWorkspace == workspace && oldFeature == feature )
+      return;
+
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
       @Override
-      public IStatus runInUIThread( IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        // we know that we always have CommandableWorkspace
-        final CommandableWorkspace oldWorkspace = (CommandableWorkspace) m_featureComposite.getWorkspace();
-        final Feature oldFeature = m_featureComposite.getFeature();
-
-        if( oldWorkspace == workspace && oldFeature == feature )
-          return Status.OK_STATUS;
 
         if( oldWorkspace != null )
         {
@@ -242,13 +283,12 @@ public class FeatureView extends ViewPart implements ModellEventListener
         if( m_featureComposite == null )
           return Status.OK_STATUS;
 
-        m_featureComposite.setFeature( workspace, feature );
+        m_featureComposite.setFeature( feature );
 
         final String groupLabel;
         if( workspace != null && feature != null && mainGroup != null && (!mainGroup.isDisposed()) )
         {
           workspace.addModellListener( FeatureView.this );
-          // getSite().setSelectionProvider( workspace.getSelectionManager() );
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -274,7 +314,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     job.setRule( m_mutextRule );
     job.setUser( true );
 
-    // This is the way to to it, but still blocks the user interface.
+    // This is the way to do it, but still blocks the user interface.
     // If this is still too slow, split the job into ui and non-ui
     // parts and run the non-ui part in a non-blocking thread.
     // NOTE: running via IProgrssSerive#runInUi gives a
@@ -309,7 +349,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   public GMLWorkspace getCurrentworkspace( )
   {
-    return m_featureComposite.getWorkspace();
+    return m_featureComposite.getFeature().getWorkspace();
   }
 
   public Feature getCurrentFeature( )
