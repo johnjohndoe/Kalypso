@@ -49,24 +49,22 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ResourceFileDialog implements IFeatureDialog
 {
-  private GMLWorkspace m_workspace;
-
   private Feature m_feature;
 
   private IPropertyType m_ftp;
 
   private FeatureChange m_change;
 
-  public ResourceFileDialog( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
+  public ResourceFileDialog( final Feature feature, final IPropertyType ftp )
   {
-    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
 
   public int open( Shell shell )
   {
-    IFile gmlFile = ResourceUtilities.findFileFromURL( m_workspace.getContext() );
+    final GMLWorkspace workspace = m_feature.getWorkspace();
+    final IFile gmlFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
     IWorkspaceRoot workspaceRoot = gmlFile.getWorkspace().getRoot();
     IResource resultFile = null;
     resultFile = getResourceFile();

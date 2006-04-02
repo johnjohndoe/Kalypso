@@ -51,6 +51,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -143,6 +144,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // guess featureType:
       if( !fl.isEmpty() )
       {
+//        final IRelationType parentFeatureTypeProperty = fl.getParentFeatureTypeProperty();
+// @Andreas: why has IRelationType no method 'getTargetType' ?
+// this is what we need to fix the bug below & does not every relation has a single target?
+// BUG: we just get the first feature and its type here, lists with mixed types
+// will produce nullPointerExceptions because of this
         final Object object = fl.get( 0 );
         if( object instanceof Feature )
           ft = ((Feature) object).getFeatureType();

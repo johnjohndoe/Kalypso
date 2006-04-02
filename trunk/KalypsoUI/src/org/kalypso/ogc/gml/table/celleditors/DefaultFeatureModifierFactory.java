@@ -53,7 +53,6 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Belger
@@ -66,7 +65,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     if( ftp instanceof IValuePropertyType )
     {
@@ -88,18 +87,18 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       if( Boolean.class == valueClass )
         return new BooleanModifier( vpt );
       if( vpt.isGeometry() )
-        return new ButtonModifier( workspace, vpt, fcl );
+        return new ButtonModifier( vpt, fcl );
 
       final IGuiTypeHandler typeHandler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( valueClass );
       if( typeHandler != null )
-        return typeHandler.createFeatureModifier( workspace, ftp, selectionManager, fcl );
+        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );
       return new StringModifier( vpt );
     }
 
     if( ftp instanceof IRelationType )
     {
       IRelationType rpt = (IRelationType) ftp;
-      return new ButtonModifier( workspace, rpt, fcl );
+      return new ButtonModifier( rpt, fcl );
     }
     throw new UnsupportedOperationException();
   }

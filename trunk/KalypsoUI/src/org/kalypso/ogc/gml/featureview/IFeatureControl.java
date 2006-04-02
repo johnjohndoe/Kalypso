@@ -44,7 +44,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -55,11 +54,9 @@ public interface IFeatureControl
 
   public void dispose();
 
-  public GMLWorkspace getWorkspace();
-
   public Feature getFeature();
 
-  public void setFeature( final GMLWorkspace workspace, final Feature feature );
+  public void setFeature( final Feature feature );
 
   /**
    * Render this control as string

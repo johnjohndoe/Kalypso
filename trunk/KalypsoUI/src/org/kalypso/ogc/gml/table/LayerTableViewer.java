@@ -48,8 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
@@ -617,7 +615,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final IPropertyType ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        m_modifier[i] = m_featureControlFactory.createFeatureModifier( getTheme().getWorkspace(), ftp, format, m_selectionManager, m_fcl );
+        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp, format, m_selectionManager, m_fcl );
         editors[i] = m_modifier[i].createCellEditor( table );
         editors[i].setValidator( m_modifier[i] );
       }
@@ -810,7 +808,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return getTable().getColumnCount();
   }
 
-  public Gistableview createTableTemplate( ) throws JAXBException
+  public Gistableview createTableTemplate( )
   {
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final Layer layer = m_gistableviewFactory.createGistableviewLayer();
@@ -819,7 +817,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     tableTemplate.setLayer( layer );
 
-    final List columns = layer.getColumn();
+    final List<Column> columns = layer.getColumn();
 
     final TableColumn[] tableColumns = getTable().getColumns();
     for( int i = 0; i < tableColumns.length; i++ )
@@ -870,7 +868,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     else
       features = getTheme().getFeatureList().toFeatures();
 
-    final Collection lines = new ArrayList();
+    final Collection<String[]> lines = new ArrayList<String[]>();
 
     final ITableLabelProvider labelProvider = (ITableLabelProvider) getLabelProvider();
 
@@ -892,7 +890,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       lines.add( line );
     }
 
-    return (String[][]) lines.toArray( new String[features.length][] );
+    return lines.toArray( new String[features.length][] );
   }
 
   public void addModellListener( ModellEventListener listener )
@@ -1001,6 +999,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   /**
    * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
    */
+  @Override
   public ISelection getSelection( )
   {
     final IKalypsoFeatureTheme theme = getTheme();
@@ -1011,6 +1010,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, m_focusedFeature, m_focusedProperty );
   }
 
+  @Override
   protected void inputChanged( final Object input, final Object oldInput )
   {
     if( !isDisposed() )

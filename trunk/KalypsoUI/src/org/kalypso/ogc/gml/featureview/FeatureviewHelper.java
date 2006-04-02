@@ -44,7 +44,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -69,6 +69,8 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 
 /**
  * @author belger
@@ -77,6 +79,8 @@ public class FeatureviewHelper
 {
   public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
+  public final static QName QNAME_GML_BOUNDEDBY = new QName( XMLHelper.GMLSCHEMA_NS, "boundedBy" );
+  
   public static final ObjectFactory FACTORY = new ObjectFactory();
 
   public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -86,26 +90,27 @@ public class FeatureviewHelper
     // wird nicht instantiiert
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp ) throws JAXBException
+  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue )
   {
     ControlType type = null;
     boolean addLabel = true;
     final GridData griddata = FACTORY.createGridData();
+    
     final JAXBElement<GridData> jaxbgriddata = FACTORY.createGridData( griddata );
 
-    final String name = ftp.getName();
+    final QName property = ftp.getQName();
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final Class clazz = vpt.getValueClass();
-      if( "boundedBy".equals( name ) )
+      if( QNAME_GML_BOUNDEDBY.equals( property ) )
         return;
       else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date".indexOf( clazz.getName() ) != -1 )
       {
         final Text editor = FACTORY.createText();
         editor.setStyle( "SWT.NONE" );
         editor.setEditable( true );
-        editor.setProperty( name );
+        editor.setProperty( property );
 
         griddata.setHorizontalAlignment( "GridData.BEGINNING" );
         griddata.setHorizontalSpan( 1 );
@@ -115,12 +120,12 @@ public class FeatureviewHelper
 
         type = editor;
       }
-      else if( java.lang.Boolean.class==clazz)
+      else if( java.lang.Boolean.class == clazz )
       {
         final Checkbox checkbox = FACTORY.createCheckbox();
         checkbox.setStyle( "SWT.NONE" );
         checkbox.setEditable( true );
-        checkbox.setProperty( name );
+        checkbox.setProperty( property );
 
         griddata.setHorizontalAlignment( "GridData.BEGINNING" );
         griddata.setHorizontalSpan( 1 );
@@ -129,15 +134,22 @@ public class FeatureviewHelper
 
         type = checkbox;
       }
-      else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz) )
+      else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
       {
         final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
-        type = handler.createFeatureviewControl( name, FACTORY );
+        type = handler.createFeatureviewControl( property, FACTORY );
 
-        griddata.setHorizontalAlignment( "GridData.FILL" );
-        griddata.setGrabExcessHorizontalSpace( true );
-
-        griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
+        if( type instanceof CompositeType )
+        {
+          griddata.setHorizontalAlignment( "GridData.FILL" );
+          griddata.setGrabExcessHorizontalSpace( true );
+          griddata.setHorizontalSpan( 2 );
+        }
+        else
+        {
+          griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+          griddata.setHorizontalSpan( 1 );
+        }
 
         type.setLayoutData( jaxbgriddata );
       }
@@ -148,7 +160,7 @@ public class FeatureviewHelper
       {
         final Table table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
-        table.setProperty( name );
+        table.setProperty( property );
 
         griddata.setHorizontalAlignment( "GridData.FILL" );
         griddata.setVerticalAlignment( "GridData.FILL" );
@@ -162,11 +174,18 @@ public class FeatureviewHelper
         type = table;
         addLabel = false;
       }
+      else if( propertyValue == null || propertyValue instanceof String )
+      {
+        // HACK: we have a link here
+        // We just do nothing, so the default behaviour (label + button) applies
+        // PROBLEM: we have still problems, because if we have a list with features
+        // sometimes null and sometimes not, the result depends on the first visited feature
+      }
       else
       {
         final Subcomposite compo = FACTORY.createSubcomposite();
         compo.setStyle( "SWT.NONE" );
-        compo.setProperty( name );
+        compo.setProperty( property );
 
         griddata.setHorizontalAlignment( "GridData.FILL" );
         griddata.setVerticalAlignment( "GridData.FILL" );
@@ -185,8 +204,8 @@ public class FeatureviewHelper
         groupdata.setVerticalAlignment( "GridData.FILL" );
         groupdata.setHorizontalSpan( 3 );
 
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
-        final String text = annotation == null ? name : annotation.getLabel();
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
+        final String text = annotation == null ? property.getLocalPart() : annotation.getLabel();
         final String tooltip = annotation == null ? null : annotation.getTooltip();
 
         group.setLayoutData( FACTORY.createGridData( groupdata ) );
@@ -209,7 +228,7 @@ public class FeatureviewHelper
     {
       final Button button = FACTORY.createButton();
       button.setStyle( "SWT.PUSH" );
-      button.setProperty( name );
+      button.setProperty( property );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       button.setLayoutData( jaxbgriddata );
@@ -218,8 +237,8 @@ public class FeatureviewHelper
       type = button;
     }
 
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
-    final String text = annotation == null ? name : annotation.getLabel();
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
+    final String text = annotation == null ? property.getLocalPart() : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
     if( type != null )
@@ -275,84 +294,34 @@ public class FeatureviewHelper
    * Standardview erzeugen
    * 
    * @param type
+   * @param feature
+   *          Optional, if not null, we can use the feature to decide certain things, which are not decidable only from
+   *          the type (e.g. linked features)
    * @return featureview
    */
-  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type )
+  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type, final Feature feature )
   {
-    try
+    final FeatureviewType featureview = FACTORY.createFeatureviewType();
+    featureview.setTypename( type.getQName() );
+    featureview.setStyle( "SWT.NONE" );
+
+    final GridLayout gridLayout = FACTORY.createGridLayout();
+    gridLayout.setNumColumns( 3 );
+    featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
+    final GridData griddata = FACTORY.createGridData();
+    griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
+    griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
+    griddata.setHorizontalAlignment( "GridData.FILL" );
+    griddata.setVerticalAlignment( "GridData.FILL" );
+    featureview.setLayoutData( FACTORY.createGridData( griddata ) );
+
+    final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
+    for( final IPropertyType ftp : type.getProperties() )
     {
-      final FeatureviewType featureview = FACTORY.createFeatureviewType();
-      featureview.setTypename( type.getName() );
-      featureview.setStyle( "SWT.NONE" );
-
-      final GridLayout gridLayout = FACTORY.createGridLayout();
-      gridLayout.setNumColumns( 3 );
-      featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
-      final GridData griddata = FACTORY.createGridData();
-      griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
-      griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
-      griddata.setHorizontalAlignment( "GridData.FILL" );
-      griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
-
-      final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
-
-      final IPropertyType[] properties = type.getProperties();
-      for( int i = 0; i < properties.length; i++ )
-      {
-        final IPropertyType ftp = properties[i];
-        addDefaultFeatureControlTypeForProperty( controlList, ftp );
-      }
-
-      // final Validator validator = JC.createValidator();
-      // validator.validate( featureview );
-
-      return featureview;
+      final Object value = feature == null ? null : feature.getProperty( ftp );
+      addDefaultFeatureControlTypeForProperty( controlList, ftp, value );
     }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
 
-      return null;
-    }
+    return featureview;
   }
-
-  /**
-   * Standardview für eine Property erzeugen
-   * 
-   * @param type
-   * @return featureview
-   */
-  public static FeatureviewType createFeatureviewFromFeatureTypeProperty( final IFeatureType type, final IPropertyType ftp )
-  {
-    try
-    {
-      final FeatureviewType featureview = FACTORY.createFeatureviewType();
-      featureview.setTypename( type.getName() );
-      featureview.setStyle( "SWT.NONE" );
-
-      final GridLayout gridLayout = FACTORY.createGridLayout();
-      gridLayout.setNumColumns( 2 );
-      featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
-      final GridData griddata = FACTORY.createGridData();
-      griddata.setGrabExcessHorizontalSpace( true );
-      griddata.setGrabExcessVerticalSpace( true );
-      griddata.setHorizontalAlignment( "GridData.FILL" );
-      griddata.setVerticalAlignment( "GridData.FILL" );
-      featureview.setLayoutData( FACTORY.createGridData( griddata ) );
-
-      final List<JAXBElement< ? extends ControlType>> control = featureview.getControl();
-
-      addDefaultFeatureControlTypeForProperty( control, ftp );
-
-      return featureview;
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
-  }
-
 }

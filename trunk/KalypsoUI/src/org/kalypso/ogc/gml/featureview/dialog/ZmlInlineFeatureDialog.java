@@ -111,7 +111,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   {
     if( m_change != null )
       c.add( m_change );
-
   }
 
   /**

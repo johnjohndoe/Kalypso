@@ -58,7 +58,6 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -75,18 +74,15 @@ public class FeaturePage extends WizardPage
 
   private Feature m_feature;
 
-  private final GMLWorkspace m_workspace;
-
   private final IFeatureSelectionManager m_selectionManager;
 
   public FeaturePage( final String pagename, final String title, final ImageDescriptor image,
-      final boolean overrideCanFlipToNextPage, final GMLWorkspace workspace, final Feature feature,
+      final boolean overrideCanFlipToNextPage, final Feature feature,
       final IFeatureSelectionManager selectionManager )
   {
     super( pagename, title, image );
 
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
-    m_workspace = workspace;
     m_feature = feature;
     m_selectionManager = selectionManager;
   }
@@ -101,8 +97,8 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( m_workspace, null, m_selectionManager, new URL[] {} );
-    m_featureComposite.setFeature( m_workspace, m_feature );
+    m_featureComposite = new FeatureComposite( null, m_selectionManager, new URL[] {} );
+    m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       public void featureChanged( final FeatureChange change )

@@ -46,19 +46,18 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Nadja Peiler
  */
 public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new ResourceFileDialog( workspace, feature, ftp );
+    return new ResourceFileDialog( feature, ftp );
   }
 
-  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory )
+  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
     final GridData griddata = factory.createGridData();
@@ -71,9 +70,9 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return button;
   }
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( ftp, fcl );
   }
 
   @Override

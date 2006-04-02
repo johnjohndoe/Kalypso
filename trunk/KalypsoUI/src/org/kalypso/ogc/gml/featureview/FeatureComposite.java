@@ -51,7 +51,10 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
@@ -64,6 +67,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -85,6 +89,7 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
+import org.kalypso.template.featureview.PropertyControlType;
 import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.Table;
@@ -92,15 +97,16 @@ import org.kalypso.template.featureview.Text;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
-  // TODO: refactor tu use QName instead, but we must adapt the binding of FeatureviewType as well
-  private final Map<String, FeatureviewType> m_viewMap = new HashMap<String, FeatureviewType>();
+  /* Used for the compability-hack. Is it possible to get this from the binding classes? */
+  public static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
+
+  private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
 
@@ -112,23 +118,23 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
+  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
   {
-    this( workspace, feature, selectionManager, new URL[] {} );
+    this( feature, selectionManager, new URL[] {} );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final URL[] templateURL )
+  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final URL[] templateURL )
   {
-    super( workspace, feature, null );
+    super( feature, null );
     m_selectionManager = selectionManager;
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
+  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
-    super( workspace, feature, null );
+    super( feature, null );
 
     m_selectionManager = selectionManager;
 
@@ -184,12 +190,23 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    */
   public FeatureviewType getFeatureview( final IFeatureType featureType )
   {
-    final String typename = featureType.getName();
+    final QName typename = featureType.getQName();
     final FeatureviewType view = m_viewMap.get( typename );
     if( view != null )
       return view;
 
-    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
+    // REMARK: this code section is for backwards compability. Before, for the typename, only
+    // the local part was given in the featureViewType (type xs:string). Now it is of type xs:qname.
+    // So old entries are interpretated against the namespace of the featureview, which allows us
+    // to try against this namespace uri.
+
+    final QName compabilityName = new QName( FEATUREVIEW_NAMESPACE, typename.getLocalPart(), typename.getPrefix() );
+    final FeatureviewType compabilityView = m_viewMap.get( compabilityName );
+    if( compabilityView != null )
+      return compabilityView;
+    // REMARK end
+
+    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType, getFeature() );
 
     m_viewMap.put( typename, newView );
 
@@ -236,7 +253,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType )
   {
     final Feature feature = getFeature();
-    final GMLWorkspace workspace = getWorkspace();
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType) controlType;
@@ -247,17 +263,17 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( layoutType != null )
         composite.setLayout( createLayout( layoutType ) );
 
-      // die Children einbauen
-      final Iterator<JAXBElement< ? extends ControlType>> iter = compositeType.getControl().iterator();
-      while( iter.hasNext() )
-      {
-        Object object = iter.next();
-        final JAXBElement< ? extends ControlType> element = (JAXBElement< ? extends ControlType>) object;
-        final ControlType control = element.getValue();
-        createControl( composite, SWT.NONE, control );
-      }
+      for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
+        createControl( composite, SWT.NONE, element.getValue() );
+
       return composite;
     }
+
+    final IPropertyType ftp;
+    if( controlType instanceof PropertyControlType )
+      ftp = getProperty( feature, (PropertyControlType) controlType );
+    else
+      ftp = null;
 
     // control erzeugen!
     if( controlType instanceof org.kalypso.template.featureview.Label )
@@ -273,10 +289,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Text editorType = (Text) controlType;
 
-      final String propertyName = editorType.getProperty();
-
-      final IValuePropertyType ftp = (IValuePropertyType) feature.getFeatureType().getProperty( propertyName );
-      final TextFeatureControl tfc = new TextFeatureControl( workspace, feature, ftp );
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
       tfc.setEditable( editorType.isEditable() );
@@ -289,10 +303,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Checkbox checkboxType = (Checkbox) controlType;
 
-      final String propertyName = checkboxType.getProperty();
-
-      final IValuePropertyType ftp = (IValuePropertyType) feature.getFeatureType().getProperty( propertyName );
-      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( workspace, feature, ftp );
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt );
 
       final Control control = cfc.createControl( parent, SWTUtilities.createStyleFromString( checkboxType.getStyle() ) );
       cfc.setEnabled( checkboxType.isEditable() );
@@ -305,9 +317,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Button buttonType = (Button) controlType;
 
-      final String propertyName = buttonType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
 
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
@@ -319,12 +329,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Radiobutton radioType = (Radiobutton) controlType;
 
-      final String propertyName = radioType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-
       final Object valueToSet = radioType.getValueToSet();
       final String text = radioType.getText();
-      final RadioFeatureControl rfc = new RadioFeatureControl( workspace, feature, ftp, valueToSet, text );
+      final RadioFeatureControl rfc = new RadioFeatureControl( feature, ftp, valueToSet, text );
 
       final int radioStyle = SWTUtilities.createStyleFromString( radioType.getStyle() );
       final Control control = rfc.createControl( parent, radioStyle );
@@ -337,11 +344,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Subcomposite compoType = (Subcomposite) controlType;
 
-      final String propertyName = compoType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ) );
-      fc.setFeature( workspace, feature );
+      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      fc.setFeature( feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
 
@@ -351,14 +355,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else if( controlType instanceof Table )
     {
-      final Table tableType = (Table) controlType;
-
-      final String propertyName = tableType.getProperty();
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
-
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
-      fc.setFeature( workspace, feature );
+      final IFeatureControl fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+      fc.setFeature( feature );
 
       addFeatureControl( fc );
 
@@ -452,13 +451,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   @Override
-  public void setFeature( final GMLWorkspace workspace, final Feature feature )
+  public void setFeature( final Feature feature )
   {
-    super.setFeature( workspace, feature );
+    super.setFeature( feature );
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl) iter.next();
-      fc.setFeature( workspace, feature );
+      fc.setFeature( feature );
     }
   }
 
@@ -466,7 +465,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     try
     {
-      Object unmarshal = FeatureviewHelper.JC.createUnmarshaller().unmarshal( url );
+      final Unmarshaller unmarshaller = FeatureviewHelper.JC.createUnmarshaller();
+      Object unmarshal = unmarshaller.unmarshal( url );
       if( unmarshal instanceof JAXBElement )
         unmarshal = ((JAXBElement) unmarshal).getValue();
 
@@ -490,7 +490,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public void addView( final FeatureviewType view )
   {
-    m_viewMap.put( view.getTypename(), view );
+    final QName typename = view.getTypename();
+
+    m_viewMap.put( typename, view );
   }
 
   public void disposeControl( )
@@ -521,11 +523,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_control;
   }
 
-  private void applyAnnotation( final Control label, final String propertyName, final Feature feature )
+  private void applyAnnotation( final Control label, final QName propertyName, final Feature feature )
   {
-    if( propertyName != null && propertyName.length() > 0 )
+    if( propertyName != null )
     {
-      final IPropertyType ftp = feature.getFeatureType().getProperty( propertyName );
+      final IPropertyType ftp = getPropertyTypeForQName( feature.getFeatureType(), propertyName );
       if( ftp != null )
       {
         final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
@@ -547,6 +549,37 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         }
       }
     }
+  }
+
+  private IPropertyType getProperty( final Feature feature, final PropertyControlType propertyControl )
+  {
+    final QName property = propertyControl.getProperty();
+    return getPropertyTypeForQName( feature.getFeatureType(), property );
+  }
+
+  /**
+   * Special method to retrieve a property from a feature for a special qname. Neeeded to have backward compability for
+   * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
+   * So old entries are interpreted against the namespace of the featuretemplate.
+   */
+  @SuppressWarnings("deprecation")
+  private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
+  {
+    if( property == null )
+      return null;
+
+    final IPropertyType propertyType = featureType.getProperty( property );
+    if( propertyType != null )
+      return propertyType;
+
+    if( property.getNamespaceURI().equals( FEATUREVIEW_NAMESPACE ) )
+    {
+      final String localPart = property.getLocalPart();
+      PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null );
+      return featureType.getProperty( localPart );
+    }
+
+    return null;
   }
 
   /**

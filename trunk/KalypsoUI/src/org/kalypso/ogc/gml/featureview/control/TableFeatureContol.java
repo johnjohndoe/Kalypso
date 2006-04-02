@@ -57,10 +57,10 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final IFeatureChangeListener m_fcl;
 
-  public TableFeatureContol( final GMLWorkspace workspace, final IPropertyType ftp,
+  public TableFeatureContol( final IPropertyType ftp,
       final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    super( workspace, ftp );
+    super( ftp );
 
     m_factory = factory;
     m_selectionManager = selectionManager;
@@ -75,7 +75,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   {
     m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionManager, m_fcl );
 
-    setFeature( getWorkspace(), getFeature() );
+    setFeature( getFeature() );
 
     /**/
     MenuManager menuManager = new MenuManager();
@@ -127,9 +127,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    *      org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public void setFeature( final GMLWorkspace workspace, final Feature feature )
+  public void setFeature( final Feature feature )
   {
-    super.setFeature( workspace, feature );
+    super.setFeature( feature );
 
     if( m_kft != null )
     {
@@ -137,6 +137,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_kft = null;
     }
 
+    final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
     if( m_viewer != null && workspace != null && feature != null )
     {
       final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );

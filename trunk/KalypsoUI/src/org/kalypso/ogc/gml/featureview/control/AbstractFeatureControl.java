@@ -63,16 +63,13 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
   private Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
 
-  private GMLWorkspace m_workspace;
-
-  public AbstractFeatureControl( final GMLWorkspace workspace, final IPropertyType ftp )
+  public AbstractFeatureControl( final IPropertyType ftp )
   {
-    this( workspace, null, ftp );
+    this( null, ftp );
   }
 
-  public AbstractFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp )
+  public AbstractFeatureControl( final Feature feature, final IPropertyType ftp )
   {
-    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
@@ -85,11 +82,6 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.clear();
   }
 
-  public final GMLWorkspace getWorkspace()
-  {
-    return m_workspace;
-  }
-
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
@@ -98,9 +90,8 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return m_feature;
   }
 
-  public void setFeature( final GMLWorkspace workspace, final Feature feature )
+  public void setFeature( final Feature feature )
   {
-    m_workspace = workspace;
     m_feature = feature;
   }
 

@@ -64,7 +64,6 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author bce
@@ -75,10 +74,10 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( final GMLWorkspace workspace, final Feature feature,
+  public IFeatureDialog createFeatureDialog( final Feature feature,
       final IPropertyType ftp )
   {
-    return new TimeserieLinkFeatureDialog( workspace, feature, ftp );
+    return new TimeserieLinkFeatureDialog( feature, ftp );
   }
 
   /**
@@ -111,11 +110,9 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   }
 
   /**
-   * @throws JAXBException
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName, org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory )
+  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory )
   {
     final CompositeType composite = factory.createCompositeType();
 
@@ -153,11 +150,11 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( ftp, fcl );
   }
 
   /**

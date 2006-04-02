@@ -55,7 +55,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This feature control is a radio button, which just sets the feature-value to the goven value when selected. If
@@ -89,14 +88,14 @@ public class RadioFeatureControl extends AbstractFeatureControl
 
   private final String m_text;
 
-  public RadioFeatureControl( final GMLWorkspace workspace, final IPropertyType ftp, final Object valueToSet, final String text )
+  public RadioFeatureControl( final IPropertyType ftp, final Object valueToSet, final String text )
   {
-    this( workspace, null, ftp, valueToSet, text );
+    this( null, ftp, valueToSet, text );
   }
 
-  public RadioFeatureControl( final GMLWorkspace workspace, final Feature feature, final IPropertyType ftp, final Object valueToSet, final String text )
+  public RadioFeatureControl( final Feature feature, final IPropertyType ftp, final Object valueToSet, final String text )
   {
-    super( workspace, feature, ftp );
+    super( feature, ftp );
 
     m_valueToSet = valueToSet;
     m_text = text;

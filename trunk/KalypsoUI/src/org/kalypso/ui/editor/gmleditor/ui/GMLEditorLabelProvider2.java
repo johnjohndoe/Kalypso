@@ -29,9 +29,13 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -47,14 +51,25 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLEditorLabelProvider2 extends LabelProvider
 {
+  private Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
+   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+    
+    new DisposeHelper( m_images.values() ).dispose();
+    m_images.clear();
+  }
+  
+  /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( Object element )
+  public Image getImage( final Object element )
   {
     ImageDescriptor descriptor = null;
     if( element instanceof Feature )
@@ -81,12 +96,17 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     }
     else
       return null;
-    return descriptor.createImage();
+
+    if( m_images.containsKey( descriptor ) )
+      return m_images.get( descriptor );
+
+    final Image createImage = descriptor.createImage();
+    m_images.put( descriptor, createImage );
+
+    return createImage;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
@@ -97,12 +117,12 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
-      final IAnnotation annotation =  AnnotationUtilities.getAnnotation(feature.getFeatureType());
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
       return annotation.getLabel() + " #" + feature.getId();
     }
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty());
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
       return annotation.getLabel();
     }
     if( element instanceof LinkedFeatureElement2 )

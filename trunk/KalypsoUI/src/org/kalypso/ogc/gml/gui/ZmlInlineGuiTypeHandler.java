@@ -42,59 +42,51 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kuepfer
  */
 public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-
   private final ZmlInlineTypeHandler m_typeHandler;
 
-  public ZmlInlineGuiTypeHandler( ZmlInlineTypeHandler typeHandler )
+  public ZmlInlineGuiTypeHandler( final ZmlInlineTypeHandler typeHandler )
   {
     m_typeHandler = typeHandler;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory )
+  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory )
   {
-
     final Button button = factory.createButton();
-    final GridData griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
-
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( factory.createLayoutData( griddata ) );
 
     return button;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, fcl );
+    return new ButtonModifier( ftp, fcl );
   }
 
   /**
@@ -114,7 +106,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   }
 
   @Override
-  public String getText( Object o )
+  public String getText( final Object o )
   {
     // final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
     // if( o == null )

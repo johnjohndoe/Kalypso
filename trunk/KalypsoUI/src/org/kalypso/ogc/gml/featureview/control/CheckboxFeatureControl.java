@@ -57,7 +57,6 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -72,9 +71,9 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
 
-  public CheckboxFeatureControl( final GMLWorkspace workspace, final Feature feature, final IValuePropertyType ftp )
+  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp )
   {
-    super( workspace, feature, ftp );
+    super( feature, ftp );
 
     m_modifier = new BooleanModifier( ftp );
   }

@@ -109,7 +109,6 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
 
     Feature targetFeature = null;
-//    IFeatureType targetFt;
     IFeatureType matchingFt = null;
     IRelationType targetAssocFtp = null;
     if( !isValidSelection( selectedFeatures ) )
@@ -172,9 +171,9 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     if( !LocalSelectionTransfer.getInstance().isSupportedType( transferType ) )
       return false;
 
-    System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() );
     if( matchingFt != null )
     {
+      System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() );
       if( selectedFeatures.length > 1 )
       {
         IFeatureType property = targetFeature.getFeatureType();
