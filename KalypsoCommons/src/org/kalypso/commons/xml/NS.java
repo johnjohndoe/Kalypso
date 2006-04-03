@@ -59,12 +59,15 @@ public interface NS
 
   public static final String NS_MAPVIEW = "gismapview.template.kalypso.org";
 
+  public static final String NS_OBSVIEW = "obsdiagview.template.kalypso.org";
+
   public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
   
   public static final String NS_KALYPSO_RRM = KALYPSO_RRM;
 
   public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
 
+  
 //  public static final String XSD = null;
 
   // TODO check if ADV is korrekt

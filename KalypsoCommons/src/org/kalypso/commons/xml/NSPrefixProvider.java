@@ -63,6 +63,7 @@ public class NSPrefixProvider
       THE_NS_MAPPER.getPreferredPrefix( NS.NS_XSD, "xs" );
       THE_NS_MAPPER.getPreferredPrefix( NS.NS_XSD_SCHEMA, "xsd" );
       THE_NS_MAPPER.getPreferredPrefix( NS.NS_MAPVIEW, "mapv" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.NS_OBSVIEW, "obsv" );
       THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_RRM, "rrm" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
