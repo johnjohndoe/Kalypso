@@ -70,7 +70,8 @@ import org.kalypso.test.util.CalcJobTestUtilis;
 public class ModelNACalcTest extends TestCase
 {
 
-  final File m_compareDir = new File( "C:\\TMP\\KalypsoCalcTest" );
+  // final File m_compareDir = new File( "C:\\TMP\\KalypsoCalcTestWE" );
+  final File m_compareDir = new File( "C:\\KalypsoCalcTestWE" );
 
   /**
    * @see junit.framework.TestCase#setUp()
@@ -156,6 +157,8 @@ public class ModelNACalcTest extends TestCase
       {
         if( NaModelConstants.IN_PARAMETER_ID.equals( id ) || NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
           return true;
+        if( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID.equals( id ) )
+          return true;
         return jarProvider.hasID( id );
       }
 
@@ -167,6 +170,8 @@ public class ModelNACalcTest extends TestCase
             return getClass().getResource( "testData/we/hydrotop.gml" );
           if( NaModelConstants.IN_PARAMETER_ID.equals( id ) )
             return getClass().getResource( "testData/we/parameter.gml" );
+          if( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID.equals( id ) )
+            return getClass().getResource( "testData/schema/namodelTest.xsd" );
           return jarProvider.getURLForID( id );
         }
         catch( SimulationException e )
@@ -210,11 +215,9 @@ public class ModelNACalcTest extends TestCase
         // "inp.dat/we_nat.zft",
             // "inp.dat/we_nat.ntz",
             // "*exe",
-            "*err",
-             "*gml",
-            "*res", "IdMap.txt", "exe.log",
+            "*err", "*gml", "*res", "IdMap.txt", "exe.log",
             // "start/we_nat_start.txt",
-             "inp.dat/we.hyd",
+            "inp.dat/we.hyd",
             // "out_we.nat/950825.qgs",
             // "inp.dat/we_nat.ger",
             "inp.dat/we_nat.geb", "zufluss/*", "klima.dat/*", "infolog.txt" };
