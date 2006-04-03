@@ -89,8 +89,8 @@ public class DiagramAxis
     // So as soon as solution is found, maybe replace the code
     // here that currently simply checks for == 0
     this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection().value(), axis.getPosition().value(),
-        axis.isInverted(), axis.getLowerMargin() == 0 ? null : new Double( axis.getLowerMargin() ), axis
-            .getUpperMargin() == 0 ? null : new Double( axis.getUpperMargin() ) );
+        axis.isInverted(), axis.getLowerMargin() == null ? null : new Double( axis.getLowerMargin() ), axis
+            .getUpperMargin() == null ? null : new Double( axis.getUpperMargin() ) );
   }
 
   public DiagramAxis( final String id, final String dataType, final String label, final String unit,
