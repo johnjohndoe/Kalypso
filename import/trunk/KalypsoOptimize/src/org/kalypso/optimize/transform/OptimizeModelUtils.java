@@ -55,9 +55,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.NSPrefixProvider;
+import org.kalypso.commons.xml.NSUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -68,9 +73,9 @@ import org.w3c.dom.NodeList;
  */
 public class OptimizeModelUtils
 {
-  public OptimizeModelUtils()
+  public OptimizeModelUtils( )
   {
-  // do not instanciate
+    // do not instanciate
   }
 
   public static void initializeModel( Document doc, ParameterOptimizeContext[] contexts ) throws TransformerException
@@ -85,15 +90,13 @@ public class OptimizeModelUtils
     setParameter( calContext.getxPaths(), value, doc );
   }
 
-  public static void transformModel( Document doc, double[] values, ParameterOptimizeContext[] contexts )
-      throws TransformerException
+  public static void transformModel( Document doc, double[] values, ParameterOptimizeContext[] contexts ) throws TransformerException
   {
     for( int i = 0; i < contexts.length; i++ )
       transformModel( doc, values[i], contexts[i] );
   }
 
-  public static void transformModel( Document doc, double value, ParameterOptimizeContext calContext )
-      throws TransformerException
+  public static void transformModel( Document doc, double value, ParameterOptimizeContext calContext ) throws TransformerException
   {
     String mode = calContext.getMode();
     if( ParameterOptimizeContext.MODE_FACTOR.equals( mode ) )
@@ -102,25 +105,25 @@ public class OptimizeModelUtils
       setParameter_Offset( calContext.getxPaths(), value, doc );
     else
       // mode direct
-      setParameter( calContext.getxPaths(), ( new Double( value ) ).toString(), doc );
+      setParameter( calContext.getxPaths(), (new Double( value )).toString(), doc );
   }
 
-  //  public static void setParameter_Factor( String[] querys, double value,
+  // public static void setParameter_Factor( String[] querys, double value,
   // Document myDom )
-  //      throws TransformerException
-  //  {
-  //    for( int n = 0; n < querys.length; n++ )
-  //    {
-  //      String query = querys[n];
-  //      NodeList nl = getXPath( query, myDom );
-  //      for( int i = 0; i < nl.getLength(); i++ )
-  //      {
-  //        String nodeValue = ( nl.item( i ) ).getNodeValue();
-  //        double setValue = value * Double.parseDouble( nodeValue );
-  //        ( nl.item( i ) ).setNodeValue( String.valueOf( setValue ) );
-  //      }
-  //    }
-  //  }
+  // throws TransformerException
+  // {
+  // for( int n = 0; n < querys.length; n++ )
+  // {
+  // String query = querys[n];
+  // NodeList nl = getXPath( query, myDom );
+  // for( int i = 0; i < nl.getLength(); i++ )
+  // {
+  // String nodeValue = ( nl.item( i ) ).getNodeValue();
+  // double setValue = value * Double.parseDouble( nodeValue );
+  // ( nl.item( i ) ).setNodeValue( String.valueOf( setValue ) );
+  // }
+  // }
+  // }
 
   public static void setParameter( String[] querys, String value, Document myDom ) throws TransformerException
   {
@@ -142,7 +145,7 @@ public class OptimizeModelUtils
     {
 
       String query = querys[n];
-      //      System.out.println( "Query: " + query );
+      // System.out.println( "Query: " + query );
       NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
@@ -160,7 +163,7 @@ public class OptimizeModelUtils
     {
 
       String query = querys[n];
-      //      System.out.println( "Query: " + query );
+      // System.out.println( "Query: " + query );
       NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
@@ -172,29 +175,41 @@ public class OptimizeModelUtils
     }
   }
 
-  //method returns nodeList to a given query
+  // method returns nodeList to a given query
   public static NodeList getXPath( String xPathQuery, Document domNode ) throws TransformerException
   {
     NodeList nl;
+    String newXPathQuery = null;
     try
     {
-      nl = XPathAPI.selectNodeList( domNode, xPathQuery );
+      final String rrmPrefix = domNode.lookupPrefix( NS.NS_KALYPSO_RRM );
+      if( rrmPrefix != null )
+        newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
+      else
+        newXPathQuery = xPathQuery;
+      nl = XPathAPI.selectNodeList( domNode, newXPathQuery, domNode );
     }
     catch( TransformerException e )
     {
-      System.out.println( xPathQuery );
+      System.out.println( newXPathQuery );
       throw e;
     }
     return nl;
   }
 
-  //  method returns node to a given query
+  // method returns node to a given query
   public static Node getXPath_singleNode( String xPathQuery, Node domNode )
   {
     Node node = null;
+    String newXPathQuery = null;
     try
     {
-      node = XPathAPI.selectSingleNode( domNode, xPathQuery );
+      final String rrmPrefix = domNode.lookupPrefix( NS.NS_KALYPSO_RRM );
+      if( rrmPrefix != null )
+        newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
+      else
+        newXPathQuery = xPathQuery;
+      node = XPathAPI.selectSingleNode( domNode, newXPathQuery, domNode );
     }
     catch( Exception e )
     {
@@ -204,7 +219,7 @@ public class OptimizeModelUtils
     return node;
   }
 
-  //method returns the Document of a xml-file
+  // method returns the Document of a xml-file
   public static Document getXML( InputStream inputStream ) throws Exception
   {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -213,7 +228,7 @@ public class OptimizeModelUtils
     return dom;
   }
 
-  //method writes a document(node) to a file
+  // method writes a document(node) to a file
   public static void toFile( File file, Node node ) throws TransformerException, FileNotFoundException
   {
     Transformer t = TransformerFactory.newInstance().newTransformer();
