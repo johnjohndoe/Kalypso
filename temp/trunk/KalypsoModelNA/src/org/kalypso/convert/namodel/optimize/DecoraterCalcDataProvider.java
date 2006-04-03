@@ -47,7 +47,7 @@ import org.kalypso.simulation.core.SimulationException;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class OptimizeCalcDataProvider implements ISimulationDataProvider
+public class DecoraterCalcDataProvider implements ISimulationDataProvider
 {
 
   private final ISimulationDataProvider m_calcDataProvider;
@@ -59,7 +59,7 @@ public class OptimizeCalcDataProvider implements ISimulationDataProvider
    * 
    * TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
    */
-  public OptimizeCalcDataProvider( ISimulationDataProvider calcDataProvider )
+  public DecoraterCalcDataProvider( ISimulationDataProvider calcDataProvider )
   {
     m_calcDataProvider = calcDataProvider;
   }

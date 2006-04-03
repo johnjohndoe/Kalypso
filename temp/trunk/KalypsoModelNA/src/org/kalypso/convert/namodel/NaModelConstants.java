@@ -45,9 +45,11 @@ package org.kalypso.convert.namodel;
  */
 public interface NaModelConstants
 {
-  //Bean IDs
+  // Bean IDs
 
   public static final String IN_META_ID = "MetaSteuerdaten";
+
+  public final static String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD";
 
   public final static String IN_MODELL_ID = "Modell";
 
@@ -58,7 +60,7 @@ public interface NaModelConstants
   public final static String IN_CONTROL_ID = "Control";
 
   public final static String IN_TEMPLATE_ID = "Template";
-  
+
   public final static String IN_SYNTHN_ID = "synthNiederschlag";
 
   public static final String IN_OPTIMIZECONF_ID = "SceConf";
@@ -76,7 +78,7 @@ public interface NaModelConstants
   public static final String NS_NAPARAMETER = "http://www.tuhh.de/parameter";
 
   public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
-  
+
   public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
 
   // flows

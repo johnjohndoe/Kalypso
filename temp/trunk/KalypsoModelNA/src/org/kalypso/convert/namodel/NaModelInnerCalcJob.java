@@ -87,6 +87,7 @@ import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -124,6 +125,8 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 /**
  * @author doemming, huebsch
@@ -248,7 +251,7 @@ public class NaModelInnerCalcJob implements ISimulation
       // calualtion model
 
       final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURL(), tmpdir );
-
+      conf.setZMLContext( inputProvider.getURLForID( NaModelConstants.IN_META_ID ) );
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = inputProvider.getURLForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
@@ -482,9 +485,10 @@ public class NaModelInnerCalcJob implements ISimulation
     initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
+    // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace );
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace, conf.getZMLContext() );
     conf.setNodeResultProvider( nodeResultProvider );
     updateModelWithExtraVChannel( modellWorkspace, nodeResultProvider );
 
@@ -547,13 +551,13 @@ public class NaModelInnerCalcJob implements ISimulation
     chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
 
     // choose precipitation form and parameters
-    conf.setPrecipitationForm( (Boolean) metaFE.getProperty( "pns" ) );
-    if( conf.getPns().equals( true ) )
+    final Boolean pns = (Boolean) metaFE.getProperty( "pns" );
+    conf.setUsePrecipitationForm( pns == null ? false : pns );
+    if( conf.isUsePrecipitationForm().equals( true ) )
     {
       conf.setAnnuality( (Double) metaFE.getProperty( "xjah" ) );
       conf.setDuration( (Double) metaFE.getProperty( "xwahl2" ) );
       conf.setForm( (String) metaFE.getProperty( "ipver" ) );
-
     }
 
     // set rootnode
@@ -845,11 +849,30 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
   }
 
-  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws IOException, Exception
+  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws Exception
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
-    Document modelDoc = XMLHelper.getAsDOM( inputModellURL, true );
+
+    Document modelDoc = null;
+    try
+    {
+      modelDoc = XMLHelper.getAsDOM( new InputSource( inputModellURL.openStream() ), true );
+    }
+
+    catch( SAXParseException e )
+    {
+      e.printStackTrace();
+      int lineNumber = e.getLineNumber();
+      System.out.println( e.getLocalizedMessage() + " #" + lineNumber );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+      throw e;
+    }
 
     OptimizeModelUtils.initializeModel( modelDoc, config.getCalContexts() );
 
@@ -1129,8 +1152,9 @@ public class NaModelInnerCalcJob implements ISimulation
         // final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
         // IKalypsoPreferences.LANGUAGE );
         final String lang = "de";
-
-        final String annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() ).getLabel();
+        // hm, so gehts auch nicht
+        final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
+        final String annotationLabel = annotation != null ? annotation.getLabel() : feature.getFeatureType().getQName().getLocalPart();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feName = (String) feature.getProperty( titlePropName );
         final String observationTitle;
@@ -1216,7 +1240,7 @@ public class NaModelInnerCalcJob implements ISimulation
           // resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
           // + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
 
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "/" + suffix + "(" + observationTitle + ").zml";
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" + suffix + "(" + observationTitle + ").zml";
         }
         if( !m_resultMap.containsKey( resultPathRelative ) )
         {
@@ -1225,7 +1249,7 @@ public class NaModelInnerCalcJob implements ISimulation
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "("
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "("
               + observationTitle + ").zml";
           m_resultMap.put( resultPathRelative, observationTitle );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );

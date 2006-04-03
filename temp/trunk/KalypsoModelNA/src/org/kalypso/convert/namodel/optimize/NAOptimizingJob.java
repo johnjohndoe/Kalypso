@@ -184,7 +184,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
     optimizeRunDir.mkdirs();
 
-    final OptimizeCalcDataProvider newDataProvider = new OptimizeCalcDataProvider( m_dataProvider );
+    final DecoraterCalcDataProvider newDataProvider = new DecoraterCalcDataProvider( m_dataProvider );
     newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedFile.toURL() );
 
     // some generated files from best run can be recycled to increase

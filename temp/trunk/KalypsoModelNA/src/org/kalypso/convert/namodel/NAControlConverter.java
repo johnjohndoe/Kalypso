@@ -177,7 +177,7 @@ public class NAControlConverter
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
-    if( conf.getPns().equals( true ) )
+    if( conf.isUsePrecipitationForm().equals( true ) )
     {
       String preFormText = conf.getPrecipitationForm();
       int preForm = 0;

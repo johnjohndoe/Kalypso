@@ -276,7 +276,7 @@ public class CatchmentManager extends AbstractManager
 
     // 3
     StringBuffer b = new StringBuffer();
-    if( m_conf.getPns().equals( true ) )
+    if( m_conf.isUsePrecipitationForm().equals( true ) )
     {
       b.append( "s " );
     }
@@ -473,7 +473,7 @@ public class CatchmentManager extends AbstractManager
 
   public static String getNiederschlagEingabeDateiString( Feature feature, NAConfiguration conf )
   {
-    if( conf.getPns().equals( true ) )
+    if( conf.isUsePrecipitationForm().equals( true ) )
     {
       return getEingabeDateiString( feature, conf, "synthZR", TimeserieConstants.TYPE_RAINFALL );
     }

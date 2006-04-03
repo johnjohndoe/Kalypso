@@ -145,6 +145,7 @@ public class NAConfiguration
 
   private String m_precipitationForm;
 
+  private URL m_zmlContext;
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -288,7 +289,7 @@ public class NAConfiguration
   {
     return m_kmChannelFT;
   }
-  
+
   public IFeatureType getstatNFT( )
   {
     return m_statNFT;
@@ -407,9 +408,14 @@ public class NAConfiguration
     m_minutesTimeStep = minutesTimeStep;
   }
 
-  public void setPrecipitationForm( Boolean pns )
+  public void setUsePrecipitationForm( Boolean pns )
   {
     m_pns = pns;
+  }
+
+  public Boolean isUsePrecipitationForm( )
+  {
+    return m_pns;
   }
 
   public int getMinutesOfTimeStep( )
@@ -453,25 +459,19 @@ public class NAConfiguration
   public void setAnnuality( Double annuality )
   {
     m_annuality = annuality;
-    
+
   }
 
   public void setDuration( Double duration )
   {
     m_duration = duration;
-   
+
   }
 
   public void setForm( String precipitationForm )
   {
     m_precipitationForm = precipitationForm;
-   
-    
-  }
 
-  public Boolean getPns( )
-  {
-    return m_pns;
   }
 
   public String getPrecipitationForm( )
@@ -489,6 +489,15 @@ public class NAConfiguration
     return m_duration;
   }
 
-  
+  public void setZMLContext( URL zmlContext )
+  {
+    m_zmlContext = zmlContext;
+  }
+
+  public URL getZMLContext( )
+  {
+    return m_zmlContext;
+
+  }
 
 }
