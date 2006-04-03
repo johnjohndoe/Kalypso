@@ -44,11 +44,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
- * xelement that represents a path-xpath element
-s * 
+ * xelement that represents a path-xpath element s *
+ * 
  * @author doemming
  */
 public class XElementFormPath extends AbstractXElement
@@ -93,7 +92,7 @@ public class XElementFormPath extends AbstractXElement
    * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
   @Override
-  public Object evaluateOther( Object context, boolean featureTypeLevel ) throws GMLXPathException
+  public Object evaluateOther( Object context, boolean featureTypeLevel )
   {
     if( context instanceof GMLWorkspace )
     {

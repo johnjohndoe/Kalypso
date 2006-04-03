@@ -384,6 +384,7 @@ public class DBaseFile
         {
           if( column.size < 8 )
           {
+            // th = doubleTH;
             th = floatTH;
             // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.Float.class, true );
           }
@@ -750,7 +751,7 @@ public class DBaseFile
     }
     // final String prefix = featureType.getQName().getLocalPart();
 
-    return FeatureFactory.createFeature( parent,m_prefix + rowNo, m_featureType, fp );
+    return FeatureFactory.createFeature( parent, m_prefix + rowNo, m_featureType, fp );
   }
 
   /**

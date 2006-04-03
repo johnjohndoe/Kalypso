@@ -91,7 +91,7 @@ public class GMLXPathUtilities
       final Iterator iterator = contextList.iterator();
       // final FeatureList results = FeatureFactory.createFeatureList( fList.getParentFeature(),
       // fList.getParentFeatureTypeProperty() );
-      final List resultList = new ArrayList();
+      final List<Object> resultList = new ArrayList<Object>();
       while( iterator.hasNext() )
       {
         final Object object = iterator.next();

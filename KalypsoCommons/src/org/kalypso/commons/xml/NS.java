@@ -47,18 +47,27 @@ public interface NS
 {
   public final static String NS_GML = "";
 
-  // used for schemalocation
+  // the 'XML-Schema' schema:
+  public final static String NS_XSD_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+
+  // used for schemalocation:
   public final static String NS_XSD = "http://www.w3.org/2001/XMLSchema-instance";
 
   public final static String XLINK = "http://www.w3.org/1999/xlink";
 
   public static final String GML2 = "http://www.opengis.net/gml";
 
-  public static final String NS_MAPVIEW="gismapview.template.kalypso.org";
-  
-  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
+  public static final String NS_MAPVIEW = "gismapview.template.kalypso.org";
 
-  public static final String KALYPSO_OBSLINK= "obslink.zml.kalypso.org";
+  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
   
-  public static final String XSD = null;
+  public static final String NS_KALYPSO_RRM = KALYPSO_RRM;
+
+  public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
+
+//  public static final String XSD = null;
+
+  // TODO check if ADV is korrekt
+  // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)
+  public static final String NS_ADV = "http://www.adv-online.de";
 }
