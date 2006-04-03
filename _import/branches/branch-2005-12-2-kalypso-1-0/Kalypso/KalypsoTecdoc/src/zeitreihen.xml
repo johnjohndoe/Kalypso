@@ -2,8 +2,18 @@
 <chapter id="chapter_4_zeitreihen">
   <title>Zeitreihenablage</title>
 
+  <indexterm>
+    <primary>Zeitreihenablage</primary>
+  </indexterm>
+
   <section>
     <title>Grundprinzip</title>
+
+    <indexterm>
+      <primary>Zeitreihenablage</primary>
+
+      <secondary>Grundprinzip</secondary>
+    </indexterm>
 
     <para>Der Zeitreihenablage liegt eine hierarchische Struktur zugrunde. Die
     Java-Schnittstelle
@@ -54,6 +64,12 @@
   <section>
     <title>Dateiablage</title>
 
+    <indexterm>
+      <primary>Zeitreihenablage</primary>
+
+      <secondary>dateibasiert</secondary>
+    </indexterm>
+
     <para>Die lokale Dateiablage (FileRepository) arbeitet direkt mit
     Verzeichnisstrukturen und den dort enthaltenen Dateien. Im Grunde ist die
     Verwaltung aller Dateitypen möglich, da das FileRepository nicht
@@ -83,6 +99,12 @@
   <section vendor="sachsen-anhalt">
     <title>WISKI-Zeitreihenablage</title>
 
+    <indexterm>
+      <primary>Zeitreihenablage</primary>
+
+      <secondary>WISKI</secondary>
+    </indexterm>
+
     <para>Zeitreihen aus WISKI werden ebenfalls über den
     IRepository-Mechanismus geliefert und zurückgeschrieben. Die hierarchische
     Struktur ist in WISKI anhand des Gruppensystems vorgegeben. Diese Struktur
@@ -98,6 +120,12 @@
   <section>
     <title>Virtuelle Ablage</title>
 
+    <indexterm>
+      <primary>Zeitreihenablage</primary>
+
+      <secondary>virtuelle Ablage</secondary>
+    </indexterm>
+
     <para>Diese Art von Repository (VirtualRepository) bietet fortgeschrittene
     Möglichkeiten, um synthetische Zeitreihen anhand anderer Zeitreihenablagen
     zu erzeugen. Eine XML - Konfigurationsdatei definiert den Inhalt der
@@ -106,9 +134,9 @@
     <filename>etc/schemas/repository/virtualRepository.xsd</filename> im
     Projekt <code><filename>KalypsoCore</filename></code>.</para>
 
-    <para>Anhand von Filtern und bestehenden Repositories (wie <abbrev>z. B.</abbrev>
-    dateibasiert oder aus der Zeitreihendatenbank) werden die synthetischen
-    Zeitreihen generiert. Die hierarchische Struktur ist frei
+    <para>Anhand von Filtern und bestehenden Repositories (wie <abbrev>z.
+    B.</abbrev> dateibasiert oder aus der Zeitreihendatenbank) werden die
+    synthetischen Zeitreihen generiert. Die hierarchische Struktur ist frei
     definierbar.</para>
 
     <!--PROFILING ANFANG sachsen-anhalt,sachsen-->
@@ -119,6 +147,10 @@
 
   <section>
     <title>Zeitreihendienst</title>
+
+    <indexterm>
+      <primary>Zeitreihendienst</primary>
+    </indexterm>
 
     <para>Wie oben beschrieben ist die Konfiguration beliebig vieler client-
     und serverseitiger Repositories möglich.</para>
@@ -163,6 +195,10 @@
 
   <section>
     <title>Filter</title>
+
+    <indexterm>
+      <primary>Zeitreihenfilter</primary>
+    </indexterm>
 
     <para>Um die Zeitreihen an die Anforderungen der Modelle anzupassen, wird
     ein sogenannter Filter-Mechanismus in KALYPSO benutzt.</para>

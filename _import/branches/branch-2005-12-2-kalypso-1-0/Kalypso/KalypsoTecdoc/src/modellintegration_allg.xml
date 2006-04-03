@@ -2,6 +2,12 @@
 <section id="sec-modellintegration-allgemein">
   <title>Grundlagen</title>
 
+  <indexterm>
+    <primary>Modellintegration</primary>
+
+    <secondary>Grundlagen</secondary>
+  </indexterm>
+
   <para>Das Programmsystem KALYPSO ist in der Lage, eine Vielzahl
   verschiedenartiger Modelle unter einer einheitlichen Benutzeroberfläche zu
   integrieren. Die Integration eines neuen Modelltyps (eines neuen
@@ -20,8 +26,9 @@
 
   <para>Serverseitig wird das Modell (bzw. der Rechenkern) über eine
   feststehende Java-Schnittstelle implementiert.Hier erfolgt die für den
-  jeweiligen Rechenkern spezifische Programmierung wie <abbrev>z. B.</abbrev>: Anstoßen des
-  nativen Programms (.exe), Lesen und Schreiben der speziellen Formate.</para>
+  jeweiligen Rechenkern spezifische Programmierung wie <abbrev>z. B.</abbrev>:
+  Anstoßen des nativen Programms (.exe), Lesen und Schreiben der speziellen
+  Formate.</para>
 
   <para>Clientseitig werden alle Modelle gleichermaßen behandelt, sie
   unterscheiden sich lediglich in ihrer Datenspezifikation. Aus diesem Grund
@@ -67,8 +74,8 @@
           </listitem>
 
           <listitem>
-            <para>Erstellen der Konvertierungsroutinen für Modellformate (<abbrev>z. B.</abbrev>
-            Zeitreihen)</para>
+            <para>Erstellen der Konvertierungsroutinen für Modellformate
+            (<abbrev>z. B.</abbrev> Zeitreihen)</para>
           </listitem>
 
           <listitem>
@@ -129,6 +136,12 @@
   <section>
     <title>Modellspezifikation und Grunddaten</title>
 
+    <indexterm>
+      <primary>Modellspezifikation und Grunddaten</primary>
+
+      <secondary>Grundlagen</secondary>
+    </indexterm>
+
     <section>
       <title>Spezifikation</title>
 
@@ -170,15 +183,21 @@
       rechtzeitig zu erkennen. Darüber hinaus können die Vorlagen natürlich
       auch zur Eingabe der Modellgrunddaten verwendet werden. Neben den
       (GIS-basierten) Modelldaten können weitere im Projekt abgelegte
-      GIS-Daten visualisiert werden (<abbrev>z. B.</abbrev> ESRI Shapes). Die Ablage der
-      Modelldaten ist zwar im Wesentlichen frei wählbar, sollte aber dennoch
-      nach einem festen Schema erfolgen (siehe <xref
+      GIS-Daten visualisiert werden (<abbrev>z. B.</abbrev> ESRI Shapes). Die
+      Ablage der Modelldaten ist zwar im Wesentlichen frei wählbar, sollte
+      aber dennoch nach einem festen Schema erfolgen (siehe <xref
       linkend="abschn_5_1" />).</para>
     </section>
   </section>
 
   <section>
     <title>Spezifikation der Rechenvarianten</title>
+
+    <indexterm>
+      <primary>Spezifikation der Rechenvarianten</primary>
+
+      <secondary>Grundlagen</secondary>
+    </indexterm>
 
     <para>Nach dem Erstellen der Grunddaten besteht der nächste Schritt darin,
     die Rechenvarianten zu spezifizieren. Eine Rechenvariante besteht stets
@@ -269,13 +288,13 @@
     <section>
       <title>ANT-Skripte und Launches</title>
 
-      <para>Das modellspezifische Verhalten <abbrev>z. B.</abbrev> beim Erstellen von
-      Rechenvarianten wird anhand von Eclipse-Launches definiert, welche im
-      Projektverzeichnis unter <filename>.model/launch</filename> abgelegt
-      werden. Ein <quote>Launch</quote> ist dabei ein allgemeiner
-      Eclipse-Mechanismus, welcher das definierte Starten eines (nicht
-      zwangsläufig) externen Prozesses ermöglicht (siehe auch die
-      Eclipse-Dokumentation.</para>
+      <para>Das modellspezifische Verhalten <abbrev>z. B.</abbrev> beim
+      Erstellen von Rechenvarianten wird anhand von Eclipse-Launches
+      definiert, welche im Projektverzeichnis unter
+      <filename>.model/launch</filename> abgelegt werden. Ein
+      <quote>Launch</quote> ist dabei ein allgemeiner Eclipse-Mechanismus,
+      welcher das definierte Starten eines (nicht zwangsläufig) externen
+      Prozesses ermöglicht (siehe auch die Eclipse-Dokumentation.</para>
 
       <para>Bisher werden bei KALYPSO ausschließlich die durch Eclipse bereits
       vordefinierten ANT-Launches benutzt, welche das Starten von ANT-Skripten
@@ -388,6 +407,12 @@
   <section>
     <title>Modell-Plugin</title>
 
+    <indexterm>
+      <primary>Modell-Plugin</primary>
+
+      <secondary>Grundlagen</secondary>
+    </indexterm>
+
     <para>Nachdem die Modellstruktur und die grundsätzlichen Aktionen zur
     Erzeugung und Behandlung von Rechenvarianten definiert sind, beginnt jetzt
     die Kapselung des Rechenkerns in Form eines Modell-Plugins.</para>
@@ -434,6 +459,14 @@
   <section id="sec_konfigAssi">
     <title>Konfiguration des Vorhersage-Assistenten</title>
 
+    <indexterm>
+      <primary>Vorhersage-Assistent</primary>
+
+      <secondary>Konfiguration</secondary>
+
+      <tertiary>Grundlagen</tertiary>
+    </indexterm>
+
     <para>Die bislang geschilderte Methode beschreibt ausschließlich die
     Datenmodellierung und die Integration im Expertenmodus.</para>
 
@@ -459,6 +492,18 @@
 
   <section>
     <title>Zusammenfassung/Checkliste</title>
+
+    <indexterm>
+      <primary>Modellintegration</primary>
+
+      <secondary>Zusammenfassung</secondary>
+    </indexterm>
+
+    <indexterm>
+      <primary>Modellintegration</primary>
+
+      <secondary>Checkliste</secondary>
+    </indexterm>
 
     <para>Zusammengefasst müssen die folgenden Schritte durchgeführt
     werden:</para>

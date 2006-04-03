@@ -2,6 +2,12 @@
 <section id="psicompact" vendor="sachsen">
   <title>Schnittstelle zu PSICompact</title>
 
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>PSICompact</secondary>
+  </indexterm>
+
   <para>Die Schnittstelle zwischen KALYPSO und PSICompact wird im Projekt
   <filename>KalypsoPSICompactAdapter</filename> implementiert, welches den
   Entwicklern den Zugriff auf das PSICompact-System ermöglicht: der Rechner
@@ -11,6 +17,14 @@
 
   <section>
     <title>Überblick</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Überblick</tertiary>
+    </indexterm>
 
     <para>Die Schnittstelle wird in drei Bereichen von KALYPSO benutzt:</para>
 
@@ -72,6 +86,14 @@
   <section id="sst_psicompact_code">
     <title>Quellcode</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Quellcode</tertiary>
+    </indexterm>
+
     <para>Die Implementierung in KALYPSO basiert auf dem IRepository-Framework
     (siehe Java-Interface
     <filename>org.kalypso.repository.IRepository</filename>). Die
@@ -84,8 +106,9 @@
     gestellt. Die Implementierungsklasse dieses Interface wird über
     Java-Reflection instantiiert. Diese Flexibilität wurde geschaffen, um
     andere mögliche Implementierungen des PSICompact-Interface integrieren zu
-    können, wie dies <abbrev>z. B.</abbrev> mit der <filename>PSICompactImpl.java</filename> im
-    Projekt <filename>KalypsoPSICompactImpl</filename> der Fall ist.</para>
+    können, wie dies <abbrev>z. B.</abbrev> mit der
+    <filename>PSICompactImpl.java</filename> im Projekt
+    <filename>KalypsoPSICompactImpl</filename> der Fall ist.</para>
 
     <para>In der Datei
     <filename>org/kalypso/psiadapter/resources/config.ini</filename> sind
@@ -100,6 +123,14 @@
 
   <section>
     <title>Laufzeit</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Laufzeit</tertiary>
+    </indexterm>
 
     <para>Zur Laufzeit werden folgende Jars benötigt:</para>
 
@@ -124,6 +155,14 @@
 
   <section>
     <title>Zeitreihen</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Zeitreihen</tertiary>
+    </indexterm>
 
     <para>Zur Zeit werden alle Werte aus dem Archivtyp
     <emphasis>PSICompact.ARC_MIN15</emphasis> (15 Minuten-Archiv) geholt und
@@ -231,7 +270,7 @@
           <row>
             <entry align="center" nameend="c2" namest="c1"></entry>
 
-            <entry> <emphasis>OK</emphasis></entry>
+            <entry><emphasis>OK</emphasis></entry>
 
             <entry><emphasis>Wert auf Gültigkeit prüfen</emphasis></entry>
 
@@ -361,6 +400,14 @@
   <section>
     <title>Benutzerrechte</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Benutzerrechte</tertiary>
+    </indexterm>
+
     <para>Es werden nur die Benutzerklassen eines Benutzers abgerufen. KALYPSO
     unterstützt folgende Zeichenketten von Benutzerklassen (siehe
     org.kalypso.services.user.UserServiceConstants.java):</para>
@@ -392,6 +439,14 @@
   <section>
     <title>Dokumentablage</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>Dokumentablage</tertiary>
+    </indexterm>
+
     <para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und in das
     Verteilungsverzeichnis von PSICompact kopiert. Der Aufbau dieser XML-Datei
     ist von PSI vorgegeben. Es gibt dazu ein Schema im xdr-Format (siehe
@@ -404,6 +459,14 @@
 
   <section>
     <title>Weitere Information</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>PSICompact</secondary>
+
+      <tertiary>weitere Information</tertiary>
+    </indexterm>
 
     <informaltable>
       <tgroup cols="2">

@@ -2,25 +2,29 @@
 <section id="modell-tubig" vendor="sachsen-anhalt">
   <title>Modellintegration Bode/Ilse (Tubig)</title>
 
+  <indexterm>
+    <primary>Modellintegration</primary>
+
+    <secondary>Bode/Ilse (Tubig)</secondary>
+  </indexterm>
+
   <para>Die Hochwasservorhersagemodelle für die Einzugsgebiete von Bode bzw.
   Ilse beruhen auf dem Programm WinPRO der Thiele + Büttner
   Ingenieurgemeinschaft GbR (TUBIG). Für das Einzugsgebiet der Bode handelt es
   sich um ein kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
-  einschließlich Talsperrenberechnung und für das Einzugsgbiet der Ilse um ein
-  Niederschlag-Abfluss-Modell. Aufgrund der großen softwaretechnischen
-  Übereinstimmung zwischen den Modellen, wird die Modellintegration für Bode
-  und Ilse gemeinsam beschrieben. Auf Abweichungen voneinander wird jeweils
-  gesondert eingegangen.</para>
+  einschließlich Talsperrenberechnung bzw. -steuerung und für das Einzugsgbiet
+  der Ilse um ein Niederschlag-Abfluss-Modell. Aufgrund der großen
+  softwaretechnischen Übereinstimmung zwischen den Modellen, wird die
+  Modellintegration für Bode und Ilse gemeinsam beschrieben. Auf Abweichungen
+  voneinander wird jeweils gesondert eingegangen.</para>
 
   <para>Zur Integration der Modelle in KALYPSO-Enterprise wurde das bestehende
   Programm durch die Firma Thiele + Büttner IG so angepasst, dass ein
-  oberflächenloser Betrieb des Rechenkerns möglich ist. Desweiteren wurde der
-  Programmteil zur Talsperrensteuerung als 32-Bit-Programm für Windows neu
-  programmiert und ein Fehler korrigiert. Dadurch haben sich im Projektverlauf
-  folgende neue oder geänderte EXE- bzw. BAT-Dateien für den Rechenkern
-  ergeben:</para>
-
-  <para><variablelist>
+  oberflächenloser Betrieb des Rechenkerns möglich ist. Desweiteren wurde ein
+  Fehler korrigiert und der Programmteil zur Talsperrensteuerung als
+  32-Bit-Programm für Windows neu programmiert. Dadurch haben sich im
+  Projektverlauf folgende neue oder geänderte EXE- bzw. BAT-Dateien für den
+  Rechenkern ergeben:<variablelist>
       <varlistentry>
         <term>oberflächenloser Betrieb</term>
 
@@ -32,19 +36,19 @@
       </varlistentry>
 
       <varlistentry>
-        <term>32-Bit-Programm zur Talsperrensteuerung</term>
-
-        <listitem>
-          <para>M_BODESTEU.EXE, run4.bat, run5.bat, wobei M_VorSt.exe
-          entfällt</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
         <term>Fehlerkorrektur</term>
 
         <listitem>
           <para>run3.bat</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>32-Bit-Programm zur Talsperrensteuerung</term>
+
+        <listitem>
+          <para>M_BODESTEU.EXE, run4.bat, run5.bat, wobei M_VorSt.exe
+          entfällt.</para>
         </listitem>
       </varlistentry>
     </variablelist></para>
@@ -69,6 +73,12 @@
 
   <section id="sec_modelSpecTubig">
     <title>Modellspezifikation und Grunddaten</title>
+
+    <indexterm>
+      <primary>Modellspezifikation und Grunddaten</primary>
+
+      <secondary>Bode/Ilse (Tubig)</secondary>
+    </indexterm>
 
     <para>Die Verzeichnisstruktur der Modellprojekte
     <filename>KalypsoBode</filename> und <filename>KalypsoIlse</filename> ist
@@ -230,8 +240,8 @@
     </table>
 
     <para>Aus den zusätzlichen Parametern für die Wasserlaufmodelle (siehe
-    <xref linkend="tbl_paramsWLMTubig" />) wird für den entsprechenden Pegel
-    die Parameterdatei für das Wasserlaufmodell
+    <xref linkend="tbl_paramsWLMTubig" />) wird beim Anstossen des Rechenkerns
+    für den entsprechenden Pegel die Parameterdatei für das Wasserlaufmodell
     (<filename>wlm_&lt;Kurz_Name&gt;.par</filename>) generiert.</para>
 
     <table id="tbl_paramsWLMTubig">
@@ -261,7 +271,8 @@
 
             <entry>Text</entry>
 
-            <entry>Kommentar für die Parameterdatei (*.wlm) des
+            <entry>Kommentar für die Parameterdatei
+            (<filename>wlm_&lt;Kurz_Name&gt;.par</filename>) des
             Wasserlaufmodells</entry>
           </row>
 
@@ -406,10 +417,254 @@
         </tbody>
       </tgroup>
     </table>
+
+    <para>Die für das Gebietsniederschlagsmodell benötigten
+    Niederschlagstationen werden über die Parameter in <xref
+    linkend="tbl_paramsOmbroTubig" /> beschrieben.</para>
+
+    <table id="tbl_paramsOmbroTubig">
+      <title>Parameter der Niederschlagsstationen (Ombrometer) für Bode und
+      Ilse</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name der Niederschlagsstation</entry>
+          </row>
+
+          <row>
+            <entry>Ort</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage der Niederschlagsstation</entry>
+          </row>
+
+          <row>
+            <entry>Messstellennummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Nummer der Niederschlagsstation</entry>
+          </row>
+
+          <row>
+            <entry>Kurz_Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Kurz-Name der Niederschlagsstation</entry>
+          </row>
+
+          <row>
+            <entry>Niederschlag_gemessen</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Niederschlagsganglinie</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Ähnlich wie bei den Pegeln, gibt es auch bei den Speicherbauwerken
+    grundlegende und zusätzliche Parameter. Modellbedingt umfassen die
+    Parameter zur Talsperre Königshütte (früher: Überleitungssperre Rappbode)
+    nur einfachste Informationen (siehe <xref
+    linkend="tbl_paramsUeberleitungTubig" />). Die zusätzlichen Parameter der
+    restlichen Speicherbauwerke sind in <xref
+    linkend="tbl_paramsSpeicherTubig" /> aufgeführt. Aus den zusätzlichen
+    Parametern werden <abbrev>u. a.</abbrev> Parameterdateien zu den
+    Speicherrechnungen generiert (*.lea, *.qma, *.qmi, *.sra, *.twa).</para>
+
+    <table id="tbl_paramsUeberleitungTubig">
+      <title>grundlegende Parameter der Speicherbauwerke (Überleitung) für
+      Bode und Ilse</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name des Speicherbauwerks</entry>
+          </row>
+
+          <row>
+            <entry>Ort</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage des Speicherbauwerks</entry>
+          </row>
+
+          <row>
+            <entry>Messstellennummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Messstellennummer</entry>
+          </row>
+
+          <row>
+            <entry>Kurz_Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Kurz-Name des Speicherbauwerks für den Rechenkern</entry>
+          </row>
+
+          <row>
+            <entry>Abgabe</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit (Speicher-) Abgabeganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Zufluss_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Zuflussganglinie</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table id="tbl_paramsSpeicherTubig">
+      <title>zusätzliche Parameter der Speicherbauwerke (Speicher) für Bode
+      und Ilse</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Ganglinie_gemessen</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Volumenganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Ganglinie_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Volumenganglinie</entry>
+          </row>
+
+          <row>
+            <entry>StauraumParameter</entry>
+
+            <entry>[hm<superscript>3</superscript>]</entry>
+
+            <entry>Stauraumaufteilung nach DIN 4048 (Totraum, Reserveraum,
+            Betriebsraum nach Monaten und Stauraum)</entry>
+          </row>
+
+          <row>
+            <entry>MindestabgabeParameter</entry>
+
+            <entry>[m<superscript>3</superscript>/s]</entry>
+
+            <entry>Mindestabgabe nach Monaten</entry>
+          </row>
+
+          <row>
+            <entry>MaximalabgabeParameter</entry>
+
+            <entry>[m<superscript>3</superscript>/s]</entry>
+
+            <entry>Maximalabgabe nach Monaten</entry>
+          </row>
+
+          <row>
+            <entry>TrinkwasserParameter</entry>
+
+            <entry>[m<superscript>3</superscript>/s]</entry>
+
+            <entry>Trinkwasserabgabe nach Monaten</entry>
+          </row>
+
+          <row>
+            <entry>EACollectionAssociation</entry>
+
+            <entry>-</entry>
+
+            <entry>Tabelle zur Beschreibung der Stauinhaltslinie und
+            charakteristischer Größen der Entlastungsanlagen (Höhe [müNN],
+            Inhalt [hm<superscript>3</superscript>], Grundablass
+            [m<superscript>3</superscript>/s], Überlauf
+            [m<superscript>3</superscript>/s], Bemerkung)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
   </section>
 
   <section>
     <title>Spezifikation der Rechenvarianten</title>
+
+    <indexterm>
+      <primary>Spezifikation der Rechenvarianten</primary>
+
+      <secondary>Bode/Ilse (Tubig)</secondary>
+    </indexterm>
 
     <para>Die Rechenvarianten wurden gemäß <xref
     linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
@@ -764,6 +1019,12 @@
   <section>
     <title>Modell-Plugin</title>
 
+    <indexterm>
+      <primary>Modell-Plugin</primary>
+
+      <secondary>Bode/Ilse (Tubig)</secondary>
+    </indexterm>
+
     <para>Die serverseitige Berechnung wird wie oben beschrieben über ein
     ANT-Skript (<filename>runCalculation.launch</filename>) angestoßen. Es
     werden alle Dateien der Rechenvariante bis auf die Vorlagen
@@ -799,7 +1060,8 @@
       <listitem>
         <para>Die vom Client übergebenen Daten der Rechenvariante werden in
         die Formate des Rechenkerns konvertiert und auch im temporären
-        Verzeichnis abgelegt.</para>
+        Verzeichnis abgelegt.<!--Für die Überleitungssperre werden auch Umbenennungen vorgenommen, 
+da das bestehende Modell nicht ganz konsewuent in seinen Benennungen ist (bceCpyIn_<bat>.bat).--></para>
       </listitem>
 
       <listitem>
@@ -811,8 +1073,7 @@
       <listitem>
         <para>Die Ergebnisdaten der Berechnung, welche sich jetzt ebenfalls im
         temporären Verzeichnis befinden, werden in die vom Client benötigten
-        Formate übertragen und können jetzt vom Client abgerufen
-        werden.</para>
+        Formate übertragen und können jetzt vom Client abgerufen werden.<!--Hier werden auch erst noch Dateien per BAT-Datei kopiert / umbenannt (bceCpyErg_<bat>.bat).--></para>
       </listitem>
     </itemizedlist>
 
@@ -824,6 +1085,14 @@
 
   <section>
     <title>Konfiguration des Vorhersage-Assistenten</title>
+
+    <indexterm>
+      <primary>Vorhersage-Assistent</primary>
+
+      <secondary>Konfiguration</secondary>
+
+      <tertiary>Bode/Ilse (Tubig)</tertiary>
+    </indexterm>
 
     <para>Die Konfiguration des Vorhersage-Assistenten für die Modelle Bode
     und Ilse befindet sich wie in <xref linkend="sec_konfigAssi" /> gefordert

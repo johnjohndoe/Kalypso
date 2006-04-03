@@ -2,6 +2,10 @@
 <chapter id="ansichtsvorlagen">
   <title>Ansichtsvorlagen</title>
 
+  <indexterm>
+    <primary>Ansichtsvorlagen</primary>
+  </indexterm>
+
   <para>KALYPSO Enterprise ermöglicht eine Reihe verschiedener Ansichten auf
   die Daten eines Modells. Die Einstellungen einer Ansicht (welche Daten,
   Darstellung, usw.) werden in Dateien bestimmter Formate, sogenannten
@@ -91,14 +95,15 @@
 
   <para>Allen Vorlagen ist gemein, dass in ihnen lediglich die Art der
   Darstellung gespeichert ist. Die eigentlichen Daten liegen in separaten
-  Datendateien (<abbrev>z. B.</abbrev> .shp, .gml, .zml) und werden aus den Vorlagen über
-  URL-Verknüpfungen referenziert. Bei der Referenzierung der Datendateien sind
-  sowohl relative als auch absolute URL-Angaben möglich. Relative Pfad-Angaben
-  beziehen sich stets auf den Ort der Vorlagendatei.</para>
+  Datendateien (<abbrev>z. B.</abbrev> .shp, .gml, .zml) und werden aus den
+  Vorlagen über URL-Verknüpfungen referenziert. Bei der Referenzierung der
+  Datendateien sind sowohl relative als auch absolute URL-Angaben möglich.
+  Relative Pfad-Angaben beziehen sich stets auf den Ort der
+  Vorlagendatei.</para>
 
-  <para>Neben den üblichen URL-Protokollen wie <abbrev>z. B.</abbrev> file: und http: wurden für
-  die Modellverwaltung eigene Protokolle definiert. Folgende Protokolle werden
-  unterstützt:</para>
+  <para>Neben den üblichen URL-Protokollen wie <abbrev>z. B.</abbrev> file:
+  und http: wurden für die Modellverwaltung eigene Protokolle definiert.
+  Folgende Protokolle werden unterstützt:</para>
 
   <informaltable>
     <tgroup cols="3">
@@ -168,6 +173,12 @@
   <section>
     <title>GIS-Kartenansicht</title>
 
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>GIS-Kartenansicht</secondary>
+    </indexterm>
+
     <para>Die GIS-Kartenansicht stellt GIS-Daten themenbasiert in einer Karte
     dar. Entsprechend besteht die Vorlage aus einer Themenliste (layern), die
     wiederum eine Liste von Darstellungsvorschriften (styles) enthalten
@@ -181,8 +192,8 @@
 
     <para>Eine Besonderheit des Formates <emphasis>shape</emphasis> ist, dass
     in der Verknüpfung (<emphasis>href</emphasis>) des Themas zusätzlich das
-    Geokoordinatensystem der Shape-Datei angegeben werden kann, <abbrev>z. B.</abbrev>:
-    <programlisting>href="project:/Grunddaten/Shapes/gewässer#EPSG:31469"</programlisting></para>
+    Geokoordinatensystem der Shape-Datei angegeben werden kann, <abbrev>z.
+    B.</abbrev>: <programlisting>href="project:/Grunddaten/Shapes/gewässer#EPSG:31469"</programlisting></para>
 
     <para>Das Attribut <emphasis>featurePath</emphasis> des Themas beschreibt,
     welche Daten innerhalb der geladenen Datei angezeigt werden. Dabei
@@ -199,6 +210,12 @@
   <section>
     <title>GIS-Tabellenansicht</title>
 
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>GIS-Tabellenansicht</secondary>
+    </indexterm>
+
     <para>Im Gegensatz zur Kartenansicht wird in der Tabellenansicht nur
     <emphasis role="bold">eine</emphasis> Liste von GIS-Elementen tabellarisch
     dargestellt. Die Regeln zur Referenzierung dieser Liste sind die gleichen
@@ -212,6 +229,12 @@
 
   <section>
     <title>GIS-Formularansicht</title>
+
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>GIS-Formularansicht</secondary>
+    </indexterm>
 
     <para>Die GIS-Formularansicht ist eine flexible Datenansicht eines
     GIS-Elements (Feature) in Form einer formularartigen Dialogmaske.</para>
@@ -239,6 +262,12 @@
 
   <section>
     <title>GIS-Strukturansicht</title>
+
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>GIS-Strukturansicht</secondary>
+    </indexterm>
 
     <para>Die GIS-Strukturansicht stellt die Daten einer GIS-Datei in einer
     Baumansicht dar.</para>
@@ -281,6 +310,14 @@
   <section>
     <title>Tabellarische Zeitreihenansicht</title>
 
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>Zeitreihen</secondary>
+
+      <tertiary>Tabelle</tertiary>
+    </indexterm>
+
     <para>Vorlagen dieser Art stellen eine oder mehrere Zeitreihen in einem
     tabellarischen Editor dar. Dabei können pro Zeitreihe eine oder mehrere
     Spalten dargestellt werden, je nachdem wie viele Werte-Achsen die
@@ -304,13 +341,22 @@
 
     <para>Neben der Themenliste können auch sogenannte RenderingRules
     (Darstellungsregeln) eingetragen sein. Diese Darstellungsregeln definieren
-    die Darstellung von Zusatzinformation wie <abbrev>z. B.</abbrev> <quote>Wert muss geprüft
-    werden</quote> oder <quote>Wert vom Benutzer geändert</quote> in Form von
-    Farbe, Bild, Tooltips und/oder Zeichen.</para>
+    die Darstellung von Zusatzinformation wie <abbrev>z. B.</abbrev>
+    <quote>Wert muss geprüft werden</quote> oder <quote>Wert vom Benutzer
+    geändert</quote> in Form von Farbe, Bild, Tooltips und/oder
+    Zeichen.</para>
   </section>
 
   <section>
     <title>Diagrammansicht Zeitreihen</title>
+
+    <indexterm>
+      <primary>Ansichtsvorlagen</primary>
+
+      <secondary>Zeitreihen</secondary>
+
+      <tertiary>Diagramm</tertiary>
+    </indexterm>
 
     <para>In der Diagrammansicht werden Zeitreihendaten als Kurven oder als
     Blockdiagramm (Niederschlag) dargestellt.</para>

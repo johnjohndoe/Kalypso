@@ -2,6 +2,10 @@
 <chapter id="grafik">
   <title>Grafik-Programm</title>
 
+  <indexterm>
+    <primary>Grafik-Programm</primary>
+  </indexterm>
+
   <para>Das Grafikprogramm ist ein Windows-Executable. Es erkennt viele
   unterschiedliche Datenformate; KALYPSO-intern wird aber nur das
   ZML-block-inline Format verwendet (siehe <xref

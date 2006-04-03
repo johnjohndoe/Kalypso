@@ -2,10 +2,20 @@
 <chapter id="extras">
   <title>Zusätzliche Information</title>
 
+  <indexterm>
+    <primary>Zusatzinformation</primary>
+  </indexterm>
+
   <para>Hier werden spezielle Aspekte von KALYPSO beschrieben.</para>
 
   <section id="dwd-vorhersage">
     <title>Integration der DWD-Vorhersage</title>
+
+    <indexterm>
+      <primary>Zusatzinformation</primary>
+
+      <secondary>DWD-Vorhersage</secondary>
+    </indexterm>
 
     <para>Für die Hochwasservorhersage wird eine Niederschlagsvorhersage
     benötigt. Die hier verwendete Vorhersage des DWD wird in einer Datei
@@ -136,12 +146,13 @@
           <para>Gibt an, ob die Zieldatei überarbeitet werden muss, damit die
           Daten konsistent bleiben. Im Normalfall ist dies nicht erforderlich,
           da die Daten übereinstimmen. Aber im Katastrophentestszenario werden
-          <abbrev>z. B.</abbrev> DWD-Vorhersagen der Vergangenheit als aktuelle Vorhersagen
-          geliefert, dabei stimmt das Datum aus dem Dateinamen nicht mit dem
-          Inhalt der Vorhersage überein: in der Datei sind noch die alten
-          Daten zu sehen. Wenn dieser Parameter aktiviert wird (true), wird
-          also die Datei überarbeitet und die darin enthaltenen Daten mit dem
-          aktuellen Datum überschrieben (dest_update).</para>
+          <abbrev>z. B.</abbrev> DWD-Vorhersagen der Vergangenheit als
+          aktuelle Vorhersagen geliefert, dabei stimmt das Datum aus dem
+          Dateinamen nicht mit dem Inhalt der Vorhersage überein: in der Datei
+          sind noch die alten Daten zu sehen. Wenn dieser Parameter aktiviert
+          wird (true), wird also die Datei überarbeitet und die darin
+          enthaltenen Daten mit dem aktuellen Datum überschrieben
+          (dest_update).</para>
         </listitem>
       </orderedlist>
 
@@ -152,6 +163,12 @@
 
   <section id="url-erweiterung">
     <title>URL-Erweiterung</title>
+
+    <indexterm>
+      <primary>Zusatzinformation</primary>
+
+      <secondary>URL-Erweiterung</secondary>
+    </indexterm>
 
     <para>KALYPSO nutzt URLs, um Resourcen (Dokumente oder Dateien) zu
     referenzieren.</para>

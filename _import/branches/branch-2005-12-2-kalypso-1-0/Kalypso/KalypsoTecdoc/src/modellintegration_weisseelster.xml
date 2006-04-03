@@ -2,6 +2,12 @@
 <section id="modell-we" vendor="sachsen">
   <title>Modellintegration Weiße Elster</title>
 
+  <indexterm>
+    <primary>Modellintegration</primary>
+
+    <secondary>Weiße Elster</secondary>
+  </indexterm>
+
   <para>Das Niederschlag-Abfluss-Modell-Plugin integriert den Rechenkern
   Kalypso-NA in die Benutzeroberfläche KALYPSO-Enterprise zum Zweck der
   Abflussvorhersage, Nachrechnung historischer Ereignisse und zur Simulation
@@ -9,6 +15,12 @@
 
   <section>
     <title>Modellintegration Client</title>
+
+    <indexterm>
+      <primary>Modellintegration Client</primary>
+
+      <secondary>Weiße Elster</secondary>
+    </indexterm>
 
     <section>
       <title>Modellprojekt Weiße Elster</title>

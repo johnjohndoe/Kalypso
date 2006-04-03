@@ -2,13 +2,26 @@
 <section id="robotron-ims" vendor="sachsen-anhalt">
   <title>Schnittstelle zum IMS: Dokumentenablage</title>
 
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>IMS</secondary>
+  </indexterm>
+
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>Dokumentenablage</secondary>
+  </indexterm>
+
   <para>Aus dem KALYPSO-Vorhersageassistenten heraus können Pegel- und
-  Speichervorhersagen, Datenübersichten (<abbrev>z. B.</abbrev> Gebietsniederschlag),
-  Längsschnitte und Scheitelwerte in Form von Tabellen (Textdateien mit
-  Trennzeichen, <abbrev>z. B.</abbrev> im CSV-Format) und Diagramme (Abbildung in Form eines
-  Bildes <abbrev>z. B.</abbrev> im PNG-Format) exportiert werden. Diese Dokumente werden
-  strukturiert im IMS abgelegt (siehe Abbildungen <xref
-  linkend="abb_ims_dok_bode" />, <xref linkend="abb_ims_dok_ilse" /> und <xref
+  Speichervorhersagen, Datenübersichten (<abbrev>z. B.</abbrev>
+  Gebietsniederschlag), Längsschnitte und Scheitelwerte in Form von Tabellen
+  (Textdateien mit Trennzeichen, <abbrev>z. B.</abbrev> im CSV-Format) und
+  Diagramme (Abbildung in Form eines Bildes <abbrev>z. B.</abbrev> im
+  PNG-Format) exportiert werden. Diese Dokumente werden strukturiert im IMS
+  abgelegt (siehe Abbildungen <xref linkend="abb_ims_dok_bode" />, <xref
+  linkend="abb_ims_dok_ilse" /> und <xref
   linkend="abb_ims_dok_saale" />).</para>
 
   <para><figure id="abb_ims_dok_bode">

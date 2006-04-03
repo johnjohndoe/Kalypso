@@ -2,6 +2,10 @@
 <chapter id="chapter_2_entwicklung">
   <title>Software-Entwicklung</title>
 
+  <indexterm>
+    <primary>Software-Entwicklung</primary>
+  </indexterm>
+
   <para>Die Programmoberfläche und die Serverkomponente von KALYPSO wurden
   vollständig in der Programmiersprache Java entwickelt.</para>
 
@@ -16,11 +20,16 @@
   <section id="ide">
     <title>Umgebung und Werkzeuge</title>
 
+    <indexterm>
+      <primary>Software-Entwicklung</primary>
+
+      <secondary>Umgebung und Werkzeuge</secondary>
+    </indexterm>
+
     <para>In diesem Kapitel werden die zur Erstellung der Software verwendeten
     Entwicklungswerkzeuge beschrieben (siehe <xref
-    linkend="tbl_develop_Entwicklungsumgebung" />).</para>
-
-    <para><table id="tbl_develop_Entwicklungsumgebung">
+    linkend="tbl_develop_Entwicklungsumgebung" />). <table
+        id="tbl_develop_Entwicklungsumgebung">
         <title>Entwicklungsumgebung</title>
 
         <tgroup cols="2">
@@ -121,11 +130,21 @@
   <section>
     <title>Programmaufbau</title>
 
+    <indexterm>
+      <primary>Programmaufbau</primary>
+    </indexterm>
+
     <para>Der Programmaufbau wird in den beiden Teilen - Client und Server -
     beschrieben.</para>
 
     <section>
       <title>KALYPSO-Client</title>
+
+      <indexterm>
+        <primary>Programmaufbau</primary>
+
+        <secondary>Client</secondary>
+      </indexterm>
 
       <para>Clientseitig baut KALYPSO auf der Eclipse Platform API auf:
       KALYPSO besteht aus einem Eclipse-Feature und einer Reihe von
@@ -337,6 +356,12 @@
     <section id="kalypso-server">
       <title>KALYPSO-Server</title>
 
+      <indexterm>
+        <primary>Programmaufbau</primary>
+
+        <secondary>Server</secondary>
+      </indexterm>
+
       <para>Der KALYPSO-Server besteht aus Web-Diensten, die unter Apache
       Tomcat laufen. Fünf Dienste stehen den Clients zur Verfügung:</para>
 
@@ -352,8 +377,8 @@
         </listitem>
 
         <listitem>
-          <para>KalypsoObsService: verwaltet die operativen Daten (<abbrev>z. B.</abbrev>
-          Zeitreihen),</para>
+          <para>KalypsoObsService: verwaltet die operativen Daten (<abbrev>z.
+          B.</abbrev> Zeitreihen),</para>
         </listitem>
 
         <listitem>
@@ -369,7 +394,13 @@
     </section>
 
     <section id="modelle-sst">
-      <title>Modell- und Schnittstellenkomponenten</title>
+      <title>Modellplugins und Schnittstellenkomponenten</title>
+
+      <indexterm>
+        <primary>Programmaufbau</primary>
+
+        <secondary>Plugins und Schnittstellen</secondary>
+      </indexterm>
 
       <para><xref linkend="tbl_devlop_spez_Plugins" /> listet die sog.
       Modellplugins und die Schnittstellenkomponenten auf.</para>
@@ -486,6 +517,12 @@
     <section id="conf">
       <title>Konfigurationsmanagement</title>
 
+      <indexterm>
+        <primary>Programmaufbau</primary>
+
+        <secondary>Konfigurationsmanagement</secondary>
+      </indexterm>
+
       <para>Neben allgemeinen Code Konfigurationen werden spezielle
       Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
       der Hochwasservorhersagezentrale Sachsen-Anhalt benötigt. <xref
@@ -554,6 +591,12 @@
   <section id="source">
     <title>Quellcode-Organisation</title>
 
+    <indexterm>
+      <primary>Quellcode</primary>
+
+      <secondary>Organisation</secondary>
+    </indexterm>
+
     <para>Der Java-Quellcode wird mit dem Versionierungssystem CVS verwaltet.
     Die API-Dokumentation des Quellcodes wurde mit Hilfe von Javadoc als HTML
     erstellt.</para>
@@ -571,6 +614,12 @@
   <section id="scm">
     <title>Quellcode-Verwaltung und Lizenzierung</title>
 
+    <indexterm>
+      <primary>Quellcode</primary>
+
+      <secondary>Verwaltung und Lizensierung</secondary>
+    </indexterm>
+
     <para>Der Quellcode wird mit CVS verwaltet. Bei jedem Meilenstein wurde
     der Projektstand mittels eines CVS Tags gekennzeichnet.</para>
 
@@ -586,6 +635,10 @@
   <section id="compile">
     <title>Kompilation</title>
 
+    <indexterm>
+      <primary>Kompilation</primary>
+    </indexterm>
+
     <para>Unter Benutzung von Eclipse wird der Quellcode inkrementell
     kompiliert. Für das Deployment werden ANT-Skripte benutzt, die den
     Quellcode separat kompilieren.</para>
@@ -598,6 +651,10 @@
 
   <section id="deployment">
     <title>Deployment</title>
+
+    <indexterm>
+      <primary>Deployment</primary>
+    </indexterm>
 
     <para vendor="sachsen-anhalt">Aus der Entwicklungsumgebung ist es möglich,
     die unterschiedlichen Dienste zu deployen. Das

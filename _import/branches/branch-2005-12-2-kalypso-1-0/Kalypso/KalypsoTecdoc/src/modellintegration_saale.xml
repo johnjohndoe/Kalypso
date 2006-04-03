@@ -2,6 +2,12 @@
 <section id="modell-saale" vendor="sachsen-anhalt">
   <title>Modellintegration Saale</title>
 
+  <indexterm>
+    <primary>Modellintegration</primary>
+
+    <secondary>Saale</secondary>
+  </indexterm>
+
   <para>Das Hochwasservorhersagemodell für das Einzugsgebiet der Saale beruht
   auf dem Programm HWVOR der GFE Consult GmbH. Es handelt sich dabei um ein
   kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
@@ -33,6 +39,12 @@
 
   <section id="sec_modelSpecSaale">
     <title>Modellspezifikation und Grunddaten</title>
+
+    <indexterm>
+      <primary>Modellspezifikation und Grunddaten</primary>
+
+      <secondary>Saale</secondary>
+    </indexterm>
 
     <para>Die Verzeichnisstruktur des Modellprojekts
     <filename>KalypsoSaale</filename> ist gemäß <xref linkend="abschn_5_1" />
@@ -269,17 +281,280 @@
         </tbody>
       </tgroup>
     </table>
+
+    <para>Aus den Parametern für die Wasserlaufmodelle (siehe <xref
+    linkend="tbl_paramsWLMSaale" />) werden Parameterdateien für den
+    Rechenkern generiert.</para>
+
+    <table id="tbl_paramsWLMSaale">
+      <title>Parameter der Wasserlaufmodelle (WLM) im Saale-Modell</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>WLMnummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Nummer des Wasserlaufmodells (bzw. Nummer des zugehörigen
+            Pegels)</entry>
+          </row>
+
+          <row>
+            <entry>IP_1 ... H3_72</entry>
+
+            <entry></entry>
+
+            <entry>diverse Wasserlaufparameter, Beschreibung in ursprünglicher
+            Modelldokumentation</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Die Parameter der im Modell abgebildeten Speicherbauwerke werden in
+    <xref linkend="tbl_paramsSpeicherSaale" /> beschrieben.</para>
+
+    <table id="tbl_paramsSpeicherSaale">
+      <title>Parameter der Speicher (Speicher) im Saale-Modell</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Messstellennummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Messstellennummer des Abgabepegels</entry>
+          </row>
+
+          <row>
+            <entry>Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name des Speicherbauwerks</entry>
+          </row>
+
+          <row>
+            <entry>Gewässer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Gewässer, an dem das Speicherbauwerk liegt</entry>
+          </row>
+
+          <row>
+            <entry>MaxInhalt</entry>
+
+            <entry>[hm<superscript>3</superscript>]</entry>
+
+            <entry>maximales Stauvolumen</entry>
+          </row>
+
+          <row>
+            <entry>Messstellennummer Zufluss</entry>
+
+            <entry>Text</entry>
+
+            <entry>Messstellennummer des Zuflusspegels</entry>
+          </row>
+
+          <row>
+            <entry>PNR_STA ... RE_KOR</entry>
+
+            <entry></entry>
+
+            <entry>diverse Speicherparameter, Beschreibung in ursprünglicher
+            Modelldokumentation</entry>
+          </row>
+
+          <row>
+            <entry>location</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage des Abgabepegels</entry>
+          </row>
+
+          <row>
+            <entry>Inhalt</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Volumenganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Inhalt_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Volumenganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Zufluss_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Zuflussganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Abgabe</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Durchflussganglinie (am
+            Abgabepegel)</entry>
+          </row>
+
+          <row>
+            <entry>Abgabe_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Durchflussganglinie</entry>
+          </row>
+
+          <row>
+            <entry>Steuerung_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Durchflussganglinie (am
+            Steuerpegel)</entry>
+          </row>
+
+          <row>
+            <entry>Überleitung_gerechnet</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit berechneter Durchflussganglinie (am
+            Überleitungspegel)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Die für das Gebietsniederschlagsmodell benötigten Ombrometer werden
+    über die Parameter in <xref linkend="tbl_paramsOmbroSaale" />
+    beschrieben.</para>
+
+    <table id="tbl_paramsOmbroSaale">
+      <title>Parameter der Ombrometer (Ombrometer) im Saale-Modell</title>
+
+      <tgroup cols="3">
+        <colspec align="left" colwidth="7*" />
+
+        <colspec align="left" colwidth="3*" />
+
+        <colspec align="left" colwidth="7*" />
+
+        <thead>
+          <row>
+            <entry align="center">Parameter</entry>
+
+            <entry align="center">Einheit</entry>
+
+            <entry align="center">Bedeutung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Name</entry>
+
+            <entry>Text</entry>
+
+            <entry>Name der Niederschlagsstation</entry>
+          </row>
+
+          <row>
+            <entry>Nummer</entry>
+
+            <entry>Text</entry>
+
+            <entry>Nummer des Ombrometers</entry>
+          </row>
+
+          <row>
+            <entry>Nummer (Ersatz)</entry>
+
+            <entry>Text</entry>
+
+            <entry>Nummer des Ersatz-Ombrometers</entry>
+          </row>
+
+          <row>
+            <entry>location</entry>
+
+            <entry>Punkt</entry>
+
+            <entry>Lage des Ombrometers</entry>
+          </row>
+
+          <row>
+            <entry>Niederschlag</entry>
+
+            <entry>Zeitreihenlink</entry>
+
+            <entry>Verknüpfung mit gemessener Niederschlagsganglinie</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
   </section>
 
   <section>
     <title>Spezifikation der Rechenvarianten</title>
+
+    <indexterm>
+      <primary>Spezifikation der Rechenvarianten</primary>
+
+      <secondary>Saale</secondary>
+    </indexterm>
 
     <para>Die Rechenvarianten wurden gemäß <xref
     linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
     <xref linkend="tab-modellintegration-saale-rechenvariante" /> zeigt den
     konkreten Aufbau für das Saale-Modell.</para>
 
-    <!--Diese Tabelle ist länger als eine Seite :-) Lass Dir was einfallen-->
+    <!--Die folgende Tabelle ist länger als eine Seite :-) Lass Dir was einfallen-->
 
     <table id="tab-modellintegration-saale-rechenvariante">
       <title>Aufbau einer Rechenvariante des Saale-Modells</title>
@@ -665,11 +940,25 @@
   <section>
     <title>Modell-Plugin</title>
 
+    <indexterm>
+      <primary>Modell-Plugin</primary>
+
+      <secondary>Saale</secondary>
+    </indexterm>
+
     <para><!--Tja Gernot, das musst Du wohl selber schreiben :-)))--></para>
   </section>
 
   <section>
     <title>Konfiguration des Vorhersage-Assistenten</title>
+
+    <indexterm>
+      <primary>Vorhersage-Assistent</primary>
+
+      <secondary>Konfiguration</secondary>
+
+      <tertiary>Saale</tertiary>
+    </indexterm>
 
     <para>Die Konfiguration des Vorhersage-Assistenten für das Saale-Modell
     befindet sich wie in <xref linkend="sec_konfigAssi" /> gefordert in der

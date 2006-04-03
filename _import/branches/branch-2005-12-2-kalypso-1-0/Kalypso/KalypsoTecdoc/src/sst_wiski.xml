@@ -2,6 +2,18 @@
 <section id="wiski" vendor="sachsen-anhalt">
   <title>WISKI/WebDataProvider</title>
 
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>WISKI</secondary>
+  </indexterm>
+
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>WebDataProvider</secondary>
+  </indexterm>
+
   <para>Alle von KALYPSO benötigten Zeitreihendaten werden innerhalb der
   Hochwasservorhersagezentrale von WISKI geliefert bzw. alle Ergebnisse in
   Form von Zeitreihen nach WISKI zurück geschrieben. Der Zugriff auf die
@@ -10,6 +22,14 @@
 
   <section>
     <title>Überblick</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Überblick</tertiary>
+    </indexterm>
 
     <para>Entsprechend den beiden WISKI-Instanzen in Magdeburg und Halle sind
     auch zwei WDP-Instanzen auf den Rechnern <filename>smdhvlapp</filename>
@@ -104,6 +124,14 @@
   <section>
     <title>Implementierung</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Implementierung</tertiary>
+    </indexterm>
+
     <para>Die Implementierung in KALYPSO basiert auf dem IRepository-Framework
     (siehe Java-Interface
     <interfacename>org.kalypso.repository.IRepository</interfacename>).</para>
@@ -118,6 +146,14 @@
 
   <section>
     <title>Konfiguration</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Konfiguration</tertiary>
+    </indexterm>
 
     <para>Die Grundkonfiguration des Zugriffs auf den WDP erfolgt über die
     Konfiguration des Zeitreihendienstes im Verzeichnis
@@ -161,6 +197,14 @@
   <section>
     <title>Laufzeit</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Laufzeit</tertiary>
+    </indexterm>
+
     <para>Zur Laufzeit wird die von der Kisters AG gelieferte Java-Bibliothek
     <filename>kiwwebdp-externalclient.jar</filename> benötigt und im
     Lib-Verzeichnis des Projekts <filename>KalypsoAdapterWiski</filename>
@@ -176,6 +220,14 @@
 
   <section>
     <title>Zeitreihen</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Zeitreihen</tertiary>
+    </indexterm>
 
     <para>WISKI liefert definierte Statuswerte zu den Werten einer Zeitreihe.
     Diese müssen auf die innerhalb von KALYPSO benutzten Stati abgebildet
@@ -251,6 +303,14 @@
   <section>
     <title>WDP-Login</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Login</tertiary>
+    </indexterm>
+
     <para>Die WDP-Schnittstelle der Kisters AG wurde speziell fürs Internet
     entwickelt, um eine Interaktion zwischen Benutzer und WISKI per Browser zu
     ermöglichen. Dabei wird ein Login-/Logout-Mechanimus verwendet, welcher
@@ -291,6 +351,14 @@
   <section id="wiski_wq_cache">
     <title>Caching-Mechanismus von W/Q-artigen Beziehungen</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Caching von W/Q-artigen Beziehungen</tertiary>
+    </indexterm>
+
     <para>Um den Betrieb von KALYPSO auch beim Ausfall von WISKI zumindest
     grundsätzlich (d.h. per Handeingabe der Zeitreihenwerte) zu ermöglichen,
     ist es seitens KALYPSO nötig, stets auf die W/Q- (oder W/V-) Beziehungen
@@ -325,6 +393,14 @@
 
   <section>
     <title>Zeitzonen</title>
+
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>WISKI</secondary>
+
+      <tertiary>Zeitzonen</tertiary>
+    </indexterm>
 
     <para>Damit die Zeitreihen einheitlich zwischen WISKI und KALYPSO
     angezeigt werden, wurde die Einstellung der Zeitzone (auch eine

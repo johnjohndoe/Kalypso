@@ -2,6 +2,10 @@
 <chapter id="modelldaten">
   <title>Modelldaten</title>
 
+  <indexterm>
+    <primary>Modelldaten</primary>
+  </indexterm>
+
   <para>KALYPSO beruht auf drei Hauptdatengruppen:</para>
 
   <figure>
@@ -16,6 +20,12 @@
 
   <section id="abschn_5_1">
     <title>Modellstruktur</title>
+
+    <indexterm>
+      <primary>Modelldaten</primary>
+
+      <secondary>Modellstruktur</secondary>
+    </indexterm>
 
     <para>Alle Daten eines Modells werden innerhalb eines sogenannten
     Projektes im Arbeitsbereich (<guilabel>Navigator</guilabel>) der Anwendung
@@ -193,8 +203,8 @@
 
             <entry>*.shp, *.*</entry>
 
-            <entry>Weitere feste Grunddaten wie <abbrev>z. B.</abbrev> Shape-Dateien,
-            Rasterdaten etc.</entry>
+            <entry>Weitere feste Grunddaten wie <abbrev>z. B.</abbrev>
+            Shape-Dateien, Rasterdaten etc.</entry>
 
             <entry>frei</entry>
           </row>
@@ -377,8 +387,8 @@
 
             <entry>*.shp, *.*</entry>
 
-            <entry>Weitere feste Grunddaten wie <abbrev>z. B.</abbrev> Shape-Dateien,
-            Rasterdaten etc.</entry>
+            <entry>Weitere feste Grunddaten wie <abbrev>z. B.</abbrev>
+            Shape-Dateien, Rasterdaten etc.</entry>
 
             <entry>frei</entry>
           </row>
@@ -407,6 +417,12 @@
   <section id="abschn_5_2">
     <title>GIS-Daten</title>
 
+    <indexterm>
+      <primary>Modelldaten</primary>
+
+      <secondary>GIS-Daten</secondary>
+    </indexterm>
+
     <para>Die Modellierung von Modellen in KALYPSO Enterprise basiert auf den
     Standards des OpenGeospatial-Konsortiums (OGC, <ulink
     url="http://www.opengeospatial.org">http://www.opengeospatial.org</ulink>)
@@ -425,6 +441,12 @@
 
   <section>
     <title>Zeitreihen</title>
+
+    <indexterm>
+      <primary>Modelldaten</primary>
+
+      <secondary>Zeitreihen</secondary>
+    </indexterm>
 
     <para>Das Zeitreihenformat (ZML) ähnelt dem OGC-Observation-Schema (siehe
     <ulink

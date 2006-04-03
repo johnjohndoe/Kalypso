@@ -2,6 +2,20 @@
 <section id="robotron-ldap" vendor="sachsen-anhalt">
   <title>Benutzerdienst: LDAP, Szenario, usw.</title>
 
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>Benutzerdienst</secondary>
+  </indexterm>
+
+  <indexterm>
+    <primary>Schnittstellen</primary>
+
+    <secondary>Benutzerdienst</secondary>
+
+    <tertiary>LDAP</tertiary>
+  </indexterm>
+
   <para>KALYPSO unterstützt folgende Benutzerklassen:</para>
 
   <itemizedlist>
@@ -83,13 +97,21 @@ LDAP_CREDENTIALS=geheim</programlisting></para>
   <section>
     <title>Szenarien: Regelbetrieb und Simulationsbetrieb</title>
 
+    <indexterm>
+      <primary>Schnittstellen</primary>
+
+      <secondary>Benutzerdienst</secondary>
+
+      <tertiary>Szenarien</tertiary>
+    </indexterm>
+
     <para>Die Variable <emphasis>SCENARIO_INI_LIST</emphasis> gibt an, welche
     sog. INI-Dateien (Konfigurationsdateien) für die Parametrisierung der
     verschiedenen Betriebsmodi zuständig sind. Dort können die
     Darstellungseigenschaften der Kalypso-Benutzeroberfläche je nach Modus
-    angepasst werden. Im Simulationsbetrieb wird <abbrev>z. B.</abbrev> die Datei
-    <filename>test.ini</filename> benutzt, diese legt fest, dass Diagramme ein
-    Wasserzeichen (siehe Eigenschaft
+    angepasst werden. Im Simulationsbetrieb wird <abbrev>z. B.</abbrev> die
+    Datei <filename>test.ini</filename> benutzt, diese legt fest, dass
+    Diagramme ein Wasserzeichen (siehe Eigenschaft
     <emphasis>DIAG_BACKGROUND_IMAGE_URL</emphasis>) und Tabellen eine
     zusätzliche Kopfzeile (siehe Eigenschaft
     <emphasis>TABLE_HEADER_IMAGE_URL</emphasis>) erhalten.</para>
