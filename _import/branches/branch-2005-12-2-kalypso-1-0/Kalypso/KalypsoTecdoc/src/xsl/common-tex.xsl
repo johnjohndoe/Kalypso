@@ -24,6 +24,7 @@
 		<xsl:text>\hyphenation{Vor-her-sa-ge--Assis-ten-ten}&#10;</xsl:text>
 		<xsl:text>\hyphenation{Ta-bel-len-wer-ten}&#10;</xsl:text>
 		<xsl:text>\hyphenation{In-for-ma-tions--Ma-nage-ment--Sys-tems}&#10;</xsl:text>
+		<xsl:text>\hyphenation{nie-der-schlags-mo-dell}&#10;</xsl:text>
 	</xsl:variable>
 
 	<xsl:param name="admon.graphics.path">./img/admon</xsl:param>
