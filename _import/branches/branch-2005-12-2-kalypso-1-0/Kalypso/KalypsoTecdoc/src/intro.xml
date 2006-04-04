@@ -9,27 +9,38 @@
   </indexterm>
 
   <para vendor="sachsen-anhalt">Dieses Dokument stellt die Technische
-  Dokumentation des Programmsystems KALYPSO Enterprise dar. Die Dokumentation
-  umfasst sowohl Aspekte der Entwicklung und Konfiguration der Software als
-  auch der Administration und Modellintegration. Die Technische Dokumentation
-  basiert dabei auf den folgenden vorangegangenen Dokumenten:</para>
+  Dokumentation des Programmsystems KALYPSO Enterprise, Installation
+  Hochwasservorhersagezentrum Sachsen-Anhalt, dar. Die Dokumentation umfasst
+  sowohl Aspekte der Entwicklung und Konfiguration der Software als auch der
+  Administration und Modellintegration. Die Technische Dokumentation basiert
+  dabei auf den folgenden vorangegangenen Dokumenten:</para>
 
   <para vendor="sachsen-anhalt"><itemizedlist>
+      <listitem>
+        <para>Feinspezifikation HVZ-LHW Sachsen-Anhalt -
+        Hochwasservorhersagezentrale Sachsen-Anhalt (HVZ)</para>
+      </listitem>
+
       <listitem>
         <para>Feinkonzept - Softwarelösungen Los 2 Prognosesystem - Teile
         1-3</para>
       </listitem>
 
       <listitem>
-        <para>KALYPSO-Anwenderhandbuch</para>
+        <para>KALYPSO - Anwenderhandbuch</para>
+      </listitem>
+
+      <listitem>
+        <para>KALYPSO-Grafik Anwenderhandbuch</para>
       </listitem>
     </itemizedlist><!--PROFILING sachsen-Anhalt ENDE--></para>
 
   <para vendor="sachsen">Dieses Dokument stellt die Technische Dokumentation
-  des Programmsystems KALYPSO Enterprise dar. Die Dokumentation umfasst sowohl
-  Aspekte der Entwicklung und Konfiguration der Software als auch der
-  Administration und Modellintegration. Die Technische Dokumentation basiert
-  dabei auf den folgenden vorangegangenen Dokumenten:</para>
+  des Programmsystems KALYPSO Enterprise, Installation Landeshochwasserzentrum
+  Sachsen, dar. Die Dokumentation umfasst sowohl Aspekte der Entwicklung und
+  Konfiguration der Software als auch der Administration und
+  Modellintegration. Die Technische Dokumentation basiert dabei auf den
+  folgenden vorangegangenen Dokumenten:</para>
 
   <para vendor="sachsen"><itemizedlist>
       <listitem>
@@ -37,7 +48,11 @@
       </listitem>
 
       <listitem>
-        <para>KALYPSO-Anwenderhandbuch</para>
+        <para>KALYPSO - Anwenderhandbuch</para>
+      </listitem>
+
+      <listitem>
+        <para>KALYPSO-Grafik Anwenderhandbuch</para>
       </listitem>
     </itemizedlist></para>
 

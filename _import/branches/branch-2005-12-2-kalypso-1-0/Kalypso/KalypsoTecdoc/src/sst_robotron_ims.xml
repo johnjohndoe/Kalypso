@@ -67,7 +67,7 @@
       <mediaobject>
         <imageobject>
           <imagedata fileref="img/sst/sachsen-anhalt/ims_dok_ablage.png"
-                     scale="70" />
+                     scale="60" />
         </imageobject>
       </mediaobject>
     </figure> Die Bedeutung der Elemente wird in der folgenden Liste
@@ -142,7 +142,7 @@
         <glossterm>schluessel</glossterm>
 
         <glossdef>
-          <para>Ein eindeutiger Schlüssel, der das Dokument identifiziert.
+          <para>Ein eindeutiger Schlüssel, welcher das Dokument identifiziert.
           Diese Eigenschaft dient dem Überschreiben im IMS gleicher Dokumente
           einer gleichen Vorhersage.</para>
         </glossdef>

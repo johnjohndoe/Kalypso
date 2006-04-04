@@ -24,11 +24,11 @@
 
     <para>Folgende Raster werden zur Zeit geliefert: <orderedlist>
         <listitem>
-          <para>Liste von Rechtswerten der Rasterzellen</para>
+          <para>Liste von Breitenkoordinate der Rasterzellen</para>
         </listitem>
 
         <listitem>
-          <para>Liste von Hochwerten der Rasterzellen</para>
+          <para>Liste von Längenkoordinate der Rasterzellen</para>
         </listitem>
 
         <listitem>
@@ -45,6 +45,9 @@
           Stunde, &gt; 48 Listen)</para>
         </listitem>
       </orderedlist></para>
+
+    <para>Eine genaue Formatbeschreibung des DWD-lm2-Formats ist beim DWD
+    erhältich.</para>
 
     <para>Die Implementierung zur Integration der Vorhersage ist im
     Quellcodeprojekt KalypsoDWD enthalten.</para>
@@ -156,8 +159,10 @@
         </listitem>
       </orderedlist>
 
-      <para>Es ist darauf zu achten, dass der Dienst Schreib- und Leserechte
-      für die verwendeten Verzeichnisse und Dateien benötigt.</para>
+      <para>Bei der Konfiguration des Tomcat-Servers (Datei
+      <filename>conf/catalina.policy</filename>) ist darauf zu achten, dass
+      der Dienst Schreib- und Leserechte für die verwendeten Verzeichnisse und
+      Dateien benötigt.</para>
     </section>
   </section>
 

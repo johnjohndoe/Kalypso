@@ -91,9 +91,7 @@
       dieselbe Verzeichnisstruktur wie im ursprünglichen Eclipse-Verzeichnis
       erforderlich ist (features, plugins und .eclipseextension). Zusätzlich
       muss im Eclipse-Verzeichnis der Erweiterung eine Datei namens
-      <filename>.eclipseextension</filename> erstellt werden. Der Inhalt
-      dieser Datei ähnelt dem der Datei
-      <filename>.eclipseproduct</filename>.</para>
+      <filename>.eclipseextension</filename> erstellt werden.</para>
 
       <para>Siehe hierzu auch die Eclipse-Onlinehilfe, unter:</para>
 
@@ -144,9 +142,15 @@
       Homeverzeichnis des aktuellen Benutzers. Bei Start-Problemen von KALYPSO
       werden dort Log-Dateien abgelegt.</para>
 
+      <para>Eine Übersicht über die vorliegende Client Installation findet
+      sich in <xref linkend="tab_install_client_overview" />.</para>
+
       <!--PROFILING ANGANG sachsen-anhalt-->
 
-      <informaltable vendor="sachsen-anhalt">
+      <table id="tab_install_client_overview" vendor="sachsen-anhalt">
+        <title>Installationspfade und Freigaben der Client
+        Installation</title>
+
         <tgroup cols="4">
           <colspec align="left" colwidth="1*" />
 
@@ -190,11 +194,14 @@
             </row>
           </tbody>
         </tgroup>
-      </informaltable>
+      </table>
 
       <!--PROFILING ANGANG sachsen-->
 
-      <informaltable vendor="sachsen">
+      <table id="tab_install_client_overview" vendor="sachsen">
+        <title>Installationspfade und Freigaben der Client
+        Installation</title>
+
         <tgroup cols="3">
           <colspec align="left" colwidth="1*" />
 
@@ -230,7 +237,7 @@
             </row>
           </tbody>
         </tgroup>
-      </informaltable>
+      </table>
 
       <!--PROFILING ENDE-->
     </section>
@@ -257,12 +264,20 @@
       gefunden wurde. Jede Konfigurationsdatei entspricht dabei im Normalfall
       einem (physischen) Server.</para>
 
-      <para>Die Konfigurationsdatei Kalypso-Client.ini liegt auf dem
-      KALYPSO-Server in der WebDAV-Webapplikation. Diese Webapplikation wird
-      standardmäßig mit Tomcat geliefert und bietet eine auf HTTP basierende
-      standardisierte Verzeichnisablage.</para>
+      <para>Die Konfigurationsdatei <filename>kalypso-Client.ini</filename>
+      liegt auf dem KALYPSO-Server in der WebDAV-Webapplikation. Diese
+      Webapplikation wird standardmäßig mit Tomcat geliefert und bietet eine
+      auf HTTP basierende standardisierte Verzeichnisablage.</para>
 
-      <informaltable vendor="sachsen-anhalt">
+      <para>Die konkrete Ablage der Konfigurationsdatei für die bestehende
+      Installation findet sich in <xref
+      linkend="tab_install_client_kalypsoclientini" />.</para>
+
+      <!--PROFILING ANFAG - ROW-basiert-->
+
+      <table id="tab_install_client_kalypsoclientini" vendor="">
+        <title>Ablage der Konfigurationsdatei</title>
+
         <tgroup cols="2">
           <colspec align="left" colwidth="1*" />
 
@@ -280,47 +295,31 @@
             <row>
               <entry>Magdeburg</entry>
 
-              <entry><filename><filename>http://smdhvzwapp:8088/webdav/Kalypso-client.ini</filename></filename></entry>
+              <entry><filename><filename>http://smdhvzwapp:8088/webdav/kalypso-client.ini</filename></filename></entry>
             </row>
 
-            <row>
+            <row vendor="sachsen-anhalt">
               <entry>Halle</entry>
 
-              <entry><filename>http://shalhvzwapp:8088/webdav/Kalypso-client.ini</filename></entry>
+              <entry><filename>http://shalhvzwapp:8088/webdav/kalypso-client.ini</filename></entry>
             </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
 
-      <informaltable vendor="sachsen">
-        <tgroup cols="2">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" colwidth="3*" />
-
-          <thead>
-            <row>
-              <entry align="center">Standort</entry>
-
-              <entry align="center">URL</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
+            <row vendor="sachsen">
               <entry>LFUG-KV-01</entry>
 
-              <entry><filename><filename>http://lfug-kv-01:8080/webdav/Kalypso-client.ini</filename></filename></entry>
+              <entry><filename><filename>http://lfug-kv-01:8080/webdav/kalypso-client.ini</filename></filename></entry>
             </row>
 
-            <row>
+            <row vendor="sachsen">
               <entry>LFUG-KV-02</entry>
 
-              <entry><filename>http://lfug-kv-02:8080/webdav/Kalypso-client.ini</filename></entry>
+              <entry><filename>http://lfug-kv-02:8080/webdav/kalypso-client.ini</filename></entry>
             </row>
           </tbody>
         </tgroup>
-      </informaltable>
+      </table>
+
+      <!--PROFILING ENDE-->
 
       <para>Nach dem ersten Start muss KALYPSO konfiguriert werden, da die
       Konfigurations-URL in den Einstellungen fehlt. Um dies zu erreichen,

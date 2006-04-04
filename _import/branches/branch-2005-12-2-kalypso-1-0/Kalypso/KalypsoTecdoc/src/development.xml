@@ -113,9 +113,9 @@
         </tgroup>
       </table></para>
 
-    <para>Als Entwicklungsumgebung wurde die frei erhältliche
-    Eclipse-Plattform verwendet. Bis auf die Wahl des Sprach-Compliance-Levels
-    auf Version 1.4 wurden in Eclipse keine speziellen Einstellungen
+    <para>Als Entwicklungsumgebung wurde die frei erhältliche Eclipse
+    Plattform verwendet. Bis auf die Wahl des Sprach-Compliance-Levels auf
+    Version 1.4 wurden in Eclipse keine speziellen Einstellungen
     vorgenommen.</para>
 
     <para>Das Erzeugen der verschiedenen Versionen des Anwenderhandbuchs
@@ -146,7 +146,7 @@
         <secondary>Client</secondary>
       </indexterm>
 
-      <para>Clientseitig baut KALYPSO auf der Eclipse Platform API auf:
+      <para>Clientseitig baut KALYPSO auf der Eclipse Plattform API auf:
       KALYPSO besteht aus einem Eclipse-Feature und einer Reihe von
       Eclipse-Plugins (siehe <xref
       linkend="tbl_develop_K_Features_Plugins" />).</para>

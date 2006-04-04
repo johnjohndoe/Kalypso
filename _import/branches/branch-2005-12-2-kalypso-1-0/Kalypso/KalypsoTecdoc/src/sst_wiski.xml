@@ -37,8 +37,8 @@
     Java-RMI (Remote Method Invocation), jeweils Port 10991.</para>
 
     <para>Der Aufruf des WDP erfordert generell eine Authentifizierung. Für
-    den Zugriff seitens KALYPSO wurde hierzu ein separater Benutzer namens
-    'wdpuser' eingerichtet.</para>
+    den Zugriff seitens KALYPSO wurde im zentralen LDAP ein separater Benutzer
+    namens 'wdpuser' eingerichtet.</para>
 
     <para><xref linkend="tbl_wdp_methoden" /> fasst die Anwendung der
     WDP-Schnittstelle aus der Sicht von KALYPSO zusammen.</para>
@@ -172,7 +172,7 @@
     linkend="abb_wdp_konfig2" />:</para>
 
     <figure id="abb_wdp_konfig1">
-      <title>Konfiguration 1</title>
+      <title>WSIKI-Adapter Konfiguration Teil 1</title>
 
       <mediaobject>
         <imageobject>
@@ -183,7 +183,7 @@
     </figure>
 
     <figure id="abb_wdp_konfig2">
-      <title>Konfiguration 2</title>
+      <title>WSIKI-Adapter Konfiguration Teil 2</title>
 
       <mediaobject>
         <imageobject>

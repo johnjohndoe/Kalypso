@@ -141,7 +141,7 @@
 
     <!--PROFILING ANFANG sachsen-anhalt,sachsen-->
 
-    <para vendor="sachsen-anhalt,sachsen">Diese Art von Ablage wird im
+    <para vendor="sachsen-anhalt;sachsen">Diese Art von Ablage wird im
     Hochwasservorhersagezentrum zur Zeit nicht eingesetzt.<!--PROFILING ENDE sachsen-anhalt, sachsen--></para>
   </section>
 
@@ -156,13 +156,13 @@
     und serverseitiger Repositories möglich.</para>
 
     <para>KALYPSO unterstützt ein spezielles clientseitiges Repository (das
-    Zeitreihendienst-Repository), dessen Inhalt der KALYPSO Observation Dienst
+    Zeitreihendienst-Repository), dessen Inhalt der KALYPSO Zeitreihendienst
     zur Verfügung stellt.</para>
 
     <para>Innerhalb dieses Repositories sind die serverseitigen oder
     Remote-Repositories abgelegt. Die Remote-Repositories werden in der
-    Konfigurationsdatei der Kalypso_ServiceObservation (siehe in
-    <filename>webdav/srvconf/IobservationService/repconf_server.xml</filename>)
+    Konfigurationsdatei
+    <filename>webdav/srvconf/IObservationService/repconf_server.xml</filename>
     definiert. Das Schema dieser XML-Datei finden Sie unter
     <filename>etc/xmlbinding/repository/repconf.xsd</filename> im
     <code><filename>KalypsoRepository</filename></code> Projekt.</para>

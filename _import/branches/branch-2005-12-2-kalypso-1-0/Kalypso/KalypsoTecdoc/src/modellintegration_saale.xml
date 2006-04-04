@@ -13,12 +13,11 @@
   kombiniertes Niederschlag-Abfluss-Modell und Wellenablaufmodell
   einschließlich Talsperrenberechnung.</para>
 
-  <!--Ein bisschen was zu SNOW schreiben im nächsten para-->
-
   <para>Zur Integration des Saale-Modells in KALYPSO-Enterprise wurde das
   bestehende Programm durch die Firma GFE Consult GmbH so angepasst, dass ein
-  oberflächenloser Betrieb des Rechenkerns möglich ist. Desweitern wurde
-  <guilabel>.. Snow..</guilabel></para>
+  oberflächenloser Betrieb des Rechenkerns möglich ist.</para>
+
+  <!--Desweiteren wurde... SNOW...-->
 
   <para>Dieser Rechenkern ist serverseitig als Modell-Plugin in KALYPSO
   integriert. Zur clientseitigen Integration wurde eine GML-basierte
@@ -28,8 +27,9 @@
   der Programmquellen vollständig im Projekt
   <filename>KalypsoModelSaale</filename> zusammengefasst. Neben der
   Implementierung des Rechendienstes befinden sich dort alle für die
-  Berechnung benötigten weiteren Ressourcen (ausführbare Dateien hwvor.exe,
-  snow.exe, unveränderbare Parameterdateien, usw.).</para>
+  Berechnung benötigten weiteren Ressourcen (ausführbare Dateien
+  <filename>hwvor.exe</filename>, <filename>snow.exe</filename>,
+  unveränderbare Parameterdateien, usw.).</para>
 
   <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
   Modelldaten usw., befinden sich im Datenprojekt
@@ -60,7 +60,7 @@
     verschaffen. Nach dem Öffnen der Ansicht erscheint eine (Baum-)
     Strukturansicht des Modells, welche unter anderem auch das Bearbeiten der
     einzelnen Modellelemente erlaubt (siehe <xref
-    linkend="fig_modellintegration_saale_ueberblick" />). Die</para>
+    linkend="fig_modellintegration_saale_ueberblick" />).</para>
 
     <figure id="fig_modellintegration_saale_ueberblick">
       <title>Überblick Modelldaten Saale</title>
@@ -115,9 +115,8 @@
     Niederschlagsgebieten. Die Liste der Parameter ist relativ lang. In der
     <xref linkend="tbl_paramsPegelSaale" /> werden nur die Parameter
     beschrieben, die spezifisch für KALYPSO sind. Die restlichen Parameter
-    sind in der ursprünglichen Modelldokumentation beschrieben.</para>
-
-    <!--Hier Verweis auf entsprechende Datei-->
+    sind in der ursprünglichen Modelldokumentation beschrieben (siehe
+    <emphasis>Hauptstammdatei PEGEL.STD</emphasis>).</para>
 
     <table id="tbl_paramsPegelSaale">
       <title>Parameter der einfachen Pegel (Pegel) im Saale-Modell</title>
@@ -221,7 +220,8 @@
     <para>Die zusätzlichen Parameter für die Niederschlagsgebiete (siehe <xref
     linkend="tbl_paramsNSGSaale" />) werden für die Berechnung des
     Gebietsniederschlagsmodells und das jeweilige Niederschlag-Abfluss-Modell
-    benötigt.</para>
+    benötigt (siehe <emphasis>EGMPAR.HWP</emphasis> in der ursprünglichen
+    Modelldokumentation).</para>
 
     <table id="tbl_paramsNSGSaale">
       <title>zusätzliche Parameter der Niederschlagsgebiete (Gebiet) im
@@ -552,7 +552,8 @@
     <para>Die Rechenvarianten wurden gemäß <xref
     linkend="sec-modellintegration-allgemein" /> angelegt und konfiguriert.
     <xref linkend="tab-modellintegration-saale-rechenvariante" /> zeigt den
-    konkreten Aufbau für das Saale-Modell.</para>
+    konkreten Aufbau für das Saale-Modell. Alle Pfade sind relativ zum
+    Modelldatenprojekt <filename>KalypsoSaale</filename> angegeben.</para>
 
     <!--Die folgende Tabelle ist länger als eine Seite :-) Lass Dir was einfallen-->
 
@@ -560,7 +561,7 @@
       <title>Aufbau einer Rechenvariante des Saale-Modells</title>
 
       <tgroup cols="3">
-        <colspec align="left" colwidth="3*" />
+        <colspec align="left" colwidth="4*" />
 
         <colspec align="left" colwidth="4*" />
 
@@ -582,16 +583,15 @@
 
             <entry>Steuerparameter der Berechnung</entry>
 
-            <entry>Kopie der Datei
-            <filename>/KalypsoSaale/.model/.calculation.template</filename>
-            unter Ersetzung/Bearbeitung der Parameter.</entry>
+            <entry>Kopie von
+            <filename>/.model/.calculation.template</filename> unter Ersetzung
+            der Parameter.</entry>
           </row>
 
           <row>
             <entry><filename>calculation.log</filename></entry>
 
-            <entry>Log-Datei des ANT-Launches zum Ausführen der
-            Berechnung</entry>
+            <entry>Log-Datei zum Ausführen der Berechnung</entry>
 
             <entry>Nach Aktivieren des ANT-Launches
             <filename>runCalculation.launch</filename></entry>
@@ -600,8 +600,7 @@
           <row>
             <entry><filename>create.log</filename></entry>
 
-            <entry>Log-Datei des ANT-Launches zur Erstellung der
-            Rechenvariante</entry>
+            <entry>Log-Datei zur Erstellung der Rechenvariante</entry>
 
             <entry>Nach Aktivieren des ANT-Launches
             <filename>createCalcCase.launch</filename></entry>
@@ -610,8 +609,7 @@
           <row>
             <entry><filename>gebietsniederschlag.log</filename></entry>
 
-            <entry>Log-Datei des ANT-Launches zur Ermittlung des
-            Gebietsniederschlags</entry>
+            <entry>Log-Datei zur Ermittlung des Gebietsniederschlags</entry>
 
             <entry>Nach Aktivieren des ANT-Launches
             <filename>gebietsniederschlag.launch</filename></entry>
@@ -622,25 +620,24 @@
 
             <entry>Ansichtsvorlage für die Steuerparameter</entry>
 
-            <entry>Kopie der Datei
-            <filename>/KalypsoSaale/.templates/Modell/Info_Rechenvariante.gft</filename></entry>
+            <entry>Kopie v<filename>on
+            /.templates/Modell/Info_Rechenvariante.gft</filename></entry>
           </row>
 
           <row>
             <entry><filename>modell.gml</filename></entry>
 
-            <entry>GML-Datei der Modelldaten der Rechenvariante</entry>
+            <entry>Modelldaten der Rechenvariante</entry>
 
             <entry>Kopie der Grunddaten des Modells
-            (<filename>/KalypsoSaale/modell.gml</filename>)</entry>
+            (<filename>/modell.gml</filename>)</entry>
           </row>
 
           <row>
             <entry><filename>update.log</filename></entry>
 
-            <entry>Log-Datei des ANT-Launches zum Abholen/Aktualisieren der
-            Zeitreihen, insbesondere Meldungen zur Gültigkeit der
-            Zeitreihenwerte</entry>
+            <entry>Log-Datei zum Abruf der Zeitreihen mit Meldungen zur
+            Gültigkeit </entry>
 
             <entry>Nach Aktivieren des ANT-Launches
             <filename>updateCalcCase.launch</filename></entry>
@@ -666,8 +663,8 @@
           <row>
             <entry><filename>Ergebnisse/</filename></entry>
 
-            <entry>Ergebnisse einer Berechnung (Zeitreihen und LOG-Dateien des
-            Rechenkerns)</entry>
+            <entry>Ergebnisse einer Berechnung (Zeitreihen und
+            LOG-Dateien)</entry>
 
             <entry>KALYPSO-Rechendienst</entry>
           </row>
@@ -675,10 +672,10 @@
           <row>
             <entry><filename>Karten/*.gmt</filename></entry>
 
-            <entry>diverse Ansichtsvorlagen für Karten</entry>
+            <entry>Ansichtsvorlagen für Karten</entry>
 
             <entry>Kopie der Dateien
-            <filename>/KalypsoSaale/.templates/Modell/Karten/*.gmt</filename></entry>
+            <filename>/.templates/Modell/Karten/*.gmt</filename></entry>
           </row>
 
           <row>
@@ -692,7 +689,7 @@
           <row>
             <entry><filename>Ombrometer/*.zml</filename></entry>
 
-            <entry>Niederschlagszeitreihen (Messwerte der Ombrometer)</entry>
+            <entry>Niederschlagszeitreihen (Ombrometermessung)</entry>
 
             <entry>KALYPSO-Zeitreihendienst</entry>
           </row>
@@ -700,18 +697,16 @@
           <row>
             <entry><filename>Parameter/*.gtt</filename></entry>
 
-            <entry>diverse Ansichtsvorlagen für Tabellen. Diese Tabellen
-            dienen der Information über Modellparameter bzw. zum Editieren
-            derselben</entry>
+            <entry>Ansichtsvorlagen für Tabellen von Modellparametern</entry>
 
             <entry>Kopie der Dateien
-            <filename>/KalypsoSaale/.templates/Modell/Parameter/*.gtt</filename></entry>
+            <filename>/.templates/Modell/Parameter/*.gtt</filename></entry>
           </row>
 
           <row>
             <entry><filename>Schnee/*.zml</filename></entry>
 
-            <entry>Abschmelzsummenzeitreihen</entry>
+            <entry>Zeitreihen der Abschmelzsummen</entry>
 
             <entry>Gebietsniederschlagsmodell</entry>
           </row>
@@ -727,12 +722,11 @@
           <row>
             <entry><filename>Steuerung/*.gft</filename></entry>
 
-            <entry>Feature(Element)vorlagen für die Steuerung der diversen
-            Talsperren bzw. der optionalen Teilmodelle (Schwarze und Weiße
-            Elster)</entry>
+            <entry>Vorlagen für die Steuerung der Talsperren und der
+            optionalen Teilmodelle (Schwarze / Weiße Elster)</entry>
 
-            <entry>Kopie der Dateien
-            <filename>/KalypsoSaale/.templates/Modell/Steuerung/*.gft</filename></entry>
+            <entry>Kopie von
+            <filename>/.templates/Modell/Steuerung/*.gft</filename></entry>
           </row>
         </tbody>
       </tgroup>
@@ -805,7 +799,7 @@
               </row>
 
               <row>
-                <entry>DWD-Vorhersagedaten</entry>
+                <entry>DWD-Vorhersafe Lokalmodell</entry>
 
                 <entry><filename>dwd</filename></entry>
 
@@ -889,6 +883,17 @@
         <quote>Gebiet</quote> des Datenmodells
         (<filename>modell.gml</filename>).</para>
 
+        <para>Die Prognosewerte werden ebenfalls über eine lineare Gewichtung
+        aus den Rasterdaten des DWD-Lokalmodells (LM2-Daten) den
+        Niederschlagsgebieten zugeordnet. Die Gewichtungsfaktoren sind in der
+        Datei <filename>/KalypsoSaale/.model/dwd/dwd2zmlConf.xml</filename>
+        für jede zu generierende Gebietsniederschlagszeitreihe
+        abgelegt.</para>
+
+        <para>Die Gewichtungsfaktoren wurden dem ursprünglichen Modell (Datei
+        <filename>Met_Geb.std</filename>) entnommen und nicht
+        modifiziert.</para>
+
         <!--Tja, und hier noch viel Bla bla zu den Abschmelzsummen etc.-->
       </section>
     </section>
@@ -946,7 +951,64 @@
       <secondary>Saale</secondary>
     </indexterm>
 
-    <para><!--Tja Gernot, das musst Du wohl selber schreiben :-)))--></para>
+    <para>Die serverseitige Berechnung wird wie oben beschrieben über ein
+    ANT-Skript (<filename>runCalculation.launch</filename>) angestoßen. Es
+    werden alle Dateien der Rechenvariante bis auf die Vorlagen und die
+    DWD-Rasterdaten übertragen.</para>
+
+    <para>Zur Berechnung wird der KALYPSO-Berechnungsdienst mit der Typ-ID des
+    Modells (hier <quote>Saale_SA_V1</quote>) angestoßen. Der Dienst aktiviert
+    anhand der ID die entsprechende Implementierung des Interface
+    <interfacename>org.kalypso.services.calculation.job.ICalcJob</interfacename>,
+    im Falle des Saale-Modells die Klasse
+    org.kalypso.lhwsachsenanhalt.saale.SaaleCalcJob im Projekt
+    <filename>KalypsoModelSaale</filename> der Programmquellen. Wie oben
+    bereits beschrieben wurde, sind alle Modell-spezifischen Programmierungen
+    und die für das Anstoßen des Rechenkerns benötigten Daten in diesem
+    Projekt zusammengefasst.</para>
+
+    <para>Der implementierte Berechnungsdienst geht für jede Berechnung wie
+    folgt vor:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Es wird ein temporäres Verzeichnis <quote>HWVOR00</quote> mit
+        den vom Rechenkern benötigten Unterverzeichnissen
+        (<filename>stammdat</filename>, <filename>Daten</filename>,
+        <filename>ausgabe</filename>) angelegt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Der Rechenkern (<filename>hwvor00.exe</filename>) und die
+        unveränderbare Steuerdatei (<filename>hwsteu.stv</filename>) werden in
+        diese Verzeichnisstruktur kopiert. Diese Daten finden sich im Paket
+        <filename>org.kalypso.lhwsachsenanhalt.saale.resources</filename> des
+        <filename>KalypsoModelSaale</filename>.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die vom Client übergebenen Daten der Rechenvariante werden in
+        die Formate des Rechenkerns konvertiert und auch im temporären
+        Verzeichnis abgelegt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die zur Steuerung des Rechenkerns benötigte Datei
+        <filename>Hwzugr.stv</filename> wird mit den passenden Pfadangaben
+        erzeugt und der Rechenkern damit gestartet.</para>
+      </listitem>
+
+      <listitem>
+        <para>Die Ergebnisdaten der Berechnung, welche sich jetzt ebenfalls im
+        temporären Verzeichnis befinden, werden in die vom Client benötigten
+        Formate übertragen und können jetzt vom Client abgerufen
+        werden.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Neben den konvertierten Zeitreihendaten werden auch LOG-Daten des
+    Rechenkerns zurück zum Client übertragen, was eine eventuelle Fehlersuche
+    erleichtert.</para>
   </section>
 
   <section>

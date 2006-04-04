@@ -102,10 +102,12 @@
   Vorlagendatei.</para>
 
   <para>Neben den üblichen URL-Protokollen wie <abbrev>z. B.</abbrev> file:
-  und http: wurden für die Modellverwaltung eigene Protokolle definiert.
-  Folgende Protokolle werden unterstützt:</para>
+  und http: wurden für die Modellverwaltung eigene Protokolle definiert (siehe
+  <xref linkend="tab_templates_protocols" />).</para>
 
-  <informaltable>
+  <table id="tab_templates_protocols">
+    <title>Innerhalb von KALYPSO unterstützte Protokolle</title>
+
     <tgroup cols="3">
       <colspec align="left" colwidth="2*" />
 
@@ -168,7 +170,7 @@
         </row>
       </tbody>
     </tgroup>
-  </informaltable>
+  </table>
 
   <section>
     <title>GIS-Kartenansicht</title>
@@ -186,7 +188,7 @@
 
     <para>Die Referenzierung der eigentlichen Daten erfolgt über das
     <emphasis>href</emphasis>-Attribut jedes <emphasis>layer</emphasis>
-    -Elements. Das <emphasis>linktpye</emphasis>-Attribut des Themas legt
+    -Elements. Das <emphasis>linktype</emphasis>-Attribut des Themas legt
     fest, in welchem Format die Datendatei geladen wird. Zur Zeit können die
     Formate GML (gml) und ESRI Shape (shape) geladen werden.</para>
 
@@ -272,29 +274,10 @@
     <para>Die GIS-Strukturansicht stellt die Daten einer GIS-Datei in einer
     Baumansicht dar.</para>
 
-    <para>Im Gegensatz zu den anderen Ansichtsvorlagen beruht das Datenformat
-    dieser Vorlage nicht auf einem XML-Schema, sondern ist wie folgt
-    aufgebaut:</para>
-
-    <orderedlist>
-      <listitem>
-        <para>Zeile: Datenart (zur Zeit gml oder shape)</para>
-      </listitem>
-
-      <listitem>
-        <para>Zeile: (Datei-)pfad zur Datendatei</para>
-      </listitem>
-    </orderedlist>
-
-    <figure>
-      <title>Beispiel</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/kap6/GIS_Strukturansicht.png" />
-        </imageobject>
-      </mediaobject>
-    </figure>
+    <para>Das Datenformat der Ansichtsvorlage der GIS-Strukturansicht beruht
+    wie bei den anderen Vorlagen auf einem XML-Schema, welches unter
+    <filename>/KalypsoCore/etc/schemas/template/gistreeview.xsd</filename>
+    abgelegt ist.</para>
 
     <para>Die GIS-Vorlagenansicht bietet neben dem Löschen und Anlegen von
     GIS-Elementen auch die Möglichkeit, ein GIS-Element zu bearbeiten. In

@@ -1033,9 +1033,9 @@
     <para>Zur Berechnung wird der KALYPSO-Rechendienst mit der Typ-ID des
     Modells (hier <quote>TubigV1.0</quote>) angestoßen. Der Dienst aktiviert
     anhand der ID die entsprechende Implementierung des Interface
-    <interfacename>org.Kalypso.services.calculation.job.ICalcJob</interfacename>,
+    <interfacename>org.kalypso.services.calculation.job.ICalcJob</interfacename>,
     im Falle des Bode- bzw. Ilse-Modells die Klasse
-    <interfacename>org.kalypso.lhwzsachsen.tubig.TubigCalcJob</interfacename>
+    <interfacename>org.kalypso.lhwsachsenanhalt.tubig.TubigCalcJob</interfacename>
     im Projekt <filename>KalypsoModelTubig</filename> der Programmquellen. Wie
     oben bereits beschrieben wurde, sind alle modellspezifischen
     Programmierungen und die für das Anstoßen des Rechenkerns benötigten Daten

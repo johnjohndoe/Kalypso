@@ -42,7 +42,7 @@
     <!--PROFILING ANFANG sachsen-->
 
     <table id="tbl_ModellStruktur" vendor="sachsen">
-      <title>Tabelle 6: Modellstruktur</title>
+      <title>Modellstruktur</title>
 
       <tgroup cols="4">
         <colspec align="left" colwidth="5*" />
@@ -247,7 +247,7 @@
     <!--PROFILING ANFANG sachsen-anhalt-->
 
     <table id="tbl_ModellStruktur" vendor="sachsen-anhalt">
-      <title>Tabelle 6: Modellstruktur</title>
+      <title>Modellstruktur</title>
 
       <tgroup cols="4">
         <colspec align="left" colwidth="5*" />
