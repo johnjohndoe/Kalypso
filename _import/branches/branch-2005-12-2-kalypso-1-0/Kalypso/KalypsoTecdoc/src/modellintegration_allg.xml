@@ -234,7 +234,7 @@
 
       <para>Die Datei <filename>.calculation</filename> ist eine Datei im
       GML-Format, welche beim Erzeugen einer Rechenvariante automatisch
-      angezeigt wird. Zu diesem Zweck muss als Vorlage eine Datei
+      angezeigt wird. Dazu muss als Vorlage eine Datei
       <filename>.calculation.template</filename> im Verzeichnis
       <filename>/.model/</filename> des Projektes angelegt sein. Die Vorlage
       wird beim Erstellen einer Rechenvariante automatisch in das neue
