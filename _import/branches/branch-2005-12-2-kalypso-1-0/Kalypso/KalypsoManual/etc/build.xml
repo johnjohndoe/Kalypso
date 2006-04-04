@@ -211,15 +211,20 @@
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
 
-		<exec executable="makeindex.exe" dir="${tex.dir}">
-			<arg value="${pdfproc.out.name}" />
-		</exec>
-
 		<exec executable="pdflatex.exe" dir="${tex.dir}">
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
     
+	  	<!-- Index erst jetzt erstellen, damit Seitennummerierung richtig wird -->
+		<exec executable="makeindex.exe" dir="${tex.dir}">
+			<arg value="${pdfproc.out.name}" />
+		</exec>
+
 		  <!-- three times! needed for correct toc numbering -->
+		<exec executable="pdflatex.exe" dir="${tex.dir}">
+			<arg value="${pdfproc.out.name}.tex" />
+		</exec>
+		  
 		<exec executable="pdflatex.exe" dir="${tex.dir}">
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
