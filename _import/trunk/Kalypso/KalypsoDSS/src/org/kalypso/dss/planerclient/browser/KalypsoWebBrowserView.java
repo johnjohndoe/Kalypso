@@ -1,6 +1,9 @@
 package org.kalypso.dss.planerclient.browser;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
 import org.kalypso.contribs.eclipse.ui.browser.ILocationChangedHandler;
 
@@ -37,7 +40,7 @@ public class KalypsoWebBrowserView extends AbstractBrowserView implements ILocat
 
     return false;
   }
-
+  
   private boolean handleLaunchProtocol( final Object link )
   {
     MessageDialog.openConfirm( getSite().getShell(), "Not implemented yet", "Das launch-protokol ist noch nicht implementiert. Link: " + link );
@@ -45,9 +48,9 @@ public class KalypsoWebBrowserView extends AbstractBrowserView implements ILocat
     return false;
   }
 
-  private boolean handlePerspectiveProtocol( String url )
+  private boolean handlePerspectiveProtocol( String urlAsString )
   {
-    String[] split = url.split( SEPERATOR );
+    final String[] split = urlAsString.split( SEPERATOR );
     // try {
     // KalypsoPerspectiveHelper.nextPerspective(split[0], split[1]);
     // } catch (WorkbenchException e) {
@@ -58,7 +61,21 @@ public class KalypsoWebBrowserView extends AbstractBrowserView implements ILocat
     // return false;
     // }
     // return true;
-    return KalypsoPerspectiveHelper.nextPerspective( split[0], split[1], getSite().getPage() );
+    String url = split[0];
+    final String perspectiveID = split[1];
+    if( m_context != null )
+    {
+      try
+      {
+        url = UrlResolverSingleton.resolveUrl( m_context, url ).toExternalForm();
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+        // use original url
+      }
+    }
+    return KalypsoPerspectiveHelper.nextPerspective( url, perspectiveID, getSite().getPage() );
   }
 
 }
