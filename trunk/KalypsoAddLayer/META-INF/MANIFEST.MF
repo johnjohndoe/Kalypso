@@ -30,5 +30,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.kalypso.contribs.java,
  org.kalypso.contribs.eclipseplatform,
- org.junit
+ org.junit,
+ org.eclipse.ui.forms
 Eclipse-AutoStart: true

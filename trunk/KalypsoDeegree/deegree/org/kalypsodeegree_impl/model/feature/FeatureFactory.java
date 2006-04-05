@@ -277,7 +277,8 @@ public class FeatureFactory
       IRelationType featureAssociationTypeProperty = ftp;
       // TODO use schemacontext as parameter
       GMLSchema context2 = null;
-      IFeatureType[] linkFTs = featureAssociationTypeProperty.getTargetFeatureTypes( context2, false );
+      final IFeatureType linkFT = featureAssociationTypeProperty.getTargetFeatureType();
+      final IFeatureType[] linkFTs = linkFT.getSubstituts( context2, false, true );
 
       try
       {

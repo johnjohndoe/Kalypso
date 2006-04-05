@@ -80,7 +80,7 @@ public class FeatureAddActionDelegate implements IActionDelegate
       final IRelationType ftp = m_selection.getParentFeatureProperty( firstFeature );
 
       int pos = 0; // TODO get pos from somewhere
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureTypes( null, false )[0], parentFeature, ftp, pos, null );
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureType(),parentFeature, ftp, pos, null );
       try
       {
         workspace.postCommand( command );

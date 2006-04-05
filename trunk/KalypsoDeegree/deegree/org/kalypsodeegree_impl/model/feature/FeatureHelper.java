@@ -291,7 +291,11 @@ public class FeatureHelper
 
     IFeatureType[] afT = null;
     if( property instanceof IRelationType )
-      afT = ((IRelationType) property).getTargetFeatureTypes( null, false );
+    {
+
+      IFeatureType ft = ((IRelationType) property).getTargetFeatureType();
+      afT = ft.getSubstituts( null, false, true );
+    }
     return afT;
   }
 
@@ -362,5 +366,4 @@ public class FeatureHelper
     }
   }
 
- 
 }

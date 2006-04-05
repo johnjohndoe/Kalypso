@@ -69,16 +69,16 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     final Object currentTargetObject = getCurrentTarget();
     if( currentTargetObject instanceof FeatureAssociationTypeElement )
     {
-//      IRelationType fatp = ((FeatureAssociationTypeElement) currentTargetObject).getAssociationTypeProperty();
-//      Feature parentFeature = ((FeatureAssociationTypeElement) currentTargetObject).getParentFeature();
-//      Object proptery = parentFeature.getProperty( fatp );
-//      final int pos;
-//      if( fatp.isList() )
-//      {
-//        pos = ((List) proptery).size();
-//      }
-//      else
-//        pos = 0;
+      // IRelationType fatp = ((FeatureAssociationTypeElement) currentTargetObject).getAssociationTypeProperty();
+      // Feature parentFeature = ((FeatureAssociationTypeElement) currentTargetObject).getParentFeature();
+      // Object proptery = parentFeature.getProperty( fatp );
+      // final int pos;
+      // if( fatp.isList() )
+      // {
+      // pos = ((List) proptery).size();
+      // }
+      // else
+      // pos = 0;
       // boolean b = workspace.isAggrigatedLink( parentFeature, fatp.getName(), pos );
 
     }
@@ -123,7 +123,8 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       // String propertyName = targetAssocFtp.getName();
       targetFeature = targetFatElement.getParentFeature();
       // try to find matching IFeatureType
-      matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), targetAssocFtp.getTargetFeatureTypes( null, false ) );
+      IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
+      matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), targetFeatureType.getSubstituts( null, false, true ) );
       // System.out.println( "matchingFT = " + matchingFt.getName() );
       if( matchingFt == null )
         return false;
@@ -158,7 +159,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
             matchingFt = type;
         }
       }
-//      targetFt = targetFeature.getFeatureType();
+      // targetFt = targetFeature.getFeatureType();
       // System.out.println( "Feature:\ntargetFT = " + targetFt.getName() + "\tsourceFT = "
       // + selectedFeatures[0].getFeatureType().getName() );
 
@@ -221,7 +222,8 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         final IPropertyType property = properties[i];
         if( property instanceof IRelationType )
         {
-          final IFeatureType[] associationFeatureTypes = ((IRelationType) property).getTargetFeatureTypes( null, false );
+          final IFeatureType associationFeatureType = ((IRelationType) property).getTargetFeatureType();
+          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
           for( int k = 0; k < associationFeatureTypes.length; k++ )
           {
             final IFeatureType aFType = associationFeatureTypes[k];

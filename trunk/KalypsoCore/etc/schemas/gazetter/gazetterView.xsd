@@ -1,0 +1,50 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gz="gazetter.view.kalypso.org"
+	targetNamespace="gazetter.view.kalypso.org"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<element name="gazetterView">
+		<annotation>
+			<documentation>
+
+				<pr>configuration of a gezetter view in kalypso</pr>
+			</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element ref="gz:GazetterLocation" minOccurs="0"
+					maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+	</element>
+	<element name="GazetterLocation" type="gz:GazetterLocationType">
+		<annotation>
+			<documentation>
+				describes a gazetter-featuretype and some hints for
+				gazetter gui
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="GazetterLocationType">
+		<sequence>
+			<element name="label" type="string" />
+			<element name="description" type="string" />
+			<element name="featureType" type="QName" />
+			<element name="labelProperty" type="QName" />
+			<element name="spacialIdentifierProperty" type="QName" />
+			<element name="geographicExtentProperty" type="QName" />
+			<!-- 
+				true, if gui should provide a text search
+			-->
+			<element name="doTextSearch" type="boolean" />
+			<!-- 
+				use parent identifier instead of parent geometry, this makes sense when parent has no geometry extent hat can be
+				used.
+			-->
+			<element name="useParentIdentifierForQuery" type="boolean"
+				minOccurs="0" />
+			<element ref="gz:GazetterLocation" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+</schema>

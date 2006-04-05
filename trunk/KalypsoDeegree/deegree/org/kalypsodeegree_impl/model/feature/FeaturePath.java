@@ -197,7 +197,6 @@ public class FeaturePath
       if( isID() )
         return workspace.getFeature( name );
 
-
       final Object value = feature.getProperty( name );
 
       // falls ein bestimmter typ gewünscht ist, jetzt filtern
@@ -224,7 +223,8 @@ public class FeaturePath
         final IRelationType relationPT = (IRelationType) ftp;
         if( m_typename != null )
         {
-          final IFeatureType[] associationFeatureTypes = relationPT.getTargetFeatureTypes( null, false );
+          final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
+          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
           for( int i = 0; i < associationFeatureTypes.length; i++ )
           {
             final IFeatureType type = associationFeatureTypes[i];
@@ -235,7 +235,8 @@ public class FeaturePath
           return null;
         }
 
-        final IFeatureType[] targetFeatureTypes = relationPT.getTargetFeatureTypes( null, true );
+        final IFeatureType targetFeatureType = relationPT.getTargetFeatureType();
+        final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( null, false, true );
         if( targetFeatureTypes.length > 0 )
           return targetFeatureTypes[0];
       }
