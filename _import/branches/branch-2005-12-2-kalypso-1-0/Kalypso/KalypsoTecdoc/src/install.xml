@@ -713,7 +713,9 @@
     </section>
   </section>
 
-  <section>
+  <!--PROFILING ANFANG sachsen-anhalt-->
+
+  <section vendor="sachsen-anhalt">
     <title>Ausfallsicherheit</title>
 
     <indexterm>
@@ -722,9 +724,9 @@
 
     <para>Die Ausfallsicherheit wird sowohl durch die Hardware als auch durch
     die Software garantiert. Für die Einzelheiten der Hardware-Konfiguration
-    verweisen wir sie auf die entsprechende Dokumentation bei Ihrem
-    System-Administrator. Hier gehen wir besonders auf die durch KALYPSO
-    angebotene serverseitige Ausfallsicherheit ein.</para>
+    verweisen wir Sie auf die entsprechende Dokumentation bei Ihrem
+    System-Administrator. Hier gehen wir auf die durch KALYPSO angebotene
+    Ausfallsicherheit ein.</para>
 
     <para vendor="sachsen-anhalt">Der KALYPSO-Server ist sowohl in Magdeburg
     (MD) als auch in Halle (HAL) installiert. Sollte ein Server komplett
@@ -732,13 +734,13 @@
     Standort. Es ist zu beachten, dass das Netzwerk den sog.
     <quote>Single-Point-Of-Failure</quote> repräsentiert: ohne Netzwerk
     funktioniert das Gesamtsystem nicht. In diesem Fall kann der
-    KALYPSO-Client trotzdem gestartet und benutzt werden.
-    Benutzerberechtigungen abfragen, Zeitreihen abrufen und züruckschreiben,
-    Modelldaten abgleichen und Dokumente in der Ablage abspeichern sind aber
+    KALYPSO-Client trotzdem gestartet und benutzt werden. Abfrage der
+    Benutzerberechtigung, Abruf und Zurückschreiben von Zeitreihen, Abgleich
+    der Modelldaten und Speichern von Dokumenten nach IMS sind aber
     unzulässige Funktionen.</para>
 
-    <para vendor="sachsen-anhalt">Folgende Tabelle (Siehe <xref
-    linkend="tbl_ausfall" />) listet die mögliche Systemausfälle und die
+    <para vendor="sachsen-anhalt">Folgende Tabelle (siehe <xref
+    linkend="tbl_ausfall" />) listet mögliche Systemausfälle und die
     entsprechende Maßnahmen. <figure id="tbl_ausfall">
         <title>Maßnahmen gegen Systemausfälle</title>
 
@@ -759,10 +761,12 @@
         <secondary>W/Q-Umrechnungsdaten</secondary>
       </indexterm>
 
-      <para>Um eine bessere Ausfallsicherheit gegen WISKI zu gewährleisten
-      wurde speziell dafür einen Caching-Mechnismus der W/Q-Tabellen
-      entwickelt. Mehr Information dazu finden Sie in <xref
+      <para>Um eine bessere Ausfallsicherheit gegen WISKI zu gewährleisten,
+      wurde speziell für die W/Q-Tabellen ein Caching-Mechnismus entwickelt.
+      Mehr Information dazu finden Sie in <xref
       linkend="wiski_wq_cache" />.</para>
     </section>
   </section>
+
+  <!--PROFILING ENDE sachsen-anhalt-->
 </chapter>

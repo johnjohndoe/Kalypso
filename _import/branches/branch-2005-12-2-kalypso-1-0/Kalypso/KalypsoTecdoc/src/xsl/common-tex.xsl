@@ -39,6 +39,9 @@
 	<xsl:variable name="latex.pdf.support">1</xsl:variable>
 	<xsl:variable name="latex.math.support">1</xsl:variable>
 
+	<!-- Blocksatz statt eingerueckte Paragraphen -->
+	<xsl:variable name="latex.use.parskip">1</xsl:variable>
+
     <xsl:param name="latex.url.quotation">0</xsl:param>
 	<xsl:param name="latex.hyphenation.tttricks">1</xsl:param>
 
@@ -63,8 +66,6 @@
 	<xsl:variable name="latex.document.font">default</xsl:variable>
 	<xsl:param name="latex.fontenc">T1</xsl:param>
 
-	<xsl:variable name="latex.figure.position">[hbt]</xsl:variable>
-
 	<xsl:variable name="latex.book.preamblestart">
 		\documentclass[a4paper, oneside, 12pt]{book}
 		\usepackage[latin1]{inputenc}
@@ -72,5 +73,11 @@
 
 	<!-- Keine Striche über und unter Tabellen und Figuren -->
 	<xsl:template name="latex.float.preamble"/>
+
+	<!-- Fette Spaltenueberschriften -->
+	<xsl:template name="latex.thead.row.entry">
+		<xsl:text>{\bfseries </xsl:text><xsl:apply-templates/><xsl:text>}</xsl:text>
+	</xsl:template>
+
 
 </xsl:stylesheet>

@@ -755,7 +755,7 @@
         <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
         (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
         Steuerparameter <filename>.calculation</filename> (siehe <xref
-        linkend="sec_pktCalculation" />) wird mit Standardwerten belegt. Die
+        linkend="sec_modellintegration_spree_pktCalculation" />) wird mit Standardwerten belegt. Die
         eigentlichen Modelldaten befinden sich in der Datei
         <filename>calcCase.gml</filename> und stellen eine reine Kopie der
         Grunddaten (<filename>/KalypsoSpree/modell.gml</filename>) dar.</para>
@@ -895,7 +895,7 @@
       </section>
     </section>
 
-    <section id="sec_pktCalculation">
+    <section id="sec_modellintegration_spree_pktCalculation">
       <title>Die Datei <filename>.calculation</filename></title>
 
       <para>Die Steuerdatei <filename>.calculation</filename> wird durch das

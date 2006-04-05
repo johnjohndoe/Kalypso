@@ -17,8 +17,9 @@
   kapselt die Zusammenarbeit beider Programme.</para>
 
   <para>Beim Öffnen einer ODT-Vorlage im Grafik-Programm wird zuerst eine
-  Konvertierung von ODT nach TPL vorgenommen. Dabei wird eine TPL-Datei neben
-  der ODT-Vorlage erzeugt und zum Start des Grafik-Programms benutzt.</para>
+  Konvertierung von ODT nach TPL vorgenommen. Dabei wird eine
+  TPL-Datei neben der ODT-Vorlage erzeugt und zum Start des Grafik-Programms
+  benutzt.</para>
 
   <para>Weiterführende Information zu der Zusammenarbeit und den
   Synchronisationsmöglichkeiten beider Programme finden Sie im
