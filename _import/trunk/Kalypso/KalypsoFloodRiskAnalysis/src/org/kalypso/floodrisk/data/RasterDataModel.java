@@ -60,19 +60,16 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
- * 
  * RasterDataModel
  * <p>
- * Methods for reading and writing rasterdata (Schema: RasterDataModel.xsd)
- * 
- * created by
+ * Methods for reading and writing rasterdata (Schema: RasterDataModel.xsd) created by
  * 
  * @author Nadja Peiler (14.06.2005)
  */
 public class RasterDataModel
 {
 
-  public RasterDataModel()
+  public RasterDataModel( )
   {
     super();
   }
@@ -84,7 +81,6 @@ public class RasterDataModel
    *          (Schema: RasterDataModel.xsd)
    * @return RectifiedGridCoverage
    * @throws Exception
-   *  
    */
   public RectifiedGridCoverage getRectifiedGridCoverage( URL gmlURL ) throws Exception
   {
@@ -101,7 +97,6 @@ public class RasterDataModel
    * @param workspace
    * @return RectifiedGridCoverage
    * @throws Exception
-   *  
    */
   public static RectifiedGridCoverage getRectifiedGridCoverage( GMLWorkspace workspace ) throws Exception
   {
@@ -117,7 +112,6 @@ public class RasterDataModel
    * @param rasterDataModelGML
    * @param grid
    * @throws Exception
-   *  
    */
   public void toFile( File rasterDataModelGML, RectifiedGridCoverage grid ) throws Exception
   {
@@ -132,21 +126,14 @@ public class RasterDataModel
     String rgcFeatureTypePropertyName = "RectifiedGridCoverageMember";
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( null,"RasterDataModel0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null, "RasterDataModel0", rootFeatureType );
     IPropertyType ftp_rgc = rootFeature.getFeatureType().getProperty( rgcFeatureTypePropertyName );
     // create feature: RectifiedGridCoverage
-    Object[] properties = new Object[]
-    {
-        "",
-        "",
-        null,
-        grid.getGridDomain(),
-        grid.getRangeSet() };
-    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature(rootFeature, "RectifiedGridCoverage0",
-        ( (IRelationType)ftp_rgc ).getTargetFeatureTypes(schema,false)[0], properties );
+    Object[] properties = new Object[] { "", "", null, grid.getGridDomain(), grid.getRangeSet() };
+    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( rootFeature, "RectifiedGridCoverage0", ((IRelationType) ftp_rgc).getTargetFeatureType(), properties );
     rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc, rectifiedGridCoverageFeature ) );
 
-    //create workspace
+    // create workspace
     GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, rasterDataModelGML.toURL(), "" );
 
     // serialize Workspace

@@ -87,11 +87,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 {
   private final static ObjectFactory OF = new ObjectFactory();
+
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private static final class MetGebGewichtung
   {
     private final double m_weight;
+
     private final String m_targetId;
 
     public MetGebGewichtung( final CSV csv, final int row, final int index )
@@ -101,12 +103,12 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       m_targetId = csv.getItem( row, index ).trim();
     }
 
-    public String getTargetId()
+    public String getTargetId( )
     {
       return m_targetId;
     }
 
-    public double getWeight()
+    public double getWeight( )
     {
       return m_weight;
     }
@@ -119,7 +121,6 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
   private String m_link;
 
   private URL m_dwd2zmlUrl;
-
 
   private DwdzmlConf m_dwdConf;
 
@@ -137,7 +138,6 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
    * </dl>*
    * 
    * @throws CoreException
-   * 
    * @see org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor#init(java.util.Properties)
    */
   public void init( final Properties properties ) throws CoreException
@@ -186,8 +186,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "URL konnte nicht erzeugt werden.\nPath = "
-          + metGebPath + "\ncontext = " + context, e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "URL konnte nicht erzeugt werden.\nPath = " + metGebPath + "\ncontext = " + context, e ) );
     }
   }
 
@@ -210,7 +209,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final String pnr = (String)f.getProperty( "PNR" );
+    final String pnr = (String) f.getProperty( "PNR" );
 
     addGewichtung( f, pnr );
     addDwd2Zml( f, pnr );
@@ -221,7 +220,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
   private void addDwd2Zml( final Feature f, final String pnr )
   {
-    final TimeseriesLinkType targetLink = (TimeseriesLinkType)f.getProperty( m_dwd2ZmlTargetLink );
+    final TimeseriesLinkType targetLink = (TimeseriesLinkType) f.getProperty( m_dwd2ZmlTargetLink );
     if( targetLink == null )
       System.out.println( "Kein DWD-Target-Link (" + m_dwd2ZmlTargetLink + ") für Feature mit ID: " + f.getId() );
 
@@ -235,9 +234,9 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
   private void addGewichtung( final Feature f, final String pnr )
   {
-    final FeatureList list = (FeatureList)f.getProperty( m_link );
+    final FeatureList list = (FeatureList) f.getProperty( m_link );
     final IRelationType ftp = (IRelationType) f.getFeatureType().getProperty( m_link );
-    final IFeatureType elementType = ftp.getTargetFeatureTypes(null,false)[0];
+    final IFeatureType elementType = ftp.getTargetFeatureType();
 
     // put values into gml
     final List metGebList = m_metGebHash.get( pnr );
@@ -253,7 +252,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     int count = 0;
     for( final Iterator iter = metGebList.iterator(); iter.hasNext(); )
     {
-      final MetGebGewichtung mgg = (MetGebGewichtung)iter.next();
+      final MetGebGewichtung mgg = (MetGebGewichtung) iter.next();
       final double weight = mgg.getWeight();
       final String targetId = mgg.getTargetId();
 
@@ -264,10 +263,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       final String elementId = f.getId() + "-gewicht-" + count++;
 
       // neues Feature: 'GewichtungElement'
-      final Feature element = FeatureFactory.createFeature( f, elementId, elementType, new Object[]
-      {
-          new Double( weight ),
-          ombrometerHref } );
+      final Feature element = FeatureFactory.createFeature( f, elementId, elementType, new Object[] { new Double( weight ), ombrometerHref } );
 
       list.add( element );
     }
@@ -293,8 +289,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
       IOUtils.closeQuietly( reader );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Met_Geb.std: "
-          + metGebUrl.toExternalForm(), e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Met_Geb.std: " + metGebUrl.toExternalForm(), e ) );
     }
 
     return csv;
@@ -304,7 +299,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
    * HACK: We use the dispose method to write the dwdConf File. The dispose is always called from the
    * ChangeSourceHandler.
    */
-  public void dispose()
+  public void dispose( )
   {
     OutputStreamWriter writer = null;
     try

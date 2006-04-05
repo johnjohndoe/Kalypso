@@ -435,7 +435,7 @@ public class CreateFloodRiskProjectJob extends Job
         landuseTypeSet.add( propertyValue );
       }
       Object[] properties = new Object[] { "", "", null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
-      final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureTypes( null, false )[0], properties );
+      final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties );
       rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_feature, feature ) );
     }
 
