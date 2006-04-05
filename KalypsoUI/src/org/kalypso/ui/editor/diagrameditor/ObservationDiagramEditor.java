@@ -202,7 +202,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
         "icons/util/img_props.gif" );
-    final IWizardPage page = new ImageExportPage( configuration, "diagprops", "Bildexport Optionen", imgDesc );
+    final IWizardPage page = new ImageExportPage( configuration, "diagprops", "Bildexport Optionen", imgDesc, 0 );
 
     return new IWizardPage[]
     { page };
