@@ -508,7 +508,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       for( int j = 0; j < soilLayerNo; j++ )
       {
         final IRelationType bodFtProp = (IRelationType) modelFT.getProperty( "bodenkorrekturmember" ); //$NON-NLS-1$
-        final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureTypes( null, false )[0];
+        final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureType();
         Feature newFeature = m_modelWS.createFeature( targetFeature, bodenKorrekturFT );
         try
         {
@@ -619,7 +619,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
           for( int j = 0; j < channelNo; j++ )
           {
-            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureTypes( null, false )[0];
+            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureType( );
             final Feature newFeature = m_modelWS.createFeature( targetFeature, kmParameterFT );
             try
             {

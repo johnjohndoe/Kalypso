@@ -86,7 +86,8 @@ public class ImportShapeFile
 
       final IRelationType ftp = (IRelationType) rootFT.getProperty( "featureMember" );
 
-      final IFeatureType[] associationFeatureTypes = ftp.getTargetFeatureTypes( null, false );
+      final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
+      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
       final IFeatureType shapeFT = associationFeatureTypes[0];
       final IPropertyType[] sourceFtp = shapeFT.getProperties();
 

@@ -442,7 +442,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final IFeatureType rootFT = rootFeature.getFeatureType();
     final IRelationType ftp = (IRelationType) rootFT.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final IFeatureType[] associationFeatureTypes = ftp.getTargetFeatureTypes( null, false );
+    final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
+    final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
     final IFeatureType shapeFT = associationFeatureTypes[0];
     return shapeFT;
   }
@@ -690,7 +691,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    */
   public String getAnnotation( IPropertyType ftp, int type )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation(ftp);
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
     if( annotation != null )
     {
       if( type == TOOL_TIP )

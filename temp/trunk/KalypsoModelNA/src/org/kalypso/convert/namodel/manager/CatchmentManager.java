@@ -100,10 +100,10 @@ public class CatchmentManager extends AbstractManager
     m_conf = conf;
     m_catchmentFT = schema.getFeatureType( "Catchment" );
     final IRelationType ftp1 = (IRelationType) m_catchmentFT.getProperty( "bodenkorrekturmember" );
-    m_bodenKorrekturFT = ftp1.getTargetFeatureTypes( schema, false )[0];
+    m_bodenKorrekturFT = ftp1.getTargetFeatureType();
 
     final IRelationType ftp2 = (IRelationType) m_catchmentFT.getProperty( "grundwasserabflussMember" );
-    m_grundwasserabflussFT = ftp2.getTargetFeatureTypes( schema, false )[0];
+    m_grundwasserabflussFT = ftp2.getTargetFeatureType();
   }
 
   /**
