@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Frame;
+import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -379,7 +380,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
-    final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc );
+    Rectangle bounds = m_mapPanel.getBounds();
+    double width = bounds.width;
+    double height = bounds.height;
+    final double actualWidthToHeigthRatio = width / height;
+    final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc, actualWidthToHeigthRatio );
 
     return new IWizardPage[] { page };
   }

@@ -44,21 +44,24 @@ import org.kalypso.contribs.java.util.logging.ILogger;
  */
 public class DiffUtils
 {
-  public static boolean diffZips( final ILogger logger, File zip1, File zip2, String[] ignorePath )
-      throws ZipException, IOException
+  public static boolean diffZips( final ILogger logger, File zip1, File zip2, String[] ignorePath ) throws ZipException, IOException
+  {
+    final IDiffObject a = new ZipDiffObject( zip1 );
+    final IDiffObject b = new ZipDiffObject( zip2 );
+    return diff( logger, a, b, ignorePath );
+  }
+
+  public static boolean diff( ILogger logger, IDiffObject a, IDiffObject b, String[] ignorePath )
   {
     boolean result = false;
     final IDiffLogger diffLogger = new DiffLogger( logger );
-
+    final IDiffVisitor visitor = new DiffVisitor( a );
+    final String[] pathesA = a.getPathes();
     final List ignores;
     if( ignorePath != null )
       ignores = Arrays.asList( ignorePath );
     else
       ignores = new ArrayList();
-    final IDiffObject a = new ZipDiffObject( zip1 );
-    final IDiffObject b = new ZipDiffObject( zip2 );
-    final IDiffVisitor visitor = new DiffVisitor( a );
-    final String[] pathesA = a.getPathes();
 
     for( int i = 0; i < pathesA.length; i++ )
     {
@@ -99,7 +102,7 @@ public class DiffUtils
     // check for jokers '*'
     for( Iterator iter = ignores.iterator(); iter.hasNext(); )
     {
-      final String ignorePath = (String)iter.next();
+      final String ignorePath = (String) iter.next();
       if( ignorePath.startsWith( "*" ) ) // *foo
       {
         if( path.endsWith( ignorePath.substring( 1 ) ) )
@@ -115,7 +118,6 @@ public class DiffUtils
   }
 
   /**
-   * 
    * @param logger
    * @param list1
    * @param list2
@@ -130,7 +132,7 @@ public class DiffUtils
     boolean result = false;
     for( Iterator iter = list1.iterator(); iter.hasNext(); )
     {
-      final String element = (String)iter.next();
+      final String element = (String) iter.next();
       if( list2.contains( element ) )
       {
         logger.log( IDiffComparator.DIFF_OK, element );
@@ -144,7 +146,7 @@ public class DiffUtils
     }
     for( Iterator iter = list2.iterator(); iter.hasNext(); )
     {
-      final String element = (String)iter.next();
+      final String element = (String) iter.next();
       logger.log( IDiffComparator.DIFF_REMOVED, element );
       result = true;
     }
