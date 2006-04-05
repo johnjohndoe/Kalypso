@@ -144,19 +144,24 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // guess featureType:
       if( !fl.isEmpty() )
       {
-//        final IRelationType parentFeatureTypeProperty = fl.getParentFeatureTypeProperty();
-// @Andreas: why has IRelationType no method 'getTargetType' ?
-// this is what we need to fix the bug below & does not every relation has a single target?
-// BUG: we just get the first feature and its type here, lists with mixed types
-// will produce nullPointerExceptions because of this
-        final Object object = fl.get( 0 );
-        if( object instanceof Feature )
-          ft = ((Feature) object).getFeatureType();
+        final IRelationType parentFTP = fl.getParentFeatureTypeProperty();
+        final IFeatureType targetFeatureType = parentFTP.getTargetFeatureType();
+        if( targetFeatureType != null )
+          ft = targetFeatureType;
         else
-          ft = null;
+        {
+          // if nothing else help, use the first feature to determine the type
+          // this may cause problems later, if the list is not homogenous
+          final Object object = fl.get( 0 );
+          if( object instanceof Feature )
+            ft = ((Feature) object).getFeatureType();
+          else
+            ft = null;
+        }
       }
       else
         ft = null;
+
     }
     else if( featureFromPath instanceof Feature )
     {
