@@ -73,7 +73,9 @@ public class AddEmptyLinkAction extends Action
   @Override
   public void run()
   {
-    final IFeatureType[] featureTypes = m_fatp.getTargetFeatureTypes(null,false);
+    
+    final IFeatureType featureType = m_fatp.getTargetFeatureType();
+    final IFeatureType[] featureTypes = featureType.getSubstituts(null, false, true);
     Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     ICommand command = null;
     FeatureTypeSelectionDialog dialog = null;

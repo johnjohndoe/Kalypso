@@ -240,7 +240,7 @@ public class ShapeSerializer
     // final IPropertyType memberProp = new FeatureAssociationTypeProperty_Impl( PROPERTY_FEATURE_MEMBER, null,
     // "FeatureAssociationType", false, ft, null );
     // final IRelationType memberProp = FeatureFactory.createRelationType( PROPERTY_FEATURE_MEMBER, false, ft, null );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, new IFeatureType[] { ft }, 0, IRelationType.UNBOUND_OCCURENCY );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER,  ft , 0, IRelationType.UNBOUND_OCCURENCY );
 
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );

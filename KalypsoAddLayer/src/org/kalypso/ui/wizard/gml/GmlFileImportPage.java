@@ -308,7 +308,11 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       final Feature parent = link.getParentFeature();
       final FeaturePath parentFeaturePath = getWorkspace().getFeaturepathForFeature( parent );
       final IRelationType ftp = link.getAssociationTypeProperty();
-      final IFeatureType[] associationFeatureTypes = ftp.getTargetFeatureTypes( null, false );
+      
+      final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
+      final IFeatureType[] associationFeatureTypes =associationFeatureType.getSubstituts(null, false,true);
+      
+      
       for( int i = 0; i < associationFeatureTypes.length; i++ )
       {
         final IFeatureType ft = associationFeatureTypes[i];

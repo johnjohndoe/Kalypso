@@ -105,10 +105,13 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     if( parentElement instanceof HeavyRelationType )
     {
       final HeavyRelationType relation = (HeavyRelationType) parentElement;
-      final IFeatureType destFT = relation.getLink2().getTargetFeatureTypes( null, false )[0];
+      final IFeatureType destFT = relation.getLink2().getTargetFeatureType();
+
       final IFeatureType destFT2 = relation.getDestFT(); // where is the
       // difference ?
-      final IFeatureType[] associationFeatureTypes = relation.getLink2().getTargetFeatureTypes( null, true );
+      final IFeatureType associationFeatureType = relation.getLink2().getTargetFeatureType();
+      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
@@ -120,9 +123,11 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     else if( parentElement instanceof RelationType )
     {
       final RelationType relation = (RelationType) parentElement;
-      final IFeatureType destFT = relation.getLink().getTargetFeatureTypes( null, false )[0];
+      final IFeatureType destFT = relation.getLink().getTargetFeatureType();
       final IFeatureType destFT2 = relation.getDestFT();
-      final IFeatureType[] associationFeatureTypes = relation.getLink().getTargetFeatureTypes( null, true );
+      final IFeatureType associationFeatureType = relation.getLink().getTargetFeatureType();
+
+      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
@@ -141,7 +146,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
         if( property instanceof IRelationType )
         {
           final IRelationType linkFTP1 = (IRelationType) property;
-          final IFeatureType ft2 = linkFTP1.getTargetFeatureTypes( null, false )[0];
+          final IFeatureType ft2 = linkFTP1.getTargetFeatureType();
           // leight: FT,Prop,FT
           // heavy: FT,Prop,FT,PropFT
           // leight relationship ?
@@ -150,7 +155,8 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
           else
           {
             // heavy relationship ?
-            final IFeatureType[] ft2s = linkFTP1.getTargetFeatureTypes( null, false );
+            final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
+            final IFeatureType[] ft2s = ft2a.getSubstituts( null, false, true );
             for( int j = 0; j < ft2s.length; j++ )
             {
               final IPropertyType[] properties2 = ft2s[j].getProperties();
@@ -160,7 +166,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
                 if( property2 instanceof IRelationType )
                 {
                   final IRelationType linkFTP2 = (IRelationType) property2;
-                  final IFeatureType ft3 = linkFTP2.getTargetFeatureTypes( null, false )[0];
+                  final IFeatureType ft3 = linkFTP2.getTargetFeatureType();
                   if( ft3.getDefaultGeometryPropertyPosition() > -1 )
                   {
                     // it is a heavy relationship;
