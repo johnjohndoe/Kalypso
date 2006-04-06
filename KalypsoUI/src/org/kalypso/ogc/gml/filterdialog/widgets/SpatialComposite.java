@@ -143,9 +143,10 @@ class SpatialComposite extends AbstractFilterComposite
     // Top-Group
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
+//    m_supportedOpsLable.setLayoutData( new GridData() );
     m_supportedOpsLable.setText( "Operation:" );
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
-    m_supportedOpsCombo.setLayout( new GridLayout() );
+    //m_supportedOpsCombo.setLayout( new GridLayout() );
     GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
     data1.widthHint = STANDARD_WIDTH_FIELD;
     m_supportedOpsCombo.setLayoutData( data1 );
@@ -171,11 +172,12 @@ class SpatialComposite extends AbstractFilterComposite
       }
     } );
     // set Geometry
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
-    data.widthHint = STANDARD_WIDTH_FIELD;
     m_spatialLabel = new Label( this, SWT.NULL );
     m_spatialLabel.setText( "Geometrie:" );
+    
     m_combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    data.widthHint = STANDARD_WIDTH_FIELD;
     m_combo.setLayoutData( data );
     ComboViewer propViewer = new ComboViewer( m_combo );
     propViewer.setContentProvider( new FeatureTypeContentProvider() );
@@ -202,8 +204,10 @@ class SpatialComposite extends AbstractFilterComposite
     propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getPropertyName() ) ) );
     // get
     m_geomLable = new Label( this, SWT.NONE );
+//    m_geomLable.setLayoutData( new GridData() );
     m_geomLable.setText( "Operator:" );
     m_geomOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_geomOpsCombo.setLayoutData( new GridData () );
     if( m_oldGeometryOp != null )
     {
       final String id = "original_FID";

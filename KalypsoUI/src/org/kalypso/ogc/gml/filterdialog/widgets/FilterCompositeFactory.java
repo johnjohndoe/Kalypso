@@ -59,6 +59,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
   public static AbstractFilterComposite createFilterElementComposite( final Composite parent, final IErrorMessageReciever errorMessageReciever, final Operation operation, final TreeSet<String> supportedOperations, final IFeatureType ft, Feature spatialOperator )
   {
     AbstractFilterComposite c = null;
+
     if( operation != null )
     {
       String operatorName = operation.getOperatorName();

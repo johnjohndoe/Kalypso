@@ -290,9 +290,11 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+          final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+
           if( firstElement instanceof Operation )
           {
+
             if( m_newOpsComposite != null )
             {
               if( !m_newOpsComposite.isDisposed() )
@@ -311,6 +313,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
               } );
               m_newOpsComposite.pack();
+              // m_propGroup.pack();
             }
           }
           else if( firstElement instanceof FeatureFilter )
@@ -393,12 +396,14 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     // property group
     m_propGroup = new Group( m_top, SWT.FILL );
     m_propGroup.setText( "Filter-Eigenschaften" );
-    m_propGroup.setLayout( new GridLayout() );
+    m_propGroup.setLayout( new GridLayout( 2, true ) );
     GridData data = new GridData( GridData.FILL_BOTH );
-    data.heightHint = 150;
-    data.widthHint = 250;
     data.grabExcessHorizontalSpace = true;
+    data.grabExcessVerticalSpace = true;
+    data.horizontalIndent = 10;
+    data.verticalIndent = 10;
     m_propGroup.setLayoutData( data );
+
     // toolbar
     m_toolBar = new ToolBar( m_top, SWT.NULL | SWT.FLAT );
     ToolItem m_loadFilterItem = new ToolItem( m_toolBar, SWT.NONE );
