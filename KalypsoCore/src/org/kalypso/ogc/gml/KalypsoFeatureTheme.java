@@ -141,27 +141,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( featureFromPath instanceof FeatureList )
     {
       fl = (FeatureList) featureFromPath;
-      // guess featureType:
-      if( !fl.isEmpty() )
-      {
-        final IRelationType parentFTP = fl.getParentFeatureTypeProperty();
-        final IFeatureType targetFeatureType = parentFTP.getTargetFeatureType();
-        if( targetFeatureType != null )
-          ft = targetFeatureType;
-        else
-        {
-          // if nothing else help, use the first feature to determine the type
-          // this may cause problems later, if the list is not homogenous
-          final Object object = fl.get( 0 );
-          if( object instanceof Feature )
-            ft = ((Feature) object).getFeatureType();
-          else
-            ft = null;
-        }
-      }
-      else
-        ft = null;
-
+      ft = fl.getParentFeatureTypeProperty().getTargetFeatureType();
     }
     else if( featureFromPath instanceof Feature )
     {
@@ -178,7 +158,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_featureList = fl;
     m_featureType = ft;
     // TODO change concept to support multiple featuretypes ...
-
   }
 
   /**
