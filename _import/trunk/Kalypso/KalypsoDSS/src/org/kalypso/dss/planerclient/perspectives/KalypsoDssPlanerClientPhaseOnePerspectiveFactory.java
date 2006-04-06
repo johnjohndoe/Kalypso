@@ -27,18 +27,42 @@ public class KalypsoDssPlanerClientPhaseOnePerspectiveFactory implements IPerspe
     // Editors are placed for free.
     final String editorArea = layout.getEditorArea();
 
+    /**
+     * <em>                
+     *  =================================
+     *  #      editor         |navigator# 
+     *  #                     |         #
+     *  #                     |         #
+     *  #                     |         #
+     *  #                     |-------- #
+     *  #                     |gazetter #
+     *  #                     |         #
+     *  #---------------------|         #
+     *  # control  | outline  |         #
+     *  # (browser)|          |         #
+     *  #          |          |         #
+     *  =================================
+     *  </em>
+     */
     // Top Right.
-    IFolderLayout topRight = layout.createFolder( "topRight", IPageLayout.RIGHT, (float) 0.75, editorArea );//$NON-NLS-1$
-    topRight.addView( IPageLayout.ID_RES_NAV );
-
+    String idNavigator="navigator";
+    String idGazetteer="gazetteer";
+    String idOutline="outline";
+    String idControl="control";
+    IFolderLayout rightSide = layout.createFolder( idNavigator, IPageLayout.RIGHT, (float) 0.75, editorArea );//$NON-NLS-1$
+    rightSide.addView( IPageLayout.ID_RES_NAV );
+    
     // Bottom Right.
-    IFolderLayout bottomRight = layout.createFolder( "bottomRight", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topRight" );//$NON-NLS-1$
-    bottomRight.addView( IPageLayout.ID_OUTLINE );
+    IFolderLayout bottomRight = layout.createFolder( idGazetteer, IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+        idNavigator );//$NON-NLS-1$
+    bottomRight.addView( "org.kalypso.ui.gazetter.view.GazetterView" );
+
+    IFolderLayout bottomCenter = layout.createFolder( idOutline, IPageLayout.BOTTOM, (float) 0.70, editorArea );
+    bottomCenter.addView( IPageLayout.ID_OUTLINE );
 
     // Bottom right.
-    IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
-        editorArea );
+    IFolderLayout bottomLeft = layout.createFolder( idControl, IPageLayout.LEFT, (float) 0.66,//$NON-NLS-1$
+        idOutline );
 
     // bottomRight.addPlaceholder(KalypsoWebBrowserView.WEB_BROWSER_VIEW_ID);
     bottomLeft.addView( KalypsoWebBrowserView.WEB_BROWSER_VIEW_ID );
