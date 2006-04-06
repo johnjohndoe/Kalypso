@@ -68,7 +68,7 @@ public class GrafikAchsen
     {
       final TypeAxis ta = (TypeAxis)ita.next();
 
-      if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
+      if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_VERTICAL ) )
       {
         GrafikAchse gAchse = null;
 
@@ -76,12 +76,12 @@ public class GrafikAchsen
 
         if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
-          if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+          if( ta.getPosition().toString().equalsIgnoreCase( DiagramAxis.POSITION_LEFT ) )
           {
             gAchse = new GrafikAchse( 1, name );
             m_leftLabel = name;
           }
-          else if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+          else if( ta.getPosition().toString().equalsIgnoreCase ( DiagramAxis.POSITION_RIGHT ) )
           {
             gAchse = new GrafikAchse( 2, name );
             m_rightLabel = name;
@@ -92,7 +92,7 @@ public class GrafikAchsen
 
         m_name2grafikAxis.put( ta.getId(), gAchse );
       }
-      else if( ta.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
+      else if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();
     }
   }
