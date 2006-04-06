@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
 import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -68,22 +69,24 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
 
   final protected String EMPTY_VALUE = "-NULL-";
 
+  static final int STANDARD_WIDTH_FIELD = 150;
+
+  static final int STANDARD_WIDTH_HEIGHT = 200;
+
   public AbstractFilterComposite( final Composite parent, int style, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
     super( parent, style );
     m_errorMessageReciever = errorMessageReciever;
     m_ft = ft;
     m_validator = new TextFieldToPropertyTypeValidator();
-    // prepare layout
     setLayout( new GridLayout( 2, false ) );
-    GridData data = new GridData();
+    GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.horizontalIndent = 10;
     data.verticalIndent = 10;
     data.widthHint = STANDARD_WIDTH_FIELD;
+    data.grabExcessHorizontalSpace = true;
     setLayoutData( data );
   }
-
-  static final int STANDARD_WIDTH_FIELD = 150;
 
   protected ModellEventProviderAdapter m_ModelEventProvider = new ModellEventProviderAdapter();
 
