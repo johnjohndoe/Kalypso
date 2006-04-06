@@ -267,7 +267,7 @@ public class GrafikLauncher
     {
       final File grafikExe = getGrafikProgramPath();
 
-      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
+      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() );
 
       final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Grafik kann nicht gestartet werden" );
 
@@ -430,44 +430,55 @@ public class GrafikLauncher
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
-        displayedAxes.add( axis );
-
-        // convert to dat-file, ready to be read by the grafik tool
-        zml2dat( values, datFile, dateAxis, axis, monitor );
-
-        final RememberForSync rfs = new RememberForSync( zmlFile, datFile, axis );
-        sync.add( rfs );
-
-        cc++;
-
-        try
+        if( axis != null )
         {
-          // fetch Y axis range for placing possible scenario text item
-          final IAxisRange range = values.getRangeFor( axis );
+          displayedAxes.add( axis );
 
-          final DoubleComparator dc = new DoubleComparator( 0.001 );
-          if( dc.compare( range.getLower(), yLower ) < 0 )
-            yLower = (Number) range.getLower();
-          if( dc.compare( range.getUpper(), yUpper ) > 0 )
-            yUpper = (Number) range.getUpper();
+          // convert to dat-file, ready to be read by the grafik tool
+          zml2dat( values, datFile, dateAxis, axis, monitor );
+
+          final RememberForSync rfs = new RememberForSync( zmlFile, datFile, axis );
+          sync.add( rfs );
+
+          cc++;
+
+          try
+          {
+            // fetch Y axis range for placing possible scenario text item
+            final IAxisRange range = values.getRangeFor( axis );
+
+            if( range != null )
+            {
+              final DoubleComparator dc = new DoubleComparator( 0.001 );
+              if( dc.compare( range.getLower(), yLower ) < 0 )
+                yLower = (Number) range.getLower();
+              if( dc.compare( range.getUpper(), yUpper ) > 0 )
+                yUpper = (Number) range.getUpper();
+            }
+          }
+          catch( final SensorException e )
+          {
+            e.printStackTrace();
+          }
         }
-        catch( final SensorException e )
-        {
-          e.printStackTrace();
-        }
+        else
+          Logger.getLogger( GrafikLauncher.class.getName() ).warning( "Keine Achse für " + tc.getName() + " gefunden." );
       }
 
       try
       {
         // fetch X axis range for placing possible scenario text item
         final IAxisRange range = values.getRangeFor( dateAxis );
-        final Date d1 = (Date) range.getLower();
-        final Date d2 = (Date) range.getUpper();
+        if( range != null )
+        {
+          final Date d1 = (Date) range.getLower();
+          final Date d2 = (Date) range.getUpper();
 
-        if( xLower == null || d1.before( xLower ) )
-          xLower = d1;
-        if( xUpper == null || d2.after( xUpper ) )
-          xUpper = d2;
+          if( xLower == null || d1.before( xLower ) )
+            xLower = d1;
+          if( xUpper == null || d2.after( xUpper ) )
+            xUpper = d2;
+        }
       }
       catch( final SensorException e )
       {

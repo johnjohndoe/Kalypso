@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -62,11 +63,19 @@ public class GrafikAchsen
 
   private String m_bottomLabel = "";
 
+  private int m_achseNr = 0;
+
+  private boolean m_rightAchseCreated = false;
+
+  private boolean m_leftAchseCreated = false;
+
+  private boolean m_invertedAchseCreated = false;
+
   public GrafikAchsen( final List taxList )
   {
     for( final Iterator ita = taxList.iterator(); ita.hasNext(); )
     {
-      final TypeAxis ta = (TypeAxis)ita.next();
+      final TypeAxis ta = (TypeAxis) ita.next();
 
       if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_VERTICAL ) )
       {
@@ -77,37 +86,73 @@ public class GrafikAchsen
         if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
           if( ta.getPosition().toString().equalsIgnoreCase( DiagramAxis.POSITION_LEFT ) )
-          {
-            gAchse = new GrafikAchse( 1, name );
-            m_leftLabel = name;
-          }
-          else if( ta.getPosition().toString().equalsIgnoreCase ( DiagramAxis.POSITION_RIGHT ) )
-          {
-            gAchse = new GrafikAchse( 2, name );
-            m_rightLabel = name;
-          }
+            gAchse = createLeftAchse( name );
+          else if( ta.getPosition().toString().equalsIgnoreCase( DiagramAxis.POSITION_RIGHT ) )
+            gAchse = createRightAchse( name );
         }
         else
-          gAchse = new GrafikAchse( 3, name );
+          gAchse = createInvertedAchse( name );
 
-        m_name2grafikAxis.put( ta.getId(), gAchse );
+        if( gAchse != null )
+          m_name2grafikAxis.put( ta.getId(), gAchse );
+        else
+          Logger.getLogger( getClass().getName() ).warning( "Grafik-Achse konnte nicht erzeugt werden: " + name + " Es sind schon " + m_achseNr + " Achse(n) vorhanden." );
       }
       else if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();
     }
   }
 
-  public String getBottomLabel()
+  private GrafikAchse createInvertedAchse( final String name )
+  {
+    if( !m_invertedAchseCreated )
+    {
+      m_invertedAchseCreated = true;
+      return new GrafikAchse( ++m_achseNr, name );
+    }
+    else
+      return null;
+  }
+
+  private GrafikAchse createRightAchse( final String name )
+  {
+    if( !m_rightAchseCreated )
+    {
+      m_rightAchseCreated = true;
+      m_rightLabel = name;
+      return new GrafikAchse( ++m_achseNr, name );
+    }
+    else if( !m_leftAchseCreated )
+      return createLeftAchse( name );
+    else
+      return null;
+  }
+
+  private GrafikAchse createLeftAchse( final String name )
+  {
+    if( !m_leftAchseCreated )
+    {
+      m_leftAchseCreated = true;
+      m_leftLabel = name;
+      return new GrafikAchse( ++m_achseNr, name );
+    }
+    else if( !m_rightAchseCreated )
+      return createRightAchse( name );
+    else
+      return null;
+  }
+
+  public String getBottomLabel( )
   {
     return m_bottomLabel;
   }
 
-  public String getRightLabel()
+  public String getRightLabel( )
   {
     return m_rightLabel;
   }
 
-  public String getLeftLabel()
+  public String getLeftLabel( )
   {
     return m_leftLabel;
   }
@@ -141,7 +186,7 @@ public class GrafikAchsen
     /**
      * @return Returns the id.
      */
-    public int getId()
+    public int getId( )
     {
       return m_id;
     }
@@ -149,7 +194,7 @@ public class GrafikAchsen
     /**
      * @return Returns the name.
      */
-    public String getName()
+    public String getName( )
     {
       return m_name;
     }
