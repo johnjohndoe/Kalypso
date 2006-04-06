@@ -81,7 +81,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_view != null )
       m_view.dispose();
@@ -95,7 +95,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   /**
    * @return template
    */
-  public ObsView getView()
+  public ObsView getView( )
   {
     return m_view;
   }
@@ -143,7 +143,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
 
       if( storage instanceof TemplateStorage )
       {
-        final TemplateStorage ts = (TemplateStorage)storage;
+        final TemplateStorage ts = (TemplateStorage) storage;
 
         loadObservation( ts.getContext(), ts.getHref() );
       }
@@ -154,14 +154,14 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           final Obsdiagview baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, null );
+          status = DiagViewUtils.applyXMLTemplate( (DiagView) getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else if( view instanceof TableView )
         {
           final Obstableview baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, null );
+          status = TableViewUtils.applyXMLTemplate( (TableView) getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else
           throw new IllegalArgumentException( "Kann Vorlage nicht öffnen, Typ wird nicht unterstützt." );
@@ -179,13 +179,22 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
     }
 
     if( status != null && !status.isOK() )
-      ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", status );
+    {
+      final IStatus finalStatus = status;
+      
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", finalStatus );
+        }
+      } );
+    }
   }
 
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME,
-          new ObsView.ItemData( true, null, null ) );
+      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null ) );
   }
 }
