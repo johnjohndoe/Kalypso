@@ -80,7 +80,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   private IScenario[] m_scenarios;
 
   private final String m_message;
-  private final static String m_title = "Kalypso - Login";
+  private final String m_title;
   private Image m_image;
 
   private ListViewer m_sceViewer;
@@ -92,8 +92,17 @@ public class KalypsoLoginDialog extends TitleAreaDialog
       final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario,
       final IScenario[] scenarios )
   {
+    this( shell, null, msg, isUserNameChangeable, defaultUserName, isPasswordEnabled, isAskForScenario,
+        scenarios );
+  }
+  
+  public KalypsoLoginDialog( final Shell shell, final String title, final String msg, final boolean isUserNameChangeable,
+      final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario,
+      final IScenario[] scenarios )
+  {
     super( shell );
 
+    m_title = title == null ? "Kalypso - Login" : title;
     m_message = msg;
 
     m_userNameChangeable = isUserNameChangeable;
@@ -104,7 +113,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
     setShellStyle( SWT.SYSTEM_MODAL | SWT.ON_TOP );
   }
-
+  
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
