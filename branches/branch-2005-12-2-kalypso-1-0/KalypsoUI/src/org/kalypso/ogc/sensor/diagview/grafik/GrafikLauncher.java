@@ -169,7 +169,8 @@ public class GrafikLauncher
     {
       final URL context = ResourceUtilities.createURL( zmlFile );
 
-      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, ObsViewUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
+      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false,
+          ObsViewUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
 
       if( !status.isOK() )
         return status;
@@ -273,7 +274,7 @@ public class GrafikLauncher
       final File grafikExe = getGrafikProgramPath();
 
       final Process proc = Runtime.getRuntime().exec(
-          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
+          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() );
 
       final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
           "Grafik kann nicht gestartet werden" );
@@ -380,7 +381,7 @@ public class GrafikLauncher
 
     final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
         "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
-    
+
     int cc = 1;
     final TypeObservation[] tobs = (TypeObservation[])odt.getObservation().toArray( new TypeObservation[0] );
     for( int i = 0; i < tobs.length; i++ )

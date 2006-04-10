@@ -81,7 +81,7 @@ public class GrafikAchsen
             gAchse = new GrafikAchse( 1, name );
             m_leftLabel = name;
           }
-          else if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+          else if( ta.getPosition().equals( DiagramAxis.POSITION_RIGHT ) )
           {
             gAchse = new GrafikAchse( 2, name );
             m_rightLabel = name;
