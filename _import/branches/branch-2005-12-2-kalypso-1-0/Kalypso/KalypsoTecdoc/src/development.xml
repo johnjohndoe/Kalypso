@@ -9,14 +9,6 @@
   <para>Die Programmoberfläche und die Serverkomponente von KALYPSO wurden
   vollständig in der Programmiersprache Java entwickelt.</para>
 
-  <!--PROFILING ANFANG sachsen-anhalt-->
-
-  <para vendor="sachsen-anhalt">TODO: ein Wort über das TubigModell aus
-  Entwickler Sicht</para>
-
-  <para vendor="sachsen-anahlt">TODO: ein Wort über das SaaleModell aus
-  Entwickler Sicht<!--PROFILING ENDE--></para>
-
   <section id="ide">
     <title>Umgebung und Werkzeuge</title>
 
