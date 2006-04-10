@@ -41,7 +41,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
 
   public Object cloneObject( final Object objectToClone ) throws CloneNotSupportedException;
   
-  /** Creeates an instance of my type from a string */
+  /** Creates an instance of my type from a string */
   public Object parseType( final String text ) throws ParseException;
 
 }
