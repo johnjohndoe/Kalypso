@@ -1,29 +1,47 @@
 package org.kalypso.ui.gazetter.view;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypso.view.gazetter.ObjectFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * <em>
@@ -64,6 +82,10 @@ import org.kalypso.view.gazetter.ObjectFactory;
 public class GazetterView extends ViewPart
 {
 
+  private final HashMap<GazetterLocationType, GazetteerControl> m_GazetteerLocation2Control = new HashMap<GazetterLocationType, GazetteerControl>();
+
+  private final HashMap<GazetteerControl, GazetterLocationType> m_GazetteerControl2Location = new HashMap<GazetteerControl, GazetterLocationType>();
+
   public GazetterView( )
   {
     // do nothing
@@ -74,25 +96,53 @@ public class GazetterView extends ViewPart
   {
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
     // prepare top composite
-    final Composite base = toolkit.createComposite( parent, SWT.FLAT | SWT.TOP );
-    base.setLayout( new GridLayout( 1, false ) );
+    final Composite baseComposite = toolkit.createComposite( parent, SWT.FLAT | SWT.TOP );
+    baseComposite.setLayout( new GridLayout( 1, false ) );
 
     // load gazetteer configuration
     final org.kalypso.view.gazetter.GazetterView gView = getGazetterView();
     final List<GazetterLocationType> gazetterLocation = gView.getGazetterLocation();
-    createComposite( base, gazetterLocation, toolkit );
-
-    toolkit.paintBordersFor( base );
+    final URL baseURL;
+    try
+    {
+      baseURL = new URL( gView.getBaseURL() );
+      createComposite( baseComposite, gazetterLocation, toolkit, baseURL );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    toolkit.paintBordersFor( baseComposite );
+    initLists( gazetterLocation );
   }
 
-  private void createComposite( Composite parent, List<GazetterLocationType> gLocations, FormToolkit toolkit )
+  private void initLists( List<GazetterLocationType> gazetterLocation )
+  {
+    final Iterator<GazetterLocationType> iterator = gazetterLocation.iterator();
+    while( iterator.hasNext() )
+    {
+      final GazetterLocationType gz = iterator.next();
+      final GazetteerControl control = m_GazetteerLocation2Control.get( gz );
+      try
+      {
+        control.init( null, null, null );
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private void createComposite( Composite parent, List<GazetterLocationType> gLocations, FormToolkit toolkit, URL baseURL )
   {
     final Iterator<GazetterLocationType> iterator = gLocations.iterator();
     while( iterator.hasNext() )
     {
       final GazetterLocationType gLocation = iterator.next();
-      final GazetteerControl gControl = new GazetteerControl( gLocation, this );
-      register( gControl );
+      final GazetteerControl gControl = new GazetteerControl( gLocation, baseURL, this );
+      register( gLocation, gControl );
 
       final Composite base = toolkit.createComposite( parent, SWT.FLAT | SWT.TOP );
       int columns = 1;
@@ -102,22 +152,6 @@ public class GazetterView extends ViewPart
       final List<GazetterLocationType> childs = gLocation.getGazetterLocation();
       if( !childs.isEmpty() )
         columns++;
-      gControl.setEnableRunnable( new Runnable()
-      {
-        public void run( )
-        {
-          if( !base.isDisposed() )
-            base.setEnabled( true );
-        }
-      } );
-      gControl.setDisableRunnable( new Runnable()
-      {
-        public void run( )
-        {
-          if( !base.isDisposed() )
-            base.setEnabled( false );
-        }
-      } );
       base.setLayout( new GridLayout( columns, false ) );
       // base.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_VERTICAL ) );
       base.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
@@ -131,13 +165,27 @@ public class GazetterView extends ViewPart
         label.setLayoutData( new GridData( GridData.BEGINNING ) );
         final Text text = toolkit.createText( searchBase, "...", SWT.BORDER );
         text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        text.addKeyListener( new KeyAdapter()
+        {
+
+          @Override
+          public void keyReleased( KeyEvent e )
+          {
+            if( e.keyCode == SWT.CR )
+            {
+              final String queryText = text.getText();
+              gControl.init( null, null, queryText );
+            }
+          }
+
+        } );
         text.addFocusListener( new FocusAdapter()
         {
           @Override
           public void focusLost( FocusEvent e )
           {
             final String queryText = text.getText();
-            gControl.query( queryText );
+            gControl.init( null, null, queryText );
           }
         } );
       }
@@ -158,20 +206,58 @@ public class GazetterView extends ViewPart
       final ComboViewer combo = new ComboViewer( comboBase, SWT.FLAT | SWT.READ_ONLY );
       combo.setData( FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER );
       combo.setContentProvider( gControl );
-      combo.setInput( new String[] { "...auswaehlen", "test" } );
       combo.getControl().setLayoutData( new GridData( GridData.CENTER | GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
       combo.addSelectionChangedListener( gControl );
+
+      combo.setLabelProvider( new GazetteerLabelProvider( gLocation.getLabelProperty() ) );
       final Button button = toolkit.createButton( comboBase, "GOTO", SWT.NONE );
       button.setLayoutData( new GridData( GridData.CENTER ) );
-      button.addSelectionListener( gControl );
-      gControl.setRefreshComboRunnable( new Runnable()
+      button.addSelectionListener( new SelectionAdapter()
       {
-        public void run( )
+
+        @Override
+        public void widgetSelected( SelectionEvent e )
         {
-          combo.refresh();
+          final IViewSite viewSite = getViewSite();
+          final IEditorPart activeEditor = viewSite.getPage().getActiveEditor();
+          if( activeEditor instanceof IMapPanelProvider && activeEditor instanceof ICommandTarget )
+          {
+            final IStructuredSelection selection = (IStructuredSelection) combo.getSelection();
+            Object firstElement = selection.getFirstElement();
+            if( firstElement instanceof Feature )
+            {
+              final Feature feature = (Feature) firstElement;
+              final QName geographicExtentProp = gLocation.getGeographicExtentProperty();
+              final Object property = feature.getProperty( geographicExtentProp );
+              if( property instanceof GM_Point )
+              {
+                // TODO
+                System.out.println( "TODO" );
+              }
+              else if( property instanceof GM_Object)
+              {
+                final GM_Object geom = (GM_Object) property;
+                // GM_Point centroid = geom.getCentroid();
+                final MapPanel mapPanel = ((IMapPanelProvider) activeEditor).getMapPanel();
+                final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, geom.getEnvelope() );
+                ((ICommandTarget) activeEditor).postCommand( command, null );
+              }
+              else
+                MessageDialog.openInformation( getSite().getShell(), "Gazetteer-Info", "Gazetter lierferte keinen Raumbezug" );
+
+            }
+            // mapEditor.postCommand(command, runnable);
+
+          }
+          else
+            MessageDialog.openInformation( getSite().getShell(), "Gazetteer-Info", "Die Aktion kann keiner Karte zugeordnet werden, bitte aktivieren Sie vorher eine Kartenansicht" );
+          // get active map:
         }
+
       } );
 
+      gControl.setViewer( combo, button );
+      combo.setInput( new String[] { "...auswaehlen", "test" } );
       // childs
       if( !childs.isEmpty() )
       {
@@ -180,15 +266,15 @@ public class GazetterView extends ViewPart
         // GridData.GRAB_VERTICAL ) );
         childBase.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
         childBase.setLayout( new GridLayout( 1, false ) );
-        createComposite( childBase, childs, toolkit );
+        createComposite( childBase, childs, toolkit, baseURL );
       }
     }
   }
 
-  private void register( GazetteerControl control )
+  private void register( GazetterLocationType location, GazetteerControl control )
   {
-    // TODO Auto-generated method stub
-
+    m_GazetteerLocation2Control.put( location, control );
+    m_GazetteerControl2Location.put( control, location );
   }
 
   private org.kalypso.view.gazetter.GazetterView getGazetterView( )
@@ -214,6 +300,11 @@ public class GazetterView extends ViewPart
   {
     // TODO Auto-generated method stub
 
+  }
+
+  public GazetteerControl getGControlForGLocation( GazetterLocationType location )
+  {
+    return m_GazetteerLocation2Control.get( location );
   }
 
 }

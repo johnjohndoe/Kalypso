@@ -122,7 +122,10 @@ public class WFSUtilities
     if( oFormat != null )
       sb.append( " outputFormat=\"" + oFormat + "\"" );
     // sb.append( " outputFormat=\"GML2\"" );
-    sb.append( " version=\"" + wfsCaps.getVersion() + "\" " );
+
+    String version = wfsCaps.getVersion();
+    if( version != null && version.length() > 0 )
+      sb.append( " version=\"" + version + "\" " );
     sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " );
     sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" );
     sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" );
@@ -131,7 +134,9 @@ public class WFSUtilities
     sb.append( " >\n" );
     String namespaceURI = ftQName.getNamespaceURI();
     String localPart = ftQName.getLocalPart();
-    if( namespaceURI != null && namespaceURI.length() > 0 )
+    if( version == null ) // deegree1 gazetteer
+      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" );
+    else if( namespaceURI != null && namespaceURI.length() > 0 )
     {
       sb.append( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" );
     }
@@ -190,11 +195,11 @@ public class WFSUtilities
 
         // Hack for testing
         // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
-//        final File tmpFile = new File( "C:/TMP/gml.gml" );
-//        final OutputStream outStream = new FileOutputStream( tmpFile );
-//        StreamUtilities.streamCopy( inputStream, outStream );
-//        IOUtils.closeQuietly( inputStream );
-//        IOUtils.closeQuietly( outStream );
+        // final File tmpFile = new File( "C:/TMP/gml.gml" );
+        // final OutputStream outStream = new FileOutputStream( tmpFile );
+        // StreamUtilities.streamCopy( inputStream, outStream );
+        // IOUtils.closeQuietly( inputStream );
+        // IOUtils.closeQuietly( outStream );
 
         final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
@@ -227,7 +232,7 @@ public class WFSUtilities
   {
     final URL[] baseURL = wfsCaps.getBaseURLDescribeFeatureTypeRequest( IWFSCapabilities.METHODE_HTTP_GET );
     final String baseURLAsString = baseURL[0].toString();
-    if( wfsCaps.getVersion().startsWith( "1.0" ) )
+    if( wfsCaps.getVersion() == null || wfsCaps.getVersion().startsWith( "1.0" ) )
     {
       // TODO support namespaces
       if( baseURL.length > 0 )
