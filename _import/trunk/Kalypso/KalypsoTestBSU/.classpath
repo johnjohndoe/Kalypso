@@ -10,5 +10,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoGMLSchema"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoUI"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoModelNA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JavaApiContributions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
