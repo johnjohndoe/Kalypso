@@ -1,46 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gz:gazetterView xmlns:gz="gazetter.view.kalypso.org"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:huis="http://www.bsu.hamburg.de/huis"
 	xsi:schemaLocation="gazetter.view.kalypso.org ../../../../../../../../KalypsoCore/etc/schemas/gazetter/gazetterView.xsd">
+	<gz:baseURL>http://bsu-uio:8082/deegreewfs-g/gazetteer</gz:baseURL>
 	<gz:GazetterLocation>
 		<gz:label>Bezirk</gz:label>
 		<gz:description>Auswahl Hamburger Bezirk</gz:description>
-		<gz:featureType>Gemarkungen</gz:featureType>
-		<gz:labelProperty>identifier</gz:labelProperty>
-		<gz:spacialIdentifierProperty>
-			identifier
-		</gz:spacialIdentifierProperty>
-		<gz:geographicExtentProperty>
-			geographicExtent
-		</gz:geographicExtentProperty>
+		<gz:featureType>huis:Bezirke</gz:featureType>
+		<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+		<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+		<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 		<gz:doTextSearch>false</gz:doTextSearch>
-		<gz:GazetterLocation>
-			<gz:label>Ortsteil</gz:label>
-			<gz:description>Auswahl des Stadtteils</gz:description>
-			<gz:featureType>QName</gz:featureType>
-			<gz:labelProperty>QName</gz:labelProperty>
-			<gz:spacialIdentifierProperty>
-				QName
-			</gz:spacialIdentifierProperty>
-			<gz:geographicExtentProperty>
-				QName
-			</gz:geographicExtentProperty>
-			<gz:doTextSearch>false</gz:doTextSearch>
-			<gz:useParentIdentifierForQuery>
-				true
-			</gz:useParentIdentifierForQuery>
-		</gz:GazetterLocation>
 		<gz:GazetterLocation>
 			<gz:label>Stadtteil</gz:label>
 			<gz:description>Auswahl des Stadtteils</gz:description>
-			<gz:featureType>QName</gz:featureType>
-			<gz:labelProperty>QName</gz:labelProperty>
-			<gz:spacialIdentifierProperty>
-				QName
-			</gz:spacialIdentifierProperty>
-			<gz:geographicExtentProperty>
-				QName
-			</gz:geographicExtentProperty>
+			<gz:featureType>huis:Stadtteile</gz:featureType>
+			<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+			<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+			<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 			<gz:doTextSearch>false</gz:doTextSearch>
 			<gz:useParentIdentifierForQuery>
 				true
@@ -48,30 +26,22 @@
 		</gz:GazetterLocation>
 		<gz:GazetterLocation>
 			<gz:label>Gemarkung</gz:label>
-			<gz:description>Auswahl des Stadtteils</gz:description>
-			<gz:featureType>QName</gz:featureType>
-			<gz:labelProperty>QName</gz:labelProperty>
-			<gz:spacialIdentifierProperty>
-				QName
-			</gz:spacialIdentifierProperty>
-			<gz:geographicExtentProperty>
-				QName
-			</gz:geographicExtentProperty>
+			<gz:description>Auswahl des Gemarkung</gz:description>
+			<gz:featureType>huis:Gemarkungen</gz:featureType>
+			<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+			<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+			<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 			<gz:doTextSearch>false</gz:doTextSearch>
 			<gz:useParentIdentifierForQuery>
 				true
 			</gz:useParentIdentifierForQuery>
 			<gz:GazetterLocation>
-				<gz:label>Flurstueck</gz:label>
-				<gz:description>Auswahl des Flurstuecks</gz:description>
-				<gz:featureType>QName</gz:featureType>
-				<gz:labelProperty>QName</gz:labelProperty>
-				<gz:spacialIdentifierProperty>
-					QName
-				</gz:spacialIdentifierProperty>
-				<gz:geographicExtentProperty>
-					QName
-				</gz:geographicExtentProperty>
+				<gz:label>Flurstuecke</gz:label>
+				<gz:description>Auswahl der Flurstuecke</gz:description>
+				<gz:featureType>huis:Flurstuecke</gz:featureType>
+				<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+				<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+				<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 				<gz:doTextSearch>false</gz:doTextSearch>
 				<gz:useParentIdentifierForQuery>
 					true
@@ -79,33 +49,45 @@
 			</gz:GazetterLocation>
 		</gz:GazetterLocation>
 	</gz:GazetterLocation>
+
 	<gz:GazetterLocation>
-		<gz:label>Strasse</gz:label>
-		<gz:description>Auswahl Strasse</gz:description>
-		<gz:featureType>Gemarkungen</gz:featureType>
-		<gz:labelProperty>identifier</gz:labelProperty>
-		<gz:spacialIdentifierProperty>
-			identifier
-		</gz:spacialIdentifierProperty>
-		<gz:geographicExtentProperty>
-			geographicExtent
-		</gz:geographicExtentProperty>
+		<gz:label>Strassen</gz:label>
+		<gz:description>Auswahl Hamburger Strassen</gz:description>
+		<gz:featureType>huis:Strassen</gz:featureType>
+		<gz:labelProperty>huis:identifier</gz:labelProperty>
+		<gz:spacialIdentifierProperty>huis:geographicIdentifier</gz:spacialIdentifierProperty>
+		<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 		<gz:doTextSearch>true</gz:doTextSearch>
 		<gz:GazetterLocation>
-			<gz:label>Hausnummer</gz:label>
-			<gz:description>gz:description</gz:description>
-			<gz:featureType>QName</gz:featureType>
-			<gz:labelProperty>QName</gz:labelProperty>
-			<gz:spacialIdentifierProperty>
-				QName
-			</gz:spacialIdentifierProperty>
-			<gz:geographicExtentProperty>
-				QName
-			</gz:geographicExtentProperty>
+			<gz:label>Hausnummern</gz:label>
+			<gz:description>Auswahl Hamburger Hausnummern</gz:description>
+			<gz:featureType>huis:Hausnummern</gz:featureType>
+			<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+			<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+			<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
 			<gz:doTextSearch>false</gz:doTextSearch>
-			<gz:useParentIdentifierForQuery>
-				true
-			</gz:useParentIdentifierForQuery>
 		</gz:GazetterLocation>
+	</gz:GazetterLocation>
+	<gz:GazetterLocation>
+		<gz:label>DGK5</gz:label>
+		<gz:description>Hamburger DGK5</gz:description>
+		<gz:featureType>huis:DGK5</gz:featureType>
+		<gz:labelProperty>huis:identifier</gz:labelProperty>
+		<gz:spacialIdentifierProperty>huis:geographicIdentifier</gz:spacialIdentifierProperty>
+		<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
+		<gz:doTextSearch>false</gz:doTextSearch>
+	</gz:GazetterLocation>
+
+	<gz:GazetterLocation>
+		<gz:label>Flurstuecke</gz:label>
+		<gz:description>Auswahl der Flurstuecke</gz:description>
+		<gz:featureType>huis:Flurstuecke</gz:featureType>
+		<gz:labelProperty>huis:geographicIdentifier</gz:labelProperty>
+		<gz:spacialIdentifierProperty>huis:identifier</gz:spacialIdentifierProperty>
+		<gz:geographicExtentProperty>huis:geographicExtent</gz:geographicExtentProperty>
+		<gz:doTextSearch>true</gz:doTextSearch>
+		<gz:useParentIdentifierForQuery>
+			true
+		</gz:useParentIdentifierForQuery>
 	</gz:GazetterLocation>
 </gz:gazetterView>

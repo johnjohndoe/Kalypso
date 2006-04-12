@@ -12,6 +12,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
+				<element name="baseURL" type="string"/>
 				<element ref="gz:GazetterLocation" minOccurs="0"
 					maxOccurs="unbounded" />
 			</sequence>
