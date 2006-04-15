@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,14 +69,18 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.RadioFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
@@ -83,6 +88,7 @@ import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
+import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -94,9 +100,11 @@ import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 
 /**
  * @author belger
@@ -322,6 +330,45 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
       addFeatureControl( bfc );
+
+      return control;
+    }
+    else if( controlType instanceof Combo )
+    {
+      final Combo comboType = (Combo) controlType;
+
+      final List<Entry> entryList = comboType.getEntry();
+      final String[] labels = new String[entryList.size()];
+      final Object[] values = new Object[entryList.size()];
+
+      final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) typeRegistry.getTypeHandlerFor( ftp );
+
+      for( int i = 0; i < labels.length; i++ )
+      {
+        final Entry entry = entryList.get( i );
+        labels[i] = entry.getLabel();
+
+        final String any = entry.getValue();
+        try
+        {
+          final Object object = typeHandler.parseType( any );
+          values[i] = object;
+        }
+        catch( final ParseException e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen eines Wertes auf der Feature-View Vorlage: " + any );
+          KalypsoGisPlugin.getDefault().getLog().log( status );
+        }
+      }
+
+      final int comboStyle = SWTUtilities.createStyleFromString( comboType.getStyle() );
+
+      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, labels, values );
+
+      final Control control = cfc.createControl( parent, comboStyle );
+
+      addFeatureControl( cfc );
 
       return control;
     }
