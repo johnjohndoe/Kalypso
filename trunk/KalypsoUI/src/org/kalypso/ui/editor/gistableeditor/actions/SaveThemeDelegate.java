@@ -109,7 +109,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
   }
 
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( final IAction action )
   {
     boolean enabled = false;
     final GisTableEditor editor = (GisTableEditor)getEditor();

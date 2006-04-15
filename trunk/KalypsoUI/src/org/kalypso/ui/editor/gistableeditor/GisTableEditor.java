@@ -117,7 +117,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
-
     public void featureChanged( final FeatureChange change )
     {
     }
