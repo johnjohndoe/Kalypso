@@ -92,6 +92,8 @@ public class SWTUtilities
     putSWT( "SWT.RIGHT", SWT.RIGHT );
     putSWT( "SWT.TRAIL", SWT.TRAIL );
     putSWT( "SWT.VERTICAL", SWT.VERTICAL );
+    putSWT( "SWT.DROP_DOWN", SWT.DROP_DOWN );
+    putSWT( "SWT.READ_ONLY", SWT.READ_ONLY );
     // TODO really a lot to complete SWT keys
   }
 
