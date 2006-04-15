@@ -4,7 +4,7 @@
    id="org.kalypso.eind.tuhh.stationaer"
    name="Profil Kalypso 1d"
    version="1.0.0"
-   provider-name="bce.com"
+   provider-name="kalypso.org"
    class="org.kalypso.eind.tuhh.stationaer.Kalypso1DTUHHPlugin">
    <runtime>
       <library name="kalypso1d.jar">
