@@ -42,11 +42,20 @@ package org.kalypso.ui.editor.gistableeditor;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
+import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInfo;
 import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
+import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
+import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
 
 /**
  * @author belger
@@ -54,8 +63,60 @@ import org.kalypso.metadoc.ui.ExportActionContributor;
 public class GisTableEditorActionBarContributor extends EditorActionBarContributor
 {
   private static final String M_SPALTEN = "spaltenSubMenu";
-  
+
   private ExportAction[] m_exportActions = null;
+
+  private RetargetActionManager m_retargetManager = new RetargetActionManager();
+
+  public GisTableEditorActionBarContributor( )
+  {
+    final RetargetInfo copyInfo = new RetargetInfo( ActionFactory.COPY.getId(), null, SWT.NONE );
+    copyInfo.setActionHandler( new CopyEditorPartAction() );
+    m_retargetManager.addRetargetInfo( copyInfo );
+
+    final RetargetInfo pasteInfo = new RetargetInfo( ActionFactory.PASTE.getId(), null, SWT.NONE );
+    pasteInfo.setActionHandler( new PasteEditorPartAction() );
+    m_retargetManager.addRetargetInfo( pasteInfo );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
+   */
+  @Override
+  public void init( final IActionBars bars )
+  {
+    bars.getGlobalActionHandler( M_SPALTEN );
+
+    final IWorkbenchPage page = getPage();
+
+    m_retargetManager.registerGlobalActionHandlers( bars );
+
+    bars.updateActionBars();
+
+    m_retargetManager.addPartListeners( page );
+
+    final IWorkbenchPart activePart = page.getActivePart();
+    if( activePart != null )
+      m_retargetManager.partActivated( activePart );
+
+    super.init( bars );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    final IWorkbenchPage page = getPage();
+    final IActionBars bars = getActionBars();
+    if( page != null )
+      m_retargetManager.disposeActions( bars, page );
+
+    bars.updateActionBars();
+
+    super.dispose();
+  }
 
   /**
    * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
@@ -65,10 +126,11 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
   {
     super.setActiveEditor( targetEditor );
 
+    m_retargetManager.setActiveEditor( targetEditor );
+
     if( m_exportActions == null )
-      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle",
-          "edit", IExportTargetModes.MODE_EXPERT );
-    
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle", "edit", IExportTargetModes.MODE_EXPERT );
+
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );
 
@@ -84,14 +146,14 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
         if( oldItem != null )
           oldItem.dispose();
 
-        //        MenuManager manager = new MenuManager("spalten1");
-        //        GisTableEditor gisTableEditor = ( (GisTableEditor)targetEditor );
+        // MenuManager manager = new MenuManager("spalten1");
+        // GisTableEditor gisTableEditor = ( (GisTableEditor)targetEditor );
         //
-        //        final MenuManager menuMgr = new MenuManager( "Spalten", M_SPALTEN );
-        //        gisTableEditor.createSpaltenMenu( menuMgr );
-        //        spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das
+        // final MenuManager menuMgr = new MenuManager( "Spalten", M_SPALTEN );
+        // gisTableEditor.createSpaltenMenu( menuMgr );
+        // spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das
         // Menu überhaupt eingebaut wird */} );
-        //        tableMenu.appendToGroup( "spalten", spaltenMenu );
+        // tableMenu.appendToGroup( "spalten", spaltenMenu );
       }
     }
   }
