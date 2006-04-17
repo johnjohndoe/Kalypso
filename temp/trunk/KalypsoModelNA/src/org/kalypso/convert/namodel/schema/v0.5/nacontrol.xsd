@@ -334,7 +334,7 @@
 							<documentation xml:lang="de">
 								<label>Speicherzeitreihen</label>
 								<tooltip>Ausgabe sämtlicher Speicherwerte</tooltip>
-								<description>Ausgabe der Ergebnisse zur Speicherberechnung</description>
+								<description>Ausgabe der Ergebnisse zur Speicherberechnung (Speicherinhalt, Wasserstand im Speicher)</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>storage time series</label>
@@ -427,7 +427,7 @@
 					<element name="CatchmentsBianf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-        						<label>Bodenfeuchte</label>
+								<label>Bodenfeuchte</label>
 								<tooltip>Korrekturfaktor fuer die Anfangsbodenfeuchte</tooltip>
 								<description>Korrekturfaktor fuer die Anfangsbodenfeuchte</description>
 							</documentation>
@@ -469,8 +469,8 @@
 					<element name="CatchmentsFaktorAigw" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-                        		<label>Grundwasserstand</label>
-    							<tooltip>Korrekturfaktor Anfangsgrundwasserstand</tooltip>
+								<label>Grundwasserstand</label>
+								<tooltip>Korrekturfaktor Anfangsgrundwasserstand</tooltip>
 								<description>Korrekturfaktor Anfangsgrundwasserstand</description>
 							</documentation>
 							<documentation xml:lang="en">
@@ -497,7 +497,7 @@
 					<element name="KMChannelsFaktorRkf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-                                <label>Faktor k</label>
+								<label>Faktor k</label>
 								<tooltip>Korrekturfaktor Speicherretention (Kalinin-Miljukov)</tooltip>
 								<description>Korrekturfaktor Speicherretention (Kalinin-Miljukov)</description>
 							</documentation>
@@ -511,7 +511,7 @@
 					<element name="KMChannelsFaktorRnf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-                                <label>Faktor n</label>
+								<label>Faktor n</label>
 								<tooltip>Korrekturfaktor Speicheranzahl (Kalinin-Miljukov)</tooltip>
 								<description>Korrekturfaktor Speicheranzahl (Kalinin-Miljukov)</description>
 							</documentation>
@@ -567,7 +567,7 @@
 							</documentation>
 						</annotation>
 					</element>
-                    <element name="accuracyPrediction" type="double" minOccurs="0">
+					<element name="accuracyPrediction" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Vorhersagegenauigkeit</label>
@@ -581,7 +581,7 @@
 							</documentation>
 						</annotation>
 					</element>
-                    <element name="useOffsetStartPrediction" type="boolean" minOccurs="0">
+					<element name="useOffsetStartPrediction" type="boolean" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Differenzausgleich Start Vorhersagespur</label>
@@ -595,7 +595,7 @@
 							</documentation>
 						</annotation>
 					</element>
-                    <element name="useOffsetEndPrediction" type="boolean" minOccurs="0">
+					<element name="useOffsetEndPrediction" type="boolean" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Differenzausgleich Ende Vorhersagespur</label>
@@ -609,7 +609,6 @@
 							</documentation>
 						</annotation>
 					</element>
-                    
 					<element name="qAblageSpurMittlerer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
@@ -652,7 +651,6 @@
 							</documentation>
 						</annotation>
 					</element>
-
 					<element name="useResults" type="boolean" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
@@ -666,7 +664,7 @@
 								<description>use existing node results to start the new simulation. the start node of the calculation is the last node with existing results</description>
 							</documentation>
 						</annotation>
-					</element>                  
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
