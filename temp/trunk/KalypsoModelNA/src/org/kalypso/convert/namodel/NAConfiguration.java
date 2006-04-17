@@ -169,10 +169,7 @@ public class NAConfiguration
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
-    // TODO WernerCatchment und JessicaCatchment vergleichen mit
     // kalypsoNa-sourcecode
-    // m_catchmentFormatURL =
-    // getClass().getResource("formats/JessicaCatchment.txt" );
     m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
     m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
