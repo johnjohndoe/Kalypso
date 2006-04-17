@@ -51,11 +51,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author hübsch
@@ -144,13 +146,12 @@ public class BodenartManager extends AbstractManager
     Date calcDate = new Date();
     asciiBuffer.getBodartBuffer().append( "Bodenparameter NA-Modell" + "\n" );
     asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );
-    asciiBuffer.getBodartBuffer().append( "                [mm/dm] [mm/dm] [mm/dm] [mm/d] [-]\n" );
+    asciiBuffer.getBodartBuffer().append( "                [mm/dm] [mm/dm] [mm/dm]  [mm/d] [-]\n" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
       final Feature bodenartFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Bodentyp verwendet werden.
-      // if( asciiBuffer.writeFeature( bodenartFE ) )
       writeFeature( asciiBuffer, bodenartFE );
     }
 
@@ -158,7 +159,11 @@ public class BodenartManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
-    asciiBuffer.getBodartBuffer().append( toAscci( feature, 6 ) + "\n" );
+    // (name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
+    asciiBuffer.getBodartBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "*" ) + " kap "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typwp" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typfk" ), "*" ) + " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbfm" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typkf" ), "*" ) + " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbf0" ), "*" ) + "\n" );
+    // asciiBuffer.getBodartBuffer().append( toAscci( feature, 6 ) + "\n" );
   }
-
 }
