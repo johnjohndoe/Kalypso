@@ -213,28 +213,31 @@ public class ChannelManager extends AbstractManager
     {
       asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" );
 
-      // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)
+      // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2-dummy)
       // RHB 5-7
       asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
       // Ueberlaufknoten optional
       final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( "iknotNodeMember" );
       Feature nodeFE = workspace.resolveLink( feature, rt2 );
-      if( nodeFE == null )
+      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "downStreamNodeMember" );
+      final Feature dnodeFE = workspace.resolveLink( feature, rt );
+      if( nodeFE == null || nodeFE == dnodeFE )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
         asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i8" ) );
-      asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
-
+      asciiBuffer.getRhbBuffer().append( "  0.00" + "\n" );
       // (itext,a80)
       // RHB 8
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" );
-
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
-      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "downStreamNodeMember" );
-      final Feature dnodeFE = workspace.resolveLink( feature, rt );
       asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
-      asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
+      Double sv = ((Double) feature.getProperty( "sv" )) / 1000000;
+      Double vmax = ((Double) feature.getProperty( "vmax" )) / 1000000;
+      Double vmin = ((Double) feature.getProperty( "vmin" )) / 1000000;
+      asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + FortranFormatHelper.printf( sv, "f9.6" ) + " " + FortranFormatHelper.printf( vmax, "f9.6" ) + " "
+          + FortranFormatHelper.printf( vmin, "f9.6" ) );
+      // asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       Object wvqProp = feature.getProperty( "hvvsqd" );
       if( wvqProp instanceof IObservation )
@@ -276,7 +279,7 @@ public class ChannelManager extends AbstractManager
     for( int row = 0; row < count; row++ )
     {
       Double w = (Double) values.getElement( row, waterTableAxis );
-      Double v = (Double) values.getElement( row, volumeAxis );
+      Double v = ((Double) values.getElement( row, volumeAxis )) / 1000000;
       Double q = (Double) values.getElement( row, dischargeAxis );
       rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) );
       rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) );

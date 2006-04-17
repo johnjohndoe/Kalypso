@@ -69,7 +69,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -267,8 +266,6 @@ public class CatchmentManager extends AbstractManager
     int asciiID = idManager.getAsciiID( feature );
     asciiBuffer.getCatchmentBuffer().append( "           " );
     asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( asciiID, "i5" ) );
-    // asciiBuffer.getCatchmentBuffer().append(
-    // FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "inum" ), "i5" ) );
     asciiBuffer.getCatchmentBuffer().append( "      7\n" );
     // 1-2
     for( int i = 1; i <= 2; i++ )
@@ -319,7 +316,8 @@ public class CatchmentManager extends AbstractManager
     // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei übernommen wird und somit in
     // der Gebietsdatei uninteressant ist.
     buf.append( "1.000" + FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) );
-    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
+    buf.append( "     " + "  1.0" ); // JH: dummy for bimax, because it is not used in fortran!
+    // buf.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
 
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "izkn_vers" );
@@ -332,24 +330,26 @@ public class CatchmentManager extends AbstractManager
     // buf.append( toAscci( nodeFeVers, 18 ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" );
-    asciiBuffer.getCatchmentBuffer().append( buf.toString() );
     Double banf = (Double) feature.getProperty( "faktorBianf" );
+    asciiBuffer.getCatchmentBuffer().append( buf.toString() );
 
-    // 9
-
+    // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
+    // JH: + dummy for "evalay", because the parameter is not used in fortran code
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
       Feature fe = (Feature) iter.next();
       if( banf != null )
         fe.setProperty( "banf", banf );
-      asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + " 1.0" + "\n" );
     }
-    // 10-11
-    for( int i = 10; i <= 11; i++ )
-    {
-      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
-    }
+
+    // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
+    // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
+    asciiBuffer.getCatchmentBuffer().append( "1.00 0.0 " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "aigw" ), "f6.2" ) + " 0.00 0.00" + "\n" );
+
+    // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
+    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 11 ) + "\n" );
 
     // 12-14
     List gwList = (List) feature.getProperty( "grundwasserabflussMember" );
@@ -379,8 +379,8 @@ public class CatchmentManager extends AbstractManager
       double delta = 1 - sumGwwi;
       line13.append( "0 " );
       line14.append( delta + " " );
-      System.out.println( "Achtung!!! Grundwasserabfluss aus Teilgebiet (Name: " + feature.getProperty( "name" ) + ", AsciiID: " + asciiID + ") beträgt nur " + delta * 100 + "%! /n" );
-      System.out.println( "Es müssen 100% abgeschlagen werden! /n Restanteil des Grundwasserabflusses (" + delta * 100 + "%) wird in virtuelles Teilgebiet außerhalb des Einzugsgebietes abgeschlagen." );
+      System.out.println( "Achtung!!! Grundwasserabfluss aus Teilgebiet (Name: " + feature.getProperty( "name" ) + ", ID: " + asciiID + ") beträgt nur " + sumGwwi * 100 + "%!" );
+      System.out.println( "Es müssen 100% abgeschlagen werden! \n Restanteil des Grundwasserabflusses (" + delta * 100 + "%) wird nicht weiter bilanziert. Ist dies gewünscht?\n" );
     }
 
     if( gwList.size() > 0 )
