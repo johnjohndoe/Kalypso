@@ -79,7 +79,6 @@ public class RHBManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
-    // TODO: Abfrage ob *.rhb vorhanden ist.
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
@@ -92,7 +91,6 @@ public class RHBManager extends AbstractManager
     String line;
 
     // JessicaRHB.txt
-
     for( int i = 0; i <= 2; i++ )
     {
       line = reader.readLine();
@@ -101,19 +99,14 @@ public class RHBManager extends AbstractManager
       System.out.println( i + ": " + line );
       createProperties( propCollector, line, i );
     }
-    // FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
     int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
     final Feature rhbStrangFE = getFeature( asciiID, m_conf.getStChannelFT() );
-    // final FeatureProperty iknotProp = (FeatureProperty)propCollector.get( "iknot" );
     int iknotNr = Integer.parseInt( propCollector.get( "iknot" ) );
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );
-      // final FeatureProperty iknotNodeMember = FeatureFactory.createFeatureProperty( "iknotNodeMember", knotFE.getId()
-      // );
       rhbStrangFE.setProperty( "iknotNodeMember", knotFE.getId() );
     }
-    // FeatureProperty jevProp = (FeatureProperty)propCollector.get( "jev" );
     int jev = Integer.parseInt( propCollector.get( "jev" ) );
     // TODO: old Code - remove diagramm and add handling with new zmlinline typehandler
     final DiagramProperty diagram = new DiagramProperty();
@@ -127,7 +120,6 @@ public class RHBManager extends AbstractManager
       Double qd = new Double( (String) map.get( "qd" ) );
       diagram.addValue( hv, vs, qd );
     }
-    // FeatureProperty diagramProp = FeatureFactory.createFeatureProperty( "hvvsqd", diagram );
     rhbStrangFE.setProperty( "hvvsqd", diagram );
     line = reader.readLine();
     System.out.println( "4: " + line );
@@ -135,7 +127,6 @@ public class RHBManager extends AbstractManager
 
     final Feature feature = getFeature( asciiID, m_storageChannelFT );
 
-//    Collection collection = propCollector.values();
     setParsedProperties( feature, propCollector,null );
     return feature;
   }

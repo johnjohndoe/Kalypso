@@ -169,7 +169,7 @@ public class HydrotopManager extends AbstractManager
         double fehler = (tGArea - gesFlaeche);
         int fehlerinProzent = (int) Math.abs( fehler / gesFlaeche * 100d );
         // if( (int)tGArea != (int)gesFlaeche )
-        if( fehlerinProzent > 1 ) // TODO @jessica: wieviel Prozent sollen tolleriert werden ?
+        if( fehlerinProzent > 1 )
         {
           System.out.println( "Fehler in den Hydrotopen!" );
           System.out.println( "Fläche Teilgebiet (ID:" + catchmentFE.getId() + ") (" + (long) tGArea + ") entspricht nicht der Summe der Hydrotopflächen (" + (long) gesFlaeche + ") Fehler : "
@@ -193,8 +193,6 @@ public class HydrotopManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope ) throws Exception
   {
-    // TODO: warum nicht so???
-    // double HGesFlaeche = GeometryUtilities.calcArea( (GM_Object)feature.getProperty( "Ort" ) );
     double HGesFlaeche = ((Double) feature.getProperty( "area" )).doubleValue();
     Double SealingRate = (Double) m_landuseMap.get( feature.getProperty( "landuse" ) );
     double HVersGrad = (SealingRate).doubleValue();

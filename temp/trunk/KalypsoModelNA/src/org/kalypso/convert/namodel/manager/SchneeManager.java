@@ -141,7 +141,6 @@ public class SchneeManager extends AbstractManager
 
       final Feature snowFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-      // if( asciiBuffer.writeFeature( snowFE ) )
       writeFeature( asciiBuffer, snowFE );
     }
 
