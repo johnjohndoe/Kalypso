@@ -61,6 +61,9 @@ public class GMLSchemaSerializeTest extends TestCase
     try
     {
       final File tmpArchive1 = File.createTempFile( "kalypsoSchema", "jar" );
+      
+      // TODO: better load schema from resources because not everybody can
+      // acces the internet (proxy!)
       final URL schemaURL = new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpArchive1 );
 

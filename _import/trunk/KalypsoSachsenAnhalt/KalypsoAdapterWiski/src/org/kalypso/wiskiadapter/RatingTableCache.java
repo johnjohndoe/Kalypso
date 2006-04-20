@@ -3,10 +3,11 @@ package org.kalypso.wiskiadapter;
 import java.io.File;
 import java.util.Date;
 
+import org.kalypso.commons.cache.FileCache;
+import org.kalypso.commons.cache.StringValidityKey;
+import org.kalypso.commons.cache.StringValidityKeyFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
-import org.kalypso.commons.cache.StringValidityFileCache;
-import org.kalypso.commons.cache.StringValidityKey;
 
 /**
  * RatingTableCache
@@ -17,7 +18,7 @@ public class RatingTableCache
 {
   private static RatingTableCache m_instance = null;
 
-  private final StringValidityFileCache m_cache;
+  private final FileCache<StringValidityKey, WQTableSet> m_cache;
 
   private RatingTableCache()
   {
@@ -25,7 +26,8 @@ public class RatingTableCache
     if( !dir.exists() )
       dir.mkdir();
 
-    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(), dir );
+    m_cache = new FileCache<StringValidityKey, WQTableSet>( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(),
+        WQTableFactory.getInstance(), dir );
   }
 
   public static RatingTableCache getInstance()
@@ -43,7 +45,7 @@ public class RatingTableCache
    */
   public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return (WQTableSet)m_cache.get( new StringValidityKey( tsInfoName, validity ) );
+    return m_cache.getObject( new StringValidityKey( tsInfoName, validity ) );
   }
 
   /**
