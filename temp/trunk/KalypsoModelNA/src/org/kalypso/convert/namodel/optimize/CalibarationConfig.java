@@ -74,6 +74,7 @@ public class CalibarationConfig
     String[][] xpathModel = new String[][]
     {
         new String[]
+//        { queryBaseCatchment + "/:bodenkorrekturmember/:bodenschichtkorrektur/:banf" },
         { queryBaseCatchment + "/:faktorBianf" },
         new String[]
         { queryBaseCatchment + "/:faktorRetobRetint" },
