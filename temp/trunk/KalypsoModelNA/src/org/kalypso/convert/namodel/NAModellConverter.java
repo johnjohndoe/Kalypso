@@ -71,7 +71,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -124,7 +123,7 @@ public class NAModellConverter
       // general
       final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-      registry.registerTypeHandler( new DiagramTypeHandler() );
+//      registry.registerTypeHandler( new DiagramTypeHandler() );
       completeascii2gml();
     }
     catch( Exception e )

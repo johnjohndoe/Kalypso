@@ -45,15 +45,12 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -109,25 +106,25 @@ public class RHBManager extends AbstractManager
     }
     int jev = Integer.parseInt( propCollector.get( "jev" ) );
     // TODO: old Code - remove diagramm and add handling with new zmlinline typehandler
-    final DiagramProperty diagram = new DiagramProperty();
-    for( int i = 0; i < jev; i++ )
-    {
-      line = reader.readLine();
-      System.out.println( i + ": " + line );
-      final HashMap map = FortranFormatHelper.scanf( getAsciiFormats()[3], line );
-      Double hv = new Double( (String) map.get( "hv" ) );
-      Double vs = new Double( (String) map.get( "vs" ) );
-      Double qd = new Double( (String) map.get( "qd" ) );
-      diagram.addValue( hv, vs, qd );
-    }
-    rhbStrangFE.setProperty( "hvvsqd", diagram );
+    // final DiagramProperty diagram = new DiagramProperty();
+    // for( int i = 0; i < jev; i++ )
+    // {
+    // line = reader.readLine();
+    // System.out.println( i + ": " + line );
+    // final HashMap map = FortranFormatHelper.scanf( getAsciiFormats()[3], line );
+    // Double hv = new Double( (String) map.get( "hv" ) );
+    // Double vs = new Double( (String) map.get( "vs" ) );
+    // Double qd = new Double( (String) map.get( "qd" ) );
+    // diagram.addValue( hv, vs, qd );
+    // }
+    // rhbStrangFE.setProperty( "hvvsqd", diagram );
     line = reader.readLine();
     System.out.println( "4: " + line );
     createProperties( propCollector, line, 4 );
 
     final Feature feature = getFeature( asciiID, m_storageChannelFT );
 
-    setParsedProperties( feature, propCollector,null );
+    setParsedProperties( feature, propCollector, null );
     return feature;
   }
 

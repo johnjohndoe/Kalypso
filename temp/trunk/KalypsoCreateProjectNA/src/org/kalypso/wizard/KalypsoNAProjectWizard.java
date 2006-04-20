@@ -141,15 +141,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final ITypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName()[0], lineStringTH, 0, 1 );
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName(), lineStringTH, 0, 1 );
 
     final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName()[0], stringTH, 1, 1 );
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName(), stringTH, 1, 1 );
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName()[0], stringTH, 1, 1 );
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName(), stringTH, 1, 1 );
 
     final ITypeHandler integerTH = registry.getTypeHandlerForClassName( Integer.class );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName()[0], integerTH, 0, 1 );
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName(), integerTH, 0, 1 );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( new QName( "wizard.kalypso.na", "Gewässer" ), pts );
@@ -619,7 +619,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
           for( int j = 0; j < channelNo; j++ )
           {
-            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureType( );
+            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureType();
             final Feature newFeature = m_modelWS.createFeature( targetFeature, kmParameterFT );
             try
             {

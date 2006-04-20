@@ -63,6 +63,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -88,7 +89,6 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 
 /**
