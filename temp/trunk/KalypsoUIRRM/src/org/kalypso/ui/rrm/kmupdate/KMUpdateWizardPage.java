@@ -90,7 +90,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
@@ -277,7 +276,7 @@ public class KMUpdateWizardPage extends WizardPage
     setKMGroup( kmGroup );
   }
 
-  private KalininMiljukovType createKMForFeature( final Feature feature )
+  protected KalininMiljukovType createKMForFeature( final Feature feature )
   {
     final KalininMiljukovType km =
 
