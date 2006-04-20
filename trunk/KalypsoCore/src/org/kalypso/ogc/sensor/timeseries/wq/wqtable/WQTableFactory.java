@@ -29,7 +29,7 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class WQTableFactory implements ISerializer
+public class WQTableFactory implements ISerializer<WQTableSet>
 {
   private final static ObjectFactory OF = new ObjectFactory();
 
@@ -53,8 +53,7 @@ public class WQTableFactory implements ISerializer
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
-      final Object unmarshal = unm.unmarshal( ins );
-      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unmarshal;
+      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unm.unmarshal( ins );
       final RatingTableList xmlTableList = element.getValue();
 
       return xmlTableList;
@@ -164,7 +163,7 @@ public class WQTableFactory implements ISerializer
    * 
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
    */
-  public Object read( final InputStream ins ) throws InvocationTargetException
+  public WQTableSet read( final InputStream ins ) throws InvocationTargetException
   {
     try
     {
@@ -180,11 +179,11 @@ public class WQTableFactory implements ISerializer
   /**
    * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
    */
-  public void write( final Object object, final OutputStream os ) throws InvocationTargetException
+  public void write( final WQTableSet object, final OutputStream os ) throws InvocationTargetException
   {
     try
     {
-      final String xml = createXMLString( (WQTableSet) object );
+      final String xml = createXMLString( object );
       os.write( xml.getBytes() );
     }
     catch( final Exception e ) // WQException, IOException

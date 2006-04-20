@@ -513,6 +513,9 @@ public class ResourceBundle extends java.util.ResourceBundle
    */
   public final synchronized String getString( final int keyID, final Object arg0 ) throws MissingResourceException
   {
+    // TODO FIXME
+    // We often get here a MissingResource Exception which even seems to sometimes lead to the shutdown of the VM
+    // this has something todo with the TODO-FIXME above
     final Object object = getObject( String.valueOf( keyID ) );
     final Object[] arguments = toArray( arg0 );
     if( format == null )

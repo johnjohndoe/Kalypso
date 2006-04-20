@@ -1,32 +1,3 @@
-package org.kalypso.ui.wizard.wfs;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.loader.WfsLoader;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.wfs.IWFSLayer;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoServiceConstants;
-import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
-import org.kalypsodeegree.filterencoding.ElseFilter;
-import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
-import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -67,6 +38,34 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package org.kalypso.ui.wizard.wfs;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.loader.WfsLoader;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.wfs.IWFSLayer;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoServiceConstants;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypsodeegree.filterencoding.ElseFilter;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 
 /**
  * @author Kuepferle
@@ -167,9 +166,8 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ, m_outlineviewer.getMapModell() );
+    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     addPage( m_importWFSPage );
-
   }
 
   @Override

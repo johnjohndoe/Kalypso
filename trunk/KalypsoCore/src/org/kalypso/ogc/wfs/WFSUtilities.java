@@ -30,8 +30,6 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -46,7 +44,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -66,6 +63,7 @@ public class WFSUtilities
   public static IWFSCapabilities getCapabilites( final URL baseURL ) throws Exception
   {
     final MultiException multiExcepts = new MultiException();
+    // TODO: we get problems here, if we already have a query part in the url
     final URL urlGetCap = new URL( baseURL + "?" + "SERVICE=WFS&REQUEST=GetCapabilities" );
     try
     {

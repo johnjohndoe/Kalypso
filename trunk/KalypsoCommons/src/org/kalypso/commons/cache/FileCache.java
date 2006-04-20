@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -20,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.serializer.ISerializer;
+import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
  * FileCache is an object cache using files and a custom serializing mechnismus. The convention is to always use
@@ -28,13 +30,13 @@ import org.kalypso.commons.serializer.ISerializer;
  * 
  * @author schlienger
  */
-public class FileCache<K>
+public class FileCache<K, V>
 {
   private final static String INDEX_FILE = ".filecache";
 
   private final Comparator< ? super K> m_kc;
 
-  private final ISerializer m_ser;
+  private final ISerializer<V> m_ser;
 
   private final File m_directory;
 
@@ -55,7 +57,7 @@ public class FileCache<K>
    * @param directory
    *          location of the index file and of all other files used for caching
    */
-  public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer ser, final File directory )
+  public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer<V> ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
       throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
@@ -150,7 +152,7 @@ public class FileCache<K>
     }
   }
 
-  public void addObject( final K key, final Object object )
+  public void addObject( final K key, final V value )
   {
     final File file;
     OutputStream os = null;
@@ -164,7 +166,7 @@ public class FileCache<K>
 
       os = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      m_ser.write( object, os );
+      m_ser.write( value, os );
 
       m_index.put( key, file );
 
@@ -180,7 +182,40 @@ public class FileCache<K>
     }
   }
 
-  public Object getObject( final Object key )
+  /**
+   * Directly adds a file to this file cache. The must must be readable by the serializer. The file is copied into the
+   * cache.
+   */
+  public void addFile( final K key, final File fileToAdd ) throws IOException
+  {
+    OutputStream os = null;
+    InputStream is = null;
+
+    try
+    {
+      final File file;
+      if( m_index.containsKey( key ) )
+        file = m_index.get( key );
+      else
+        file = File.createTempFile( "cache", ".item", m_directory );
+
+      os = new BufferedOutputStream( new FileOutputStream( file ) );
+      is = new BufferedInputStream( new FileInputStream( fileToAdd ) );
+
+      StreamUtilities.streamCopy( is, os );
+
+      m_index.put( key, file );
+
+      writeIndexFile();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+  public V getObject( final K key )
   {
     final File file = m_index.get( key );
     if( file == null )
@@ -196,6 +231,10 @@ public class FileCache<K>
     catch( final Exception e )
     {
       e.printStackTrace();
+      
+      // if something goes wrong
+      // delete this entry from the cache
+      remove( key );
 
       return null;
     }
@@ -210,7 +249,7 @@ public class FileCache<K>
     return m_index.size();
   }
 
-  public void remove( final Object key )
+  public void remove( final K key )
   {
     if( m_index.containsKey( key ) )
     {
@@ -247,7 +286,7 @@ public class FileCache<K>
    * @return null if not found
    */
   @SuppressWarnings("unchecked")
-  public Object getRealKey( final K key )
+  public K getRealKey( final K key )
   {
     if( m_index.containsKey( key ) )
     {

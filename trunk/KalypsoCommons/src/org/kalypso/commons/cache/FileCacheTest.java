@@ -26,8 +26,8 @@ public class FileCacheTest extends TestCase
   {
     final StringKeyFactory fact = new StringKeyFactory();
     final Comparator<String> kc = new StringComparator();
-    final ISerializer ser = new StringSerializer();
-    final FileCache<String> cache = new FileCache<String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    final ISerializer<String> ser = new StringSerializer();
+    final FileCache<String, String> cache = new FileCache<String, String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
 
     cache.addObject( "A", "A" );
     cache.addObject( "B", "B" );
@@ -70,9 +70,9 @@ public class FileCacheTest extends TestCase
     }
   }
 
-  private static class StringSerializer implements ISerializer
+  private static class StringSerializer implements ISerializer<String>
   {
-    public Object read( InputStream ins ) throws InvocationTargetException
+    public String read( final InputStream ins ) throws InvocationTargetException
     {
       BufferedReader r = null;
       try
@@ -92,7 +92,7 @@ public class FileCacheTest extends TestCase
       }
     }
 
-    public void write( Object object, OutputStream os ) throws InvocationTargetException
+    public void write( final String object, final OutputStream os ) throws InvocationTargetException
     {
       BufferedWriter w = null;
       try
