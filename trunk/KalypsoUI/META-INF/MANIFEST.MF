@@ -174,6 +174,5 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.services.core.client,
  org.eclipse.jface.text,
  org.junit,
- org.kalypso.services.observation,
- org.kalypso.services.observation.client
+ org.kalypso.services.observation
 Eclipse-AutoStart: true
