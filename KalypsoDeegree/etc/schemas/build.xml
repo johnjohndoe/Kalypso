@@ -6,7 +6,7 @@
 	<property name="project" value="${workspace}/KalypsoDeegree" />
 
     <patternset id="binding.schemata">
-      <include name="etc/schemas/sld/**/*.xsd"/>
+      <include name="etc/schemas/**/*.xsd"/>
       <include name="deegree/org/kalypsodeegree_impl/gml/schema/schemata/obslink/obslink.xsd"/>
     </patternset>
   

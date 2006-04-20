@@ -40,7 +40,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -48,19 +48,20 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 /**
  * @author kuepfer
  */
-public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
+public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   // public static final class CLASS_ZmlInlineIdealKcWtLaiType=new
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
-  public final QName[] m_typeName;
+  public final QName m_typeName;
 
   protected final String[] m_axisTypes;
 
@@ -69,15 +70,15 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public ZmlInlineTypeHandler( final String name, final String[] axisTypes, Class clazz )
   {
     m_axisTypes = axisTypes;
-    m_typeName = new QName[] { new QName( NAMESPACE, name ) };
+    m_typeName = new QName( NAMESPACE, name );
     m_className = clazz;
-    // IObservation.class;.getName() + "." + classNameSuffix;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
+  @Override
   public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
     final StringWriter sw = new StringWriter();
@@ -86,8 +87,14 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
       final Observation xml = ZmlFactory.createXML( (IObservation) object, null, null );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
-      XMLUtilities.setTextNode( node.getOwnerDocument(), node, sw.toString() );
       sw.close();
+      final String toString = sw.toString();
+      Document ownerDocument = node.getOwnerDocument();
+      // Text text = ownerDocument.createTextNode( toString );
+      // node.appendChild( text );
+      final CDATASection section = ownerDocument.createCDATASection( toString );
+      node.appendChild( section );
+      // XMLUtilities.setTextNode( node.getOwnerDocument(), node, toString );
     }
     catch( final Exception e )
     {
@@ -103,6 +110,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Override
   public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
@@ -145,7 +153,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return m_typeName;
   }
@@ -210,10 +218,10 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   {
     final public static String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
   }
-  
+
   public interface TN extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_RAINFALL};
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_RAINFALL };
   }
 
   /**
@@ -223,4 +231,5 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   {
     return false;
   }
+
 }

@@ -38,55 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.typehandler;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.kalypso.gml;
 
 /**
- * @author huebsch
+ * @author doemming
  */
-public class DiagramProperty
+public class GMLException extends Exception
 {
-  private final List<Double> xValues = new ArrayList<Double>();
-
-  private final List<Double> yValues = new ArrayList<Double>();
-
-  private final List<Double> zValues = new ArrayList<Double>();
-
-  public void addValue( Double x, Double y, Double z )
+  public GMLException( )
   {
-    xValues.add( x );
-    yValues.add( y );
-    zValues.add( z );
+    super();
   }
 
-  public int size( )
+  public GMLException( String message )
   {
-    return xValues.size();
+    super( message );
   }
 
-  public Double getXValue( int index )
+  public GMLException( String message, Throwable cause )
   {
-    return xValues.get( index );
+    super( message, cause );
   }
 
-  public Double getYValue( int index )
+  public GMLException( Throwable cause )
   {
-    return yValues.get( index );
-  }
-
-  public Double getZValue( int index )
-  {
-    return zValues.get( index );
-  }
-
-  @Override
-  public Object clone( )
-  {
-    final DiagramProperty clone = new DiagramProperty();
-    for( int i = 0; i < size(); i++ )
-      clone.addValue( new Double( getXValue( i ).doubleValue() ), new Double( getYValue( i ).doubleValue() ), new Double( getZValue( i ).doubleValue() ) );
-    return clone;
+    super( cause );
   }
 }

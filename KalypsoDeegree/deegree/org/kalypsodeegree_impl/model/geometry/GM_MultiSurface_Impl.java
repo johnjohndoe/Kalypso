@@ -211,7 +211,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     double[] min = (double[])bb.getMin().getAsArray().clone();
     double[] max = (double[])bb.getMax().getAsArray().clone();
 
-    for( int i = 1; i < getSize(); i++ )
+    final int size = getSize();
+	for( int i = 1; i < size; i++ )
     {
       double[] pos1 = getSurfaceAt( i ).getEnvelope().getMin().getAsArray();
       double[] pos2 = getSurfaceAt( i ).getEnvelope().getMax().getAsArray();

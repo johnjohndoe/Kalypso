@@ -92,7 +92,7 @@ import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;

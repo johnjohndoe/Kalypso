@@ -48,10 +48,10 @@ import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -273,6 +273,8 @@ public class WFSUtilities
         }
         // TODO check for chars to escape in namespace
         return new URL( result.toString() );
+//      http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=DescribeFeatureType&version=1.1.0&service=WFS&TYPENAME=ns:gns_locationinstance&NAMESPACE=xmlns(ns=http://www.deegree.org/app)  
+//     http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=GetCapabilities&version=1.1.0&service=WFS   
       }
     }
     throw new UnsupportedOperationException();

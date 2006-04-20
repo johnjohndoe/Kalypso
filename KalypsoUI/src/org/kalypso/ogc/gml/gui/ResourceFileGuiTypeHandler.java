@@ -90,7 +90,7 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return ResourceFileTypeHandler.CLASSNAME;
   }
 
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return ResourceFileTypeHandler.QNAME;
   }

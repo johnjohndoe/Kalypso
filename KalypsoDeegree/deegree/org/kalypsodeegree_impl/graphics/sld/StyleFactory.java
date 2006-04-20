@@ -1098,7 +1098,7 @@ public class StyleFactory
     Geometry geom = null;
     if( geometryPropertyName != null )
     {
-      geom = new Geometry_Impl( geometryPropertyName, null );
+      geom = new Geometry_Impl( geometryPropertyName);
     }
     return new LineSymbolizer_Impl( stroke, geom, min, max );
   }
@@ -1213,7 +1213,7 @@ public class StyleFactory
     Geometry geom = null;
     if( geometryPropertyName != null )
     {
-      geom = new Geometry_Impl( geometryPropertyName, null );
+      geom = new Geometry_Impl( geometryPropertyName );
     }
     return new PolygonSymbolizer_Impl( fill, stroke, geom, min, max );
   }
@@ -1291,7 +1291,7 @@ public class StyleFactory
     Geometry geom = null;
     if( geometryPropertyName != null )
     {
-      geom = new Geometry_Impl( geometryPropertyName, null );
+      geom = new Geometry_Impl( geometryPropertyName);
     }
     final PointSymbolizer_Impl pointSymbolizer = new PointSymbolizer_Impl( graphic, geom, min, max );
     return pointSymbolizer;
@@ -1369,7 +1369,7 @@ public class StyleFactory
     Geometry geom = null;
     if( geometryPropertyName != null )
     {
-      geom = new Geometry_Impl( geometryPropertyName, null );
+      geom = new Geometry_Impl( geometryPropertyName);
     }
     ParameterValueType label = createParameterValueType( attribute );
     return createTextSymbolizer( geom, label, font, labelPlacement, halo, fill, min, max );

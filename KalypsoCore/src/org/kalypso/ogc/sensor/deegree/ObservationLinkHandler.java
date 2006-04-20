@@ -50,13 +50,13 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -64,13 +64,13 @@ import org.w3c.dom.NodeList;
 /**
  * @author belger
  */
-public class ObservationLinkHandler implements IMarshallingTypeHandler
+public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final Class CLASS_NAME = TimeseriesLinkType.class;
 
   public static final String NAMESPACE = "obslink.zml.kalypso.org";
 
-  public static final QName[] TYPE_NAME = new QName[] { new QName( NAMESPACE, ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class ) ) };
+  public static final QName TYPE_NAME = new QName( NAMESPACE, ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class ) );
 
   private final static ObjectFactory m_factory = new ObjectFactory();
 
@@ -87,7 +87,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return TYPE_NAME;
   }
@@ -96,6 +96,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
+  @Override
   public void marshall( final Object object, final Node node, URL context ) throws TypeRegistryException
   {
     try
@@ -116,6 +117,7 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Override
   public Object unmarshall( final Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try

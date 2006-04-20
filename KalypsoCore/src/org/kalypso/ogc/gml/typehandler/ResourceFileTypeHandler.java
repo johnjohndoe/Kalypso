@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -49,24 +49,25 @@ import org.w3c.dom.Node;
  * 
  * @author Nadja Peiler (16.06.2005)
  */
-public class ResourceFileTypeHandler implements IMarshallingTypeHandler
+public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final String NSHWS = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData";
 
   public static final Class CLASSNAME = IFile.class;
 
-  public static QName[] QNAME = new QName[] { new QName( NSHWS, "resourceFile" ) };
+  public static QName QNAME = new QName( NSHWS, "resourceFile" );
 
   public Class getValueClass( )
   {
     return CLASSNAME;
   }
 
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return QNAME;
   }
 
+  @Override
   public void marshall( Object object, Node node, URL context )
   {
     IFile resourceFile = (IFile) object;
@@ -75,7 +76,8 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
     node.appendChild( ownerDoc.createTextNode( path ) );
   }
 
-  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
+  @Override
+  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) 
   {
     String value = node.getFirstChild().getNodeValue();
     IPath path = new Path( value );

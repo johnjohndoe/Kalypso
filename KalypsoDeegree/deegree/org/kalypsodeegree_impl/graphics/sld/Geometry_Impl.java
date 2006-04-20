@@ -60,11 +60,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
-import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.xml.DOMPrinter;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -80,17 +78,17 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 class Geometry_Impl implements Geometry, Marshallable
 {
-  private GMLGeometry geometryAsGML = null;
+  // private GMLGeometry geometryAsGML = null;
 
   private String propertyName = null;
 
   /**
    * constructor initializing the class with the <Geometry>
    */
-  Geometry_Impl( String propertyName, GMLGeometry geometryAsGML )
+  Geometry_Impl( String propertyName )
   {
     setPropertyName( propertyName );
-    setGeometryAsGML( geometryAsGML );
+    // setGeometryAsGML( geometryAsGML );
   }
 
   /**
@@ -98,7 +96,7 @@ class Geometry_Impl implements Geometry, Marshallable
    * 
    * @return the name of the geometry property
    */
-  public String getPropertyName()
+  public String getPropertyName( )
   {
     return propertyName;
   }
@@ -114,52 +112,50 @@ class Geometry_Impl implements Geometry, Marshallable
     this.propertyName = propertyName;
   }
 
-  /**
-   * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
-   * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
-   * directly. (This is not part of the SLD XML-schema)
-   * 
-   * @return the GMLGeometry
-   */
-  public GMLGeometry getGeometryAsGML()
-  {
-    return geometryAsGML;
-  }
+  // /**
+  // * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
+  // * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
+  // * directly. (This is not part of the SLD XML-schema)
+  // *
+  // * @return the GMLGeometry
+  // */
+  // public GMLGeometry getGeometryAsGML()
+  // {
+  // return geometryAsGML;
+  // }
 
   /**
-   * sets the <GMLGeometry>
+   * // * sets the <GMLGeometry> // * // *
    * 
-   * @param geometryAsGML
-   *          the GMLGeometry
+   * @param geometryAsGML // *
+   *          the GMLGeometry //
    */
-  public void setGeometryAsGML( GMLGeometry geometryAsGML )
-  {
-    this.geometryAsGML = geometryAsGML;
-  }
-
+  // public void setGeometryAsGML( GMLGeometry geometryAsGML )
+  // {
+  // this.geometryAsGML = geometryAsGML;
+  // }
   /**
    * exports the content of the Geometry as XML formated String
    * 
    * @return xml representation of the Geometry
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
     StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<Geometry>" );
     if( propertyName != null && !propertyName.equals( "" ) )
     {
+      sb.append( "<Geometry>" );
       sb.append( "<ogc:PropertyName>" ).append( propertyName );
       sb.append( "</ogc:PropertyName>" );
+      sb.append( "</Geometry>" );
     }
-    else
-    {
-      String s = DOMPrinter.nodeToString( ( (GMLGeometry_Impl)geometryAsGML ).getAsElement(), "UTF-8" );
-      sb.append( s );
-    }
-
-    sb.append( "</Geometry>" );
+    // else
+    // {
+    // String s = DOMPrinter.nodeToString( ((GMLGeometry_Impl) geometryAsGML).getAsElement(), "UTF-8" );
+    // sb.append( s );
+    // }
 
     Debug.debugMethodEnd();
     return sb.toString();

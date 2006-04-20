@@ -136,7 +136,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     // ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geoPt.getValueClass(), true );
     final ITypeHandler typeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName()[0], typeHandler, 0, 1 );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1 );
 
     int count = 1;
     for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
@@ -148,7 +148,7 @@ public class ShapeSerializer
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
       final ITypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName()[0], typeHandler2, 1, 1 );
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1 );
       count++;
     }
 
@@ -231,12 +231,12 @@ public class ShapeSerializer
     // final IPropertyType nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME, String.class, true );
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName()[0], stringTH, 1, 1 );
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1 );
 
     final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );
     // final IPropertyType boundingProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_BBOX,
     // GeometryUtilities.getEnvelopeClass(), true );
-    final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX, envelopeTH.getTypeName()[0], envelopeTH, 1, 1 );
+    final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX, envelopeTH.getTypeName(), envelopeTH, 1, 1 );
     // final IPropertyType memberProp = new FeatureAssociationTypeProperty_Impl( PROPERTY_FEATURE_MEMBER, null,
     // "FeatureAssociationType", false, ft, null );
     // final IRelationType memberProp = FeatureFactory.createRelationType( PROPERTY_FEATURE_MEMBER, false, ft, null );

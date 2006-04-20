@@ -42,9 +42,9 @@ public final class FeatureHelperTest extends TestCase
 
     final IPropertyType[] sourceProps = new IPropertyType[] {
     // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
-        GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH.getTypeName()[0], stringTH, 1, 1 ), //
-        GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, stringTH.getTypeName()[0], stringTH, 1, 1 ), //
-        GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, stringTH.getTypeName()[0], stringTH, 1, 1 ) };
+        GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH.getTypeName(), stringTH, 1, 1 ), //
+        GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, stringTH.getTypeName(), stringTH, 1, 1 ), //
+        GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, stringTH.getTypeName(), stringTH, 1, 1 ) };
     final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( new QName( NS, "sourceFT" ), sourceProps );
 
     // zwei features erzeugen

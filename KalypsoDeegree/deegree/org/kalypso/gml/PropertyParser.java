@@ -44,19 +44,16 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -67,118 +64,97 @@ import org.xml.sax.XMLReader;
  */
 public class PropertyParser
 {
-  private final DocumentBuilder m_builder;
 
-  public PropertyParser( )
-  {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware( true );
-    try
-    {
-      m_builder = factory.newDocumentBuilder();
-    }
-    catch( ParserConfigurationException e )
-    {
-      // TODO Auto-generated catch block
-      throw new UnsupportedOperationException();
-    }
-  }
+	public PropertyParser()
+	{
+		final DocumentBuilderFactory factory = DocumentBuilderFactory
+				.newInstance();
+		factory.setNamespaceAware(true);
+	}
 
-  final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
+	final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
 
-  public void createProperty( Feature feature, String uri, String localName, Attributes atts )
-  {
-    final IFeatureType featureType = feature.getFeatureType();
-    final QName propQName = new QName( uri, localName );
-    final IPropertyType property = featureType.getProperty( propQName );
-    m_stackPT.push( property );
-    // TODO check if it is a link
-  }
+	public void createProperty(Feature feature, String uri, String localName,
+			Attributes atts)
+	{
+		final IFeatureType featureType = feature.getFeatureType();
+		final QName propQName = new QName(uri, localName);
+		final IPropertyType property = featureType.getProperty(propQName);
+		m_stackPT.push(property);
+		// TODO check if it is a link
+	}
 
-  public IPropertyType getCurrentPropertyType( )
-  {
-    if( m_stackPT.empty() )
-      return null;
-    return m_stackPT.peek();
-  }
+	public IPropertyType getCurrentPropertyType()
+	{
+		if (m_stackPT.empty())
+			return null;
+		return m_stackPT.peek();
+	}
 
-  public void setContent( Feature feature, String content )
-  {
-    return;
-    // final IValuePropertyType vpt = (IValuePropertyType) getCurrentPropertyType();
-    // final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+	public void setContent(Feature feature, String content)
+	{
+		return;
+		// final IValuePropertyType vpt = (IValuePropertyType)
+		// getCurrentPropertyType();
+		// final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)
+		// vpt.getTypeHandler();
 
-  }
+	}
 
-  public void setContent( final Feature parentFE, final IValuePropertyType pt, final XMLReader xmlReader, final String uri, final String localName, final String qName, Attributes atts )
-  {
+	public void setContent(final Feature parentFE, final IValuePropertyType pt,
+			final XMLReader xmlReader, final String uri,
+			final String localName, final String qName, Attributes atts)
+	{
+		final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) pt
+				.getTypeHandler();
+		final UrlResolver urlResolver = null;
+		final ContentHandler orgCH = xmlReader.getContentHandler();
+		final UnMarshallResultEater resultEater = new UnMarshallResultEater()
+		{
 
-    // This builder is namespace-aware
-    final Document doc = m_builder.newDocument();
-    final ContentHandler orgCH = xmlReader.getContentHandler();
+			public void eat(Object value)
+			{
+				xmlReader.setContentHandler(orgCH);
+				// simulate end element tag
+				try
+				{
+					orgCH.endElement(uri, localName, qName);
+				} catch (SAXException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-    final Itest runnable = new Itest()
-    {
-      public void run( final Node node )
-      {
-        final IMarshallingTypeHandler th = (IMarshallingTypeHandler) pt.getTypeHandler();
-        if( node == null )
-          return;
-        try
-        {
-          String test=XMLHelper.toString(node);
-//          System.out.println( test );
-          final Object value = th.unmarshall( node, null, null );
-          if( value == null )
-          {
-//            System.out.println( "null" );
-            return;
-          }
-          if( pt.isList() )
-          {
-            final List<Object> list = (List<Object>) parentFE.getProperty( pt );
-            list.add( value );
-          }
-          else
-            parentFE.setProperty( pt, value );
-//          System.out.println( "          | set Property " + parentFE.getId() + " " + value.getClass().getName() );
-        }
-        catch( TypeRegistryException e )
-        {
-          e.printStackTrace();
-        }
-        finally
-        {
-          xmlReader.setContentHandler( orgCH );
-          // simulate end element tag
-          try
-          {
-            orgCH.endElement( uri, localName, qName );
-          }
-          catch( SAXException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-        }
-      }
+				if (value == null)
+				{
+					return;
+				}
+				if (pt.isList())
+				{
+					final List<Object> list = (List<Object>) parentFE
+							.getProperty(pt);
+					list.add(value);
+				} else
+					parentFE.setProperty(pt, value);
+			}
+		};
 
-    };
+		try
+		{
+			typeHandler.unmarshal(xmlReader, urlResolver, resultEater);
+		} catch (TypeRegistryException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-    final DOMConstructor con = new DOMConstructor( doc, runnable );
-    xmlReader.setContentHandler( con );
-    // simulate startElement
-    con.startElement( uri, localName, qName, atts );
-  }
+		// xmlReader.setContentHandler( con );
+		// // simulate startElement
+		// con.startElement( uri, localName, qName, atts );
+	}
 
-  public interface Itest
-  {
-    public void run( Node node );
-
-  }
-
-  public void popPT( )
-  {
-    m_stackPT.pop();
-  }
+	public void popPT()
+	{
+		m_stackPT.pop();
+	}
 }

@@ -82,6 +82,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -101,7 +102,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureId;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

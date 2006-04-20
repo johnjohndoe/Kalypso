@@ -37,14 +37,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
 

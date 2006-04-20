@@ -38,56 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.extension;
-
-import javax.xml.namespace.QName;
+package org.kalypsodeegree_impl.graphics.sld;
 
 /**
  * @author doemming
  */
-public abstract class AbstractXSDSimpleTypeHandler implements IMarshallingTypeHandler
+public class StyleNotDefinedException extends Exception
 {
-  private final QName[] m_typeNames;
-
-  private final Class m_valueClass;
-
-  public AbstractXSDSimpleTypeHandler( final Class valueClass, final QName[] typeNames )
+  public StyleNotDefinedException( )
   {
-    m_valueClass = valueClass;
-    m_typeNames = typeNames;
+    super();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getClassName()
-   */
-  public Class getValueClass( )
+  public StyleNotDefinedException( Throwable cause )
   {
-    return m_valueClass;
+    super( cause );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
-  public QName[] getTypeName( )
+  public StyleNotDefinedException( String message, Throwable cause )
   {
-    return m_typeNames;
+    super( message, cause );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
-   */
-  public String getShortname( )
+  public StyleNotDefinedException( String message )
   {
-    // TODO remove
-    return null;
+    super( message );
   }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return false;
-  }
-
 }

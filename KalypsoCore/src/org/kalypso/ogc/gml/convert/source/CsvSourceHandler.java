@@ -67,7 +67,7 @@ public class CsvSourceHandler implements ISourceHandler
         final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( clazz );
         // final IPropertyType ftp = FeatureFactory.createFeatureTypeProperty( new QName( "namespace", element.getName()
         // ), clazz, false, null );
-        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", element.getName() ), typeHandler.getTypeName()[0], typeHandler, 0, 1 );
+        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", element.getName() ), typeHandler.getTypeName(), typeHandler, 0, 1 );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
         reader.addInfo( ftp, info );
       }

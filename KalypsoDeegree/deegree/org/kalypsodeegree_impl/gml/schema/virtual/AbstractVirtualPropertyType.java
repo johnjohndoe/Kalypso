@@ -133,7 +133,7 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
    */
   public QName getValueQName( )
   {
-    return m_typeHandler.getTypeName()[0];
+    return m_typeHandler.getTypeName();
   }
 
   /**

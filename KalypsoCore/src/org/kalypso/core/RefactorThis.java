@@ -42,7 +42,6 @@ package org.kalypso.core;
 
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
@@ -63,6 +62,5 @@ public class RefactorThis
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
     registry.registerTypeHandler( new ResourceFileTypeHandler() );
     registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new DiagramTypeHandler() );
   }
 }

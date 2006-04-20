@@ -142,7 +142,7 @@ public class ToStringContentHandler implements ContentHandler
 
   }
 
-  public String getOGCException( )
+  public String getResult( )
   {
     return m_buffer.toString();
   }

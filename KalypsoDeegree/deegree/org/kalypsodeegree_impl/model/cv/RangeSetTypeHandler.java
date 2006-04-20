@@ -15,8 +15,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,11 +26,11 @@ import org.w3c.dom.Node;
  * 
  * @author N. Peiler
  */
-public class RangeSetTypeHandler implements IMarshallingTypeHandler
+public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
 
-  public static final QName[] TYPENAME = new QName[] { new QName( NSRGC, "RangeSetType" ) };
+  public static final QName TYPENAME = new QName( NSRGC, "RangeSetType" );
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -43,7 +43,7 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return TYPENAME;
   }
@@ -52,6 +52,7 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
+  @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
 
   {
@@ -85,6 +86,7 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Override
   public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     // TODO do not give context here, better give resolver

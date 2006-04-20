@@ -248,9 +248,9 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
    */
-  public String getSchemaLocation( )
+  public String getSchemaLocationString( )
   {
-    return m_workspace.getSchemaLocation();
+    return m_workspace.getSchemaLocationString();
   }
 
   /**

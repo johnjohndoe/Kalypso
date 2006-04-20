@@ -198,7 +198,8 @@ public final class GmlSerializer
 
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null );
+    final String schemaLocationString = contentHandler.getSchemaLocationString();
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString );
     return workspace;
 
   }
@@ -214,8 +215,8 @@ public final class GmlSerializer
     xmlReader.parse( new InputSource( inputStream ) );
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
-
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, null );
+    final String schemaLocationString = contentHandler.getSchemaLocationString();
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString );
     return workspace;
   }
 }

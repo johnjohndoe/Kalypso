@@ -63,31 +63,22 @@ package org.kalypsodeegree_impl.model.feature;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree.gml.GMLFeature;
-import org.kalypsodeegree.gml.GMLProperty;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * This factory offers methods for creating Features, FeatureCollection and all direct related classes/interfaces that
@@ -179,56 +170,7 @@ public class FeatureFactory
     return result;
   }
 
-  public static Feature createFeature( Feature parent, final GMLFeature gmlFeature, final IFeatureType featureTypes[], final URL context, final IUrlResolver urlResolver ) throws Exception
-  {
-    final QName featureName = gmlFeature.getQName();
-
-    IFeatureType featureType = null;
-    // TODO use hash!
-    for( int ft_i = 0; ft_i < featureTypes.length; ft_i++ )
-    {
-      final QName name = featureTypes[ft_i].getQName();
-      if( featureName.equals( name ) )
-      {
-        featureType = featureTypes[ft_i];
-        break;
-      }
-    }
-
-    if( featureType == null )
-      throw new Exception( "Could not find named feature " + featureName + " in schema" );
-
-    final GMLProperty[] gmlProps = gmlFeature.getProperties();
-
-    final String id = gmlFeature.getId();
-    final Feature feature = new Feature_Impl( parent, featureType, id, false );
-
-    // every gmlProp should fit to a featurePropertyType
-    for( int p = 0; p < gmlProps.length; p++ )
-    {
-      GMLProperty gmlProp = gmlProps[p];
-      final QName propName = gmlProp.getQName();
-      IPropertyType ftp = featureType.getProperty( propName );
-      int propertyPosition = featureType.getPropertyPosition( ftp );
-
-      if( ftp == null ) // ignore to support upgrading to new schema (doemming)
-        continue;
-      // 
-      // throw new Exception( "property '" + propName + "' not defined in
-      // schema" );
-      //
-      Object o = wrap( feature, ftp, gmlProp, context, urlResolver );
-
-      if( ftp.isList() )
-        ((List) feature.getProperty( propertyPosition )).add( o );
-      else
-        feature.setProperty( createFeatureProperty( ftp, o ) );
-    }
-
-    Debug.debugMethodEnd();
-    return feature;
-  }
-
+  
   /** Creates default feature, used by LegendView */
   public static Feature createDefaultFeature( Feature parent, final String id, final IFeatureType ft, final boolean createGeometry )
   {
@@ -256,83 +198,6 @@ public class FeatureFactory
       }
     }
     return (FeatureProperty[]) results.toArray( new FeatureProperty[results.size()] );
-  }
-
-  private static Object wrap( Feature parent, IPropertyType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver ) throws Exception
-  {
-    if( ftp instanceof IRelationType )
-      return wrapXLink( parent, (IRelationType) ftp, gmlProperty, context, urlResolver );
-    if( ftp instanceof IValuePropertyType )
-      return wrapNOXLink( (IValuePropertyType) ftp, gmlProperty, context, urlResolver );
-    throw new UnsupportedOperationException();
-    // this shozld not happen
-  }
-
-  private static Object wrapXLink( Feature parent, IRelationType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver )
-  {
-    final Object value = gmlProperty.getPropertyValue();
-    Object result = null;
-    if( value != null && value instanceof GMLFeature )
-    {
-      IRelationType featureAssociationTypeProperty = ftp;
-      // TODO use schemacontext as parameter
-      GMLSchema context2 = null;
-      final IFeatureType linkFT = featureAssociationTypeProperty.getTargetFeatureType();
-      final IFeatureType[] linkFTs = linkFT.getSubstituts( context2, false, true );
-
-      try
-      {
-        result = createFeature( parent, (GMLFeature) value, linkFTs, context, urlResolver );
-      }
-      catch( final Exception e )
-      {
-        // TODO: was soll denn das?
-        // dadurch bekommt keiner mit, wenn was im GML nicht stimmt!!!
-        e.printStackTrace();
-      }
-    }
-    else
-    {
-      String string = (String) gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
-      // remove leading "#"
-      if( string.startsWith( "#" ) )
-        result = string.substring( 1 );
-      else
-        result = string;
-    }
-    return result;
-  }
-
-  private static Object wrapNOXLink( IValuePropertyType ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver ) throws Exception
-  {
-
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
-    // TODO give context not null
-    if( typeHandler != null )
-      try
-      {
-        return typeHandler.unmarshall( gmlProperty.getElement(), context, urlResolver );
-
-      }
-      catch( Exception e )
-      {
-        // FIXME throw exception ?
-        return null;
-      }
-    // FeatureAssociationType
-    final Object o = gmlProperty.getPropertyValue();
-    if( o == null )
-    {
-      if( ftp.isNullable() )
-        return null;
-      throw new Exception( "Property " + ftp.getQName() + " is not nullable, but value is" );
-    }
-
-    // System.out.println("Object"+o.getClass().toString());
-    if( o instanceof String )
-      return Mapper.mapXMLValueToJava( (String) o, ftp );
-
-    throw new Exception( "could not convert property (" + o.toString() + ") to " + ftp.getValueQName() );
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )

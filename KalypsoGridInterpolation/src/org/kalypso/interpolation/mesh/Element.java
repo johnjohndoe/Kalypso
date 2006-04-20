@@ -50,8 +50,8 @@ public class Element
     final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
     final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
     final IPropertyType[] pts = new IPropertyType[]//
-    { GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName()[0], geomTH, 1, 1 ),//
-        GMLSchemaFactory.createValuePropertyType( new QName( ns, "vertList" ), stringTH.getTypeName()[0], stringTH, 1, 1 ) //
+    { GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1 ),//
+        GMLSchemaFactory.createValuePropertyType( new QName( ns, "vertList" ), stringTH.getTypeName(), stringTH, 1, 1 ) //
     };
     m_featureType = GMLSchemaFactory.createFeatureType( new QName( ns, "MeshElement" ), pts );
   }

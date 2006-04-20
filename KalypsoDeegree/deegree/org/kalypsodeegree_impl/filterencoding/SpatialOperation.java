@@ -63,18 +63,13 @@ package org.kalypsodeegree_impl.filterencoding;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.gml.GMLBox;
-import org.kalypsodeegree.gml.GMLException;
-import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.gml.GMLFactory;
-import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
-import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.w3c.dom.Element;
 
@@ -91,8 +86,6 @@ import com.vividsolutions.jts.geom.Geometry;
 public class SpatialOperation extends AbstractOperation
 {
 
-  private GMLGeometry m_gmlGeometry;
-
   private GM_Object geometryLiteral;
 
   private PropertyName m_propertyName;
@@ -100,16 +93,18 @@ public class SpatialOperation extends AbstractOperation
   // calvin added on 10/21/2003
   private double m_distance = -1;
 
+  private GM_Object m_geometry;
+
   /**
    * Constructs a new SpatialOperation.
    * 
    * @see OperationDefines
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry )
+  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry )
   {
     super( operatorId );
     m_propertyName = propertyName;
-    m_gmlGeometry = gmlGeometry;
+    m_geometry = gmlGeometry;
   }
 
   /**
@@ -117,11 +112,11 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @see OperationDefines Calvin added on 10/21/2003
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry, double d )
+  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry, double d )
   {
     super( operatorId );
     this.m_propertyName = propertyName;
-    this.m_gmlGeometry = gmlGeometry;
+    this.m_geometry = gmlGeometry;
     this.m_distance = d;
   }
 
@@ -167,7 +162,7 @@ public class SpatialOperation extends AbstractOperation
     }
 
     PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
-    final GMLGeometry gmlGeometry = GMLFactory.createGMLGeometry( child2 );
+    final GM_Object gmlGeometry = GML3BindingGM_ObjectAdapter.createGM_Object( child2 );
 
     if( gmlGeometry == null )
     {
@@ -224,7 +219,7 @@ public class SpatialOperation extends AbstractOperation
         break;
       case OperationDefines.BBOX:
       {
-        if( !(gmlGeometry instanceof GMLBox) )
+        if( !(gmlGeometry instanceof GM_Envelope) )
         {
           throw new FilterConstructionException( "'" + name + "' can only be used with a 'Box'-geometry!" );
         }
@@ -267,18 +262,11 @@ public class SpatialOperation extends AbstractOperation
    * @throws FilterEvaluationException
    *           if the Literal can not be converted to a GM_Object
    */
-  public GM_Object getGeometryLiteral( ) throws FilterEvaluationException
+  public GM_Object getGeometryLiteral( )
   {
     if( geometryLiteral == null )
     {
-      try
-      {
-        geometryLiteral = GMLAdapter.wrap( m_gmlGeometry );
-      }
-      catch( GM_Exception e )
-      {
-        throw new FilterEvaluationException( "Construction of GM_Object from " + "SpatialOperation literal failed: '" + e.getMessage() + "'!" );
-      }
+      geometryLiteral = m_geometry;
     }
 
     return geometryLiteral;
@@ -289,9 +277,9 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @return the literal as a <tt>GMLGeometry</tt> -object.
    */
-  public GMLGeometry getGeometry( )
+  public GM_Object getGeometry( )
   {
-    return m_gmlGeometry;
+    return m_geometry;
   }
 
   /**
@@ -302,8 +290,7 @@ public class SpatialOperation extends AbstractOperation
   @Deprecated
   public GM_Envelope getBoundingBox( )
   {
-    GM_Envelope box = GMLAdapter.createGM_Envelope( (GMLBox) m_gmlGeometry );
-
+    final GM_Envelope box = m_geometry.getEnvelope();
     return box;
   }
 
@@ -323,7 +310,7 @@ public class SpatialOperation extends AbstractOperation
     sb.append( " xmlns:gml='http://www.opengis.net/gml' " ).append( ">" );
     sb.append( m_propertyName.toXML() );
 
-    Element element = ((GMLGeometry_Impl) m_gmlGeometry).getAsElement();
+    Element element = GML3BindingGM_ObjectAdapter.createElement( m_geometry );
     XMLTools.appendNode( element, "", sb );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
 
@@ -464,17 +451,10 @@ public class SpatialOperation extends AbstractOperation
     m_propertyName = name;
   }
 
-  public void setGeometry( GMLGeometry geom ) throws GM_Exception
-  {
-    m_gmlGeometry = geom;
-    geometryLiteral = GMLAdapter.wrap( geom );
-  }
-
-  public void setGeometry( GM_Object geom ) throws GMLException
+  public void setGeometry( GM_Object geom )
   {
     geometryLiteral = geom;
-    m_gmlGeometry = GMLFactory.createGMLGeometry( null, geom );
-
+    m_geometry = geom;
   }
 
   public void setOperatorId( int opearationId )

@@ -454,7 +454,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
    */
-  public String getSchemaLocation( )
+  public String getSchemaLocationString( )
   {
     return m_schemaLocation;
   }

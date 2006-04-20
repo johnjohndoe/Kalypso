@@ -72,7 +72,7 @@ import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 
 /**
  * Exposes the {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}suitable as web-service.
