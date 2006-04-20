@@ -91,7 +91,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName()
+  public QName getTypeName()
   {
     return ObservationLinkHandler.TYPE_NAME;
   }

@@ -94,6 +94,7 @@ public class GMLWorkspaceReader implements XMLReader
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
+    
     final SAXFactory factory = new SAXFactory( indentHandler );
     handler.startDocument();
     factory.process( workspace );

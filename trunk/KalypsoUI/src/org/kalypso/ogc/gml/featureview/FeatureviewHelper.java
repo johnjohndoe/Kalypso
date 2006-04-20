@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -70,7 +71,6 @@ import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 
 /**
  * @author belger

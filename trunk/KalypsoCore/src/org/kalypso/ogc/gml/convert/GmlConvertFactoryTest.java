@@ -17,7 +17,6 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
@@ -34,7 +33,6 @@ public class GmlConvertFactoryTest extends TestCase
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new DiagramTypeHandler() );
     registry.registerTypeHandler( new RangeSetTypeHandler() );
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
   }

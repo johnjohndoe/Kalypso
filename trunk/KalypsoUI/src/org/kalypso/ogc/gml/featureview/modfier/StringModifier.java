@@ -54,13 +54,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 
 /**
  * @author belger

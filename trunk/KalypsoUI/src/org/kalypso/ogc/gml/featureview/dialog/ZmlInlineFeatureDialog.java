@@ -78,9 +78,9 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
     if( m_typeHandler instanceof ZmlInlineTypeHandler )
     {
       inlineTypeHandler = (ZmlInlineTypeHandler) m_typeHandler;
-      final QName[] typeName = inlineTypeHandler.getTypeName();
+      final QName typeName = inlineTypeHandler.getTypeName();
 
-      if( !(typeName[0].getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) )
+      if( !(typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) )
         dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
             | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
       else

@@ -100,7 +100,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return m_typeHandler.getTypeName();
   }

@@ -577,7 +577,8 @@ public class ImportWmsWizardPage extends WizardPage
         final HttpClient client = KalypsoGisPlugin.getDefault().createConfiguredHttpClient( m_timeout );
         final HttpMethod method = new GetMethod( m_url.toString() );
         // do not forget the next line!
-        method.setDoAuthentication( true );
+        // method.setDoAuthentication( true );
+        method.setDoAuthentication( false );
         final Thread thread = new Thread()
         {
           /**

@@ -40,8 +40,8 @@ public class Point
     final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPointClass() );
     final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
 
-    final IValuePropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName()[0], geomTH, 1, 1 );
-    final IValuePropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "value" ), doubleTH.getTypeName()[0], doubleTH, 1, 1 );
+    final IValuePropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1 );
+    final IValuePropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( ns, "value" ), doubleTH.getTypeName(), doubleTH, 1, 1 );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2 };
     m_featureType = GMLSchemaFactory.createFeatureType( new QName( "ns", "FEMNode" ), pts );
 
@@ -67,7 +67,7 @@ public class Point
       crs = cs;
     }
     GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature(null, pointID, this.m_featureType, false );
+    Feature f = FeatureFactory.createFeature( null, pointID, this.m_featureType, false );
     f.setProperty( "GEOM", point );
     this.feature = f;
 
@@ -82,14 +82,14 @@ public class Point
       crs = cs;
     }
     GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), crs );
-    Feature f = FeatureFactory.createFeature(null, pointID, this.m_featureType, false );
+    Feature f = FeatureFactory.createFeature( null, pointID, this.m_featureType, false );
     f.setProperty( "GEOM", point );
     this.feature = f;
   }// constructor}
 
   public Point( String id, GM_Object geom )
   {
-    Feature f = FeatureFactory.createFeature(null, id, this.m_featureType, false );
+    Feature f = FeatureFactory.createFeature( null, id, this.m_featureType, false );
     f.setProperty( "GEOM", geom );
     this.feature = f;
   }

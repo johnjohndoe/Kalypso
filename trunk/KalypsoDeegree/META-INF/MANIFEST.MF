@@ -11,9 +11,9 @@ Bundle-ClassPath: kalypsodeegree.jar,
  lib/jai/mlibwrapper_jai.jar,
  lib/java3d/j3dutils.jar,
  lib/java3d/vecmath.jar,
- lib/deegree/deegree2004-02-13.jar,
  lib/xalan-j/xalan.jar,
- lib/shiftone/shiftone-cache.jar
+ lib/shiftone/shiftone-cache.jar,
+ lib/deegree/deegree2004-02-13.jar
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,
@@ -21,6 +21,7 @@ Require-Bundle: org.kalypso.commons,
  org.junit,
  org.kalypso.gmlschema;visibility:=reexport
 Eclipse-AutoStart: true
+Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: Acme,
  Acme.JPM.Encoders,
  com.sun.media.jai.codec,
@@ -240,7 +241,6 @@ Export-Package: Acme,
  org.kalypso.zml.obslink,
  org.kalypsodeegree,
  org.kalypsodeegree.filterencoding,
- org.kalypsodeegree.gml,
  org.kalypsodeegree.graphics,
  org.kalypsodeegree.graphics.displayelements,
  org.kalypsodeegree.graphics.legend,
@@ -256,7 +256,6 @@ Export-Package: Acme,
  org.kalypsodeegree.ogcbasic,
  org.kalypsodeegree.tools,
  org.kalypsodeegree.xml,
- org.kalypsodeegree_impl.extension,
  org.kalypsodeegree_impl.filterencoding,
  org.kalypsodeegree_impl.gml,
  org.kalypsodeegree_impl.gml.schema,
@@ -311,4 +310,3 @@ Export-Package: Acme,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper,
  org.w3c.dom.xpath
-Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin

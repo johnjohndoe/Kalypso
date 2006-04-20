@@ -417,14 +417,14 @@ public class DBaseFile
       }
       else
         th = null;
-      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, column.name ), th.getTypeName()[0], th, 1, 1 );
+      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, column.name ), th.getTypeName(), th, 1, 1 );
     }
 
     // remove everything before "\" or "/"
     final QName qNameFT = new QName( NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class geoClass = getGeometryType();
     final ITypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName()[0], geoTH, 1, 1 );
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1 );
     return GMLSchemaFactory.createFeatureType( qNameFT, ftp );
   }
 

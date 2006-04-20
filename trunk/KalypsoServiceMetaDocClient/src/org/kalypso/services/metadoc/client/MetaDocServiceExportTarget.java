@@ -75,6 +75,7 @@ import org.kalypso.core.client.ProxyFactory;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
@@ -92,7 +93,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**

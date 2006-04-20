@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="de.tuhh.wb.kalypso/simpletypebase"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+	<element name="string" type="string" />
+	<element name="simple">
+		<complexType>
+			<sequence>
+				<element name="string" type="string" />
+				<element name="date" type="date" />
+				<element name="decimal" type="decimal" />
+				<element name="time" type="time" />
+				<element name="dateTime" type="dateTime" />
+				<element name="duration" type="duration" />
+				<element name="int" type="int" />
+				<element name="integer" type="integer" />
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>

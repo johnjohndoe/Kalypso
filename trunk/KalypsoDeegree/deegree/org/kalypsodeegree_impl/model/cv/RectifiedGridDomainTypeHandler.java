@@ -7,14 +7,12 @@ import java.util.Vector;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
-import org.kalypsodeegree_impl.gml.GMLFactory;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
+import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,14 +23,14 @@ import org.w3c.dom.NodeList;
  * 
  * @author N. Peiler
  */
-public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
+public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
 
   private String NSGML = XMLHelper.GMLSCHEMA_NS;
 
   private static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
 
-  public static final QName[] TYPENAME = new QName[] { new QName( NSRGC, "RectifiedGridDomainType" ) };
+  public static final QName TYPENAME = new QName( NSRGC, "RectifiedGridDomainType" );
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -45,7 +43,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName[] getTypeName( )
+  public QName getTypeName( )
   {
     return TYPENAME;
   }
@@ -54,6 +52,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
+  @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
 
@@ -125,6 +124,7 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Override
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     Node node_rg = ((Element) node).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
@@ -153,8 +153,9 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
     Node n_point = ((Element) n_origin).getElementsByTagNameNS( NSGML, "Point" ).item( 0 );
     try
     {
-      GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
-      GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );
+      GM_Point origin = (GM_Point) GML3BindingGM_ObjectAdapter.createGM_Object( (Element) n_point );
+      // GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
+      // GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );
       System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
       System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 

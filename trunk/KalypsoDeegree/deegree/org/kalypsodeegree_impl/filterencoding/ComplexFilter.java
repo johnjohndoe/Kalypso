@@ -63,11 +63,11 @@ package org.kalypsodeegree_impl.filterencoding;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
