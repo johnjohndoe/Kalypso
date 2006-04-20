@@ -50,10 +50,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 public final class KeyInfo extends Job implements ILoaderListener
 {
@@ -80,7 +80,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     setRule( rule );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_listeners.clear();
 
@@ -183,10 +183,11 @@ public final class KeyInfo extends Job implements ILoaderListener
   {
     synchronized( this )
     {
+      final String location = m_key.getLocation();
       try
       {
         LOGGER.info( "Loading object for key: " + m_key );
-        m_object = m_loader.load( m_key.getLocation(), m_key.getContext(), monitor );
+        m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
       catch( final Throwable e )
       {
@@ -197,14 +198,14 @@ public final class KeyInfo extends Job implements ILoaderListener
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
-        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Resource", e );
+        return StatusUtilities.statusFromThrowable( e, "Fehler beim Laden von " + location );
       }
     }
 
     return Status.OK_STATUS;
   }
 
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_listeners.isEmpty();
   }
@@ -218,7 +219,7 @@ public final class KeyInfo extends Job implements ILoaderListener
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     final StringBuffer b = new StringBuffer();
     b.append( "KeyInfo:\n" );
@@ -232,17 +233,17 @@ public final class KeyInfo extends Job implements ILoaderListener
     return b.toString();
   }
 
-  public IPoolableObjectType getKey()
+  public IPoolableObjectType getKey( )
   {
     return m_key;
   }
 
-  public IPoolListener[] getListeners()
+  public IPoolListener[] getListeners( )
   {
     return m_listeners.toArray( new IPoolListener[m_listeners.size()] );
   }
 
-  public Object getObject()
+  public Object getObject( )
   {
     return m_object;
   }
