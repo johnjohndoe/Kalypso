@@ -51,17 +51,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.convert.update.WeisseElsterConstants;
-import org.kalypso.core.RefactorThis;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -76,10 +68,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.extension.TypeHandlerUtilities;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

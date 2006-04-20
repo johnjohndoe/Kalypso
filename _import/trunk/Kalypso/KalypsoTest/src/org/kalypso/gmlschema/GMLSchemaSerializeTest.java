@@ -38,55 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml;
+package org.kalypso.gmlschema;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /**
  * @author doemming
  */
-public class ParserTest extends TestCase
+public class GMLSchemaSerializeTest extends TestCase
 {
   /**
-   * @see junit.framework.TestCase#setUp()
+   * test succeedes when <br>
+   * 1. GML(version 3.1) schemas get parsed from OGC-site and stored in local jar-archive<br>
+   * AND<br>
+   * 2. the local jar-archive gets parsed to another jar-archive to see if first one is valid
    */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    super.setUp();
-    KalypsoTest.init();
-
-  }
-
-  public void testload( ) throws Exception
+  public void testCreateSchemaJarArchive( ) throws Exception
   {
     try
     {
-      final URL resource = getClass().getResource( "resources/modell.gml" );
+      final File tmpArchive1 = File.createTempFile( "kalypsoSchema", "jar" );
+      final URL schemaURL = new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" );
+      GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpArchive1 );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
-      final File file = new File( "C:/TMP/newParserInAndNewOut.gml" );
-      final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file ), "UTF-8" );
-      GmlSerializer.serializeWorkspace( writer, workspace );
-      IOUtils.closeQuietly( writer );
-      // secound pass
+      final URL schemaURL2 = GMLSchemaUtilities.getSchemaURLForArchive( tmpArchive1 );
 
-      final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( file.toURL() );
-      final File file2 = new File( "C:/TMP/newParserInAndNewOut2.gml" );
-      final OutputStreamWriter writer2 = new OutputStreamWriter( new FileOutputStream( file2 ), "UTF-8" );
-      GmlSerializer.serializeWorkspace( writer2, workspace2 );
-      IOUtils.closeQuietly( writer2 );
-
+      final File tmpArchive2 = File.createTempFile( "kalypsoSchema", "jar" );
+      GMLSchemaUtilities.createSchemaArchive( schemaURL2, tmpArchive2 );
+      tmpArchive1.delete();
+      tmpArchive2.delete();
     }
     catch( Exception e )
     {
@@ -94,4 +77,5 @@ public class ParserTest extends TestCase
       throw e;
     }
   }
+
 }

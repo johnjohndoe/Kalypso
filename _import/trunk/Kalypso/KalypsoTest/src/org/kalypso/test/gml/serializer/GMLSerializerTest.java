@@ -39,10 +39,10 @@ import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
 import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 
 /**
