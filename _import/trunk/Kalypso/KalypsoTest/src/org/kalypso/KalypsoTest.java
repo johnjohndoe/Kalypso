@@ -30,7 +30,6 @@
 package org.kalypso;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -41,7 +40,6 @@ import org.kalypso.dss.DSSUrlCatalog;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;

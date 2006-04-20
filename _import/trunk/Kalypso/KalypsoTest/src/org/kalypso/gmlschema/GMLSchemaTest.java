@@ -31,12 +31,8 @@ package org.kalypso.gmlschema;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -47,7 +43,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.kalypso.KalypsoTest;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
 import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
@@ -59,8 +54,6 @@ import org.kalypso.test.TestUtilities;
 public class GMLSchemaTest extends TestCase
 {
   public static final String NS_GML2 = "http://www.opengis.net/gml";
-
-  private Hashtable<URL, URL> m_listToTest = new Hashtable<URL, URL>();
 
   /*
    * @see TestCase#setUp()

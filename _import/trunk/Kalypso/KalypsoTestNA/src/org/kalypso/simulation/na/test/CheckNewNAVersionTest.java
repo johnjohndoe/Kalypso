@@ -49,18 +49,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeMap;
 
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
-import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.diff.DiffLogger;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.diff.IDiffComparator;
-import org.kalypso.commons.diff.IDiffLogger;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.convert.namodel.manager.HydrotopManager;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffObject;
 
@@ -149,11 +145,11 @@ public class CheckNewNAVersionTest extends TestCase
           final BlockTimeSeriesDiffObject diff2 = new BlockTimeSeriesDiffObject( newFile );
           // make diff
           DiffUtils.diff( logger, diff1, diff2, null );
+          }
+
         }
 
       }
-
-    }
     else
     {
       System.out.println( "Die Anzahl der Dateien ist nicht identisch!\nAnzahl(1): " + oldFiles.length + "\tAnzahl(2): " + newFiles.length );
