@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * 
  * @author schlienger
  */
-public interface ISerializer
+public interface ISerializer<V>
 {
   /**
    * Reads an object from the input stream
@@ -19,7 +19,7 @@ public interface ISerializer
    *          InputStream to read from
    * @return new instance of object read from stream
    */
-  public Object read( final InputStream ins ) throws InvocationTargetException;
+  public V read( final InputStream ins ) throws InvocationTargetException;
 
   /**
    * Writes the given object to the output stream
@@ -29,5 +29,5 @@ public interface ISerializer
    * @param os
    *          OutputStream to write to
    */
-  public void write( final Object object, final OutputStream os ) throws InvocationTargetException;
+  public void write( final V object, final OutputStream os ) throws InvocationTargetException;
 }

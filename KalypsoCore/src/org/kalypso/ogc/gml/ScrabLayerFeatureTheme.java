@@ -81,7 +81,6 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     CommandableWorkspace workspace = null;
     try
     {
-      
       final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL );
       workspace = new CommandableWorkspace( createGMLWorkspace );
     }
@@ -89,7 +88,12 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     {
       // TODO what is to be done??
       e.printStackTrace();
+      
+      // at least do not continue to initialize
+      m_scrabLayerTheme = null;
+      return;
     }
+    
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager );
     // add styles for visualisation

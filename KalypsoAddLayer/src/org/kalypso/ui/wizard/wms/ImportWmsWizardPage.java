@@ -1,53 +1,3 @@
-package org.kalypso.ui.wizard.wms;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -88,6 +38,48 @@ import org.kalypso.ui.KalypsoGisPlugin;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.wizard.wms;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.deegree.services.wms.capabilities.Layer;
+import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+
 /**
  * @author Kuepferle, Doemming
  */
@@ -184,7 +176,7 @@ public class ImportWmsWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
-        final List<Layer> input = (List<Layer>) m_selectedLayers.getInput();
+        final List<Layer> input = getLayers();
         List<Layer> selectableLayer = new ArrayList<Layer>();
         for( Iterator iter = selection.iterator(); iter.hasNext(); )
         {
@@ -266,7 +258,7 @@ public class ImportWmsWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         final IStructuredSelection selection2 = (IStructuredSelection) m_selectedLayers.getSelection();
-        final List<Layer> input = (List<Layer>) m_selectedLayers.getInput();
+        final List<Layer> input = getLayers();
         input.removeAll( selection2.toList() );
         m_selectedLayers.setInput( input );
         m_multiLayerButton.setEnabled( input.size() > 1 );
@@ -393,30 +385,37 @@ public class ImportWmsWizardPage extends WizardPage
   // getContainer().updateButtons();
   // }
 
-  /**
-   * @param service
-   * @return capabilities of wms
-   * @throws Exception
-   */
-  private synchronized WMSCapabilities getCapabilites( URL service ) throws Exception
+  private synchronized WMSCapabilities getCapabilites( final URL service ) throws Exception
   {
-    if( !m_capabilites.containsKey( service ) )
-    {
-      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-      final URL urlGetCapabilities = new URL( service.toString() + "?SERVICE=WMS&REQUEST=GetCapabilities" );
+    if( m_capabilites.containsKey( service ) )
+      return m_capabilites.get( service );
 
-      // TODO set timeout somewhere
-      // maybe inside the createHttpClient Method of the Plugin-Class
-      // get the timeout from global preferences
-      int timeOut = 20000;
-      final InputStream inputStream = getFromURL( urlGetCapabilities, timeOut );
-      final Reader reader = new InputStreamReader( inputStream );
+    // create quuery url
+    final String query = service.getQuery();
+    final String getCapabilitiesQuery = "SERVICE=WMS&REQUEST=GetCapabilities";
+    final String queryToken = (query == null || query.length() == 0) ? "?" : "&";
+    final String urlGetCapabilitiesString = service.toString() + queryToken + getCapabilitiesQuery;
+    final URL urlGetCapabilities = new URL( urlGetCapabilitiesString );
 
-      final WMSCapabilities capabilities = wmsCapFac.createCapabilities( reader );
-      // store url and capabilites in a map so it is only loaded once
-      m_capabilites.put( service, capabilities );
-    }
-    return m_capabilites.get( service );
+    // TODO set timeout somewhere
+    // maybe inside the createHttpClient Method of the Plugin-Class
+    // get the timeout from global preferences
+    final int timeOut = 20000;
+    final InputStream inputStream = URLGetter.getFromURL( getContainer(), urlGetCapabilities, timeOut );
+    final Reader urlReader = new InputStreamReader( inputStream );
+
+    final String capabilitiesAsString = IOUtils.toString( urlReader );
+    final StringReader reader = new StringReader( capabilitiesAsString );
+
+    System.out.println( capabilitiesAsString );
+
+    // TODO: handle exceptions and at least close streams! this is no error handling!
+    final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
+    final WMSCapabilities capabilities = wmsCapFac.createCapabilities( reader );
+    // store url and capabilites in a map so it is only loaded once
+    m_capabilites.put( service, capabilities );
+
+    return capabilities;
   }
 
   private URL validateURLField( final String url )
@@ -499,14 +498,17 @@ public class ImportWmsWizardPage extends WizardPage
    */
   public Layer[] getLayersList( )
   {
-    final List<Layer> result = new ArrayList<Layer>();
-    final List<Layer> list = (List<Layer>) m_selectedLayers.getInput();
-    for( Iterator iter = list.iterator(); iter.hasNext(); )
-    {
-      final Layer layer = (Layer) iter.next();
-      result.add( layer );
-    }
-    return result.toArray( new Layer[result.size()] );
+    final List<Layer> list = getLayers();
+    return list.toArray( new Layer[list.size()] );
+  }
+
+  /**
+   * For casting the input to List<Layer> and suppress the warning
+   */
+  @SuppressWarnings("unchecked")
+  protected List<Layer> getLayers( )
+  {
+    return (List<Layer>) m_selectedLayers.getInput();
   }
 
   /**
@@ -515,130 +517,5 @@ public class ImportWmsWizardPage extends WizardPage
   public boolean isMultiLayer( )
   {
     return m_multiLayerButton.getSelection();
-  }
-
-  public InputStream getFromURL( final URL url, final int timeOut ) throws Exception
-  {
-    final URLGetter getter = new URLGetter( url, timeOut );
-    System.out.println( "progress" );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, getter );
-    Throwable exception = status.getException();
-    if( exception != null )
-      throw new Exception( exception );
-    final String errorMessage2 = getter.getErrorMessage();
-    if( errorMessage2 != null )
-      throw new Exception( errorMessage2 );
-    System.out.println( "progress done" );
-    return getter.getResult();
-    // final HttpClient client = new HttpClient();
-    // client.setTimeout( timeOut );
-    //
-    // final String urlString = url.toString();
-    // final HttpMethod method = new GetMethod( urlString );
-    // client.executeMethod( method );
-    // return method.getResponseBodyAsStream();
-  }
-
-  private class URLGetter implements ICoreRunnableWithProgress
-  {
-    InputStream m_result = null;
-
-    String m_errorMessage = null;
-
-    private final int m_timeout;
-
-    private final URL m_url;
-
-    public URLGetter( final URL url, final int timeout )
-    {
-      m_url = url;
-      m_timeout = timeout;
-    }
-
-    public InputStream getResult( )
-    {
-      return m_result;
-    }
-
-    public String getErrorMessage( )
-    {
-      return m_errorMessage;
-    }
-
-    /**
-     * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public IStatus execute( final IProgressMonitor monitor )
-    {
-      IStatus result = Status.OK_STATUS;
-
-      try
-      {
-        final HttpClient client = KalypsoGisPlugin.getDefault().createConfiguredHttpClient( m_timeout );
-        final HttpMethod method = new GetMethod( m_url.toString() );
-        // do not forget the next line!
-        // method.setDoAuthentication( true );
-        method.setDoAuthentication( false );
-        final Thread thread = new Thread()
-        {
-          /**
-           * @see java.lang.Thread#run()
-           */
-          @Override
-          public void run( )
-          {
-            try
-            {
-              // Thread.sleep( 10000 );
-              client.executeMethod( method );
-              m_result = method.getResponseBodyAsStream();
-            }
-            // catch( InterruptedException e )
-            // {
-            // m_errorMessage = "Interrupted";
-            // }
-            catch( IOException e )
-            {
-              m_errorMessage = e.getLocalizedMessage();
-              e.printStackTrace();
-              System.out.println( method.getResponseBodyAsString() );
-            }
-          }
-        };
-        monitor.beginTask( "resolve " + m_url.toString(), 100 );
-        thread.start();
-        while( thread.isAlive() )
-        // while( true )
-        {
-          Thread.sleep( 100 );
-          String statusText = "";
-          try
-          {
-            statusText = method.getStatusText();
-          }
-          catch( Exception e )
-          {
-            statusText = "Verbinde ...";
-          }
-          monitor.setTaskName( statusText );
-          monitor.internalWorked( IProgressMonitor.UNKNOWN );
-          if( monitor.isCanceled() )
-          {
-            thread.interrupt();
-            // thread.destroy();
-            monitor.done();
-            return Status.CANCEL_STATUS;
-          }
-        }
-
-        monitor.done();
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        result = Status.CANCEL_STATUS;
-      }
-      return result;
-    }
   }
 }

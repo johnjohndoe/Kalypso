@@ -87,6 +87,7 @@ public class AddThemeCommand implements ICommand
    * @deprecated use constrtuctor without style information TODO separate AddTheme from AddStyle, at the moment AddTheme
    *             is both
    */
+  @Deprecated
   public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type, final String featurePath, final String source, final String stylelinktype, final String style, final String styleLocation, final String styleType )
   {
     m_mapModell = model;

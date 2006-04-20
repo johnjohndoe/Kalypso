@@ -51,7 +51,6 @@ import java.util.List;
 import javax.naming.OperationNotSupportedException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -82,7 +81,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSUtilities;
@@ -304,7 +302,7 @@ public class ImportWfsWizardPage extends WizardPage
   //
   // private final IMapModell m_mapModel;
 
-  public ImportWfsWizardPage( String pageName, IMapModell model )
+  public ImportWfsWizardPage( final String pageName )
   {
     super( pageName );
     // m_mapModel = model;
@@ -313,7 +311,7 @@ public class ImportWfsWizardPage extends WizardPage
     setPageComplete( false );
   }
 
-  public ImportWfsWizardPage( String pageName, String title, ImageDescriptor titleImage, IMapModell model )
+  public ImportWfsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     // m_mapModel = model;
@@ -581,20 +579,6 @@ public class ImportWfsWizardPage extends WizardPage
     return new URL( getUrl() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
   }
 
-  /**
-   * Double click in list, or return from url control.
-   * 
-   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-   * @param e
-   */
-  public void widgetDefaultSelected( SelectionEvent e )
-  {
-    if( getWizard().canFinish() )
-    {
-      getWizard().performFinish();
-    }
-  }
-
   private IWFSCapabilities getCapabilites( ) throws MalformedURLException, IOException, Exception
   {
 
@@ -774,13 +758,20 @@ public class ImportWfsWizardPage extends WizardPage
       for( int i = 0; i < original.length; i++ )
       {
         IWFSLayer wfsFT = (IWFSLayer) original[i];
-        final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+        final List<IWFSLayer> input = getLayerList();
         input.add( wfsFT );
         m_listRightSide.add( wfsFT );
         // if( !ArrayUtils.contains( original, item ) )
       }
       updateButtons();
     }
+  }
+
+  /** Just for casting the list and suppress the warning */
+  @SuppressWarnings("unchecked")
+  private List<IWFSLayer> getLayerList( )
+  {
+    return (List<IWFSLayer>) m_listRightSide.getInput();
   }
 
   protected void removeButtonPressed( )
@@ -792,7 +783,7 @@ public class ImportWfsWizardPage extends WizardPage
       for( int i = 0; i < list.length; i++ )
       {
         final IWFSLayer wfsFT = (IWFSLayer) list[i];
-        final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+        final List<IWFSLayer> input = getLayerList();
         input.remove( wfsFT );
         m_listRightSide.remove( wfsFT );
         // if( ArrayUtils.contains( list, wfsFT ) )
@@ -819,7 +810,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void revalidatePage( )
   {
-    final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+    final List<IWFSLayer> input = getLayerList();
     setPageComplete( input != null && !input.isEmpty() );
   }
 
@@ -834,7 +825,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   public IWFSLayer[] getChoosenFeatureLayer( )
   {
-    final List<IWFSLayer> input = (List<IWFSLayer>) m_listRightSide.getInput();
+    final List<IWFSLayer> input = getLayerList();
     if( input == null )
       return new IWFSLayer[0];
     return input.toArray( new IWFSLayer[input.size()] );
