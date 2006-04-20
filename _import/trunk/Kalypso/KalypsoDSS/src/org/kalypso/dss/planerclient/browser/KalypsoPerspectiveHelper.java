@@ -49,30 +49,30 @@ public class KalypsoPerspectiveHelper
     final IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
     try
     {
-      final URL url = new URL( urlWithPageState );
-//      IProject project = ResourceUtilities.findProjectFromURL( url );
-//      URL projectURL = project.getFullPath().toFile().toURL();
-//      final IUrlResolver urlResolver = new UrlResolver();
-//
-//      // urlResolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" );
-//      urlResolver.addReplaceToken( "project", projectURL.toExternalForm() + "/" );
-//      // urlResolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString() + "/" );
-//
-//      BufferedReader reader = new BufferedReader( new InputStreamReader( url.openStream() ) );
-//      // Replace tokens
-//      final ReplaceTokens rt = new ReplaceTokens( reader );
-//      rt.setBeginToken( ':' );
-//      rt.setEndToken( ':' );
-//      for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
-//      {
-//        final Map.Entry entry = (Entry) tokenIt.next();
-//
-//        final Token token = new ReplaceTokens.Token();
-//        token.setKey( (String) entry.getKey() );
-//        token.setValue( (String) entry.getValue() );
-//
-//        rt.addConfiguredToken( token );
-//      }
+       final URL url = new URL( urlWithPageState );
+      // IProject project = ResourceUtilities.findProjectFromURL( url );
+      // URL projectURL = project.getFullPath().toFile().toURL();
+      // final IUrlResolver urlResolver = new UrlResolver();
+      //
+      // urlResolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" );
+      // urlResolver.addReplaceToken( "project", projectURL.toExternalForm() + "/" );
+      // urlResolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString() + "/" );
+      //
+      // BufferedReader reader = new BufferedReader( new InputStreamReader( url.openStream() ) );
+      // // Replace tokens
+      // final ReplaceTokens rt = new ReplaceTokens( reader );
+      // rt.setBeginToken( ':' );
+      // rt.setEndToken( ':' );
+      // for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
+      // {
+      // final Map.Entry entry = (Entry) tokenIt.next();
+      //
+      // final Token token = new ReplaceTokens.Token();
+      // token.setKey( (String) entry.getKey() );
+      // token.setValue( (String) entry.getValue() );
+      //
+      // rt.addConfiguredToken( token );
+      // }
 
       // return createGMLWorkspace( new InputSource( rt ), gmlURL, urlResolver );
 

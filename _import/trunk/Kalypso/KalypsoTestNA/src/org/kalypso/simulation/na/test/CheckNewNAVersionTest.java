@@ -72,7 +72,7 @@ public class CheckNewNAVersionTest extends TestCase
 {
   private final static String BASE_DIR = "D://Daten//ReferenzModell//KollauModell"; // "C://temp//NAModell";
 
-  private final static String BASE_DIR_OLD = BASE_DIR.concat( "//results//VorUmbau//ergebnisse//lz_dt24h" );// "//old"
+  private final static String BASE_DIR_OLD = BASE_DIR.concat( "//results//VorUmbau//ergebnisse//lz_dt24h_4562" );// "//old"
                                                                                                             // );
 
   // private final static String BASE_DIR_OLD = BASE_DIR.concat( "//out_we.nat" );// "//old" );
@@ -149,54 +149,6 @@ public class CheckNewNAVersionTest extends TestCase
           final BlockTimeSeriesDiffObject diff2 = new BlockTimeSeriesDiffObject( newFile );
           // make diff
           DiffUtils.diff( logger, diff1, diff2, null );
-
-          // for( String key : m_nodes )
-          // {
-          // TreeMap oldTimeSerie = oldSeries.getTimeSerie( key );
-          // TreeMap newTimeSerie = newSeries.getTimeSerie( key );
-          // if( oldTimeSerie != null && newTimeSerie != null && !oldTimeSerie.isEmpty() && !newTimeSerie.isEmpty() )
-          // {
-          // diffLogger.log( IDiffComparator.DIFF_INFO, "Knotennummer: " + key );
-          // dc.diff( diffLogger, oldTimeSerie, newTimeSerie );
-          // diffLogger.log( IDiffComparator.DIFF_OK, "\n\n" );
-          // fileChecked = true;
-          // }
-          //
-          // }
-          // for( String key : m_catchments )
-          // {
-          // TreeMap oldTimeSerie = oldSeries.getTimeSerie( key );
-          // TreeMap newTimeSerie = newSeries.getTimeSerie( key );
-          // if( oldTimeSerie != null && newTimeSerie != null && !oldTimeSerie.isEmpty() && !newTimeSerie.isEmpty() )
-          // {
-          // diffLogger.log( IDiffComparator.DIFF_INFO, "Teilgebietsnummer: " + key );
-          // dc.diff( diffLogger, oldTimeSerie, newTimeSerie );
-          // diffLogger.log( IDiffComparator.DIFF_OK, "\n\n" );
-          // fileChecked = true;
-          // }
-          //
-          // }
-          // for( String key : m_channels )
-          // {
-          // TreeMap oldTimeSerie = oldSeries.getTimeSerie( key );
-          // TreeMap newTimeSerie = newSeries.getTimeSerie( key );
-          // if( oldTimeSerie != null && newTimeSerie != null && !oldTimeSerie.isEmpty() && !newTimeSerie.isEmpty() )
-          // {
-          // diffLogger.log( IDiffComparator.DIFF_INFO, "Strangnummer: " + key );
-          // dc.diff( diffLogger, oldTimeSerie, newTimeSerie );
-          // diffLogger.log( IDiffComparator.DIFF_OK, "\n\n" );
-          // fileChecked = true;
-          // }
-          //
-          // }
-          if( fileChecked )
-          {
-            sb.append( " ** timeseries, compared (+)\n" );
-            fileChecked = false;
-          }
-          else
-            sb.append( " ** no timeseries, not compared (-)\n" );
-
         }
 
       }
