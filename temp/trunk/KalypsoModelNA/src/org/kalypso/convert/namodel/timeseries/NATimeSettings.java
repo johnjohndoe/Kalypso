@@ -32,11 +32,9 @@ package org.kalypso.convert.namodel.timeseries;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 /**
- * 
  * provides unique time(zone)-setting for the rainfall runoff simulation kernel
  * 
  * @author doemming
@@ -46,38 +44,38 @@ public class NATimeSettings
 
   private static NATimeSettings m_instance = null;
 
-  private final SimpleTimeZone m_timeZone;
+  private final TimeZone m_timeZone;
 
   private Calendar m_calendar;
 
-  private NATimeSettings()
+  private NATimeSettings( )
   {
-    m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
+    m_timeZone = TimeZone.getTimeZone( "GMT+1" );
+    // new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
     m_calendar = Calendar.getInstance( m_timeZone );
   }
 
-  public static NATimeSettings getInstance()
+  public static NATimeSettings getInstance( )
   {
     if( m_instance == null )
       m_instance = new NATimeSettings();
     return m_instance;
   }
 
-  public DateFormat updateDateFormat( DateFormat dateFormat )
+  public DateFormat getTimeZonedDateFormat( DateFormat dateFormat )
   {
-    dateFormat.setTimeZone( (TimeZone)m_timeZone.clone() );
+    dateFormat.setTimeZone( (TimeZone) m_timeZone.clone() );
     return dateFormat;
   }
 
-  public Calendar getCalendar()
+  public Calendar getCalendar( )
   {
-    return (Calendar)m_calendar.clone();
+    return (Calendar) m_calendar.clone();
   }
 
   /**
-   * 
    * @param date
-   * @return calendar 
+   * @return calendar
    */
   public Calendar getCalendar( final Date date )
   {

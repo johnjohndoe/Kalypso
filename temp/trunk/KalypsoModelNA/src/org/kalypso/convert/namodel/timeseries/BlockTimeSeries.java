@@ -52,6 +52,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -59,9 +60,9 @@ import java.util.regex.Pattern;
 
 public class BlockTimeSeries
 {
-  private final DateFormat m_dateFormat = new SimpleDateFormat( "yyMMdd" );
+  private final DateFormat m_dateFormat;
 
-  //  private final DateFormat m_outputDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+  // private final DateFormat m_outputDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   private final static int SEARCH_TIMEOFFSET = 0;
 
@@ -71,11 +72,10 @@ public class BlockTimeSeries
 
   // simulationszeitraum: von 970101 24 uhr bis 980102 24 uhr 24.000
   // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
-  private final static Pattern pTime = Pattern
-      .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+  private final static Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
 
-  //  private final static Pattern pTime = Pattern
-  //      .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{5,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+  // private final static Pattern pTime = Pattern
+  // .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{5,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
 
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" );
 
@@ -83,10 +83,20 @@ public class BlockTimeSeries
 
   private final Hashtable m_blocks;
 
-  public BlockTimeSeries()
+  public BlockTimeSeries( final TimeZone timeZone )
   {
-    NATimeSettings.getInstance().updateDateFormat( m_dateFormat );
+    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
+    format.setTimeZone( timeZone );
+    m_dateFormat = format;
     m_blocks = new Hashtable();
+  }
+
+  /**
+   * use TimeZone: CET - Central European Time
+   */
+  public BlockTimeSeries( )
+  {
+    this( TimeZone.getTimeZone( "GMT+1" ) );
   }
 
   /**
@@ -115,83 +125,86 @@ public class BlockTimeSeries
       String line;
       Matcher m = null;
       int step = SEARCH_TIMEOFFSET;
-      while( ( line = reader.readLine() ) != null )
+      while( (line = reader.readLine()) != null )
       {
-        //			System.out.println("LINE: "+line);
+        // System.out.println("LINE: "+line);
         if( !line.startsWith( "#" ) )
           switch( step )
           {
-          case SEARCH_TIMEOFFSET:
-            m = pTime.matcher( line );
-            if( m.matches() )
-            {
-              String sDate = m.group( 1 );
-              String sTime = m.group( 2 );
-              String sStep = m.group( 3 );
-              startDate = ( m_dateFormat.parse( sDate ) ).getTime();
-              int sTime_int = Integer.parseInt( sTime );
-              if( sTime_int == 24 )
-              {
-                sTime = "0";
-              }
-              startDate += Long.parseLong( sTime ) * 1000l * 3600l;
-              if( sStep.equals( "0.083" ) )
-              {
-                /*
-                 * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
-                 */
-                timeStep = 300000l;
-                System.out.println( "TimeStep: " + timeStep );
-              }
-              else
-              {
-                timeStep = ( (long)( Float.parseFloat( sStep ) * 1000f ) ) * 3600l;
-              }
-              Date testDate = new Date( startDate );
-              System.out.println( "startdate: " + testDate + "  step:" + sStep );
-              step++;
-            }
-            break;
-          case SEARCH_BLOCK_HEADER:
-            m = pBlock.matcher( line );
-            if( m.matches() )
-            {
-              String key = m.group( 1 );
-              valuesToGo = Integer.parseInt( m.group( 3 ) );
-
-              if( allowedKeys == null || allowedKeys.contains( key ) )
-              {
-                if( m_blocks.containsKey( key ) )
-                  timeSeries = (TreeMap)m_blocks.get( key );
-                else
-                {
-                  timeSeries = new TreeMap();
-                  m_blocks.put( key, timeSeries );
-                }
-                step++;
-                valueIndex = 0;
-                valueOffset = timeSeries.size();
-              }
-            }
-            break;
-          case SEARCH_VALUES:
-            String values[] = line.split( "\\s+" );
-            for( int i = 0; i < values.length; i++ )
-            {
-              m = pHeader.matcher( values[i] );
+            case SEARCH_TIMEOFFSET:
+              m = pTime.matcher( line );
               if( m.matches() )
               {
-                String value = m.group( 1 );
-                Date valueDate = new Date( startDate + ( valueIndex + valueOffset ) * timeStep );
-                timeSeries.put( valueDate, value );
-                valueIndex += 1;
-                if( valueIndex >= valuesToGo )
-                  step = SEARCH_BLOCK_HEADER;
+                String sDate = m.group( 1 );
+                String sTime = m.group( 2 );
+                String sStep = m.group( 3 );
+                final Date parseDate = m_dateFormat.parse( sDate );
+                startDate = (parseDate).getTime();
+                int sTime_int = Integer.parseInt( sTime );
+                // 24 means 0 same day ! (RRM/fortran-logic)
+                if( sTime_int == 24 )
+                {
+                  sTime = "0";
+                }
+                startDate += Long.parseLong( sTime ) * 1000l * 3600l;
+                if( sStep.equals( "0.083" ) )
+                {
+                  /*
+                   * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
+                   */
+                  timeStep = 300000l;
+                  System.out.println( "TimeStep: " + timeStep );
+                }
+                else
+                {
+                  timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
+                }
+
+                Date testDate = new Date( startDate );
+                System.out.println( "startdate: " + testDate + "  step:" + sStep );
+                step++;
               }
-            }
-            break;
-          default:
-            break;
+              break;
+            case SEARCH_BLOCK_HEADER:
+              m = pBlock.matcher( line );
+              if( m.matches() )
+              {
+                String key = m.group( 1 );
+                valuesToGo = Integer.parseInt( m.group( 3 ) );
+
+                if( allowedKeys == null || allowedKeys.contains( key ) )
+                {
+                  if( m_blocks.containsKey( key ) )
+                    timeSeries = (TreeMap) m_blocks.get( key );
+                  else
+                  {
+                    timeSeries = new TreeMap();
+                    m_blocks.put( key, timeSeries );
+                  }
+                  step++;
+                  valueIndex = 0;
+                  valueOffset = timeSeries.size();
+                }
+              }
+              break;
+            case SEARCH_VALUES:
+              String values[] = line.split( "\\s+" );
+              for( int i = 0; i < values.length; i++ )
+              {
+                m = pHeader.matcher( values[i] );
+                if( m.matches() )
+                {
+                  String value = m.group( 1 );
+                  Date valueDate = new Date( startDate + (1 + valueIndex + valueOffset) * timeStep );
+                  timeSeries.put( valueDate, value );
+                  valueIndex += 1;
+                  if( valueIndex >= valuesToGo )
+                    step = SEARCH_BLOCK_HEADER;
+                }
+              }
+              break;
+            default:
+              break;
           }
       }
       reader.close();
@@ -203,7 +216,7 @@ public class BlockTimeSeries
     }
   }
 
-  public Enumeration getKeys()
+  public Enumeration getKeys( )
   {
     return m_blocks.keys();
   }
@@ -212,7 +225,7 @@ public class BlockTimeSeries
   {
     if( m_blocks.containsKey( key ) )
     {
-      SortedMap map = (SortedMap)m_blocks.get( key );
+      SortedMap map = (SortedMap) m_blocks.get( key );
 
       FileWriter writer = new FileWriter( exportFile );
       String line;
@@ -221,8 +234,8 @@ public class BlockTimeSeries
       while( it.hasNext() )
       {
         Object dateKey = it.next();
-        Object value = (String)map.get( dateKey );
-        line = dateFormat.format( (Date)dateKey ) + " " + value;
+        Object value = (String) map.get( dateKey );
+        line = dateFormat.format( (Date) dateKey ) + " " + value;
         writeln( writer, line );
       }
       writer.close();
@@ -231,7 +244,7 @@ public class BlockTimeSeries
 
   public TreeMap getTimeSerie( String key )
   {
-    TreeMap resultData = (TreeMap)m_blocks.get( key );
+    TreeMap resultData = (TreeMap) m_blocks.get( key );
     return resultData;
   }
 

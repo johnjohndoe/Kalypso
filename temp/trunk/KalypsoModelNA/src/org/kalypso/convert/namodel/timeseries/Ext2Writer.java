@@ -43,7 +43,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -52,23 +51,22 @@ public class Ext2Writer
 {
   private final static long twelveHinMillis = 1000l * 60l * 60l * 12l;
 
-  //  private final static TimeZone m_timeZone = new SimpleTimeZone( 0, "ausgedacht" );
-
-  private final DateFormat m_dateFormat = new SimpleDateFormat( "dd MM yyyy 12 " );
+  // private final static TimeZone m_timeZone = new SimpleTimeZone( 0, "ausgedacht" );
 
   private final Date m_start;
 
   private final Date m_end;
 
+  private DateFormat m_dateFormat;
+
   public Ext2Writer( final Date start, final Date end )
   {
-    NATimeSettings.getInstance().updateDateFormat( m_dateFormat );
+    m_dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy 12 " ) );
     m_start = start;
     m_end = end;
   }
 
-  public void write( final IObservation observation, final String axisType, final Writer writer,
-      final String defaultValue ) throws IOException, SensorException
+  public void write( final IObservation observation, final String axisType, final Writer writer, final String defaultValue ) throws IOException, SensorException
   {
     final IAxis[] axisList = observation.getAxisList();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
@@ -76,10 +74,10 @@ public class Ext2Writer
     final ITuppleModel values = observation.getValues( null );
     int obsOffset = 0;
     final int maxOffset = values.getCount();
-    Date obsDate = (Date)values.getElement( obsOffset, dateAxis );
+    Date obsDate = (Date) values.getElement( obsOffset, dateAxis );
 
-    //    TimeserieUtils.
-    writer.write( "EX2\n" ); //header
+    // TimeserieUtils.
+    writer.write( "EX2\n" ); // header
     final Calendar calendarStart = NATimeSettings.getInstance().getCalendar();
     calendarStart.setTime( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 0 );
@@ -96,12 +94,12 @@ public class Ext2Writer
       while( date.getTime() - obsDate.getTime() > twelveHinMillis && obsOffset + 1 < maxOffset )
       {
         obsOffset++;
-        obsDate = (Date)values.getElement( obsOffset, dateAxis );
+        obsDate = (Date) values.getElement( obsOffset, dateAxis );
       }
       writer.write( m_dateFormat.format( date ) );
       if( Math.abs( obsDate.getTime() - date.getTime() ) <= twelveHinMillis )
       {
-        final Double value = (Double)values.getElement( obsOffset, valueAxis );
+        final Double value = (Double) values.getElement( obsOffset, valueAxis );
         writer.write( value.toString() );
       }
       else
