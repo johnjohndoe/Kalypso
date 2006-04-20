@@ -40,14 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
-import java.util.Date;
-
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -70,25 +67,10 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final Class valueClass = (vpt).getValueClass();
-
-      if( String.class == valueClass )
-        return new StringModifier( vpt );
-      if( Integer.class == valueClass )
-        return new StringModifier( vpt );
-      if( Long.class == valueClass )
-        return new StringModifier( vpt );
-      if( Float.class == valueClass )
-        return new StringModifier( vpt );
-      if( Double.class == valueClass )
-        return new StringModifier( vpt );
-      if( Date.class == valueClass )
-        return new StringModifier( vpt );
-      if( Boolean.class == valueClass )
-        return new BooleanModifier( vpt );
       if( vpt.isGeometry() )
         return new ButtonModifier( vpt, fcl );
 
+      final Class valueClass = (vpt).getValueClass();
       final IGuiTypeHandler typeHandler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( valueClass );
       if( typeHandler != null )
         return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );

@@ -74,8 +74,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( final Feature feature,
-      final IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new TimeserieLinkFeatureDialog( feature, ftp );
   }
@@ -83,7 +82,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public Class getValueClass()
+  public Class getValueClass( )
   {
     return ObservationLinkHandler.CLASS_NAME;
   }
@@ -91,7 +90,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
-  public QName getTypeName()
+  public QName getTypeName( )
   {
     return ObservationLinkHandler.TYPE_NAME;
   }
@@ -105,14 +104,15 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     if( element == null )
       return "";
 
-    final String href = ( (TimeseriesLinkType)element ).getHref();
+    final String href = ((TimeseriesLinkType) element).getHref();
     return href == null ? "" : href;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName, org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
+   *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory )
+  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final CompositeType composite = factory.createCompositeType();
 
@@ -126,7 +126,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     // Text
     final Text text = factory.createText();
     text.setStyle( "SWT.NONE" );
-    text.setProperty( propertyName );
+    text.setProperty( property.getQName() );
 
     final GridData textData = factory.createGridData();
     textData.setHorizontalAlignment( "GridData.BEGINNING" );
@@ -137,20 +137,22 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     final Button button = factory.createButton();
     final GridData buttonData = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
-    button.setProperty( propertyName );
+    button.setProperty( property.getQName() );
 
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData(factory.createLayoutData( buttonData ) );
+    button.setLayoutData( factory.createLayoutData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
-    control.add(factory.createControl(text ));
-    control.add( factory.createControl(button ));
+    control.add( factory.createControl( text ) );
+    control.add( factory.createControl( button ) );
 
     return composite;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {

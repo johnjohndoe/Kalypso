@@ -79,6 +79,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
@@ -155,6 +156,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     THE_PLUGIN = this;
 
+    // TODO: move everything to start()!
+    
     configureLogger();
 
     try
@@ -554,9 +557,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_tsRepositoryContainer;
   }
 
-  public static void registerTypeHandler( ITypeRegistry marshallingRegistry, ITypeRegistry guiRegistry )
+  public static void registerTypeHandler( final ITypeRegistry marshallingRegistry, final ITypeRegistry guiRegistry )
   {
-
     try
     {
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
@@ -575,6 +577,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       }
       if( guiRegistry != null )
       {
+        GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
@@ -583,7 +586,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       }
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
       MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
