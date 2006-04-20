@@ -107,6 +107,9 @@ public class GMLSchemaEditor extends EditorPart
         try
         {
           // final URL url = input.getStorage().getContents().gettoFile().toURL();
+          // TODO: we get problems here because this is not loaded via the schema cache, but inside, 
+          // we load depending schemata from the cache
+          
           final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( input.getStorage().getContents(), null );
           if( m_viewer != null )
           {

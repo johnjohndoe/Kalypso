@@ -40,8 +40,6 @@
  ------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -63,7 +61,7 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
   public IFeatureDialog createFeatureDialog( final Feature feature,
       final IPropertyType ftp );
 
-  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory );
+  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
 
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
 }

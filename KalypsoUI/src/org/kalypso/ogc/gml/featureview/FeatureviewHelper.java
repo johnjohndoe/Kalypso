@@ -57,7 +57,6 @@ import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
@@ -69,7 +68,6 @@ import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.Table;
-import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -103,41 +101,15 @@ public class FeatureviewHelper
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final Class clazz = vpt.getValueClass();
+      
+      // ignore 'boundedBy'
       if( QNAME_GML_BOUNDEDBY.equals( property ) )
         return;
-      else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date".indexOf( clazz.getName() ) != -1 )
-      {
-        final Text editor = FACTORY.createText();
-        editor.setStyle( "SWT.NONE" );
-        editor.setEditable( true );
-        editor.setProperty( property );
-
-        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-        griddata.setHorizontalSpan( 1 );
-        griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
-
-        editor.setLayoutData( jaxbgriddata );
-
-        type = editor;
-      }
-      else if( java.lang.Boolean.class == clazz )
-      {
-        final Checkbox checkbox = FACTORY.createCheckbox();
-        checkbox.setStyle( "SWT.NONE" );
-        checkbox.setEditable( true );
-        checkbox.setProperty( property );
-
-        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-        griddata.setHorizontalSpan( 1 );
-        griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
-        checkbox.setLayoutData( jaxbgriddata );
-
-        type = checkbox;
-      }
-      else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
+      
+      if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
       {
         final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
-        type = handler.createFeatureviewControl( property, FACTORY );
+        type = handler.createFeatureviewControl( ftp, FACTORY );
 
         if( type instanceof CompositeType )
         {
@@ -149,7 +121,11 @@ public class FeatureviewHelper
         {
           griddata.setHorizontalAlignment( "GridData.BEGINNING" );
           griddata.setHorizontalSpan( 1 );
+          
+          // TODO is this ok for all controls?
+          griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
         }
+
 
         type.setLayoutData( jaxbgriddata );
       }

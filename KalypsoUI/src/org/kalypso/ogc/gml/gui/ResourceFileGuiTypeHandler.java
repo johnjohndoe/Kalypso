@@ -57,12 +57,12 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return new ResourceFileDialog( feature, ftp );
   }
 
-  public ControlType createFeatureviewControl( final QName propertyName, final ObjectFactory factory )
+  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
     final GridData griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
-    button.setProperty( propertyName );
+    button.setProperty( property.getQName() );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
     button.setLayoutData( factory.createGridData( griddata ) );

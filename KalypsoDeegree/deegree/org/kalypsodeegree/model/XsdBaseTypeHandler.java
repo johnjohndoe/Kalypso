@@ -48,164 +48,158 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.ToStringContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
-import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.gmlschema.types.UnmarshalResultProvider;
 import org.kalypso.gmlschema.types.SimpleTypeUnmarshalingContentHandler;
+import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.gmlschema.types.UnMarshallResultEater;
+import org.kalypso.gmlschema.types.UnmarshalResultProvider;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author doemming
- * 
  */
 public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
 {
+  private final QName m_typeQName;
 
-	final QName m_typeQName;
+  private final Class m_valueClass;
 
-	private final Class m_valueClass;
+  public XsdBaseTypeHandler( String xsdTypeName, Class valueClass )
+  {
+    m_valueClass = valueClass;
+    m_typeQName = new QName( NS.NS_XSD_SCHEMA, xsdTypeName );
+  }
 
-	public XsdBaseTypeHandler(String xsdTypeName, Class valueClass)
-	{
-		m_valueClass = valueClass;
-		m_typeQName = new QName(NS.NS_XSD_SCHEMA, xsdTypeName);
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
+   *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
+   */
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
+  {
+    try
+    {
+      final String namespaceURI = propQName.getNamespaceURI();
+      final String localPart = propQName.getLocalPart();
+      final String qNameString = propQName.getPrefix() + ":" + localPart;
+      contentHandler.startElement( namespaceURI, localPart, qNameString, null );
+      final String valueAsXMLString = convertToXMLString( (T) value );
+      final char[] cs = valueAsXMLString.toCharArray();
+      contentHandler.characters( cs, 0, cs.length );
+      contentHandler.endElement( namespaceURI, localPart, qNameString );
+    }
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new TypeRegistryException( e );
+    }
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName,
-	 *      java.lang.Object, org.xml.sax.ContentHandler,
-	 *      org.xml.sax.ext.LexicalHandler, java.net.URL)
-	 */
-	public void marshal(QName propQName, Object value,
-			ContentHandler contentHandler, LexicalHandler lexicalHandler,
-			URL context) throws TypeRegistryException
-	{
-		try
-		{
-			final String namespaceURI = propQName.getNamespaceURI();
-			final String localPart = propQName.getLocalPart();
-			final String qNameString = propQName.getPrefix() + ":" + localPart;
-			contentHandler.startElement(namespaceURI, localPart, qNameString,
-					null);
-			final String valueAsXMLString = convertToXMLString((T) value);
-			final char[] cs = valueAsXMLString.toCharArray();
-			contentHandler.characters(cs, 0, cs.length);
-			contentHandler.endElement(namespaceURI, localPart, qNameString);
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new TypeRegistryException(e);
-		}
-	}
+  public abstract String convertToXMLString( final T value );
 
-	public abstract String convertToXMLString(T value);
+  public abstract T convertToJavaValue( final String xmlString );
 
-	public abstract T convertToJavaValue(String xmlString);
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
+   */
+  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
+  {
+    try
+    {
+      // xml to memory
+      final ToStringContentHandler toStringHandler = new ToStringContentHandler();
+      final UnmarshalResultProvider result = new UnmarshalResultProvider()
+      {
+        public Object getResult( )
+        {
+          try
+          {
+            final String stringResult = toStringHandler.getResult();
+            return parseType( stringResult );
+          }
+          catch( final Exception e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            
+            // why no rethrow exception here?
+          }
+          return null;
+        }
+      };
 
-	/**
-	 * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
-	 *      org.kalypso.contribs.java.net.IUrlResolver,
-	 *      org.kalypso.gmlschema.types.MarshalResultEater)
-	 */
-	public void unmarshal(XMLReader xmlReader, IUrlResolver urlResolver,
-			UnMarshallResultEater marshalResultEater)
-			throws TypeRegistryException
-	{
-		try
-		{
-			// xml to memory
-			final ToStringContentHandler toStringHandler = new ToStringContentHandler();
-			final UnmarshalResultProvider result = new UnmarshalResultProvider()
-			{
-				public Object getResult()
-				{
-					try
-					{
-						final String stringResult = toStringHandler.getResult();
-						return parseType(stringResult);
-					} catch (Exception e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return null;
-				}
-			};
+      final SimpleTypeUnmarshalingContentHandler tmpCH = new SimpleTypeUnmarshalingContentHandler( toStringHandler, result, marshalResultEater );
+      xmlReader.setContentHandler( tmpCH );
+    }
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new TypeRegistryException( e );
+    }
+  }
 
-			final SimpleTypeUnmarshalingContentHandler tmpCH = new SimpleTypeUnmarshalingContentHandler(
-					toStringHandler, result, marshalResultEater);
-			xmlReader.setContentHandler(tmpCH);
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
+   */
+  public String getShortname( )
+  {
+    return m_typeQName.getLocalPart();
+  }
 
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new TypeRegistryException(e);
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  {
+    // why not?
+    throw new CloneNotSupportedException();
+  }
 
-		}
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String xmlString )
+  {
+    if( xmlString == null || xmlString.length() < 1 )
+      return null;
+    try
+    {
+      return convertToJavaValue( xmlString );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+      
+      // TODO: throw parse exception?!
+    }
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
-	 */
-	public String getShortname()
-	{
-		return m_typeQName.getLocalPart();
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
+   */
+  public Class getValueClass( )
+  {
+    return m_valueClass;
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
-	 */
-	public Object cloneObject(Object objectToClone)
-			throws CloneNotSupportedException
-	{
-		throw new CloneNotSupportedException();
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
+   */
+  public QName getTypeName( )
+  {
+    return m_typeQName;
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
-	 */
-	public Object parseType(String xmlString)
-	{
-		if (xmlString == null || xmlString.length() < 1)
-			return null;
-		try
-		{
-			return convertToJavaValue(xmlString);
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-
-	/**
-	 * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
-	 */
-	public Class getValueClass()
-	{
-		return m_valueClass;
-	}
-
-	/**
-	 * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-	 */
-	public QName getTypeName()
-	{
-		return m_typeQName;
-	}
-
-	/**
-	 * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-	 */
-	public boolean isGeometry()
-	{
-		return false;
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
+  public boolean isGeometry( )
+  {
+    return false;
+  }
 
 }
