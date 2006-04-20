@@ -822,10 +822,6 @@
             factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
             name="%Extension.repository.factories.localDirectory">
       </repository>
-      <repository
-            factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
-            name="%Extension.repository.factories.timeseriesService">
-      </repository>
    </extension>
       <extension
          point="org.kalypso.services.core.client.serviceproxy">
