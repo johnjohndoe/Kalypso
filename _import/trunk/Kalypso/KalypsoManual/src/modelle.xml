@@ -1486,6 +1486,111 @@
             </row>
 
             <row>
+              <entry><emphasis role="bold">Kalibrierungsfaktoren der
+              Retentionskonstanten</emphasis></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+
+              <entry></entry>
+            </row>
+
+            <row>
+              <entry>faktorRetvs</entry>
+
+              <entry>Faktor k QObfl.vers.</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante versiegelter
+              Abfluss (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetob</entry>
+
+              <entry>Faktor k QObfl.nat.</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante
+              Oberflächenabfluss (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetint</entry>
+
+              <entry>Faktor k QIntf.</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante Interflow
+              (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetbas</entry>
+
+              <entry>Faktor k QBasis</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante Basisabfluss
+              (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetgw</entry>
+
+              <entry>Faktor k QGw</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante
+              Grundwasserabfluss (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetklu</entry>
+
+              <entry>Faktor k Q tiefenGw</entry>
+
+              <entry>[-]</entry>
+
+              <entry></entry>
+
+              <entry>Korrekturfaktor der Retentionskonstante Tiefengrundwasser
+              (optional)</entry>
+
+              <entry>double</entry>
+            </row>
+
+            <row>
               <entry><emphasis role="bold">Grundwasser</emphasis></entry>
 
               <entry></entry>
@@ -1796,22 +1901,6 @@
 
               <entry>Faktor Anfangsinhalt Grundwasserspeicher. Parameter der
               Modelloptimierung im Vorhersagefall - <literal>anderenfalls
-              unbesetzt</literal>.</entry>
-
-              <entry>double</entry>
-            </row>
-
-            <row>
-              <entry>faktorBianf</entry>
-
-              <entry>Faktor AIGW</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry>1</entry>
-
-              <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0). Parameter
-              der Modelloptimierung im Vorhersagefall - <literal>anderenfalls
               unbesetzt</literal>.</entry>
 
               <entry>double</entry>
@@ -2151,21 +2240,6 @@
             </row>
 
             <row>
-              <entry>pegelBerechnetZRAblage</entry>
-
-              <entry>ZR Ablage Berechnung</entry>
-
-              <entry>[ - ]</entry>
-
-              <entry></entry>
-
-              <entry>Verknüpfung zur Ablage des Ergebnisses in der Datenbank
-              (optional)</entry>
-
-              <entry>TimeseriesLink Feature Property</entry>
-            </row>
-
-            <row>
               <entry>zuflussZR</entry>
 
               <entry>Zufluss Berechnung</entry>
@@ -2174,7 +2248,8 @@
 
               <entry>Zufluss/*.zml</entry>
 
-              <entry>Zufluss Zeitreihe (lokal)</entry>
+              <entry>Zufluss Zeitreihe, lokal im Rechenfall
+              (optionall)</entry>
 
               <entry>TimeseriesLink Feature Property</entry>
             </row>
