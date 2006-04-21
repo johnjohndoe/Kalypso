@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -529,6 +530,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public ResourceBundle getResourceBundle( )
   {
     return m_resourceBundle;
+  }
+
+  public TimeZone getDisplayTimeZone( )
+  {
+
+    final String timeZoneID = getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
+    try
+    {
+      return TimeZone.getTimeZone( timeZoneID );
+    }
+    catch( Exception e )
+    {
+      return TimeZone.getDefault();
+    }
   }
 
   public CS_CoordinateSystem getCoordinatesSystem( )
