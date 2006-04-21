@@ -58,7 +58,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-  public KalypsoPreferencePage()
+  public KalypsoPreferencePage( )
   {
     super( GRID );
     setPreferenceStore( KalypsoGisPlugin.getDefault().getPreferenceStore() );
@@ -72,34 +72,28 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void createFieldEditors( )
   {
-    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
-        "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:",
-        getFieldEditorParent() ) );
+    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
 
     // set echo char because it is a password field
-    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS,
-        "Http-Proxy Pass&wort:", getFieldEditorParent() );
+    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:",
-        getFieldEditorParent() ) );
-
+    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() ) );
+    final StringFieldEditor timeZoneFieldEditor = new StringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, "Zeitzone für Diagramm/Tabellen-Darstellung\n(z.B. 'GMT+1' fuer Winterzeit Deutschland)", getFieldEditorParent() );
+    addField( timeZoneFieldEditor );
 
     //
-    //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
+    // addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
     // multiple-choice preference", 1,
-    //        new String[][]
-    //        {
-    //        { "&Choice 1", "choice1" },
-    //        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
+    // new String[][]
+    // {
+    // { "&Choice 1", "choice1" },
+    // { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
   }
 
   /**
@@ -107,7 +101,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
    */
   public void init( IWorkbench workbench )
   {
-  // empty
+    // empty
   }
 
   /**

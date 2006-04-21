@@ -57,6 +57,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
@@ -108,7 +109,7 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * By default the timezone is the default one. It can be overriden by the value of the template.
    */
-  private TimeZone m_timezone = TimeZone.getDefault();
+  private TimeZone m_timezone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
 
   /**
    * Default constructor: enables all the features
@@ -382,14 +383,14 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     return m_hiddenTypes;
   }
-  
+
   public void setTimezone( final TimeZone timezone )
   {
     m_timezone = timezone;
-    
+
     fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
   }
-  
+
   public TimeZone getTimezone( )
   {
     return m_timezone;
