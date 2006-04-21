@@ -86,13 +86,13 @@ public class NetWorker
 
   private String contentType = null;
 
-  private String request = null;
+  private String m_request = null;
 
-  private URL url = null;
+  private URL m_url = null;
 
-  private int reqType = -1;
+  private int m_reqType = -1;
 
-  private String encoding = null;
+  private String m_encoding = null;
 
   /**
    * constructor for initializing a HTTP GET connection with UTF-8 as character encoding
@@ -103,9 +103,9 @@ public class NetWorker
   public NetWorker( URL url )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.reqType = GET;
-    this.url = url;
-    this.encoding = "UTF-8";
+    this.m_reqType = GET;
+    this.m_url = url;
+    this.m_encoding = "UTF-8";
     Debug.debugMethodEnd();
   }
 
@@ -120,9 +120,9 @@ public class NetWorker
   public NetWorker( String encoding, URL url )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.reqType = GET;
-    this.url = url;
-    this.encoding = encoding;
+    this.m_reqType = GET;
+    this.m_url = url;
+    this.m_encoding = encoding;
     Debug.debugMethodEnd();
   }
 
@@ -137,10 +137,10 @@ public class NetWorker
   public NetWorker( URL url, String request )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.reqType = POST;
-    this.url = url;
-    this.request = request;
-    this.encoding = "UTF-8";
+    this.m_reqType = POST;
+    this.m_url = url;
+    this.m_request = request;
+    this.m_encoding = "UTF-8";
     Debug.debugMethodEnd();
   }
 
@@ -157,10 +157,10 @@ public class NetWorker
   public NetWorker( String encoding, URL url, String request )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.reqType = POST;
-    this.url = url;
-    this.request = request;
-    this.encoding = encoding;
+    this.m_reqType = POST;
+    this.m_url = url;
+    this.m_request = request;
+    this.m_encoding = encoding;
     Debug.debugMethodEnd();
   }
 
@@ -181,23 +181,23 @@ public class NetWorker
     Debug.debugMethodBegin( this, "getInputStream" );
 
     // open connection to the requested host
-    URLConnection connection = url.openConnection();
+    URLConnection connection = m_url.openConnection();
 
     connection.setDoInput( false );
 
     // sets the content type of the request
     connection.setRequestProperty( "Content-Type", "text/xml" );
 
-    if( ( reqType == POST ) && ( request != null ) )
+    if( ( m_reqType == POST ) && ( m_request != null ) )
     {
       connection.setDoOutput( true );
 
       // get connection stream
-      OutputStreamWriter osw = new OutputStreamWriter( connection.getOutputStream(), encoding );
+      OutputStreamWriter osw = new OutputStreamWriter( connection.getOutputStream(), m_encoding );
       PrintWriter os = new PrintWriter( osw );
 
       // write post request into stream
-      os.print( request );
+      os.print( m_request );
       os.close();
     }
     else
@@ -220,7 +220,7 @@ public class NetWorker
     Debug.debugMethodBegin( this, "getInputStream" );
 
     // open connection to the requested host
-    final URLConnection connection = url.openConnection();
+    final URLConnection connection = m_url.openConnection();
     configureProxy( connection );
     connection.setDoInput( true );
 
@@ -230,16 +230,16 @@ public class NetWorker
     // provide result stream
     InputStream is = null;
 
-    if( ( reqType == POST ) && ( request != null ) )
+    if( ( m_reqType == POST ) && ( m_request != null ) )
     {
       connection.setDoOutput( true );
 
       // get connection stream
-      OutputStreamWriter osw = new OutputStreamWriter( connection.getOutputStream(), encoding );
+      OutputStreamWriter osw = new OutputStreamWriter( connection.getOutputStream(), m_encoding );
       PrintWriter os = new PrintWriter( osw );
 
       // write post request into stream
-      os.print( request );
+      os.print( m_request );
       os.close();
     }
     else

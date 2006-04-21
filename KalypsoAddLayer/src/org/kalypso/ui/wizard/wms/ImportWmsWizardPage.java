@@ -43,14 +43,12 @@ package org.kalypso.ui.wizard.wms;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
@@ -79,6 +77,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.ImageProvider;
+import org.kalypsodeegree_impl.services.wms.WMSCapabilitiesHelper;
 
 /**
  * @author Kuepferle, Doemming
@@ -391,11 +390,7 @@ public class ImportWmsWizardPage extends WizardPage
       return m_capabilites.get( service );
 
     // create quuery url
-    final String query = service.getQuery();
-    final String getCapabilitiesQuery = "SERVICE=WMS&REQUEST=GetCapabilities";
-    final String queryToken = (query == null || query.length() == 0) ? "?" : "&";
-    final String urlGetCapabilitiesString = service.toString() + queryToken + getCapabilitiesQuery;
-    final URL urlGetCapabilities = new URL( urlGetCapabilitiesString );
+    final URL urlGetCapabilities = WMSCapabilitiesHelper.createCapabilitiesRequest( service );
 
     // TODO set timeout somewhere
     // maybe inside the createHttpClient Method of the Plugin-Class
@@ -404,10 +399,12 @@ public class ImportWmsWizardPage extends WizardPage
     final InputStream inputStream = URLGetter.getFromURL( getContainer(), urlGetCapabilities, timeOut );
     final Reader urlReader = new InputStreamReader( inputStream );
 
-    final String capabilitiesAsString = IOUtils.toString( urlReader );
-    final StringReader reader = new StringReader( capabilitiesAsString );
+//    final String capabilitiesAsString = IOUtils.toString( urlReader );
+//    final StringReader reader = new StringReader( capabilitiesAsString );
 
-    System.out.println( capabilitiesAsString );
+//    System.out.println( capabilitiesAsString );
+    
+    final Reader reader = urlReader;
 
     // TODO: handle exceptions and at least close streams! this is no error handling!
     final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();

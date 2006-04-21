@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wms;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.services.wms.capabilities.Layer;
@@ -70,7 +71,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  private ArrayList<String> m_catalog;
+  private final ArrayList<String> m_catalog = new ArrayList<String>();
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -148,7 +149,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, IStructuredSelection selection )
   {
     // read service catalog file
     InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
@@ -156,10 +157,11 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     {
       readCatalog( is );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
-      m_catalog = new ArrayList<String>();
+      
+      m_catalog.clear();
     }
     finally
     {
@@ -187,19 +189,21 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     return m_catalog;
   }
 
-  public void readCatalog( InputStream is ) throws IOException
+  public void readCatalog( final InputStream is ) throws IOException
   {
-    ArrayList<String> catalog = new ArrayList<String>();
-    BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
-    String line = br.readLine();
-    while( line != null )
+    m_catalog.clear();
+    
+    // use properties to parse catalog: dont do everything yourself
+    // fixes bug with '=' inside of URLs
+    final Properties properties = new Properties();
+    properties.load( is );
+    
+    final Set<Entry<Object, Object>> name = properties.entrySet();
+    for( final Entry<Object, Object> entry : name )
     {
-      if( line.startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
-        catalog.add( (line.split( "=" ))[1] );
-      line = br.readLine();
+      if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
+        m_catalog.add( entry.getValue().toString() );
     }
-
-    m_catalog = catalog;
   }
 
   /**
