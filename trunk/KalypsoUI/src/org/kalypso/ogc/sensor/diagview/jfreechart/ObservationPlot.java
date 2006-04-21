@@ -49,10 +49,12 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,6 +62,7 @@ import javax.swing.ImageIcon;
 
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.IntervalMarker;
@@ -146,8 +149,6 @@ public class ObservationPlot extends XYPlot
    */
   public ObservationPlot( final DiagView view ) throws SensorException
   {
-    super();
-
     // space between axes and data area
     setAxisOffset( new Spacer( Spacer.ABSOLUTE, 5, 5, 5, 5 ) );
 
@@ -166,6 +167,8 @@ public class ObservationPlot extends XYPlot
       addCurve( (DiagViewCurve) curves[i] );
 
     setNoDataMessage( "Keine Daten vorhanden" );
+    
+    setTimezone( view.getTimezone() );
   }
 
   public void dispose( )
@@ -470,15 +473,13 @@ public class ObservationPlot extends XYPlot
       }
       catch( final SensorException e )
       {
-        e.printStackTrace();
+        Logger.getLogger( getClass().getName() ).warning( e.getLocalizedMessage() );
       }
     }
   }
 
   /**
    * Removes the curve from the plot
-   * 
-   * @param curve
    */
   public synchronized void removeCurve( final DiagViewCurve curve )
   {
@@ -717,6 +718,33 @@ public class ObservationPlot extends XYPlot
     public String toString( )
     {
       return getClass().getName() + ": " + this.label + " " + this.alarm + " " + this.axis.getLabel();
+    }
+  }
+
+  public void setTimezone( final TimeZone timezone )
+  {
+    for( int i = 0; i < getDomainAxisCount(); i++ )
+    {
+      final ValueAxis axis = getDomainAxis( i );
+      if( axis instanceof DateAxis )
+      {
+        final DateAxis da = (DateAxis) axis;
+        final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
+        df.setTimeZone( timezone );
+        da.setDateFormatOverride( df );
+      }
+    }
+
+    for( int i = 0; i < getRangeAxisCount(); i++ )
+    {
+      final ValueAxis axis = getRangeAxis( i );
+      if( axis instanceof DateAxis )
+      {
+        final DateAxis da = (DateAxis) axis;
+        final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
+        df.setTimeZone( timezone );
+        da.setDateFormatOverride( df );
+      }
     }
   }
 }

@@ -45,6 +45,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import javax.swing.JLabel;
@@ -126,5 +127,14 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   public void clearMarkers( )
   {
     m_markers.clear();
+  }
+
+  /**
+   * Set the timezone for the rendering component. This is the timezone into which the dates should be displayed in the
+   * table. It allows you to override the default behaviour which is uses the locale setting.
+   */
+  public void setTimeZone( final TimeZone tz )
+  {
+    df.setTimeZone( tz );
   }
 }
