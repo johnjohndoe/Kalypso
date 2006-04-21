@@ -828,9 +828,6 @@
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_CalculationService_Impl"
             interfacename="ICalculationService"/>
-      <serviceproxy
-            class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
-            interfacename="IObservationService"/>
    </extension>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
