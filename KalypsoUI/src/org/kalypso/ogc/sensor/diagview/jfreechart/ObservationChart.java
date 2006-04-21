@@ -205,6 +205,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
           {
             setTitle( view.getTitle() );
             setLegendProperties( view.getLegendName(), view.isShowLegend() );
+            obsPlot.setTimezone( view.getTimezone() );
             break;
           }
 

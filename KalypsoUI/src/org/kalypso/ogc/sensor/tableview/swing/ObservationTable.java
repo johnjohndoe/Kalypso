@@ -89,7 +89,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   private final TableView m_view;
 
-  private final DateTableCellRenderer m_dateRenderer;
+  protected final DateTableCellRenderer m_dateRenderer;
 
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
@@ -134,7 +134,9 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_model = (ObservationTableModel)getModel();
     m_model.setRules( template.getRules() );
 
+    // date renderer with timezone
     m_dateRenderer = new DateTableCellRenderer();
+    m_dateRenderer.setTimeZone( template.getTimezone() );
 
     m_nbRenderer = new MaskedNumberTableCellRenderer( m_model );
 
@@ -288,6 +290,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         {
           final TableView view = (TableView)evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
+          m_dateRenderer.setTimeZone( view.getTimezone() );
         }
       }
     };

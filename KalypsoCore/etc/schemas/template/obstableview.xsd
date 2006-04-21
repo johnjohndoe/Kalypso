@@ -4,9 +4,10 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:kalypso="types.template.kalypso.org" 
 	xmlns:myns="obstableview.template.kalypso.org">
+
 	<xs:import namespace="types.template.kalypso.org" 
 		schemaLocation="./layerTypes.xsd"/>
-	<!-- typeRenderingRule -->
+
 	<xs:complexType name="typeRenderingRule">
 		<xs:sequence>
 			<xs:element name="foregroundcolor" type="xs:string" minOccurs="0" 
@@ -65,8 +66,7 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<!-- / typeRenderingRule -->
-	<!-- typeColumn -->
+
 	<xs:complexType name="typeColumn">
 		<xs:attribute name="id" type="xs:string" use="required">
 			<xs:annotation>
@@ -108,8 +108,7 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<!-- / typeColumn -->
-	<!-- typeObservation -->
+
 	<xs:complexType name="typeObservation">
 		<xs:complexContent>
 			<xs:extension base="kalypso:kalypsoLinkType">
@@ -120,8 +119,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- / typeObservation -->
-	<!-- obstableview -->
+
 	<xs:element name="obstableview">
 		<xs:complexType>
 			<xs:sequence>
@@ -140,6 +138,13 @@
 						of their names. If false, the columns are sorted according to the order
 						into which the associated observations got loaded.
 					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+				<xs:element name="timezone" type="xs:string" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>the timezone into which the dates are displayed in the table. When no
+							timezone is defined, KALYPSO uses the default timezone of the system.</xs:documentation>
+					</xs:annotation>
 				</xs:element>
 				
 				<xs:element name="rules" minOccurs="0" maxOccurs="1">

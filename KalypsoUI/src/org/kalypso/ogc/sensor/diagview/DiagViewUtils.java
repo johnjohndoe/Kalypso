@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -193,6 +194,10 @@ public class DiagViewUtils
 
     xmlTemplate.setLegend( xmlLegend );
     xmlTemplate.setTitle( view.getTitle() );
+
+    // only set timezone if not default one
+    if( !view.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
+      xmlTemplate.setTimezone( view.getTimezone().getID() );
 
     final List<TypeAxis> xmlAxes = xmlTemplate.getAxis();
 
@@ -346,6 +351,13 @@ public class DiagViewUtils
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
+    }
+
+    // timezone is optional
+    if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
+      view.setTimezone( timeZone );
     }
 
     // axes spec is optional

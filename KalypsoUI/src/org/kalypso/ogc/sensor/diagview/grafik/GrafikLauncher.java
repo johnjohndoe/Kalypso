@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -364,6 +365,13 @@ public class GrafikLauncher
     Number yUpper = new Double( Double.MIN_VALUE );
     final Set<XLine> xLines = new TreeSet<XLine>();
     final Map<Double, ValueAndColor> yLines = new HashMap<Double, ValueAndColor>();
+
+    // set the timezone of the dateformat
+    if( odt.getTimezone() != null && odt.getTimezone().length() > 0 )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( odt.getTimezone() );
+      GRAFIK_DF.setTimeZone( timeZone );
+    }
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
 

@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
@@ -105,6 +106,11 @@ public abstract class ObsView implements IObsViewEventProvider
   private List m_hiddenTypes = new ArrayList();
 
   /**
+   * By default the timezone is the default one. It can be overriden by the value of the template.
+   */
+  private TimeZone m_timezone = TimeZone.getDefault();
+
+  /**
    * Default constructor: enables all the features
    */
   public ObsView( )
@@ -153,40 +159,6 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     firePrintObsView( null );
   }
-
-  // public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
-  // {
-  // for( int i = 0; i < maxLoops; i++ )
-  // {
-  // if( !isLoading() )
-  // return true;
-  //
-  // try
-  // {
-  // Thread.sleep( sleepTime );
-  // }
-  // catch( InterruptedException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // }
-  //
-  // return false;
-  // }
-  //
-  // private boolean isLoading()
-  // {
-  // synchronized( m_items )
-  // {
-  // for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
-  // {
-  // if( ( (ObsViewItem)iter.next() ).isLoading() )
-  // return true;
-  // }
-  //
-  // return false;
-  // }
-  // }
 
   public void removeAllItems( )
   {
@@ -409,5 +381,17 @@ public abstract class ObsView implements IObsViewEventProvider
   public List getHiddenTypes( )
   {
     return m_hiddenTypes;
+  }
+  
+  public void setTimezone( final TimeZone timezone )
+  {
+    m_timezone = timezone;
+    
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
+  }
+  
+  public TimeZone getTimezone( )
+  {
+    return m_timezone;
   }
 }

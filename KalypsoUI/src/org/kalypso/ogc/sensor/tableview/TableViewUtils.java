@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -198,6 +199,10 @@ public final class TableViewUtils
     xmlTemplate.setRules( xmlRulesType );
     final List<TypeRenderingRule> xmlRules = xmlRulesType.getRenderingrule();
 
+    // only set timezone if not default one
+    if( !template.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
+      xmlTemplate.setTimezone( template.getTimezone().getID() );
+    
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
     {
@@ -275,6 +280,13 @@ public final class TableViewUtils
 
     view.setAlphaSort( xml.isAlphaSort() );
 
+    // timezone is optional
+    if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
+      view.setTimezone( timeZone );
+    }
+    
     final Rules trules = xml.getRules();
     if( trules != null )
     {
