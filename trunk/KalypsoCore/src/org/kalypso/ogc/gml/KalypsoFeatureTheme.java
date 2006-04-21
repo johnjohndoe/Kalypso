@@ -95,6 +95,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_featureType = getFeatureType();
 
     m_workspace.addModellListener( this );
+
   }
 
   public void dispose( )
@@ -140,7 +141,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( featureFromPath instanceof FeatureList )
     {
       fl = (FeatureList) featureFromPath;
-      ft = fl.getParentFeatureTypeProperty().getTargetFeatureType();
+      // ft = fl.getParentFeatureTypeProperty().getTargetFeatureType();
+      ft = m_workspace.getFeatureTypeFromPath( m_featurePath );
     }
     else if( featureFromPath instanceof Feature )
     {
