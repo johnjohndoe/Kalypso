@@ -47,6 +47,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -62,9 +63,14 @@ import javax.media.jai.TiledImage;
 
 import org.deegree.services.OGCWebServiceClient;
 import org.deegree.services.OGCWebServiceEvent;
+import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
+import org.deegree.services.capabilities.DCPType;
+import org.deegree.services.capabilities.HTTP;
+import org.deegree.services.capabilities.Protocol;
 import org.deegree.services.wms.capabilities.Format;
 import org.deegree.services.wms.capabilities.Operation;
+import org.deegree.services.wms.capabilities.Request;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
 import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
@@ -76,6 +82,7 @@ import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -83,13 +90,17 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.services.wms.WMSCapabilitiesHelper;
 import org.kalypsodeegree_impl.tools.NetWorker;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
+
+import com.sun.xml.stream.writers.WriterUtility;
 
 /**
  * @author Doemming Kuepferle
@@ -160,19 +171,26 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
     try
     {
-      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-      final URL url = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
-      // final URL url = new URL( service + "?SERVICE=WMS&REQUEST=GetCapabilities" );
-      final URLConnection c = url.openConnection();
-      NetWorker.configureProxy( c );
-      c.addRequestProperty( "SERVICE", "WMS" );
+      final URL url = WMSCapabilitiesHelper.createCapabilitiesRequest( new URL( service ) );
 
+      final URLConnection c = url.openConnection();
+      
+      // TODO this is another mechanism than used normally in Kalypso -> we will get problems here with proxies
+      NetWorker.configureProxy( c );
+
+      // warum nochmal??
+      c.addRequestProperty( "SERVICE", "WMS" );
       c.addRequestProperty( "REQUEST", "GetCapabilities" );
 
       // create capabilites from the request
       // TODO check that this does not wait forever, if there is no connection
+      // TODO: refacotr to use same mechanism as ImportWMSWizardPage to read capabilities
+      // TODO: close connection + stream!!!
       final Reader reader = new InputStreamReader( c.getInputStream() );
+
+      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
       m_wmsCaps = wmsCapFac.createCapabilities( reader );
+      
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
 
       // match the local with the remote coordiante system
@@ -255,8 +273,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     m_lockRequestEnvLocalSRS = targetEnvLocalSRS;
 
     final String id = "KalypsoWMSRequest" + getName() + Long.toString( (new Date()).getTime() );
-    final HashMap parameterMap = createGetMapRequestParameter();
+    final HashMap<String, String> parameterMap = createGetMapRequestParameter();
+    
     final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
+    
     final int width = m_lastWidth;
     final int height = m_lastHeight;
     final OGCWebServiceClient client = new OGCWebServiceClient()
@@ -274,7 +294,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           return;
         final Job renderJob = new Job( "loading map from WMS " + getName() )
         {
-
           /**
            * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
            */
@@ -283,14 +302,28 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           {
             try
             {
-              final RenderedImage resultImage = (RenderedImage) ((WMSGetMapResponse) response).getMap();
+              final WMSGetMapResponse mapResponse = (WMSGetMapResponse) response;
+              
+              final RenderedImage resultImage = (RenderedImage) (mapResponse).getMap();
               if( resultImage == null )
-                return StatusUtilities.createErrorStatus( "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
+              {
+                final OGCWebServiceRequest mapRequest = mapResponse.getRequest();
+                final Document exception = mapResponse.getException();
+                final StringWriter stringWriter = new StringWriter();
+                XMLHelper.writeDOM( exception, WriterUtility.DEFAULT_ENCODING, stringWriter );
+               
+                final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + ". Das Thema sollte unsichtbar geschaltet werden.", null );
+                status.add( StatusUtilities.createErrorStatus( "Request war: '" + mapRequest + "'" ) );
+                status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
+                status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, stringWriter.toString(), "\n", null ) );
+                
+                return status;
+              }
               final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
               setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
               return Status.OK_STATUS;
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               return StatusUtilities.statusFromThrowable( e, "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
             }
@@ -321,6 +354,43 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private HashMap<String, String> createGetMapRequestParameter( ) throws Exception
   {
     final HashMap<String, String> wmsParameter = new HashMap<String, String>();
+
+    // HACK: add existing query parts from base url
+    final Request capaRequest = m_wmsCaps.getCapability().getRequest();
+    final Operation operation = capaRequest.getOperation( 0 );
+    final DCPType[] types = operation.getDCPTypes();
+    for( final DCPType type : types )
+    {
+      final Protocol protocol = type.getProtocol();
+      if( protocol instanceof HTTP )
+      {
+        final HTTP httpProtocol = (HTTP) protocol;
+        final URL[] getOnlineResources = httpProtocol.getGetOnlineResources();
+        for( final URL url : getOnlineResources )
+        {
+          if( url != null )
+          {
+            final String query = url.getQuery();
+            final String[] requestParts = query.split( "&" );
+            for( final String requestPart : requestParts )
+            {
+              final String[] queryParts = requestPart.split( "=" );
+              if( queryParts.length != 2 )
+                continue;
+              
+              wmsParameter.put( queryParts[0], queryParts[1] );
+            }
+            
+            // the first valid url is enough
+            break;
+          }
+
+          // the first http-protocol is enough
+          break;
+        }
+      }
+    }
+
     wmsParameter.put( "SERVICE", "WMS" );
     wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
@@ -338,6 +408,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     wmsParameter.put( "HEIGHT", "" + m_lastHeight );
     wmsParameter.put( "SRS", m_remoteSRS.getName() );
 
+    
     // if( m_authentification )
     // {
     // if(m_pass == null || m_user == null )
@@ -370,7 +441,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    */
   protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width, final int height, final GeoTransform geoTransform ) throws Exception
   {
-
     try
     {
       final Image buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );

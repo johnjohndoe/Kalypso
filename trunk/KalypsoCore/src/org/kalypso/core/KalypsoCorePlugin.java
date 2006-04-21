@@ -46,9 +46,6 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
- *
- * TODO: insert type comment here
- *
  * @author belger
  */
 public class KalypsoCorePlugin extends Plugin
@@ -56,6 +53,11 @@ public class KalypsoCorePlugin extends Plugin
   private static KalypsoCorePlugin m_default;
   private IFeatureSelectionManager m_selectionManager;
 
+  public static String getID()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+  
   public static KalypsoCorePlugin getDefault()
   {
     return m_default;
