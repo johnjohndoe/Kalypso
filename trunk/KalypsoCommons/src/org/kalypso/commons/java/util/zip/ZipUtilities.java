@@ -158,11 +158,26 @@ public class ZipUtilities
    */
   public static void zip( final File zipfile, final File dir ) throws IOException
   {
-    ZipFileVisitor visitor = new ZipFileVisitor( zipfile );
-    visitor.setBasePattern( dir.getAbsolutePath() );
-    visitor.setBaseReplace( "" );
-    FileUtilities.accept( dir, visitor, true );
-    visitor.close();
+    final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
+    zip( zos, dir );
+  }
+  
+  /**
+   * Zip a dir into a zip-stream. the streamgets closed by this operation.
+   */
+  public static void zip( final ZipOutputStream zos, final File dir ) throws IOException
+  {
+    ZipFileVisitor visitor = new ZipFileVisitor( zos );
+    try
+    {
+      visitor.setBasePattern( dir.getAbsolutePath() );
+      visitor.setBaseReplace( "" );
+      FileUtilities.accept( dir, visitor, true );
+    }
+    finally
+    {
+      visitor.close();
+    }
   }
 
   /**

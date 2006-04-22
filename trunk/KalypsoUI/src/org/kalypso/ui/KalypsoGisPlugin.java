@@ -68,6 +68,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -455,10 +456,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         cacheDir.mkdir();
         GMLSchemaCatalog.init( theCatalog, cacheDir );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
-        // TODO ja was tun ????
         e.printStackTrace();
+
+        // at least log it
+        getLog().log( StatusUtilities.statusFromThrowable(e, "Error while initializing schema catalog") );
       }
     }
   }
@@ -484,6 +487,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
+    
+    GMLSchemaCatalog.release();
   }
 
   public static String getId( )
