@@ -61,6 +61,7 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     m_axisTypeValue = config.getAttribute( "axisType" );
   }
 
+  @Override
   public String toString()
   {
     return m_title;
