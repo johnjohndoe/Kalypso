@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.eindim" version="0.1"
-	xmlns:eind="org.kalypso.model.eindim" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"></import>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"></import>
-	<element name="strand" type="eind:StrandType" />
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Monika Thül (BCE GmbH) -->
+<schema xmlns:eind="org.kalypso.model.eindim" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.model.eindim" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<element name="strand" type="eind:StrandType"/>
 	<complexType name="StrandType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="strandElement" type="eind:StrandElementType" minOccurs="0"
-						maxOccurs="unbounded" />
+					<element name="strandElement" type="eind:StrandElementType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
 	<!--  Strang-Element -->
-	<complexType name="StrangElementType">
+	<complexType name="StrandElementType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -45,22 +41,17 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profilline" type="gml:PolygoneZ">
+					<element name="profilline" type="gml:PolygonType">
 						<annotation>
 							<appinfo>
-								<cachedproperty
-									method="org.kalypso.model.eindim.tuhh.gml.ProfilGeomCacher"
-									input="http://www.tuhh.de/kalypso1D:profillink"
-									validity="http://www.tuhh.de/kalypso1D:cachedate" />
+								<cachedproperty method="org.kalypso.model.eindim.tuhh.gml.ProfilGeomCacher" input="http://www.tuhh.de/kalypso1D:profillink" validity="http://www.tuhh.de/kalypso1D:cachedate"/>
 							</appinfo>
 							<documentation xml:lang="de">
 								<label>Geometrie</label>
 								<tooltip>Geometrie des Profils</tooltip>
 								<description>
-									Die Geometrien des Profils in Form eines Features mit mehreren
-									Geometrie-Properties (z.B. Profillinie, Punkte, Marker). Dieses
-									Feature ist in Wirklichkeit eine Kopie aus dem Referenzierten
-									Profil und wird hier nur gecached. Bei Aenderungen des Profil
+									Die Geometrien des Profils in Form eines Features mit mehreren Geometrie-Properties (z.B. Profillinie, Punkte, Marker). Dieses
+									Feature ist in Wirklichkeit eine Kopie aus dem Referenzierten Profil und wird hier nur gecached. Bei Aenderungen des Profil
 									muss das Feature neu generiert werden.
 								</description>
 							</documentation>
@@ -79,8 +70,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profileLink" type="eind:ProfileAssociationType" minOccurs="1"
-						maxOccurs="1">
+					<element name="profileLink" type="eind:ProfileAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profil</label>
@@ -92,18 +82,16 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
 	<complexType name="ProfileAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="eind:profile" />
+					<element ref="eind:profile"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
-	<element name="profile" type="eind:ProfileType" substitutionGroup="gml:_Feature" />
+	<element name="profile" type="eind:ProfileType" substitutionGroup="gml:_Feature"/>
 	<complexType name="ProfileType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -121,5 +109,4 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
 </schema>
