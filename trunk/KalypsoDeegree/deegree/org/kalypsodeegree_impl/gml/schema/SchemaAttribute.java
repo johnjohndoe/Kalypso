@@ -71,6 +71,7 @@ public class SchemaAttribute
     return m_ValueNS;
   }
 
+  @Override
   public String toString()
   {
     return getClass().toString() + m_NS + ":" + m_Name + "='" + m_ValueNS + ":" + m_Value + "'";

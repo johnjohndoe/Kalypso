@@ -4,7 +4,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * @author doemming this class extends the deegree feature interface and implements methods to handle properties that

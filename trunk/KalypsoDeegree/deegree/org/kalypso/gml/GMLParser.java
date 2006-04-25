@@ -70,6 +70,7 @@ import org.xml.sax.XMLReader;
  * @deprecated do not use anymore
  * @see GMLSerializer
  */
+@Deprecated
 public class GMLParser
 {
 	public GMLWorkspace parseGML(final URL gmlURL) throws SAXException,
