@@ -71,7 +71,6 @@ import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.parser.impl.DateParser;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -272,7 +271,7 @@ public class ZmlFactory
    * @param context
    *          [optional] the context of the source in order to resolve relative url
    */
-public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
+  public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
   {
     final Observation obs;
 
@@ -306,7 +305,7 @@ public static IObservation parseXML( final InputSource source, final String iden
           value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" ).replaceAll( XMLUtilities.CDATA_END_REGEX, "" );
         else
           value = "";
-        if( md.getName().equals(TimeserieConstants.MD_TIMEZONE ))
+        if( md.getName().equals( TimeserieConstants.MD_TIMEZONE ) )
           timeZone = TimeZone.getTimeZone( md.getValue() );
         metadata.put( md.getName(), value );
       }
@@ -362,6 +361,7 @@ public static IObservation parseXML( final InputSource source, final String iden
 
     return decorateObservation( zmlObs, href, context );
   }
+
   /**
    * Central method for decorating the observation according to its context and identifier. It internally checks for:
    * <ol>
@@ -456,6 +456,7 @@ public static IObservation parseXML( final InputSource source, final String iden
     {
       if( timezone == null )
         timezone = TimeZone.getTimeZone( "UTC" ); // in year 1928 GMT has been replaced by UTC
+
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
 
@@ -486,15 +487,11 @@ public static IObservation parseXML( final InputSource source, final String iden
         metadataList.add( mdType );
       }
 
-      // insert timezone in the metadata if specified
-      if( timezone != null )
-      {
-        final MetadataType mdType = OF.createMetadataType();
-        mdType.setName( TimeserieConstants.MD_TIMEZONE );
-        mdType.setValue( timezone.getID() );
+      final MetadataType mdType = OF.createMetadataType();
+      mdType.setName( TimeserieConstants.MD_TIMEZONE );
+      mdType.setValue( timezone.getID() );
 
-        metadataList.add( mdType );
-      }
+      metadataList.add( mdType );
 
       final List<AxisType> axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
