@@ -537,6 +537,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_resourceBundle;
   }
 
+  /**
+   * @return the timeZone as defined in the KALYPSO preferences. If unknown, the JVM default timezone is returned.
+   */
   public TimeZone getDisplayTimeZone( )
   {
 
@@ -545,8 +548,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       return TimeZone.getTimeZone( timeZoneID );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
+      LOGGER.warning( e.getLocalizedMessage() );
+      LOGGER.warning( "The provided TimeZone from the KALYPSO preferences is not known, using default one." );
+
       return TimeZone.getDefault();
     }
   }
