@@ -1,53 +1,370 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Monika Thül (BCE GmbH) -->
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:eindim="org.kalypso.model.eindim" targetNamespace="org.kalypso.model.eindim" elementFormDefault="qualified" version="0.1">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
-	<element name="calculation1DStationaryTuhh" type="eindim:calculation1DStationaryTuhhType" substitutionGroup="gml:_Feature">
+<schema targetNamespace="org.kalypso.model.eindim.tuhh" xmlns:tuhh="org.kalypso.model.eindim.tuhh" xmlns:eindim="org.kalypso.model.eindim" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+	<import namespace="org.kalypso.model.eindim" schemaLocation="calculationEindim.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="D:\Eclipse\Kalypso\KalypsoContributionsOGC31\etc\schemas\original\gml\3.1.1\base\gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+
+	<element name="calculation1DStationaryTuhh" type="tuhh:Calculation1DStationaryTuhhType" substitutionGroup="eindim:calculation">
 		<annotation>
 			<documentation>ist ggf. Spezialisierung eines allg. calculation1D</documentation>
 		</annotation>
 	</element>
-	<element name="strand" type="eindim:StrandType" substitutionGroup="gml:_Feature"/>
-	<element name="strandMember" type="eindim:StrandAssociationType" substitutionGroup="gml:featureMember"/>
-	<element name="strandElement" type="eindim:StrandElementType"/>
-	<element name="strandElementMember" type="eindim:StrandElementAssociationType"/>
-	<complexType name="calculation1DStationaryTuhhType">
+
+	<element name="calculationModeMember" type="tuhh:CalculationModePropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="calculationMode" type="tuhh:CalculationModeType" substitutionGroup="gml:_Feature"/>
+	<element name="calculationModeWaterlevel" type="tuhh:CalculationModeWaterlevelType" substitutionGroup="tuhh:calculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Wasserspiegellagenberechnung</label>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationModeBankfullUniform" type="tuhh:CalculationModeBankfullUniformType" substitutionGroup="tuhh:calculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bordvollberechnung - stationär gleichförmige Abflussverhältnisse</label>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationModeBankfullNonUniform" type="tuhh:CalculationModeBankfullNonUniformType" substitutionGroup="tuhh:calculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bordvollberechnung - stationär ungleichförmige Abflussverhältnisse</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="calculationStartCondition" type="tuhh:CalculationStartConditionType" substitutionGroup="gml:_Feature"/>
+	<element name="calculationStartConditionGrenztiefe" type="tuhh:CalculationStartConditionGrenztiefeType" substitutionGroup="tuhh:calculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>als Grenztiefe</label>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationStartConditionUniformSlope" type="tuhh:CalculationStartConditionUniformSlopeType" substitutionGroup="tuhh:calculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Annahme stationär gleichförmiges Gefälle</label>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationStartConditionWaterlevel" type="tuhh:CalculationStartConditionWaterlevelType" substitutionGroup="tuhh:calculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Direkteingabe Wasserspiegel</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="strand1DStationaryTuhhMember" type="tuhh:Strand1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandMember"/>
+	<element name="strand1DStationaryTuhh" type="tuhh:Strand1DStationaryTuhhType" substitutionGroup="eindim:strand"/>
+
+	<element name="strandElement1DStationaryTuhhMember" type="tuhh:StrandElement1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandElementMember"/>
+	<element name="strandElement1DStationaryTuhh" type="tuhh:StrandElement1DStationaryTuhhType" substitutionGroup="eindim:strandElement"/>
+
+	<element name="energyLossMember" type="tuhh:EnergyLossPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="energyLoss" type="tuhh:EnergyLossType" substitutionGroup="gml:_Feature"/>
+
+	<complexType name="Calculation1DStationaryTuhhType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="eindim:CalculationType">
 				<sequence>
 					<element ref="eindim:strandMember"/>
+
+					<!-- TODO bezeichnungen englisch machen -->
+					<!-- TODO: Texte besser! -->
+					<element name="fliessgesetz">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Fließgesetz</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="darcyRohr">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>äquivalente Sandrauheiten nach Darcy-Weisbach (Rohrströmungen)</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="darcyOffeneGerinne">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>äquivalente Sandrauheiten nach Darcy-Weisbach (offene Gerinne mit Formeinfluss)</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="manningStrickler">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Rauheitsbeiwerte nach Gauckler-Manning-Strickler</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+
+					<element name="startStation" type="int"/>
+					<element name="endStation" type="int"/>
+
+					<element name="wapIteration">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnung des Waserspiegels</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<!-- TODO: Texte besser! -->
+							<restriction base="string">
+								<enumeration value="simpleIteration">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>einfache Iteration</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="exactIteration">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>genaue Berechnung durch Einschlussiteration</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+
+					<element name="verzoegerungsverlust">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verzögerungsverlust</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<!-- TODO: Texte besser! -->
+							<restriction base="string">
+								<enumeration value="dvwk">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach DVWK (beta = 0.67)</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="bjoernsen">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach Björnsen (beta = 0.5)</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="dfg">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+
+					<element name="reibungsverlust">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art der Berechnung von Reibungsverlust</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<!-- TODO: Texte besser! -->
+							<restriction base="string">
+								<enumeration value="trapezFormula">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach Trapezformel</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="geometricFormula">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>durch geometrische Mittelung</label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+
+					<element name="doCalcBridges" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Brücken mit Berechnen</label>
+							</documentation>
+						</annotation>
+					</element>
+
+					<element name="doCalcBarrages" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wehre mit Berechnen</label>
+							</documentation>
+						</annotation>
+					</element>
+
+					<element ref="eindim:roughnessDefinitionCollectionMember" minOccurs="0">
+						<annotation>
+							<documentation>
+								<description>Optional. If present, used to map the roughness-classes in the profile to real values (i.e. the profile must have used the same roughness classes)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO use better word for 'plant' everywhere -->
+					<element ref="eindim:plantDefinitionCollectionMember" minOccurs="0">
+						<annotation>
+							<documentation>
+								<description>Optional. If present, used to map the plant-classes in the profile to real values (i.e. the profile must have used the same roughness classes)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tuhh:calculationModeMember"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="StrandType">
+
+	<complexType name="CalculationModePropertyType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element name="strandElement" type="string"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="StrandAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="eindim:strand"/>
+					<element ref="tuhh:calculationMode"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="StrandElementType">
-		<annotation>
-			<documentation>ggf. noch Spezialisierungen pro Rechenkern (Pasche, Knauf,...)</documentation>
-		</annotation>
-		<sequence>
-			<element name="profile" type="string"/>
-		</sequence>
+
+	<complexType name="CalculationModeType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="type" type="string"/>
+				</sequence>
+			</extension>
+		</complexContent>
 	</complexType>
-	<complexType name="StrandElementAssociationType"/>
+
+	<complexType name="CalculationModeWaterlevelType">
+		<complexContent>
+			<extension base="tuhh:CalculationModeType">
+				<sequence>
+					<!-- TODO force it to be one of the water's runOffEvents? -->
+					<element name="runOffEventMember" type="om:AbstractObservationPropertyType"/>
+					<element ref="tuhh:calculationStartConditionMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationModeBankfullUniformType">
+		<complexContent>
+			<extension base="tuhh:CalculationModeType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationModeBankfullNonUniformType">
+		<complexContent>
+			<extension base="tuhh:CalculationModeType">
+				<sequence>
+					<element ref="tuhh:calculationStartConditionMember"/>
+					<element name="minimalRunOff" type="double"/>
+					<element name="maximalRunOff" type="double"/>
+					<element name="runOffStep" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="CalculationStartConditionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:calculationStartCondition"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationStartConditionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationStartConditionGrenztiefeType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationStartConditionUniformSlopeType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence>
+					<element name="slope" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationStartConditionWaterlevelType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence>
+					<element name="waterlevel" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Strand1DStationaryTuhhPropertyType">
+		<complexContent>
+			<restriction base="eindim:StrandPropertyType">
+				<sequence>
+					<element ref="tuhh:strand1DStationaryTuhh"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Strand1DStationaryTuhhType">
+		<complexContent>
+			<restriction base="eindim:StrandType">
+				<sequence>
+					<element ref="tuhh:strandElement1DStationaryTuhhMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="StrandElement1DStationaryTuhhPropertyType">
+		<complexContent>
+			<restriction base="eindim:StrandElementPropertyType">
+				<sequence>
+					<element ref="tuhh:strandElement1DStationaryTuhh"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
 	<complexType name="StrandElement1DStationaryTuhhType">
 		<complexContent>
 			<extension base="eindim:StrandElementType">
@@ -55,9 +372,35 @@
 					<element name="distanceL" type="double"/>
 					<element name="distanceM" type="double"/>
 					<element name="distanceR" type="double"/>
-					<element name="energyLoss" type="double"/>
+					<element ref="tuhh:energyLossMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EnergyLossPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:energyLoss"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EnergyLossType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="lossType" type="string">
+						<annotation>
+							<documentation>TODO: statt beliebiegier string, hole Werte aus einem Dictionary</documentation>
+						</annotation>
+					</element>
+					<element name="value" type="double"/>
+				</sequence>
+			</extension>
+
 		</complexContent>
 	</complexType>
 </schema>

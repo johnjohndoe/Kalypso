@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Monika Thül (BCE GmbH) -->
+<schema targetNamespace="org.kalypso.model.eindim" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:eindim="org.kalypso.model.eindim" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="D:\Eclipse\Kalypso\KalypsoContributionsOGC31\etc\schemas\original\gml\3.1.1\base\gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+
+	<element name="calculationMember" type="eindim:CalculationPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="calculation" type="eindim:CalculationType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation>ist ggf. Spezialisierung eines allg. calculation1D</documentation>
+		</annotation>
+	</element>
+
+	<element name="resultMember" type="eindim:ResultPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="result" type="eindim:ResultType" substitutionGroup="gml:_Feature"/>
+
+	<element name="resultDocumentMember" type="eindim:ResultDocumentPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="resultDocument" type="eindim:ResultDocumentType" substitutionGroup="gml:_Feature"/>
+
+	<element name="waterMember" type="eindim:WaterPropertyType" substitutionGroup="gml:featureMember"/>
+
+	<element name="water" type="eindim:WaterType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässer</label>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="strandMember" type="eindim:StrandPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="strand" type="eindim:StrandType" substitutionGroup="gml:_Feature"/>
+	<element name="strandElementMember" type="eindim:StrandElementPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="strandElement" type="eindim:StrandElementType" substitutionGroup="gml:_Feature"/>
+
+	<element name="profileMember" type="eindim:ProfilePropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="profile" type="eindim:ProfileType" substitutionGroup="gml:_Feature"/>
+
+	<element name="roughnessDefinitionCollectionMember" type="eindim:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="roughnessDefinitionCollection" type="eindim:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="roughnessDefinitionMember" type="eindim:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="roughnessDefinition" type="eindim:RoughnessDefinitionType" substitutionGroup="gml:_Feature"/>
+
+	<element name="plantDefinitionCollectionMember" type="eindim:PlantDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="plantDefinitionCollection" type="eindim:PlantDefinitionCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="plantDefinitionMember" type="eindim:PlantDefinitionPropertyType" substitutionGroup="gml:featureMember"/>
+	<element name="plantDefinition" type="eindim:PlantDefinitionType" substitutionGroup="gml:_Feature"/>
+	
+	<complexType name="CalculationPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:calculation"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CalculationType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="name" type="string"/>
+					<element name="description" type="string"/>
+					<element name="user" type="string"/>
+					<element name="creationDate" type="dateTime"/>
+					<element ref="eindim:resultMember" minOccurs="0" maxOccurs="1"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="StrandPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:strand"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType abstract="false" name="StrandType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="eindim:waterMember"/>
+					<element ref="eindim:strandElementMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="StrandElementPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:strandElement"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="StrandElementType">
+		<annotation>
+			<documentation>ggf. noch Spezialisierungen pro Rechenkern (Pasche, Knauf,...)</documentation>
+		</annotation>
+		<complexContent>
+			<annotation>
+				<appinfo>We hav two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="line" type="gml:LineStringSegmentType">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation</appinfo>
+						</annotation>
+					</element>
+					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation. This is more difficult than the line property bceause, it depends on the prfoile, how many points we have.</appinfo>
+						</annotation>
+					</element>
+					<element name="cacheDate" type="dateTime">
+						<annotation>
+							<appinfo>This property represent the lastTime, when the cached proeprties (line, markers) have been synchronized against the profileMember</appinfo>
+						</annotation>
+					</element>
+					<element ref="eindim:profileMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ProfilePropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:profile"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ProfileType">
+		<annotation>
+			<documentation>ggf. noch Spezialisierungen pro Rechenkern (Pasche, Knauf,...)</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!-- TODO: maybe restict type to specific observation (only profiles are allowed)-->
+					<element name="station" type="double">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profilMember) itself.</appinfo>
+						</annotation>
+					</element>
+					<element name="profilMember" type="om:AbstractObservationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WaterPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:water"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WaterType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="name" type="string"/>
+					<element name="kennziffer" type="string"/>
+					<element name="direction" type="boolean"/>
+					<element ref="eindim:profileMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="eindim:strandMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="runOffEventMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="waterlevelEvent" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ResultPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:result"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ResultType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="eindim:calculationMember"/>
+					<element name="calculationTime" type="dateTime"/>
+					<element ref="eindim:resultDocumentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="resultObservationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ResultDocumentPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:resultDocument"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ResultDocumentType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="label" type="string"/>
+					<element name="filePath" type="string">
+						<annotation>
+							<documentation><![CDATA[
+								TODO: eigenen Typ definieren + 
+								type handler (z.B. datei öffnen beim klick)]]></documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="RoughnessDefinitionCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:roughnessDefinitionCollectionMember"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="RoughnessDefinitionCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="eindim:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="RoughnessDefinitionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:roughnessDefinitionMember"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RoughnessDefinitionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="label" type="string"/>
+					<element name="category" type="int"/>
+					<element name="valueKS" type="double"/>
+					<element name="valueKST" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="PlantDefinitionCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:plantDefinitionCollectionMember"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="PlantDefinitionCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="eindim:plantDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="PlantDefinitionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="eindim:plantDefinitionMember"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="PlantDefinitionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="label" type="string"/>
+					<element name="category" type="int"/>
+					<element name="valueAX" type="double"/>
+					<element name="valueAY" type="double"/>
+					<element name="valueDP" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	
+</schema>
