@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Monika Thül (BCE GmbH) -->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:eindim="org.kalypso.model.eindim" targetNamespace="org.kalypso.model.eindim" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<element name="calculation1DStationaryTuhh" type="eindim:calculation1DStationaryTuhhType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation>ist ggf. Spezialisierung eines allg. calculation1D</documentation>
+		</annotation>
+	</element>
+	<element name="strand" type="eindim:StrandType" substitutionGroup="gml:_Feature"/>
+	<element name="strandMember" type="eindim:StrandAssociationType" substitutionGroup="gml:featureMember"/>
+	<element name="strandElement" type="eindim:StrandElementType"/>
+	<element name="strandElementMember" type="eindim:StrandElementAssociationType"/>
+	<complexType name="calculation1DStationaryTuhhType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="eindim:strandMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StrandType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="strandElement" type="string"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StrandAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="eindim:strand"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="StrandElementType">
+		<annotation>
+			<documentation>ggf. noch Spezialisierungen pro Rechenkern (Pasche, Knauf,...)</documentation>
+		</annotation>
+		<sequence>
+			<element name="profile" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="StrandElementAssociationType"/>
+	<complexType name="StrandElement1DStationaryTuhhType">
+		<complexContent>
+			<extension base="eindim:StrandElementType">
+				<sequence>
+					<element name="distanceL" type="double"/>
+					<element name="distanceM" type="double"/>
+					<element name="distanceR" type="double"/>
+					<element name="energyLoss" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
