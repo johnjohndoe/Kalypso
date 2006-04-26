@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006   10:24 pm
+!     Last change:  WP   26 Apr 2006    1:56 pm
 !--------------------------------------------------------------------------
 ! This code, wspow.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -84,14 +84,21 @@ SUBROUTINE wspow (henow, strbr, q, q1, hrow, hv, rg, indmax, hvst,&
 USE DIM_VARIABLEN
 USE IO_UNITS
 
-CHARACTER(1) idr1
+CHARACTER(LEN=1) :: idr1
                                                                         
-! commonblock fuer die Brueckenberechnung
-CHARACTER(1) ibridge
-REAL xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
-COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
- & hokmax, hsuw, raub, breite, xk, ibridge
-                                                                        
+
+! COMMON-Block /BRUECK/ ------------------------------------------------------------
+INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
+REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
+CHARACTER(LEN=1):: ibridge
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
+! ----------------------------------------------------------------------------------
+
+
+
 ! commonblock fuer die Wehrberechnung
 
 INTEGER iwmin, nokw, nwfd

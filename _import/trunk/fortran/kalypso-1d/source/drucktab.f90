@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    1:46 pm
+!     Last change:  WP   26 Apr 2006   12:00 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !--------------------------------------------------------------------------
-SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, stat, jw7, idr1)
+SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, station, jw7, idr1)
 !
 ! Programmbeschreibung
 ! --------------------
@@ -66,6 +66,7 @@ SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, stat, jw7, idr1)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE KONSTANTEN
 USE IO_UNITS
 USE MOD_ERG
 
@@ -75,7 +76,7 @@ INTEGER, INTENT(IN) 	:: indmax   		! Anzahl der Rauhigkeitsabschnitte (LV=1, FS=
 INTEGER, INTENT(INOUT) 	:: nz       		! Anzahl der Zeilen im Ergebnisfile
 INTEGER, INTENT(IN) 	:: jw5      		! UNIT der Ausgabedatei (Ergebnisfile)
 INTEGER, INTENT(IN) 	:: nblatt   		! Anzahl der Seiten des Ergebnisausdrucks
-REAL, INTENT(IN)    	:: stat (maxger)    	! Stationierung in km
+REAL, INTENT(IN)    	:: station (maxger)    	! Stationierung in km
 INTEGER, INTENT(IN) 	:: jw7              	! UNIT einer weiteren Ausgabedatei ??
 CHARACTER(LEN=1)    	:: idr1             	! = 'j' falls eine Wasserstandsabflussbeziehung
                                         	! ausgegeben werden soll. Gesetzt in wsp.f90 oder QaWSP.f90
@@ -114,6 +115,12 @@ COMMON / erg / wsp, hen, qs, fgesp, froudp, hvs, hrs, hs, fp, up, &
              & vp, qtp, rkp, fbwp, brp, vmp, hbors, hein, hort, igrenz, brg
 ! -----------------------------------------------------------------------------
 
+
+! COMMON-Block /LAENGS/ -------------------------------------------------------
+REAL 		:: bolip (maxger), borep (maxger), sohlp (maxger), stat (maxger)
+REAL 		:: hbv (maxger), isstat (maxger), hmingp (maxger), k_kp (maxger)
+COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
+! -----------------------------------------------------------------------------
 
 
 ! COMMON-Block /OB_ALPHA/ -----------------------------------------------------
@@ -162,7 +169,8 @@ REAL                    :: v
 
 !WP 11.03.2006
 ! Speichern der ausgegebenen Werte in dem globalen Ergebnis-Modul
-IF (idr1.eq.'j') then
+
+!IF (idr1.eq.'j') then
 
   do j = 1, 3
 
@@ -176,11 +184,20 @@ IF (idr1.eq.'j') then
 
   end do
 
-  out_PROF(i,nr_q)%stat   = stat(i)             ! Station in [km]
-  out_PROF(i,nr_q)%wsp    = wsp(i)              ! Wasserspiegelhoehe [mNN]
-  out_PROF(i,nr_q)%hen    = hen(i)              ! Energielinienhoehe [mNN]
+  out_PROF(i,nr_q)%stat   = station(i)          	! Station in [km]
+  out_PROF(i,nr_q)%wsp    = wsp(i)              	! Wasserspiegelhoehe [mNN]
+  out_PROF(i,nr_q)%hen    = hen(i)              	! Energielinienhoehe [mNN]
+  out_PROF(i,nr_q)%sohle  = sohlp(i)            	! tiefster Sohlpunkt [mNN]
+  out_PROF(i,nr_q)%boeli  = bolip(i)            	! Bordvollhoehe links [mNN]
+  out_PROF(i,nr_q)%boere  = borep(i)            	! Bordvollhoehe rechts [mNN]
+  out_PROF(i,nr_q)%hbv    = MIN(bolip(i), borep(i)) 	! minimale Bordvollhoehe [mNN]
+  out_PROF(i,nr_q)%vm     = vmp(i)              	! mittlere Fliessgeschwindigkeit [m/s]
+  out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
 
-end if
+
+
+
+!end if
 
 ifbr = 0
 ifpgs = 0
@@ -263,7 +280,7 @@ IF (qtp (i, j) .lt. 1.e-6) j = j + 1
 ! 2.) Ausgabe der ersten Zeile mit den Profilparametern (wsp, lambda, v, A, usw.)
 ! -------------------------------------------------------------------------------
 
-WRITE (jw5, 10) stat(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp(i,j), up(i,j), vp(i,j), qtp(i,j)
+WRITE (jw5, 10) station(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp(i,j), up(i,j), vp(i,j), qtp(i,j)
 
 !HB   *****************************************************************
 !HB        26.11.2001 - H.Broeker
@@ -274,11 +291,11 @@ IF (alpha_ja.eq.1) then
   !HB          Uebergabe der benoetigten Werte an SUB ALPHA_DRU
   !HB          mit anschliessender Ausgabe in Datei Beiwerte.AUS
   !HB          (Zusatz-AusgabeDatei von Impuls- und Energiestrombeiwert)
-  CALL alpha_dru (stat, wsp, hen, up, qs)
+  CALL alpha_dru (station, wsp, hen, up, qs)
   !HB          Ausdruck der ueblichen Ausgabewerte in die Datei
   !HB          Beiwerte.AUS. Das Format entspricht der bekannten
   !HB          Tabellenform.
-  WRITE (UNIT_OUT_ALPHA, 10) stat(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp (i,j), up(i,j), vp(i,j), qtp(i,j)
+  WRITE (UNIT_OUT_ALPHA, 10) station(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp (i,j), up(i,j), vp(i,j), qtp(i,j)
 ENDIF
 !HB   *****************************************************************
 
@@ -287,7 +304,7 @@ ENDIF
 ! 2b.) Ausgabe der Zeile mit den Profilparametern in Datei mit WQ-Beziehung
 ! -------------------------------------------------------------------------
 IF (idr1.eq.'j') then
-  WRITE (jw7, 10) stat(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp(i,j), up(i,j), vp(i,j), qtp(i,j)
+  WRITE (jw7, 10) station(i), wsp(i), hen(i), j, rkp(i,j), fbwp(i,j), fp(i,j), up(i,j), vp(i,j), qtp(i,j)
 ENDIF
 
 ! Format auf 3 Stellen genau (normale Einstellung)
@@ -379,7 +396,7 @@ DO j = 1, nknot
 
   end if
 
-  write (UNIT_OUT_LAMBDA_I,9000) stat(i), j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
+  write (UNIT_OUT_LAMBDA_I,9000) station(i), j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
 
 END DO
 9000 format (1X, F10.4, i7, F10.3, F10.3, F12.7, F10.3)

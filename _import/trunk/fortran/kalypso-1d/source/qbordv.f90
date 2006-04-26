@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006    6:20 pm
+!     Last change:  WP   26 Apr 2006    2:13 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1082,21 +1082,29 @@ do i = nr_prof, anz_prof(j)-1
     out_IND(i,j,k)%Q      = out_IND(i+1,j,k)%Q     
   end do
 
-  out_PROF(i,j)%stat 	= out_PROF(i+1,j)%stat
-  out_PROF(i,j)%wsp 	= out_PROF(i+1,j)%wsp
-  out_PROF(i,j)%hen 	= out_PROF(i+1,j)%hen
-  out_PROF(i,j)%sohle 	= out_PROF(i+1,j)%sohle
-  out_PROF(i,j)%qges 	= out_PROF(i+1,j)%qges
-  out_PROF(i,j)%h_bv 	= out_PROF(i+1,j)%h_bv
-  out_PROF(i,j)%boeli 	= out_PROF(i+1,j)%boeli
-  out_PROF(i,j)%boere 	= out_PROF(i+1,j)%boere
-  out_PROF(i,j)%tau 	= out_PROF(i+1,j)%tau
-  out_PROF(i,j)%hvm 	= out_PROF(i+1,j)%hvm
-  out_PROF(i,j)%hrm 	= out_PROF(i+1,j)%hrm
-  out_PROF(i,j)%hein 	= out_PROF(i+1,j)%hein
-  out_PROF(i,j)%hort 	= out_PROF(i+1,j)%hort
-  out_PROF(i,j)%hm 	= out_PROF(i+1,j)%hm 
-  out_PROF(i,j)%interpol= out_PROF(i+1,j)%interpol
+  out_PROF(i,j)%stat 		= out_PROF(i+1,j)%stat
+  out_PROF(i,j)%wsp 		= out_PROF(i+1,j)%wsp
+  out_PROF(i,j)%hen 		= out_PROF(i+1,j)%hen
+  out_PROF(i,j)%hbv 		= out_PROF(i+1,j)%hbv
+  out_PROF(i,j)%sohle 		= out_PROF(i+1,j)%sohle
+  out_PROF(i,j)%qges 		= out_PROF(i+1,j)%qges
+  out_PROF(i,j)%boeli 		= out_PROF(i+1,j)%boeli
+  out_PROF(i,j)%boere 		= out_PROF(i+1,j)%boere
+  out_PROF(i,j)%vm 		= out_PROF(i+1,j)%vm
+  out_PROF(i,j)%tau 		= out_PROF(i+1,j)%tau
+  out_PROF(i,j)%hvm 		= out_PROF(i+1,j)%hvm
+  out_PROF(i,j)%hrm 		= out_PROF(i+1,j)%hrm
+  out_PROF(i,j)%hein 		= out_PROF(i+1,j)%hein
+  out_PROF(i,j)%hort 		= out_PROF(i+1,j)%hort
+  out_PROF(i,j)%hm 		= out_PROF(i+1,j)%hm
+  out_PROF(i,j)%WehrOK 		= out_PROF(i+1,j)%WehrOK
+  out_PROF(i,j)%BrueckOK	= out_PROF(i+1,j)%BrueckOK
+  out_PROF(i,j)%BrueckUK  	= out_PROF(i+1,j)%BrueckUK
+  out_PROF(i,j)%BrueckB  	= out_PROF(i+1,j)%BrueckB
+  out_PROF(i,j)%RohrD  		= out_PROF(i+1,j)%RohrD
+  out_PROF(i,j)%interpol	= out_PROF(i+1,j)%interpol
+  out_PROF(i,j)%chr_kenn	= out_PROF(i+1,j)%chr_kenn
+
 end do
 
 anz_prof(j) = anz_prof(j) - 1

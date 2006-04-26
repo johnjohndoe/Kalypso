@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006    6:33 pm
+!     Last change:  WP   26 Apr 2006    4:37 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -166,20 +166,13 @@ COMMON / alph_pf / alph_aus, nr_alph
 
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
-! fuer BRUECKENBERECHNUNG, AUFRUF IN INTDAT, IMPULS, WSPBER
 INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
 REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
-REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
 CHARACTER(LEN=1):: ibridge
-COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
-       & hokmax, hsuw, raub, breite, xk, ibridge
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /BRUECK3/ -----------------------------------------------------------
-! Gelaende Oberkante Grenze
-INTEGER 	:: iokl, iokr
-COMMON / brueck3 / iokl, iokr
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
 
 
@@ -547,7 +540,15 @@ ENDIF
 !**   REWIND setzt Strangtabelle auf Anfangspunkt zurueck
 REWIND (UNIT_EIN_STR)
 
-
+do i = 1, maxger
+  out_PROF(i,nr_q)%interpol 	= .FALSE.
+  out_PROF(i,nr_q)%chr_kenn 	= 'n'
+  out_PROF(i,nr_q)%WehrOK 	= -999.999
+  out_PROF(i,nr_q)%BrueckOK 	= -999.999
+  out_PROF(i,nr_q)%BrueckUK 	= -999.999
+  out_PROF(i,nr_q)%BrueckB 	= -999.999
+  out_PROF(i,nr_q)%RohrD        = -999.999
+end do
 
 
 
@@ -589,9 +590,10 @@ Hauptschleife: DO i = 1, maxger
   stat (nprof) = statles
 
   prof_it (nprof) = 0
-  out_PROF(nprof,nr_q)%interpol = .FALSE.
+
   out_PROF(nprof,nr_q)%stat = stat(nprof)
-                                                                        
+
+
   ! ------------------------------------------------------------------
   ! Einlesen der Profildatei NR (z.B. St000150.prf)
   ! ------------------------------------------------------------------
@@ -693,6 +695,7 @@ Hauptschleife: DO i = 1, maxger
   ENDIF
 
 
+
   ! ------------------------------------------------------------------
   ! Einlesen der Daten in Sub proein und Weiterverarbeitung in intdat
   ! ------------------------------------------------------------------
@@ -739,6 +742,7 @@ Hauptschleife: DO i = 1, maxger
   ENDIF
 
 
+
   !HB*******************************************************************
   !HB      26.11.2001 - H.Broeker
   !HB      ----------------------
@@ -751,6 +755,10 @@ Hauptschleife: DO i = 1, maxger
   !HB*******************************************************************
 
 
+  if (iprof .ne. ' ') then
+    out_PROF(nprof,nr_q)%chr_kenn = iprof   	! Sonderprofil
+    out_PROF(nprof,nr_q)%RohrD = durchm         ! Wenn Kreis -> Durchmesser, Wenn Trapez -> Breite
+  end if
 
 
   ! --------------------------------------------------------------------------------------------------
@@ -964,7 +972,7 @@ Hauptschleife: DO i = 1, maxger
                                                         !WP Hinweis: Je nach Abflusszustand kann sich die
                                                         !WP Anzahl der interpolierten Profile aendern
         out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+        out_PROF(nprof,nr_q)%chr_kenn = 'i'         	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
 
         num (nprof) = '0'
@@ -1060,12 +1068,12 @@ Hauptschleife: DO i = 1, maxger
 
       num (nprof) = '0'
 
-      out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
-                                                      !WP Hinweis: Je nach Abflusszustand kann sich die
-                                                      !WP Anzahl der interpolierten Profile aendern
+      out_PROF(nprof,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
+                                                !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                !WP Anzahl der interpolierten Profile aendern
 
       out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-                                                !WP dass dieses Profil bei dem aktuellen Abfluss
+      out_PROF(nprof,nr_q)%chr_kenn = 'i'   	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                 !WP interpoliert wurde.
 
 
@@ -1098,7 +1106,16 @@ Hauptschleife: DO i = 1, maxger
 
       CALL intdat (staso, ifehl)
 
-      stat (nprof) = statgem
+      stat (nprof) = statgem                          !WP Original Brueckenstation (Profil i)!
+      out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+                                                      !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                      !WP Anzahl der interpolierten Profile aendern
+
+      out_PROF(nprof,nr_q)%BrueckOK = hokmin
+      out_PROF(nprof,nr_q)%BrueckUK = hukmax
+      out_PROF(nprof,nr_q)%BrueckB = breite
+
+      out_PROF(nprof,nr_q)%chr_kenn = 'b'
 
       prof_it (nprof) = 0
 
@@ -1317,26 +1334,23 @@ Hauptschleife: DO i = 1, maxger
 
 
 
-      !**   --------------------------------------------------------------
-      !**   Wehrberechnung
-      !**   --------------------------------------------------------------
+
+      ! ---------------------------------------------------------------------------------
+      ! Wehrberechnung
+      ! ---------------------------------------------------------------------------------
 
       WRITE (UNIT_OUT_TAB, 323) stat (nprof)
+      write (UNIT_OUT_LOG, 323)
       323 FORMAT   (/,5x,'Wehrberechnung an Station km   ',f7.3,' : ',/)
 
       nz = nz + 3
-
-      !**      SCHREIBEN IN KONTROLLFILE OHNE VARIABLE?
-      write (UNIT_OUT_LOG, 323)
 
       num (nprof) = prof_nr (1:10)
 
       CALL w_ber (henw, q, nprof, nz, ifg, idr1, nblatt)
 
-      !**      Wasserspiegel im Oberwasser, WELCHE VARIABLE WIRD GESCHRIEBEN?
-      WRITE (UNIT_OUT_TAB, 324)
 
-      !**      SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_TAB, 324)
       write (UNIT_OUT_LOG, 324)
       324 FORMAT   (/,5x,'Oberwasser:')
 
@@ -1348,13 +1362,17 @@ Hauptschleife: DO i = 1, maxger
        & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
        & nz, idr1)
 
+      out_PROF(nprof,nr_q)%WehrOK   = hokwmin   !WP Speichern der Wehroberkante dieses Profils
+      out_PROF(nprof,nr_q)%chr_kenn = 'w'
+
     !UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
     ELSE
 
 
-      !**   ---------------------------------------------------------------
-      !**   Normale Berechnung fuer alle weiteren Profile ausser nprof=1
-      !**   ---------------------------------------------------------------
+
+      ! ---------------------------------------------------------------
+      ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
+      ! ---------------------------------------------------------------
 
       num (nprof) = prof_nr (1:10)
 
@@ -1371,9 +1389,13 @@ Hauptschleife: DO i = 1, maxger
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
 
-    !**   ------------------------------------------------------------------
-    !**   Abspeichern der Ergebnisse
-    !**   ------------------------------------------------------------------
+
+
+
+
+    ! ------------------------------------------------------------------
+    ! Abspeichern der Ergebnisse
+    ! ------------------------------------------------------------------
 
     IF (nz.gt.50) then
       nblatt = nblatt + 1
@@ -1390,6 +1412,7 @@ Hauptschleife: DO i = 1, maxger
 
 
     IF (nprof.gt.1) then
+
       IF (ibridge.eq.'b'.and.ibruecke.eq.'j') then
 
         !     Einlesen aus flussname.dat:
@@ -1434,8 +1457,9 @@ Hauptschleife: DO i = 1, maxger
                                                         !WP Anzahl der interpolierten Profile aendern
 
           out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+          out_PROF(nprof,nr_q)%chr_kenn = 'i'       	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
+
 
           write (   *  ,      1003) stat (nprof)
           write (   0  ,      1003) stat (nprof)
@@ -1508,7 +1532,6 @@ Hauptschleife: DO i = 1, maxger
       !       ENDIF ZU (nprof.gt.1)???
       ENDIF
 
-
       IF (iprof.eq.' ') then
 
         IF (igrenz (nprof) .eq.1.or.igrenz (nprof) .eq.2) then
@@ -1552,8 +1575,9 @@ Hauptschleife: DO i = 1, maxger
                                                         !WP Anzahl der interpolierten Profile aendern
 
               out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-                                                        !WP dass dieses Profil bei dem aktuellen Abfluss
+              out_PROF(nprof,nr_q)%chr_kenn = 'i'   	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
+
 
               write (    *       ,1000) stat(nprof)
               write (    0       ,1000) stat(nprof)
@@ -1691,6 +1715,7 @@ Hauptschleife: DO i = 1, maxger
 
     !**   ENDIF ZU (nprof.gt.1)
     ENDIF
+
 
     hmin2 = hmin
 

@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    1:22 pm
+!     Last change:  WP   26 Apr 2006    1:57 pm
 !--------------------------------------------------------------------------
 ! This code, impuls.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -111,20 +111,20 @@ USE IO_UNITS
       REAL m 
                                                                         
       COMMON / flaechen / ad, aue, apl, apg, hss, hue, hpl, hp 
-      !     **************************************************************
-      !      common-block fuer die brueckenberechnung
 
-      CHARACTER(1) ibridge 
-      REAL xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla) 
-                                                                        
-      COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
-      hokmax, hsuw, raub, breite, xk, ibridge                           
-                                                                        
-      COMMON / brueck2 / hokmin 
-!     wird benutzt in bruecke                                           
-!                     intdat                                            
-!                     impuls                                            
-!                     wspber                                            
+
+! COMMON-Block /BRUECK/ ------------------------------------------------------------
+INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
+REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
+CHARACTER(LEN=1):: ibridge
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
+! ----------------------------------------------------------------------------------
+
+
+
 !     ******************************************************************
 !     uebergabe-parameter:                                              
 !                                                                       

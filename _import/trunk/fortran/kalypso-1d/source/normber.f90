@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006    1:23 pm
+!     Last change:  WP   26 Apr 2006    2:46 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -504,6 +504,7 @@ IF (bordvoll .ne. 'g') then
   !**  str=ABSTAND ZWISCHEN ZWEI PROFILEN,
   !**  hmin= MIN. GELAENDEHOEHE DES PROFILES
   sgef = (sohlp (i - 1) - hmin) / str
+
 
   IF (sgef.ge.0.) then
 

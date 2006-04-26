@@ -688,3 +688,22 @@ Kalypso 1.0.17   März 2006
      berechnet wurde.
 
                                                     Wolf Plöger, 13.03.2006
+
+Kalypso 1.0.18   April 2006
+---------------------------
+1.)  Erhoehung der Anzahl der maximal möglichen Abflussänderungen in einem Flusslauf von 10 auf 50.
+
+2.)  Auflösung der COMMON-Blöcke BRUECK2 und BRUECK3. Die enthaltenen Variablen werden zu BRUECK
+     hinzugefügt.
+
+3.)  Verwendung des Moduls MOD_ERG nun auch für "Normale" Berechnung und Längsschnittausgabe.
+
+4.)  Erweiterung der Ausgabe in laengsschnitt.txt mit:
+     - Profilkennung (n = Normal, i = interpoliert, k = Kreis, m = Maul, t = Trapez, e = Ei)
+     - Wehroberkante
+     - Brückenunterkante
+     - Brückenoberkante
+     - Brückenbreite
+     - Durchmesser von Durchlässen
+
+                                                    Wolf Plöger, 26.04.2006

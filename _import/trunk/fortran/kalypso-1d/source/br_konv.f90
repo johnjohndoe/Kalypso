@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006    1:46 pm
+!     Last change:  WP   26 Apr 2006    1:58 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -91,20 +91,13 @@ INTEGER                 :: ifroud
 INTEGER                 :: iwehr
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
-! fuer BRUECKENBERECHNUNG, AUFRUF IN INTDAT, IMPULS, WSPBER
 INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
 REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
-REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
 CHARACTER(LEN=1):: ibridge
-COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
-       & hokmax, hsuw, raub, breite, xk, ibridge
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /BRUECK3/ -----------------------------------------------------------
-! Gelaende Oberkante Grenze
-INTEGER 	:: iokl, iokr
-COMMON / brueck3 / iokl, iokr
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
 
 
@@ -266,7 +259,14 @@ iwehr = 0
 hr2 = 0.
 cd = 2.0
 
+
+
+!----------------------------------------------------------
+!WP Setzen der Hoehe der Sohle im Unterwasser auf HMIN ????
 hsuw = hmin
+!WP Hier eventuell Problem!
+!----------------------------------------------------------
+
 
 !     2 moeglichkeiten :
 !     - 1. profilwerte fuer 2 und 3 um (hmin-hsuw)/2., bzw. (hmin-hsuw)
@@ -499,7 +499,6 @@ CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, indmax, &
 
 CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
-
 WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "3":'')')
 nz = nz + 2
 IF (nz.gt.50) then
@@ -531,7 +530,7 @@ CALL intdat (staso, ifehl)
 
 !***********************************************************************
 !**
-!**    test nu fuer impulsberechnung
+!**    test nur fuer impulsberechnung
 !**    ==> Q-W Schleife bleibt weg
 !**
 !**       goto 200
@@ -1518,8 +1517,7 @@ IF (iartt.eq.2) then
 
   ikenn = ikenn + ifkonv
 
-  CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof),      &
-   & indmax, ikenn)
+  CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
   ! ****************************************************************
   ! Ausdrucken der ergebisse im .tab-file

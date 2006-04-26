@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006    3:36 pm
+!     Last change:  WP   26 Apr 2006    2:13 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.17'
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 10.03.2006'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.18'
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 26.04.2006'
 
 end module VERSION
 
@@ -56,7 +56,7 @@ implicit none
 save
 
 INTEGER, parameter :: nch80 = 250      ! Max. Laenge von Zeichenketten, z.B. Dateinamen
-INTEGER, parameter :: merg = 10        ! Max. Anzahl von Abflussereignissen
+INTEGER, parameter :: merg = 50        ! Max. Anzahl von Abflussereignissen
 INTEGER, parameter :: maxkla = 1000    ! Max. Anzahl von Punkten pro Profil
 INTEGER, parameter :: maxger = 1000    ! Max. Anzahl von Profilen
 INTEGER, parameter :: maxabfluesse = 100    ! Max. Anzahl von Abfluessen bei stat.-ungl. Berechnung
@@ -73,7 +73,7 @@ INTEGER, parameter :: idim = 1000       ! ?? WP wird nur in wenigen SUBs verwend
 INTEGER, parameter :: idim4 = 20       ! ?? WP wird nur in wenigen SUBs verwendet
 INTEGER, parameter :: idim2 = 16       ! ?? WP wird nur in wenigen SUBs verwendet muss gleich ipro sein!!!
 
-INTEGER, parameter :: grnz_it = 15     ! Max. Anzahl der Iterationen fuer Grenzteifenberechnung
+INTEGER, parameter :: grnz_it = 15     ! Max. Anzahl der Iterationen fuer Grenztiefenberechnung
 INTEGER, parameter :: grnz_sch = 5     ! Max. Anzahl der Schleifendurchlaeufe bei Grenztiefenberechnung
 
 end module DIM_VARIABLEN
@@ -158,18 +158,25 @@ TYPE :: ergebnis_profil
   REAL :: stat          ! Station [km]
   REAL :: wsp           ! Wasserspiegelhoehe [mNN]
   REAL :: hen           ! Energiehpehe [mNN]
+  REAL :: hbv           ! Bordvolle Hoehe des Profils [mNN]
   REAL :: sohle         ! Hoehe des tiefsten Punktes im Profil [m]
   REAL :: qges          ! Gesamtabfluss [m3/s] (links + mitte + rechts)
-  REAL :: h_bv          ! Bordvolle Hoehe des Profils [mNN]
   REAL :: boeli         ! Boeschungsoberkante links [mNN]
   REAL :: boere         ! Boeschungsoberkante rechts [mNN]
+  REAL :: vm            ! Mittlere Fliessgeschwindigkeit [m/s]
   REAL :: tau           ! Schubspannung im Flussschlauch [N/m2]
   REAL :: hvm           ! Verlusthoehe [m]
   REAL :: hrm           ! Verlusthoehe [m]
   REAL :: hein          ! Verlusthoehe [m]
   REAL :: hort          ! Verlusthoehe [m]
   REAL :: hm            ! Verlusthoehe [m]
+  REAL :: WehrOK        ! Wehroberkante [mNN], falls kein Wehr, dann -999.99
+  REAL :: BrueckOK      ! Brueckenoberkante [mNN], falls keine Bruecke, dann -999.99
+  REAL :: BrueckUK      ! Brueckenunterkante [mNN], falls keine Bruecke, dann -999.99
+  REAL :: BrueckB       ! Brueckenbreite [m], falls keine Bruecke, dann -999.99
+  REAL :: RohrD         ! Rohrdurchmesser [m], falls kein Rohr, dann -999.99
   LOGICAL :: interpol   ! Profil ist interpoliert (.TRUE.) oder urspruenglich (.FALSE.), wichtig bei Bruecken
+  CHARACTER(LEN=1) :: chr_kenn ! Kennung fuer das Profil (i = Interpoliert, n = Normal, b = Bruecke, w = Wehr, d = Durchlass)
 END TYPE ergebnis_profil
 TYPE (ergebnis_profil), DIMENSION(1:maxger, 1:maxabfluesse) :: out_PROF
 

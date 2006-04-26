@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    5:57 pm
+!     Last change:  WP   26 Apr 2006    1:56 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -130,15 +130,16 @@ COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /BRUECK/ -------------------------------------------------------
-! fuer BRUECKENBERECHNUNG, AUFRUF IN INTDAT, IMPULS, WSPBER
+! COMMON-Block /BRUECK/ ------------------------------------------------------------
 INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
 REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
-REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
 CHARACTER(LEN=1):: ibridge
-COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
-       & hokmax, hsuw, raub, breite, xk, ibridge
-! -----------------------------------------------------------------------------
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
+! ----------------------------------------------------------------------------------
+
 
 
 ! COMMON-Block /DD/ -----------------------------------------------------------

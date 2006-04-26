@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006    9:33 pm
+!     Last change:  WP   26 Apr 2006    4:40 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,6 +39,8 @@
 !***********************************************************************
 
 
+
+
 SUBROUTINE zeila (unit5, nprof, pfad2, mark, file_laengs)
 
 ! ----------------------------------------------------------------
@@ -46,12 +48,15 @@ SUBROUTINE zeila (unit5, nprof, pfad2, mark, file_laengs)
 ! geschrieben:  p.koch     01.08.1989
 !                                                                       
 ! geaendert:    w. ploeger 10.05.2005
+!               w. ploeger 26.04.2006
 !                                                                       
 ! ---------------------------------------------------------------
 !                                                                       
-! dieses unterprogramm wird benutzt, um plotgerechte ausgabefiles
+! Dieses unterprogramm wird benutzt, um plotgerechte ausgabefiles
 ! der laengsschnitte zu erzeugen:
-! - bei wasserspiegellagenberechnung mit konstantem q:   .wsl-file
+!
+! - bei wasserspiegellagenberechnung mit konstantem q:   .wsl-file  (Blockformat)
+!                                                        laengsschnitt.txt (Tabelle)
 ! - bei bordvoll-berechnung (schrittweise variiertes q): .wsp-file
 !                                                        .qbv-file
 ! ---------------------------------------------------------------
@@ -63,6 +68,7 @@ USE ZEIT
 USE AUSGABE_LAENGS
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_ERG
                                                                         
 !WP -- Calling Variables -------------------------------------------------------------------------------------
 CHARACTER(LEN=nch80), INTENT(IN) :: pfad2	! Pfad- und Dateinamen für zu erstellende Dateien
@@ -544,34 +550,68 @@ IF (mark.eq.1.or.mark.eq.3) then
                                                                         
      ENDIF
 
+
+     !WP 26.04.2006
+     !WP Folgender Block wurde durch die unten aufgeführten Ausgaben ersetzt.
      ! ST --------------------------------------------------------------------
      ! ST 30.03.2005
      ! Schreibe in Datei laengsschnitt.txt Tabelle
 
      !Tabellenkopf
      !WRITE (UNIT_OUT_LAENGS, 7) MMTTJJ , HHMMSS
-     WRITE (UNIT_OUT_LAENGS, 8) 'Stat', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
-                             & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re'
+     !WRITE (UNIT_OUT_LAENGS, 8) 'Stat', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+     !                        & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re'
 
-     WRITE (UNIT_OUT_LAENGS, 8) 'km'  , 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
-                             & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm'
+     !WRITE (UNIT_OUT_LAENGS, 8) 'km'  , 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+     !                        & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm'
 
 
      !Werte für jedes Profil
-     DO i = 1, nprof
+     !DO i = 1, nprof
+     !
+     !  tau_fl(i) = (rk_fl(i) / 8) * rho * vp_fl(i)**2
+     !
+     !  WRITE (UNIT_OUT_LAENGS, 9) Stat1(i), sohl1(i), wsp1(i), hen1(i), bv1(i), boli1(i), bore1(i), vbv1(i), &
+     !             & tau_fl(i), rk_li(i), rk_fl(i), rk_re(i), fp_li(i), fp_fl(i), fp_re(i), br_li(i), br_fl(i), br_re(i)
+     !
+     !END DO
 
-       tau_fl(i) = (rk_fl(i) / 8) * rho * vp_fl(i)**2
+     !write (UNIT_OUT_LAENGS, *)
 
-       WRITE (UNIT_OUT_LAENGS, 9) Stat1(i), sohl1(i), wsp1(i), hen1(i), bv1(i), boli1(i), bore1(i), vbv1(i), &
-                  & tau_fl(i), rk_li(i), rk_fl(i), rk_re(i), fp_li(i), fp_fl(i), fp_re(i), br_li(i), br_fl(i), br_re(i)
 
-     END DO
+     WRITE (UNIT_OUT_LAENGS, 80) 'Stat', 'Kenn', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+                             & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
+                             & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN'
 
-     7 FORMAT(1X, A8, ', ', A8, ' Uhr')
-     8 FORMAT(1X, 7A10,   A8,   A8,   3A8,   3A10,   3A10)
-     9 FORMAT(1x, 7F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3)
+     WRITE (UNIT_OUT_LAENGS, 80) 'km'  ,  '-', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+                             & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
+                             & 'mNN',    'mNN',      'mNN',      'm',       'm'
+
+
+     do i = 1, anz_prof(1)
+
+       write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
+                                & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
+                                & out_PROF(i,1)%vm, out_PROF(i,1)%tau, &
+                                & out_IND(i,1,1)%lambda, out_IND(i,1,2)%lambda, out_IND(i,1,3)%lambda, &
+                                & out_IND(i,1,1)%A, out_IND(i,1,2)%A, out_IND(i,1,3)%A, &
+                                & out_IND(i,1,1)%B, out_IND(i,1,2)%B, out_IND(i,1,3)%B, &
+                                & out_PROF(i,1)%WehrOK, out_PROF(i,1)%BrueckOK, out_PROF(i,1)%BrueckUK, &
+                                & out_PROF(i,1)%BrueckB, out_PROF(i,1)%RohrD
+     end do
+
+
+     7  FORMAT (1X, A8, ', ', A8, ' Uhr')
+
+     8  FORMAT (1X, 7A10,   A8,   A8,   3A8,   3A10,   3A10)
+     9  FORMAT (1x, 7F10.4, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3)
+
+     80 FORMAT (1X, A10,   A5, 6A10,   A8,   A8,   3A8,   3A10,   3A10,   5A10)
+     90 format (1X, F10.4, A5, 6F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3, 5F10.3)
      ! ST --------------------------------------------------------------------
                                                                         
+
+
 ELSEIF (mark.gt.1) then
 
      PRINT *

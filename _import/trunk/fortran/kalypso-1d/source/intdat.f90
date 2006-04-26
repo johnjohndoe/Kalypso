@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2006    3:00 pm
+!     Last change:  WP   26 Apr 2006    1:57 pm
 !--------------------------------------------------------------------------
 ! This code, intda.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -63,26 +63,13 @@ INTEGER, INTENT(OUT) :: ierl            ! Fehlernummer
 
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
-! fuer BRUECKENBERECHNUNG, AUFRUF IN INTDAT, IMPULS, WSPBER
 INTEGER 	:: iwl, iwr, nuk, nok
+INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
 REAL 		:: xuk (maxkla), huk (maxkla), xok (maxkla), hok (maxkla)
-REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk
+REAL    	:: hukmax, hokmax, hsuw, raub, breite, xk, hokmin
 CHARACTER(LEN=1):: ibridge
-COMMON / brueck / iwl, iwr, nuk, nok, xuk, huk, xok, hok, hukmax, &
-       & hokmax, hsuw, raub, breite, xk, ibridge
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /BRUECK2/ -----------------------------------------------------------
-REAL            :: hokmin
-COMMON / brueck2 / hokmin
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /BRUECK3/ -----------------------------------------------------------
-! Gelaende Oberkante Grenze
-INTEGER 	:: iokl, iokr
-COMMON / brueck3 / iokl, iokr
+COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
+       & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
 
 

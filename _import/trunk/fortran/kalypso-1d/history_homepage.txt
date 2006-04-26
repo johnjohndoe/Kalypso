@@ -229,3 +229,13 @@ Kalypso 1.0.17   März 2006
 4.)  Datei mit Kontrollausgaben KONTROLL.LOG wird ab sofort immer ausgegeben.
 
                                                     Wolf Plöger, 13.03.2006
+
+
+Kalypso 1.0.18   April 2006
+---------------------------
+1.)  Erhöhung der Anzahl der maximal möglichen Abflussänderungen in einem Flusslauf von 10 auf 50.
+
+2.)  Erweiterung der Ausgabe in "laengsschnitt.txt"
+
+                                                    Wolf Plöger, 26.04.2006
+
