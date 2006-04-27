@@ -32,9 +32,9 @@ public class BlockTimeSeriesTest extends TestCase
     // TreeMap map2 = load( "resources/qgs.dat", "103" );
     // assertNotNull( map );
     // assertNotNull( map2 );
-    // TreeMap map3 = load( "./resources/WinterSommerTest.dat", "103" );
-    TreeMap map3 = load( "./resources/WinterSommer24hTest.dat", "103" );
-    check( map3, 3 );
+     TreeMap map3 = load( "./resources/WinterSommerTest.dat", "103" );
+//    TreeMap map3 = load( "./resources/WinterSommer24hTest.dat", "103" );
+    check( map3, 28 );
   }
 
   private void check( TreeMap map, int max )
