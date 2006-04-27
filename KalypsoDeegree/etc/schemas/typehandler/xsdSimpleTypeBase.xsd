@@ -6,14 +6,53 @@
 	<element name="simple">
 		<complexType>
 			<sequence>
-				<element name="string" type="string" />
+				<element name="gMonthDay" type="gMonthDay" />
+				<element name="gDay" type="gDay" />
+				<element name="gMonth" type="gMonth" />
+				<element name="gYear" type="gYear" />
+				<element name="gYearMonth" type="gYearMonth" />
 				<element name="date" type="date" />
-				<element name="decimal" type="decimal" />
 				<element name="time" type="time" />
 				<element name="dateTime" type="dateTime" />
 				<element name="duration" type="duration" />
-				<element name="int" type="int" />
+				<element name="string" type="string" />
+				<element name="normalizedString" type="normalizedString" />
+				<element name="token" type="token" />
+				<element name="language" type="language" />
+				<element name="Name" type="Name" />
+				<element name="NCName" type="NCName" />
+				<element name="ID" type="ID" />
+				<element name="IDREF" type="IDREF" />
+				<element name="IDREFS" type="IDREFS" />
+				<element name="ENTITY" type="ENTITY" />
+				<element name="ENTITIES" type="ENTITIES" />
+				<element name="NMTOKEN" type="NMTOKEN" />
+				<element name="NMTOKENS" type="NMTOKENS" />
+				<element name="boolean" type="boolean" />
+				<element name="base64Binary" type="base64Binary" />
+				<element name="hexBinary" type="hexBinary" />
+				<element name="float" type="float" />
+				<element name="decimal" type="decimal" />
 				<element name="integer" type="integer" />
+				<element name="nonPositiveInteger" type="nonPositiveInteger" />
+				<element name="negativeInteger" type="negativeInteger" />
+				<element name="long" type="long" />
+				<element name="int" type="int" />
+				<element name="short" type="short" />
+				<element name="byte" type="byte" />
+				<element name="nonNegativeInteger" type="nonNegativeInteger" />
+				<element name="positiveInteger" type="positiveInteger" />
+				<element name="unsignedLong" type="unsignedLong" />
+				<element name="unsignedInt" type="unsignedInt" />
+				<element name="unsignedShort" type="unsignedShort" />
+				<element name="unsignedByte" type="unsignedByte" />
+				<element name="double" type="double" />
+				<element name="anyURI" type="anyURI" />
+				<element name="QName" type="QName" />
+				<!-- 
+				<element name="NOTATION" type="NOTATION" />
+				 -->
+				
 			</sequence>
 		</complexType>
 	</element>

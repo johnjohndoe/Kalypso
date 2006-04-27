@@ -40,40 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.schemata;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die
- * gleichen Schemata (zumindest obslink) werden auch fürs binding benutzt ist
- * sind dadurch endlich wirklich nur noch einmal vorhanden.
+ * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
+ * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.
  * 
  * @author gernot
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
-	/**
-	 * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
-	 *      java.util.Map)
-	 */
-	protected void fillCatalog(final Class myClass, final Map catalog)
-	{
-		catalog.put("obslink.zml.kalypso.org", getClass().getResource(
-				"obslink/obslink.xsd"));
-		catalog.put("http://www.w3.org/1999/xlink", getClass().getResource(
-				"gml2_2002/xlinks.xsd"));
-		catalog.put("http://www.opengis.net/gml", getClass().getResource(
-				"gml2_2002/feature.xsd"));
-		catalog.put("org.kalypso.dwd.geolayer", myClass
-				.getResource("dwd/v0.1/dwdGeoLayer.xsd"));
-		catalog.put("inline.zml.kalypso.org", getClass().getResource(
-				"obslink/zmlinline.xsd"));
-		catalog.put("http://www.opengis.net/wfs", getClass().getResource(
-				"wfs1.1.0/wfs1.1.0.xsd"));
+  /**
+   * 
+   */
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
+  {
+    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
+    catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
 
-		// is also in KalypsoDSS
-		// catalog.put( "http://www.xplanung.de/bplangml",
-		// getClass().getResource( "resources/BPlan-Operationen_2.xsd" ) );
-	}
+    // GML2-Base
+    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+
+    // GML3-Base
+    // try
+    // {
+    // catalog.put( "http://www.opengis.net/gml", new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" ) );
+    // catalog.put( "http://www.opengis.net/swe", new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"
+    // ) );
+    // catalog.put( "http://www.opengis.net/om", new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd"
+    // ) );
+    // }
+    // catch( MalformedURLException e )
+    // {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+
+    catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
+    catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
+    catalog.put( "http://www.opengis.net/wfs", getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
+
+    // is also in KalypsoDSS
+    // catalog.put( "http://www.xplanung.de/bplangml",
+    // getClass().getResource( "resources/BPlan-Operationen_2.xsd" ) );
+  }
 }
