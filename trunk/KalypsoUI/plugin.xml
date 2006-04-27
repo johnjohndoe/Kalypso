@@ -479,8 +479,16 @@
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                style="push"
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
-               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
-         </action>
+               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"/>
+         <action
+               toolbarPath="tabelle"
+               label="Tabelle Eigenschaften"
+               tooltip=""
+               icon="icons/util/settings.gif"
+               class="org.kalypso.ui.editor.obstableeditor.actions.TablePropertiesAction"
+               style="push"
+               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
+               id="org.kalypso.ui.editor.obstableeditor.actions.TablePropertiesAction"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"

@@ -291,6 +291,8 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           final TableView view = (TableView)evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
           m_dateRenderer.setTimeZone( view.getTimezone() );
+          
+          repaint();
         }
       }
     };
