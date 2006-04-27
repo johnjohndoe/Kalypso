@@ -1,84 +1,215 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.eindim.tuhh" xmlns:tuhh="org.kalypso.model.eindim.tuhh" xmlns:eindim="org.kalypso.model.eindim" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+<schema targetNamespace="org.kalypso.model.eindim.tuhh" xmlns:tuhh="org.kalypso.model.eindim.tuhh" xmlns:eindim="org.kalypso.model.eindim" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<import namespace="org.kalypso.model.eindim" schemaLocation="calculationEindim.xsd"/>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="D:\Eclipse\Kalypso\KalypsoContributionsOGC31\etc\schemas\original\gml\3.1.1\base\gml.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTE
+	_________________________________________________________________________________________
+	-->
 	<element name="calculation1DStationaryTuhh" type="tuhh:Calculation1DStationaryTuhhType" substitutionGroup="eindim:calculation">
 		<annotation>
-			<documentation>ist ggf. Spezialisierung eines allg. calculation1D</documentation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
 		</annotation>
 	</element>
-
-	<element name="calculationModeMember" type="tuhh:CalculationModePropertyType" substitutionGroup="gml:featureMember"/>
-	<element name="calculationMode" type="tuhh:CalculationModeType" substitutionGroup="gml:_Feature"/>
+	<!-- 
+	-->
+	<element name="calculationModeMember" type="tuhh:CalculationModePropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationMode" type="tuhh:CalculationModeType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
 	<element name="calculationModeWaterlevel" type="tuhh:CalculationModeWaterlevelType" substitutionGroup="tuhh:calculationMode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Wasserspiegellagenberechnung</label>
+				<label>???Wasserspiegellagenberechnung</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
+	<!-- 
+	-->
 	<element name="calculationModeBankfullUniform" type="tuhh:CalculationModeBankfullUniformType" substitutionGroup="tuhh:calculationMode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bordvollberechnung - stationär gleichförmige Abflussverhältnisse</label>
+				<label>???Bordvollberechnung - stationär gleichförmige Abflussverhältnisse</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
+	<!-- 
+	-->
 	<element name="calculationModeBankfullNonUniform" type="tuhh:CalculationModeBankfullNonUniformType" substitutionGroup="tuhh:calculationMode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bordvollberechnung - stationär ungleichförmige Abflussverhältnisse</label>
+				<label>???Bordvollberechnung - stationär ungleichförmige Abflussverhältnisse</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
-
-	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember"/>
-	<element name="calculationStartCondition" type="tuhh:CalculationStartConditionType" substitutionGroup="gml:_Feature"/>
+	<!-- 
+	-->
+	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calculationStartCondition" type="tuhh:CalculationStartConditionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
 	<element name="calculationStartConditionGrenztiefe" type="tuhh:CalculationStartConditionGrenztiefeType" substitutionGroup="tuhh:calculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>als Grenztiefe</label>
+				<label>???als Grenztiefe</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
+	<!-- 
+	-->
 	<element name="calculationStartConditionUniformSlope" type="tuhh:CalculationStartConditionUniformSlopeType" substitutionGroup="tuhh:calculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Annahme stationär gleichförmiges Gefälle</label>
+				<label>???Annahme stationär gleichförmiges Gefälle</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
+	<!-- 
+	-->
 	<element name="calculationStartConditionWaterlevel" type="tuhh:CalculationStartConditionWaterlevelType" substitutionGroup="tuhh:calculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Direkteingabe Wasserspiegel</label>
+				<label>???Direkteingabe Wasserspiegel</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
 			</documentation>
 		</annotation>
 	</element>
-
-	<element name="strand1DStationaryTuhhMember" type="tuhh:Strand1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandMember"/>
-	<element name="strand1DStationaryTuhh" type="tuhh:Strand1DStationaryTuhhType" substitutionGroup="eindim:strand"/>
-
-	<element name="strandElement1DStationaryTuhhMember" type="tuhh:StrandElement1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandElementMember"/>
-	<element name="strandElement1DStationaryTuhh" type="tuhh:StrandElement1DStationaryTuhhType" substitutionGroup="eindim:strandElement"/>
-
-	<element name="energyLossMember" type="tuhh:EnergyLossPropertyType" substitutionGroup="gml:featureMember"/>
-	<element name="energyLoss" type="tuhh:EnergyLossType" substitutionGroup="gml:_Feature"/>
-
+	<!-- 
+	-->
+	<element name="strand1DStationaryTuhhMember" type="tuhh:Strand1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="strand1DStationaryTuhh" type="tuhh:Strand1DStationaryTuhhType" substitutionGroup="eindim:strand">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="strandElement1DStationaryTuhhMember" type="tuhh:StrandElement1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandElementMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="strandElement1DStationaryTuhh" type="tuhh:StrandElement1DStationaryTuhhType" substitutionGroup="eindim:strandElement">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="energyLossMember" type="tuhh:EnergyLossPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="energyLoss" type="tuhh:EnergyLossType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???</label>
+				<tooltip>???</tooltip>
+				<description>???</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPEN
+	_________________________________________________________________________________________	
+	-->
 	<complexType name="Calculation1DStationaryTuhhType">
 		<complexContent>
 			<extension base="eindim:CalculationType">
 				<sequence>
-					<element ref="eindim:strandMember"/>
-
+					<element ref="eindim:strandMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 					<!-- TODO bezeichnungen englisch machen -->
 					<!-- TODO: Texte besser! -->
 					<element name="fliessgesetz">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Fließgesetz</label>
+								<label>???Fließgesetz</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -86,188 +217,272 @@
 								<enumeration value="darcyRohr">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>äquivalente Sandrauheiten nach Darcy-Weisbach (Rohrströmungen)</label>
+											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (Rohrströmungen)</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="darcyOffeneGerinne">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>äquivalente Sandrauheiten nach Darcy-Weisbach (offene Gerinne mit Formeinfluss)</label>
+											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (offene Gerinne mit Formeinfluss)</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="manningStrickler">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Rauheitsbeiwerte nach Gauckler-Manning-Strickler</label>
+											<label>???Rauheitsbeiwerte nach Gauckler-Manning-Strickler</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-
-					<element name="startStation" type="int"/>
-					<element name="endStation" type="int"/>
-
+					<element name="startStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="endStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="wapIteration">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Berechnung des Waserspiegels</label>
+								<label>???Berechnung des Waserspiegels</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 						<simpleType>
-							<!-- TODO: Texte besser! -->
 							<restriction base="string">
 								<enumeration value="simpleIteration">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>einfache Iteration</label>
+											<label>???einfache Iteration</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="exactIteration">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>genaue Berechnung durch Einschlussiteration</label>
+											<label>???genaue Berechnung durch Einschlussiteration</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-
 					<element name="verzoegerungsverlust">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Verzögerungsverlust</label>
+								<label>???Verzögerungsverlust</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 						<simpleType>
-							<!-- TODO: Texte besser! -->
 							<restriction base="string">
 								<enumeration value="dvwk">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>nach DVWK (beta = 0.67)</label>
+											<label>???nach DVWK (beta = 0.67)</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="bjoernsen">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>nach Björnsen (beta = 0.5)</label>
+											<label>???nach Björnsen (beta = 0.5)</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="dfg">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<label>???nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-
 					<element name="reibungsverlust">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Art der Berechnung von Reibungsverlust</label>
+								<label>???Art der Berechnung von Reibungsverlust</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 						<simpleType>
-							<!-- TODO: Texte besser! -->
 							<restriction base="string">
 								<enumeration value="trapezFormula">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>nach Trapezformel</label>
+											<label>???nach Trapezformel</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="geometricFormula">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>durch geometrische Mittelung</label>
+											<label>???durch geometrische Mittelung</label>
+											<tooltip>???</tooltip>
+											<description>???</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-
 					<element name="doCalcBridges" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Brücken mit Berechnen</label>
+								<label>???Brücken mit Berechnen</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 					</element>
-
 					<element name="doCalcBarrages" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wehre mit Berechnen</label>
+								<label>???Wehre mit Berechnen</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
 							</documentation>
 						</annotation>
 					</element>
-
 					<element ref="eindim:roughnessDefinitionCollectionMember" minOccurs="0">
 						<annotation>
-							<documentation>
-								<description>Optional. If present, used to map the roughness-classes in the profile to real values (i.e. the profile must have used the same roughness classes)</description>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???Optional. If present, used to map the roughness-classes in the profile to real values (i.e. the profile must have used the same roughness
+								classes)</description>
 							</documentation>
 						</annotation>
 					</element>
 					<!-- TODO use better word for 'plant' everywhere -->
 					<element ref="eindim:plantDefinitionCollectionMember" minOccurs="0">
 						<annotation>
-							<documentation>
-								<description>Optional. If present, used to map the plant-classes in the profile to real values (i.e. the profile must have used the same roughness classes)</description>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???Optional. If present, used to map the plant-classes in the profile to real values (i.e. the profile must have used the same roughness classes)
+								</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tuhh:calculationModeMember"/>
+					<element ref="tuhh:calculationModeMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationModePropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="tuhh:calculationMode"/>
+					<element ref="tuhh:calculationMode">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
 	<complexType name="CalculationModeType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="type" type="string"/>
+					<element name="type" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationModeWaterlevelType">
 		<complexContent>
 			<extension base="tuhh:CalculationModeType">
 				<sequence>
 					<!-- TODO force it to be one of the water's runOffEvents? -->
-					<element name="runOffEventMember" type="om:AbstractObservationPropertyType"/>
-					<element ref="tuhh:calculationStartConditionMember"/>
+					<element name="runOffEventMember" type="om:AbstractObservationPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tuhh:calculationStartConditionMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationModeBankfullUniformType">
 		<complexContent>
 			<extension base="tuhh:CalculationModeType">
@@ -275,31 +490,71 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationModeBankfullNonUniformType">
 		<complexContent>
 			<extension base="tuhh:CalculationModeType">
 				<sequence>
-					<element ref="tuhh:calculationStartConditionMember"/>
-					<element name="minimalRunOff" type="double"/>
-					<element name="maximalRunOff" type="double"/>
-					<element name="runOffStep" type="double"/>
+					<element ref="tuhh:calculationStartConditionMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="minimalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maximalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runOffStep" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
-
+	<!-- 
+	-->
 	<complexType name="CalculationStartConditionPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="tuhh:calculationStartCondition"/>
+					<element ref="tuhh:calculationStartCondition">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
 	<complexType name="CalculationStartConditionType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -307,7 +562,8 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationStartConditionGrenztiefeType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
@@ -315,52 +571,95 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationStartConditionUniformSlopeType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
 				<sequence>
-					<element name="slope" type="double"/>
+					<element name="slope" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="CalculationStartConditionWaterlevelType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
 				<sequence>
-					<element name="waterlevel" type="double"/>
+					<element name="waterlevel" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="Strand1DStationaryTuhhPropertyType">
 		<complexContent>
 			<restriction base="eindim:StrandPropertyType">
 				<sequence>
-					<element ref="tuhh:strand1DStationaryTuhh"/>
+					<element ref="tuhh:strand1DStationaryTuhh">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
 	<complexType name="Strand1DStationaryTuhhType">
 		<complexContent>
 			<restriction base="eindim:StrandType">
 				<sequence>
-					<element ref="tuhh:strandElement1DStationaryTuhhMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="tuhh:strandElement1DStationaryTuhhMember" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="StrandElement1DStationaryTuhhPropertyType">
 		<complexContent>
 			<restriction base="eindim:StrandElementPropertyType">
 				<sequence>
-					<element ref="tuhh:strandElement1DStationaryTuhh"/>
+					<element ref="tuhh:strandElement1DStationaryTuhh">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -369,38 +668,90 @@
 		<complexContent>
 			<extension base="eindim:StrandElementType">
 				<sequence>
-					<element name="distanceL" type="double"/>
-					<element name="distanceM" type="double"/>
-					<element name="distanceR" type="double"/>
-					<element ref="tuhh:energyLossMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="distanceL" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceM" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceR" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tuhh:energyLossMember" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
+	<!-- 
+	-->
 	<complexType name="EnergyLossPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="tuhh:energyLoss"/>
+					<element ref="tuhh:energyLoss">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
 	<complexType name="EnergyLossType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="lossType" type="string">
 						<annotation>
-							<documentation>TODO: statt beliebiegier string, hole Werte aus einem Dictionary</documentation>
+							<documentation xml:lang="de">GML: use dictionary for values <label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
 						</annotation>
 					</element>
-					<element name="value" type="double"/>
+					<element name="value" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
-
 		</complexContent>
 	</complexType>
+	<!-- 
+	-->
 </schema>
