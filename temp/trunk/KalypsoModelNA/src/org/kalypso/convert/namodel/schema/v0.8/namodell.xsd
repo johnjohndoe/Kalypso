@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Anneliese Fey (TU Hamburg-Harburg) -->
-<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.7">
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.8">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-               <element name="Abfluss" type="obslink:TimeseriesLinkType/>
         jetzt: <element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty/>
 	-->
 	<element name="NaModell" type="na:NaModellType">
@@ -201,7 +200,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty">
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Pegel (lok)</label>
@@ -216,7 +215,7 @@
 						</annotation>
 					</element>
 					<!-- ZR berechnet, hier wird das ergebnis gespeichert-->
-					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty">
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abfluss berechnet</label>
@@ -226,20 +225,6 @@
 							<documentation xml:lang="en">
 								<label>Calculated discharge</label>
 								<tooltip>Calculated discharge line</tooltip>
-								<description>.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="pegelBerechnetZRAblage" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>ZR Ablage Berechnung</label>
-								<tooltip>Verknuepfung zur Ablage des Ergebnisses in der Datenbank</tooltip>
-								<description>.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>TS Storage calculation </label>
-								<tooltip>Connection of the storage with the results in the database</tooltip>
 								<description>.</description>
 							</documentation>
 						</annotation>
@@ -1128,20 +1113,6 @@ siehe bodenkorrekturmember...
 						</annotation>
 					</element>
 					<!--               Optimierung              -->
-					<element name="faktorBianf" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Faktor Bianf</label>
-								<tooltip>Optimierungsfaktor  Anfangsinhalt Interzeptionsspeicher</tooltip>
-								<description>Faktor, welcher bei der Berechnung einer Optimierung den Anfangsinhalt Interzeptionsspeicher optimiert</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Coeff. Bianf</label>
-								<tooltip>Optimization coefficient initial value interzeption storage</tooltip>
-								<description>Optimization coefficient initial value interzeption storage</description>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="faktorAigw" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -1181,6 +1152,91 @@ siehe bodenkorrekturmember...
 								<label>synth. P.</label>
 								<tooltip>synthetic precipitation</tooltip>
 								<description>choice of precipitation from pool of synthetic precipitation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- Korrekturfaktoren (zur Kalibrierung) der Retentionskonstanten       -->
+					<element name="faktorRetvs" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k QObfl.vers.</label>
+								<tooltip>Korrekturfaktor der Retentionskonstante Oberflaechenabfluss, versiegelte Flächen [-]</tooltip>
+								<description>Korrekturfaktor der Retentionskonstante (Speicherkonstante) des Oberflaechenabflusses versiegelter Flaechen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k Qsealed</label>
+								<tooltip>Factor Retention constant of the surface area discharge, sealed [-]</tooltip>
+								<description>Factor Retention constant (stoage constant) of the surface discharge of sealed surfaces </description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetob" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k QObfl.nat.</label>
+								<tooltip>Korrekturfaktor der Retentionskonstante Oberflaechenabfluss, natuerlich [-]</tooltip>
+								<description>Korrekturfaktor der Retentionskonstante (Speicherkonstante) des Oberflaechenabflusses natuerlicher Flaechen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k Qnat</label>
+								<tooltip>Factor Retention constant of the surface area discharge, natural [-]</tooltip>
+								<description>Factor Retention constant (stoage constant) of the surface discharge of natural surfaces</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetint" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k QIntf.</label>
+								<tooltip>Korrekturfaktor der  Retentionskonstante Interflow [-]</tooltip>
+								<description>Korrekturfaktor der  Retentionskonstante (Speicherkonstante) des Interflows</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k QIntf.</label>
+								<tooltip>Factor Retention constant Interflow [-]</tooltip>
+								<description>Factor Retention constant (stoage constant) of the Interflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetbas" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k QBasis</label>
+								<tooltip>Korrekturfaktor der Retentionskonstante Basisabfluss [-]</tooltip>
+								<description>Korrekturfaktor der Retentionskonstante (Speicherkonstante) des Basisabflusses</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k QBasis</label>
+								<tooltip>Factor Retention constant of basis discharge [-]</tooltip>
+								<description>Factor Retention constant (stoage constant) of the basis discharge</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetgw" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k QGw</label>
+								<tooltip>Korrekturfaktor der Retentionskonstante Grundwasser [-]</tooltip>
+								<description>Korrekturfaktor der Retentionskonstante (Speicherkonstante) des Grundwasserflusses in die Nachbargebiete</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k QGw</label>
+								<tooltip>Factor Korrekturfaktor der Retention constant groundwater [-]</tooltip>
+								<description>Factor Korrekturfaktor der Retention constant (stoage constant) of groundwater flow in the neighbouring areas</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetklu" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor k Q tiefenGw</label>
+								<tooltip>Korrekturfaktor der Retentionskonstante Tiefengrundwasserleiter [-]</tooltip>
+								<description>Korrekturfaktor der Retentionskonstante (Speicherkonstante) des Flusses im Tiefengrundwasserleiter</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Factor k Q lowerGw</label>
+								<tooltip>Factor Retention constant for deep aquifer [-]</tooltip>
+								<description>Factor Retention constant (stoage constant) of the flow in deep aquifer</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -1597,7 +1653,7 @@ siehe bodenkorrekturmember...
 					<element name="position" type="gml:LineStringPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>System Geometrie</label>
+								<label>Geometrie</label>
 								<tooltip>Geometrie des Mulden-Rigolen-Systems</tooltip>
 								<description>Länge der Mulden-Rigole [m]</description>
 							</documentation>

@@ -330,7 +330,6 @@ public class CatchmentManager extends AbstractManager
     // buf.append( toAscci( nodeFeVers, 18 ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" );
-    Double banf = (Double) feature.getProperty( "faktorBianf" );
     asciiBuffer.getCatchmentBuffer().append( buf.toString() );
 
     // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
@@ -339,8 +338,6 @@ public class CatchmentManager extends AbstractManager
     while( iter.hasNext() )
     {
       Feature fe = (Feature) iter.next();
-      if( banf != null )
-        fe.setProperty( "banf", banf );
       asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + " 1.0" + "\n" );
     }
 
@@ -349,8 +346,23 @@ public class CatchmentManager extends AbstractManager
     asciiBuffer.getCatchmentBuffer().append( "1.00 0.0 " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "aigw" ), "f6.2" ) + " 0.00 0.00" + "\n" );
 
     // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
-    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 11 ) + "\n" );
+    // if correction factors of retention constants are choosen, retention constants correction
+    Double faktorRetvs = FeatureHelper.getAsDouble( feature, "faktorRetvs", 1 );
+    Double faktorRetob = FeatureHelper.getAsDouble( feature, "faktorRetob", 1 );
+    Double faktorRetint = FeatureHelper.getAsDouble( feature, "faktorRetint", 1 );
+    Double faktorRetbas = FeatureHelper.getAsDouble( feature, "faktorRetbas", 1 );
+    Double faktorRetgw = FeatureHelper.getAsDouble( feature, "faktorRetgw", 1 );
+    Double faktorRetklu = FeatureHelper.getAsDouble( feature, "faktorRetklu", 1 );
+    double retvs = faktorRetvs.doubleValue() * ((Double) feature.getProperty( "retvs" )).doubleValue();
+    double retob = faktorRetob.doubleValue() * ((Double) feature.getProperty( "retob" )).doubleValue();
+    double retint = faktorRetint.doubleValue() * ((Double) feature.getProperty( "retint" )).doubleValue();
+    double retbas = faktorRetbas.doubleValue() * ((Double) feature.getProperty( "retbas" )).doubleValue();
+    double retgw = faktorRetgw.doubleValue() * ((Double) feature.getProperty( "retgw" )).doubleValue();
+    double retklu = faktorRetklu.doubleValue() * ((Double) feature.getProperty( "retklu" )).doubleValue();
 
+    // asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 11 ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( retvs, "*" ) + " " + FortranFormatHelper.printf( retob, "*" ) + " " + FortranFormatHelper.printf( retint, "*" ) + " "
+        + FortranFormatHelper.printf( retbas, "*" ) + " " + FortranFormatHelper.printf( retgw, "*" ) + " " + FortranFormatHelper.printf( retklu, "*" ) + "\n" );
     // 12-14
     List gwList = (List) feature.getProperty( "grundwasserabflussMember" );
     asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( Integer.toString( gwList.size() ), "*" ) + "\n" );
