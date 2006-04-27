@@ -1,17 +1,8 @@
 package org.kalypso.ui.editor.abstractobseditor;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -29,16 +20,16 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 import org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction;
+import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
+import org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand;
 
 /**
  * AbstractObsOutlinePage
@@ -204,7 +195,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     if( element instanceof ObsViewItem )
     {
       final ObsViewItem item = (ObsViewItem)element;
-      item.setShown( event.getChecked() );
+      m_editor.postCommand( new SetShownCommand( item, event.getChecked() ), null );
+//      item.setShown( event.getChecked() );
     }
   }
 
@@ -260,43 +252,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
       final String[] files = (String[])data;
 
-      final AbstractObservationEditor editor = m_editor2;
-
-      final Job updateTemplateJob = new Job( "Vorlage aktualisieren" )
-      {
-        @Override
-        protected IStatus run( IProgressMonitor monitor )
-        {
-          monitor.beginTask( getName(), IProgressMonitor.UNKNOWN );
-
-          try
-          {
-            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
-
-            for( int i = 0; i < files.length; i++ )
-            {
-              IFile file = wksp.getFileForLocation( new Path( files[i] ) );
-              file = (IFile)wksp.findMember( file.getFullPath() );
-              final URL url = ResourceUtilities.createURL( file );
-
-              editor.loadObservation( url, url.toExternalForm() );
-            }
-
-            return Status.OK_STATUS;
-          }
-          catch( Exception e )
-          {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "", e );
-          }
-          finally
-          {
-            monitor.done();
-          }
-        }
-      };
-
-      updateTemplateJob.schedule();
-
+      m_editor2.postCommand( new DropZmlCommand( m_editor2, m_view, files ), null );
+      
       return true;
     }
 
@@ -315,5 +272,4 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
       return true;
     }
   }
-
 }

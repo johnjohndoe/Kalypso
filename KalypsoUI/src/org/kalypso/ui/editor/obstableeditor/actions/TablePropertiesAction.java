@@ -39,29 +39,29 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.ui.editor.diagrameditor.actions;
+package org.kalypso.ui.editor.obstableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
-import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
-import org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog;
-import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
+import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
+import org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog;
 
 /**
  * @author schlienger
  */
-public class DiagramPropertiesAction extends AbstractEditorActionDelegate
+public class TablePropertiesAction extends AbstractEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-    final DiagView diag = (DiagView) editor.getView();
-    final DiagramPropertiesDialog dlg = new DiagramPropertiesDialog( getShell(), diag.getTitle(), diag.isShowLegend(), diag.getLegendName(), diag.getTimezone().getID() );
+    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
+    final TableView table = (TableView) editor.getView();
+    final TablePropertiesDialog dlg = new TablePropertiesDialog( getShell(), table.getTimezone().getID() );
     if( dlg.open() == Window.OK )
-      editor.postCommand( new ChangeDiagPropsCommand( diag, dlg.getDiagramTitle(), dlg.isShowLegend(), dlg.getLegendTitle(), dlg.getTimezoneName() ), null );
+      editor.postCommand( new ChangeTablePropsCommand( table, dlg.getTimezoneName() ), null );
   }
 }

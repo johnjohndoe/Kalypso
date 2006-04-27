@@ -39,7 +39,7 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.ui.editor.diagrameditor;
+package org.kalypso.ui.editor.obstableeditor;
 
 import java.util.Arrays;
 import java.util.TimeZone;
@@ -48,38 +48,25 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * @author schlienger
  */
-public class DiagramPropertiesDialog extends TitleAreaDialog
+public class TablePropertiesDialog extends TitleAreaDialog
 {
-  protected String m_diagTitle;
-
-  protected boolean m_showLegend;
-
-  protected String m_legendTitle;
-
   protected String m_tz;
 
-  public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend, final String legendTitle, final String timezoneName )
+  public TablePropertiesDialog( final Shell parentShell, final String timezoneName )
   {
     super( parentShell );
 
-    m_diagTitle = diagTitle;
-    m_showLegend = showLegend;
-    m_legendTitle = legendTitle;
     m_tz = timezoneName;
   }
 
@@ -89,64 +76,20 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
-    setTitle( "Zeitreihen-Diagramm-Eigenschaften" );
+    setTitle( "Zeitreihentabellen-Eigenschaften" );
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
     cmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Label lblTitle = new Label( cmp, SWT.LEFT );
-    lblTitle.setText( "Diagramm-Titel" );
-    final Text txtTitle = new Text( cmp, SWT.BORDER );
-    txtTitle.setText( m_diagTitle );
-    txtTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    txtTitle.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        m_diagTitle = txtTitle.getText();
-      }
-    } );
-
-    final Label lblShowLegend = new Label( cmp, SWT.LEFT );
-    lblShowLegend.setText( "Ledende anzeigen?" );
-    final Button btnShowLegend = new Button( cmp, SWT.CHECK );
-    btnShowLegend.setSelection( m_showLegend );
-    btnShowLegend.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        m_showLegend = btnShowLegend.getSelection();
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // empty
-      }
-    } );
-
-    final Label lblLegTitle = new Label( cmp, SWT.LEFT );
-    lblLegTitle.setText( "Legende-Titel" );
-    final Text txtLegTitle = new Text( cmp, SWT.BORDER );
-    txtLegTitle.setText( m_legendTitle );
-    txtLegTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    txtLegTitle.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        m_legendTitle = txtLegTitle.getText();
-      }
-    } );
-
     final Label lblTz = new Label( cmp, SWT.LEFT );
     lblTz.setText( "Zeitzone" );
     final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
     cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
+
     final String[] tz = TimeZone.getAvailableIDs();
     Arrays.sort( tz );
     cmbTz.setItems( tz );
-    
     cmbTz.setText( m_tz );
     
     cmbTz.addModifyListener( new ModifyListener()
@@ -160,21 +103,6 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     return cmp;
   }
 
-  public String getDiagramTitle( )
-  {
-    return m_diagTitle;
-  }
-
-  public boolean isShowLegend( )
-  {
-    return m_showLegend;
-  }
-
-  public String getLegendTitle( )
-  {
-    return m_legendTitle;
-  }
-  
   public String getTimezoneName( )
   {
     return m_tz;
