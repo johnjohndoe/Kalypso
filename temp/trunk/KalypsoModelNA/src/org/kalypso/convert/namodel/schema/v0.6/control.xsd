@@ -193,7 +193,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="ipver" type="string">
+					<element name="ipver" type="na:ipverEnumerationType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Verteilung</label>
@@ -211,4 +211,12 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	<simpleType name="ipverEnumerationType">
+		<restriction base="string">
+			<enumeration value="Blockregen"/>
+			<enumeration value="linksschiefer Regen"/>
+			<enumeration value="Zentralregen"/>
+			<enumeration value="rechtsschiefer Regen"/>
+		</restriction>
+	</simpleType>
 </schema>
