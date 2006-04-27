@@ -18,6 +18,8 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}NodeCollectionMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollectionMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
 .  Feature: {http://www.tuhh.de/kalypsoNA}NodeCollection
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}NodeCollectionType
 .  .  .  restricted by
@@ -64,9 +66,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .       Value: {http://www.opengis.net/gml}PointPropertyType
 .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Point
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}num
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .       Class: class java.lang.Integer
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}generateResult
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
 .  .  .       Class: class java.lang.Boolean
@@ -84,14 +83,106 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}pegelBerechnetZRAblage
 .  .  .       Value: {obslink.zml.kalypso.org}TimeseriesLinkFeatureProperty
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}zuflussZR
+.  .  .  [0,1]Property: {http://www.tuhh.de/kalypsoNA}zuflussZR
 .  .  .       Value: {obslink.zml.kalypso.org}TimeseriesLinkFeatureProperty
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
+.  .  .  [0,1]  Relation: {http://www.tuhh.de/kalypsoNA}branchingMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  Feature: {http://www.tuhh.de/kalypsoNA}_Branching
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}AbstractBranchingType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  Feature: {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}ContInflowFeatureType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.tuhh.de/kalypsoNA}AbstractBranchingType
+.  .  .  .  .  extended by
+.  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}qzug
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  Feature: {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}ContExtractionFeatureType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.tuhh.de/kalypsoNA}AbstractBranchingType
+.  .  .  .  .  extended by
+.  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}branchingNodeMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}qabg
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  Feature: {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}OverfallFeatureType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.tuhh.de/kalypsoNA}AbstractBranchingType
+.  .  .  .  .  extended by
+.  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}branchingNodeMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}queb
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  Feature: {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}BranchingFeatureType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.tuhh.de/kalypsoNA}AbstractBranchingType
+.  .  .  .  .  extended by
+.  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}branchingNodeMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}zproz
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-.  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}verzweigungNodeMember
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  Feature: {http://www.tuhh.de/kalypsoNA}CatchmentCollection
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}CatchmentCollectionType
 .  .  .  restricted by
@@ -138,9 +229,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .       Value: {http://www.opengis.net/gml}PolygonPropertyType
 .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Surface
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}inum
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .       Class: class java.lang.Integer
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}entwaesserungsStrangMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
@@ -164,12 +252,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}fver
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}vsg
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}bimax
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}bianf
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
@@ -183,19 +265,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Class: class java.lang.Double
 .  .  .  [1,10]  Relation: {http://www.tuhh.de/kalypsoNA}bodenkorrekturmember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}f_eva
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}aint
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}aigw
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}fint
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}ftra
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}retvs
@@ -247,6 +317,9 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}verdunstungZR
 .  .  .       Value: {obslink.zml.kalypso.org}TimeseriesLinkFeatureProperty
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}zft
+.  .  .       Value: {inline.zml.kalypso.org}ZmlInlineTAType
+.  .  .       Class: interface org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler$TA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}faktorBianf
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
@@ -256,6 +329,9 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}faktorRetobRetint
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}synthZR
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .       Class: class java.lang.String
 .  Feature: {http://www.tuhh.de/kalypsoNA}ChannelCollection
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}ChannelCollectionType
 .  .  .  restricted by
@@ -305,9 +381,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .       Value: {http://www.opengis.net/gml}LineStringPropertyType
 .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Curve
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}inum
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .       Class: class java.lang.Integer
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}downStreamNodeMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  Feature: {http://www.tuhh.de/kalypsoNA}VirtualChannel
@@ -328,9 +401,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .  .  .       Value: {http://www.opengis.net/gml}LineStringPropertyType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Curve
-.  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}inum
-.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .  .  .       Class: class java.lang.Integer
 .  .  .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}downStreamNodeMember
 .  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  Feature: {http://www.tuhh.de/kalypsoNA}KMChannel
@@ -351,15 +421,12 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .  .  .       Value: {http://www.opengis.net/gml}LineStringPropertyType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Curve
-.  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}inum
-.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .  .  .       Class: class java.lang.Integer
 .  .  .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}downStreamNodeMember
 .  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}qfmax
+.  .  .  [0,1]Property: {http://www.tuhh.de/kalypsoNA}startkm
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}c
+.  .  .  [0,1]Property: {http://www.tuhh.de/kalypsoNA}endkm
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  .  .  [5,5]  Relation: {http://www.tuhh.de/kalypsoNA}KMParameterMember
@@ -388,16 +455,10 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}Ort    [X] GEOMETRY
 .  .  .  .  .       Value: {http://www.opengis.net/gml}LineStringPropertyType
 .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Curve
-.  .  .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}inum
-.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
-.  .  .  .  .       Class: class java.lang.Integer
 .  .  .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}downStreamNodeMember
 .  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  .  .  [0,1]  Relation: {http://www.tuhh.de/kalypsoNA}iknotNodeMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}c
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}sv
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
@@ -408,8 +469,87 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}hvvsqd
-.  .  .       Value: {http://www.tuhh.de/kalypsoNA}DiagramType
-.  .  .       Class: class org.kalypso.ogc.gml.typehandler.DiagramProperty
+.  .  .       Value: {inline.zml.kalypso.org}ZmlInlineWVQType
+.  .  .       Class: interface org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler$WVQ
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}generateResult
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
+.  .  .       Class: class java.lang.Boolean
+.  Feature: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollectionType
+.  .  .  restricted by
+.  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureCollectionType
+.  .  .  .  .  extended by
+.  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureCollectionBaseType
+.  .  .  .  .  .  .  restricted by
+.  .  .  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  [0,oo]  Relation: {http://www.tuhh.de/kalypsoNA}swaleTrenchMember
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  Feature: {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  ContentType: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchFeatureType
+.  .  .  extended by
+.  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}position    [X] GEOMETRY
+.  .  .       Value: {http://www.opengis.net/gml}LineStringPropertyType
+.  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Curve
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}drainPipeSlope
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}kfPipe
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}diameterPipe
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}roughnessPipe
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}widthTrench
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}nutzung
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .       Class: class java.lang.String
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}boden
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .       Class: class java.lang.String
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}maxPerk
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}InflowGW
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}dischargeNode
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
+.  .  .       Class: class java.math.BigInteger
 .  Feature: {http://www.tuhh.de/kalypsoNA}KMParameter
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}KMParameterType
 .  .  .  extended by
@@ -438,6 +578,9 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}rnv
+.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .       Class: class java.lang.Double
+.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}c
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  Feature: {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
@@ -474,9 +617,6 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}retlay
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-.  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}evalay
-.  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
-.  .  .       Class: class java.lang.Double
 .  Feature: {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}grundwasserabflussType
 .  .  .  extended by
@@ -495,4 +635,3 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}gwwi
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-

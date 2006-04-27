@@ -32,7 +32,6 @@ package org.kalypso.gmlschema;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -45,6 +44,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
+import org.kalypso.gmlschema.basics.GmlTreePrintVisitor;
 import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
 import org.kalypso.test.TestUtilities;
 
@@ -62,18 +62,20 @@ public class GMLSchemaTest extends TestCase
   protected void setUp( ) throws Exception
   {
     KalypsoTest.init();
-    final Map<String, URL> map;
-    map = new HashMap<String, URL>();
-    // map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
-    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell.xsd" ) );
-    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
-    // map.put( "http://www.w3.org/1999/xlink", getClass().getResource( "resources/xlinks.xsd" ) );
-    map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
+    // final Map<String, URL> map;
+    // map = new HashMap<String, URL>();
 
-    final File tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
-    tmpFileCache.deleteOnExit();
-    GMLSchemaCatalog.init( new IUrlCatalog()
+    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell.xsd" ) );
+    // map.put( "http://www.w3.org/1999/xlink", getClass().getResource( "resources/xlinks.xsd" ) );
+    // map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
+    final IUrlCatalog defaultCatalog = GMLSchemaCatalog.getDefaultCatalog();
+    final Map<String, URL> map = defaultCatalog.getCatalog();
+    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
+    map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
+
+    final IUrlCatalog newURLCatalog = new IUrlCatalog()
     {
+
       public Map<String, URL> getCatalog( )
       {
         return map;
@@ -84,7 +86,23 @@ public class GMLSchemaTest extends TestCase
         return map.get( namespace );
       }
 
-    }, tmpFileCache );
+    };
+
+    final File tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
+    tmpFileCache.deleteOnExit();
+    GMLSchemaCatalog.init( newURLCatalog, tmpFileCache );
+    // {
+    // public Map<String, URL> getCatalog( )
+    // {
+    // return map;
+    // }
+    //
+    // public URL getURL( String namespace )
+    // {
+    // return map.get( namespace );
+    // }
+    //
+    // }, tmpFileCache );
 
     // m_listToTest
   }
@@ -95,7 +113,7 @@ public class GMLSchemaTest extends TestCase
     {
 
       loadAndTestSchema( // 
-//          getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
+          // getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
           getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
           getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
           , false );
@@ -121,7 +139,8 @@ public class GMLSchemaTest extends TestCase
     if( gmlSchema != null )
     {
       final StringBuffer buffer = new StringBuffer();
-      final ITreeContentProviderVisitor visitor = new PrintVisitor( new GMLSchemaLabelProvider(), buffer );
+      
+      final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
       final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
       provider.accept( gmlSchema, visitor, 0 );
       if( writeCompareFile )
@@ -142,36 +161,11 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-//        System.out.println( buffer.toString() );
+        // System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }
   }
 
-  private static class PrintVisitor implements ITreeContentProviderVisitor
-  {
-    private final ILabelProvider m_labelProvider;
-
-    private final StringBuffer m_buffer;
-
-    public PrintVisitor( final ILabelProvider labelProvider, StringBuffer buffer )
-    {
-      m_labelProvider = labelProvider;
-      m_buffer = buffer;
-    }
-
-    public boolean visit( Object element, int indent )
-    {
-      final String space = StringUtils.repeat( ".  ", indent );
-      final String text = m_labelProvider.getText( element );
-      final String[] lines = text.split( "\n" );
-      for( int i = 0; i < lines.length; i++ )
-      {
-        m_buffer.append( space );
-        m_buffer.append( lines[i] );
-        m_buffer.append( "\n" );
-      }
-      return true;
-    }
-  }
+  
 }

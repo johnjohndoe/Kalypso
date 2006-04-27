@@ -67,7 +67,7 @@ public class GMLSchemaSerializeTest extends TestCase
       final URL schemaURL = new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpArchive1 );
 
-      final URL schemaURL2 = GMLSchemaUtilities.getSchemaURLForArchive( tmpArchive1 );
+      final URL schemaURL2 = GMLSchemaUtilities.getSchemaURLForArchive( schemaURL );
 
       final File tmpArchive2 = File.createTempFile( "kalypsoSchema", "jar" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL2, tmpArchive2 );
