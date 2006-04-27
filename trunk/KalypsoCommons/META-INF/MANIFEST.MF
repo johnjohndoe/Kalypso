@@ -7,11 +7,17 @@ Bundle-ClassPath: KalypsoCommons.jar,
  lib/commons-io-1.0.jar,
  lib/commons-lang-2.0.jar,
  lib/commons-logging.jar,
- lib/commons-httpclient-2.0.2.jar
+ lib/commons-httpclient-2.0.2.jar,
+ lib/commons-codec-1.3.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Export-Package: org.apache.commons.httpclient,
+Export-Package: org.apache.commons.codec,
+ org.apache.commons.codec.binary,
+ org.apache.commons.codec.digest,
+ org.apache.commons.codec.language,
+ org.apache.commons.codec.net,
+ org.apache.commons.httpclient,
  org.apache.commons.httpclient.auth,
  org.apache.commons.httpclient.cookie,
  org.apache.commons.httpclient.methods,
