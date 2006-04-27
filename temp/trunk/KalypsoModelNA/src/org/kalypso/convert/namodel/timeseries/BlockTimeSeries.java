@@ -79,7 +79,8 @@ public class BlockTimeSeries
 
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" );
 
-  private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
+  private final Pattern pHeader = Pattern.compile( "\\s*(-?+\\d+\\.\\d+)\\s*" );
+//  private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
   private final Hashtable m_blocks;
 
