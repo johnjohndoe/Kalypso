@@ -76,7 +76,9 @@ public class NAZMLGenerator
    */
   private static boolean DEBUG = false;
 
-  final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
+  final static DateFormat m_grapDateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy HH mm ss" ) );
+
+  // final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
@@ -233,6 +235,7 @@ public class NAZMLGenerator
       // unfortunately
       // the simulation kernel will hang in an endless loop and write a endless
       // error file if this occurs, so we better prevent this in any case
+      // TODO: JH Do we need a user information on this???
 
       if( value.doubleValue() < 0 )
         writer.write( m_grapDateFormat.format( date ) + " 0.0\n" );
