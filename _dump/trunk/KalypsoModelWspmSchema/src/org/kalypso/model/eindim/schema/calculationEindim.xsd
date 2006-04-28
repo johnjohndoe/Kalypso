@@ -435,7 +435,7 @@
 					<!-- TODO: maybe restict type to specific observation (only profiles are allowed)-->
 					<element name="station" type="double">
 						<annotation>
-							<appinfo>This property is backuped by the observation (profilMember) itself.</appinfo>
+							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
 							<documentation xml:lang="de">
 								<label>???</label>
 								<tooltip>???</tooltip>
@@ -443,7 +443,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profilMember" type="om:AbstractObservationType">
+					<element name="profileMember" type="om:AbstractObservationType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
