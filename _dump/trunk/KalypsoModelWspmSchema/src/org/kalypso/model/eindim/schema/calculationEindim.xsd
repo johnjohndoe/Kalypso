@@ -17,7 +17,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="calculation" type="eindim:CalculationType" substitutionGroup="gml:_Feature">
+	<element name="abstractCalculation" abstract="true" type="eindim:AbstractCalculationType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">ist ggf. Spezialisierung eines allg. calculation1D <label>???</label>
 				<tooltip>???</tooltip>
@@ -116,7 +116,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="strandElement" type="eindim:StrandElementType" substitutionGroup="gml:_Feature">
+	<element name="abstractStrandElement" type="eindim:AbstractStrandElementType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???</label>
@@ -125,9 +125,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
-	-->
-	<element name="profileMember" type="eindim:ProfilePropertyType" substitutionGroup="gml:featureMember">
+	<element name="influentStrandElement" type="eindim:InfluentStrandElementType" substitutionGroup="eindim:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???</label>
@@ -136,7 +134,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="profile" type="eindim:ProfileType" substitutionGroup="gml:_Feature">
+	<element name="profileStrandElement" type="eindim:ProfileStrandElementType" substitutionGroup="eindim:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???</label>
@@ -234,7 +232,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:calculation">
+					<element ref="eindim:abstractCalculation">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -247,7 +245,7 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="CalculationType">
+	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -342,7 +340,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:strandElement">
+					<element ref="eindim:abstractStrandElement">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -355,14 +353,54 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="StrandElementType">
+	<complexType name="AbstractStrandElementType" abstract="true">
 		<complexContent>
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
 			<extension base="gml:AbstractFeatureType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InfluentStrandElementType">
+		<complexContent>
+			<annotation>
+				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="eindim:AbstractStrandElementType">
 				<sequence>
-					<element name="line" type="gml:LineStringSegmentType">
+					<element name="location" type="gml:PointType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>Position des Zulaufs</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileStrandElementType">
+		<complexContent>
+			<annotation>
+				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="eindim:AbstractStrandElementType">
+				<sequence>
+					<element name="station" type="double">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>???</label>
+								<tooltip>???</tooltip>
+								<description>???</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="profileGeometry" type="gml:LineStringSegmentType">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation</appinfo>
 							<documentation xml:lang="de">
@@ -375,7 +413,7 @@
 					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation. This is more difficult than the line property bceause, it depends on
-								the prfoile, how many points we have.</appinfo>
+								the profile, how many points we have.</appinfo>
 							<documentation xml:lang="de">
 								<label>???</label>
 								<tooltip>???</tooltip>
@@ -393,57 +431,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="eindim:profileMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<complexType name="ProfilePropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="eindim:profile">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="ProfileType">
-		<annotation>
-			<documentation>ggf. noch Spezialisierungen pro Rechenkern (Pasche, Knauf,...)</documentation>
-		</annotation>
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<!-- TODO: maybe restict type to specific observation (only profiles are allowed)-->
-					<element name="station" type="double">
-						<annotation>
-							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
-							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="profileMember" type="om:AbstractObservationType">
+					<element name="profileMember" type="om:AbstractObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -506,7 +494,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="eindim:profileMember" minOccurs="0" maxOccurs="unbounded">
+					<element name="profileMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
