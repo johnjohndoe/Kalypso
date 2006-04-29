@@ -1,5 +1,9 @@
 package org.kalypso.ogc.gml.schemaeditor;
 
+import java.net.URL;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,6 +18,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.part.EditorPart;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
@@ -106,11 +111,14 @@ public class GMLSchemaEditor extends EditorPart
         final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
         try
         {
-          // final URL url = input.getStorage().getContents().gettoFile().toURL();
-          // TODO: we get problems here because this is not loaded via the schema cache, but inside, 
+          // TODO: we get problems here because this is not loaded via the schema cache, but inside,
           // we load depending schemata from the cache
-          
-          final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( input.getStorage().getContents(), null );
+
+          final IStorage storage = input.getStorage();
+          final IFile file = (IFile) storage.getAdapter( IFile.class );
+          final URL context = file == null ? null : ResourceUtilities.createURL( file );
+
+          final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
           if( m_viewer != null )
           {
             m_viewer.getControl().getDisplay().asyncExec( new Runnable()
