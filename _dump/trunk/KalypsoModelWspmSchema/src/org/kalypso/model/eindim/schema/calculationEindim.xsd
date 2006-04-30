@@ -650,7 +650,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:roughnessDefinitionCollectionMember">
+					<element ref="eindim:roughnessDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -686,7 +686,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:roughnessDefinitionMember">
+					<element ref="eindim:roughnessDefinition">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -749,7 +749,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:plantDefinitionCollectionMember">
+					<element ref="eindim:plantDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
@@ -785,7 +785,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:plantDefinitionMember">
+					<element ref="eindim:plantDefinition">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???</label>
