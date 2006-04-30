@@ -96,7 +96,13 @@ public class TypeHandlerUtilities
   // Boolean.class );
   // final ITypeHandler dateTH = registry.getTypeHandlerForClassName(
   // Date.class );
-
+  /**
+   * simple type handler of build-in XMLSCHEMA types <br>
+   * TODO typehandler for lists of simpletypes <br>
+   * TODO mixed types typehandler <br>
+   * TODO better solution for anytype <br>
+   * TODO substitutiongroups of simple types
+   */
   public static void registerXSDSimpleTypeHandler( ITypeRegistry registry )
   {
     try
@@ -173,8 +179,11 @@ public class TypeHandlerUtilities
       // <element name="ENTITY" type="ENTITY" />
       // <element name="NMTOKEN" type="NMTOKEN" />
       // <element name="anyURI" type="anyURI" />
+      // <element name="IDREF" type="IDREF" />
+      // <element name="IDREFS" type="IDREFS" />
       // <element name="anyType" type="anyType" />
-      final String[] stringTypes = { "string", "normalizedString", "token", "language", "Name", "NCName", "ID", "ENTITY", "NMTOKEN", "anyURI", "anyType" };
+
+      final String[] stringTypes = { "string", "normalizedString", "token", "language", "Name", "NCName", "ID", "ENTITY", "NMTOKEN", "anyURI", "IDREF", "IDREFS", "anyType" };
       for( int i = 0; i < stringTypes.length; i++ )
       {
         final String xmlTypeName = stringTypes[i];
@@ -532,9 +541,6 @@ public class TypeHandlerUtilities
         }
       } );
 
-      // TODO <element name="IDREF" type="IDREF" />
-      // TODO <element name="IDREFS" type="IDREFS" />
-
       // registry.registerTypeHandler(new XsdBaseTypeHandler("boolean",
       // Boolean.class));
       // registry.registerTypeHandler(new XsdBaseTypeHandler("integer",
@@ -621,18 +627,22 @@ public class TypeHandlerUtilities
 
   }
 
+  /**
+   * type handler for GML3 types
+   */
   public static void registerGeometryGML2typeHandler( final ITypeRegistry registry ) throws TypeRegistryException
   {
     final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
+    // geometrie types
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), new QName( NS.GML3, "Point" ), GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "LineStringPropertyType" ), new QName( NS.GML3, "LineString" ), GM_Curve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPointPropertyType" ), new QName( NS.GML3, "MultiPoint" ), GM_MultiPoint.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiLineStringPropertyType" ), new QName( NS.GML3, "MultiLineString" ), GM_MultiCurve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPolygonPropertyType" ), new QName( NS.GML3, "MultiPolygon" ), GM_MultiSurface.class, true ) );
-
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
-    // GML3:
+
+    // other GML3 types:
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DirectionPropertyType" ), new QName( NS.GML3, "direction" ), DirectionPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false ) );
