@@ -11,17 +11,18 @@
 	<element name="calculationMember" type="eindim:CalculationPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???calculationMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="abstractCalculation" abstract="true" type="eindim:AbstractCalculationType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">ist ggf. Spezialisierung eines allg. calculation1D <label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+			<documentation xml:lang="de">ist ggf. Spezialisierung eines allgemeinen calculation1D 
+				<label>???abstractCalculation</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -30,18 +31,18 @@
 	<element name="resultMember" type="eindim:ResultPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???Referenz auf Ergebnis</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="result" type="eindim:ResultType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???Ergebnis</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -50,18 +51,18 @@
 	<element name="resultDocumentMember" type="eindim:ResultDocumentPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???resultDocumentMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="resultDocument" type="eindim:ResultDocumentType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???resultDocument</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -70,9 +71,9 @@
 	<element name="waterMember" type="eindim:WaterPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???Referenz auf Gewässer</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -80,8 +81,8 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Gewässer</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -90,18 +91,18 @@
 	<element name="strandMember" type="eindim:StrandPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???Referenz auf Gewässerstrang</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="strand" type="eindim:StrandType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???Gewässerstrang</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -110,36 +111,36 @@
 	<element name="strandElementMember" type="eindim:StrandElementPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???strandElementMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="abstractStrandElement" type="eindim:AbstractStrandElementType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???abstractStrandElement</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="influentStrandElement" type="eindim:InfluentStrandElementType" substitutionGroup="eindim:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???influentStrandElement</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="profileStrandElement" type="eindim:ProfileStrandElementType" substitutionGroup="eindim:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???profileStrandElement</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -148,18 +149,18 @@
 	<element name="roughnessDefinitionCollectionMember" type="eindim:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???roughnessDefinitionCollectionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="roughnessDefinitionCollection" type="eindim:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???roughnessDefinitionCollection</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -168,18 +169,18 @@
 	<element name="roughnessDefinitionMember" type="eindim:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???roughnessDefinitionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="roughnessDefinition" type="eindim:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???roughnessDefinition</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -188,18 +189,18 @@
 	<element name="plantDefinitionCollectionMember" type="eindim:PlantDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???plantDefinitionCollectionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="plantDefinitionCollection" type="eindim:PlantDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???plantDefinitionCollection</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -208,18 +209,18 @@
 	<element name="plantDefinitionMember" type="eindim:PlantDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???plantDefinitionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="plantDefinition" type="eindim:PlantDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???</label>
-				<tooltip>???</tooltip>
-				<description>???</description>
+				<label>???plantDefinition</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -235,9 +236,9 @@
 					<element ref="eindim:abstractCalculation">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???Referenz auf Berechnung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -252,27 +253,27 @@
 					<element name="user" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???Benutzer</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="creationDate" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???Erstellungsdatum</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element ref="eindim:resultMember" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???Referenz auf Ergebnis</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -289,9 +290,9 @@
 					<element ref="eindim:strand">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:strand</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -306,9 +307,9 @@
 					<element ref="eindim:waterMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:waterMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -316,17 +317,17 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerachse</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element ref="eindim:strandElementMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:strandElementMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -343,9 +344,9 @@
 					<element ref="eindim:abstractStrandElement">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:abstractStrandElement</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -373,8 +374,8 @@
 					<element name="location" type="gml:PointType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
+								<label>???location???</label>
+								<tooltip>???tooltip</tooltip>
 								<description>Position des Zulaufs</description>
 							</documentation>
 						</annotation>
@@ -394,9 +395,9 @@
 						<annotation>
 							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???station</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -404,9 +405,9 @@
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation</appinfo>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???profileGeometry==</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -415,9 +416,9 @@
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation. This is more difficult than the line property bceause, it depends on
 								the profile, how many points we have.</appinfo>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???marker</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -425,18 +426,18 @@
 						<annotation>
 							<appinfo>This property represent the lastTime, when the cached proeprties (line, markers) have been synchronized against the profileMember</appinfo>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???cacheDate</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="profileMember" type="om:AbstractObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???profileMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -453,9 +454,9 @@
 					<element ref="eindim:water">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:water</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -470,63 +471,63 @@
 					<element name="name" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???name</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="kennziffer" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???kennziffer</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="direction" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???direction</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="profileMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???profileMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element ref="eindim:strandMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:strandMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="runOffEventMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???runOffEventMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="waterlevelEvent" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???waterlevelEvent</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -543,9 +544,9 @@
 					<element ref="eindim:result">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:result</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -560,36 +561,36 @@
 					<element ref="eindim:calculationMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:calculationMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="calculationTime" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???Zeitpunkt der Berechnung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element ref="eindim:resultDocumentMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:resultDocumentMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="resultObservationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???resultObservationMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -606,9 +607,9 @@
 					<element ref="eindim:resultDocument">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:resultDocument</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -623,9 +624,9 @@
 					<element name="label" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -634,9 +635,9 @@
 							<documentation xml:lang="de"><![CDATA[
 								TODO: eigenen Typ definieren + 
 								type handler (z.B. datei öffnen beim klick)]]>
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???filePath</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -653,9 +654,9 @@
 					<element ref="eindim:roughnessDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:roughnessDefinitionCollection</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -670,9 +671,9 @@
 					<element ref="eindim:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:roughnessDefinitionMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -689,9 +690,9 @@
 					<element ref="eindim:roughnessDefinition">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:roughnessDefinition</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -706,36 +707,36 @@
 					<element name="label" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="category" type="int">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???category</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="valueKS" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???valueKS</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="valueKST" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???valueKST</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -752,9 +753,9 @@
 					<element ref="eindim:plantDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:plantDefinitionCollection</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -769,9 +770,9 @@
 					<element ref="eindim:plantDefinitionMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:plantDefinitionMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -788,9 +789,9 @@
 					<element ref="eindim:plantDefinition">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???eindim:plantDefinition</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -805,45 +806,45 @@
 					<element name="label" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="category" type="int">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???category</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="valueAX" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???valueAX</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="valueAY" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???valueAY</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="valueDP" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???</label>
-								<tooltip>???</tooltip>
-								<description>???</description>
+								<label>???valueDP</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
