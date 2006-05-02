@@ -1645,7 +1645,20 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="SwaleAndTrench" type="na:SwaleAndTrenchFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="SwaleAndTrench" type="na:SwaleAndTrenchFeatureType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Mulden-Rigole</label>
+				<tooltip>Mulden-Rigole</tooltip>
+				<description>Mulden-Rigole</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>SwaleAndTrench</label>
+				<tooltip>SwaleAndTrench</tooltip>
+				<description>SwaleAndTrench</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="SwaleAndTrenchFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
