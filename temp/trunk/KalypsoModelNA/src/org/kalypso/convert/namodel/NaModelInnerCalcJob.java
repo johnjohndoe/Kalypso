@@ -120,6 +120,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
+//import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -575,18 +576,19 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // create temperatur und verdunstung timeseries
     final File klimaDir = new File( tmpDir, "klima.dat" );
-    final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
-    final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
+    // TODO: wird das hier noch benötigt (Weisse Elster)?
+//    final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
+//    final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
     final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf.getSimulationEnd() );
 
-    if( !tempFile.exists() )
-    {
-      writer.writeTmpFile( tempFile );
-    }
-    if( !verdFile.exists() )
-    {
-      writer.writeVerdFile( verdFile );
-    }
+//    if( !tempFile.exists() )
+//    {
+//      writer.writeTmpFile( tempFile );
+//    }
+//    if( !verdFile.exists() )
+//    {
+//      writer.writeVerdFile( verdFile );
+//    }
     // dump idmapping to file
 
     final IDManager idManager = conf.getIdManager();
@@ -843,7 +845,7 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
-    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4beta" ) )
+    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
@@ -1144,7 +1146,7 @@ public class NaModelInnerCalcJob implements ISimulation
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" )) )
+        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" ))|| resultFT == (modellWorkspace.getFeatureType( "StorageChannel" )))
         {
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
