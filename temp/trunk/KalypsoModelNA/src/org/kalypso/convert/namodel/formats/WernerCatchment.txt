@@ -1,5 +1,5 @@
-___________(inum,i5)____(ispk,i3)
-(name,a80)
+___________(name,i5)____(ispk,i3)
+(IGNORE,a80)
 (flaech,*)
 (pns,a1)_(langzeit,a)_(kurzzeit,a)_(faktn,f5.2)
 (namft,a)_(namept,a)

@@ -125,21 +125,22 @@ public class ParseManager
     naModellFe.setProperty( "NodeCollectionMember", nodeCollectionFe );
 
     // complete Feature CatchmentCollection
-    final IPropertyType pt = channelCollectionFe.getFeatureType().getProperty( "channelMember" );
+    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( "catchmentMember" );
     Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
     for( int i = 0; i < features.length; i++ )
     {
       Feature catchmentFE = features[i];
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( pt, catchmentFE );
+      final FeatureProperty property = FeatureFactory.createFeatureProperty( catchmentMemberPT, catchmentFE );
       catchmentCollectionFe.addProperty( property );
     }
 
     // complete Features of ChannelCollections
+    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( "channelMember" );
     features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
     for( int i = 0; i < features.length; i++ )
     {
       Feature channelFE = features[i];
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( pt, channelFE );
+      final FeatureProperty property = FeatureFactory.createFeatureProperty( channelMemberPT, channelFE );
       channelCollectionFe.addProperty( property );
 
     }
@@ -155,7 +156,7 @@ public class ParseManager
     }
 
     // complete Features of StorageChannel
-    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
+//    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
 
     System.out.println( "\n\n-----------------" );
     return naModellFe;

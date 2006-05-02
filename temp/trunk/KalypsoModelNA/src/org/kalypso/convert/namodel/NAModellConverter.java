@@ -47,9 +47,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.BodenartManager;
 import org.kalypso.convert.namodel.manager.BodentypManager;
@@ -62,19 +59,14 @@ import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.ParseManager;
 import org.kalypso.convert.namodel.manager.RHBManager;
 import org.kalypso.convert.namodel.manager.SchneeManager;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -114,33 +106,33 @@ public class NAModellConverter
 
   private final IdleLanduseManager m_idleLanduseManager;
 
-  public static void main( String[] args )
-  {
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
-    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-    try
-    {
-      // general
-      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      registry.registerTypeHandler( new ObservationLinkHandler() );
+//  public static void main( String[] args )
+//  {
+//    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
+//    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
+//    try
+//    {
+//      // general
+//      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+//      registry.registerTypeHandler( new ObservationLinkHandler() );
 //      registry.registerTypeHandler( new DiagramTypeHandler() );
-      completeascii2gml();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
+//      completeascii2gml();
+//    }
+//    catch( Exception e )
+//    {
+//      e.printStackTrace();
+//    }
+//  }
 
-  public static void completeascii2gml( ) throws Exception
+  public static void completeascii2gml(final File gmlBaseDir, final File asciiBaseDir ) throws Exception
   {
-    final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
-    File asciiBaseDir = new File( "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
+//    final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
+//    File asciiBaseDir = new File( "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
 
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     Feature modelRootFeature = modelAsciiToFeature( conf );
 
-    String shapeDir = "D:\\Kalypso_NA\\9-Programmtest\\Uebungsmodell\\Shapes";
+    String shapeDir = "D:\\Kalypso_NA\\9-Modelle\\7-Rantzau\\05_GIS\\NA-Modell";
     insertSHPGeometries( modelRootFeature, shapeDir );
 
     File modelGmlFile = new File( gmlBaseDir, "modell.gml" );
@@ -163,10 +155,10 @@ public class NAModellConverter
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
 
-    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teilgebiete", cSystem );
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\rantzau_gebiete", cSystem );
     final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\gewaesser", cSystem );
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\straenge", cSystem );
     final List channelFeatures = (List) channelWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\knoten", cSystem );
@@ -177,17 +169,17 @@ public class NAModellConverter
     System.out.println( "inserting geometries: catchments" );
     Feature catchmentCollection = (Feature) modelFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List) catchmentCollection.getProperty( "catchmentMember" );
-    copyProperties( catchmentFeatures, "GEOM", "TEILGEBNR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
+    copyProperties( catchmentFeatures, "GEOM", "TGNR", (Feature[]) catchmentList.toArray( new Feature[catchmentList.size()] ), "Ort", "name" );
 
     System.out.println( "inserting geometries: channels" );
     Feature channelCollection = (Feature) modelFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List) channelCollection.getProperty( "channelMember" );
-    copyProperties( channelFeatures, "GEOM", "STRANGNR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "inum" );
+    copyProperties( channelFeatures, "GEOM", "STRNR", (Feature[]) channelList.toArray( new Feature[channelList.size()] ), "Ort", "name" );
 
     System.out.println( "inserting geometries: nodes" );
     Feature nodeCollection = (Feature) modelFeature.getProperty( "NodeCollectionMember" );
     List nodeList = (List) nodeCollection.getProperty( "nodeMember" );
-    copyProperties( nodeFeatures, "GEOM", "KNOTENNR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "num" );
+    copyProperties( nodeFeatures, "GEOM", "KTNR", (Feature[]) nodeList.toArray( new Feature[nodeList.size()] ), "Ort", "name" );
   }
 
   private static void copyProperties( final List catchmentFeatures, String orgGeomPropName, String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )

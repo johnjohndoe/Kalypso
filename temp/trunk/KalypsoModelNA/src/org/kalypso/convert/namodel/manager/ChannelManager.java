@@ -134,7 +134,7 @@ public class ChannelManager extends AbstractManager
     // FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
     // FeatureProperty artProp = (FeatureProperty)propCollector.get( "iart" );
 
-    int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
+    int asciiID = Integer.parseInt( propCollector.get( "name" ) );
     int art = Integer.parseInt( propCollector.get( "iart" ) );
     Feature feature;
     switch( art )

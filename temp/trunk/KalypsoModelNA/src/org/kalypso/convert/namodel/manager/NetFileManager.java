@@ -217,7 +217,7 @@ public class NetFileManager extends AbstractManager
       for( Iterator iter = set.iterator(); iter.hasNext(); )
       {
         Entry element = (Entry) iter.next();
-        System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
+//        System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
       }
 
       // adding Timeseries links
@@ -270,11 +270,11 @@ public class NetFileManager extends AbstractManager
     // final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
     final Feature knotoFE = getFeature( iknotoNr, m_conf.getNodeFT() );
     nodeCollector.put( knotoFE.getId(), knotoFE );
-    knotoFE.setProperty( "num", "" + iknotoNr );
+    knotoFE.setProperty( "name", "" + iknotoNr );
     // final FeatureProperty numPropertyKnotU = FeatureFactory.createFeatureProperty( "num", "" + iknotuNr );
     final Feature knotuFE = getFeature( iknotuNr, m_conf.getNodeFT() );
     nodeCollector.put( knotuFE.getId(), knotuFE );
-    knotuFE.setProperty( "num", "" + iknotuNr );
+    knotuFE.setProperty( "name", "" + iknotuNr );
     // set node channel relations
     final Feature strangFE = getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
     // node -> strang

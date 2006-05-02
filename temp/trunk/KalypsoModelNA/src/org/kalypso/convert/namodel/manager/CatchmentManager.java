@@ -207,7 +207,7 @@ public class CatchmentManager extends AbstractManager
 
     // generate id:
     // prop = propCollector.get( "inum" );
-    int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
+    int asciiID = Integer.parseInt( propCollector.get( "name" ) );
 
     final Feature feature = getFeature( asciiID, m_catchmentFT );
 
