@@ -18,7 +18,7 @@
     </indexterm>
 
     <para>Das am Arbeitsbereich Wasserbau der TUHH verwendete
-    Niederschlag-Abfluss-Modell Kalypso-NA ist eine OpenSource Modell zur
+    Niederschlag-Abfluss-Modell Kalypso-NA ist ein OpenSource Modell zur
     Simulation des vollständigen, landgebundenen Teils der globalen
     Wasserbilanz. Hierbei werden die Teilprozesse Schneespeicherung,
     Evapotranspiration, Bodenwasserspeicherung, Grundwasserneubildung,
@@ -41,7 +41,7 @@
     Hydrotopebene simuliert. Zur Beschreibung der Abflusskonzentration werden
     die entstandenen Abflussvolumina auf Teilgebietsebene aggregiert und unter
     Berücksichtigung der charakteristischen Fließzeiten nach Translation und
-    Retention als Teilgebietsabfluss gesammelt und einem Knoten im
+    Retention als Teilgebietsabfluss gesammelt und einem Gewässerstrang im
     Gerinnennetz zugeordnet. Dabei werden die Prozesse als lateral
     eindimensional aufgefasst. Die Abflussverformung im Gerinne erfolgt nach
     dem Verfahren von Kalinin-Miljukov.</para>
@@ -226,15 +226,8 @@
         </listitem>
 
         <listitem>
-          <para>Berechnung durchführen</para>
-        </listitem>
-
-        <listitem>
-          <para>Langzeitkalibrierung</para>
-        </listitem>
-
-        <listitem>
-          <para>Kurzzeitkalibrierung/ - validierung</para>
+          <para>Berechnung durchführen (Langzeitkalibrierung,
+          Kurzzeitkalibrierung, Modellvalidierung)</para>
         </listitem>
       </orderedlist>
 
@@ -253,8 +246,9 @@
         linkend="kalypso_na-mapping_hydrotope" /> zu finden. Im Kalypso
         Modeler (siehe <xref linkend="programm_start" />) können diese Daten
         dann in ein neues NA-Modell Projekt integriert werden. Um die
-        Datenmenge zu reduzieren ist es empfehlenswert gleiche Hydrotope in
-        einem Teilgebiet zu vereinigen (GIS Anwenung dissolve).</para>
+        Datenmenge und später die Rechenzeit zu reduzieren ist es
+        empfehlenswert gleiche Hydrotope in einem Teilgebiet zu vereinigen
+        (GIS Anwenung dissolve).</para>
 
         <para>Ein neues Projekt kann durch Auswahl des Menüpunktes
         <guimenuitem>Datei &gt; Neu &gt; Andere</guimenuitem> mit Hilfe eines
@@ -552,22 +546,25 @@
         <emphasis role="bold">(Basis)Karten</emphasis>-Verzeichnis im Projekt
         enthalten, welches verschieden Karten zur Modellvisualisierung
         beinhaltet. Die zur Visualisierung benötigten Shape-Dateien können im
-        <emphasis role="bold">Shape</emphasis>-Verzeichnis abgelegt werden.
-        Für das Abholen der Zeitreihen (aus einer Datenbank/ einem lokalen
-        Verzeichnis o.ä.) in eine Rechenvariante sind im Verzeichnis <emphasis
-        role="bold">ZeitreihenControl</emphasis> Tabellen zur Zuordnung der
-        verschiedenen Zeitreihentypen vordefiniert. Der Name des Ordners für
-        die Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
-        <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
+        <emphasis role="bold">Shape</emphasis>-Verzeichnis abgelegt werden
+        (optional). Für das Abholen der Zeitreihen (aus einer Datenbank/ einem
+        lokalen Verzeichnis o.ä.) in eine Rechenvariante sind im Verzeichnis
+        <emphasis role="bold">ZeitreihenControl</emphasis> Tabellen zur
+        Zuordnung der verschiedenen Zeitreihentypen vordefiniert. Der Name des
+        Ordners für die Rechenvarianten ist frei wählbar. Standardmäßig ist
+        ein Ordner <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
         vordefiniert. Unter den Verzeichnissen der angelegten Rechenvarianten
-        findet sich die jeweiligen Strukturen zur Datenbearbeitung ähnlich zum
-        Hauptverzeichnis wieder.</para>
+        findet sich eine jeweiligen Strukturen zur Datenbearbeitung ähnlich
+        zum Hauptverzeichnis wieder. Mit Hilfe dieser Struktur können die
+        Daten der Rechenvarianten unabhängig zum Basismodell bearbeitet
+        werden.</para>
 
-        <para>Es sei nochmals darauf hingewiesen, dass die Modelldaten selbst
-        in den jeweiligen *.gml-Dateien zumeist im Haupt- bzw.
+        <para>Es sei darauf hingewiesen, dass die Modelldaten selbst in den
+        jeweiligen *.gml-Dateien zumeist im Haupt- bzw.
         Rechenvariantenverzeichnis abgelegt sind. Die jeweiligen Editoren
-        stellen lediglich unterschiedliche Ansichten dieser Daten dar (siehe
-        <xref linkend="gui-oeffnen_ansichten" />).</para>
+        ermöglichen lediglich die unterschiedlichen Ansichts- und
+        bearbeitungsweisen dieser Daten (siehe <xref
+        linkend="gui-oeffnen_ansichten" />).</para>
 
         <figure id="pic_we_navigator">
           <title>Navigator NA-Modell</title>
@@ -794,7 +791,9 @@
             Art und Weise dar. Die Daten selbst werden in den Datendateien
             (*.gml) vorgehalten! Bei der Editierung ist daher strikt zwischen
             dem Speichern der Ansicht und dem Speichern der Daten zu
-            unterscheiden!</para>
+            unterscheiden! Außerdem ist darauf zu achten, dass die
+            Datenbearbeitung im gewünschten/ richtigen Rechenfall bzw. im
+            Hauptverzeichnis erfolgt!</para>
           </note>
         </para>
       </section>
@@ -830,29 +829,31 @@
         reduzieren und so den Netzaufbau übersichtlich zu gestalten. Es können
         einzelne Relationen durch setzen eines Hakens im Kontrollkästchen an-
         bzw. ausgeschaltet werden. Hierbei ist es durch die hierarchische
-        Anordnung möglich, ganze Gruppen zu bedienen. Eine Relation wird durch
-        "ziehen" einer Verbindung mit der Maus erreicht. Hierzu ist das
-        Anfangselement durch Klicken der linken Maustaste (nicht loslassen)
-        auszuwählen. Zieht man die Verbindung auf das Zielelement so wird bei
-        einer möglichen Verbindung eine dünne rote Linie sichtbar. Ist die
-        gewünschte Verbindung auf diese Weise angezeigt, so kann die Maustaste
-        losgelassen werden, um die Verbindung zu setzen. Die Realation wird
-        durch einen Pfeil der entsprechenden Farbe des Ausgangselementes
-        symbolisiert (Darstellung entsprechend des gewählten Styles).</para>
+        Anordnung möglich, ganze Gruppen zu bedienen.</para>
+
+        <para>Eine Relation wird durch "ziehen" einer Verbindung mit der Maus
+        erreicht. Hierzu ist das Anfangselement durch Klicken der linken
+        Maustaste (nicht loslassen) auszuwählen. Zieht man die Verbindung auf
+        das Zielelement, so wird bei einer möglichen Verbindung eine dünne
+        rote Linie sichtbar. Ist die gewünschte Verbindung auf diese Weise
+        angezeigt, so kann die Maustaste losgelassen werden, um die Verbindung
+        zu setzen. Die Realation wird durch einen Pfeil der entsprechenden
+        Farbe des Ausgangselementes symbolisiert (Darstellung entsprechend des
+        gewählten Styles).</para>
 
         <para>Der Verlauf des abzubildenenden Gewässers wird durch Relationen
         von Strängen zu Knoten und wiederum weiter von Knoten zu Strängen
-        realisiert. Die Verbindungen werden jeweils in Richtung in
-        Fließrichtung getätigt. An das so entstandene Gewässersystem werden
-        die Teilgebiete durch eine Relation vom Teilgebiet zum Strang
-        angebunden (die Entwässerung des Teilgebietes erfolgt am
-        Unterwasserknoten des Stranges). Zusätzlich wird das unterirdische
-        Einzugsgebiet - das Grundwassersystem - durch die Verbindung von
-        Teilgebiet zu Teilgebieten abgebildet. Für weitere Spezialfälle wie
-        Zuflüsse, Verzweigungen, Entnahmen, usw. sind zusätzliche Knoten zu
-        Knoten Relationen möglich. Sind bei der Verknüpfung zweier Elemente
-        mehrere Verbindungsmöglichkeiten vorhanden, so kann die entsprechend
-        gewünschte Verbindung durch einen Auswahldialog gewählt werden.</para>
+        realisiert. Die Verbindungen werden jeweils in Fließrichtung getätigt.
+        An das so entstandene Gewässersystem werden die Teilgebiete durch eine
+        Relation vom Teilgebiet zum Strang angebunden (die Entwässerung des
+        Teilgebietes erfolgt am Unterwasserknoten des Stranges). Zusätzlich
+        wird das unterirdische Einzugsgebiet - das Grundwassersystem - durch
+        die Verbindung von Teilgebiet zu Teilgebieten abgebildet. Für weitere
+        Spezialfälle wie Zuflüsse, Verzweigungen, Entnahmen, usw. sind
+        zusätzliche Knoten zu Knoten Relationen möglich. Sind bei der
+        Verknüpfung zweier Elemente mehrere Verbindungsmöglichkeiten
+        vorhanden, so kann die entsprechend gewünschte Verbindung durch einen
+        Auswahldialog festgesetzt werden.</para>
 
         <para>Die Relationen sind durch die Tatsache, dass die Systemstruktur
         eine gerichtete Baumstruktur sein muss in ihrer Anordnung begrenzt.
@@ -862,9 +863,9 @@
         das Informationsfenster am unteren Rand der Ansicht Edit
         Optionen.</para>
 
-        <para>Das Löschen einer Verbindung funktioniert bei Auswahl der Option
-        <guimenuitem>Relationen entfernen</guimenuitem> im Fenster Edit
-        Optionen auf gleicher Art und Weise.</para>
+        <para>Das Funktionalität des Löschens einer Verbindung wird durch
+        Auswahl der Option <guimenuitem>Relationen entfernen</guimenuitem> im
+        Fenster Edit Optionen auf gleicher Art und Weise erreicht.</para>
 
         <figure>
           <title>Ansicht Edit Optionen</title>
@@ -1040,7 +1041,7 @@
               <note>
                 <para>Erfolgt der Im- oder Export über ein
                 Tabellenkalkulationsprogramm, so ist im externen Programm die
-                Formatierung der Tabellenzellen als Zahl (mit entsprechendeer
+                Formatierung der Tabellenzellen als Zahl (mit entsprechend der
                 Anzahl Nachkommastellen) sicherzustellen! Ein Import ist nur
                 bei bereits vorhandener Zeitreihe möglich. Ist noch keine
                 Zeitreihe vorhanden, so kann diese über den Button
@@ -1190,16 +1191,43 @@
         <emphasis>AusgabeManagement.gft</emphasis> und
         S<emphasis>imulationsManagement.gft</emphasis> geändert werden. Neben
         den Zeitpunkten für den Start der Berechnung und das Ende der
-        Simulation kann auch der Berechnungszeitschritt vorgegeben werden.
-        Daneben folgen die Ausgabeoptionen für die Berechnung. Es können
-        Zeitreihen für den Gesamtabfluss, die einzelnen Abflusskomponenten
-        eines Teilgebietes, die Eingangszeitreihen (Niederschlag, Temperatur,
-        Verdunstung) für ein Teilgebiet und weitere Berechnungsergebnisse an
-        den Knoten ausgegeben werden. Nach Änderung der Steuerdaten
-        (Simulationszeitraum bzw. Zeitschritt) werden die Zeitreihen nicht
-        automatisch aktualisiert. Dies muss vom Anwender über den Menüpunkt
-        <guimenu>Rechenvariante &gt; Zeitreihen aktualisieren</guimenu>
-        vorgenommen werden.</para>
+        Simulation kann auch der Berechnungszeitschritt (in Minuten -
+        Langzeitsimulation bei delta t &gt;1440 min) und die zu verwendende
+        Rechenkernversion vorgegeben werden. Daneben folgen die
+        Ausgabeoptionen für die Berechnung. Es können Zeitreihen für den
+        Gesamtabfluss, die einzelnen Abflusskomponenten eines Teilgebietes,
+        die Eingangszeitreihen (Niederschlag, Temperatur, Verdunstung) für ein
+        Teilgebiet und weitere Berechnungsergebnisse an den Knoten ausgegeben
+        werden. Nach Änderung der Steuerdaten (Simulationszeitraum bzw.
+        Zeitschritt) werden die Zeitreihen nicht automatisch aktualisiert.
+        Dies muss vom Anwender über den Menüpunkt <guimenu>Rechenvariante &gt;
+        Zeitreihen aktualisieren</guimenu> vorgenommen werden.</para>
+
+        <table>
+          <title>verfügbare Rechenkernversionen</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>Key (Versionsangabe)</entry>
+
+                <entry>Verwendete Rechenkernversion</entry>
+              </row>
+
+              <row>
+                <entry>v2.0.2</entry>
+
+                <entry>kalypso_2.02.exe</entry>
+              </row>
+
+              <row>
+                <entry>v2.0.4, neueste, latest</entry>
+
+                <entry>kalypso_2.0.4.exe</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
         <para>Um für ein Modellknoten bzw. Pegel, Teilgebiet oder
         Rückhaltebeckenstrang Ergebnisse aus Berechnungen auszugeben, muss in
@@ -1208,7 +1236,79 @@
         gesetzt werden. Die Anzahl der gesetzten Häkchen ist dabei beliebig.
         Für jedes gewählte Modellelement wird nach der Berechnung die
         jeweiligen (in Ausgabemenagement.gft gewählten) Zeitreihen im
-        Unterordner <guimenu>Ergebnisse</guimenu> abgelegt.</para>
+        Unterordner <guimenu>Ergebnisse</guimenu> abgelegt. Es stehen je nach
+        Auswahl folgende Ergebnisse zur Verfügung:</para>
+<para>Knoten:</para>
+        <itemizedlist>
+          <listitem>
+            <para>Gesamtknotenabfluss</para>
+          </listitem>
+          </itemizedlist>
+<para>Teilgebiete:</para>          
+<itemizedlist>
+          <listitem>
+            <para>Temperatur</para>
+          </listitem>
+
+          <listitem>
+            <para>Niederschlag</para>
+          </listitem>
+
+          <listitem>
+            <para>Schneehöhe</para>
+          </listitem>
+
+          <listitem>
+            <para>Gesamtteilgebietsabfluss</para>
+          </listitem>
+
+          <listitem>
+            <para>Oberflaechenabfluss(natuerlich)</para>
+          </listitem>
+
+          <listitem>
+            <para>Oberflaechenabfluss(versiegelt)</para>
+          </listitem>
+
+          <listitem>
+            <para>Interflow</para>
+          </listitem>
+
+          <listitem>
+            <para>Basisabfluss</para>
+          </listitem>
+
+          <listitem>
+            <para>Grundwasserabfluss</para>
+          </listitem>
+
+          <listitem>
+            <para>Grundwasserstand</para>
+          </listitem>
+
+          <listitem>
+            <para>Evapotranspiration</para>
+          </listitem>
+
+          <listitem>
+            <para>Abflussbilanz</para>
+
+          </listitem>
+</itemizedlist>
+<para>Speicher:</para>
+<itemizedlist>
+          <listitem>
+            <para>Wasserspiegelhoehe</para>
+          </listitem>
+
+          <listitem>
+            <para>Fuellvolumen</para>
+          </listitem>
+
+          <listitem>
+            <para>Speicherueberlauf</para>
+          </listitem>
+        </itemizedlist>
       </section>
 
       <section>
