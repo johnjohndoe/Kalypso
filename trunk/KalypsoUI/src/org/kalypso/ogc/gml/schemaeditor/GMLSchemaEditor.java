@@ -132,14 +132,6 @@ public class GMLSchemaEditor extends EditorPart
             } );
           }
         }
-        catch( final CoreException e )
-        {
-          final IStatus status = e.getStatus();
-          
-          KalypsoGisPlugin.getDefault().getLog().log( status );
-
-          return status;
-        }
         catch( final Exception e )
         {
           final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Ansicht" );
