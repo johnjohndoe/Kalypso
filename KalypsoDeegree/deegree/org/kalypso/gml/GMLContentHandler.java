@@ -44,8 +44,11 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -54,6 +57,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 import org.xml.sax.Attributes;
@@ -201,7 +205,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       // TODO: maybe schema is unknown, so better throw an exception with
       // a better error message
       if( schema == null )
-        throw new UnsupportedOperationException( "could not load schema" );
+        // shouldn't we better throw an SaxException instead of a runtime exception??
+        throw new UnsupportedOperationException( "Could not load schema with namespace: " + uri + "(schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was" + schemaLocationString + ")" );
       m_gmlSchema = schema;
     }
 
@@ -446,45 +451,44 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   private GMLSchema getSchema( final String schemaLocationString )
   {
     // get schema from schemalocation
-    final String[] strings = schemaLocationString.split( "\\s+" );
-    GMLSchema schema = null;
-    if( m_useSchemaCatalog )
-      try
-      {
-        String namespaceURI = strings[0];
-
-        // TODO: if we have a schema location, use the cache to determine if we have to reload the schema
-        schema = GMLSchemaCatalog.getSchema( namespaceURI );
-        if( schema != null )
-          return schema;
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-
-    final URL schemaLocationURL;
+    final String[] splittetSchemaLocation = schemaLocationString.split( "\\s+" );
+    if( splittetSchemaLocation.length == 0 )
+    {
+      System.out.println( "Empty schema location: " + schemaLocationString );
+      // TODO;: maybe better to throw an exception here?
+      return null;
+    }
+    
     try
     {
-      final String locationURI = strings[1];
-      if( m_context != null )
+      final String namespaceURI = splittetSchemaLocation[0];
+      final URL schemaLocationURL;
+
+      if( splittetSchemaLocation.length < 2 )
+        schemaLocationURL = null;
+      else
       {
-        UrlResolver resolver = new UrlResolver();
-        schemaLocationURL = resolver.resolveURL( m_context, locationURI );
+        final String locationURI = splittetSchemaLocation[1];
+
+        if( m_context != null )
+          schemaLocationURL = new UrlResolver().resolveURL( m_context, locationURI );
+        else
+          schemaLocationURL = new URL( locationURI );
       }
-      else
-        schemaLocationURL = new URL( locationURI );
+
       if( m_useSchemaCatalog )
-        schema = GMLSchemaCatalog.getSchema( schemaLocationURL );
+        return GMLSchemaCatalog.getSchema( namespaceURI, schemaLocationURL );
       else
-        schema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
+        return GMLSchemaFactory.createGMLSchema( schemaLocationURL );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      // TODO produce error message
-      e.printStackTrace();
+      final ILog log = KalypsoDeegreePlugin.getDefault().getLog();
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Could not loade schema for schemaLocation: " + schemaLocationString );
+      log.log( status );
     }
-    return schema;
+    
+    return null;
   }
 
   public GMLSchema getGMLSchema( )
