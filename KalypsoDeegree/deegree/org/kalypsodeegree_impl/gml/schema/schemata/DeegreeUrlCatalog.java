@@ -64,22 +64,20 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
     catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
 
     // GML2-Base
-    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+    // catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // GML3-Base
-    // try
-    // {
-    // catalog.put( "http://www.opengis.net/gml", new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" ) );
-    // catalog.put( "http://www.opengis.net/swe", new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"
-    // ) );
-    // catalog.put( "http://www.opengis.net/om", new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd"
-    // ) );
-    // }
-    // catch( MalformedURLException e )
-    // {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
+    try
+    {
+      catalog.put( "http://www.opengis.net/gml", new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" ) );
+      catalog.put( "http://www.opengis.net/swe", new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
+      catalog.put( "http://www.opengis.net/om", new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
     catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
