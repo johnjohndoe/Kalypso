@@ -4,7 +4,6 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,6 +20,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
@@ -28,17 +28,10 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 public class GMLSchemaEditor extends EditorPart
 {
-
-  TreeViewer m_viewer;
-
-  public GMLSchemaEditor( )
-  {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  private TreeViewer m_viewer;
 
   @Override
-  public void doSave( IProgressMonitor monitor )
+  public void doSave( final IProgressMonitor monitor )
   {
     // not supported...
   }
@@ -53,7 +46,7 @@ public class GMLSchemaEditor extends EditorPart
    * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   @Override
-  public void init( IEditorSite site, IEditorInput input )
+  public void init( final IEditorSite site, final IEditorInput input )
   {
     setSite( site );
     setInput( input );
@@ -80,7 +73,6 @@ public class GMLSchemaEditor extends EditorPart
     parent.setLayout( new GridLayout() );
     m_viewer = new TreeViewer( parent, SWT.V_SCROLL );
     m_viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    // m_viewer.setContentProvider( new GMLSchemaTreeContentProvider( null, true ) );
     m_viewer.setContentProvider( new GMLSchemaTreeContentProvider( null, false ) );
     m_viewer.setLabelProvider( new GMLSchemaLabelProvider() );
   }
@@ -88,8 +80,8 @@ public class GMLSchemaEditor extends EditorPart
   @Override
   public void setFocus( )
   {
-    // TODO Auto-generated method stub
-
+    if( m_viewer != null )
+      m_viewer.getControl().setFocus();
   }
 
   /**
@@ -112,25 +104,27 @@ public class GMLSchemaEditor extends EditorPart
         final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
         try
         {
-          // TODO: we get problems here because this is not loaded via the schema cache, but inside,
-          // we load depending schemata from the cache
-
           final IStorage storage = input.getStorage();
           final IFile file = (IFile) storage.getAdapter( IFile.class );
           final URL context = file == null ? null : ResourceUtilities.createURL( file );
 
-          final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
-          if( m_viewer != null )
-          {
-            m_viewer.getControl().getDisplay().asyncExec( new Runnable()
-            {
-              public void run( )
-              {
-                m_viewer.setInput( gmlSchema );
-              }
+          // if we have a context, load the schema via the cache
+          final GMLSchema gmlSchema;
+          if( context != null )
+            // this does not load the schema from the cache but puts it at least into the cache
+            gmlSchema = GMLSchemaCatalog.getSchema( context );
+          else
+            gmlSchema = GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
 
-            } );
-          }
+          getSite().getShell().getDisplay().asyncExec( new Runnable()
+          {
+            public void run( )
+            {
+              final TreeViewer viewer = getViewer();
+              if( viewer != null )
+                viewer.setInput( gmlSchema );
+            }
+          } );
         }
         catch( final Exception e )
         {
@@ -144,9 +138,14 @@ public class GMLSchemaEditor extends EditorPart
         {
           monitor.done();
         }
-        
+
         return Status.OK_STATUS;
       }
     }.schedule();
+  }
+
+  protected TreeViewer getViewer( )
+  {
+    return m_viewer;
   }
 }
