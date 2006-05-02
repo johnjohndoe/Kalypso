@@ -19,6 +19,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
@@ -123,7 +124,6 @@ public class GMLSchemaEditor extends EditorPart
           {
             m_viewer.getControl().getDisplay().asyncExec( new Runnable()
             {
-
               public void run( )
               {
                 m_viewer.setInput( gmlSchema );
@@ -134,29 +134,25 @@ public class GMLSchemaEditor extends EditorPart
         }
         catch( final CoreException e )
         {
-          e.printStackTrace();
+          final IStatus status = e.getStatus();
+          
+          KalypsoGisPlugin.getDefault().getLog().log( status );
 
-          monitor.done();
-          return e.getStatus();
+          return status;
         }
         catch( final Exception e )
         {
-          e.printStackTrace();
+          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Ansicht" );
 
-          monitor.done();
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Ansicht", e );
+          KalypsoGisPlugin.getDefault().getLog().log( statusFromThrowable );
+
+          return statusFromThrowable;
         }
-        // getEditorSite().getShell().getDisplay().syncExec( new Runnable()
-        // {
-        // public void run( )
-        // {
-        // if( schema != null )
-        // setPartName( "Schema: " + schema.getTargetNamespace() );
-        // else
-        // setPartName( "Schema: <kein Schema>" );
-        // }
-        // } );
-        monitor.done();
+        finally
+        {
+          monitor.done();
+        }
+        
         return Status.OK_STATUS;
       }
     }.schedule();
