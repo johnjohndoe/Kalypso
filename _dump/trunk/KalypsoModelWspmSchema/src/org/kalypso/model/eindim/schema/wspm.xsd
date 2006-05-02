@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:eindim="org.kalypso.model.eindim"
-	targetNamespace="org.kalypso.model.eindim" elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
+	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<!-- WSPM heißt -->
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTE
 	_________________________________________________________________________________________
 	-->
-	<element name="calculationMember" type="eindim:CalculationPropertyType" substitutionGroup="gml:featureMember">
+	<element name="calculationMember" type="wspm:CalculationPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???calculationMember</label>
@@ -17,10 +18,9 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="abstractCalculation" abstract="true" type="eindim:AbstractCalculationType" substitutionGroup="gml:_Feature">
+	<element name="abstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">ist ggf. Spezialisierung eines allgemeinen calculation1D 
-				<label>???abstractCalculation</label>
+			<documentation xml:lang="de">ist ggf. Spezialisierung eines allgemeinen calculation1D <label>???abstractCalculation</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -28,7 +28,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="resultMember" type="eindim:ResultPropertyType" substitutionGroup="gml:featureMember">
+	<element name="resultMember" type="wspm:ResultPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf Ergebnis</label>
@@ -37,7 +37,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="result" type="eindim:ResultType" substitutionGroup="gml:_Feature">
+	<element name="result" type="wspm:ResultType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Ergebnis</label>
@@ -48,7 +48,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="resultDocumentMember" type="eindim:ResultDocumentPropertyType" substitutionGroup="gml:featureMember">
+	<element name="resultDocumentMember" type="wspm:ResultDocumentPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???resultDocumentMember</label>
@@ -57,7 +57,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="resultDocument" type="eindim:ResultDocumentType" substitutionGroup="gml:_Feature">
+	<element name="resultDocument" type="wspm:ResultDocumentType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???resultDocument</label>
@@ -68,7 +68,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="waterMember" type="eindim:WaterPropertyType" substitutionGroup="gml:featureMember">
+	<element name="waterMember" type="wspm:WaterPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf Gewässer</label>
@@ -77,7 +77,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="water" type="eindim:WaterType" substitutionGroup="gml:_Feature">
+	<element name="water" type="wspm:WaterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Gewässer</label>
@@ -88,7 +88,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="strandMember" type="eindim:StrandPropertyType" substitutionGroup="gml:featureMember">
+	<element name="strandMember" type="wspm:StrandPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf Gewässerstrang</label>
@@ -97,7 +97,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="strand" type="eindim:StrandType" substitutionGroup="gml:_Feature">
+	<element name="strand" type="wspm:StrandType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Gewässerstrang</label>
@@ -108,7 +108,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="strandElementMember" type="eindim:StrandElementPropertyType" substitutionGroup="gml:featureMember">
+	<element name="strandElementMember" type="wspm:StrandElementPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???strandElementMember</label>
@@ -117,7 +117,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="abstractStrandElement" type="eindim:AbstractStrandElementType" abstract="true" substitutionGroup="gml:_Feature">
+	<element name="abstractStrandElement" type="wspm:AbstractStrandElementType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???abstractStrandElement</label>
@@ -126,7 +126,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="influentStrandElement" type="eindim:InfluentStrandElementType" substitutionGroup="eindim:abstractStrandElement">
+	<element name="influentStrandElement" type="wspm:InfluentStrandElementType" substitutionGroup="wspm:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???influentStrandElement</label>
@@ -135,7 +135,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="profileStrandElement" type="eindim:ProfileStrandElementType" substitutionGroup="eindim:abstractStrandElement">
+	<element name="profileStrandElement" type="wspm:ProfileStrandElementType" substitutionGroup="wspm:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???profileStrandElement</label>
@@ -146,7 +146,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="roughnessDefinitionCollectionMember" type="eindim:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="roughnessDefinitionCollectionMember" type="wspm:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinitionCollectionMember</label>
@@ -155,7 +155,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="roughnessDefinitionCollection" type="eindim:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
+	<element name="roughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinitionCollection</label>
@@ -166,7 +166,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="roughnessDefinitionMember" type="eindim:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="roughnessDefinitionMember" type="wspm:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinitionMember</label>
@@ -175,7 +175,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="roughnessDefinition" type="eindim:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="roughnessDefinition" type="wspm:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinition</label>
@@ -186,7 +186,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="plantDefinitionCollectionMember" type="eindim:PlantDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="plantDefinitionCollectionMember" type="wspm:PlantDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???plantDefinitionCollectionMember</label>
@@ -195,7 +195,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="plantDefinitionCollection" type="eindim:PlantDefinitionCollectionType" substitutionGroup="gml:_Feature">
+	<element name="plantDefinitionCollection" type="wspm:PlantDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???plantDefinitionCollection</label>
@@ -206,7 +206,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="plantDefinitionMember" type="eindim:PlantDefinitionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="plantDefinitionMember" type="wspm:PlantDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???plantDefinitionMember</label>
@@ -215,10 +215,30 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="plantDefinition" type="eindim:PlantDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="plantDefinition" type="wspm:PlantDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???plantDefinition</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="calcCreationMember" type="wspm:calcCreationPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???elementMember:Erstellung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="calcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:Erstellung</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -229,11 +249,18 @@
 	TYPEN
 	_________________________________________________________________________________________	
 	-->
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
 	<complexType name="CalculationPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:abstractCalculation">
+					<element ref="wspm:abstractCalculation">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Referenz auf Berechnung</label>
@@ -248,27 +275,18 @@
 	</complexType>
 	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="user" type="string">
+					<element ref="wspm:calcCreationMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Benutzer</label>
+								<label>???elementRef:Erstellung</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="creationDate" type="dateTime">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Erstellungsdatum</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="eindim:resultMember" minOccurs="0">
+					<element ref="wspm:resultMember" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Referenz auf Ergebnis</label>
@@ -287,10 +305,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:strand">
+					<element ref="wspm:strand">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:strand</label>
+								<label>???wspm:strand</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -302,12 +320,12 @@
 	</complexType>
 	<complexType name="StrandType" abstract="false">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="eindim:waterMember">
+					<element ref="wspm:waterMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:waterMember</label>
+								<label>???wspm:waterMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -322,10 +340,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="eindim:strandElementMember" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:strandElementMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:strandElementMember</label>
+								<label>???wspm:strandElementMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -341,10 +359,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:abstractStrandElement">
+					<element ref="wspm:abstractStrandElement">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:abstractStrandElement</label>
+								<label>???wspm:abstractStrandElement</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -359,7 +377,7 @@
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence/>
 			</extension>
 		</complexContent>
@@ -369,7 +387,7 @@
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="eindim:AbstractStrandElementType">
+			<extension base="wspm:AbstractStrandElementType">
 				<sequence>
 					<element name="location" type="gml:PointType">
 						<annotation>
@@ -389,7 +407,7 @@
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="eindim:AbstractStrandElementType">
+			<extension base="wspm:AbstractStrandElementType">
 				<sequence>
 					<element name="station" type="double">
 						<annotation>
@@ -451,10 +469,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:water">
+					<element ref="wspm:water">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:water</label>
+								<label>???wspm:water</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -466,7 +484,7 @@
 	</complexType>
 	<complexType name="WaterType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="name" type="string">
 						<annotation>
@@ -486,10 +504,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="direction" type="boolean">
+					<element name="isDirectionUpstream" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???direction</label>
+								<label>???isDirectionUpstream</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -504,10 +522,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="eindim:strandMember" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:strandMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:strandMember</label>
+								<label>???wspm:strandMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -541,10 +559,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:result">
+					<element ref="wspm:result">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:result</label>
+								<label>???wspm:result</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -556,12 +574,12 @@
 	</complexType>
 	<complexType name="ResultType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="eindim:calculationMember">
+					<element ref="wspm:calculationMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:calculationMember</label>
+								<label>???wspm:calculationMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -576,10 +594,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="eindim:resultDocumentMember" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:resultDocumentMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:resultDocumentMember</label>
+								<label>???wspm:resultDocumentMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -604,10 +622,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:resultDocument">
+					<element ref="wspm:resultDocument">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:resultDocument</label>
+								<label>???wspm:resultDocument</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -619,7 +637,7 @@
 	</complexType>
 	<complexType name="ResultDocumentType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -651,10 +669,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:roughnessDefinitionCollection">
+					<element ref="wspm:roughnessDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:roughnessDefinitionCollection</label>
+								<label>???wspm:roughnessDefinitionCollection</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -666,12 +684,12 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionCollectionType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="eindim:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:roughnessDefinitionMember</label>
+								<label>???wspm:roughnessDefinitionMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -687,10 +705,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:roughnessDefinition">
+					<element ref="wspm:roughnessDefinition">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:roughnessDefinition</label>
+								<label>???wspm:roughnessDefinition</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -702,7 +720,7 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -750,10 +768,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:plantDefinitionCollection">
+					<element ref="wspm:plantDefinitionCollection">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:plantDefinitionCollection</label>
+								<label>???wspm:plantDefinitionCollection</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -765,12 +783,12 @@
 	</complexType>
 	<complexType name="PlantDefinitionCollectionType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="eindim:plantDefinitionMember" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:plantDefinitionMember" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:plantDefinitionMember</label>
+								<label>???wspm:plantDefinitionMember</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -786,10 +804,10 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="eindim:plantDefinition">
+					<element ref="wspm:plantDefinition">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???eindim:plantDefinition</label>
+								<label>???wspm:plantDefinition</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -801,7 +819,7 @@
 	</complexType>
 	<complexType name="PlantDefinitionType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -843,6 +861,65 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???valueDP</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="calcCreationPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Erstellung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:calcCreation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Erstellung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="calcCreationType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Erstellung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="user" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Benutzer</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="creationDate" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Datum</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>

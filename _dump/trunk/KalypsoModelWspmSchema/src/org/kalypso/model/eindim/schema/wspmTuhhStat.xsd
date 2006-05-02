@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.eindim.tuhh" xmlns:tuhh="org.kalypso.model.eindim.tuhh" xmlns:eindim="org.kalypso.model.eindim" xmlns:gml="http://www.opengis.net/gml"
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
-	<import namespace="org.kalypso.model.eindim" schemaLocation="./calculationEindim.xsd"/>
+	<import namespace="org.kalypso.model.wspm" schemaLocation="./wspm.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<!-- Erweiterung für das instationäre WSPM der TU-HH -->
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTE
 	_________________________________________________________________________________________
 	-->
-	<element name="calculation1DStationaryTuhh" type="tuhh:Calculation1DStationaryTuhhType" substitutionGroup="eindim:abstractCalculation">
+	<element name="calculationWspmTuhhStat" type="tuhh:CalculationWspmTuhhStatType" substitutionGroup="wspm:abstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Berechnung 1D-TUHH</label>
@@ -146,19 +147,19 @@
 	</element>
 	<!-- 
 	-->
-	<element name="strand1DStationaryTuhhMember" type="tuhh:Strand1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandMember">
+	<element name="strandWspmTuhhStatMember" type="tuhh:StrandWspmTuhhStatPropertyType" substitutionGroup="wspm:strandMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???strand1DStationaryTuhhMember</label>
+				<label>???strandWspmTuhhStatMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="strand1DStationaryTuhh" type="tuhh:Strand1DStationaryTuhhType" substitutionGroup="eindim:strand">
+	<element name="strandWspmTuhhStat" type="tuhh:StrandWspmTuhhStatType" substitutionGroup="wspm:strand">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???strand1DStationaryTuhh</label>
+				<label>???strandWspmTuhhStat</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -166,54 +167,93 @@
 	</element>
 	<!-- 
 	-->
-	<element name="influentStrandElement1DStationaryTuhhMember" type="tuhh:InfluentStrandElement1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandElementMember">
+	<element name="influentStrandElementWspmTuhhStatMember" type="tuhh:InfluentStrandElementWspmTuhhStatPropertyType" substitutionGroup="wspm:strandElementMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???influentStrandElement1DStationaryTuhhMember</label>
+				<label>???influentStrandElementWspmTuhhStatMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
 	<!-- TODO Überflüssig?, kann evntuell weg. -->
-	<element name="influentStrandElement1DStationaryTuhh" type="eindim:InfluentStrandElementType" substitutionGroup="eindim:abstractStrandElement">
+	<element name="influentStrandElementWspmTuhhStat" type="wspm:InfluentStrandElementType" substitutionGroup="wspm:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???influentStrandElement1DStationaryTuhh</label>
+				<label>???influentStrandElementWspmTuhhStat</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="profileStrandElement1DStationaryTuhhMember" type="tuhh:ProfileStrandElement1DStationaryTuhhPropertyType" substitutionGroup="eindim:strandElementMember">
+	<element name="profileStrandElementWspmTuhhStatMember" type="tuhh:ProfileStrandElementWspmTuhhStatPropertyType" substitutionGroup="wspm:strandElementMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???profileStrandElement1DStationaryTuhhMember</label>
+				<label>???profileStrandElementWspmTuhhStatMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="profileStrandElement1DStationaryTuhh" type="tuhh:ProfileStrandElement1DStationaryTuhhType" substitutionGroup="eindim:abstractStrandElement">
+	<element name="profileStrandElementWspmTuhhStat" type="tuhh:ProfileStrandElementWspmTuhhStatType" substitutionGroup="wspm:abstractStrandElement">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???profileStrandElement1DStationaryTuhh</label>
+				<label>???profileStrandElementWspmTuhhStat</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-
+	<!-- 
+	-->
+	<element name="subStrandDefinitionMember" type="tuhh:subStrandDefinitionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subStrandDefinitionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="subStrandDefinition" type="tuhh:subStrandDefinitionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subStrandDefinition</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:specialOptionsMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="specialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:specialOptions</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
 	<!-- 
 	_________________________________________________________________________________________
 	TYPEN
 	_________________________________________________________________________________________	
 	-->
-	<complexType name="Calculation1DStationaryTuhhType">
+	<complexType name="CalculationWspmTuhhStatType">
 		<complexContent>
-			<extension base="eindim:AbstractCalculationType">
+			<extension base="wspm:AbstractCalculationType">
 				<sequence>
-					<element ref="tuhh:strand1DStationaryTuhhMember">
+					<element ref="tuhh:strandWspmTuhhStatMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
@@ -264,26 +304,16 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="startStation" type="int">
+					<element ref="tuhh:subStrandDefinitionMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Anfangsstation</label>
+								<label>???Abschnittsdefinition</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="endStation" type="int">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Endstation</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					
-					<element ref="eindim:roughnessDefinitionCollectionMember" minOccurs="0">
+					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Referenz auf Rauheitsdefinition</label>
@@ -294,7 +324,7 @@
 						</annotation>
 					</element>
 					<!-- TODO use better word for 'plant' everywhere -->
-					<element ref="eindim:plantDefinitionCollectionMember" minOccurs="0">
+					<element ref="wspm:plantDefinitionCollectionMember" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Referenz auf Bewuchsdefinition</label>
@@ -338,7 +368,7 @@
 	</complexType>
 	<complexType name="AbstractCalculationModeType" abstract="true">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="type" type="string">
 						<annotation>
@@ -476,7 +506,7 @@
 	</complexType>
 	<complexType name="CalculationStartConditionType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence> </sequence>
 			</extension>
 		</complexContent>
@@ -547,10 +577,9 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationWaterlevelParameterType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="wspIteration">
 						<annotation>
@@ -654,19 +683,10 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="doCalcBridges" type="boolean">
+					<element ref="tuhh:specialOptionsMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Brücken mit Berechnen</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="doCalcBarrages" type="boolean">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Wehre mit Berechnen</label>
+								<label>???elementRef:specialOptions</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -675,18 +695,17 @@
 				</sequence>
 			</extension>
 		</complexContent>
-		
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="Strand1DStationaryTuhhPropertyType">
+	<complexType name="StrandWspmTuhhStatPropertyType">
 		<complexContent>
-			<restriction base="eindim:StrandPropertyType">
+			<restriction base="wspm:StrandPropertyType">
 				<sequence>
-					<element ref="tuhh:strand1DStationaryTuhh">
+					<element ref="tuhh:strandWspmTuhhStat">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???tuhh:strand1DStationaryTuhh</label>
+								<label>???tuhh:strandWspmTuhhStat</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -696,25 +715,25 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="Strand1DStationaryTuhhType">
+	<complexType name="StrandWspmTuhhStatType">
 		<complexContent>
-			<restriction base="eindim:StrandType">
+			<restriction base="wspm:StrandType">
 				<sequence>
 					<!--  The tuhh strand is restricted to certain, tuhh specific, elements -->
-					<choice	 minOccurs="0" maxOccurs="unbounded">
-						<element ref="tuhh:influentStrandElement1DStationaryTuhhMember">
+					<choice minOccurs="0" maxOccurs="unbounded">
+						<element ref="tuhh:influentStrandElementWspmTuhhStatMember">
 							<annotation>
 								<documentation xml:lang="de">
-									<label>???tuhh:influentStrandElement1DStationaryTuhhMember</label>
+									<label>???tuhh:influentStrandElementWspmTuhhStatMember</label>
 									<tooltip>???tooltip</tooltip>
 									<description>???description</description>
 								</documentation>
 							</annotation>
 						</element>
-						<element ref="tuhh:profileStrandElement1DStationaryTuhhMember">
+						<element ref="tuhh:profileStrandElementWspmTuhhStatMember">
 							<annotation>
 								<documentation xml:lang="de">
-									<label>???tuhh:profileStrandElement1DStationaryTuhhMember</label>
+									<label>???tuhh:profileStrandElementWspmTuhhStatMember</label>
 									<tooltip>???tooltip</tooltip>
 									<description>???description</description>
 								</documentation>
@@ -727,14 +746,14 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="InfluentStrandElement1DStationaryTuhhPropertyType">
+	<complexType name="InfluentStrandElementWspmTuhhStatPropertyType">
 		<complexContent>
-			<restriction base="eindim:StrandElementPropertyType">
+			<restriction base="wspm:StrandElementPropertyType">
 				<sequence>
-					<element ref="tuhh:influentStrandElement1DStationaryTuhh">
+					<element ref="tuhh:influentStrandElementWspmTuhhStat">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???tuhh:influentStrandElement1DStationaryTuhh</label>
+								<label>???tuhh:influentStrandElementWspmTuhhStat</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -744,21 +763,21 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="InfluentStrandElement1DStationaryTuhhType">
+	<complexType name="InfluentStrandElementWspmTuhhStatType">
 		<complexContent>
-			<extension base="eindim:InfluentStrandElementType">
+			<extension base="wspm:InfluentStrandElementType">
 				<sequence/>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="ProfileStrandElement1DStationaryTuhhPropertyType">
+	<complexType name="ProfileStrandElementWspmTuhhStatPropertyType">
 		<complexContent>
-			<restriction base="eindim:StrandElementPropertyType">
+			<restriction base="wspm:StrandElementPropertyType">
 				<sequence>
-					<element ref="tuhh:profileStrandElement1DStationaryTuhh">
+					<element ref="tuhh:profileStrandElementWspmTuhhStat">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???tuhh:profileStrandElement1DStationaryTuhh</label>
+								<label>???tuhh:profileStrandElementWspmTuhhStat</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -768,9 +787,9 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="ProfileStrandElement1DStationaryTuhhType">
+	<complexType name="ProfileStrandElementWspmTuhhStatType">
 		<complexContent>
-			<extension base="eindim:ProfileStrandElementType">
+			<extension base="wspm:ProfileStrandElementType">
 				<sequence>
 					<element name="distanceL" type="double">
 						<annotation>
@@ -799,13 +818,12 @@
 							</documentation>
 						</annotation>
 					</element>
-					
 					<element name="energyLoss" type="tuhh:EnergyLossType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???energyLoss</label>
 								<tooltip>???tooltip</tooltip>
-								<description></description>
+								<description/>
 							</documentation>
 						</annotation>
 					</element>
@@ -864,6 +882,124 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
+	<!-- 
+	-->
+	<complexType name="subStrandDefinitionPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subStrandDefinitionPropertyType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:subStrandDefinition">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???AbschnittsdefinitionPropertyType</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="subStrandDefinitionType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subStrandDefinitionType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Anfangsstation</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="endStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Endstation</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="specialOptionsPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???propertyType:Zusatzoptionen</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:specialOptions">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Zusatzoptionen</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="specialOptionsType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???specialOptionsType:Zusatztoptionen</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="doCalcBridges" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Brücken mit Berechnen</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="doCalcBarrages" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Wehre mit Berechnen</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 	<!-- 
 	-->
 </schema>
