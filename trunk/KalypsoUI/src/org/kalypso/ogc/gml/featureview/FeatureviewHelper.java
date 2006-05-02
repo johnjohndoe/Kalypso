@@ -100,15 +100,16 @@ public class FeatureviewHelper
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final Class clazz = vpt.getValueClass();
       
       // ignore 'boundedBy'
       if( QNAME_GML_BOUNDEDBY.equals( property ) )
         return;
       
-      if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
+      final QName valueQName = vpt.getValueQName();
+      if( GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( valueQName ) )
       {
-        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
+        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
+
         type = handler.createFeatureviewControl( ftp, FACTORY );
 
         if( type instanceof CompositeType )
