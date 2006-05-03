@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.schemata;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -63,15 +64,18 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
     catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
     catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
 
+    // let cvs point to GML2 !
+    
     // GML2-Base
-    // catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // GML3-Base
     try
     {
-      catalog.put( "http://www.opengis.net/gml", new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" ) );
+//      catalog.put( "http://www.opengis.net/gml", new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" ) );
       catalog.put( "http://www.opengis.net/swe", new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
       catalog.put( "http://www.opengis.net/om", new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
+//      catalog.put( "org.kalypso.model.eindim", (new File( "C:/eclipse3.1_workspace/KalypsoModelEindim/src/org/kalypso/model/eindim/schema/calculationEindim.xsd" )).toURL() );
     }
     catch( MalformedURLException e )
     {
