@@ -114,7 +114,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final String templateXml = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbanannt>.gft", templateXml, file
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gft", templateXml, file
           .getFullPath() ) );
 
       return input;
