@@ -188,7 +188,7 @@ public class PSICompactObservationItem implements IObservation
     {
       measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
-    catch( final ECommException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -207,7 +207,7 @@ public class PSICompactObservationItem implements IObservation
     {
       measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
-    catch( final ECommException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -285,7 +285,7 @@ public class PSICompactObservationItem implements IObservation
       m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
     }
-    catch( final ECommException e )
+    catch( final Exception e )
     {
       throw new SensorException( e );
     }
@@ -309,7 +309,7 @@ public class PSICompactObservationItem implements IObservation
         // this observation has changed
         m_evtPrv.fireChangedEvent( null );
       }
-      catch( final ECommException e )
+      catch( final Exception e )
       {
         throw new SensorException( e );
       }

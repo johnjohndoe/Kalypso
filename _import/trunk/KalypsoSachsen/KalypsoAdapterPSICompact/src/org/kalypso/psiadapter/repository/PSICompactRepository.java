@@ -35,9 +35,7 @@ public class PSICompactRepository extends AbstractRepository
    */
   private final void buildStructure( final PSICompactItem rootItem, final Map<String, PSICompactItem> nodes, int valueType ) throws ECommException
   {
-    final PSICompact psi = PSICompactFactory.getConnection();
-
-    final ObjectInfo[] objInfos = psi.getInfo( valueType );
+    final ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo( valueType );
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
 
@@ -150,7 +148,7 @@ public class PSICompactRepository extends AbstractRepository
 
       fireRepositoryStructureChanged();
     }
-    catch( ECommException e )
+    catch( final Exception e )
     {
       throw new RepositoryException( e );
     }

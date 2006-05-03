@@ -9,7 +9,6 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
-import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ObjectInfo;
 
@@ -102,7 +101,7 @@ public class PSICompactItem implements IRepositoryItem
       if( adaptable && anotherClass == IObservation.class )
         return new PSICompactObservationItem( getName(), getIdentifier(), m_objectInfo, m_valueType );
     }
-    catch( final ECommException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
