@@ -649,7 +649,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "TimePrimitivePropertyType" ), new QName( NS.GML3, "validTime" ), TimePrimitivePropertyType.class, false ) );
+    //    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "TimePrimitivePropertyType" ), new QName( NS.GML3, "validTime" ), TimePrimitivePropertyType.class, false ) );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
     // NS.GML3, "" ), .class, false ) );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
