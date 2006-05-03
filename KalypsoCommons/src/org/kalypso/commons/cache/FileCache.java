@@ -264,11 +264,8 @@ public class FileCache<K, V>
 
   public void clear( )
   {
-    for( final Iterator it = m_index.values().iterator(); it.hasNext(); )
-    {
-      final File file = (File) it.next();
+    for( File file : m_index.values() )
       file.delete();
-    }
 
     final File indexFile = new File( m_directory, INDEX_FILE );
     indexFile.delete();
