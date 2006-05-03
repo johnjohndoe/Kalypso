@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 
+import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 
 /**
@@ -21,7 +22,7 @@ public final class PSICompactFactory
 
   private static String PSI_CLASS = null;
 
-  protected static PSICompact m_psiCompact = null;
+  private static PSICompact m_psiCompact = null;
 
   private static Properties m_factoryProperties = null;
 
@@ -36,6 +37,19 @@ public final class PSICompactFactory
    */
   public final static PSICompact getConnection()
   {
+    if( m_psiCompact != null )
+    {
+      try
+      {
+        // fake Aufruf nur um zu testen ob die SST da ist
+        m_psiCompact.getDataModelVersion(  );
+      }
+      catch( final ECommException e )
+      {
+        m_psiCompact = null; // damit wird es neu initialisiert
+      }
+    }
+    
     if( m_psiCompact == null )
     {
       InputStream stream = null;
