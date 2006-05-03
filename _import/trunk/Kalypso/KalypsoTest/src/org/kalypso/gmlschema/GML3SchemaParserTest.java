@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
+import java.io.File;
+import java.net.URL;
+
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
@@ -71,17 +74,20 @@ public class GML3SchemaParserTest extends TestCase
       // gmlSchema.getGMLVersion();
 
       // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/swe" );
-      final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/om" );
-      gmlSchema.getGMLVersion();
+      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/om" );
+      final URL schemaLocationURL = (new File( "C:/eclipse3.1_workspace/KalypsoModelEindim/src/org/kalypso/model/eindim/schema/wspm.xsd" )).toURL();
+      final URL testResourceURL = getClass().getResource( "resources/GML3_wspm/schematree.txt" );
 
-      final StringBuffer buffer = new StringBuffer();
-      final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
-      final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, false );
-      provider.accept( gmlSchema, visitor, 0 );
-      System.out.println( buffer.toString() );
-      // final URL gml3SchemaArchiveURL = getClass().getResource( "resources/gml3SchemaArchive.jar" );
-      // final URL gml3SchemaURL = GMLSchemaUtilities.getSchemaURLForArchive( gmlSchemaArchiveURL );
-      // final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gml3SchemaURL );
+      GMLSchemaTest.loadAndTestSchema( schemaLocationURL, testResourceURL, false );
+
+      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "org.kalypso.model.wspm" );
+      // gmlSchema.getGMLVersion();
+      //
+      // final StringBuffer buffer = new StringBuffer();
+      // final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
+      // final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
+      // provider.accept( gmlSchema, visitor, 0 );
+      // System.out.println( buffer.toString() );
     }
     catch( Exception e )
     {

@@ -139,7 +139,7 @@ public class GMLSchemaTest extends TestCase
     if( gmlSchema != null )
     {
       final StringBuffer buffer = new StringBuffer();
-      
+
       final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
       final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
       provider.accept( gmlSchema, visitor, 0 );
@@ -161,11 +161,10 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        // System.out.println( buffer.toString() );
+        System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }
   }
 
-  
 }
