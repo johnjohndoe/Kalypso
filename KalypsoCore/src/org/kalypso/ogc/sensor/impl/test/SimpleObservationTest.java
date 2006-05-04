@@ -41,10 +41,13 @@
 
 package org.kalypso.ogc.sensor.impl.test;
 
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 import junit.framework.TestCase;
@@ -75,5 +78,24 @@ public class SimpleObservationTest extends TestCase
   public static IObservation getTestObservation() throws SensorException
   {
     return ZmlFactory.parseXML( SimpleObservationTest.class.getResource( "test.zml" ), "" );
+  }
+  
+  public void testAxis()
+  {
+    final IAxis[] axes = m_obs.getAxisList();
+    
+    final SimpleAxis axis = new SimpleAxis( axes[0] );
+    
+    assertTrue( axes[0].equals( axis ) );
+    assertFalse( axes[1].equals( axis ) );
+    
+    IAxis saxes1 = KalypsoStatusUtils.createStatusAxisFor( axes[0], false );
+    IAxis saxes2 = KalypsoStatusUtils.createStatusAxisFor( axes[1], false );
+    IAxis saxis = KalypsoStatusUtils.createStatusAxisFor( axis, false );
+    
+    assertTrue( saxes1.equals( saxis ) );
+
+    assertFalse( saxes1.equals( saxes2 ) );
+    assertFalse( saxis.equals( saxes2 ) );
   }
 }

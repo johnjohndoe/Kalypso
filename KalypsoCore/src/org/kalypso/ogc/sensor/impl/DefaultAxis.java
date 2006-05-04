@@ -40,17 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * Default implementation of the IAxis interface. This class is immutable.
  * 
  * @author schlienger
  */
-public class DefaultAxis implements IAxis
+public class DefaultAxis extends AbstractAxis implements IAxis
 {
   private final String m_label;
 
@@ -133,67 +130,6 @@ public class DefaultAxis implements IAxis
   public Class getDataClass()
   {
     return m_dataClass;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    if( getUnit().length() == 0 )
-      return getName();
-
-    return getName() + " - " + getUnit();
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals( Object obj )
-  {
-    if( !( obj instanceof IAxis ) )
-      return false;
-
-    if( this == obj )
-      return true;
-
-    final IAxis other = (IAxis)obj;
-    final EqualsBuilder builder = new EqualsBuilder();
-    builder.append( m_dataClass, other.getDataClass() ).append( m_isKey, other.isKey() ).append( m_type,
-        other.getType() ).append( m_unit, other.getUnit() );
-
-    // TRICK: hässlich, aber notwendig: der Label muss auch berücksichtigt werden wenn es sich um kalypso-status
-    // Achsen handelt, sonst sind sie alle gleich.
-    // Es ist sicherlich nicht schön dass plötzlich DefaultAxis von KalypsoStatusUtils abhängig ist, aber
-    // so ist das Leben. Hier besteht ein großes Refaktoring Bedarf.
-    if( KalypsoStatusUtils.isStatusAxis( this ) )
-      builder.append( m_label, other.getName() );
-
-    return builder.isEquals();
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode()
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder( 27, 13 );
-    builder.append( m_dataClass ).append( m_isKey ).append( m_type ).append( m_unit );
-
-    // TRICK: hässlich, aber notwendig: der Label muss auch berücksichtigt werden wenn es sich um kalypso-status
-    // Achsen handelt, sonst sind sie alle gleich.
-    // Es ist sicherlich nicht schön dass plötzlich DefaultAxis von KalypsoStatusUtils abhängig ist, aber
-    // so ist das Leben. Hier besteht ein großes Refaktoring Bedarf.
-    if( KalypsoStatusUtils.isStatusAxis( this ) )
-      builder.append( m_label );
-
-    return builder.toHashCode();
-
-    //    final StringBuffer bf = new StringBuffer();
-    //
-    //    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_type ).append( m_unit );
-    //
-    //    return bf.toString().hashCode();
   }
 
   /**
