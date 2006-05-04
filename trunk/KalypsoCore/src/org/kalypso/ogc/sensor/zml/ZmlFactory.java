@@ -464,6 +464,8 @@ public class ZmlFactory
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
+      boolean timeZonePresent = false;
+
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
@@ -472,10 +474,17 @@ public class ZmlFactory
         final Map.Entry entry = (Entry) it.next();
 
         final String mdKey = (String) entry.getKey();
-        final String mdValue = (String) entry.getValue();
+        String mdValue = (String) entry.getValue();
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
+
+        // HACK: check if timezone already present
+        if( mdKey.equals( TimeserieConstants.MD_TIMEZONE ) )
+        {
+          timeZonePresent = true;
+          mdValue = timezone.getID(); // override with our timezone
+        }
 
         // TRICKY: if this looks like an xml-string then pack it
         // into a CDATA section and use the 'data'-Element instead
@@ -487,11 +496,14 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      final MetadataType mdType = OF.createMetadataType();
-      mdType.setName( TimeserieConstants.MD_TIMEZONE );
-      mdType.setValue( timezone.getID() );
-
-      metadataList.add( mdType );
+      // HACK: only add timezone if not already there
+      if( !timeZonePresent )
+      {
+        final MetadataType mdType = OF.createMetadataType();
+        mdType.setName( TimeserieConstants.MD_TIMEZONE );
+        mdType.setValue( timezone.getID() );
+        metadataList.add( mdType );
+      }
 
       final List<AxisType> axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
