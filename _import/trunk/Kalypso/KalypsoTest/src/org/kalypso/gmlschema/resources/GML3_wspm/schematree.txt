@@ -239,6 +239,18 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}categoryConstraint
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}measureConstraint
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .  .  .       Class: class java.lang.Double
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}intervalConstraint
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .  .  .       Class: class java.lang.Double
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}otherConstraint
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
 .  .  .  Feature: {http://www.opengis.net/swe}CompoundPhenomenon
 .  .  .  .  ContentType: {http://www.opengis.net/swe}CompoundPhenomenonType
 .  .  .  .  .  extended by
@@ -321,6 +333,15 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}categoryConstraintList
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}measureConstraintList
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .  .  .       Class: class java.lang.Double
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}intervalConstraintList
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
+.  .  .  .  .       Class: class java.lang.Double
 .  .  .  Feature: {http://www.opengis.net/swe}TimeGeometricComplex
 .  .  .  .  ContentType: {http://www.opengis.net/swe}TimeGeometricComplexType
 .  .  .  .  .  extended by
@@ -384,6 +405,17 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  [0,1]Property: {http://www.opengis.net/swe}duration
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
 .  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}originPos
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/swe}origin
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetDuration
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetInterval
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .  .       Class: class java.math.BigDecimal
 .  .  .  Feature: {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  ContentType: {http://www.opengis.net/swe}TimeInstantGridType
 .  .  .  .  .  extended by
@@ -403,6 +435,17 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/swe}duration
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
 .  .  .  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}originPos
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/swe}origin
+.  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetDuration
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetInterval
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .  .  .  .       Class: class java.math.BigDecimal
 .  .  .  Feature: {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  ContentType: {http://www.opengis.net/swe}TimeIntervalGridType
 .  .  .  .  .  extended by
@@ -422,6 +465,23 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/swe}duration
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
 .  .  .  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}originPos
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/swe}origin
+.  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetDuration
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}offsetInterval
+.  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .  .  .  .       Class: class java.math.BigDecimal
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}windowDuration
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}windowInterval
+.  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .  .       Class: class java.math.BigDecimal
 .  .  Feature: {http://www.opengis.net/om}AbstractObservation
 .  .  .  ContentType: {http://www.opengis.net/om}AbstractObservationType
 .  .  .  .  extended by
@@ -1378,6 +1438,85 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}dictionaryEntry
+.  .  .  .  .   -> {http://www.opengis.net/gml}Definition
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
+.  .  .  .  .   -> {http://www.opengis.net/om}Instrument
+.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
+.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
+.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
+.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
+.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}UserDefinedCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ObliqueCartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
+.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeOrdinalReferenceSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeClock
+.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}ConstrainedPhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}indirectEntry
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}DefinitionCollection
 .  .  .  ContentType: {http://www.opengis.net/gml}DictionaryType
 .  .  .  .  extended by
@@ -1396,6 +1535,85 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}dictionaryEntry
+.  .  .  .  .   -> {http://www.opengis.net/gml}Definition
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
+.  .  .  .  .   -> {http://www.opengis.net/om}Instrument
+.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
+.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
+.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
+.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
+.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}UserDefinedCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ObliqueCartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
+.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeOrdinalReferenceSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeClock
+.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}ConstrainedPhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}indirectEntry
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}DefinitionProxy
 .  .  .  ContentType: {http://www.opengis.net/gml}DefinitionProxyType
 .  .  .  .  extended by
@@ -1525,6 +1743,22 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}duration
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}timeInterval
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .       Class: class java.math.BigDecimal
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}beginPosition
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}begin
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}endPosition
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}end
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  Feature: {http://www.opengis.net/gml}_Topology
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractTopologyType
 .  .  .  .  extended by
@@ -1693,6 +1927,12 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}subComplex
 .  .  .  .  .   -> {http://www.opengis.net/gml}TopoComplex
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}topoPrimitiveMember
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TopoPrimitive	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}Node
+.  .  .  .  .   -> {http://www.opengis.net/gml}Edge
+.  .  .  .  .   -> {http://www.opengis.net/gml}Face
+.  .  .  .  .   -> {http://www.opengis.net/gml}TopoSolid
+.  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}topoPrimitiveMembers
 .  .  .  .  .   -> {http://www.opengis.net/gml}_TopoPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}Node
 .  .  .  .  .   -> {http://www.opengis.net/gml}Edge
@@ -2231,6 +2471,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesGeodeticDatum
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesCartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesSphericalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
 .  .  Feature: {http://www.opengis.net/gml}_GeneralDerivedCRS
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractGeneralDerivedCRSType
 .  .  .  .  extended by
@@ -2465,6 +2709,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesImageDatum
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesCartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesObliqueCartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ObliqueCartesianCS
 .  .  Feature: {http://www.opengis.net/gml}TemporalCRS
 .  .  .  ContentType: {http://www.opengis.net/gml}TemporalCRSType
 .  .  .  .  extended by
@@ -2934,6 +3182,22 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}duration
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
+.  .  .  .       Class: class javax.xml.datatype.Duration
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}timeInterval
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
+.  .  .  .       Class: class java.math.BigDecimal
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}beginPosition
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}begin
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}endPosition
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}end
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  Feature: {http://www.opengis.net/gml}_Datum
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractDatumType
 .  .  .  .  extended by
@@ -4284,6 +4548,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}labelStyle
 .  .  .  .  .   -> {http://www.opengis.net/gml}LabelStyle
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}style
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .       Class: class java.lang.String
 .  .  Feature: {http://www.opengis.net/gml}TopologyStyle
 .  .  .  ContentType: {http://www.opengis.net/gml}TopologyStyleType
 .  .  .  .  extended by
@@ -4304,6 +4571,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}labelStyle
 .  .  .  .  .   -> {http://www.opengis.net/gml}LabelStyle
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}style
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .       Class: class java.lang.String
 .  .  Feature: {http://www.opengis.net/gml}LabelStyle
 .  .  .  ContentType: {http://www.opengis.net/gml}LabelStyleType
 .  .  .  .  extended by
@@ -4439,6 +4709,11 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}interval
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
 .  .  .  .       Class: class java.math.BigDecimal
+.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}originPosition
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}origin
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  Feature: {http://www.opengis.net/gml}TimeOrdinalReferenceSystem
 .  .  .  ContentType: {http://www.opengis.net/gml}TimeOrdinalReferenceSystemType
 .  .  .  .  extended by
@@ -5011,4 +5286,5 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}creationDate
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}dateTime
 .  .  .       Class: class javax.xml.datatype.XMLGregorianCalendar
+
 

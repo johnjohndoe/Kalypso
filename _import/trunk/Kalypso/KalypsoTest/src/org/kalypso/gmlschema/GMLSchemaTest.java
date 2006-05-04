@@ -161,7 +161,7 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        System.out.println( buffer.toString() );
+        // System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }
