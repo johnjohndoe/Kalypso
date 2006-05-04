@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 
+import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 
 /**
@@ -68,6 +69,21 @@ public final class PSICompactFactory
    */
   public final static PSICompact getConnection()
   {
+    if( m_psiCompact != null )
+    {
+      try
+      {
+        m_psiCompact.getDataModelVersion();
+      }
+      catch( final ECommException e )
+      {
+        m_psiCompact = null;
+
+        // es geht im nächsten if-Block weiter
+        // damit wird es neu initialisiert (vielleicht wurde psicompact inzwischen neu gestartet)
+      }
+    }
+
     if( m_psiCompact == null )
     {
       InputStream stream = null;
@@ -92,7 +108,7 @@ public final class PSICompactFactory
         // initialisieren kann
         m_psiCompact.init();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         throw new IllegalStateException( "Error while creating PSICompact: " + e.toString() );
       }
