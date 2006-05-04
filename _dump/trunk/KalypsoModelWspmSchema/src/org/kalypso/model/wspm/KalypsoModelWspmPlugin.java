@@ -1,4 +1,4 @@
-package org.kalypso.model.eindim;
+package org.kalypso.model.wspm;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -6,16 +6,16 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoModelEindimPlugin extends Plugin
+public class KalypsoModelWspmPlugin extends Plugin
 {
 
   // The shared instance.
-  private static KalypsoModelEindimPlugin plugin;
+  private static KalypsoModelWspmPlugin plugin;
 
   /**
    * The constructor.
    */
-  public KalypsoModelEindimPlugin( )
+  public KalypsoModelWspmPlugin( )
   {
     plugin = this;
   }
@@ -42,7 +42,7 @@ public class KalypsoModelEindimPlugin extends Plugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoModelEindimPlugin getDefault( )
+  public static KalypsoModelWspmPlugin getDefault( )
   {
     return plugin;
   }

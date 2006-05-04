@@ -3,10 +3,10 @@
 	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-	<!-- WSPM heißt -->
+	<!-- WSPM stands for 'water surface profile model' -->
 	<!-- 
 	_________________________________________________________________________________________
-	ELEMENTE
+	ELEMENTS
 	_________________________________________________________________________________________
 	-->
 	<element name="calculationMember" type="wspm:CalculationPropertyType" substitutionGroup="gml:featureMember">
@@ -68,7 +68,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="waterMember" type="wspm:WaterPropertyType" substitutionGroup="gml:featureMember">
+	<element name="waterBodyMember" type="wspm:WaterBodyPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf Gewässer</label>
@@ -77,7 +77,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="water" type="wspm:WaterType" substitutionGroup="gml:_Feature">
+	<element name="waterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Gewässer</label>
@@ -186,19 +186,19 @@
 	</element>
 	<!-- 
 	-->
-	<element name="plantDefinitionCollectionMember" type="wspm:PlantDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="vegetationDefinitionCollectionMember" type="wspm:VegetationDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???plantDefinitionCollectionMember</label>
+				<label>???vegetationDefinitionCollectionMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="plantDefinitionCollection" type="wspm:PlantDefinitionCollectionType" substitutionGroup="gml:_Feature">
+	<element name="vegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???plantDefinitionCollection</label>
+				<label>???vegetationDefinitionCollection</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -206,19 +206,19 @@
 	</element>
 	<!-- 
 	-->
-	<element name="plantDefinitionMember" type="wspm:PlantDefinitionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="vegetationDefinitionMember" type="wspm:VegetationDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???plantDefinitionMember</label>
+				<label>???vegetationDefinitionMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="plantDefinition" type="wspm:PlantDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="vegetationDefinition" type="wspm:VegetationDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???plantDefinition</label>
+				<label>???vegetationDefinition</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -246,7 +246,7 @@
 	</element>
 	<!-- 
 	_________________________________________________________________________________________
-	TYPEN
+	TYPES
 	_________________________________________________________________________________________	
 	-->
 	<complexType name="EmptyFeatureBaseType">
@@ -260,15 +260,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:abstractCalculation">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Referenz auf Berechnung</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:abstractCalculation"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -277,24 +269,8 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="wspm:calcCreationMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???elementRef:Erstellung</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="wspm:resultMember" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Referenz auf Ergebnis</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:calcCreationMember"/>
+					<element ref="wspm:resultMember" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -305,15 +281,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:strand">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:strand</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:strand"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -322,16 +290,8 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="wspm:waterMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:waterMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="riverLine" type="gml:LineStringSegmentType">
+					<element ref="wspm:waterBodyMember"/>
+					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerachse</label>
@@ -340,15 +300,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:strandElementMember" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:strandElementMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:strandElementMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -359,15 +311,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:abstractStrandElement">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:abstractStrandElement</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:abstractStrandElement"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -465,24 +409,16 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="WaterPropertyType">
+	<complexType name="WaterBodyPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:water">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:water</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:waterBody"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="WaterType">
+	<complexType name="WaterBodyType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
@@ -495,10 +431,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="kennziffer" type="string">
+					<element name="waterBodyRefNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???kennziffer</label>
+								<label>???waterBodyRefNr</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -522,15 +458,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:strandMember" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:strandMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:strandMember" minOccurs="0" maxOccurs="unbounded"/>
 					<element name="runOffEventMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -540,10 +468,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="waterlevelEvent" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element name="waterlevelFixation" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???waterlevelEvent</label>
+								<label>???waterlevelFixation</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -559,15 +487,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:result">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:result</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:result"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -576,15 +496,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="wspm:calculationMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:calculationMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:calculationMember"/>
 					<element name="calculationTime" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
@@ -594,15 +506,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:resultDocumentMember" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:resultDocumentMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:resultDocumentMember" minOccurs="0" maxOccurs="unbounded"/>
 					<element name="resultObservationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -622,15 +526,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:resultDocument">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:resultDocument</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:resultDocument"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -669,15 +565,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:roughnessDefinitionCollection">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:roughnessDefinitionCollection</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:roughnessDefinitionCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -686,15 +574,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:roughnessDefinitionMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -705,15 +585,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:roughnessDefinition">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:roughnessDefinition</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:roughnessDefinition"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -764,60 +636,36 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="PlantDefinitionCollectionPropertyType">
+	<complexType name="VegetationDefinitionCollectionPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:plantDefinitionCollection">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:plantDefinitionCollection</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:vegetationDefinitionCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="PlantDefinitionCollectionType">
+	<complexType name="VegetationDefinitionCollectionType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="wspm:plantDefinitionMember" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:plantDefinitionMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:vegetationDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="PlantDefinitionPropertyType">
+	<complexType name="VegetationDefinitionPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:plantDefinition">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspm:plantDefinition</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:vegetationDefinition"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="PlantDefinitionType">
+	<complexType name="VegetationDefinitionType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
@@ -873,37 +721,15 @@
 	<!-- 
 	-->
 	<complexType name="calcCreationPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Erstellung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:calcCreation">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Erstellung</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="wspm:calcCreation"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
 	<complexType name="calcCreationType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Erstellung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>

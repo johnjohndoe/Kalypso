@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calculationWspmTuhhStat gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="org.kalypso.model.wspm.tuhh wspmTuhhStat.xsd">
+<calculationWspmTuhhSteadyState gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="org.kalypso.model.wspm.tuhh wspmTuhhSteadyState.xsd">
     <calcCreationMember xmlns="org.kalypso.model.wspm">
         <calcCreation>
             <user>Belger</user>
             <creationDate>1972-10-24T10:00:00</creationDate>
         </calcCreation>
     </calcCreationMember>
-    <strandWspmTuhhStatMember>
-        <strandWspmTuhhStat/>
-    </strandWspmTuhhStatMember>
+    <strandWspmTuhhSteadyStateMember>
+        <strandWspmTuhhSteadyState/>
+    </strandWspmTuhhSteadyStateMember>
     <fliessgesetz>darcyOffeneGerinne</fliessgesetz>
     <subStrandDefinitionMember>
         <subStrandDefinition>
@@ -39,4 +39,4 @@
             </calculationWaterlevelParameterMember>
         </calculationModeWaterlevel>
     </calculationModeMember>
-</calculationWspmTuhhStat>
+</calculationWspmTuhhSteadyState>
