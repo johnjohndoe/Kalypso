@@ -225,6 +225,7 @@
                path="additions"
                id="org.kalypso.ui.editors.treeeditor.menu">
             <groupMarker name="edit"/>
+            <separator name="additions"/>
          </menu>
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"
@@ -244,7 +245,7 @@
                style="push"
                tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
                toolbarPath="edit"
                id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate">
          </action>
@@ -254,7 +255,7 @@
                style="push"
                tooltip="%Extension.EditorActions.redo.tooltip"
                class="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
                toolbarPath="edit"
                id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate">
          </action>
