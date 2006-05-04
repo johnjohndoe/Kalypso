@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.IAxis;
  * 
  * @author schlienger
  */
-public class DefaultAxis implements IAxis
+public final class DefaultAxis extends AbstractAxis implements IAxis
 {
   private final String m_label;
 
@@ -130,49 +130,6 @@ public class DefaultAxis implements IAxis
   public Class<?> getDataClass()
   {
     return m_dataClass;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString()
-  {
-    if( getUnit().length() == 0 )
-      return getName();
-
-    return getName() + " - " + getUnit();
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( Object obj )
-  {
-    if( !( obj instanceof IAxis ) )
-      return false;
-
-    final IAxis other = (IAxis)obj;
-
-    if( m_dataClass == other.getDataClass() && m_isKey == other.isKey() && m_type.equals( other.getType() )
-        && m_unit.equals( other.getUnit() ) )
-      return true;
-
-    return false;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    final StringBuffer bf = new StringBuffer();
-
-    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_type ).append( m_unit );
-
-    return bf.toString().hashCode();
   }
 
   /**
