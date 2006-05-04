@@ -46,13 +46,13 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -191,7 +191,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           else
             schema = GMLSchemaFactory.createGMLSchema( m_schemaLocationHint );
         }
-        catch( GMLSchemaException e )
+        catch( final GMLSchemaException e )
         {
           // TODO Auto-generated catch block
         }
@@ -206,7 +206,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       // a better error message
       if( schema == null )
         // shouldn't we better throw an SaxException instead of a runtime exception??
-        throw new UnsupportedOperationException( "Could not load schema with namespace: " + uri + "(schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was" + schemaLocationString + ")" );
+        throw new UnsupportedOperationException( "Could not load schema with namespace: " + uri + "(schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + schemaLocationString
+            + ")" );
       m_gmlSchema = schema;
     }
 
@@ -450,31 +451,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   private GMLSchema getSchema( final String schemaLocationString )
   {
-    // get schema from schemalocation
-    final String[] splittetSchemaLocation = schemaLocationString.split( "\\s+" );
-    if( splittetSchemaLocation.length == 0 )
-    {
-      System.out.println( "Empty schema location: " + schemaLocationString );
-      // TODO;: maybe better to throw an exception here?
-      return null;
-    }
-    
     try
     {
-      final String namespaceURI = splittetSchemaLocation[0];
-      final URL schemaLocationURL;
-
-      if( splittetSchemaLocation.length < 2 )
-        schemaLocationURL = null;
-      else
-      {
-        final String locationURI = splittetSchemaLocation[1];
-
-        if( m_context != null )
-          schemaLocationURL = new UrlResolver().resolveURL( m_context, locationURI );
-        else
-          schemaLocationURL = new URL( locationURI );
-      }
+      final String namespaceURI = GMLSchemaUtilities.getSchemaNamespaceFromSchemaLocation( schemaLocationString );
+      final URL schemaLocationURL = GMLSchemaUtilities.getSchemaURLFromSchemaLocation( schemaLocationString, m_context );
 
       if( m_useSchemaCatalog )
         return GMLSchemaCatalog.getSchema( namespaceURI, schemaLocationURL );
@@ -487,7 +467,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       final IStatus status = StatusUtilities.statusFromThrowable( e, "Could not loade schema for schemaLocation: " + schemaLocationString );
       log.log( status );
     }
-    
+
     return null;
   }
 
@@ -510,5 +490,4 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   {
     return m_schemaLocationString;
   }
-
 }

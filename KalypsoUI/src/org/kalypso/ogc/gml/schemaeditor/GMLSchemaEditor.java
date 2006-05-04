@@ -1,9 +1,11 @@
 package org.kalypso.ogc.gml.schemaeditor;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,6 +23,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
@@ -101,20 +104,9 @@ public class GMLSchemaEditor extends EditorPart
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
         try
         {
-          final IStorage storage = input.getStorage();
-          final IFile file = (IFile) storage.getAdapter( IFile.class );
-          final URL context = file == null ? null : ResourceUtilities.createURL( file );
-
-          // if we have a context, load the schema via the cache
-          final GMLSchema gmlSchema;
-          if( context != null )
-            // this does not load the schema from the cache but puts it at least into the cache
-            gmlSchema = GMLSchemaCatalog.getSchema( context );
-          else
-            gmlSchema = GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
+          final GMLSchema gmlSchema = createSchemaFromInput();
 
           getSite().getShell().getDisplay().asyncExec( new Runnable()
           {
@@ -147,5 +139,34 @@ public class GMLSchemaEditor extends EditorPart
   protected TreeViewer getViewer( )
   {
     return m_viewer;
+  }
+
+  protected GMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException
+  {
+    final IEditorInput editorInput = getEditorInput();
+    if( editorInput instanceof IStorageEditorInput )
+    {
+
+      final IStorageEditorInput input = (IStorageEditorInput) editorInput;
+
+      final IStorage storage = input.getStorage();
+      final IFile file = (IFile) storage.getAdapter( IFile.class );
+      final URL context = file == null ? null : ResourceUtilities.createURL( file );
+
+      // if we have a context, load the schema via the cache
+      if( context != null )
+        // this does not load the schema from the cache but puts it at least into the cache
+        return GMLSchemaCatalog.getSchema( context );
+      else
+        return GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
+    }
+    else if( editorInput instanceof GmlSchemaEditorInput )
+    {
+      final GmlSchemaEditorInput schemaInput = (GmlSchemaEditorInput) editorInput;
+
+      return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getLocation() );
+    }
+      
+    throw new IllegalArgumentException( "Invalid editor input. Must be either IStorageEditorInput or GmlSchemaEditorInput." );
   }
 }
