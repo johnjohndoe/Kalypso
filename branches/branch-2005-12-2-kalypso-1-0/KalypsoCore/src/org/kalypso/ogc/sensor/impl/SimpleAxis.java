@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  * 
  * @author doemming
  */
-public class SimpleAxis implements IAxis
+public class SimpleAxis extends AbstractAxis implements IAxis
 {
   private String m_type;
 
@@ -106,37 +106,4 @@ public class SimpleAxis implements IAxis
   {
     return TimeserieUtils.getUnit( m_type );
   }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals( Object obj )
-  {
-    if( !( obj instanceof IAxis ) )
-      return false;
-
-    final IAxis other = (IAxis)obj;
-
-    if( getDataClass() == other.getDataClass() && isKey() == other.isKey() && getType().equals( other.getType() )
-        && getUnit().equals( other.getUnit() ) )
-      return true;
-
-    return false;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode()
-  {
-    final StringBuffer bf = new StringBuffer();
-
-    bf.append( getDataClass().getName() );
-    bf.append( isKey() );
-    bf.append( getType() );
-    bf.append( getUnit() );
-
-    return bf.toString().hashCode();
-  }
-
 }
