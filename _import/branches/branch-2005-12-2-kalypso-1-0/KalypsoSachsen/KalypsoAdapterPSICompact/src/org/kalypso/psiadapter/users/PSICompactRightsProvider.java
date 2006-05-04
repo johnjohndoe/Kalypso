@@ -7,9 +7,6 @@ import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.UserRightsException;
 
-import de.psi.go.lhwz.ECommException;
-import de.psi.go.lhwz.PSICompact;
-
 /**
  * PSICompactRightsProvider, it simply forwards the rights that it gets from PSICompact.
  * 
@@ -17,13 +14,9 @@ import de.psi.go.lhwz.PSICompact;
  */
 public class PSICompactRightsProvider implements IUserRightsProvider
 {
-  private final PSICompact m_psicompact;
-
   public PSICompactRightsProvider()
   {
-    m_psicompact = PSICompactFactory.getConnection();
-
-    if( m_psicompact == null )
+    if( PSICompactFactory.getConnection() == null )
       throw new IllegalStateException( "PSI-Compact Schnittstelle konnte nicht initialisiert werden" );
   }
 
@@ -48,13 +41,10 @@ public class PSICompactRightsProvider implements IUserRightsProvider
    */
   public String[] getRights( final String username, final String scenarioId ) throws UserRightsException
   {
-    if( m_psicompact == null )
-      return null;
-
     try
     {
       final ArrayList rights = new ArrayList();
-      final String[] userClasses = m_psicompact.getUserClasses( username.toLowerCase() );
+      final String[] userClasses = PSICompactFactory.getConnection().getUserClasses( username.toLowerCase() );
 
       // handle "null", remove whitespaces, convert right for kalypso
       for( int i = 0; i < userClasses.length; i++ )
@@ -68,7 +58,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
 
       return (String[])rights.toArray( new String[rights.size()] );
     }
-    catch( final ECommException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 

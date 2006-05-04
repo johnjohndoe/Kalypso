@@ -33,14 +33,12 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
    */
-  private final void buildStructure( final PSICompactItem rootItem, final Map nodes, int valueType ) throws ECommException
+  private final void buildStructure( final PSICompactItem rootItem, final Map nodes, int valueType )
+      throws ECommException
   {
-    final PSICompact psi = PSICompactFactory.getConnection();
-
-    final ObjectInfo[] objInfos = psi.getInfo( valueType );
+    final ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo( valueType );
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
-
 
     for( int k = 0; k < objInfos.length; k++ )
     {
@@ -80,15 +78,16 @@ public class PSICompactRepository extends AbstractRepository
     }
 
     // should never happen
-//    // abnormal case...
-//    if( parent == null )
-//      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
+    //    // abnormal case...
+    //    if( parent == null )
+    //      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0
+    // );
 
     // create the root parent
-//    while( parent.getParent() != null )
-//      parent = (PSICompactItem)parent.getParent();
+    //    while( parent.getParent() != null )
+    //      parent = (PSICompactItem)parent.getParent();
 
-//    return parent;
+    //    return parent;
   }
 
   /**
@@ -130,27 +129,27 @@ public class PSICompactRepository extends AbstractRepository
     {
       final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
       final TreeMap nodes = new TreeMap();
-      
-//      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
-//      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
+
+      //      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
+      //      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
       buildStructure( rootItem, nodes, PSICompact.TYPE_VALUE );
 
       // this should never happen any more?
-//      if( nodeMeasurements != nodeForecasts )
-//      {
-//        Logger.getLogger( getClass().getName() ).info(
-//            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
-//
-//        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
-//      }
-//      else
-//        m_psiRoot = nodeMeasurements;
+      //      if( nodeMeasurements != nodeForecasts )
+      //      {
+      //        Logger.getLogger( getClass().getName() ).info(
+      //            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
+      //
+      //        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
+      //      }
+      //      else
+      //        m_psiRoot = nodeMeasurements;
       m_psiRoot = rootItem;
 
       fireRepositoryStructureChanged();
     }
-    catch( ECommException e )
+    catch( final Exception e )
     {
       throw new RepositoryException( e );
     }
