@@ -72,6 +72,11 @@ public class FeatureParser
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );
+    
+    // TODO: at least do system out, but better would be to throw an exception here
+    // instead in the Feature_Impl construktor
+    System.out.println( "No feature type for: " + qNameFT );
+    
     final String fid;
     // GMLContentHandler.print( atts );
     // TODO check for alternatives xml:id gml:fid
