@@ -18,9 +18,10 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="abstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature">
+	<element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">ist ggf. Spezialisierung eines allgemeinen calculation1D <label>???abstractCalculation</label>
+			<documentation xml:lang="de">
+				<label>???abstractCalculation</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -37,7 +38,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="result" type="wspm:ResultType" substitutionGroup="gml:_Feature">
+	<element name="Result" type="wspm:ResultType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Ergebnis</label>
@@ -57,7 +58,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="resultDocument" type="wspm:ResultDocumentType" substitutionGroup="gml:_Feature">
+	<element name="ResultDocument" type="wspm:ResultDocumentType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???resultDocument</label>
@@ -77,7 +78,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="waterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
+	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Gewässer</label>
@@ -88,7 +89,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="strandMember" type="wspm:StrandPropertyType" substitutionGroup="gml:featureMember">
+	<element name="reachMember" type="wspm:ReachPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf Gewässerstrang</label>
@@ -97,7 +98,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="strand" type="wspm:StrandType" substitutionGroup="gml:_Feature">
+	<element name="Reach" type="wspm:ReachType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Gewässerstrang</label>
@@ -108,37 +109,37 @@
 	</element>
 	<!-- 
 	-->
-	<element name="strandElementMember" type="wspm:StrandElementPropertyType" substitutionGroup="gml:featureMember">
+	<element name="reachSegmentMember" type="wspm:ReachSegmentPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???strandElementMember</label>
+				<label>???reachSegmentMember</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="abstractStrandElement" type="wspm:AbstractStrandElementType" abstract="true" substitutionGroup="gml:_Feature">
+	<element name="AbstractReachSegment" type="wspm:AbstractReachSegmentType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???abstractStrandElement</label>
+				<label>???abstractReachSegment</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="influentStrandElement" type="wspm:InfluentStrandElementType" substitutionGroup="wspm:abstractStrandElement">
+	<element name="InfluentReachSegment" type="wspm:InfluentReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???influentStrandElement</label>
+				<label>???influentReachSegment</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="profileStrandElement" type="wspm:ProfileStrandElementType" substitutionGroup="wspm:abstractStrandElement">
+	<element name="ProfileReachSegment" type="wspm:ProfileReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???profileStrandElement</label>
+				<label>???profileReachSegment</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -155,7 +156,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="roughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
+	<element name="RoughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinitionCollection</label>
@@ -175,7 +176,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="roughnessDefinition" type="wspm:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="RoughnessDefinition" type="wspm:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???roughnessDefinition</label>
@@ -195,7 +196,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="vegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType" substitutionGroup="gml:_Feature">
+	<element name="VegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???vegetationDefinitionCollection</label>
@@ -215,7 +216,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="vegetationDefinition" type="wspm:VegetationDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="VegetationDefinition" type="wspm:VegetationDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???vegetationDefinition</label>
@@ -235,7 +236,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="calcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
+	<element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???element:Erstellung</label>
@@ -260,7 +261,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:abstractCalculation"/>
+					<element ref="wspm:AbstractCalculation"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -277,16 +278,16 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="StrandPropertyType">
+	<complexType name="ReachPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:strand"/>
+					<element ref="wspm:Reach"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="StrandType" abstract="false">
+	<complexType name="ReachType" abstract="false">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
@@ -300,38 +301,49 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:strandElementMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="StrandElementPropertyType">
+	<complexType name="ReachSegmentPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:abstractStrandElement"/>
+					<element ref="wspm:AbstractReachSegment"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="AbstractStrandElementType" abstract="true">
+	<complexType name="AbstractReachSegmentType" abstract="true">
 		<complexContent>
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
 			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence/>
+				<sequence>
+					<element name="station" type="double">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>???station</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="InfluentStrandElementType">
+	<complexType name="InfluentReachSegmentType">
 		<complexContent>
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="wspm:AbstractStrandElementType">
+			<extension base="wspm:AbstractReachSegmentType">
 				<sequence>
 					<element name="location" type="gml:PointType">
 						<annotation>
@@ -346,23 +358,13 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="ProfileStrandElementType">
+	<complexType name="ProfileReachSegmentType">
 		<complexContent>
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="wspm:AbstractStrandElementType">
+			<extension base="wspm:AbstractReachSegmentType">
 				<sequence>
-					<element name="station" type="double">
-						<annotation>
-							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
-							<documentation xml:lang="de">
-								<label>???station</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="profileGeometry" type="gml:LineStringSegmentType">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation</appinfo>
@@ -413,7 +415,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:waterBody"/>
+					<element ref="wspm:WaterBody"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -458,7 +460,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:strandMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspm:reachMember" minOccurs="0" maxOccurs="unbounded"/>
 					<element name="runOffEventMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -487,7 +489,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:result"/>
+					<element ref="wspm:Result"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -526,7 +528,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:resultDocument"/>
+					<element ref="wspm:ResultDocument"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -565,7 +567,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:roughnessDefinitionCollection"/>
+					<element ref="wspm:RoughnessDefinitionCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -585,7 +587,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:roughnessDefinition"/>
+					<element ref="wspm:RoughnessDefinition"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -640,7 +642,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:vegetationDefinitionCollection"/>
+					<element ref="wspm:VegetationDefinitionCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -660,7 +662,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:vegetationDefinition"/>
+					<element ref="wspm:VegetationDefinition"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -724,7 +726,7 @@
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:calcCreation"/>
+					<element ref="wspm:CalcCreation"/>
 				</sequence>
 			</restriction>
 		</complexContent>

@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calculationWspmTuhhSteadyState gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="org.kalypso.model.wspm.tuhh wspmTuhhSteadyState.xsd">
+<CalculationWspmTuhhSteadyState gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="org.kalypso.model.wspm.tuhh">
+<!--    xsi:schemaLocation="org.kalypso.model.wspm.tuhh file://C:\Programme_inst\eclipse31\workspace\KalypsoModelWspmTuhh\src\org\kalypso\model\wspm\tuhh\schemata\wspmTuhhSteadyState.xsd"-->
     <calcCreationMember xmlns="org.kalypso.model.wspm">
-        <calcCreation>
+        <CalcCreation>
             <user>Belger</user>
             <creationDate>1972-10-24T10:00:00</creationDate>
-        </calcCreation>
+        </CalcCreation>
     </calcCreationMember>
-    <strandWspmTuhhSteadyStateMember>
-        <strandWspmTuhhSteadyState/>
-    </strandWspmTuhhSteadyStateMember>
+    <reachWspmTuhhSteadyStateMember>
+        <ReachWspmTuhhSteadyState/>
+    </reachWspmTuhhSteadyStateMember>
     <fliessgesetz>darcyOffeneGerinne</fliessgesetz>
-    <subStrandDefinitionMember>
-        <subStrandDefinition>
+    <subReachDefinitionMember>
+        <SubReachDefinition>
             <startStation>1000</startStation>
             <endStation>2000</endStation>
-        </subStrandDefinition>
-    </subStrandDefinitionMember>
+        </SubReachDefinition>
+    </subReachDefinitionMember>
     <calculationModeMember>
-        <calculationModeWaterlevel>
+        <CalculationModeWaterlevel>
             <type/>
             <runOffEventMember/>
             <calculationStartConditionMember>
-                <calculationStartCondition/>
+                <CalculationStartCondition/>
             </calculationStartConditionMember>
             <calculationWaterlevelParameterMember>
-                <calculationWaterlevelParameter>
+                <CalculationWaterlevelParameter>
                     <wspIteration>exactIteration</wspIteration>
                     <verzoegerungsverlust>bjoernsen</verzoegerungsverlust>
                     <reibungsverlust>geometricFormula</reibungsverlust>
                     <specialOptionsMember>
-                        <specialOptions>
+                        <SpecialOptions>
                             <doCalcBridges>true</doCalcBridges>
-                        <doCalcBarrages>true</doCalcBarrages>
-                    </specialOptions>
-                        </specialOptionsMember>
-                </calculationWaterlevelParameter>
+                            <doCalcBarrages>true</doCalcBarrages>
+                        </SpecialOptions>
+                    </specialOptionsMember>
+                </CalculationWaterlevelParameter>
             </calculationWaterlevelParameterMember>
-        </calculationModeWaterlevel>
+        </CalculationModeWaterlevel>
     </calculationModeMember>
-</calculationWspmTuhhSteadyState>
+</CalculationWspmTuhhSteadyState>
