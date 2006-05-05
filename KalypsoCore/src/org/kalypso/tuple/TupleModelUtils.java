@@ -103,6 +103,11 @@ public final class TupleModelUtils
   
   public <R extends IKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model )
   {
+    return dump( model, '\t' );
+  }
+  
+  public <R extends IKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model, final char separator )
+  {
     final Set<R> rowKeySet = model.getRowKeySet();
     final Set<C> columnKeySet = model.getColumnKeySet();
 
@@ -114,7 +119,7 @@ public final class TupleModelUtils
       {
         model.getValue( rowKey, colKey ).toString();
         
-        sw.append( '\t' );
+        sw.append( separator );
       }
       
       sw.append( '\n' );

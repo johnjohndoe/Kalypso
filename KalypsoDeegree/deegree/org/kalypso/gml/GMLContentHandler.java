@@ -443,7 +443,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     {
       final QName attQName = new QName( atts.getURI( i ), atts.getLocalName( i ) );
       if( XSD_SCHEMALOCATION.equals( attQName ) )
-        return atts.getValue( i );
+      {
+        final String value = atts.getValue( i );
+        return value == null ? null : value.trim();
+      }
     }
     // no schemalocation found in attributes
     return null;
