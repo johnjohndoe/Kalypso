@@ -239,16 +239,16 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}categoryConstraint
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}categoryConstraint
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}measureConstraint
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}measureConstraint
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}intervalConstraint
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}intervalConstraint
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}otherConstraint
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}otherConstraint
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
 .  .  .  Feature: {http://www.opengis.net/swe}CompoundPhenomenon
@@ -333,13 +333,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}categoryConstraintList
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}categoryConstraintList
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}measureConstraintList
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}measureConstraintList
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
-.  .  .  .  .  [1,1]Property: {http://www.opengis.net/swe}intervalConstraintList
+.  .  .  .  .  [1,oo]Property: {http://www.opengis.net/swe}intervalConstraintList
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
 .  .  .  Feature: {http://www.opengis.net/swe}TimeGeometricComplex
@@ -547,13 +547,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -645,13 +645,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -1143,13 +1143,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -1179,13 +1179,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -1235,13 +1235,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -1271,13 +1271,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -1438,7 +1438,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}dictionaryEntry
+.  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}dictionaryEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}Definition
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
@@ -1515,7 +1515,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}indirectEntry
+.  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}indirectEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}DefinitionCollection
 .  .  .  ContentType: {http://www.opengis.net/gml}DictionaryType
@@ -1535,7 +1535,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}dictionaryEntry
+.  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}dictionaryEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}Definition
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
@@ -1612,7 +1612,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}indirectEntry
+.  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}indirectEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}DefinitionProxy
 .  .  .  ContentType: {http://www.opengis.net/gml}DefinitionProxyType
@@ -1743,10 +1743,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}duration
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}duration
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
 .  .  .  .       Class: class javax.xml.datatype.Duration
-.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}timeInterval
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}timeInterval
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
 .  .  .  .       Class: class java.math.BigDecimal
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}beginPosition
@@ -3182,10 +3182,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
-.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}duration
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}duration
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}duration
 .  .  .  .       Class: class javax.xml.datatype.Duration
-.  .  .  .  [1,1]Property: {http://www.opengis.net/gml}timeInterval
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}timeInterval
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}decimal
 .  .  .  .       Class: class java.math.BigDecimal
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}beginPosition
@@ -4313,13 +4313,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -4377,13 +4377,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -4446,13 +4446,13 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractCalculation	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}result
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}resultDocument
-.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}strand
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinitionCollection
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}roughnessDefinition
-.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
+.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}calcCreation
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}profileStrandElement
@@ -5010,8 +5010,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}filePath
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .       Class: class java.lang.String
-.  Feature: {org.kalypso.model.wspm}water
-.  .  ContentType: {org.kalypso.model.wspm}WaterType
+.  Feature: {org.kalypso.model.wspm}waterBody
+.  .  ContentType: {org.kalypso.model.wspm}WaterBodyType
 .  .  .  extended by
 .  .  .  .  ContentType: {org.kalypso.model.wspm}EmptyFeatureBaseType
 .  .  .  .  .  restricted by
@@ -5033,7 +5033,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}name
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .       Class: class java.lang.String
-.  .  .  [1,1]Property: {org.kalypso.model.wspm}kennziffer
+.  .  .  [1,1]Property: {org.kalypso.model.wspm}waterBodyRefNr
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .       Class: class java.lang.String
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}isDirectionUpstream
@@ -5047,7 +5047,7 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}runOffEventMember
 .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
 .  .  .  .   -> {http://www.opengis.net/om}Observation
-.  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}waterlevelEvent
+.  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}waterlevelFixation
 .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
 .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  Feature: {org.kalypso.model.wspm}strand
@@ -5070,8 +5070,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
-.  .  .  [1,1]  Relation: {org.kalypso.model.wspm}waterMember
-.  .  .  .   -> {org.kalypso.model.wspm}water
+.  .  .  [1,1]  Relation: {org.kalypso.model.wspm}waterBodyMember
+.  .  .  .   -> {org.kalypso.model.wspm}waterBody
 .  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}strandElementMember
 .  .  .  .   -> {org.kalypso.model.wspm}abstractStrandElement	  [x] abstract
 .  .  .  .   -> {org.kalypso.model.wspm}influentStrandElement
@@ -5203,8 +5203,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}valueKST
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-.  Feature: {org.kalypso.model.wspm}plantDefinitionCollection
-.  .  ContentType: {org.kalypso.model.wspm}PlantDefinitionCollectionType
+.  Feature: {org.kalypso.model.wspm}vegetationDefinitionCollection
+.  .  ContentType: {org.kalypso.model.wspm}VegetationDefinitionCollectionType
 .  .  .  extended by
 .  .  .  .  ContentType: {org.kalypso.model.wspm}EmptyFeatureBaseType
 .  .  .  .  .  restricted by
@@ -5223,10 +5223,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
-.  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}plantDefinitionMember
-.  .  .  .   -> {org.kalypso.model.wspm}plantDefinition
-.  Feature: {org.kalypso.model.wspm}plantDefinition
-.  .  ContentType: {org.kalypso.model.wspm}PlantDefinitionType
+.  .  .  [0,oo]  Relation: {org.kalypso.model.wspm}vegetationDefinitionMember
+.  .  .  .   -> {org.kalypso.model.wspm}vegetationDefinition
+.  Feature: {org.kalypso.model.wspm}vegetationDefinition
+.  .  ContentType: {org.kalypso.model.wspm}VegetationDefinitionType
 .  .  .  extended by
 .  .  .  .  ContentType: {org.kalypso.model.wspm}EmptyFeatureBaseType
 .  .  .  .  .  restricted by
@@ -5286,5 +5286,3 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  [1,1]Property: {org.kalypso.model.wspm}creationDate
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}dateTime
 .  .  .       Class: class javax.xml.datatype.XMLGregorianCalendar
-
-
