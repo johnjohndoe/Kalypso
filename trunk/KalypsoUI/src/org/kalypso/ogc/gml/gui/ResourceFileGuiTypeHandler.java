@@ -29,6 +29,7 @@
  */
 package org.kalypso.ogc.gml.gui;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
@@ -43,7 +44,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -57,17 +58,17 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return new ResourceFileDialog( feature, ftp );
   }
 
-  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
-    final GridData griddata = factory.createGridData();
+    final GridDataType griddata = factory.createGridDataType();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( property.getQName() );
 
     griddata.setHorizontalAlignment( "GridData.BEGINNING" );
     button.setLayoutData( factory.createGridData( griddata ) );
 
-    return button;
+    return factory.createButton( button );
   }
 
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )

@@ -29,6 +29,7 @@
  */
 package org.kalypso.ogc.gml.gui;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -70,13 +71,13 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( property.getQName() );
 
-    return button;
+    return factory.createButton( button );
   }
 
   /**

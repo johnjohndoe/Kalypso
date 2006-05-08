@@ -171,7 +171,7 @@ public class Feature_Impl implements Feature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
-  public Object getProperty( IPropertyType pt )
+  public Object getProperty( final IPropertyType pt )
   {
     final int pos = m_featureType.getPropertyPosition( pt );
     return getProperty( pos );

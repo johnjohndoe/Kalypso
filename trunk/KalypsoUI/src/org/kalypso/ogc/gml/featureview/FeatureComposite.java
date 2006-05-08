@@ -94,11 +94,13 @@ import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.PropertyControlType;
 import org.kalypso.template.featureview.Radiobutton;
-import org.kalypso.template.featureview.Subcomposite;
+import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.Combo.Entry;
@@ -284,9 +286,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       ftp = null;
 
     // control erzeugen!
-    if( controlType instanceof org.kalypso.template.featureview.Label )
+    if( controlType instanceof LabelType )
     {
-      final org.kalypso.template.featureview.Label labelType = (org.kalypso.template.featureview.Label) controlType;
+      final LabelType labelType = (LabelType) controlType;
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
       label.setText( labelType.getText() );
       applyAnnotation( label, labelType.getProperty(), feature );
@@ -387,9 +389,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       return control;
     }
-    else if( controlType instanceof Subcomposite )
+    else if( controlType instanceof SubcompositeType )
     {
-      final Subcomposite compoType = (Subcomposite) controlType;
+      final SubcompositeType compoType = (SubcompositeType) controlType;
 
       final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ) );
       fc.setFeature( feature );
@@ -451,9 +453,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Object createLayoutData( final LayoutDataType layoutDataType )
   {
-    if( layoutDataType instanceof org.kalypso.template.featureview.GridData )
+    if( layoutDataType instanceof GridDataType )
     {
-      final org.kalypso.template.featureview.GridData gridDataType = (org.kalypso.template.featureview.GridData) layoutDataType;
+      final GridDataType gridDataType = (GridDataType) layoutDataType;
       final GridData gridData = new GridData();
 
       gridData.grabExcessHorizontalSpace = gridDataType.isGrabExcessHorizontalSpace();

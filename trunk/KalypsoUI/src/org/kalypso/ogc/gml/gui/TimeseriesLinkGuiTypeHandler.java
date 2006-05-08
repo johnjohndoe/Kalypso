@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridData;
+import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
@@ -112,7 +112,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final CompositeType composite = factory.createCompositeType();
 
@@ -128,25 +128,25 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     text.setStyle( "SWT.NONE" );
     text.setProperty( property.getQName() );
 
-    final GridData textData = factory.createGridData();
+    final GridDataType textData = factory.createGridDataType();
     textData.setHorizontalAlignment( "GridData.BEGINNING" );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
-    text.setLayoutData( factory.createLayoutData( textData ) );
+    text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
     final Button button = factory.createButton();
-    final GridData buttonData = factory.createGridData();
+    final GridDataType buttonData = factory.createGridDataType();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( property.getQName() );
 
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( factory.createLayoutData( buttonData ) );
+    button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
     control.add( factory.createControl( text ) );
     control.add( factory.createControl( button ) );
 
-    return composite;
+    return factory.createComposite( composite );
   }
 
   /**
