@@ -3,7 +3,7 @@
 	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-	<!-- WSPM stands for 'water surface profile model' -->
+	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTS
