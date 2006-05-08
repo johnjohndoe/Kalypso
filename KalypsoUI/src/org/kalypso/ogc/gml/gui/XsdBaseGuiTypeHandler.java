@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -91,7 +92,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) property;
@@ -106,7 +107,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       checkbox.setEditable( true );
       checkbox.setProperty( qname );
 
-      return checkbox;
+      return factory.createCheckbox( checkbox );
     }
 
     // if we have an enumeration, create a combo
@@ -143,7 +144,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       final List<Entry> entries = combo.getEntry();
       entries.addAll( comboEntries );
 
-      return combo;
+      return factory.createCombo( combo );
     }
 
     // everything else will be edited in a text field
@@ -152,7 +153,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     editor.setEditable( true );
     editor.setProperty( qname );
 
-    return editor;
+    return factory.createText( editor );
   }
 
   /**

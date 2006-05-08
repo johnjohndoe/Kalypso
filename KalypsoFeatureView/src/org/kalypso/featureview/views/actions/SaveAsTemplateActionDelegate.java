@@ -117,6 +117,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
       return;
     }
 
+    
     final SaveAsDialog dialog = new SaveAsDialog( shell );
     dialog.setBlockOnOpen( true );
     dialog.setTitle( STR_ALS_VORLAGE_SPEICHERN );
@@ -173,9 +174,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final JAXBException e )
         {
-          e.printStackTrace();
-
-          StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
+          return StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
         }
         catch( final CoreException e )
         {

@@ -16,22 +16,22 @@
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="view" type="ns1:featureviewType" minOccurs="0"
+				<xs:element name="view" type="ns1:FeatureviewType" minOccurs="0"
 					maxOccurs="unbounded">
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="featureview" type="ns1:featureviewType" />
-	<xs:complexType name="featureviewType">
+	<xs:element name="featureview" type="ns1:FeatureviewType" />
+	<xs:complexType name="FeatureviewType">
 		<xs:complexContent>
 			<xs:extension base="ns1:compositeType">
 				<xs:attribute name="typename" type="xs:QName" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="controlType">
+	<xs:complexType name="ControlType">
 		<xs:sequence minOccurs="0">
 			<xs:element ref="ns1:layoutData" />
 		</xs:sequence>
@@ -40,18 +40,18 @@
 		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true" />
 		<xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
 	</xs:complexType>
-	<xs:complexType name="propertyControlType">
+	<xs:complexType name="PropertyControlType">
 		<xs:complexContent>
-			<xs:extension base="ns1:controlType">
+			<xs:extension base="ns1:ControlType">
 				<xs:attribute name="property" type="xs:QName" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="layoutType" />
+	<xs:complexType name="LayoutType" />
 	<xs:complexType name="layoutDataType" />
 	<xs:complexType name="compositeType">
 		<xs:complexContent>
-			<xs:extension base="ns1:controlType">
+			<xs:extension base="ns1:ControlType">
 				<xs:sequence minOccurs="0">
 					<xs:element ref="ns1:layout" />
 					<xs:element ref="ns1:control" minOccurs="0" maxOccurs="unbounded" />
@@ -69,20 +69,20 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="control" type="ns1:controlType" />
-	<xs:element name="label" substitutionGroup="ns1:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType">
-					<xs:attribute name="text" type="xs:string" use="optional" default="" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="control" type="ns1:ControlType" />
+	<xs:element name="label" type="ns1:LabelType" substitutionGroup="ns1:control"/>
+	<xs:complexType name="LabelType">
+		<xs:complexContent>
+			<xs:extension base="ns1:PropertyControlType">
+				<xs:attribute name="text" type="xs:string" use="optional" default="" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:element name="text" substitutionGroup="ns1:control">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType">
+				<xs:extension base="ns1:PropertyControlType">
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>
 			</xs:complexContent>
@@ -91,7 +91,7 @@
 	<xs:element name="button" substitutionGroup="ns1:control">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType" />
+				<xs:extension base="ns1:PropertyControlType" />
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -103,7 +103,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType">
+				<xs:extension base="ns1:PropertyControlType">
 					<xs:attribute name="text" type="xs:string" use="optional" default="" />
 					<xs:attribute name="valueToSet" type="xs:string" use="required" />
 				</xs:extension>
@@ -116,7 +116,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType">
+				<xs:extension base="ns1:PropertyControlType">
 					<xs:sequence>
 						<xs:element name="entry" minOccurs="1" maxOccurs="unbounded">
 							<xs:annotation>
@@ -143,7 +143,7 @@
 	<xs:element name="checkbox" substitutionGroup="ns1:control">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType">
+				<xs:extension base="ns1:PropertyControlType">
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>
 			</xs:complexContent>
@@ -152,22 +152,23 @@
 	<xs:element name="table" substitutionGroup="ns1:control">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType" />
+				<xs:extension base="ns1:PropertyControlType" />
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="subcomposite" substitutionGroup="ns1:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ns1:propertyControlType" />
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="layout" type="ns1:layoutType" abstract="true" />
+	<xs:element name="subcomposite" type="ns1:SubcompositeType" substitutionGroup="ns1:control"/>
+	<xs:complexType name="SubcompositeType">
+		<xs:complexContent>
+			<xs:extension base="ns1:PropertyControlType" />
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:element name="layout" type="ns1:LayoutType" abstract="true" />
 	<xs:element name="gridLayout" substitutionGroup="ns1:layout">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ns1:layoutType">
+				<xs:extension base="ns1:LayoutType">
 					<xs:attribute name="horizontalSpacing" type="xs:int" use="optional" default="5" />
 					<xs:attribute name="verticalSpacing" type="xs:int" use="optional" default="5" />
 					<xs:attribute name="marginWidth" type="xs:int" use="optional" default="5" />
@@ -180,25 +181,26 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="layoutData" type="ns1:layoutDataType" abstract="true" />
-	<xs:element name="gridData" substitutionGroup="ns1:layoutData">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ns1:layoutDataType">
-					<xs:attribute name="verticalAlignment" type="xs:string" use="optional"
-						default="2" />
-					<xs:attribute name="horizontalAlignment" type="xs:string" use="optional"
-						default="2" />
-					<xs:attribute name="widthHint" type="xs:int" use="optional" default="-1" />
-					<xs:attribute name="heightHint" type="xs:int" use="optional" default="-1" />
-					<xs:attribute name="horizontalIndent" type="xs:int" use="optional" default="0" />
-					<xs:attribute name="horizontalSpan" type="xs:int" use="optional" default="1" />
-					<xs:attribute name="verticalSpan" type="xs:int" use="optional" default="1" />
-					<xs:attribute name="grabExcessHorizontalSpace" type="xs:boolean" use="optional"
-						default="false" />
-					<xs:attribute name="grabExcessVerticalSpace" type="xs:boolean" use="optional"
-						default="false" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+
+	<xs:element name="gridData" type="ns1:GridDataType" substitutionGroup="ns1:layoutData"/>
+	<xs:complexType name="GridDataType">
+		<xs:complexContent>
+			<xs:extension base="ns1:layoutDataType">
+				<xs:attribute name="verticalAlignment" type="xs:string" use="optional"
+					default="2" />
+				<xs:attribute name="horizontalAlignment" type="xs:string" use="optional"
+					default="2" />
+				<xs:attribute name="widthHint" type="xs:int" use="optional" default="-1" />
+				<xs:attribute name="heightHint" type="xs:int" use="optional" default="-1" />
+				<xs:attribute name="horizontalIndent" type="xs:int" use="optional" default="0" />
+				<xs:attribute name="horizontalSpan" type="xs:int" use="optional" default="1" />
+				<xs:attribute name="verticalSpan" type="xs:int" use="optional" default="1" />
+				<xs:attribute name="grabExcessHorizontalSpace" type="xs:boolean" use="optional"
+					default="false" />
+				<xs:attribute name="grabExcessVerticalSpace" type="xs:boolean" use="optional"
+					default="false" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 </xs:schema>
