@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -64,97 +65,90 @@ import org.xml.sax.XMLReader;
  */
 public class PropertyParser
 {
+  final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
+  
+  public PropertyParser( )
+  {
+    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware( true );
+  }
 
-	public PropertyParser()
-	{
-		final DocumentBuilderFactory factory = DocumentBuilderFactory
-				.newInstance();
-		factory.setNamespaceAware(true);
-	}
+  public void createProperty( final Feature feature, final String uri, final String localName, final Attributes atts )
+  {
+    final IFeatureType featureType = feature.getFeatureType();
+    final QName propQName = new QName( uri, localName );
+    final IPropertyType property = featureType.getProperty( propQName );
+    m_stackPT.push( property );
+    // TODO check if it is a link
+  }
 
-	final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
+  public IPropertyType getCurrentPropertyType( )
+  {
+    if( m_stackPT.empty() )
+      return null;
+    return m_stackPT.peek();
+  }
 
-	public void createProperty(Feature feature, String uri, String localName,
-			Attributes atts)
-	{
-		final IFeatureType featureType = feature.getFeatureType();
-		final QName propQName = new QName(uri, localName);
-		final IPropertyType property = featureType.getProperty(propQName);
-		m_stackPT.push(property);
-		// TODO check if it is a link
-	}
+  public void setContent( final Feature feature, final String content )
+  {
+    return;
+    // final IValuePropertyType vpt = (IValuePropertyType)
+    // getCurrentPropertyType();
+    // final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)
+    // vpt.getTypeHandler();
+  }
 
-	public IPropertyType getCurrentPropertyType()
-	{
-		if (m_stackPT.empty())
-			return null;
-		return m_stackPT.peek();
-	}
+  public void setContent( final Feature parentFE, final IValuePropertyType pt, final XMLReader xmlReader, final String uri, final String localName, final String qName, Attributes atts )
+  {
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) pt.getTypeHandler();
+    final UrlResolver urlResolver = null;
+    final ContentHandler orgCH = xmlReader.getContentHandler();
+    final UnMarshallResultEater resultEater = new UnMarshallResultEater()
+    {
+      public void eat( final Object value ) throws GMLSchemaException
+      {
+        xmlReader.setContentHandler( orgCH );
+        // simulate end element tag
 
-	public void setContent(Feature feature, String content)
-	{
-		return;
-		// final IValuePropertyType vpt = (IValuePropertyType)
-		// getCurrentPropertyType();
-		// final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)
-		// vpt.getTypeHandler();
+        try
+        {
+          orgCH.endElement( uri, localName, qName );
+        }
+        catch( final SAXException e )
+        {
+          throw new GMLSchemaException( e );
+        }
 
-	}
+        if( value == null )
+          return;
+        
+        if( pt.isList() )
+        {
+          final List<Object> list = (List<Object>) parentFE.getProperty( pt );
+          list.add( value );
+        }
+        else
+          parentFE.setProperty( pt, value );
+      }
+    };
 
-	public void setContent(final Feature parentFE, final IValuePropertyType pt,
-			final XMLReader xmlReader, final String uri,
-			final String localName, final String qName, Attributes atts)
-	{
-		final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) pt
-				.getTypeHandler();
-		final UrlResolver urlResolver = null;
-		final ContentHandler orgCH = xmlReader.getContentHandler();
-		final UnMarshallResultEater resultEater = new UnMarshallResultEater()
-		{
+    try
+    {
+      typeHandler.unmarshal( xmlReader, urlResolver, resultEater );
+    }
+    catch( TypeRegistryException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-			public void eat(Object value)
-			{
-				xmlReader.setContentHandler(orgCH);
-				// simulate end element tag
-				try
-				{
-					orgCH.endElement(uri, localName, qName);
-				} catch (SAXException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+    // xmlReader.setContentHandler( con );
+    // // simulate startElement
+    // con.startElement( uri, localName, qName, atts );
+  }
 
-				if (value == null)
-				{
-					return;
-				}
-				if (pt.isList())
-				{
-					final List<Object> list = (List<Object>) parentFE
-							.getProperty(pt);
-					list.add(value);
-				} else
-					parentFE.setProperty(pt, value);
-			}
-		};
-
-		try
-		{
-			typeHandler.unmarshal(xmlReader, urlResolver, resultEater);
-		} catch (TypeRegistryException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// xmlReader.setContentHandler( con );
-		// // simulate startElement
-		// con.startElement( uri, localName, qName, atts );
-	}
-
-	public void popPT()
-	{
-		m_stackPT.pop();
-	}
+  public void popPT( )
+  {
+    m_stackPT.pop();
+  }
 }

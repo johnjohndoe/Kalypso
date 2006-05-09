@@ -47,11 +47,11 @@ import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
@@ -63,79 +63,70 @@ import org.xml.sax.ext.LexicalHandler;
  * 
  * @author doemming
  */
-public class GenericGM_ObjectBindingTypeHandler extends
-		GenericBindingTypeHandler
+public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
 
-	private final Class m_gmObjectClass;
+  private final Class m_gmObjectClass;
 
-	public GenericGM_ObjectBindingTypeHandler(JAXBContext jaxbContext,
-			QName typeQName, QName valueQName, Class gm_objectClass,
-			boolean isGeometry)
-	{
-		super(jaxbContext, typeQName, valueQName, GML3BindingGM_ObjectAdapter
-				.getBindingClassFor(gm_objectClass), isGeometry);
-		m_gmObjectClass = gm_objectClass;
-	}
+  public GenericGM_ObjectBindingTypeHandler( JAXBContext jaxbContext, QName typeQName, QName valueQName, Class gm_objectClass, boolean isGeometry )
+  {
+    super( jaxbContext, typeQName, valueQName, GML3BindingGM_ObjectAdapter.getBindingClassFor( gm_objectClass ), isGeometry );
+    m_gmObjectClass = gm_objectClass;
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#getValueClass()
-	 */
-	@Override
-	public Class getValueClass()
-	{
-		return m_gmObjectClass;
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#getValueClass()
+   */
+  @Override
+  public Class getValueClass( )
+  {
+    return m_gmObjectClass;
+  }
 
-	/**
-	 * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#unmarshal(org.xml.sax.XMLReader,
-	 *      org.kalypso.contribs.java.net.IUrlResolver,
-	 *      org.kalypso.gmlschema.types.MarshalResultEater)
-	 */
-	@Override
-	public void unmarshal(XMLReader xmlReader, IUrlResolver urlResolver,
-			final UnMarshallResultEater marshalResultEater)
-			throws TypeRegistryException
-	{
-		final UnMarshallResultEater eater = new UnMarshallResultEater()
-		{
-			public void eat(Object value)
-			{
-				try
-				{
-					final GM_Object geometryValue = GML3BindingGM_ObjectAdapter
-							.createGM_Object(value);
-					marshalResultEater.eat(geometryValue);
-				} catch (GM_Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		};
-		super.unmarshal(xmlReader, urlResolver, eater);
-	}
+  /**
+   * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#unmarshal(org.xml.sax.XMLReader,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
+   */
+  @Override
+  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
+  {
+    final UnMarshallResultEater eater = new UnMarshallResultEater()
+    {
+      public void eat( Object value ) throws GMLSchemaException
+      {
+        final GM_Object geometryValue;
+        try
+        {
+          geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object( value );
+          marshalResultEater.eat( geometryValue );
+        }
+        catch( final GM_Exception e )
+        {
+          throw new GMLSchemaException( e );
+        }
+      }
+    };
 
-	/**
-	 * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object,
-	 *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler,
-	 *      java.net.URL)
-	 */
-	@Override
-	public void marshal(QName propQName, Object value,
-			ContentHandler contentHandler, LexicalHandler lexicalHandler,
-			URL context) throws TypeRegistryException
-	{
-		final GM_Object geometry = (GM_Object) value;
-		try
-		{
-			final AbstractGeometryType abstractGeomType = GML3BindingGM_ObjectAdapter
-					.createBindingGeometryType(geometry);
-			super.marshal(propQName, abstractGeomType, contentHandler,
-					lexicalHandler, context);
-		} catch (GM_Exception e)
-		{
-			e.printStackTrace();
-			throw new TypeRegistryException(e);
-		}
-	}
+    super.unmarshal( xmlReader, urlResolver, eater );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
+   *      org.xml.sax.ext.LexicalHandler, java.net.URL)
+   */
+  @Override
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
+  {
+    final GM_Object geometry = (GM_Object) value;
+    try
+    {
+      final AbstractGeometryType abstractGeomType = GML3BindingGM_ObjectAdapter.createBindingGeometryType( geometry );
+      super.marshal( propQName, abstractGeomType, contentHandler, lexicalHandler, context );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      throw new TypeRegistryException( e );
+    }
+  }
 }
