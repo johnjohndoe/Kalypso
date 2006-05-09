@@ -296,7 +296,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           m_status = START_PROPERTY_END_FEATURE;
         }
         else
-          throw new SAXException( "GML Type not supported" ); // they sould not be
+          throw new SAXException( "GML Type not supported for: " + qName ); // they sould not be
         // parsed here
         // else
         // m_propParser.setContent( parentFE, (IValuePropertyType) pt, uri,
