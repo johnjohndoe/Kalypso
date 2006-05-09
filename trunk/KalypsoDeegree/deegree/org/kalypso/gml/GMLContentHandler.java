@@ -57,7 +57,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.ComplexBindingTypeHandler;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
@@ -250,9 +249,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         if( pt instanceof IValuePropertyType )
         {
           final IValuePropertyType vpt = (IValuePropertyType) pt;
-          
-          if( vpt.getTypeHandler().getClass() == ComplexBindingTypeHandler.class )
-            ((ComplexBindingTypeHandler)vpt.getTypeHandler()).setAttributes( atts );
           
           m_propParser.setContent( feature, vpt, m_xmlReader, uri, localName, qName, atts );
           // we skip the end tag

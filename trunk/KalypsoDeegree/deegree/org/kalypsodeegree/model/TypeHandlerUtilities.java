@@ -49,7 +49,6 @@ import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.ConventionalUnitType;
 import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
 import ogc31.www.opengis.net.gml.CoverageFunctionType;
 import ogc31.www.opengis.net.gml.DerivationUnitTermType;
@@ -64,7 +63,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.types.ComplexBindingTypeHandler;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -647,6 +645,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
 
     // other GML3 types:
+    // TODO check if this work... Maybe use the ComplexBindingTypeHandler instead...
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DirectionPropertyType" ), new QName( NS.GML3, "direction" ), DirectionPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false ) );
@@ -655,9 +654,9 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false ) );
 
     // Types for the elements of ConventionalUnitType
-    registry.registerTypeHandler( new ComplexBindingTypeHandler( context, new QName( NS.GML3, "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false ) );
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RoughConversionToPreferredUnitType" ), new QName( NS.GML3, "roughConversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false ) );
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RoughConversionToPreferredUnitType" ), new QName( NS.GML3, "roughConversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false, true ) );
     
     //    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "TimePrimitivePropertyType" ), new QName( NS.GML3, "validTime" ), TimePrimitivePropertyType.class, false ) );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
