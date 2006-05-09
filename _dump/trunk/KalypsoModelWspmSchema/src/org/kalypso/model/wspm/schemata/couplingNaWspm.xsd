@@ -66,6 +66,15 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
+					<element name="couplingParameter" type="string" default="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???couplingParameter</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="wspm:waterBodyMember"/>
 					<element name="resultRunOffEventMember" type="om:AbstractObservationPropertyType">
 						<annotation>
@@ -86,6 +95,16 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="naGewaesser" type="string" default="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???naGewässer</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					
 				</sequence>
 			</extension>
 		</complexContent>
@@ -124,10 +143,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="weight" type="double" default="1">
+					<element name="zuordnungsParameter" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???weight</label>
+								<label>???zuordnungsParameter</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
