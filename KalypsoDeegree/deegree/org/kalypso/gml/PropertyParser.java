@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -101,6 +102,11 @@ public class PropertyParser
   public void setContent( final Feature parentFE, final IValuePropertyType pt, final XMLReader xmlReader, final String uri, final String localName, final String qName, Attributes atts )
   {
     final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) pt.getTypeHandler();
+
+    // TODO hack, check if there is a better way to set the attributes (maybe in IMarshallingTypeHandler.unmarshall() ?)
+    if( typeHandler.getClass() == GenericBindingTypeHandler.class )
+      ((GenericBindingTypeHandler)typeHandler).setAttributes( atts );
+    
     final UrlResolver urlResolver = null;
     final ContentHandler orgCH = xmlReader.getContentHandler();
     final UnMarshallResultEater resultEater = new UnMarshallResultEater()
