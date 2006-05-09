@@ -68,14 +68,13 @@ public class FeatureParser
    * @param parent
    *          feature or workspace
    */
-  public void createFeature( Object parent, String uri, String localName, Attributes atts )
+  public void createFeature( Object parent, String uri, String localName, Attributes atts ) throws GMLException
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );
     
-    // TODO: at least do system out, but better would be to throw an exception here
-    // instead in the Feature_Impl construktor
-    System.out.println( "No feature type for: " + qNameFT );
+    if( featureType == null )
+      throw new GMLException( "No feature type found for: " + qNameFT );
     
     final String fid;
     // GMLContentHandler.print( atts );

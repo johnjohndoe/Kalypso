@@ -57,12 +57,14 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.ComplexBindingTypeHandler;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -74,8 +76,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 {
   private static final int FIRST_FEATURE = 1;
 
+  /** a new property begins or a feature gets closed */
   private static final int START_PROPERTY_END_FEATURE = 2;
 
+  /** a new value begins or a property gets closed */
   private static final int START_VALUE_END_PROPERTY = 3;
 
   private FeatureParser m_featureParser;
@@ -148,7 +152,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public void startElement( String uri, String localName, String qName, Attributes atts )
+  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
   {
     // handle OGC Exceptions
     if( m_exceptionContentHandler != null )
@@ -179,11 +183,13 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     if( m_gmlSchema == null )
     {
       // first element may have schemalocation
-      final String schemaLocationString = getSchemalocation( atts );
-      m_schemaLocationString = schemaLocationString;
+      m_schemaLocationString = getSchemalocation( atts );
+
       GMLSchema schema = null;
+
       // 1. try : use hint
       if( m_schemaLocationHint != null )
+      {
         try
         {
           if( m_useSchemaCatalog )
@@ -193,21 +199,22 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         catch( final GMLSchemaException e )
         {
-          // TODO Auto-generated catch block
+          throw new SAXException( e );
         }
+      }
+
       // 2. try : from schemalocation attributes
-      if( schema == null && schemaLocationString != null )
-        schema = getSchema( schemaLocationString );
+      if( schema == null && m_schemaLocationString != null )
+        schema = getSchema( m_schemaLocationString );
+
       // 3. try : from namespace of root element
       if( schema == null && m_useSchemaCatalog )
         schema = GMLSchemaCatalog.getSchema( uri );
 
-      // TODO: maybe schema is unknown, so better throw an exception with
-      // a better error message
       if( schema == null )
-        // shouldn't we better throw an SaxException instead of a runtime exception??
-        throw new UnsupportedOperationException( "Could not load schema with namespace: " + uri + "(schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + schemaLocationString
+        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + m_schemaLocationString
             + ")" );
+
       m_gmlSchema = schema;
     }
 
@@ -217,21 +224,37 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     switch( m_status )
     {
       case FIRST_FEATURE:
-        m_featureParser.createFeature( null, uri, localName, atts );
+      {
+        try
+        {
+          m_featureParser.createFeature( null, uri, localName, atts );
+        }
+        catch( final GMLException e )
+        {
+          throw new SAXException( e );
+        }
+
         m_rootFeature = m_featureParser.getCurrentFeature();
         m_status = START_PROPERTY_END_FEATURE;
         break;
+      }
+
       case START_PROPERTY_END_FEATURE:
       {
         final Feature feature = m_featureParser.getCurrentFeature();
         m_propParser.createProperty( feature, uri, localName, atts );
-        // 
+
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
-        final Feature parentFE = m_featureParser.getCurrentFeature();
+        //final Feature parentFE = m_featureParser.getCurrentFeature();
+
         if( pt instanceof IValuePropertyType )
         {
           final IValuePropertyType vpt = (IValuePropertyType) pt;
-          m_propParser.setContent( parentFE, vpt, m_xmlReader, uri, localName, qName, atts );
+          
+          if( vpt.getTypeHandler().getClass() == ComplexBindingTypeHandler.class )
+            ((ComplexBindingTypeHandler)vpt.getTypeHandler()).setAttributes( atts );
+          
+          m_propParser.setContent( feature, vpt, m_xmlReader, uri, localName, qName, atts );
           // we skip the end tag
         }
         else if( pt instanceof IRelationType )// its a relation
@@ -241,7 +264,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           {
             final String refID = atts.getValue( index );// #
             String refID2 = refID.replaceAll( "^#", "" );
-            FeatureUtils.addChild( parentFE, (IRelationType) pt, refID2 );
+            FeatureUtils.addChild( feature, (IRelationType) pt, refID2 );
           }
         }
         else
@@ -254,27 +277,37 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
 
         m_status = START_VALUE_END_PROPERTY;
-      }
         break;
+      }
+
       case START_VALUE_END_PROPERTY:
       {
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
         final Feature parentFE = m_featureParser.getCurrentFeature();
         if( pt instanceof IRelationType )
         {
-          m_featureParser.createFeature( parentFE, uri, localName, atts );
+          try
+          {
+            m_featureParser.createFeature( parentFE, uri, localName, atts );
+          }
+          catch( final GMLException e )
+          {
+            throw new SAXException( e );
+          }
+          
           final Feature childFE = m_featureParser.getCurrentFeature();
           FeatureUtils.addChild( parentFE, (IRelationType) pt, childFE );
           m_status = START_PROPERTY_END_FEATURE;
         }
         else
-          throw new UnsupportedOperationException(); // they sould not be
+          throw new SAXException( "GML Type not supported" ); // they sould not be
         // parsed here
         // else
         // m_propParser.setContent( parentFE, (IValuePropertyType) pt, uri,
         // localName, qName, atts );
-      }
         break;
+      }
+
       default:
         break;
     }
@@ -290,8 +323,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.endElement( uri, localName, qName );
       return;
     }
+    
     if( uri == null || uri.length() < 1 )
       uri = m_gmlSchema.getTargetNamespace();
+    
     indent();
     // System.out.println( "</" + uri + ":" + localName + ">" );
     m_indent--;
@@ -341,6 +376,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.characters( ch, start, length );
       return;
     }
+    
     final Feature feature = m_featureParser.getCurrentFeature();
     switch( m_status )
     {
@@ -368,10 +404,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void startPrefixMapping( String prefix, String uri )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.startPrefixMapping( prefix, uri );
-      return;
-    }
   }
 
   /**
@@ -380,10 +413,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void endDocument( )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.endDocument();
-      return;
-    }
   }
 
   /**
@@ -392,10 +422,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void endPrefixMapping( String prefix )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.endPrefixMapping( prefix );
-      return;
-    }
   }
 
   /**
@@ -404,11 +431,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void processingInstruction( String target, String data )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.processingInstruction( target, data );
-      return;
-    }
-    // nothing
   }
 
   /**
@@ -417,10 +440,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void setDocumentLocator( Locator locator )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.setDocumentLocator( locator );
-      return;
-    }
   }
 
   /**
@@ -429,17 +449,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   public void skippedEntity( String name )
   {
     if( m_exceptionContentHandler != null )
-    {
       m_exceptionContentHandler.skippedEntity( name );
-      return;
-    }
-    // nothing
   }
 
   private String getSchemalocation( Attributes atts )
   {
-    final int length = atts.getLength();
-    for( int i = 0; i < length; i++ )
+    for( int i = 0; i < atts.getLength(); i++ )
     {
       final QName attQName = new QName( atts.getURI( i ), atts.getLocalName( i ) );
       if( XSD_SCHEMALOCATION.equals( attQName ) )
@@ -464,7 +479,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       else
         return GMLSchemaFactory.createGMLSchema( schemaLocationURL );
     }
-    catch( final Exception e )
+    catch( final Exception e ) // MarlformedURLException, GMLSchemaException
     {
       final ILog log = KalypsoDeegreePlugin.getDefault().getLog();
       final IStatus status = StatusUtilities.statusFromThrowable( e, "Could not loade schema for schemaLocation: " + schemaLocationString );
@@ -486,7 +501,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
     if( m_exceptionContentHandler != null )
       throw new GMLException( m_exceptionContentHandler.getResult() );
-    throw new GMLException( "could not load GML" );
+    
+    throw new GMLException( "Could not load GML, Root-Feature was not created." );
   }
 
   public String getSchemaLocationString( )
