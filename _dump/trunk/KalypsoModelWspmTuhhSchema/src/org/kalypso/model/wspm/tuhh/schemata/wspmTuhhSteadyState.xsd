@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+	<import namespace="org.kalypso.model.wspm" schemaLocation="../../../../../../../../KalypsoModelWspm/src/org/kalypso/model/wspm/schemata/wspm.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Berechnung 1D-TUHH</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="calculationModeMember" type="tuhh:CalculationModePropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Referenz auf Art der Berechnung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="AbstractCalculationMode" abstract="true" type="tuhh:AbstractCalculationModeType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Art der Berechnung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationModeWaterlevel" type="tuhh:CalculationModeWaterlevelType" substitutionGroup="tuhh:AbstractCalculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Wasserspiegellagenberechnung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationModeBankfullUniform" type="tuhh:CalculationModeBankfullUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bordvollberechnung - stationär gleichförmige Abflussverhältnisse</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationModeBankfullNonUniform" type="tuhh:CalculationModeBankfullNonUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bordvollberechnung - stationär ungleichförmige Abflussverhältnisse</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???calculationStartConditionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="CalculationStartCondition" type="tuhh:CalculationStartConditionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Randbedingung</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationStartConditionCriticalWaterDepth" type="tuhh:CalculationStartConditionCriticalWaterDepthType" substitutionGroup="tuhh:CalculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???als Grenztiefe</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationStartConditionUniformBottomSlope" type="tuhh:CalculationStartConditionUniformBottomSlopeType" substitutionGroup="tuhh:CalculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Annahme stationär gleichförmiges Gefälle</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="CalculationStartConditionWaterlevel" type="tuhh:CalculationStartConditionWaterlevelType" substitutionGroup="tuhh:CalculationStartCondition">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Direkteingabe Wasserspiegel</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!--
+	-->
+	<element name="calculationWaterlevelParameterMember" type="tuhh:CalculationWaterlevelParameterPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Referenz auf numerische Parameter</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="CalculationWaterlevelParameter" type="tuhh:CalculationWaterlevelParameterType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???numerische Parameter</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???reachWspmTuhhSteadyStateMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType" substitutionGroup="wspm:Reach">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???reachWspmTuhhSteadyState</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="influentReachSegmentWspmTuhhSteadyStateMember" type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???influentReachSegmentWspmTuhhSteadyStateMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- TODO Überflüssig?, kann eventuell weg. -->
+	<element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???influentReachSegmentWspmTuhhSteadyState</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="profileReachSegmentWspmTuhhSteadyStateMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???profileReachSegmentWspmTuhhSteadyStateMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???profileReachSegmentWspmTuhhSteadyState</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subReachDefinitionMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subReachDefinition</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:specialOptionsMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:specialOptions</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<complexType name="CalculationWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:AbstractCalculationType">
+				<sequence>
+					<element ref="tuhh:reachWspmTuhhSteadyStateMember"/>
+					<element name="fliessgesetz">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Fließgesetz</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="darcyRohr">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (Rohrströmungen)</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="darcyOffeneGerinne">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (offene Gerinne mit Formeinfluss)</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="manningStrickler">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???Rauheitsbeiwerte nach Gauckler-Manning-Strickler</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element ref="tuhh:subReachDefinitionMember"/>
+					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
+					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
+					<element ref="tuhh:calculationModeMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="CalculationModePropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:AbstractCalculationMode"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="AbstractCalculationModeType" abstract="true">
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="type" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Art der Berechnung --- </label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationModeWaterlevelType">
+		<complexContent>
+			<extension base="tuhh:AbstractCalculationModeType">
+				<sequence>
+					<!-- TODO force it to be one of the water body's runOffEvents? -->
+					<element name="runOffEventMember" type="om:AbstractObservationPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Referenz auf Abflussereignis</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tuhh:calculationStartConditionMember"/>
+					<element ref="tuhh:calculationWaterlevelParameterMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationModeBankfullUniformType">
+		<complexContent>
+			<extension base="tuhh:AbstractCalculationModeType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationModeBankfullNonUniformType">
+		<complexContent>
+			<extension base="tuhh:AbstractCalculationModeType">
+				<sequence>
+					<element ref="tuhh:calculationStartConditionMember"/>
+					<element name="minimalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???minimalRunOff</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maximalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???maximalRunOff</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runOffStep" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???runOffStep</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tuhh:calculationWaterlevelParameterMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="CalculationStartConditionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:CalculationStartCondition"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="CalculationStartConditionType">
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationStartConditionCriticalWaterDepthType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationStartConditionUniformBottomSlopeType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence>
+					<element name="bottomSlope" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???bottomSlope</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CalculationStartConditionWaterlevelType">
+		<complexContent>
+			<extension base="tuhh:CalculationStartConditionType">
+				<sequence>
+					<element name="waterlevel" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Anfangswasserspiegel</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="CalculationWaterlevelParameterPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:CalculationWaterlevelParameter"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="CalculationWaterlevelParameterType">
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="wspIteration">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Berechnung des Waserspiegels</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="simpleIteration">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???einfache Iteration</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="exactIteration">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???genaue Berechnung durch Einschlussiteration</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="verzoegerungsverlust">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Verzögerungsverlust</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="dvwk">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???nach DVWK (beta = 0.67)</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="bjoernsen">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???nach Björnsen (beta = 0.5)</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="dfg">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="reibungsverlust">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Art der Berechnung von Reibungsverlust</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="trapezFormula">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???nach Trapezformel</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="geometricFormula">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???durch geometrische Mittelung</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element ref="tuhh:specialOptionsMember"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="ReachWspmTuhhSteadyStatePropertyType">
+		<complexContent>
+			<restriction base="wspm:ReachPropertyType">
+				<sequence>
+					<element ref="tuhh:ReachWspmTuhhSteadyState"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ReachWspmTuhhSteadyStateType">
+		<complexContent>
+			<restriction base="wspm:ReachType">
+				<sequence>
+					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
+					<choice minOccurs="0" maxOccurs="unbounded">
+						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
+						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
+					</choice>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="InfluentReachSegmentWspmTuhhSteadyStatePropertyType">
+		<complexContent>
+			<restriction base="wspm:ReachSegmentPropertyType">
+				<sequence>
+					<element ref="tuhh:InfluentReachSegmentWspmTuhhSteadyState"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="InfluentReachSegmentWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:InfluentReachSegmentType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
+		<complexContent>
+			<restriction base="wspm:ReachSegmentPropertyType">
+				<sequence>
+					<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileReachSegmentWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:ProfileReachSegmentType">
+				<sequence>
+					<element name="distanceL" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceL</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? linkes Vorland</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceM" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceM</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? Hauptöffnung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceR" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceR</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? rechtes Vorland</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="localEnergyLoss" type="tuhh:LocalEnergyLossType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???localEnergyLoss</label>
+								<tooltip>???tooltip</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<simpleType name="LocalEnergyLossType">
+		<restriction base="string">
+			<enumeration value="EINLAUF">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Einlauf</label>
+						<tooltip>???tooltip</tooltip>
+						<description>???description</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="KRUEMMER">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Krümmer</label>
+						<tooltip>???tooltip</tooltip>
+						<description>???description</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="ZUSATZVERLUST">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Zusatz-Verlust</label>
+						<tooltip>???tooltip</tooltip>
+						<description>???description</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="RECHEN">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Rechen</label>
+						<tooltip>???tooltip</tooltip>
+						<description>???description</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="AUSLAUF">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Auslauf</label>
+						<tooltip>???tooltip</tooltip>
+						<description>???description</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<!-- 
+	-->
+	<complexType name="subReachDefinitionPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subReachDefinitionPropertyType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:SubReachDefinition"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="subReachDefinitionType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???subReachDefinitionType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Anfangsstation</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="endStation" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Endstation</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="specialOptionsPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???propertyType:Zusatzoptionen</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:SpecialOptions"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="specialOptionsType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???specialOptionsType:Zusatztoptionen</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="doCalcBridges" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Brücken mit Berechnen</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="doCalcBarrages" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Wehre mit Berechnen</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+</schema>

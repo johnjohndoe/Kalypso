@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.wspm.tuhh.schemata.WspmTuhhUrlCatalog"
+            id="org.kalypso.model.wspm.tuhh.urlcatalog"/>
+   </extension>
+
+</plugin>

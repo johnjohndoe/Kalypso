@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmTuhh Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.tuhh; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: org.kalypso.model.wspm.tuhh/
+Bundle-Activator: org.kalypso.model.wspm.tuhh.KalypsoModelWspmTuhhPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.contribs.java
+Eclipse-AutoStart: true
