@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CalculationWspmTuhhSteadyState gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="org.kalypso.model.wspm.tuhh">
-<!--    xsi:schemaLocation="org.kalypso.model.wspm.tuhh file://C:\Programme_inst\eclipse31\workspace\KalypsoModelWspmTuhh\src\org\kalypso\model\wspm\tuhh\schemata\wspmTuhhSteadyState.xsd"-->
+    <!--xsi:schemaLocation="org.kalypso.model.wspm.tuhh file://C:\Programme_inst\eclipse31\workspace\KalypsoModelWspmTuhh\src\org\kalypso\model\wspm\tuhh\schemata\wspmTuhhSteadyState.xsd">-->
     <calcCreationMember xmlns="org.kalypso.model.wspm">
         <CalcCreation>
             <user>Belger</user>

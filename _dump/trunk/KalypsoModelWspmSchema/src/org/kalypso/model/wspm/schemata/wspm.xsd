@@ -4,6 +4,7 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM = 'water surface profile model' -->
+	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTS
@@ -21,7 +22,7 @@
 	<element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???abstractCalculation</label>
+				<label>???AbstractCalculation</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -257,6 +258,43 @@
 	</complexType>
 	<!-- 
 	-->
+	<complexType name="NamedFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="metaDataProperty" type="gml:MetaDataPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Metadaten</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="description" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Beschreibung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="name" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Name</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
 	<complexType name="CalculationPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
@@ -268,7 +306,7 @@
 	</complexType>
 	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calcCreationMember"/>
 					<element ref="wspm:resultMember" minOccurs="0"/>
@@ -289,13 +327,13 @@
 	</complexType>
 	<complexType name="ReachType" abstract="false">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:waterBodyMember"/>
-					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
+					<element name="generatedWaterBodyCenterLine" type="gml:LineStringSegmentType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Gewässerachse</label>
+								<label>generierte Gewässerachse</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -367,7 +405,7 @@
 				<sequence>
 					<element name="profileGeometry" type="gml:LineStringSegmentType">
 						<annotation>
-							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation</appinfo>
+							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation and can be a line or a point</appinfo>
 							<documentation xml:lang="de">
 								<label>???profileGeometry==</label>
 								<tooltip>???tooltip</tooltip>
@@ -422,21 +460,21 @@
 	</complexType>
 	<complexType name="WaterBodyType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
-					<element name="name" type="string">
+					<element name="waterBodyRefNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???name</label>
+								<label>???waterBodyRefNr</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="waterBodyRefNr" type="string">
+					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???waterBodyRefNr</label>
+								<label>Gewässerachse</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -574,7 +612,7 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
@@ -594,7 +632,7 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -649,7 +687,7 @@
 	</complexType>
 	<complexType name="VegetationDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:vegetationDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
@@ -669,7 +707,7 @@
 	</complexType>
 	<complexType name="VegetationDefinitionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>

@@ -5,6 +5,7 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
+	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTS
@@ -39,7 +40,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationModeWaterlevel" type="tuhh:CalculationModeWaterlevelType" substitutionGroup="tuhh:AbstractCalculationMode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -49,7 +49,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationModeBankfullUniform" type="tuhh:CalculationModeBankfullUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -59,7 +58,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationModeBankfullNonUniform" type="tuhh:CalculationModeBankfullNonUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -89,7 +87,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationStartConditionCriticalWaterDepth" type="tuhh:CalculationStartConditionCriticalWaterDepthType" substitutionGroup="tuhh:CalculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
@@ -99,7 +96,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationStartConditionUniformBottomSlope" type="tuhh:CalculationStartConditionUniformBottomSlopeType" substitutionGroup="tuhh:CalculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
@@ -109,7 +105,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	
 	<element name="CalculationStartConditionWaterlevel" type="tuhh:CalculationStartConditionWaterlevelType" substitutionGroup="tuhh:CalculationStartCondition">
 		<annotation>
 			<documentation xml:lang="de">
@@ -326,7 +321,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationModeWaterlevelType">
 		<complexContent>
 			<extension base="tuhh:AbstractCalculationModeType">
@@ -347,7 +341,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationModeBankfullUniformType">
 		<complexContent>
 			<extension base="tuhh:AbstractCalculationModeType">
@@ -355,7 +348,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationModeBankfullNonUniformType">
 		<complexContent>
 			<extension base="tuhh:AbstractCalculationModeType">
@@ -411,7 +403,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationStartConditionCriticalWaterDepthType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
@@ -419,7 +410,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationStartConditionUniformBottomSlopeType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
@@ -437,7 +427,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<complexType name="CalculationStartConditionWaterlevelType">
 		<complexContent>
 			<extension base="tuhh:CalculationStartConditionType">
