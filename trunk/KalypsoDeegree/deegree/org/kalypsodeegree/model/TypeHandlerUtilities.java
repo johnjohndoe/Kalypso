@@ -55,6 +55,7 @@ import ogc31.www.opengis.net.gml.DerivationUnitTermType;
 import ogc31.www.opengis.net.gml.DirectionPropertyType;
 import ogc31.www.opengis.net.gml.GridDomainType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
+import ogc31.www.opengis.net.gml.MetaDataPropertyType;
 import ogc31.www.opengis.net.gml.ObjectFactory;
 import ogc31.www.opengis.net.gml.RangeSetType;
 import ogc31.www.opengis.net.gml.RectifiedGridDomainType;
@@ -235,7 +236,7 @@ public class TypeHandlerUtilities
           @Override
           public String convertToXMLString( String value[] )
           {
-            StringBuffer result = new StringBuffer();
+            final StringBuffer result = new StringBuffer();
             for( int i = 0; i < value.length; i++ )
             {
               if( i != 0 )
@@ -657,6 +658,8 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RoughConversionToPreferredUnitType" ), new QName( NS.GML3, "roughConversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false, true ) );
+
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "MetaDataPropertyType" ), new QName( NS.GML3, "metaDataProperty" ), MetaDataPropertyType.class, false, true ) );
     
     //    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "TimePrimitivePropertyType" ), new QName( NS.GML3, "validTime" ), TimePrimitivePropertyType.class, false ) );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "" ), new QName(
