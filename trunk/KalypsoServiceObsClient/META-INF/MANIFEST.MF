@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.services.observation.client.KalypsoServiceObsClientPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Export-Package: org.kalypso.services.observation.client,org.kalypso.services.sensor.impl
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,
  org.kalypso.commons,
@@ -17,5 +18,3 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.ui
 Eclipse-AutoStart: true
 Bundle-ClassPath: KalypsoClientObs.jar
-Export-Package: org.kalypso.services.observation.client,
- org.kalypso.services.sensor.impl

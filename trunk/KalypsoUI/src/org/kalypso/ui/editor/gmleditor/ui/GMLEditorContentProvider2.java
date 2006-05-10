@@ -52,11 +52,10 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   private CommandableWorkspace m_workspace;
 
   /**
-   * remebers the child-parent relationship. This is nedded, because if we provide no parent,
-   * setExpandedElements doesn't work, which
-   * will lead to an unusable gui.
+   * remebers the child-parent relationship. This is nedded, because if we provide no parent, setExpandedElements
+   * doesn't work, which will lead to an unusable gui.
    */
-  private Map<Object,Object> m_parentHash = new HashMap<Object,Object>();
+  private Map<Object, Object> m_parentHash = new HashMap<Object, Object>();
 
   private TreeViewer m_viewer;
 
@@ -80,38 +79,39 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof GMLWorkspace )
     {
-      return new Object[]
-      { ( (GMLWorkspace)parentElement ).getRootFeature() };
+      return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
     }
     if( parentElement instanceof Feature )
     {
-      final IPropertyType[] properties = ( (Feature)parentElement ).getFeatureType().getProperties();
+      Feature parentFE = (Feature) parentElement;
+      final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
       for( int i = 0; i < properties.length; i++ )
       {
         final IPropertyType property = properties[i];
         if( property instanceof IRelationType )
-          result.add( new FeatureAssociationTypeElement( (Feature)parentElement,
-              (IRelationType)property ) );
+          result.add( new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property ) );
 
         if( GeometryUtilities.isGeometry( property ) )
-          result.add( property );
+        {
+          final Object value = parentFE.getProperty( property );
+          if( value != null )
+            result.add( value );
+        }
       }
-      
       return result.toArray();
     }
     if( parentElement instanceof FeatureAssociationTypeElement )
     {
-      final Feature parentFeature = ( (FeatureAssociationTypeElement)parentElement ).getParentFeature();
-      final IRelationType ftp = ( (FeatureAssociationTypeElement)parentElement )
-          .getAssociationTypeProperty();
-      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp);
+      final Feature parentFeature = ((FeatureAssociationTypeElement) parentElement).getParentFeature();
+      final IRelationType ftp = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty();
+      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
       for( int i = 0; i < features.length; i++ )
       {
         final Feature feature = features[i];
         if( feature != null )
         {
-          if( m_workspace.isAggrigatedLink( parentFeature, ftp,i ) )
+          if( m_workspace.isAggrigatedLink( parentFeature, ftp, i ) )
             result.add( new LinkedFeatureElement2( feature ) );
           else
             result.add( feature );
@@ -148,15 +148,14 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   public Object[] getElements( Object inputElement )
   {
     if( inputElement instanceof GMLWorkspace )
-      return new Object[]
-      { ( (GMLWorkspace)inputElement ).getRootFeature() };
+      return new Object[] { ((GMLWorkspace) inputElement).getRootFeature() };
     return new Object[0];
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_parentHash.clear();
     m_viewer = null;
@@ -168,8 +167,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (TreeViewer)viewer;
-    
+    m_viewer = (TreeViewer) viewer;
+
     if( oldInput != newInput )
     {
       m_parentHash.clear();
@@ -178,7 +177,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         m_workspace = null;
 
       if( newInput instanceof CommandableWorkspace )
-        m_workspace = (CommandableWorkspace)newInput;
+        m_workspace = (CommandableWorkspace) newInput;
       else
         m_workspace = null;
     }
@@ -186,28 +185,27 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   public Feature getParentFeature( final Feature feature )
   {
-    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
     if( parent == null )
       return null;
-    
+
     return parent.getParentFeature();
   }
 
   public IRelationType getParentFeatureProperty( final Feature feature )
   {
-    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
     if( parent == null )
       return null;
-    
+
     return parent.getAssociationTypeProperty();
   }
 
-  
   public void expandElement( final Object element )
   {
     if( element == null )
       return;
-    
+
     expandElement( getParent( element ) );
 
     m_viewer.setExpandedState( element, true );

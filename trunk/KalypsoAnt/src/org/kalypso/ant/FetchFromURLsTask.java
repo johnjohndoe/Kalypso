@@ -50,7 +50,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 
 /**
  * copies data from a url to a file <br>

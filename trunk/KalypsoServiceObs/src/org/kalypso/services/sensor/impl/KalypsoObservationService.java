@@ -62,8 +62,8 @@ import javax.jws.WebService;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;

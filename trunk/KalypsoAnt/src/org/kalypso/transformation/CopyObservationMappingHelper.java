@@ -35,7 +35,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 
-import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;

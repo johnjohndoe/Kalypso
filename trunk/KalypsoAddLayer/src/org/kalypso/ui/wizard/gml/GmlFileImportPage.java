@@ -68,8 +68,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -233,7 +234,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   {
     if( e.widget == m_browseButton )
     {
-      final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, "Auswählen einer GML Datei", new String[] { "gml" }, m_selectedProject );
+      final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, "Auswählen einer GML Datei", new String[] { "gml" }, m_selectedProject, new ResourceSelectionValidator() );
       dialog.open();
       // get first element, only one element possible
       IPath selection = (IPath) dialog.getResult()[0];
@@ -308,15 +309,14 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       final Feature parent = link.getParentFeature();
       final FeaturePath parentFeaturePath = getWorkspace().getFeaturepathForFeature( parent );
       final IRelationType ftp = link.getAssociationTypeProperty();
-      
+
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes =associationFeatureType.getSubstituts(null, false,true);
-      
-      
+      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+
       for( int i = 0; i < associationFeatureTypes.length; i++ )
       {
         final IFeatureType ft = associationFeatureTypes[i];
-        final String title = AnnotationUtilities.getAnnotation(ft).getLabel();
+        final String title = AnnotationUtilities.getAnnotation( ft ).getLabel();
         final FeaturePath path = new FeaturePath( parentFeaturePath, ftp.getName() + "[" + ft.getName() + "]" );
         pathList.add( path.toString() );
         titleList.add( title );

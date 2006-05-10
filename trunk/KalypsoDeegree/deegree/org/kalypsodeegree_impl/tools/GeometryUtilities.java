@@ -450,57 +450,77 @@ public class GeometryUtilities
     return false;
   }
 
-//  public static Class getClass( IPropertyType ftp )
-//  {
-//    if( isPointGeometry( ftp ) )
-//      return getPointClass();
-//    if( isMultiPointGeometry( ftp ) )
-//      return getMultiPointClass();
-//    if( isLineStringGeometry( ftp ) )
-//      return getLineStringClass();
-//    if( isMultiLineStringGeometry( ftp ) )
-//      return getMultiLineStringClass();
-//    if( isPolygonGeometry( ftp ) )
-//      return getPolygonClass();
-//    if( isMultiPolygonGeometry( ftp ) )
-//      return getMultiPolygonClass();
-//    if( isAnyMultiGeometry( ftp ) )
-//      return null;
-//    return null;
-//  }
+  // public static Class getClass( IPropertyType ftp )
+  // {
+  // if( isPointGeometry( ftp ) )
+  // return getPointClass();
+  // if( isMultiPointGeometry( ftp ) )
+  // return getMultiPointClass();
+  // if( isLineStringGeometry( ftp ) )
+  // return getLineStringClass();
+  // if( isMultiLineStringGeometry( ftp ) )
+  // return getMultiLineStringClass();
+  // if( isPolygonGeometry( ftp ) )
+  // return getPolygonClass();
+  // if( isMultiPolygonGeometry( ftp ) )
+  // return getMultiPolygonClass();
+  // if( isAnyMultiGeometry( ftp ) )
+  // return null;
+  // return null;
+  // }
 
-  public static Class getPointClass( )
+  public static Class< ? extends Object> getPointClass( )
   {
     return GM_Point.class;
   }
 
-  public static Class getMultiPointClass( )
+  public static Class< ? extends Object> getMultiPointClass( )
   {
     return GM_MultiPoint.class;
   }
 
-  public static Class getLineStringClass( )
+  public static Class< ? extends Object> getLineStringClass( )
   {
     return GM_Curve.class;
   }
 
-  public static Class getMultiLineStringClass( )
+  public static Class< ? extends Object> getMultiLineStringClass( )
   {
     return GM_MultiCurve.class;
   }
 
-  public static Class getPolygonClass( )
+  public static Class< ? extends Object> getPolygonClass( )
   {
     return GM_Surface.class;
   }
 
-  public static Class getMultiPolygonClass( )
+  public static Class< ? extends Object> getMultiPolygonClass( )
   {
     return GM_MultiSurface.class;
   }
 
-  public static Class getUndefinedGeometryClass( )
+  public static Class< ? extends Object> getUndefinedGeometryClass( )
   {
     return GM_Object.class;
+  }
+
+  public static boolean isGeometry( Object o )
+  {
+    Class< ? extends Object> class1 = o.getClass();
+    if( getUndefinedGeometryClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getPointClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getMultiPointClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getLineStringClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getMultiLineStringClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getPolygonClass().isAssignableFrom( class1 ) )
+      return true;
+    else if( getMultiPolygonClass().isAssignableFrom( class1 ) )
+      return true;
+    return false;
   }
 }

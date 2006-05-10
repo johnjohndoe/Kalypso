@@ -63,10 +63,10 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
     // GML
     // Version 2.1
-//     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
-    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
+//    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
 
     // WFS
     catalog.put( "http://www.opengis.net/wfs", getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );

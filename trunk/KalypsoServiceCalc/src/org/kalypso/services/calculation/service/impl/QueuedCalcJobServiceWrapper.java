@@ -56,11 +56,11 @@ import javax.jws.WebService;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.ITypeRegistry;

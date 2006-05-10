@@ -50,8 +50,8 @@ import java.util.logging.Logger;
 import javax.jws.WebService;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.IUserService;
