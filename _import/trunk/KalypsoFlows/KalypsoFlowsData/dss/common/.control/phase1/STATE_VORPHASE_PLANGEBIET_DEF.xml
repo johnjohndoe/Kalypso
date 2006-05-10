@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbench version="2.0">
+<workbenchAdvisor/>
+<window height="768" maximized="true" width="1024" x="154" y="154">
+<fastViewData fastViewLocation="1024"/>
+<perspectiveBar>
+<itemSize x="160"/>
+</perspectiveBar>
+<coolbarLayout locked="0">
+<coolItem id="group.file" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="95" y="22"/>
+<coolItem id="additions" itemType="typeGroupMarker"/>
+<coolItem id="KalypsoDebug.config" itemType="typeToolBarContribution" x="107" y="22"/>
+<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="49" y="22"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="36" y="22"/>
+<coolItem id="org_eclipse_ui_examples_readmetool_actionSet" itemType="typeToolBarContribution" x="82" y="22"/>
+<coolItem id="group.nav" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="108" y="22"/>
+<coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="org.kalypso.ui.editor.mapeditor.GisMapEditor" itemType="typeToolBarContribution" x="397" y="22"/>
+<coolItem id="group.help" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
+</coolbarLayout>
+<page focus="true" label="&lt;Unknown Label&gt; - Flows Planer Portal">
+<editors>
+<editorArea activeWorkbook="DefaultEditorWorkbook">
+<info part="DefaultEditorWorkbook">
+<folder appearance="1" expanded="2">
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+</editorArea>
+<editor focus="true" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" name="Plangebiet_definieren.gmt" partName="Plangebiet_definieren.gmt" path="PATH/PROJ/.control/phase1/Plangebiet_definieren.gmt" title="Plangebiet_definieren.gmt" tooltip="PROJ/.control/phase1/Plangebiet_definieren.gmt" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/PROJ/.control/phase1/Plangebiet_definieren.gmt"/>
+</editor>
+</editors>
+<views>
+<view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
+<viewState/>
+</view>
+<view id="Kalypso.CommandURLBrowserView" partName="Command Browser">
+<viewState url=".control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
+<scrolbars/>
+</viewState>
+</view>
+<view id="KalypsoPortal.view.gazatteer" partName="Gazatteer View">
+<viewState/>
+</view>
+<view id="org.eclipse.ui.views.ResourceNavigator" partName="Navigator">
+<viewState LINK_NAVIGATOR_TO_EDITOR="0" sorter="1">
+<filters>
+<filter element="*.dat" isEnabled="false"/>
+<filter element="*.class" isEnabled="false"/>
+<filter element=".*" isEnabled="false"/>
+<filter element="*.gml" isEnabled="true"/>
+</filters>
+<selection>
+<element path="/PROJ"/>
+</selection>
+</viewState>
+</view>
+</views>
+<perspectives activePart="org.eclipse.ui.views.ResourceNavigator" activePerspective="org.kalypso.portal.perspective.planner">
+<perspective editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="org.kalypso.portal.perspective.KalypsoPlanerPortalPerspectiveFactory" id="org.kalypso.portal.perspective.planner" label="Flows Planer Portal"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="KalypsoDebug.config"/>
+<alwaysOnActionSet id="KalypsoFloodRiskAnalysis.Start"/>
+<alwaysOnActionSet id="org_eclipse_ui_examples_readmetool_actionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.openExternalFile"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.update.ui.softwareUpdates"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.folder"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.file"/>
+<view id="org.eclipse.ui.views.ResourceNavigator"/>
+<view id="KalypsoPortal.view.gazatteer"/>
+<view id="org.eclipse.ui.views.ContentOutline"/>
+<view id="Kalypso.CommandURLBrowserView"/>
+<layout>
+<mainWindow>
+<info part="org.eclipse.ui.editorss"/>
+<info folder="true" part="stickyFolderRight" ratio="0.7496063" ratioLeft="952" ratioRight="318" relationship="2" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+</folder>
+</info>
+<info folder="true" part="navigator" ratio="0.7496063" ratioLeft="952" ratioRight="318" relationship="2" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.views.ResourceNavigator" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="gazetteer" ratio="0.49944505" ratioLeft="450" ratioRight="451" relationship="4" relative="navigator">
+<folder activePageID="KalypsoPortal.view.gazatteer" appearance="2" expanded="2">
+<page content="KalypsoPortal.view.gazatteer" label="Gazatteer View"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="control" ratio="0.6992231" ratioLeft="630" ratioRight="271" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="Kalypso.CommandURLBrowserView" appearance="2" expanded="2">
+<page content="Kalypso.CommandURLBrowserView" label="Command Browser"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="outline" ratio="0.65966386" ratioLeft="628" ratioRight="324" relationship="2" relative="control">
+<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+</perspectives>
+<navigationHistory>
+<editors>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" path="/PROJ/.control/phase1/Plangebiet_definieren.gmt"/>
+</editors>
+<item active="true" historyLabel="Karten Editor" index="0"/>
+</navigationHistory>
+<stickyState/>
+</page>
+<workbenchWindowAdvisor/>
+<actionBarAdvisor/>
+</window>
+<mruList/>
+</workbench>
