@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="viewcontent" name="viewcontent" schema="schema/viewcontent.exsd"/>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.portal.intro.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.kalypso.portal.application"
+            name="FLOWS DSS Portal">
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.kalypso.portal.introID">
+      </intro>
+      <introProductBinding
+            introId="org.kalypso.portal.introID"
+            productId="org.kalypso.portal.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="introContent.xml"
+            id="org.kalypso.portal.configId"
+            introId="org.kalypso.portal.introID">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+   <extension
+         id="org.kalypso.portal.perspective"
+         name="Flows Planer Client Perspective"
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.portal.perspective.KalypsoPlanerPortalPerspectiveFactory"
+            icon="content/icons/obj48/javaapp_obj.gif"
+            id="org.kalypso.portal.perspective.planner"
+            name="Flows Planer Portal "/>
+   </extension>
+   <extension
+         id="KalypsoPortal.views"
+         name="views"
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            class="org.eclipse.target.internal.ui.SiteExplorerView"
+            id="KalypsoPortal.view.site"
+            name="Projekt Site"/>
+      <view
+            allowMultiple="true"
+            class="org.kalypso.contribs.eclipse.ui.browser.commandable.CommandURLBrowserView"
+            icon="icons/planerIconApplication.gif"
+            id="Kalypso.CommandURLBrowserView"
+            name="Command Browser"/>
+      <view
+            allowMultiple="true"
+            class="org.kalypso.portal.view.LaunchProtocolView"
+            icon="icons/sample.gif"
+            id="KalypsoPortal.view.testview"
+            name="Test View"/>
+      <view
+            allowMultiple="false"
+            class="org.kalypso.portal.view.DefinePotentialInteractionAreaView"
+            icon="icons/planerIconApplication.gif"
+            id="KalypsoPortal.view.interaction"
+            name="Betroffenheiten"/>
+      <view
+            allowMultiple="true"
+            class="org.kalypso.ui.gazetter.view.GazetterView"
+            id="KalypsoPortal.view.gazatteer"
+            name="Gazatteer View"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.kalypso.portal.loadProject.wizard"
+            class="org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard"
+            id="org.kalypso.portal.wizard.newPlanerProject"
+            name="neues Planer-Client Projekt"
+            project="true"/>
+      <category
+            id="org.kalypso.portal.loadProject.wizard"
+            name="Planer-Client Projekte"/>
+      <primaryWizard id="org.kalypso.portal.wizard.newPlanerProject"/>
+      <primaryWizard id="org.kalypso.portal.wizard.loadProject"/>
+      <wizard
+            category="org.kalypso.portal.loadProject.wizard"
+            class="org.kalypso.portal.wizard.LoadProjectFromWorkspaceWizard"
+            id="org.kalypso.portal.wizard.loadProject"
+            name="oeffnen eines Projekts im Arbeitsbereich"/>
+   </extension>
+
+</plugin>
