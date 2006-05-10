@@ -81,6 +81,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -158,9 +159,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
   private SpatialOperationPanel m_spatialCombo = null;
 
-  private boolean m_loadGeomSelection = false;
+  boolean m_loadGeomSelection = false;
 
-  private boolean m_drawGeomSelection = false;
+  boolean m_drawGeomSelection = false;
 
   private Label spatialButton;
 
@@ -1132,7 +1133,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( m_loadGeomSelection )
           {
             IProject project = ProjectUtilities.getSelectedProjects()[0];
-            KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), project, "Auswählen der Geometry für den Räumlichen Filter", new String[] { "shp", "gml" }, project );
+            KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), project, "Auswählen der Geometry für den Räumlichen Filter", new String[] { "shp", "gml" }, project, new ResourceSelectionValidator() );
             int open = dialog.open();
             if( open == Window.OK )
             {

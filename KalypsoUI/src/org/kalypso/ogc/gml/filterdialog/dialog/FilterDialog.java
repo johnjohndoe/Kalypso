@@ -82,6 +82,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -414,7 +415,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       public void widgetSelected( SelectionEvent e )
       {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(), "Filter auswählen", new String[] { "xml" }, workspace.getRoot() );
+        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(), "Filter auswählen", new String[] { "xml" }, workspace.getRoot(), new ResourceSelectionValidator() );
         int open = dialog2.open();
         if( open == Window.OK )
         {

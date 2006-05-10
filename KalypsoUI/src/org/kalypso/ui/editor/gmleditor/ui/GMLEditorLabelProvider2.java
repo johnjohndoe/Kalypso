@@ -42,6 +42,7 @@ import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -60,11 +61,11 @@ public class GMLEditorLabelProvider2 extends LabelProvider
   public void dispose( )
   {
     super.dispose();
-    
+
     new DisposeHelper( m_images.values() ).dispose();
     m_images.clear();
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
@@ -94,6 +95,8 @@ public class GMLEditorLabelProvider2 extends LabelProvider
       if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
     }
+    else if( GeometryUtilities.getPolygonClass().isAssignableFrom( element.getClass() ) )
+      descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
     else
       return null;
 
@@ -118,12 +121,16 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     {
       final Feature feature = (Feature) element;
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-      return annotation.getLabel() + " #" + feature.getId();
+      if( annotation != null )
+        return annotation.getLabel() + " #" + feature.getId();
+      return "NO_LABEL #" + feature.getId();
     }
     if( element instanceof FeatureAssociationTypeElement )
     {
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
-      return annotation.getLabel();
+      if( annotation != null )
+        return annotation.getLabel();
+      return "<-> ";
     }
     if( element instanceof LinkedFeatureElement2 )
     {
@@ -134,6 +141,10 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     {
       IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
+    }
+    if( element instanceof GM_Object )
+    {
+      return element.getClass().getName().replaceAll( ".+\\.", "" );
     }
     return "unknown";
   }

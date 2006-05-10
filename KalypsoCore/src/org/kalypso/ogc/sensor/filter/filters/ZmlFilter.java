@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.commons.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;

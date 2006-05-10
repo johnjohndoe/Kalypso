@@ -62,9 +62,9 @@ import org.kalypso.commons.java.io.FileUtilities;
  */
 public class ZipUtilities
 {
-  private ZipUtilities()
+  private ZipUtilities( )
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   public static void unzip( final File zip, final File targetdir ) throws ZipException, IOException
@@ -125,14 +125,32 @@ public class ZipUtilities
    *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
    *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
-   *  
    */
   public static void zip( final File zipfile, final File[] files, final File basedir ) throws IOException
+  {
+    final FileOutputStream os = new FileOutputStream( zipfile );
+
+    zip( os, files, basedir );
+  }
+
+  /**
+   * Puts given files into a zip archive stream.
+   * 
+   * @param out
+   *          Target output stream. will be created rep. overwritten.
+   * @param files
+   *          The files to zip
+   * @param basedir
+   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
+   *          this dir). If null, alle ZipEntries are create with full path.
+   * @throws IOException
+   */
+  public static void zip( final OutputStream out, final File[] files, final File basedir ) throws IOException
   {
     ZipOutputStream zos = null;
     try
     {
-      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
+      zos = new ZipOutputStream( new BufferedOutputStream( out ) );
 
       for( int i = 0; i < files.length; i++ )
       {
@@ -149,7 +167,6 @@ public class ZipUtilities
   }
 
   /**
-   * 
    * @param zipfile
    *          file to write
    * @param dir
@@ -186,8 +203,7 @@ public class ZipUtilities
    * @param pathname
    *          The name of the zip entry (relative Path into zip archive).
    */
-  public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname )
-      throws IOException
+  public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname ) throws IOException
   {
     final ZipEntry newEntry = new ZipEntry( pathname );
     zos.putNextEntry( newEntry );

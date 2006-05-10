@@ -46,15 +46,15 @@ import java.util.Stack;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
