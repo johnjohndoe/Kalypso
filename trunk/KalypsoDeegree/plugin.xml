@@ -6,6 +6,9 @@
          id="org.kalypso.deegree.catalog"
          name="UrlCatalog"
          point="org.kalypso.contribs.java.urlCatalog">
+        <catalog
+              class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC"
+              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>
       <catalog
             class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
             id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>

@@ -177,7 +177,7 @@ public class SAXFactory
 			return; // TODO check
 		if (vpt.isList())
 		{
-			final FeatureList list = (FeatureList) value;
+			final List list = (List) value;
 			final Iterator iterator = list.iterator();
 			while (iterator.hasNext())
 			{
