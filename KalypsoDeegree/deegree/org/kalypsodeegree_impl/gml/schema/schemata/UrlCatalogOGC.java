@@ -40,27 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.schemata;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
- * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.<br>
- * this catalog resolves some schemas that a related to kalypso, but not to ogc<br>
- * TODO rename in URLCatalogKalypso
+ * this catalog resolves all schemas that are original provided by ogc or very close to these
  * 
- * @author gernot
+ * @author doemming
  */
-public class DeegreeUrlCatalog extends AbstractUrlCatalog
+public class UrlCatalogOGC extends AbstractUrlCatalog
 {
+  /**
+   * 
+   */
   @Override
   protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
-    // schemas related close to ogc have been moved to URLCatalogOGC
-    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
-    catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
-    catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
+    // XLINK
+    catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
+    // GML
+    // Version 2.1
+//     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+
+    // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
+    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
+
+    // WFS
+    catalog.put( "http://www.opengis.net/wfs", getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
+
+    // SWE & OM things
+    try
+    {
+      // TODO move to resources:
+      catalog.put( "http://www.opengis.net/swe", new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
+      catalog.put( "http://www.opengis.net/om", new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }
