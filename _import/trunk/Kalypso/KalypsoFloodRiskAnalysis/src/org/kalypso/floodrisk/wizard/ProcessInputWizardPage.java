@@ -1,43 +1,43 @@
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
-*
-*  This file is part of kalypso.
-*  Copyright (C) 2004 by:
-* 
-*  Technical University Hamburg-Harburg (TUHH)
-*  Institute of River and coastal engineering
-*  Denickestraﬂe 22
-*  21073 Hamburg, Germany
-*  http://www.tuhh.de/wb
-* 
-*  and
-*  
-*  Bjoernsen Consulting Engineers (BCE)
-*  Maria Trost 3
-*  56070 Koblenz, Germany
-*  http://www.bjoernsen.de
-* 
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-* 
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-* 
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-* 
-*  Contact:
-* 
-*  E-Mail:
-*  belger@bjoernsen.de
-*  schlienger@bjoernsen.de
-*  v.doemming@tuhh.de
-*   
-*  ---------------------------------------------------------------------------*/
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.wizard;
 
 import org.eclipse.core.resources.IProject;
@@ -54,14 +54,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.floodrisk.process.ProcessExtension;
 
 /**
  * ProcessInputWizardPage
  * <p>
- * WizardPage, which asks for the location of the inputdata
- * 
- * created by
+ * WizardPage, which asks for the location of the inputdata created by
  * 
  * @author Nadja Peiler (18.05.2005)
  */
@@ -93,7 +92,6 @@ public class ProcessInputWizardPage extends WizardPage
    * sets the process for which inputdata is needed
    * 
    * @param processExt
-   *  
    */
   public void setProcessExtension( ProcessExtension processExt )
   {
@@ -101,7 +99,6 @@ public class ProcessInputWizardPage extends WizardPage
   }
 
   /**
-   * 
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   public void createControl( Composite parent )
@@ -148,15 +145,13 @@ public class ProcessInputWizardPage extends WizardPage
 
   KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select modelData", fileResourceExtensions,
-        m_project );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select modelData", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
   }
 
   /**
    * sets the selected project
    * 
    * @param project
-   *  
    */
   public void setProject( IProject project )
   {
@@ -165,10 +160,8 @@ public class ProcessInputWizardPage extends WizardPage
 
   /**
    * validates the user input
-   * 
-   *  
    */
-  void validate()
+  void validate( )
   {
     setErrorMessage( null );
     boolean pageComplete = true;
@@ -176,7 +169,7 @@ public class ProcessInputWizardPage extends WizardPage
     // modelData
     if( m_textModelData.getText() != null && m_textModelData.getText().length() > 0 )
     {
-      //ok
+      // ok
     }
     else
     {
@@ -186,17 +179,16 @@ public class ProcessInputWizardPage extends WizardPage
     setPageComplete( pageComplete );
   }
 
-  protected void handleButtonPressed()
+  protected void handleButtonPressed( )
   {
     try
     {
-      KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
-      { "xml" } );
+      KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "xml" } );
       dialog.open();
       Object[] result = dialog.getResult();
       if( result != null )
       {
-        Path resultPath = (Path)result[0];
+        Path resultPath = (Path) result[0];
         m_textModelData.setText( resultPath.toString() );
         m_processExt.setModelDataPath( resultPath );
       }
