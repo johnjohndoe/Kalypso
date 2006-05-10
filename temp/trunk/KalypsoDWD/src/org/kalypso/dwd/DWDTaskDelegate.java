@@ -43,7 +43,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
