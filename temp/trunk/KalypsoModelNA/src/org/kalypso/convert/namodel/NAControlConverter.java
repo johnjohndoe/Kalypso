@@ -44,6 +44,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,10 +93,34 @@ public class NAControlConverter
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( conf, controlFE, b );
     appendResultInformation( modellWorkspace, controlWorkspace, b, conf.getIdManager() );
+    // Startwerte fuer die kurzzeitsimulation
+    appendInitailDates( controlFE, b );
     // write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
     writer.close();
+  }
+
+  private static void appendInitailDates( final Feature controlFE, final StringBuffer b )
+  {
+    List dateList = (List) controlFE.getProperty( "InitialValueDate" );
+    if( dateList != null )
+    {
+      Iterator iter = dateList.iterator();
+      while( iter.hasNext() )
+      {
+        Feature fe = (Feature) iter.next();
+        Boolean write = (Boolean) fe.getProperty( "write" );
+        if( write )
+        {
+          Date initialDate = (Date) fe.getProperty( "initialDate" );
+          SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
+          String iniDate = format.format( initialDate );
+          b.append( iniDate + "\n" );
+        }
+      }
+    }
+    b.append( "99999\n" );
   }
 
   private static void appendResultsToGenerate( NAConfiguration conf, Feature controlFE, StringBuffer b )
@@ -161,8 +188,6 @@ public class NAControlConverter
       // b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
-    // TODO startwerte fuer die kurzzeitsimulation
-    b.append( "99999\n" );
   }
 
   private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
@@ -200,8 +225,8 @@ public class NAControlConverter
       else
         System.out.println( "Falsche Wahl der synthetische Niederschlagsform!" );
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" );
-      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + conf.getAnnuality().toString() + " " + conf.getDuration().toString() + " " + Integer.toString( preForm ) + " " + "start" + File.separator
-          + startFile.getName() + "\n" );
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + conf.getAnnuality().toString() + " " + conf.getDuration().toString() + " " + Integer.toString( preForm ) + " " + "start"
+          + File.separator + startFile.getName() + "\n" );
     }
     else
     {

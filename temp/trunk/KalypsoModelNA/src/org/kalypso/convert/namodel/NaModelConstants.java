@@ -67,6 +67,10 @@ public interface NaModelConstants
 
   public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
 
+  public final static String LZSIM_OUT_ID = "LZSIM_OUT";
+  
+  public final static String LZSIM_IN_ID = "LZSIM_IN";
+
   public static final String NS_NAMETA = "org.kalypso.na.control";
 
   public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";

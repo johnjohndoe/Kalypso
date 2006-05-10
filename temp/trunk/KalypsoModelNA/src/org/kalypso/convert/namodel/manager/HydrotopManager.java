@@ -2,10 +2,11 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
@@ -131,10 +132,23 @@ public class HydrotopManager extends AbstractManager
       final Feature catchmentFE = (Feature) catchmentIter.next();
       if( asciiBuffer.writeFeature( catchmentFE ) ) // do it only for relevant catchments
       {
+
+        Comparator comparator = new Comparator()
+        {
+          public int compare( Object o1, Object o2 )
+          {
+            String id1 = ((Feature) o1).getId();
+            String id2 = ((Feature) o2).getId();
+            return id1.compareTo( id2 );
+          }
+        };
+
+        TreeSet hydWriteSet = new TreeSet( comparator );
+
         double versFlaeche = 0.0;
         double natFlaeche = 0.0;
         double gesFlaeche = 0.0;
-        final List hydWriteList = new ArrayList();
+        // final List hydWriteList = new ArrayList();
         final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( "Ort" );
 
         // Hydrotope im TeilgebietsEnvelope
@@ -150,7 +164,8 @@ public class HydrotopManager extends AbstractManager
           final Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
           if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
           {
-            hydWriteList.add( hydFeature );
+            // hydWriteList.add( hydFeature );
+            hydWriteSet.add( hydFeature );
             double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
             String landuse = (String) hydFeature.getProperty( "landuse" );
             double versGrad = ((Double) m_landuseMap.get( landuse )).doubleValue();
@@ -163,7 +178,9 @@ public class HydrotopManager extends AbstractManager
 
         }
 
-        int hydAnzahl = hydWriteList.size();
+        // int hydAnzahl = hydWriteList.size();
+        int hydAnzahl = hydWriteSet.size();
+
         double tGArea = GeometryUtilities.calcArea( tGGeomProp );
         // TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)
         double fehler = (tGArea - gesFlaeche);
@@ -179,7 +196,8 @@ public class HydrotopManager extends AbstractManager
         asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) );
         asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + (long) versFlaeche + " " + (long) natFlaeche + " " + (long) gesFlaeche + "\n" );
 
-        Iterator hydIter = hydWriteList.iterator();
+        Iterator hydIter = hydWriteSet.iterator();
+        // Iterator hydIter = hydWriteList.iterator();
         int anzHydrotope = 0;
         while( hydIter.hasNext() )
         {
