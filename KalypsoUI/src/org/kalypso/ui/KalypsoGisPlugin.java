@@ -183,10 +183,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       e1.printStackTrace();
     }
-    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    registerTypeHandler( marshallingRegistry, guiRegistry );
-    registerVirtualFeatureTypeHandler();
   }
 
   private void registerVirtualFeatureTypeHandler( )
@@ -368,6 +364,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     super.start( context );
 
+    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    registerTypeHandler( marshallingRegistry, guiRegistry );
+    registerVirtualFeatureTypeHandler();
+    
     try
     {
       reconfigure();
