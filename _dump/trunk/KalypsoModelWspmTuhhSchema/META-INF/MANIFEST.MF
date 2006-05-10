@@ -8,5 +8,6 @@ Bundle-Activator: org.kalypso.model.wspm.tuhh.KalypsoModelWspmTuhhPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.contribs.java
+ org.kalypso.contribs.java,
+ org.kalypso.ui.model.wspm
 Eclipse-AutoStart: true

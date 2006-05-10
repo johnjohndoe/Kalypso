@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.ui.model.wspm.IWspmConstants;
 
 public class WspmTuhhUrlCatalog extends AbstractUrlCatalog
 {
@@ -13,6 +14,6 @@ public class WspmTuhhUrlCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
-    catalog.put( "org.kalypso.model.wspm.tuhh", myClass.getResource( "wspmTuhhSteadyState.xsd" ) );
+    catalog.put( IWspmConstants.NS_WSPM_TUHH, myClass.getResource( "wspmTuhhSteadyState.xsd" ) );
   }
 }

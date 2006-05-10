@@ -309,7 +309,7 @@
 			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calcCreationMember"/>
-					<element ref="wspm:resultMember" minOccurs="0"/>
+					<element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -771,7 +771,7 @@
 	</complexType>
 	<complexType name="calcCreationType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element name="user" type="string">
 						<annotation>
