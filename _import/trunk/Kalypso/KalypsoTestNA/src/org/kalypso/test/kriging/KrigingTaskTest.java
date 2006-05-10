@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 
 /**
@@ -68,6 +69,7 @@ public class KrigingTaskTest extends TestCase
     // initalize urlcatalogs
     final MultiUrlCatalog multiCatalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
+        new UrlCatalogOGC(),
         new UrlCatalogNA(),
         new UrlCatalogUpdateObservationMapping(),
         new DeegreeUrlCatalog() } );

@@ -66,6 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -95,6 +96,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
     // initalize urlcatalogs
     final MultiUrlCatalog multiCatalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
+        new UrlCatalogOGC(),
         new UrlCatalogNA(),
         new UrlCatalogDWD(),
         new UrlCatalogUpdateObservationMapping(),

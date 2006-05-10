@@ -73,6 +73,7 @@ public class ParserTest extends TestCase
     try
     {
       final URL resource = getClass().getResource( "resources/modell.gml" );
+//      final URL resource = getClass().getResource( "resources/dictionary.gml" );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
       final File file = new File( "C:/TMP/newParserInAndNewOut.gml" );

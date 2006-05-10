@@ -60,22 +60,20 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 public class CalculateDamageJobTest extends TestCase
 {
 
-  public void testRun()
+  public void testRun( )
   {
-    //  initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogFloodRisk() } );
+    // initialize schemaCatalog
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(), new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    //  register typeHandler
+    // register typeHandler
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
@@ -96,26 +94,22 @@ public class CalculateDamageJobTest extends TestCase
   private void testCalculateDamage( CalculateDamageJob job )
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
-    //Input
+    // Input
     int numInputBeans = 3;
     SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
-    SimulationDataPath input1 = new SimulationDataPath( CalculateDamageJob.LanduseRasterDataID, base
-        + "Landuse//landuseData.gml" );
+    SimulationDataPath input1 = new SimulationDataPath( CalculateDamageJob.LanduseRasterDataID, base + "Landuse//landuseData.gml" );
     input[0] = input1;
-    SimulationDataPath input2 = new SimulationDataPath( CalculateDamageJob.WaterlevelDataID, base
-        + "Control//waterlevelData.gml" );
+    SimulationDataPath input2 = new SimulationDataPath( CalculateDamageJob.WaterlevelDataID, base + "Control//waterlevelData.gml" );
     input[1] = input2;
-    SimulationDataPath input3 = new SimulationDataPath( CalculateDamageJob.ContextModelID, base
-        + "Control//contextModell.gml" );
+    SimulationDataPath input3 = new SimulationDataPath( CalculateDamageJob.ContextModelID, base + "Control//contextModell.gml" );
     input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
-    //Output
+    // Output
     int numOutputBeans = 2;
     SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
     SimulationDataPath output1 = new SimulationDataPath( CalculateDamageJob.DamageDirectoryID, base + "Damage" );
     output[0] = output1;
-    SimulationDataPath output2 = new SimulationDataPath( CalculateDamageJob.AnnualDamageRasterDataID, base
-        + "Damage//annualDamage.gml" );
+    SimulationDataPath output2 = new SimulationDataPath( CalculateDamageJob.AnnualDamageRasterDataID, base + "Damage//annualDamage.gml" );
     output[1] = output2;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 

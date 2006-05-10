@@ -59,6 +59,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
@@ -68,7 +69,7 @@ public class RasterizeLanduseJobTest extends TestCase
   public void testRun( )
   {
     // initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] {new UrlCatalogOGC(), new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
     // register typeHandler

@@ -58,6 +58,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
@@ -70,6 +71,7 @@ public class CalculateFloodRiskJobTest extends TestCase
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
         new DeegreeUrlCatalog(),
+        new UrlCatalogOGC(),
         new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 

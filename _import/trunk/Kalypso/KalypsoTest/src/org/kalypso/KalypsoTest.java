@@ -43,6 +43,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 /**
  * TODO: insert type comment here
@@ -69,6 +70,7 @@ public class KalypsoTest
       // RefactorThis.registerSpecialTypeHandler(registry);
       KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
       final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
+          ,new UrlCatalogOGC()//
           , new DeegreeUrlCatalog() //
           , new DSSUrlCatalog() //
           } );

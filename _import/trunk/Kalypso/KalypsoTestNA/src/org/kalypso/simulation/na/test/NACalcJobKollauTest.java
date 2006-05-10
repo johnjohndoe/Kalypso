@@ -63,6 +63,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 
 public class NACalcJobKollauTest extends TestCase
@@ -74,6 +75,7 @@ public class NACalcJobKollauTest extends TestCase
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
         new DeegreeUrlCatalog(),
+        new UrlCatalogOGC(),
         new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
