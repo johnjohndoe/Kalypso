@@ -226,7 +226,6 @@ public abstract class AbstractManager
           feature.setProperty( vpt, new Double( value ) );
         else if( clazz == Boolean.class )
           feature.setProperty( vpt, new Boolean( value ) );
-        return;
       }
     }
   }
