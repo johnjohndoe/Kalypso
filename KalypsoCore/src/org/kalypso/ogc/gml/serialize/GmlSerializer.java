@@ -213,6 +213,7 @@ public final class GmlSerializer
     final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, schemaURLHint, useGMLSchemaCache, null );
     xmlReader.setContentHandler( contentHandler );
     xmlReader.parse( new InputSource( inputStream ) );
+    // TODO: close stream!!! never forget this!
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
     final String schemaLocationString = contentHandler.getSchemaLocationString();

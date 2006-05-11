@@ -47,7 +47,12 @@ public class FeaturePath
   {
     final String id = feature.getId();
     if( id == null || id.length() < 1 )
+    {
+      // TODO: this leads to subtle bugs
+      // better throw an exception here?
+      System.out.println( "Feature has no id: " + feature );
       m_segments = new Segment[0];
+    }
     else
       m_segments = new Segment[] { new Segment( feature ) };
   }

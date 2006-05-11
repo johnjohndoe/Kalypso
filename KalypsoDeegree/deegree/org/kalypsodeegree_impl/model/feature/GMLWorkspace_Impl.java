@@ -37,8 +37,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final String m_schemaLocation;
 
-  // private final String m_schemaNamespace;
-
   /** id -> feature */
   final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
 
@@ -46,8 +44,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final GMLSchema m_schema;
 
-  // /** xmlns -> namespaceURI */
-  // private final Map m_nsMap;
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
@@ -366,6 +362,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // id );
       // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
       // System.out.println( "found" );
+      
+      if( id == null || id.length() == 0 )
+        System.out.println( "Feature has no id: " + f );
+      
       m_indexMap.put( id, f );
       return true;
     }

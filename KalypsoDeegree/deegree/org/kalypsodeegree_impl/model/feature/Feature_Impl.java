@@ -173,6 +173,9 @@ public class Feature_Impl implements Feature
    */
   public Object getProperty( final IPropertyType pt )
   {
+    if( pt == null )
+      throw new IllegalArgumentException( "pt may not null" );
+    
     final int pos = m_featureType.getPropertyPosition( pt );
     return getProperty( pos );
   }
@@ -270,7 +273,7 @@ public class Feature_Impl implements Feature
    * 
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
-  public void setProperty( FeatureProperty property )
+  public void setProperty( final FeatureProperty property )
   {
     if( property == null )
       return;
@@ -391,11 +394,15 @@ public class Feature_Impl implements Feature
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
   @Deprecated
-  public Object getProperty( String propNameLocalPart )
+  public Object getProperty( final String propNameLocalPart )
   {
     if( propNameLocalPart.indexOf( ':' ) > 0 )
       throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
+    
     final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
+    if( pt == null )
+      throw new IllegalArgumentException( "unknown local part: " + propNameLocalPart );
+    
     return getProperty( pt );
   }
 

@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -20,7 +21,10 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.serializer.ISerializer;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
@@ -215,7 +219,7 @@ public class FileCache<K, V>
     }
   }
 
-  public V getObject( final K key )
+  public V getObject( final K key ) throws InvocationTargetException
   {
     final File file = m_index.get( key );
     if( file == null )
@@ -228,14 +232,20 @@ public class FileCache<K, V>
 
       return m_ser.read( ins );
     }
-    catch( final Exception e )
+    catch( final InvocationTargetException e )
     {
-      e.printStackTrace();
-      
       // if something goes wrong
       // delete this entry from the cache
       remove( key );
 
+      // this must be handled outside
+      throw e;
+    }
+    catch( final IOException e )
+    {
+      PluginUtilities.logToPlugin( KalypsoCommonsPlugin.getDefault(), IStatus.WARNING, "Unable to read cache file, although it should be there, returning null.", e );
+
+      // element was not yet in cahce
       return null;
     }
     finally
