@@ -412,7 +412,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( ft.getQName().equals( featureQName ) )
         return ft;
     }
-    return null;
+    
+    // HACK: because a workspace has only its one feature types
+    // maybe allways use this method?
+    return m_schema.getFeatureType(featureQName);
   }
 
   /**

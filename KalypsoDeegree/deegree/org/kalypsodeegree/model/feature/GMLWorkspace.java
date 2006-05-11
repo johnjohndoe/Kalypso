@@ -85,7 +85,7 @@ public interface GMLWorkspace extends ModellEventProvider
   /** Visit alle features denoted by this path */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth );
 
-  public IFeatureType getFeatureType( QName featureQName );
+  public IFeatureType getFeatureType( final QName featureQName );
 
   public Object getFeatureFromPath( final String featurePath );
 
