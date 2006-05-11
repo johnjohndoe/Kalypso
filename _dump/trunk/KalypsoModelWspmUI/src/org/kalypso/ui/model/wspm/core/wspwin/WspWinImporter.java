@@ -72,6 +72,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class WspWinImporter
 {
   public static final String DIR_PROF = "prof";
+
   public static final String FILE_PROBEZ = "probez.txt";
 
   private WspWinImporter( )
@@ -89,7 +90,7 @@ public class WspWinImporter
   {
     // HACK: initialize KalypsoUI
     KalypsoGisPlugin.getDefault();
-    
+
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
 
     try
@@ -108,33 +109,50 @@ public class WspWinImporter
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
       final IFeatureType modelRootFT = modelRootFeature.getFeatureType();
-      
-      // set model name
-      final IPropertyType gmlNameProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML2, "name" ) );
-      final String modelName = (String) modelRootFeature.getProperty( gmlNameProp ) + wspwinDirectory.getName();
+
+      // ////////////// //
+      // set model name //
+      // ////////////// //
+      final IPropertyType gmlNameProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML3, "name" ) );
+      final String oldProjectName = (String) modelRootFeature.getProperty( gmlNameProp );
+      final String modelName = (oldProjectName == null ? "" : oldProjectName) + wspwinDirectory.getName();
       modelRootFeature.setProperty( gmlNameProp, modelName );
-      
-      // set model description
-      final IPropertyType gmlDescProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML2, "description" ) );
-      final StringBuffer modelDescription = new StringBuffer( (String)modelRootFeature.getProperty( gmlDescProp ) );
+
+      // ///////////////////// //
+      // set model description //
+      // ///////////////////// //
+      final IPropertyType gmlDescProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML3, "description" ) );
+      final String oldProjectDescription = (String) modelRootFeature.getProperty( gmlDescProp );
+      final StringBuffer modelDescription = new StringBuffer( oldProjectDescription == null ? "" : oldProjectDescription );
       if( modelDescription.length() != 0 )
         modelDescription.append( "\n\n" );
-      
+
       modelDescription.append( "Projekt wurde aus WspWin Projekt " );
-        modelDescription.append( wspwinDirectory.getAbsolutePath() );
+      modelDescription.append( wspwinDirectory.getAbsolutePath() );
       modelDescription.append( " importiert." );
-      
+
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
       {
         modelDescription.append( "\nWspWin Projektbeschreibung: " );
         modelDescription.append( wspwinModelDescription );
       }
-      
-      modelRootFeature.setProperty( gmlDescProp, modelDescription.toString() );
-      
 
-      // write workspace
+      modelRootFeature.setProperty( gmlDescProp, modelDescription.toString() );
+
+      // /////////// //
+      // add reaches //
+      // /////////// //
+      
+      // load wsp.cfg
+      
+      // foreach make a reach
+      
+      // add them whith new id's
+
+      // /////////////// //
+      // write workspace //
+      // ////////////// //
       monitor.subTask( "Modell wird geschrieben..." );
       final SetContentHelper contentHelper = new SetContentHelper()
       {
@@ -153,11 +171,11 @@ public class WspWinImporter
     }
   }
 
-  /** Returns the content of the  prof/probez.txt file */
+  /** Returns the content of the prof/probez.txt file */
   public static String readProjectDescription( final File wspwinDirectory ) throws IOException
   {
     final File probezFile = new File( getProfDir( wspwinDirectory ), FILE_PROBEZ );
-    
+
     return FileUtils.readFileToString( probezFile, null );
   }
 
