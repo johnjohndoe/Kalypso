@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoUIModelWspm Plug-in
+Bundle-SymbolicName: org.kalypso.ui.model.wspm; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: org.kalypso.ui.model.wspm/
+Bundle-Activator: org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.kalypso.contribs.eclipseplatform,
+ org.kalypso.commons,
+ org.kalypso.core,
+ org.kalypso.ui
+Eclipse-AutoStart: true
+Export-Package: org.kalypso.ui.model.wspm,
+ org.kalypso.ui.model.wspm.core.wspwin,
+ org.kalypso.ui.model.wspm.importwizard,
+ org.kalypso.ui.model.wspm.tuhh
