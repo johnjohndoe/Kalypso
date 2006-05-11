@@ -213,7 +213,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
       String filterXML = dialogSettings.get( FILTER_KEY );
-      if( filterXML != null || filterXML.length() > 0 )
+      if( filterXML != null )
       {
         StringInputStream input = new StringInputStream( filterXML );
         try
