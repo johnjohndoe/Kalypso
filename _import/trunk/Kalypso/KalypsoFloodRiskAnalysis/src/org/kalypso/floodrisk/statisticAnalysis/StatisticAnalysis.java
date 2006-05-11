@@ -42,6 +42,7 @@ package org.kalypso.floodrisk.statisticAnalysis;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Hashtable;
@@ -542,7 +543,7 @@ public class StatisticAnalysis
    * @throws IOException
    * @throws GmlSerializeException
    */
-  public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList, Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException
+  public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList, Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException, InvocationTargetException
   {
     // load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );

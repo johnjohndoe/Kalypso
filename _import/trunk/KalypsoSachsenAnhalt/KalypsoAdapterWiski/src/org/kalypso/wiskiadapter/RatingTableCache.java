@@ -1,6 +1,7 @@
 package org.kalypso.wiskiadapter;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.kalypso.commons.cache.FileCache;
@@ -45,7 +46,16 @@ public class RatingTableCache
    */
   public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return m_cache.getObject( new StringValidityKey( tsInfoName, validity ) );
+    try
+    {
+      return m_cache.getObject( new StringValidityKey( tsInfoName, validity ) );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
   }
 
   /**

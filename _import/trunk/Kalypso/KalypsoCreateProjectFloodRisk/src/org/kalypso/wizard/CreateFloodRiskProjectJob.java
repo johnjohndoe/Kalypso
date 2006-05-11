@@ -46,6 +46,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.HashSet;
@@ -401,13 +402,13 @@ public class CreateFloodRiskProjectJob extends Job
    * @throws IOException
    * @throws GmlSerializeException
    */
-  private HashSet createLanduseDataGML( ) throws IOException, GmlSerializeException
+  private HashSet createLanduseDataGML( ) throws IOException, GmlSerializeException, InvocationTargetException
   {
 
     File landuseDataGML = m_workspacePath.append( m_projectHandel.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile();
 
     // load schema
-    GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL );
 
     String rootFeatureTypeName = "VectorDataCollection";
     String featureTypePropertyName = "FeatureMember";
@@ -597,7 +598,7 @@ public class CreateFloodRiskProjectJob extends Job
    * @throws IOException
    * @throws GmlSerializeException
    */
-  private void createWaterlevelData( Vector targetFiles ) throws IOException, GmlSerializeException
+  private void createWaterlevelData( Vector targetFiles ) throws IOException, GmlSerializeException, InvocationTargetException
   {
     File waterlevelDataFile = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toFile();
 
