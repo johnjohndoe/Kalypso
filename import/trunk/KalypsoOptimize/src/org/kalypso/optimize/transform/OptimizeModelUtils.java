@@ -56,13 +56,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.commons.xml.NSPrefixProvider;
-import org.kalypso.commons.xml.NSUtilities;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -182,7 +178,7 @@ public class OptimizeModelUtils
     String newXPathQuery = null;
     try
     {
-      final String rrmPrefix = domNode.lookupPrefix( NS.NS_KALYPSO_RRM );
+      final String rrmPrefix = domNode.lookupPrefix( NS.KALYPSO_RRM );
       if( rrmPrefix != null )
         newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
       else
@@ -204,7 +200,7 @@ public class OptimizeModelUtils
     String newXPathQuery = null;
     try
     {
-      final String rrmPrefix = domNode.lookupPrefix( NS.NS_KALYPSO_RRM );
+      final String rrmPrefix = domNode.lookupPrefix( NS.KALYPSO_RRM );
       if( rrmPrefix != null )
         newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
       else
