@@ -52,4 +52,6 @@ public interface IWspmConstants
   public static String NS_WSPMPROJ = "org.kalypso.model.wspmproj";
 
   public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
+
+  public static String NS_NA_WSPM = "org.kalypso.model.wspm.nawspm";
 }

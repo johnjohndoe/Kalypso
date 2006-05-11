@@ -16,5 +16,6 @@ public class WspmUrlCatalog extends AbstractUrlCatalog
   {
     catalog.put( IWspmConstants.NS_WSPM, myClass.getResource( "wspm.xsd" ) );
     catalog.put( IWspmConstants.NS_WSPMPROJ, myClass.getResource( "wspmProject.xsd" ) );
+    catalog.put( IWspmConstants.NS_NA_WSPM, myClass.getResource( "couplingNaWspm.xsd" ) );
   }
 }
