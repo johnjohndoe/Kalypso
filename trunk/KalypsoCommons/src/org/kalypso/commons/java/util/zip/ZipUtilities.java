@@ -55,6 +55,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
 
 /**
@@ -72,7 +73,6 @@ public class ZipUtilities
     InputStream zipIS = null;
     try
     {
-
       zipIS = new BufferedInputStream( new FileInputStream( zip ) );
       unzip( zipIS, targetdir );
     }
@@ -83,6 +83,17 @@ public class ZipUtilities
   }
 
   public static void unzip( final InputStream inputStream, final File targetdir ) throws IOException
+  {
+    unzip( inputStream, targetdir, true );
+  }
+
+  /**
+   * unzips a zip-stream into a target dir.
+   * 
+   * @param overwriteExisting
+   *          if false, existing files will not be overwritten. Folders are always created.
+   */
+  public static void unzip( final InputStream inputStream, final File targetdir, final boolean overwriteExisting ) throws IOException
   {
     final ZipInputStream zis = new ZipInputStream( inputStream );
     while( true )
@@ -102,7 +113,11 @@ public class ZipUtilities
         OutputStream os = null;
         try
         {
-          os = new BufferedOutputStream( new FileOutputStream( newfile ) );
+          if( !overwriteExisting && newfile.exists() )
+            os = new NullOutputStream();
+          else
+            os = new BufferedOutputStream( new FileOutputStream( newfile ) );
+
           CopyUtils.copy( zis, os );
         }
         finally
@@ -178,7 +193,7 @@ public class ZipUtilities
     final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
     zip( zos, dir );
   }
-  
+
   /**
    * Zip a dir into a zip-stream. the streamgets closed by this operation.
    */
