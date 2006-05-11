@@ -54,8 +54,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -64,10 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author thuel2
- */
-/**
- * @author thuel2
+ * @author thuel
  */
 public class WspWinImporter
 {
@@ -113,7 +110,7 @@ public class WspWinImporter
       // ////////////// //
       // set model name //
       // ////////////// //
-      final IPropertyType gmlNameProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML3, "name" ) );
+      final IPropertyType gmlNameProp = modelRootFT.getProperty( new QName( NS.GML3, "name" ) );
       final String oldProjectName = (String) modelRootFeature.getProperty( gmlNameProp );
       final String modelName = (oldProjectName == null ? "" : oldProjectName) + wspwinDirectory.getName();
       modelRootFeature.setProperty( gmlNameProp, modelName );
@@ -121,7 +118,7 @@ public class WspWinImporter
       // ///////////////////// //
       // set model description //
       // ///////////////////// //
-      final IPropertyType gmlDescProp = modelRootFT.getProperty( new QName( GMLSchemaConstants.NS_GML3, "description" ) );
+      final IPropertyType gmlDescProp = modelRootFT.getProperty( new QName( NS.GML3, "description" ) );
       final String oldProjectDescription = (String) modelRootFeature.getProperty( gmlDescProp );
       final StringBuffer modelDescription = new StringBuffer( oldProjectDescription == null ? "" : oldProjectDescription );
       if( modelDescription.length() != 0 )
