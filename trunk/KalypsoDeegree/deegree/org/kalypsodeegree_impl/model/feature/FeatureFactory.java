@@ -92,8 +92,6 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class FeatureFactory
 {
-  private static final String DEFAULTNAMESPACE = "www.generic";
-
   /**
    * creates an instance of a FeatureProperty from its name and the data (value) it contains
    * 
@@ -159,7 +157,7 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( Feature parent, final String id, final IFeatureType featureType, final FeatureProperty[] properties )
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final FeatureProperty[] properties )
   {
     final Feature result = createFeature( parent, id, featureType, false );
     for( int i = 0; i < properties.length; i++ )
@@ -185,7 +183,7 @@ public class FeatureFactory
   {
     // TODO handle occurency here and generate empty List or FeatureList as
     // default
-    final List results = new ArrayList();
+    final List<FeatureProperty> results = new ArrayList<FeatureProperty>();
     for( int i = 0; i < propTypes.length; i++ )
     {
       final IPropertyType ftp = propTypes[i];
@@ -197,7 +195,7 @@ public class FeatureFactory
         results.add( FeatureFactory.createFeatureProperty( ftp, value ) );
       }
     }
-    return (FeatureProperty[]) results.toArray( new FeatureProperty[results.size()] );
+    return results.toArray( new FeatureProperty[results.size()] );
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )
@@ -224,7 +222,7 @@ public class FeatureFactory
 
   public static IPropertyType[] createVirtualFeatureTypeProperties( IFeatureType realFeatureType )
   {
-    final List result = new ArrayList();
+    final List<IPropertyType> result = new ArrayList<IPropertyType>();
     final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
     final IPropertyType[] properties = realFeatureType.getProperties();
 
@@ -240,7 +238,7 @@ public class FeatureFactory
     for( int i = 0; i < vftp.length; i++ )
       result.add( vftp[i] );
 
-    return (IPropertyType[]) result.toArray( new IPropertyType[result.size()] );
+    return result.toArray( new IPropertyType[result.size()] );
   }
 
   public static GMLWorkspace createGMLWorkspace( GMLSchema schema, Feature rootFeature, URL context, String schemaLocation )

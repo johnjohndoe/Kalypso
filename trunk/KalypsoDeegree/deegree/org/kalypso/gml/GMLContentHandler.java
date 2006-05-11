@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -202,13 +201,17 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
       try
       {
-        // 2. try : from schemalocation attributes
+        // 2. try : from uri + schemalocation attributes
         if( schema == null && m_schemaLocationString != null )
-          schema = getSchema( m_schemaLocationString );
+        {
+          final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
+          final URL schemaLocation = namespaces.get( uri );
 
-        // 3. try : from namespace of root element
-        if( schema == null && m_useSchemaCatalog )
-          schema = GMLSchemaCatalog.getSchema( uri );
+          if( m_useSchemaCatalog )
+            schema = GMLSchemaCatalog.getSchema( uri, schemaLocation );
+          else if( schemaLocation != null )
+            schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
+        }
       }
       catch( final Exception e )
       {
@@ -468,17 +471,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     }
     // no schemalocation found in attributes
     return null;
-  }
-
-  private GMLSchema getSchema( final String schemaLocationString ) throws MalformedURLException, InvocationTargetException, GMLSchemaException
-  {
-    final String namespaceURI = GMLSchemaUtilities.getSchemaNamespaceFromSchemaLocation( schemaLocationString );
-    final URL schemaLocationURL = GMLSchemaUtilities.getSchemaURLFromSchemaLocation( schemaLocationString, m_context );
-
-    if( m_useSchemaCatalog )
-      return GMLSchemaCatalog.getSchema( namespaceURI, schemaLocationURL );
-
-    return GMLSchemaFactory.createGMLSchema( schemaLocationURL );
   }
 
   public GMLSchema getGMLSchema( )
