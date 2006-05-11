@@ -77,6 +77,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -100,8 +101,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   protected Combo sourceNameField;
 
   protected Button sourceBrowseButton;
-
-  protected Button selectTypesButton;
 
   protected Button selectAllButton;
 
@@ -212,7 +211,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
     // top level group
     Composite buttonComposite = new Composite( parent, SWT.NONE );
     GridLayout layout = new GridLayout();
-    layout.numColumns = 3;
+    layout.numColumns = 2;
     layout.makeColumnsEqualWidth = true;
     buttonComposite.setLayout( layout );
     buttonComposite.setFont( parent.getFont() );
@@ -220,23 +219,9 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
     buttonData.horizontalSpan = 2;
     buttonComposite.setLayoutData( buttonData );
 
-    // types edit button
-    selectTypesButton = createButton( buttonComposite, IDialogConstants.SELECT_TYPES_ID, SELECT_TYPES_TITLE, false );
-
-    SelectionListener listener = new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        handleTypesEditButtonPressed();
-      }
-    };
-    selectTypesButton.addSelectionListener( listener );
-    setButtonLayoutData( selectTypesButton );
-
     selectAllButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 
-    listener = new SelectionAdapter()
+    final SelectionListener selectAlllistener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( SelectionEvent e )
@@ -244,12 +229,12 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
         setAllSelections( true );
       }
     };
-    selectAllButton.addSelectionListener( listener );
+    selectAllButton.addSelectionListener( selectAlllistener );
     setButtonLayoutData( selectAllButton );
 
     deselectAllButton = createButton( buttonComposite, IDialogConstants.DESELECT_ALL_ID, DESELECT_ALL_TITLE, false );
 
-    listener = new SelectionAdapter()
+    final SelectionListener deselectAllListener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( SelectionEvent e )
@@ -257,21 +242,22 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
         setAllSelections( false );
       }
     };
-    deselectAllButton.addSelectionListener( listener );
+    deselectAllButton.addSelectionListener( deselectAllListener );
     setButtonLayoutData( deselectAllButton );
 
   }
 
-  // /**
-  // * Create the import options specification widgets.
-  // */
-  // protected void createOptionsGroupButtons( Group optionsGroup )
-  // {
-  // // overwrite... checkbox
-  // overwriteExistingResourcesCheckbox = new Button( optionsGroup, SWT.CHECK );
-  // overwriteExistingResourcesCheckbox.setFont( optionsGroup.getFont() );
-  // overwriteExistingResourcesCheckbox.setText( DataTransferMessages.FileImport_overwriteExisting );
-  // }
+  /**
+   * Create the import options specification widgets.
+   */
+  @Override
+  protected void createOptionsGroupButtons( final Group optionsGroup )
+  {
+    // // overwrite... checkbox
+    // overwriteExistingResourcesCheckbox = new Button( optionsGroup, SWT.CHECK );
+    // overwriteExistingResourcesCheckbox.setFont( optionsGroup.getFont() );
+    // overwriteExistingResourcesCheckbox.setText( DataTransferMessages.FileImport_overwriteExisting );
+  }
 
   /**
    * Create the group for creating the root directory
@@ -410,7 +396,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    */
   protected void enableButtonGroup( boolean enable )
   {
-    selectTypesButton.setEnabled( enable );
     selectAllButton.setEnabled( enable );
     deselectAllButton.setEnabled( enable );
   }
@@ -699,18 +684,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   }
 
   /**
-   * Set all of the selections in the selection group to value. Implemented here to provide access for inner classes.
-   * 
-   * @param value
-   *          boolean
-   */
-  @Override
-  protected void setAllSelections( boolean value )
-  {
-    super.setAllSelections( value );
-  }
-
-  /**
    * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the
    * source combo and selects it.
    * 
@@ -719,7 +692,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    */
   protected void setSourceName( String path )
   {
-
     if( path.length() > 0 )
     {
 
@@ -746,100 +718,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   }
 
   /**
-   * Update the tree to only select those elements that match the selected types
-   */
-  @Override
-  protected void setupSelectionsBasedOnSelectedTypes( )
-  {
-    ProgressMonitorDialog dialog = new ProgressMonitorJobsDialog( getContainer().getShell() );
-    final Map selectionMap = new Hashtable();
-
-    final IElementFilter filter = new IElementFilter()
-    {
-
-      public void filterElements( Collection files, IProgressMonitor monitor ) throws InterruptedException
-      {
-        if( files == null )
-        {
-          throw new InterruptedException();
-        }
-        Iterator filesList = files.iterator();
-        while( filesList.hasNext() )
-        {
-          if( monitor.isCanceled() )
-            throw new InterruptedException();
-          checkFile( filesList.next() );
-        }
-      }
-
-      public void filterElements( Object[] files, IProgressMonitor monitor ) throws InterruptedException
-      {
-        if( files == null )
-        {
-          throw new InterruptedException();
-        }
-        for( int i = 0; i < files.length; i++ )
-        {
-          if( monitor.isCanceled() )
-            throw new InterruptedException();
-          checkFile( files[i] );
-        }
-      }
-
-      private void checkFile( Object fileElement )
-      {
-        MinimizedFileSystemElement file = (MinimizedFileSystemElement) fileElement;
-        if( isExportableExtension( file.getFileNameExtension() ) )
-        {
-          List elements = new ArrayList();
-          FileSystemElement parent = file.getParent();
-          if( selectionMap.containsKey( parent ) )
-            elements = (List) selectionMap.get( parent );
-          elements.add( file );
-          selectionMap.put( parent, elements );
-        }
-      }
-
-    };
-
-    IRunnableWithProgress runnable = new IRunnableWithProgress()
-    {
-      public void run( final IProgressMonitor monitor ) throws InterruptedException
-      {
-        monitor.beginTask( DataTransferMessages.ImportPage_filterSelections, IProgressMonitor.UNKNOWN );
-        getSelectedResources( filter, monitor );
-      }
-    };
-
-    try
-    {
-      dialog.run( true, true, runnable );
-    }
-    catch( InvocationTargetException exception )
-    {
-      // Couldn't start. Do nothing.
-      return;
-    }
-    catch( InterruptedException exception )
-    {
-      // Got interrupted. Do nothing.
-      return;
-    }
-    // make sure that all paint operations caused by closing the progress
-    // dialog get flushed, otherwise extra pixels will remain on the screen until
-    // updateSelections is completed
-    getShell().update();
-    // The updateSelections method accesses SWT widgets so cannot be executed
-    // as part of the above progress dialog operation since the operation forks
-    // a new process.
-    if( selectionMap != null )
-    {
-      updateSelections( selectionMap );
-    }
-  }
-
-  /*
-   * (non-Javadoc) Method declared on IDialogPage. Set the selection up when it becomes visible.
+   * Method declared on IDialogPage. Set the selection up when it becomes visible.
    */
   @Override
   public void setVisible( boolean visible )
@@ -848,28 +727,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
     resetSelection();
     if( visible )
       this.sourceNameField.setFocus();
-  }
-
-  /**
-   * Update the selections with those in map . Implemented here to give inner class visibility
-   * 
-   * @param map
-   *          Map - key tree elements, values Lists of list elements
-   */
-  @Override
-  protected void updateSelections( Map map )
-  {
-    super.updateSelections( map );
-  }
-
-  /**
-   * Check if widgets are enabled or disabled by a change in the dialog. Provided here to give access to inner classes.
-   */
-  @Override
-  protected void updateWidgetEnablements( )
-  {
-
-    super.updateWidgetEnablements();
   }
 
   /**
@@ -918,7 +775,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   @Override
   protected boolean sourceConflictsWithDestination( IPath sourcePath )
   {
-
     IContainer container = getSpecifiedContainer();
     if( container == null )
       return false;
@@ -949,5 +805,4 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     return root.getFolder( path );
   }
-
 }

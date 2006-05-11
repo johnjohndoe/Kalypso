@@ -48,6 +48,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.text.DateFormatter;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -79,6 +81,8 @@ public class WspWinImporter
   public static final String DIR_PROF = "prof";
 
   public static final String FILE_PROBEZ = "probez.txt";
+
+  private static final DateFormat DATE_FORMATTER = SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT );
 
   private WspWinImporter( )
   {
@@ -135,8 +139,7 @@ public class WspWinImporter
       modelDescription.append( "Projekt wurde aus WspWin Projekt " );
       modelDescription.append( wspwinDirectory.getAbsolutePath() );
       modelDescription.append( " importiert (" );
-      final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT );
-      modelDescription.append( dateFormat.format( new Date( System.currentTimeMillis() ) ) );
+      modelDescription.append( DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) );
       modelDescription.append( ").");
       
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
@@ -160,6 +163,7 @@ public class WspWinImporter
         wspCfgBean.setType( 'b' );
       }
       
+      // TODO: first import profiles from profproj.txt
       
       // from now on, we have tuhh projects: if we later support other kinds of projects, tewak here
       final TuhhWspmProject tuhhProject = new TuhhWspmProject( modelRootFeature );
@@ -200,15 +204,15 @@ public class WspWinImporter
     
     final StringBuffer descBuffer = new StringBuffer();
     descBuffer.append( "Imported from WspWin\n" );
-    descBuffer.append( "Originally created: " + zustandBean.getDate() );
+    descBuffer.append( "Originally created: " + DATE_FORMATTER.format( zustandBean.getDate() ) );
     
     reach.setDescription( descBuffer.toString() );
     
-    // add date
+    // add reachSegments + profiles (.str)
     
-    // add profile data and so on
-
-    // TODO Auto-generated method stub
+    // add runoff events (.wsf, .qwt)
+    
+    // add calculations (.ber, .001)
     
   }
 

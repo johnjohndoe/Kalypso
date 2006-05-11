@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -48,13 +50,49 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author belger
  *
  */
-public class TuhhReach extends WspmReach implements IWspmConstants
+public abstract class WspmReach implements IWspmConstants
 {
-  public TuhhReach( final Feature reach )
+  private final Feature m_reach;
+
+  public WspmReach( final Feature reach )
   {
-    super( reach );
-    
-    if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-      throw new IllegalStateException( "Feature is of wrong type: " + reach );
+    // dont check, we are abstract; maybe check if qname substitutes?
+//    if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
+//      throw new IllegalStateException( "Feature is of wrong type: " + reach );
+
+    m_reach = reach;
   }
+
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( m_reach );
+  }
+
+  public void setName( final String name )
+  {
+    NamedFeatureHelper.setName( m_reach, name );
+  }
+
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( m_reach );
+  }
+
+  public void setDescription( final String desc )
+  {
+    NamedFeatureHelper.setDescription( m_reach, desc );
+  }
+
+  public void setWaterBody( final WspmWaterBody body )
+  {
+    final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
+    m_reach.setProperty( waterProp, body.getFeature().getId() );
+  }
+  
+  public WspmWaterBody getWaterBody(  )
+  {
+    return new WspmWaterBody( (Feature) m_reach.getProperty( new QName( NS_WSPM, "waterBodyMember" ) ) );
+  }
+
+
 }

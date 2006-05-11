@@ -87,6 +87,7 @@ public class WspmWaterBody implements IWspmConstants
   public TuhhReach createNewReach(  )
   {
     final GMLWorkspace workspace = m_water.getWorkspace();
+    
     final IFeatureType reachFT = workspace.getFeatureType( new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
     
     final Feature newTuhhReach = workspace.createFeature( m_water, reachFT );
@@ -94,7 +95,16 @@ public class WspmWaterBody implements IWspmConstants
     final FeatureList reachList = (FeatureList) m_water.getProperty( new QName( NS_WSPM, "reachMember" ) );
     reachList.add( newTuhhReach );
     
-    return new TuhhReach( newTuhhReach );
+    final TuhhReach tuhhReach = new TuhhReach( newTuhhReach );
+    
+    tuhhReach.setWaterBody( this );
+    
+    return tuhhReach;
+  }
+
+  public Feature getFeature( )
+  {
+    return m_water;
   }
 
 }
