@@ -38,7 +38,7 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
 
   public WspWinImportWizard( )
   {
-    setWindowTitle( "WspWin Daten" );
+    setWindowTitle( "WspWin Daten" );  
     setNeedsProgressMonitor( true );
 
     final IDialogSettings pluginSettings = KalypsoUIModelWspmPlugin.getDefault().getDialogSettings();
