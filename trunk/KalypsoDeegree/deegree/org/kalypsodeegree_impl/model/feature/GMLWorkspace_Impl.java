@@ -44,7 +44,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final GMLSchema m_schema;
 
-
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
@@ -330,7 +329,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void accept( final FeatureVisitor fv, final List features, final int depth )
   {
-    for( Iterator iter = features.iterator(); iter.hasNext(); )
+    for( final Iterator iter = features.iterator(); iter.hasNext(); )
     {
       final Object next = iter.next();
 
@@ -362,10 +361,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // id );
       // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
       // System.out.println( "found" );
-      
+
       if( id == null || id.length() == 0 )
         System.out.println( "Feature has no id: " + f );
-      
+
+      // TODO: better generate new ids and remember wich ones are generated (because
+      // we dont want to write the gernerated ones)
+
       m_indexMap.put( id, f );
       return true;
     }
@@ -373,7 +375,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final class UnRegisterVisitor implements FeatureVisitor
   {
-
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
      */
