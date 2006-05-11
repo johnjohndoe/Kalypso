@@ -253,7 +253,10 @@
 	-->
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureType"/>
+			<restriction base="gml:AbstractFeatureType">
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required"/>
+			</restriction>
 		</complexContent>
 	</complexType>
 	<!-- 
@@ -262,7 +265,7 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="metaDataProperty" type="gml:MetaDataPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Metadaten</label>
@@ -271,7 +274,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="description" type="string">
+					<element ref="gml:description">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Beschreibung</label>
@@ -280,7 +283,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="name" type="string">
+					<element ref="gml:name">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Name</label>
@@ -290,6 +293,8 @@
 						</annotation>
 					</element>
 				</sequence>
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required"/>
 			</restriction>
 		</complexContent>
 	</complexType>
