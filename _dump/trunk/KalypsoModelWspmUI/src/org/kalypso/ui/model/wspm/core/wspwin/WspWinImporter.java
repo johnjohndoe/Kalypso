@@ -44,27 +44,35 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
+import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
+import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
+import org.kalypso.ui.model.wspm.abstraction.WspmProject;
+import org.kalypso.ui.model.wspm.core.wspwin.WspCfgBean.ZustandBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author thuel
+ * @author thuel2
+ */
+/**
+ * @author thuel2
  */
 public class WspWinImporter
 {
@@ -105,29 +113,32 @@ public class WspWinImporter
       monitor.subTask( "Daten werden konvertiert..." );
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
-      final IFeatureType modelRootFT = modelRootFeature.getFeatureType();
+//      final IFeatureType modelRootFT = modelRootFeature.getFeatureType();
 
+      final WspmProject wspmProject = new WspmProject( modelRootFeature );
+      
       // ////////////// //
       // set model name //
       // ////////////// //
-      final IPropertyType gmlNameProp = modelRootFT.getProperty( new QName( NS.GML3, "name" ) );
-      final String oldProjectName = (String) modelRootFeature.getProperty( gmlNameProp );
-      final String modelName = (oldProjectName == null ? "" : oldProjectName) + wspwinDirectory.getName();
-      modelRootFeature.setProperty( gmlNameProp, modelName );
+      final String oldProjectName = wspmProject.getName();
+      final String modelName = oldProjectName + wspwinDirectory.getName();
+      wspmProject.setName( modelName );
 
       // ///////////////////// //
       // set model description //
       // ///////////////////// //
-      final IPropertyType gmlDescProp = modelRootFT.getProperty( new QName( NS.GML3, "description" ) );
-      final String oldProjectDescription = (String) modelRootFeature.getProperty( gmlDescProp );
+      final String oldProjectDescription = wspmProject.getDescription();
       final StringBuffer modelDescription = new StringBuffer( oldProjectDescription == null ? "" : oldProjectDescription );
       if( modelDescription.length() != 0 )
         modelDescription.append( "\n\n" );
 
       modelDescription.append( "Projekt wurde aus WspWin Projekt " );
       modelDescription.append( wspwinDirectory.getAbsolutePath() );
-      modelDescription.append( " importiert." );
-
+      modelDescription.append( " importiert (" );
+      final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT );
+      modelDescription.append( dateFormat.format( new Date( System.currentTimeMillis() ) ) );
+      modelDescription.append( ").");
+      
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
       {
@@ -135,15 +146,27 @@ public class WspWinImporter
         modelDescription.append( wspwinModelDescription );
       }
 
-      modelRootFeature.setProperty( gmlDescProp, modelDescription.toString() );
+      wspmProject.setDescription( modelDescription.toString() );
 
       // /////////// //
       // add reaches //
       // /////////// //
       
       // load wsp.cfg
+      final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
+      if( wspCfgBean.getType() != 'b' )
+      {
+        PluginUtilities.logToPlugin( KalypsoUIModelWspmPlugin.getDefault(), IStatus.WARNING, "Es wird ein WspWin-Knauf Projekt als TUHH-Pasche-Projekt importiert.", null );
+        wspCfgBean.setType( 'b' );
+      }
       
+      
+      // from now on, we have tuhh projects: if we later support other kinds of projects, tewak here
+      final TuhhWspmProject tuhhProject = new TuhhWspmProject( modelRootFeature );
+      final ZustandBean[] zustaende = wspCfgBean.getZustaende();
       // foreach make a reach
+      for( final ZustandBean zustandBean : zustaende )
+        importTuhhZustand( tuhhProject, zustandBean );
       
       // add them whith new id's
 
@@ -166,6 +189,27 @@ public class WspWinImporter
     {
       monitor.done();
     }
+  }
+
+  private static void importTuhhZustand( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean )
+  {
+    final String name = zustandBean.getName();
+    System.out.println( "Importing "  + name );
+    final TuhhReach reach = tuhhProject.createNewReach( zustandBean.getWaterName() );
+    reach.setName( name );
+    
+    final StringBuffer descBuffer = new StringBuffer();
+    descBuffer.append( "Imported from WspWin\n" );
+    descBuffer.append( "Originally created: " + zustandBean.getDate() );
+    
+    reach.setDescription( descBuffer.toString() );
+    
+    // add date
+    
+    // add profile data and so on
+
+    // TODO Auto-generated method stub
+    
   }
 
   /** Returns the content of the prof/probez.txt file */

@@ -581,6 +581,12 @@
 		<complexContent>
 			<restriction base="wspm:ReachType">
 				<sequence>
+					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="gml:description"/>
+					<element ref="gml:name"/>
+					<element ref="wspm:waterBodyMember"/>
+					<element ref="gml:lineStringMember"/>
+					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
 					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
 					<choice minOccurs="0" maxOccurs="unbounded">
 						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>

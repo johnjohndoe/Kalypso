@@ -335,7 +335,7 @@
 			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:waterBodyMember"/>
-					<element name="generatedWaterBodyCenterLine" type="gml:LineStringSegmentType">
+					<element ref="gml:lineStringMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>generierte Gewässerachse</label>

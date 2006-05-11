@@ -6,38 +6,45 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoModelWspmTuhhPlugin extends Plugin {
+public class KalypsoModelWspmTuhhPlugin extends Plugin
+{
 
-	//The shared instance.
-	private static KalypsoModelWspmTuhhPlugin plugin;
-	
-	/**
-	 * The constructor.
-	 */
-	public KalypsoModelWspmTuhhPlugin() {
-		plugin = this;
-	}
+  // The shared instance.
+  private static KalypsoModelWspmTuhhPlugin plugin;
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+  /**
+   * The constructor.
+   */
+  public KalypsoModelWspmTuhhPlugin( )
+  {
+    plugin = this;
+  }
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-	}
+  /**
+   * This method is called upon plug-in activation
+   */
+  @Override
+  public void start( BundleContext context ) throws Exception
+  {
+    super.start( context );
+  }
 
-	/**
-	 * Returns the shared instance.
-	 */
-	public static KalypsoModelWspmTuhhPlugin getDefault() {
-		return plugin;
-	}
+  /**
+   * This method is called when the plug-in is stopped
+   */
+  @Override
+  public void stop( BundleContext context ) throws Exception
+  {
+    super.stop( context );
+    plugin = null;
+  }
+
+  /**
+   * Returns the shared instance.
+   */
+  public static KalypsoModelWspmTuhhPlugin getDefault( )
+  {
+    return plugin;
+  }
 
 }
