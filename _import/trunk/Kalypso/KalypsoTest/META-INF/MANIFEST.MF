@@ -15,8 +15,7 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.eclipse.ui,
  org.junit,
  org.kalypso.simulation.core,
- org.kalypso.ui,
- org.kalypso.dss
+ org.kalypso.ui
 Export-Package: org.kalypso,
  org.kalypso.gml,
  org.kalypso.gmlschema,
