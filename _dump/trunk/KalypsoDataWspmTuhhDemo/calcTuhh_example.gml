@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CalculationWspmTuhhSteadyState gml:id="exampleTuhhWspCalc" xmlns="org.kalypso.model.wspm.tuhh" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="org.kalypso.model.wspm.tuhh">
-    <!--xsi:schemaLocation="org.kalypso.model.wspm.tuhh file://C:\Programme_inst\eclipse31\workspace\KalypsoModelWspmTuhh\src\org\kalypso\model\wspm\tuhh\schemata\wspmTuhhSteadyState.xsd">-->
+    xsi:schemaLocation="org.kalypso.model.wspm.tuhh ../../workspace/KalypsoModelWspmTuhh/src/org/kalypso/model/wspm/tuhh/schemata/wspmTuhhSteadyState.xsd"> 
+    <!--xsi:schemaLocation="org.kalypso.model.wspm.tuhh file://C:\Programme_inst\eclipse31\workspace\KalypsoModelWspmTuhh\src\org\kalypso\model\wspm\tuhh\schemata\wspmTuhhSteadyState.xsd">--> 
+    <!--xsi:schemaLocation="org.kalypso.model.wspm.tuhh">-->
+    <description xmlns="org.kalypso.model.wspm">Tuhh-Beispiel: total schöön</description>
+    <name xmlns="org.kalypso.model.wspm">Demo</name>
     <calcCreationMember xmlns="org.kalypso.model.wspm">
         <CalcCreation>
+            <description xmlns="org.kalypso.model.wspm"></description>
+            <name xmlns="org.kalypso.model.wspm"></name>
             <user>Belger</user>
             <creationDate>1972-10-24T10:00:00</creationDate>
         </CalcCreation>
