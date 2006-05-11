@@ -44,8 +44,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
-import org.kalypso.gmlschema.GMLSchemaConstants;
 
 /**
  * this catalog resolves all schemas that are original provided by ogc or very close to these
@@ -54,30 +54,27 @@ import org.kalypso.gmlschema.GMLSchemaConstants;
  */
 public class UrlCatalogOGC extends AbstractUrlCatalog
 {
-  /**
-   * 
-   */
   @Override
   protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
   {
     // XLINK
-    catalog.put( GMLSchemaConstants.NS_XLINK, getClass().getResource( "gml2_2002/xlinks.xsd" ) );
+    catalog.put( NS.XLINK, getClass().getResource( "gml2_2002/xlinks.xsd" ) );
     // GML
     // Version 2.1
     // catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
-    catalog.put( GMLSchemaConstants.NS_GML3, getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
+    catalog.put( NS.GML3, getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
 
     // WFS
-    catalog.put( GMLSchemaConstants.NS_WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
+    catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
 
     // SWE & OM things
     try
     {
       // TODO move to resources:
-      catalog.put( GMLSchemaConstants.NS_SWE, new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
-      catalog.put( GMLSchemaConstants.NS_OM, new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
+      catalog.put( NS.SWE, new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
+      catalog.put( NS.OM, new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
     }
     catch( MalformedURLException e )
     {

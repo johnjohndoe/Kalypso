@@ -113,5 +113,4 @@ public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHan
   {
     return false;
   }
-
 }
