@@ -279,11 +279,11 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       }
 
       final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      QName valueQName = new QName( NS.NS_XSD, xmltype );
+      QName valueQName = new QName( NS.XSD, xmltype );
       IMarshallingTypeHandler handler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
       if( handler == null )
       {
-        valueQName = new QName( NS.NS_XSD, "string" );
+        valueQName = new QName( NS.XSD, "string" );
         handler = (IMarshallingTypeHandler) registry.getTypeHandlerForTypeName( valueQName );
       }
       // String typename = null;

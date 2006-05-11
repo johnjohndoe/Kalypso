@@ -68,7 +68,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
   public XsdBaseTypeHandler( String xsdTypeName, Class valueClass )
   {
     m_valueClass = valueClass;
-    m_typeQName = new QName( NS.NS_XSD_SCHEMA, xsdTypeName );
+    m_typeQName = new QName( NS.XSD_SCHEMA, xsdTypeName );
   }
 
   /**

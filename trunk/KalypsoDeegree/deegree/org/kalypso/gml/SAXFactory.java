@@ -95,8 +95,8 @@ public class SAXFactory
 				null), NS.GML2);
 		m_handler.startPrefixMapping(m_nsMapper.getPreferredPrefix(NS.XLINK,
 				null), NS.XLINK);
-		m_handler.startPrefixMapping(m_nsMapper.getPreferredPrefix(NS.NS_XSD,
-				null), NS.NS_XSD);
+		m_handler.startPrefixMapping(m_nsMapper.getPreferredPrefix(NS.XSD,
+				null), NS.XSD);
 
 		final Set<String> uriSet = new HashSet<String>();
 		final IFeatureType[] featureTypes = workspace.getFeatureTypes();
@@ -113,9 +113,9 @@ public class SAXFactory
 		final String schemaLocationString = workspace.getSchemaLocationString();
 		if (schemaLocationString != null && schemaLocationString.length() > 0)
 		{
-			final String qName = m_nsMapper.getPreferredPrefix(NS.NS_XSD, null)
+			final String qName = m_nsMapper.getPreferredPrefix(NS.XSD, null)
 					+ ":" + "schemaLocation";
-			a.addAttribute(NS.NS_XSD, "schemaLocation", qName, "CDATA",
+			a.addAttribute(NS.XSD, "schemaLocation", qName, "CDATA",
 					schemaLocationString);
 		}
 		process(rootFeature, a);

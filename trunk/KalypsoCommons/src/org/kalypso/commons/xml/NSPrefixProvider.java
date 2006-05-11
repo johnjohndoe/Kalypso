@@ -60,14 +60,14 @@ public class NSPrefixProvider
     {
       THE_NS_MAPPER = new NSPrefixProvider();
       THE_NS_MAPPER.getPreferredPrefix( NS.XLINK, "xlink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.NS_XSD, "xs" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.NS_XSD_SCHEMA, "xsd" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.NS_MAPVIEW, "mapv" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.NS_OBSVIEW, "obsv" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.XSD, "xs" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_MAPVIEW, "mapv" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSVIEW, "obsv" );
       THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_RRM, "rrm" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.NS_ADV, "adv" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.ADV, "adv" );
 
       // TODO add here all the well known namespaces...
     }

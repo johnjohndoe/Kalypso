@@ -89,7 +89,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   private GMLSchema m_gmlSchema = null;
 
-  private final static QName XSD_SCHEMALOCATION = new QName( NS.NS_XSD, "schemaLocation" );
+  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
 
   private final XMLReader m_xmlReader;
 
