@@ -3,6 +3,7 @@ package org.kalypso.commons.cache;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -22,7 +23,7 @@ import org.kalypso.commons.serializer.ISerializer;
  */
 public class FileCacheTest extends TestCase
 {
-  public void testGetObject()
+  public void testGetObject( ) throws InvocationTargetException
   {
     final StringKeyFactory fact = new StringKeyFactory();
     final Comparator<String> kc = new StringComparator();
@@ -72,7 +73,7 @@ public class FileCacheTest extends TestCase
 
   private static class StringSerializer implements ISerializer<String>
   {
-    public String read( final InputStream ins ) throws InvocationTargetException
+    public String read( final InputStream ins ) throws IOException
     {
       BufferedReader r = null;
       try
@@ -81,29 +82,19 @@ public class FileCacheTest extends TestCase
 
         return r.readLine();
       }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        throw new InvocationTargetException( e );
-      }
       finally
       {
         IOUtils.closeQuietly( r );
       }
     }
 
-    public void write( final String object, final OutputStream os ) throws InvocationTargetException
+    public void write( final String object, final OutputStream os ) throws IOException
     {
       BufferedWriter w = null;
       try
       {
         w = new BufferedWriter( new OutputStreamWriter( os ) );
         w.write( object.toString() );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        throw new InvocationTargetException( e );
       }
       finally
       {

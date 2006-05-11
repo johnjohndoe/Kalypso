@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.schemaeditor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -164,7 +165,14 @@ public class GMLSchemaEditor extends EditorPart
     {
       final GmlSchemaEditorInput schemaInput = (GmlSchemaEditorInput) editorInput;
 
-      return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getLocation() );
+      try
+      {
+        return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getLocation() );
+      }
+      catch( final InvocationTargetException e )
+      {
+        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
       
     throw new IllegalArgumentException( "Invalid editor input. Must be either IStorageEditorInput or GmlSchemaEditorInput." );

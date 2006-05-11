@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -179,14 +180,14 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   /**
    * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
    */
-  public void write( final WQTableSet object, final OutputStream os ) throws InvocationTargetException
+  public void write( final WQTableSet object, final OutputStream os ) throws InvocationTargetException, IOException
   {
     try
     {
       final String xml = createXMLString( object );
       os.write( xml.getBytes() );
     }
-    catch( final Exception e ) // WQException, IOException
+    catch( WQException e )
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );

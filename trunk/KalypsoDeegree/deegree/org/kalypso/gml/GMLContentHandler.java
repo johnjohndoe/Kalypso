@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -57,7 +56,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.tools.FeatureUtils;
 import org.xml.sax.Attributes;
@@ -202,13 +200,22 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
       }
 
-      // 2. try : from schemalocation attributes
-      if( schema == null && m_schemaLocationString != null )
-        schema = getSchema( m_schemaLocationString );
+      try
+      {
+        // 2. try : from schemalocation attributes
+        if( schema == null && m_schemaLocationString != null )
+          schema = getSchema( m_schemaLocationString );
 
-      // 3. try : from namespace of root element
-      if( schema == null && m_useSchemaCatalog )
-        schema = GMLSchemaCatalog.getSchema( uri );
+        // 3. try : from namespace of root element
+        if( schema == null && m_useSchemaCatalog )
+          schema = GMLSchemaCatalog.getSchema( uri );
+      }
+      catch( final Exception e )
+      {
+        if( schema == null )
+          throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was "
+              + m_schemaLocationString + ")", e );
+      }
 
       if( schema == null )
         throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + m_schemaLocationString
@@ -244,12 +251,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         m_propParser.createProperty( feature, uri, localName, atts );
 
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
-        //final Feature parentFE = m_featureParser.getCurrentFeature();
+        // final Feature parentFE = m_featureParser.getCurrentFeature();
 
         if( pt instanceof IValuePropertyType )
         {
           final IValuePropertyType vpt = (IValuePropertyType) pt;
-          
+
           m_propParser.setContent( feature, vpt, m_xmlReader, uri, localName, qName, atts );
           // we skip the end tag
         }
@@ -290,7 +297,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           {
             throw new SAXException( e );
           }
-          
+
           final Feature childFE = m_featureParser.getCurrentFeature();
           FeatureUtils.addChild( parentFE, (IRelationType) pt, childFE );
           m_status = START_PROPERTY_END_FEATURE;
@@ -319,10 +326,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.endElement( uri, localName, qName );
       return;
     }
-    
+
     if( uri == null || uri.length() < 1 )
       uri = m_gmlSchema.getTargetNamespace();
-    
+
     indent();
     // System.out.println( "</" + uri + ":" + localName + ">" );
     m_indent--;
@@ -372,7 +379,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.characters( ch, start, length );
       return;
     }
-    
+
     final Feature feature = m_featureParser.getCurrentFeature();
     switch( m_status )
     {
@@ -463,26 +470,15 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     return null;
   }
 
-  private GMLSchema getSchema( final String schemaLocationString )
+  private GMLSchema getSchema( final String schemaLocationString ) throws MalformedURLException, InvocationTargetException, GMLSchemaException
   {
-    try
-    {
-      final String namespaceURI = GMLSchemaUtilities.getSchemaNamespaceFromSchemaLocation( schemaLocationString );
-      final URL schemaLocationURL = GMLSchemaUtilities.getSchemaURLFromSchemaLocation( schemaLocationString, m_context );
+    final String namespaceURI = GMLSchemaUtilities.getSchemaNamespaceFromSchemaLocation( schemaLocationString );
+    final URL schemaLocationURL = GMLSchemaUtilities.getSchemaURLFromSchemaLocation( schemaLocationString, m_context );
 
-      if( m_useSchemaCatalog )
-        return GMLSchemaCatalog.getSchema( namespaceURI, schemaLocationURL );
-      else
-        return GMLSchemaFactory.createGMLSchema( schemaLocationURL );
-    }
-    catch( final Exception e ) // MarlformedURLException, GMLSchemaException
-    {
-      final ILog log = KalypsoDeegreePlugin.getDefault().getLog();
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Could not loade schema for schemaLocation: " + schemaLocationString );
-      log.log( status );
-    }
+    if( m_useSchemaCatalog )
+      return GMLSchemaCatalog.getSchema( namespaceURI, schemaLocationURL );
 
-    return null;
+    return GMLSchemaFactory.createGMLSchema( schemaLocationURL );
   }
 
   public GMLSchema getGMLSchema( )
@@ -497,7 +493,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
     if( m_exceptionContentHandler != null )
       throw new GMLException( m_exceptionContentHandler.getResult() );
-    
+
     throw new GMLException( "Could not load GML, Root-Feature was not created." );
   }
 
