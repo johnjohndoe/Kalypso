@@ -94,10 +94,10 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
 
         try
         {
-          monitor.subTask( "Modellstruktur validieren..." + targetContainer.getName() );
+          monitor.subTask( " - Modellstruktur validieren..." + targetContainer.getName() );
           WspmHelper.ensureValidWspmTuhhStructure( targetContainer, new SubProgressMonitor( monitor, 10 ) );
 
-          monitor.subTask( "Datenimport" );
+          monitor.subTask( " - Datenimport" );
           WspWinImporter.importProject( wspwinDirectory, targetContainer, new SubProgressMonitor( monitor, 90 ) );
         }
         catch( final CoreException rethrown )

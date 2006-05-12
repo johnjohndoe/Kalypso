@@ -75,6 +75,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -99,6 +100,8 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 {
   // widgets
   protected Combo sourceNameField;
+
+  protected Button overwriteExistingResourcesCheckbox;
 
   protected Button sourceBrowseButton;
 
@@ -254,9 +257,12 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   protected void createOptionsGroupButtons( final Group optionsGroup )
   {
     // // overwrite... checkbox
-    // overwriteExistingResourcesCheckbox = new Button( optionsGroup, SWT.CHECK );
-    // overwriteExistingResourcesCheckbox.setFont( optionsGroup.getFont() );
-    // overwriteExistingResourcesCheckbox.setText( DataTransferMessages.FileImport_overwriteExisting );
+    overwriteExistingResourcesCheckbox = new Button( optionsGroup, SWT.CHECK );
+    overwriteExistingResourcesCheckbox.setFont( optionsGroup.getFont() );
+    overwriteExistingResourcesCheckbox.setText( DataTransferMessages.FileImport_overwriteExisting );
+    
+    // not yet implemented, so disable it
+    overwriteExistingResourcesCheckbox.setEnabled( false );
   }
 
   /**
@@ -384,11 +390,16 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    * Create the import source specification widgets
    */
   @Override
-  protected void createSourceGroup( Composite parent )
+  protected void createSourceGroup( final Composite parent )
   {
     createRootDirectoryGroup( parent );
     createFileSelectionGroup( parent );
     createButtonsGroup( parent );
+
+    // HACK: hide file selection and buttons groups
+    final Control[] children = parent.getChildren();
+    ((GridData) children[1].getLayoutData()).exclude = true;
+    ((GridData) children[2].getLayoutData()).exclude = true;
   }
 
   /**
@@ -640,6 +651,9 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
       // set filenames history
       for( int i = 0; i < sourceNames.length; i++ )
         sourceNameField.add( sourceNames[i] );
+
+      // radio buttons and checkboxes
+      overwriteExistingResourcesCheckbox.setSelection( settings.getBoolean( STORE_OVERWRITE_EXISTING_RESOURCES_ID ) );
     }
   }
 
@@ -660,6 +674,9 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
       sourceNames = addToHistory( sourceNames, getSourceDirectoryName() );
       settings.put( STORE_SOURCE_NAMES_ID, sourceNames );
+
+      // radio buttons and checkboxes
+      settings.put( STORE_OVERWRITE_EXISTING_RESOURCES_ID, overwriteExistingResourcesCheckbox.getSelection() );
     }
   }
 

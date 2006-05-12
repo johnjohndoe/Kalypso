@@ -2,6 +2,7 @@ package org.kalypso.ui.model.wspm;
 
 import org.eclipse.ui.plugin.*;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.osgi.framework.BundleContext;
 
 /**

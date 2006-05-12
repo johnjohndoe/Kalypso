@@ -12,8 +12,9 @@ public class WspmTuhhUrlCatalog extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( IWspmConstants.NS_WSPM_TUHH, myClass.getResource( "wspmTuhhSteadyState.xsd" ) );
+    prefixes.put( IWspmConstants.NS_WSPM_TUHH, "tuhh" );
   }
 }

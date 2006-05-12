@@ -60,7 +60,7 @@ public class TuhhWspmProject extends WspmProject
   /**
    * Adds a new reach to this project.
    * <p>
-   * If there is already a water with the given name, use it. If not, crerate a new one.
+   * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
   public TuhhReach createNewReach( final String waterName )
@@ -84,5 +84,22 @@ public class TuhhWspmProject extends WspmProject
     }
 
     return null;
+  }
+
+  /**
+   * Adds a new profile (reference) to this project.
+   * <p>
+   * If there is already a water with the given name, use it. If not, generate a new one.
+   * </p>
+   */
+  public WspmProfileReference createNewProfile( final String waterName, final String hrefHint )
+  {
+    final WspmWaterBody water = findWater( waterName );
+    if( water != null )
+      return water.createNewProfile( hrefHint );
+
+    final WspmWaterBody newWater = createWaterBody();
+    newWater.setName( waterName );
+    return newWater.createNewProfile( hrefHint );
   }
 }

@@ -73,6 +73,11 @@ public class WspmProject implements IWspmConstants
     m_wspProject = wspProject;
   }
 
+  public Feature getFeature( )
+  {
+    return m_wspProject;
+  }
+  
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_wspProject );

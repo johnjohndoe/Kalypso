@@ -41,32 +41,40 @@
 package org.kalypso.ui.model.wspm.core.wspwin;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.swing.text.DateFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
+import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
 import org.kalypso.ui.model.wspm.abstraction.WspmProject;
-import org.kalypso.ui.model.wspm.core.wspwin.WspCfgBean.ZustandBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -95,32 +103,35 @@ public class WspWinImporter
    * Prerequisite: container holds a valid wspm-tuhh structure
    * </p>
    */
-  public static void importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
+  public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-    // HACK: initialize KalypsoUI
-    KalypsoGisPlugin.getDefault();
+    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import-Log", null );
 
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
+
+    monitor.subTask( " - Initialisiere KALYPSO..." );
+
+    // HACK: initialize KalypsoUI
+    KalypsoGisPlugin.getDefault();
 
     try
     {
       // load gml workspace
-      monitor.subTask( "Modell wird geladen..." );
+      monitor.subTask( " - Modell wird geladen..." );
       final IFile modelFile = targetContainer.getFile( new Path( "wspmTuhhModel.gml" ) );
       final URL url = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url );
       monitor.worked( 200 );
 
-      monitor.subTask( "WspWin Projekt wird geladen..." );
+      monitor.subTask( " - WspWin Projekt wird geladen..." );
       // load wspwin data
 
-      monitor.subTask( "Daten werden konvertiert..." );
+      monitor.subTask( " - Daten werden konvertiert..." );
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
-//      final IFeatureType modelRootFT = modelRootFeature.getFeatureType();
 
       final WspmProject wspmProject = new WspmProject( modelRootFeature );
-      
+
       // ////////////// //
       // set model name //
       // ////////////// //
@@ -140,8 +151,8 @@ public class WspWinImporter
       modelDescription.append( wspwinDirectory.getAbsolutePath() );
       modelDescription.append( " importiert (" );
       modelDescription.append( DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) );
-      modelDescription.append( ").");
-      
+      modelDescription.append( ")." );
+
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
       {
@@ -151,27 +162,33 @@ public class WspWinImporter
 
       wspmProject.setDescription( modelDescription.toString() );
 
-      // /////////// //
-      // add reaches //
-      // /////////// //
-      
-      // load wsp.cfg
+      // /////////////////// //
+      // Load WspWin Project //
+      // /////////////////// //
       final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
       if( wspCfgBean.getType() != 'b' )
       {
         PluginUtilities.logToPlugin( KalypsoUIModelWspmPlugin.getDefault(), IStatus.WARNING, "Es wird ein WspWin-Knauf Projekt als TUHH-Pasche-Projekt importiert.", null );
         wspCfgBean.setType( 'b' );
       }
-      
-      // TODO: first import profiles from profproj.txt
-      
+
       // from now on, we have tuhh projects: if we later support other kinds of projects, tewak here
       final TuhhWspmProject tuhhProject = new TuhhWspmProject( modelRootFeature );
+
+      // /////////////// //
+      // import profiles //
+      // /////////////// //
+      final ProfileBean[] commonProfiles = wspCfgBean.getProfiles( wspwinDirectory );
+      final Map<String, WspmProfileReference> importedProfiles = new HashMap<String, WspmProfileReference>( commonProfiles.length );
+      logStatus.add( importProfiles( getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles ) );
+
+      // ////////////// //
+      // import reaches //
+      // ////////////// //
       final ZustandBean[] zustaende = wspCfgBean.getZustaende();
-      // foreach make a reach
       for( final ZustandBean zustandBean : zustaende )
-        importTuhhZustand( tuhhProject, zustandBean );
-      
+        importTuhhZustand( tuhhProject, zustandBean, importedProfiles );
+
       // add them whith new id's
 
       // /////////////// //
@@ -193,27 +210,86 @@ public class WspWinImporter
     {
       monitor.done();
     }
+
+    return logStatus;
   }
 
-  private static void importTuhhZustand( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean )
+  /**
+   * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
+   * the profile is added as reference to it.
+   */
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfileReference> addedProfiles )
+  {
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import PROFPROJ.TXT", null );
+
+    for( final ProfileBean bean : commonProfiles )
+    {
+      final String fileName = bean.getFileName();
+
+      final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), fileName );
+      addedProfiles.put( fileName, prof );
+
+      // TODO: fill data into profile
+      bean.getStation();
+      bean.getFileName();
+
+      // HACK: we now just copy the files directly instead
+      final URL context = tuhhProject.getFeature().getWorkspace().getContext();
+      Writer urlWriter = null;
+      Reader fileReader = null;
+      try
+      {
+        final URL targetUrl = new URL( context, prof.getHref() );
+        final File file = new File( profDir, fileName );
+
+        urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
+        fileReader = new FileReader( file );
+        IOUtils.copy( fileReader, urlWriter );
+      }
+      catch( final MalformedURLException e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
+      catch( final IOException e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( urlWriter );
+        IOUtils.closeQuietly( fileReader );
+      }
+    }
+
+    return status;
+  }
+
+  /**
+   * Adds the zustand-bean to the tuhh-project. Already imported profiles are not imported a second time.
+   * <p>
+   * If the zustand contains unknown profiles (e.g. due to a wspwin bug), they will be also imported and added to the
+   * importedPRofilesMap.
+   * </p>
+   */
+  private static void importTuhhZustand( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles )
   {
     final String name = zustandBean.getName();
-    System.out.println( "Importing "  + name );
+    System.out.println( "Importing " + name );
     final TuhhReach reach = tuhhProject.createNewReach( zustandBean.getWaterName() );
     reach.setName( name );
-    
+
     final StringBuffer descBuffer = new StringBuffer();
     descBuffer.append( "Imported from WspWin\n" );
     descBuffer.append( "Originally created: " + DATE_FORMATTER.format( zustandBean.getDate() ) );
-    
+
     reach.setDescription( descBuffer.toString() );
-    
+
     // add reachSegments + profiles (.str)
-    
+
     // add runoff events (.wsf, .qwt)
-    
+
     // add calculations (.ber, .001)
-    
+
   }
 
   /** Returns the content of the prof/probez.txt file */
