@@ -3,7 +3,6 @@ package org.kalypso.portal.perspective;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.contribs.eclipse.ui.browser.commandable.CommandURLBrowserView;
 
 public class KalypsoPlanerPortalPerspectiveFactory implements
 		IPerspectiveFactory {

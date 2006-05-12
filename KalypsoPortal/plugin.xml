@@ -68,7 +68,7 @@
       <view
             allowMultiple="true"
             class="org.kalypso.contribs.eclipse.ui.browser.commandable.CommandURLBrowserView"
-            icon="icons/planerIconApplication.gif"
+            icon="icons/planerBrowser.gif"
             id="Kalypso.CommandURLBrowserView"
             name="Command Browser"/>
       <view
