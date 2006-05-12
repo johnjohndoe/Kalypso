@@ -74,6 +74,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -89,7 +90,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private final GisMapOutlineViewer m_modellView;
 
-  private List m_actionDelegates = null;
+  private List<PluginMapOutlineActionDelegate> m_actionDelegates = null;
 
   public GisMapOutlineViewer getModellView( )
   {
