@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This is an abstraction layer for tuhh wspm modells. It ensures, that only the right kind of data gets into the model.
@@ -102,4 +107,18 @@ public class TuhhWspmProject extends WspmProject
     newWater.setName( waterName );
     return newWater.createNewProfile( hrefHint );
   }
+  
+  public TuhhCalculation createCalculation( final WspmWaterBody waterBody )
+  {
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final IFeatureType calcTye = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ) );
+    
+    final Feature calcFeature = workspace.createFeature( waterBody.getFeature(), calcTye );
+    
+    final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
+    calcList.add( calcFeature );
+    
+    return new TuhhCalculation( calcFeature );
+  }
+
 }

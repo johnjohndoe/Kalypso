@@ -42,12 +42,10 @@ package org.kalypso.ui.model.wspm.abstraction;
 
 import javax.xml.namespace.QName;
 
-import org.deegree_impl.gml.GML_Transformer;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
-import org.kalypso.ui.model.wspm.core.wspwin.RunOffEventBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -153,5 +151,4 @@ public class WspmWaterBody implements IWspmConstants
 
     return new WspmRunOffEventReference( href );
   }
-
 }

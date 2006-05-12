@@ -106,11 +106,23 @@ public class ZustandBean
     return ZustandContentBean.read( new File( profDir, getFileName() ) );
   }
 
-  public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
+  private File getZustandFile( final File profDir, final String suffix )
   {
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    final File qwtFile = new File( profDir, strBaseName + ".qwt" );
+    final File qwtFile = new File( profDir, strBaseName + "." + suffix );
+    return qwtFile;
+  }
+
+  public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
+  {
+    final File qwtFile = getZustandFile( profDir, "qwt" );
     return RunOffEventBean.read( qwtFile );
+  }
+
+  public CalculationBean[] readCalculations( File profDir ) throws ParseException, IOException
+  {
+    final File berFile = getZustandFile( profDir, "ber" );
+    return CalculationBean.readBerFile( berFile );
   }
 }

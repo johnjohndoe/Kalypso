@@ -72,6 +72,7 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
+import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
@@ -356,6 +357,8 @@ public class WspWinImporter
 
     }
 
+    final WspmWaterBody waterBody = reach.getWaterBody();
+
     // ////////////////////////////// //
     // add runoff events (.wsf, .qwt) //
     // ///////////////////////////// ///
@@ -363,7 +366,6 @@ public class WspWinImporter
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
-      final WspmWaterBody waterBody = reach.getWaterBody();
       for( final RunOffEventBean bean : runOffEventBeans )
       {
         final WspmRunOffEventReference roeRef = waterBody.createRunOffEvent( bean.getName() );
@@ -381,6 +383,23 @@ public class WspWinImporter
     // ///////////////////////////// //
     // add calculations (.ber, .001) //
     // ///////////////////////////// //
+    try
+    {
+      final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
+      for( final CalculationBean bean : calcBeans )
+      {
+        // read content
+        
+        // create calculation
+        final TuhhCalculation calc = tuhhProject.createCalculation( waterBody );
+        calc.setName( bean.getName() );
+        calc.setDescription( "Imported from WspWin");
+      }
+    }
+    catch( final Exception e )
+    {
+      status.add( StatusUtilities.statusFromThrowable( e ) );
+    }
 
     return status;
   }

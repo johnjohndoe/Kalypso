@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.core.wspwin.WspWinImporter;
@@ -38,7 +39,7 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
 
   public WspWinImportWizard( )
   {
-    setWindowTitle( "WspWin Daten" );  
+    setWindowTitle( "WspWin Daten" );
     setNeedsProgressMonitor( true );
 
     final IDialogSettings pluginSettings = KalypsoUIModelWspmPlugin.getDefault().getDialogSettings();
@@ -118,9 +119,9 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
+    if( !status.isOK() )
+      StatusUtilities.printStackTraces( status );
     ErrorDialog.openError( shell, "WspWin Daten", "Fehler beim Datenimport", status );
-    // if( !status.isOK() )
-    // status.getException().printStackTrace();
 
     return status.isOK();
   }
