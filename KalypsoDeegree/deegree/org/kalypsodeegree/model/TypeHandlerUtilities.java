@@ -247,11 +247,11 @@ public class TypeHandlerUtilities
           public String convertToXMLString( String value[] )
           {
             final StringBuffer result = new StringBuffer();
-            for( int i = 0; i < value.length; i++ )
+            for( int i1 = 0; i1 < value.length; i1++ )
             {
-              if( i != 0 )
+              if( i1 != 0 )
                 result.append( " " );
-              result.append( value[i] );
+              result.append( value[i1] );
             }
             return result.toString();
           }

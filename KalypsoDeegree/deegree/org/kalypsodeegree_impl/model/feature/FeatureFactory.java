@@ -129,7 +129,7 @@ public class FeatureFactory
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties ( e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( Feature parent, String id, IFeatureType featureType, boolean initializeWithDefaults )
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
   {
     return new Feature_Impl( parent, featureType, id, initializeWithDefaults );
   }
