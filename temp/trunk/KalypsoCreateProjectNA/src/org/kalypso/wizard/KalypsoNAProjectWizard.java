@@ -76,6 +76,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -665,7 +666,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   }// mapRiver
 
-  public GMLSchema getModelSchema( )
+  public IGMLSchema getModelSchema( )
   {
     return m_modelSchema;
   }
