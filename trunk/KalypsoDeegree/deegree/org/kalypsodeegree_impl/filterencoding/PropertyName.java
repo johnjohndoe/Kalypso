@@ -171,8 +171,7 @@ public class PropertyName extends Expression_Impl
     {
       return object;
     }
-
-    return object.toString();
+    return FilterElementLabelProvider.toString( object );
   }
 
   /**
