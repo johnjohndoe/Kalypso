@@ -72,7 +72,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
@@ -451,7 +450,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       try
       {
-        final IUrlCatalog theCatalog = new MultiUrlCatalog( JavaApiContributionsExtension.getRegistredCatalogs() );
+        final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
         final IPath stateLocation = getStateLocation();
         final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
         cacheDir.mkdir();

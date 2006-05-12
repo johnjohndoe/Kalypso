@@ -50,6 +50,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -175,7 +176,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatures( ft );
   }
 
-  public IFeatureType getFeatureType( QName featureName )
+  public IFeatureType getFeatureType( final QName featureName )
   {
     return m_workspace.getFeatureType( featureName );
   }
@@ -251,14 +252,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public String getSchemaLocationString( )
   {
     return m_workspace.getSchemaLocationString();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaNamespace()
-   */
-  public String getSchemaNamespace( )
-  {
-    return m_workspace.getSchemaNamespace();
   }
 
   public Feature createFeature( Feature parent, IFeatureType type )
@@ -400,6 +393,14 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public IFeatureType getFeatureType( String nameLocalPart )
   {
     return m_workspace.getFeatureType( nameLocalPart );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getGMLSchema()
+   */
+  public IGMLSchema getGMLSchema( )
+  {
+    return m_workspace.getGMLSchema();
   }
 
 }

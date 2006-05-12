@@ -45,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -53,20 +52,19 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author doemming
  */
 public class GMLWorkspaceReader implements XMLReader
 {
-  String nsu = ""; // NamespaceURI
+//  private String nsu = ""; // NamespaceURI
 
-  Attributes atts = new AttributesImpl();
+//  private Attributes atts = new AttributesImpl();
 
-  String rootElement = "addressbook";
+//  private String rootElement = "addressbook";
 
-  String indent = "\n    "; // for readability!
+//  private String indent = "\n    "; // for readability!
 
   private final List<String> m_enabledFeatures = new ArrayList<String>();
 
@@ -99,7 +97,6 @@ public class GMLWorkspaceReader implements XMLReader
     handler.startDocument();
     factory.process( workspace );
     handler.endDocument();
-
   }
 
   public boolean getFeature( String name )

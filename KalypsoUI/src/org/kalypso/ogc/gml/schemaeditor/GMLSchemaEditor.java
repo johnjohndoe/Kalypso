@@ -22,10 +22,10 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -107,7 +107,7 @@ public class GMLSchemaEditor extends EditorPart
       {
         try
         {
-          final GMLSchema gmlSchema = createSchemaFromInput();
+          final IGMLSchema gmlSchema = createSchemaFromInput();
 
           getSite().getShell().getDisplay().asyncExec( new Runnable()
           {
@@ -142,7 +142,7 @@ public class GMLSchemaEditor extends EditorPart
     return m_viewer;
   }
 
-  protected GMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException
+  protected IGMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException
   {
     final IEditorInput editorInput = getEditorInput();
     if( editorInput instanceof IStorageEditorInput )

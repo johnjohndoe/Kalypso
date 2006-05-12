@@ -61,17 +61,17 @@ public class RelationCircleFinder
 
   public List[] findCircle( )
   {
-    return findCircle( m_testFeature, new ArrayList() );
+    return findCircle( m_testFeature, new ArrayList<Feature>() );
   }
 
-  private List[] findCircle( final Feature feature, final List list )
+  private List[] findCircle( final Feature feature, final List<Feature> list )
   {
-    final List result = new ArrayList();
+    final List<List<Feature>> result = new ArrayList<List<Feature>>();
     list.add( feature );
     final Feature[] linkedFeatures = getLinkedFeatures( feature );
     for( int i = 0; i < linkedFeatures.length; i++ )
     {
-      final List newList = new ArrayList( list );
+      final List<Feature> newList = new ArrayList<Feature>( list );
       final Feature linkFeature = linkedFeatures[i];
       if( linkFeature == m_testFeature )
         result.add( newList );
@@ -87,12 +87,12 @@ public class RelationCircleFinder
                                                             // java.util.Arrays: check if this is ok
       }
     }
-    return (List[]) result.toArray( new List[result.size()] );
+    return result.toArray( new List[result.size()] );
   }
 
   private Feature[] getLinkedFeatures( Feature feature )
   {
-    List result = new ArrayList();
+    final List result = new ArrayList();
     IFeatureType featureType = feature.getFeatureType();
     IPropertyType[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
@@ -103,6 +103,7 @@ public class RelationCircleFinder
         final IRelationType linkPT = (IRelationType) property;
         if( property.isList() )
         {
+          // TODO: is this really intended? The list is added, not its content!
           final Feature[] links = m_workspace.resolveLinks( feature, linkPT );
           result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
                                                           // java.util.Arrays: check if this is ok
