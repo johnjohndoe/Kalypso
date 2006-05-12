@@ -37,8 +37,6 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.kalypso.KalypsoTest;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -84,6 +82,11 @@ public class GMLSchemaTest extends TestCase
       public URL getURL( String namespace )
       {
         return map.get( namespace );
+      }
+
+      public String getPreferedNamespacePrefix( String namespace )
+      {
+        return null;
       }
 
     };
@@ -134,7 +137,7 @@ public class GMLSchemaTest extends TestCase
   public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
     System.out.println( " test " + schemaLocationURL.toString() );
-    final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
+    final IGMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
 
     if( gmlSchema != null )
     {

@@ -40,7 +40,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 public final class TubigUrlCatalog extends AbstractUrlCatalog
 {
   @Override
-  protected final void fillCatalog( final Class myClass, final Map<String, URL> catalog )
+  protected final void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.tubig.modell", myClass.getResource( "schemata/tubigmodell.xsd" ) );
     catalog.put( "org.kalypso.tubig.pegel", myClass.getResource( "schemata/pegel.xsd" ) );

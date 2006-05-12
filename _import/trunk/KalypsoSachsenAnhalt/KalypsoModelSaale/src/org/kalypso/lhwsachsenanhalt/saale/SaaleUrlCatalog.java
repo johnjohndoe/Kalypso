@@ -38,7 +38,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public final class SaaleUrlCatalog extends AbstractUrlCatalog
 {
-  protected final void fillCatalog( final Class myClass, final Map catalog )
+  protected final void fillCatalog( final Class myClass, final Map catalog, Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.saale.modell", myClass.getResource( "schemata/saalemodell.xsd" ) );
     catalog.put( "org.kalypso.saale.pegel", myClass.getResource( "schemata/pegel.xsd" ) );
