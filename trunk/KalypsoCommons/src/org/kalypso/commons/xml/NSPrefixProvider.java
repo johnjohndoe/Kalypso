@@ -42,9 +42,18 @@ package org.kalypso.commons.xml;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.contribs.java.JavaApiContributionsExtension;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+
 /**
  * The NSPrefixProvider is a singelton to ensures that namespaces are allways prefixed the same way. This is not
  * neccesary, but very nice.
+ * <p>
+ * Suggestion: Retrieve preffered namespaces via catalog mechanism, so new plugins can contribute new namesapce
+ * prefixes.
+ * </p>
  * 
  * @author doemming
  */
@@ -52,7 +61,9 @@ public class NSPrefixProvider
 {
   private static NSPrefixProvider THE_NS_MAPPER = null;
 
-  final HashMap<String, String> m_prefixMap = new HashMap<String, String>();
+  private IUrlCatalog m_catalog = null;
+
+  private final HashMap<String, String> m_prefixMap = new HashMap<String, String>();
 
   public static NSPrefixProvider getInstance( )
   {
@@ -76,6 +87,14 @@ public class NSPrefixProvider
 
   private NSPrefixProvider( )
   {
+    try
+    {
+      m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( e.getStatus() );
+    }
   }
 
   /**
@@ -86,22 +105,36 @@ public class NSPrefixProvider
    */
   public String getPreferredPrefix( final String namespaceURI, final String suggestion )
   {
-    if( !(m_prefixMap.containsKey( namespaceURI )) )
+    if( !m_prefixMap.containsKey( namespaceURI ) )
     {
-      // test suggestion
-      if( suggestion != null && suggestion.length() > 1 )
+      // if we have a catalog, use its prefix as suggestion
+      if( m_catalog != null )
       {
-        if( m_prefixMap.containsKey( suggestion ) ) // generate new key
-        {
-          m_prefixMap.put( namespaceURI, generatePrefix( namespaceURI, 0 ) );
-        }
+        final String prefix = m_catalog.getPreferedNamespacePrefix( namespaceURI );
+        if( prefix != null )
+          applySuggestion( namespaceURI, prefix );
         else
-          m_prefixMap.put( namespaceURI, suggestion );
+          applySuggestion( namespaceURI, suggestion );
       }
       else
-        m_prefixMap.put( namespaceURI, generatePrefix( namespaceURI, 0 ) );
+        applySuggestion( namespaceURI, suggestion );
     }
     return m_prefixMap.get( namespaceURI );
+  }
+
+  /** Puts the suggestion into the map, but ensures that it is unique. */
+  private void applySuggestion( final String namespaceURI, String suggestion )
+  {
+    // test suggestion
+    if( suggestion != null && suggestion.length() > 1 )
+    {
+      if( m_prefixMap.containsKey( suggestion ) ) // generate new key
+        m_prefixMap.put( namespaceURI, generatePrefix( namespaceURI, 0 ) );
+      else
+        m_prefixMap.put( namespaceURI, suggestion );
+    }
+    else
+      m_prefixMap.put( namespaceURI, generatePrefix( namespaceURI, 0 ) );
   }
 
   private String generatePrefix( final String namespaceUri, int tryIndex )

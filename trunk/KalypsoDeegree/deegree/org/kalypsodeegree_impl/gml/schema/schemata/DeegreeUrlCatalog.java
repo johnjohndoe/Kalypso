@@ -56,7 +56,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
   @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog )
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // schemas related close to ogc have been moved to URLCatalogOGC
     catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );

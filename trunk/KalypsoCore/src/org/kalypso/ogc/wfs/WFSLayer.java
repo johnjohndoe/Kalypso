@@ -44,9 +44,9 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
@@ -61,7 +61,7 @@ public class WFSLayer implements IWFSLayer
 
   private final URL m_describeFeatureTypeURL;
 
-  private GMLSchema m_gmlSchema = null;
+  private IGMLSchema m_gmlSchema = null;
 
   public WFSLayer( final QName qName, final String title, final URL describeFeatureTypeURL )
   {

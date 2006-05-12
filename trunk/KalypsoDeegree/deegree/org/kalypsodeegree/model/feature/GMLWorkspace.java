@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -23,13 +24,16 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public static final int RESOLVE_COMPOSITION = 2;
 
-  public Feature getRootFeature();
+  public Feature getRootFeature( );
+
+  public IGMLSchema getGMLSchema( );
 
   /**
-   * 
+   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getAllFeatureTypes()} instead.
    * @return all FeatureTypes that can be used somewhere in the schema
    */
-  public IFeatureType[] getFeatureTypes();
+  @Deprecated
+  public IFeatureType[] getFeatureTypes( );
 
   public Feature[] getFeatures( final IFeatureType ft );
 
@@ -38,7 +42,7 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * resolves the associationlink to a feature, maxOccurs =1
    */
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty);
+  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty );
 
   /**
    * resolves the associationlink to a feature, maxOccurs =1
@@ -71,7 +75,7 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, IFeatureType linkSrcFeatureType, final IRelationType linkProperty );
 
-  public URL getContext();
+  public URL getContext( );
 
   /** Visit all Features of the given IFeatureType */
   public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth );
@@ -85,6 +89,10 @@ public interface GMLWorkspace extends ModellEventProvider
   /** Visit alle features denoted by this path */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth );
 
+  /**
+   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getFeatureType(QName)} instead.
+   */
+  @Deprecated
   public IFeatureType getFeatureType( final QName featureQName );
 
   public Object getFeatureFromPath( final String featurePath );
@@ -93,22 +101,19 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public FeaturePath getFeaturepathForFeature( final Feature feature );
 
-  public String getSchemaLocationString();
+  public String getSchemaLocationString( );
 
-  public String getSchemaNamespace();
-
-  public Feature createFeature(Feature parent, IFeatureType type );
+  public Feature createFeature( Feature parent, IFeatureType type );
 
   public Feature getParentFeature( Feature toFindParentFrom );
 
   public void addFeatureAsComposition( Feature parent, final IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
 
-  public void addFeatureAsAggregation( Feature parent,final IRelationType linkProperty, int pos, String featureID ) throws Exception;
+  public void addFeatureAsAggregation( Feature parent, final IRelationType linkProperty, int pos, String featureID ) throws Exception;
 
   public void setFeatureAsAggregation( Feature srcFE, final IRelationType linkProperty, int pos, String featureID ) throws Exception;
 
-  public void setFeatureAsAggregation( Feature parent, final IRelationType linkProperty, String featureID, boolean overwrite )
-      throws Exception;
+  public void setFeatureAsAggregation( Feature parent, final IRelationType linkProperty, String featureID, boolean overwrite ) throws Exception;
 
   /**
    * removes a related feature from the parent. Works only if the child is linked <br>
@@ -125,7 +130,7 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   public boolean removeLinkedAsCompositionFeature( Feature parentFeature, final IRelationType linkProperty, Feature childFeature );
 
-  public Map getNamespaceMap();
+  public Map getNamespaceMap( );
 
   /**
    * return true if these feature are related
@@ -133,7 +138,6 @@ public interface GMLWorkspace extends ModellEventProvider
   public boolean isExistingRelation( Feature f1, Feature f2, final IRelationType linkProperty );
 
   /**
-   * 
    * @param parent
    * @param linkPropName
    * @param pos
@@ -144,15 +148,13 @@ public interface GMLWorkspace extends ModellEventProvider
   public boolean isAggrigatedLink( Feature parent, final IRelationType linkProperty, int pos );
 
   /**
-   * 
    * @param parentFE
    * @param linkPropName
    * @param linkedFE
    * @param overwrite
    * @throws Exception
    */
-  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProperty, final Feature linkedFE,
-      final boolean overwrite ) throws Exception;
+  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProperty, final Feature linkedFE, final boolean overwrite ) throws Exception;
 
   /**
    * @param visitor
@@ -161,16 +163,17 @@ public interface GMLWorkspace extends ModellEventProvider
    * @param featureProperties
    *          properties to follow
    */
-  public void accept( final FeatureVisitor visitor, Feature feature, int depth,
-      final IPropertyType[] featureProperties );
+  public void accept( final FeatureVisitor visitor, Feature feature, int depth, final IPropertyType[] featureProperties );
 
   public boolean contains( final Feature feature );
-  
+
   public boolean isBrokenLink( final Feature parentFeature, final IPropertyType ftp, final int pos );
 
   /**
+   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getFeatureType(QName)} or
+   *             {@link GMLSchema#getFeatureType(String)} instead.
    * @deprecated use getFeatureType(QName)
    */
   @Deprecated
-  public IFeatureType getFeatureType( final String nameLocalPart);
+  public IFeatureType getFeatureType( final String nameLocalPart );
 }

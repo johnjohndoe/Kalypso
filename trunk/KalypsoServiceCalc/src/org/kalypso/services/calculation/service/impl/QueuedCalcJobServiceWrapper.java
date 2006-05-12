@@ -174,7 +174,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       final AbstractUrlCatalog emptyCatalog = new AbstractUrlCatalog()
       {
         @Override
-        protected void fillCatalog( final Class myClass, final Map katalog )
+        protected void fillCatalog( final Class myClass, final Map katalog, Map<String, String> prefixes )
         {
           // nix, ist leer
         }

@@ -1,6 +1,6 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -24,14 +24,14 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   private FeatureVisitor m_visitor;
 
-  private final GMLSchema m_context;
+  private final IGMLSchema m_context;
 
-  public FeatureTypeVisitor( final GMLSchema context, final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final IGMLSchema context, final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
   {
     this( context, visitor, ft.getQName().getLocalPart(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final GMLSchema context, final FeatureVisitor visitor, String typeLocalPart, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final IGMLSchema context, final FeatureVisitor visitor, String typeLocalPart, final boolean acceptIfSubstituting )
   {
     m_context = context;
     m_visitor = visitor;

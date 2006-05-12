@@ -97,7 +97,7 @@ public final class GmlSerializer
   {
     try
     {
-      // TODO use encloding
+      // TODO use encoding
       final TransformerFactory tFac = TransformerFactory.newInstance();
       tFac.setAttribute( "indent-number", new Integer( 4 ) );
       final Transformer transformer = tFac.newTransformer();

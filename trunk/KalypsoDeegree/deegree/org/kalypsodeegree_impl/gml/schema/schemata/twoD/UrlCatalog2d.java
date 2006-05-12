@@ -59,7 +59,7 @@ public class UrlCatalog2d extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
    */
-  protected void fillCatalog( final Class myClass, final Map catalog )
+  protected void fillCatalog( final Class myClass, final Map catalog, Map<String, String> prefixes )
   {
     catalog.put( "http://elbe.wb.tu-harburg.de/2dModel", getClass().getResource( "2dgml.xsd" ) );
   }

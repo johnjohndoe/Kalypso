@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -53,7 +54,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   // schema , featureTypes, rootFeature, context
-  public GMLWorkspace_Impl( final GMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, String schemaLocation )
+  public GMLWorkspace_Impl( final GMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
   {
     m_schema = schema;
     m_featureTypes = featureTypes;
@@ -124,16 +125,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return new Feature[] { feature };
       return new Feature[] {};
     }
-    final List result = new ArrayList();
+    final List<Feature> result = new ArrayList<Feature>();
     final List linkList = (List) srcFeature.getProperty( linkProperty );
 
-    for( Iterator iter = linkList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = linkList.iterator(); iter.hasNext(); )
     {
-      Object linkValue = iter.next();
+      final Object linkValue = iter.next();
       if( linkValue instanceof Feature )
       {
         if( !(resolveMode == RESOLVE_LINK) )
-          result.add( linkValue );
+          result.add( (Feature) linkValue );
         continue;
       }
       // must be a reference
@@ -144,7 +145,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       }
     }
     // broken Link
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   public Feature getRootFeature( )
@@ -220,7 +221,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( linkTargetfeature == null )
       return new Feature[0];
 
-    final List result = new ArrayList();
+    final List<Feature> result = new ArrayList<Feature>();
     final Feature[] features = getFeatures( linkSrcFeatureType );
     for( int i = 0; i < features.length; i++ )
     {
@@ -248,7 +249,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           result.add( substiFeatures[i] );
       }
     }
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   /**
@@ -412,10 +413,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( ft.getQName().equals( featureQName ) )
         return ft;
     }
-    
+
     // HACK: because a workspace has only its one feature types
     // maybe allways use this method?
-    return m_schema.getFeatureType(featureQName);
+    return m_schema.getFeatureType( featureQName );
   }
 
   /**
@@ -461,14 +462,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public String getSchemaLocationString( )
   {
     return m_schemaLocation;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaNamespace()
-   */
-  public String getSchemaNamespace( )
-  {
-    return m_schema.getTargetNamespace();
   }
 
   /**
@@ -811,5 +804,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( property instanceof Feature )
       return false;
     return !m_indexMap.containsKey( property );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getGMLSchema()
+   */
+  public IGMLSchema getGMLSchema( )
+  {
+    return m_schema;
   }
 }
