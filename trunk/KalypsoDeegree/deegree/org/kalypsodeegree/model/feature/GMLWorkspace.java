@@ -103,9 +103,9 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public String getSchemaLocationString( );
 
-  public Feature createFeature( Feature parent, IFeatureType type );
+  public Feature createFeature( final Feature parent, final IFeatureType type );
 
-  public Feature getParentFeature( Feature toFindParentFrom );
+  public Feature getParentFeature( final Feature toFindParentFrom );
 
   public void addFeatureAsComposition( Feature parent, final IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
 

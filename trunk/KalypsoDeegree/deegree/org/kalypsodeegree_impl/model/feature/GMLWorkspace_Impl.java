@@ -465,15 +465,19 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * Creates a new feature and registers it with this workspace.
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public Feature createFeature( Feature parent, IFeatureType type )
+  public Feature createFeature( final Feature parent, final IFeatureType type )
   {
     final String newId = createFeatureId( type );
-    return FeatureFactory.createFeature( parent, newId, type, false );
+    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, false );
+    m_indexMap.put( newId, newFeature );
+    return newFeature;
   }
 
-  private String createFeatureId( IFeatureType type )
+  private String createFeatureId( final IFeatureType type )
   {
     String id = type.getQName().getLocalPart();
     int no = 0;
