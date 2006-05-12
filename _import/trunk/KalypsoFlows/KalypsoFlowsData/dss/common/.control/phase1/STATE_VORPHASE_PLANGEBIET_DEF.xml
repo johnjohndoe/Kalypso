@@ -53,12 +53,21 @@
 <filters>
 <filter element="*.dat" isEnabled="false"/>
 <filter element="*.class" isEnabled="false"/>
-<filter element=".*" isEnabled="false"/>
-<filter element="*.gml" isEnabled="true"/>
+<filter element=".*" isEnabled="true"/>
+<filter element="*.gml" isEnabled="false"/>
+<filter element="*.dbf" isEnabled="true"/>
+<filter element="*.sbn" isEnabled="true"/>
+<filter element="*.sbx" isEnabled="true"/>
+<filter element="*.shx" isEnabled="true"/>
 </filters>
+<currentFrame>
+<frameInput factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/PROJ" type="4" /> 
+<expanded>
+</expanded>
 <selection>
-<element path="/PROJ"/>
+<element factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/PROJ" type="4"/>
 </selection>
+</currentFrame>
 </viewState>
 </view>
 </views>
