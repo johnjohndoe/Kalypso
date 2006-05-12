@@ -42,68 +42,48 @@ package org.kalypso.ui.model.wspm.abstraction;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
- * @author belger
+ * @author Belger
  */
-public abstract class WspmReach implements IWspmConstants
+public class TuhhReachProfileSegment implements IWspmConstants
 {
-  private final Feature m_reach;
+  private final Feature m_reachSegment;
 
-  public WspmReach( final Feature reach )
+  public TuhhReachProfileSegment( final Feature reachSegment )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
+    if( !QNameUtilities.equals( reachSegment.getFeatureType().getQName(), IWspmConstants.NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) )
+      throw new IllegalStateException( "reachSegment ist no reachSegment" );
 
-    m_reach = reach;
+    m_reachSegment = reachSegment;
   }
 
-  public String getName( )
+  public void setProfileMember( final WspmProfileReference profileReference )
   {
-    return NamedFeatureHelper.getName( m_reach );
+    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM, "profileMember" ) );
+    m_reachSegment.setProperty( gmlDescProp, profileReference.getHref() );
   }
 
-  public void setName( final String name )
+  public void setDistanceL( final double distanceL )
   {
-    NamedFeatureHelper.setName( m_reach, name );
+    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceL" ) );
+    m_reachSegment.setProperty( gmlDescProp, distanceL );
   }
 
-  public String getDescription( )
+  public void setDistanceM( final double distanceM )
   {
-    return NamedFeatureHelper.getDescription( m_reach );
+    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceM" ) );
+    m_reachSegment.setProperty( gmlDescProp, distanceM );
   }
 
-  public void setDescription( final String desc )
+  public void setDistanceR( final double distanceR )
   {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public void setWaterBody( final WspmWaterBody body )
-  {
-    final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
-    m_reach.setProperty( waterProp, body.getFeature().getId() );
-  }
-
-  public WspmWaterBody getWaterBody( )
-  {
-    final Object body = m_reach.getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
-    if( body instanceof Feature )
-      return new WspmWaterBody( (Feature) body );
-    else
-    {
-      final Feature feature = m_reach.getWorkspace().getFeature( (String) body );
-      return new WspmWaterBody( feature );
-    }
-  }
-
-  protected FeatureList getReachSegmentList( )
-  {
-    return (FeatureList) m_reach.getProperty( new QName( NS_WSPM, "reachSegmentMember" ) );
+    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceR" ) );
+    m_reachSegment.setProperty( gmlDescProp, distanceR );
   }
 
 }

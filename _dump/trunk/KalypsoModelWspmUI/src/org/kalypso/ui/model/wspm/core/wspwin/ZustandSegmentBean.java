@@ -40,77 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.core.wspwin;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
-
-import org.kalypso.commons.java.io.FileUtilities;
-
-public class ZustandBean
+/**
+ * Represents a line from the lower part of a .str file.
+ * 
+ * @author Belger
+ */
+public class ZustandSegmentBean
 {
-  final String m_name;
+  private final double m_stationFrom;
+  private final double m_stationTo;
+  private final String m_fileNameFrom;
+  private final String m_fileNameTo;
+  private final double m_distanceVL;
+  private final double m_distanceHF;
+  private final double m_distanceVR;
 
-  final String m_waterName;
-
-  final String m_fileName;
-
-  final double m_startStation;
-
-  final double m_endStation;
-
-  final Date m_date;
-
-  public ZustandBean( final String name, final String waterName, final String fileName, final double startStation, final double endStation, final Date date )
+  public ZustandSegmentBean( final double stationFrom, final double stationTo, final String fileNameFrom, final String fileNameTo, final double distanceVL, final double distanceHF, final double distanceVR )
   {
-    m_name = name;
-    m_waterName = waterName;
-    m_fileName = fileName;
-    m_startStation = startStation;
-    m_endStation = endStation;
-    m_date = date;
+    m_stationFrom = stationFrom;
+    m_stationTo = stationTo;
+    m_fileNameFrom = fileNameFrom;
+    m_fileNameTo = fileNameTo;
+    m_distanceVL = distanceVL;
+    m_distanceHF = distanceHF;
+    m_distanceVR = distanceVR;
+    
   }
 
-  public Date getDate( )
+  public double getDistanceHF( )
   {
-    return m_date;
+    return m_distanceHF;
   }
 
-  public double getEndStation( )
+  public double getDistanceVL( )
   {
-    return m_endStation;
+    return m_distanceVL;
   }
 
-  public String getFileName( )
+  public double getDistanceVR( )
   {
-    return m_fileName;
+    return m_distanceVR;
   }
 
-  public String getName( )
+  public String getFileNameFrom( )
   {
-    return m_name;
+    return m_fileNameFrom;
   }
 
-  public double getStartStation( )
+  public String getFileNameTo( )
   {
-    return m_startStation;
+    return m_fileNameTo;
   }
 
-  public String getWaterName( )
+  public double getStationFrom( )
   {
-    return m_waterName;
+    return m_stationFrom;
   }
 
-  public ZustandContentBean readZustand( final File profDir ) throws IOException, ParseException
+  public double getStationTo( )
   {
-    return ZustandContentBean.read( new File( profDir, getFileName() ) );
+    return m_stationTo;
   }
 
-  public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
-  {
-    final String strFileName = getFileName();
-    final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    final File qwtFile = new File( profDir, strBaseName + ".qwt" );
-    return RunOffEventBean.read( qwtFile );
-  }
 }

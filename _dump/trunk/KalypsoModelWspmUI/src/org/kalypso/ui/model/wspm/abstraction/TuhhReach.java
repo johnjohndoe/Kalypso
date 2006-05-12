@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -56,5 +62,35 @@ public class TuhhReach extends WspmReach implements IWspmConstants
     
     if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
       throw new IllegalStateException( "Feature is of wrong type: " + reach );
+  }
+
+  /**
+   * Creates and adds a new profile segment to this reach.
+   */
+  public TuhhReachProfileSegment createProfileSegment( final WspmProfileReference profileReference, final double distanceL, final double distanceM, final double distanceR )
+  {
+    final FeatureList reachSegmentList = getReachSegmentList();
+    final Feature parentFeature = reachSegmentList.getParentFeature();
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    
+    final IRelationType parentFeatureTypeProperty = reachSegmentList.getParentFeatureTypeProperty();
+
+    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
+    
+    final IFeatureType tuhhProfileReachSegmentType = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
+    
+    final Feature feature = workspace.createFeature( parentFeature, tuhhProfileReachSegmentType );
+
+    reachSegmentList.add( feature );
+    
+    final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
+    
+    // set default values
+    tuhhProfilesegment.setProfileMember( profileReference );
+    tuhhProfilesegment.setDistanceL( distanceL );
+    tuhhProfilesegment.setDistanceM( distanceM );
+    tuhhProfilesegment.setDistanceR( distanceR );
+    
+    return tuhhProfilesegment;
   }
 }

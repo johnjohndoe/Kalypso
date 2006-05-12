@@ -45,6 +45,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.deegree_impl.gml.GMLFactory;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -127,11 +128,20 @@ public class WspmProject implements IWspmConstants
 
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
     
-    final Feature feature = workspace.createFeature( m_wspProject, targetFeatureType );
+    final Feature feature = workspace.createFeature( parentFeature, targetFeatureType );
 
     waterBodyList.add( feature );
     
-    return new WspmWaterBody( feature );
+    final WspmWaterBody wspmWaterBody = new WspmWaterBody( feature );
+    
+    // set default values
+    wspmWaterBody.setName( "" );
+    wspmWaterBody.setDescription( "" );
+    wspmWaterBody.setRefNr( "" );
+    wspmWaterBody.setCenterLine( null );
+    wspmWaterBody.setDirectionUpstreams( false );
+    
+    return wspmWaterBody;
   }
 
 }

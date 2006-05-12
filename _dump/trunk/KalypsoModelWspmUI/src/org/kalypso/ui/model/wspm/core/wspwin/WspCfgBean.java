@@ -49,10 +49,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
@@ -67,10 +65,22 @@ public class WspCfgBean
   /** model type: 'b' is Pasche-TUHH, 'l' is PSW-Knauf */
   private char m_type;
 
+  private File m_projectDir;
+
   private List<ZustandBean> m_zustaende = new ArrayList<ZustandBean>();
 
   public WspCfgBean( )
   {
+  }
+
+  public File getProjectDir( )
+  {
+    return m_projectDir;
+  }
+
+  public void setProjectDir( final File projectDir )
+  {
+    m_projectDir = projectDir;
   }
 
   public char getType( )
@@ -103,6 +113,7 @@ public class WspCfgBean
       reader = new LineNumberReader( new FileReader( wspCfgFile ) );
 
       final WspCfgBean bean = new WspCfgBean();
+      bean.setProjectDir( wspwinDir );
 
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
@@ -164,7 +175,7 @@ public class WspCfgBean
   /**
    * Reads the file profproj.txt
    */
-  public ProfileBean[] getProfiles( final File wspwinDir ) throws IOException, ParseException
+  public ProfileBean[] readProfproj( final File wspwinDir ) throws IOException, ParseException
   {
     final File profprojFile = new File( WspWinImporter.getProfDir( wspwinDir ), "profproj.txt" );
 
@@ -173,71 +184,48 @@ public class WspCfgBean
     {
       reader = new LineNumberReader( new FileReader( profprojFile ) );
 
-      final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
+      final int[] counts = readStrHeader( reader );
+      final int profilCount = counts[0];
+      final int relationCount = counts[1];
 
-      final String firstLine = reader.readLine();
-      if( firstLine == null || firstLine.length() == 0 )
-        throw new ParseException( "First line of profproj.txt is empty.", reader.getLineNumber() );
-
-      // ignore the values, we read the count from the linecount
-      // just parse the type
-      final StringTokenizer firstLineTokenizer = new StringTokenizer( firstLine );
-      if( firstLineTokenizer.countTokens() != 2 )
-        throw new ParseException( "Syntax of first line ist wrong.", reader.getLineNumber() );
-
-      final int profilCount = Integer.parseInt( firstLineTokenizer.nextToken() );
-
-      final int relationCount = Integer.parseInt( firstLineTokenizer.nextToken() );
       if( relationCount == 0 )
       {
         // ignore for now; later we may do sanity checks, if there are unused profiles
       }
 
-      for( int i = 0; i < profilCount; i++ )
-      {
-        if( !reader.ready() )
-          throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
-
-        final String line = reader.readLine();
-        if( line == null || line.trim().length() == 0 )
-          throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
-
-        final StringTokenizer tokenizer = new StringTokenizer( line );
-        if( tokenizer.countTokens() != 6 )
-          throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
-
-        try
-        {
-          final String waterName = tokenizer.nextToken();
-          final double station = Double.parseDouble( tokenizer.nextToken() );
-          final String vzk = tokenizer.nextToken(); // Verzweigungskennung
-          final String mfb = tokenizer.nextToken(); // Mehrfeldbrückenkennung
-          final String zustandName = tokenizer.nextToken();
-          final String fileName = tokenizer.nextToken();
-
-          // give unused data in form of metadata entries
-          final Map<String, String> metadata = new HashMap<String, String>( 2 );
-          metadata.put( "VZK", vzk );
-          metadata.put( "MFB", mfb );
-          metadata.put( "ZUSTAND", zustandName );
-
-          final ProfileBean bean = new ProfileBean( waterName, station, fileName, metadata );
-          beans.add( bean );
-        }
-        catch( final NumberFormatException e )
-        {
-          e.printStackTrace();
-          throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
-        }
-
-      }
-
-      return beans.toArray( new ProfileBean[beans.size()] );
+      return ProfileBean.readProfiles( reader, profilCount );
     }
     finally
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+
+  /** Reads the first line of a profproj.txt or .str file. Returns 2 ints: profile count + second count. */
+  public static int[] readStrHeader( LineNumberReader reader ) throws IOException, ParseException
+  {
+    final String firstLine = reader.readLine();
+    if( firstLine == null || firstLine.length() == 0 )
+      throw new ParseException( "First line of profproj.txt is empty.", reader.getLineNumber() );
+
+    // ignore the values, we read the count from the linecount
+    // just parse the type
+    final StringTokenizer firstLineTokenizer = new StringTokenizer( firstLine );
+    if( firstLineTokenizer.countTokens() < 2 )
+      throw new ParseException( "Syntax of first line ist wrong.", reader.getLineNumber() );
+
+    final int[] counts = new int[2];
+    counts[0] = Integer.parseInt( firstLineTokenizer.nextToken() );
+    counts[1] = Integer.parseInt( firstLineTokenizer.nextToken() );
+    
+    // if it is a .str file, we ignore the following name and waterName
+
+    return counts;
+  }
+
+  public ZustandContentBean readZustand( final ZustandBean zustandBean ) throws IOException, ParseException
+  {
+    return zustandBean.readZustand( WspWinImporter.getProfDir( getProjectDir() ) );
   }
 
 }

@@ -457,9 +457,10 @@
 	<complexType name="WaterBodyPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
-				<sequence>
+				<sequence minOccurs="0">
 					<element ref="wspm:WaterBody"/>
 				</sequence>
+				<attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</restriction>
 		</complexContent>
 	</complexType>

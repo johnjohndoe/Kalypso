@@ -98,7 +98,9 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
           WspmHelper.ensureValidWspmTuhhStructure( targetContainer, new SubProgressMonitor( monitor, 10 ) );
 
           monitor.subTask( " - Datenimport" );
-          WspWinImporter.importProject( wspwinDirectory, targetContainer, new SubProgressMonitor( monitor, 90 ) );
+          final IStatus status = WspWinImporter.importProject( wspwinDirectory, targetContainer, new SubProgressMonitor( monitor, 90 ) );
+          if( !status.isOK() )
+            throw new CoreException( status );
         }
         catch( final CoreException rethrown )
         {

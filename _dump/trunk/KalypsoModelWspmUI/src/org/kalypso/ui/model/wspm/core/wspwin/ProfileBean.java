@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.core.wspwin;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Represents a line from a profproj.txt or .str file
@@ -82,4 +89,50 @@ public class ProfileBean
     return m_waterName;
   }
 
+  public static ProfileBean[] readProfiles( final LineNumberReader reader, final int profilCount ) throws IOException, ParseException
+  {
+    final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
+    for( int i = 0; i < profilCount; i++ )
+    {
+      if( !reader.ready() )
+        throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+
+      final String line = reader.readLine();
+      if( line == null || line.trim().length() == 0 )
+        throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+
+      final StringTokenizer tokenizer = new StringTokenizer( line );
+      if( tokenizer.countTokens() != 6 )
+        throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
+
+      try
+      {
+        final String waterName = tokenizer.nextToken();
+        final double station = Double.parseDouble( tokenizer.nextToken() );
+        final String vzk = tokenizer.nextToken(); // Verzweigungskennung
+        final String mfb = tokenizer.nextToken(); // Mehrfeldbrückenkennung
+        final String zustandName = tokenizer.nextToken();
+        final String fileName = tokenizer.nextToken();
+
+        // give unused data in form of metadata entries
+        final Map<String, String> metadata = new HashMap<String, String>( 2 );
+        metadata.put( "VZK", vzk );
+        metadata.put( "MFB", mfb );
+        metadata.put( "ZUSTAND", zustandName );
+
+        final ProfileBean bean = new ProfileBean( waterName, station, fileName, metadata );
+        beans.add( bean );
+      }
+      catch( final NumberFormatException e )
+      {
+        e.printStackTrace();
+        throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
+      }
+
+    }
+
+    return beans.toArray( new ProfileBean[beans.size()] );
+  }
+
+  
 }

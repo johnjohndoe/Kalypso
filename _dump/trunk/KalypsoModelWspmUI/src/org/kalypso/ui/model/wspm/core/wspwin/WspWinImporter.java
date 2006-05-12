@@ -49,6 +49,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,6 +76,8 @@ import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
 import org.kalypso.ui.model.wspm.abstraction.WspmProject;
+import org.kalypso.ui.model.wspm.abstraction.WspmRunOffEventReference;
+import org.kalypso.ui.model.wspm.abstraction.WspmWaterBody;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -178,7 +181,7 @@ public class WspWinImporter
       // /////////////// //
       // import profiles //
       // /////////////// //
-      final ProfileBean[] commonProfiles = wspCfgBean.getProfiles( wspwinDirectory );
+      final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
       final Map<String, WspmProfileReference> importedProfiles = new HashMap<String, WspmProfileReference>( commonProfiles.length );
       logStatus.add( importProfiles( getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles ) );
 
@@ -187,9 +190,20 @@ public class WspWinImporter
       // ////////////// //
       final ZustandBean[] zustaende = wspCfgBean.getZustaende();
       for( final ZustandBean zustandBean : zustaende )
-        importTuhhZustand( tuhhProject, zustandBean, importedProfiles );
+      {
+        try
+        {
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles ) );
+        }
+        catch( final Exception e )
+        {
+          logStatus.add( StatusUtilities.statusFromThrowable( e, "Fehler beim Import von Zustand: " + zustandBean.getFileName() ) );
+        }
+      }
 
-      // add them whith new id's
+      // stop, if we have errors until now
+      if( !logStatus.isOK() )
+        return logStatus;
 
       // /////////////// //
       // write workspace //
@@ -224,27 +238,9 @@ public class WspWinImporter
 
     for( final ProfileBean bean : commonProfiles )
     {
-      final String fileName = bean.getFileName();
-
-      final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), fileName );
-      addedProfiles.put( fileName, prof );
-
-      // TODO: fill data into profile
-      bean.getStation();
-      bean.getFileName();
-
-      // HACK: we now just copy the files directly instead
-      final URL context = tuhhProject.getFeature().getWorkspace().getContext();
-      Writer urlWriter = null;
-      Reader fileReader = null;
       try
       {
-        final URL targetUrl = new URL( context, prof.getHref() );
-        final File file = new File( profDir, fileName );
-
-        urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
-        fileReader = new FileReader( file );
-        IOUtils.copy( fileReader, urlWriter );
+        importProfile( profDir, tuhhProject, addedProfiles, bean );
       }
       catch( final MalformedURLException e )
       {
@@ -254,14 +250,49 @@ public class WspWinImporter
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
-      finally
-      {
-        IOUtils.closeQuietly( urlWriter );
-        IOUtils.closeQuietly( fileReader );
-      }
     }
 
     return status;
+  }
+
+  /**
+   * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
+   * (usually the filename), we return this instead.
+   */
+  private static WspmProfileReference importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfileReference> knownProfiles, final ProfileBean bean ) throws IOException
+  {
+    final String fileName = bean.getFileName();
+
+    if( knownProfiles.containsKey( fileName ) )
+      return knownProfiles.get( fileName );
+
+    final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), fileName );
+    knownProfiles.put( fileName, prof );
+
+    // TODO: fill data into profile
+    bean.getStation();
+    bean.getFileName();
+
+    // HACK: we now just copy the files directly instead
+    final URL context = tuhhProject.getFeature().getWorkspace().getContext();
+    Writer urlWriter = null;
+    Reader fileReader = null;
+    try
+    {
+      final URL targetUrl = new URL( context, prof.getHref() );
+      final File file = new File( profDir, fileName );
+
+      urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
+      fileReader = new FileReader( file );
+      IOUtils.copy( fileReader, urlWriter );
+
+      return prof;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( urlWriter );
+      IOUtils.closeQuietly( fileReader );
+    }
   }
 
   /**
@@ -271,11 +302,13 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static void importTuhhZustand( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles )
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles ) throws IOException, ParseException
   {
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
+
     final String name = zustandBean.getName();
-    System.out.println( "Importing " + name );
-    final TuhhReach reach = tuhhProject.createNewReach( zustandBean.getWaterName() );
+    final String waterName = zustandBean.getWaterName();
+    final TuhhReach reach = tuhhProject.createNewReach( waterName );
     reach.setName( name );
 
     final StringBuffer descBuffer = new StringBuffer();
@@ -285,11 +318,71 @@ public class WspWinImporter
     reach.setDescription( descBuffer.toString() );
 
     // add reachSegments + profiles (.str)
+    final ZustandContentBean zustandContent = wspCfg.readZustand( zustandBean );
+    // we ignore the profileBeans and just add the segments, so we can even import projects
+    // which are slightly inconsistent, maybe add warning messages later
+    final ZustandSegmentBean[] segmentBeans = zustandContent.getSegmentBeans();
+    final File profDir = getProfDir( wspCfg.getProjectDir() );
+    // create reachSegments and associated profiles
+    for( final ZustandSegmentBean bean : segmentBeans )
+    {
+      try
+      {
+        final ProfileBean fromBean = new ProfileBean( waterName, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
+        final WspmProfileReference fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean );
 
-    // add runoff events (.wsf, .qwt)
+        reach.createProfileSegment( fromProf, bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
+      }
+      catch( final IOException e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
 
-    // add calculations (.ber, .001)
+      if( bean == segmentBeans[segmentBeans.length - 1] )
+      {
+        try
+        {
+          // also add last profile
+          final ProfileBean toBean = new ProfileBean( waterName, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
+          final WspmProfileReference toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean );
 
+          reach.createProfileSegment( toProf, 0.0, 0.0, 0.0 );
+        }
+        catch( final IOException e )
+        {
+          status.add( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+
+    }
+
+    // ////////////////////////////// //
+    // add runoff events (.wsf, .qwt) //
+    // ///////////////////////////// ///
+    final Map<String, WspmRunOffEventReference> readRunOffEvents = new HashMap<String, WspmRunOffEventReference>();
+    try
+    {
+      final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
+      final WspmWaterBody waterBody = reach.getWaterBody();
+      for( final RunOffEventBean bean : runOffEventBeans )
+      {
+        final WspmRunOffEventReference roeRef = waterBody.createRunOffEvent( bean.getName() );
+        // remember for reference from calculation
+        readRunOffEvents.put( bean.getName(), roeRef );
+        
+        // TODO: write values into runoff-observation
+      }
+    }
+    catch( final Exception e )
+    {
+      status.add( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    // ///////////////////////////// //
+    // add calculations (.ber, .001) //
+    // ///////////////////////////// //
+
+    return status;
   }
 
   /** Returns the content of the prof/probez.txt file */
