@@ -59,6 +59,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.browser.commandable.AbstractCommandURLAction;
+import org.kalypso.contribs.eclipse.ui.browser.commandable.CommandURL;
 import org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLActionKeys;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -89,6 +90,7 @@ public class AddGeometrieFromFileAction extends AbstractCommandURLAction
     final String contextString = keyValuePair.getProperty( ICommandURLActionKeys.KEY_CONTEXT );
     final String fPath = keyValuePair.getProperty( ICommandURLActionKeys.KEY_FEATURE_PATH );
     final String qName = keyValuePair.getProperty( ICommandURLActionKeys.KEY_QNAME );
+    final String nextPageUrl = keyValuePair.getProperty( CommandURL.KEY_URL );
     URL context = null;
     URL fileUrl = null;
     try
@@ -120,7 +122,7 @@ public class AddGeometrieFromFileAction extends AbstractCommandURLAction
       {
         final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( fileUrl, new UrlResolver() );
         final Feature rootFeature = workspace.getRootFeature();
-        
+
         final IFeatureType featureType = workspace.getFeatureType( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiet" ) );
         Feature newfeature = workspace.createFeature( rootFeature, featureType );
         IPropertyType property = featureType.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "gebiet" ) );
@@ -145,18 +147,12 @@ public class AddGeometrieFromFileAction extends AbstractCommandURLAction
         e.printStackTrace();
       }
 
-      fireButtonEvent( SWT.OK );
+      fireEvent( SWT.OK, nextPageUrl );
     }
     else
     {
-      fireButtonEvent( SWT.CANCEL );
+      fireEvent( SWT.CANCEL, nextPageUrl );
     }
   }
 
-  private void fireButtonEvent( int type )
-  {
-    Event event = new Event();
-    event.type = type;
-    fireEvent( event );
-  }
 }

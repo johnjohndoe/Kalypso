@@ -27,7 +27,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   {
     IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
     configurer.setInitialSize( new Point( 700, 550 ) );
-    configurer.setShowCoolBar( false );
+    configurer.setShowCoolBar( true );
     configurer.setShowStatusLine( false );
     configurer.setShowProgressIndicator( true );
     configurer.setTitle( "FLOWS Planer Portal" );
