@@ -11,9 +11,7 @@
 <coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="95" y="22"/>
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="KalypsoDebug.config" itemType="typeToolBarContribution" x="107" y="22"/>
-<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="49" y="22"/>
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="36" y="22"/>
-<coolItem id="org_eclipse_ui_examples_readmetool_actionSet" itemType="typeToolBarContribution" x="82" y="22"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="108" y="22"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
