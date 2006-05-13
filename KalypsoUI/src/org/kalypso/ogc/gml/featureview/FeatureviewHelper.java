@@ -88,7 +88,7 @@ public class FeatureviewHelper
     // wird nicht instantiiert
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue )
+  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue, boolean showTables )
   {
     JAXBElement< ? extends ControlType> jaxbType = null;
     boolean addLabel = true;
@@ -136,6 +136,9 @@ public class FeatureviewHelper
     {
       if( ftp.isList() )
       {
+        if( !showTables )
+          return;
+        
         final Table table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
         table.setProperty( property );
@@ -277,7 +280,7 @@ public class FeatureviewHelper
    *          the type (e.g. linked features)
    * @return featureview
    */
-  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type, final Feature feature )
+  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type, final Feature feature, final boolean showTables )
   {
     final FeatureviewType featureview = FACTORY.createFeatureviewType();
     featureview.setTypename( type.getQName() );
@@ -297,7 +300,7 @@ public class FeatureviewHelper
     for( final IPropertyType ftp : type.getProperties() )
     {
       final Object value = feature == null ? null : feature.getProperty( ftp );
-      addDefaultFeatureControlTypeForProperty( controlList, ftp, value );
+      addDefaultFeatureControlTypeForProperty( controlList, ftp, value, showTables );
     }
 
     return featureview;

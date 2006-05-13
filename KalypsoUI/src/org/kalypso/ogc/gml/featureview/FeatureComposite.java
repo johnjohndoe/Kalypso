@@ -116,7 +116,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /* Used for the compability-hack. Is it possible to get this from the binding classes? */
   public static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
 
+  /** Map of especially added view-templates.*/
   private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
+
+  /** This meber menages the generated view-templates.*/
+  private FeatureViewManager m_defaultViews = new FeatureViewManager();
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
 
@@ -127,6 +131,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private Control m_control = null;
 
   private final IFeatureSelectionManager m_selectionManager;
+
 
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
   {
@@ -152,6 +157,17 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       addView( views[i] );
   }
 
+  public void setShowTables( final boolean showTables )
+  {
+    m_defaultViews.setShowTables( showTables );
+    updateControl();
+  }
+  
+  public boolean isShowTables( )
+  {
+    return m_defaultViews.isShowTables( );
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
@@ -209,18 +225,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     // the local part was given in the featureViewType (type xs:string). Now it is of type xs:qname.
     // So old entries are interpretated against the namespace of the featureview, which allows us
     // to try against this namespace uri.
-
     final QName compabilityName = new QName( FEATUREVIEW_NAMESPACE, typename.getLocalPart(), typename.getPrefix() );
     final FeatureviewType compabilityView = m_viewMap.get( compabilityName );
     if( compabilityView != null )
       return compabilityView;
     // REMARK end
 
-    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType, getFeature() );
-
-    m_viewMap.put( typename, newView );
-
-    return newView;
+    return m_defaultViews.get( featureType, getFeature() );
   }
 
   public Control createControl( final Composite parent, final int style, final IFeatureType ft )
