@@ -2,6 +2,7 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -9,7 +10,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -46,57 +46,17 @@ public class Feature_Impl implements Feature
   private final String m_id;
 
   /**
-   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
-   * 
-   * @param parent
-   *          either a parent Feature or a GMLWorkspace
-   * @deprecated use Constructor:
-   *             <code>Feature_Impl( final IFeatureType ft, final String id, boolean initializeWithDefaults )</code>
-   *             instead.
-   */
-  @Deprecated
-  protected Feature_Impl( final Feature parent, final IFeatureType ft, final String id )
-  {
-    if( ft == null )
-      throw new UnsupportedOperationException( "must provide a featuretype" );
-    m_parent = parent;
-    m_featureType = ft;
-    m_id = id;
-    // initialize
-    final IPropertyType[] ftp = ft.getProperties();
-    m_properties = new Object[ftp.length];
-    for( int i = 0; i < ftp.length; i++ )
-    {
-      if( m_featureType.getProperties( i ).isList() )
-      {
-        if( ftp[i] instanceof IRelationType )
-          m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );
-        else
-          m_properties[i] = new ArrayList();
-      }
-      else
-        m_properties[i] = null;
-    }
-
-    final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-    for( int i = 0; i < properties.length; i++ )
-    {
-      if( properties[i].getValue() != null && ft.getProperty( properties[i].getName() ).getMaxOccurs() == 1 )
-        setProperty( properties[i] );
-    }
-  }
-
-  /**
-   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
+   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
    * 
    * @param initializeWithDefaults
    *          set <code>true</code> when generating from UserInterface <br>
    *          set <code>false</code> when generating from GML or so.
    */
-  public Feature_Impl( final Object parent, final IFeatureType ft, final String id, boolean initializeWithDefaults )
+  public Feature_Impl( final Object parent, final IFeatureType ft, final String id, final boolean initializeWithDefaults )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
+    
     m_parent = parent;
     m_featureType = ft;
     m_id = id;
@@ -116,18 +76,22 @@ public class Feature_Impl implements Feature
       else
         m_properties[i] = null;
     }
+    
     if( initializeWithDefaults )
     {
-      final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-      for( int i = 0; i < properties.length; i++ )
+      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
+      for( final Map.Entry<IPropertyType, Object> entry : properties.entrySet() )
       {
-        if( properties[i].getValue() != null && ft.getProperty( properties[i].getName() ).getMaxOccurs() == 1 )
-          setProperty( properties[i] );
+        final IPropertyType pt = entry.getKey();
+        final Object value = entry.getValue();
+        
+        if( value != null && pt.getMaxOccurs() == 1 )
+          setProperty( pt, value );
       }
     }
   }
 
-  protected Feature_Impl( final Object parent, IFeatureType ft, String id, Object[] propValues )
+  protected Feature_Impl( final Object parent, final IFeatureType ft, final String id, final Object[] propValues )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
@@ -175,7 +139,7 @@ public class Feature_Impl implements Feature
   {
     if( pt == null )
       throw new IllegalArgumentException( "pt may not null" );
-    
+
     final int pos = m_featureType.getPropertyPosition( pt );
     return getProperty( pos );
   }
@@ -211,7 +175,7 @@ public class Feature_Impl implements Feature
    */
   public GM_Object[] getGeometryProperties( )
   {
-    final List result = new ArrayList();
+    final List<GM_Object> result = new ArrayList<GM_Object>();
     final IPropertyType[] ftp = m_featureType.getProperties();
     for( int p = 0; p < ftp.length; p++ )
     {
@@ -221,11 +185,9 @@ public class Feature_Impl implements Feature
         if( o == null )
           continue;
         if( o instanceof List )
-        {
           result.addAll( (List) o );
-        }
         else
-          result.add( o );
+          result.add( (GM_Object) o );
       }
     }
     // TODO allways use virtual ftp to calculate bbox ??
@@ -238,15 +200,13 @@ public class Feature_Impl implements Feature
         if( o == null )
           continue;
         if( o instanceof List )
-        {
           result.addAll( (List) o );
-        }
         else
-          result.add( o );
+          result.add( (GM_Object) o );
       }
     }
 
-    return (GM_Object[]) result.toArray( new GM_Object[result.size()] );
+    return result.toArray( new GM_Object[result.size()] );
   }
 
   /**
@@ -268,57 +228,7 @@ public class Feature_Impl implements Feature
     return (GM_Object) prop;
   }
 
-  /**
-   * set defaulproperty (occurenceposition=0)
-   * 
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(org.kalypsodeegree.model.feature.FeatureProperty)
-   */
-  public void setProperty( final FeatureProperty property )
-  {
-    if( property == null )
-      return;
-    IFeatureType ft = getFeatureType();
-    if( ft == null )
-      return;
-    IPropertyType ftp = ft.getProperty( property.getName() );
-    if( ftp == null )
-    {
-      return;
-    }
-    if( GeometryUtilities.isGeometry( ftp ) )
-      invalidEnvelope();
-
-    int pos = m_featureType.getPropertyPosition( property.getPropertyType() );
-    m_properties[pos] = property.getValue();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
-   */
-  public void addProperty( final FeatureProperty property )
-  {
-    // to handle boundingbox if geometryproperty
-    int pos = m_featureType.getPropertyPosition( property.getPropertyType() );
-    Object newValue = property.getValue();
-    Object oldValue = m_properties[pos];
-    if( oldValue instanceof List )
-    {
-      if( newValue instanceof List )
-      {
-        ((List) oldValue).addAll( (List) newValue );
-      }
-      else
-      {
-        ((List) oldValue).add( newValue );
-      }
-    }
-    else
-    {
-      m_properties[pos] = newValue;
-    }
-  }
-
-  /**
+   /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
   public GM_Envelope getEnvelope( )
@@ -384,9 +294,16 @@ public class Feature_Impl implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
-  public void setProperty( IPropertyType pt, Object value )
+  public void setProperty( final IPropertyType pt, final Object value )
   {
-    setProperty( FeatureFactory.createFeatureProperty( pt, value ) );
+    if( pt == null )
+      return;
+
+    if( GeometryUtilities.isGeometry( pt ) )
+      invalidEnvelope();
+
+    final int pos = m_featureType.getPropertyPosition( pt );
+    m_properties[pos] = value;
   }
 
   /**
@@ -398,11 +315,11 @@ public class Feature_Impl implements Feature
   {
     if( propNameLocalPart.indexOf( ':' ) > 0 )
       throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
-    
+
     final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
     if( pt == null )
       throw new IllegalArgumentException( "unknown local part: " + propNameLocalPart );
-    
+
     return getProperty( pt );
   }
 

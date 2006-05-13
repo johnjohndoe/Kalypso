@@ -122,7 +122,7 @@ public class FeatureHelper
 
       final Object newobject = cloneData( object, sourceFTP.getValueClass() );
 
-      targetFeature.setProperty( FeatureFactory.createFeatureProperty( targetFTP, newobject ) );
+      targetFeature.setProperty( targetFTP, newobject );
     }
   }
 
@@ -364,6 +364,36 @@ public class FeatureHelper
       final Object cloneValue = cloneData( valueOriginal, pt.getValueClass() );
       targetFE.setProperty( pt, cloneValue );
     }
+  }
+  
+  /**
+   * <ul>
+   * <li>If the property is not a list, just set the value</li>
+   * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
+   * the list.</li>
+   * </ul>
+   * 
+   * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
+   */
+  public static void addProperty( final Feature feature, final IPropertyType pt, final Object newValue )
+  {
+    final Object oldValue = feature.getProperty( pt );
+
+    if( oldValue instanceof List )
+    {
+      if( newValue instanceof List )
+        ((List) oldValue).addAll( (List) newValue );
+      else
+        ((List) oldValue).add( newValue );
+    }
+    else
+      feature.setProperty( pt, newValue );
+  }
+  
+  public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )
+  {
+    for( final Map.Entry<IPropertyType, Object> entry : props.entrySet() )
+      result.setProperty( entry.getKey(), entry.getValue() );
   }
 
 }

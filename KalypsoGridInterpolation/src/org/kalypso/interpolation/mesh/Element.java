@@ -6,6 +6,7 @@
 package org.kalypso.interpolation.mesh;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -18,7 +19,6 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -26,6 +26,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -70,21 +71,17 @@ public class Element
     GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
     final Feature f = FeatureFactory.createFeature( null, eleNo, m_featureType, false );
 
-    FeatureProperty geoProperty = FeatureFactory.createFeatureProperty( m_featureType.getProperty( "GEOM" ), surface );
-    f.addProperty( geoProperty );
-    FeatureProperty property = FeatureFactory.createFeatureProperty( m_featureType.getProperty( "vertList" ), verticies );
-    f.addProperty( property );
+    FeatureHelper.addProperty( f, m_featureType.getProperty( "GEOM" ), surface );
+    FeatureHelper.addProperty( f, m_featureType.getProperty( "vertList" ), verticies );
     this.feature = f;
-
-  }// constructor}
+  }
 
   public Element( String eleNo, GM_Object geom, CS_CoordinateSystem crs ) throws GM_Exception
   {
     if( crs == null )
       throw new GM_Exception( "No coordinate system defined! Element can not be created" );
     final Feature f = FeatureFactory.createFeature( null, eleNo, m_featureType, false );
-    final FeatureProperty geomProperty = FeatureFactory.createFeatureProperty( m_featureType.getProperty( "GEOM" ), geom );
-    f.addProperty( geomProperty );
+    FeatureHelper.addProperty( f, m_featureType.getProperty( "GEOM" ), geom );
     this.feature = f;
   }
 
@@ -121,7 +118,7 @@ public class Element
 
   public Vector getVertList( )
   {
-    Vector vect = new Vector();
+    final Vector<String> vect = new Vector<String>();
     StringTokenizer st = new StringTokenizer( (String) feature.getProperty( "vertList" ) );
     while( st.hasMoreTokens() )
     {
@@ -140,9 +137,9 @@ public class Element
     return getGeometry().getNumberOfSurfacePatches();
   }
 
-  public HashMap splitElement( ) throws Exception
+  public Map splitElement( ) throws Exception
   {
-    HashMap res = new HashMap();
+    final Map<String, Element> res = new HashMap<String, Element>();
     String eID1 = getElementID() + ".1";
     String eID2 = getElementID() + ".2";
     Vector vList = getVertList();

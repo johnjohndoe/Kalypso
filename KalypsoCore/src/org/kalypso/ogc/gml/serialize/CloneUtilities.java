@@ -37,28 +37,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
 
 /**
- * 
  * Helper for cloning objects
  * 
  * @author doemming
  */
 public class CloneUtilities
 {
-
-  private static ITypeRegistry m_typeHandlerRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
   /**
-   * 
    * clones a object that has a marshaller and unmarshaller
    * 
    * @param value
@@ -71,47 +60,15 @@ public class CloneUtilities
   public static Object clone( final Object value, final JAXBContext jc ) throws JAXBException
   {
     // marshall it
-    
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
     final StringWriter tmpBuffer = new StringWriter();
     marshaller.marshal( value, tmpBuffer );
 
     // unmarshall it
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader( tmpBuffer.toString() );
-    final InputSource source = new InputSource(reader);
+    final InputSource source = new InputSource( reader );
     return unmarshaller.unmarshal( source );
-  }
-
-//  public static Feature clone( Feature featureToClone ) throws CloneNotSupportedException
-//  {
-//    Object[] properties = featureToClone.getProperties();
-//    Object[] clonedProperties = new Object[properties.length];
-//    IFeatureType featureType = featureToClone.getFeatureType();
-//    IPropertyType[] featureTypeProperties = featureType.getProperties();
-//    for( int i = 0; i < properties.length; i++ )
-//    {
-//      Object property = properties[i];
-//
-//      if( property != null )
-//        clonedProperties[i] = cloneFeatureProperty( property, featureTypeProperties[i] );
-//
-//    }
-//    return FeatureFactory.createFeature( featureToClone.getId(), featureType, clonedProperties );
-//
-//  }
-
-  public static Object cloneFeatureProperty( Object featureProperty, IPropertyType property )
-      throws CloneNotSupportedException
-  {
-    final Class clazz = featureProperty.getClass();
-    final ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz );
-    
-    if( typeHandler == null )
-      return FeatureFactory.createFeatureProperty( property,featureProperty );
-
-    if( typeHandler instanceof IMarshallingTypeHandler )
-      return ( (IMarshallingTypeHandler)typeHandler ).cloneObject( featureProperty );
-    throw new CloneNotSupportedException( "Object: " + featureProperty.getClass().getName() + "\tis not clonable" );
   }
 }

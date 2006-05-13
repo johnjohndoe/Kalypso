@@ -47,6 +47,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,6 +75,7 @@ import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -92,8 +94,8 @@ import org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This target uses the MetaDoc Service for storing the documents on the server side.
@@ -254,7 +256,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
     // create featuretype from bean
     final Collection<IValuePropertyType> ftpColl = new ArrayList<IValuePropertyType>();
-    final Collection<FeatureProperty> fpColl = new ArrayList<FeatureProperty>();
+    final Map<IPropertyType, Object> fpColl = new LinkedHashMap<IPropertyType, Object>();
     final int[] ints = new int[map.size()];
     int count = 0;
     for( org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry entry : entries )
@@ -302,17 +304,17 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       }
       final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), valueQName, handler, 0, 1 );
       ftpColl.add( vpt );
-      fpColl.add( FeatureFactory.createFeatureProperty( vpt, realValue ) );
+      fpColl.put( vpt, realValue );
 
       ints[count++] = 1;
     }
 
     final IValuePropertyType[] ftps = ftpColl.toArray( new IValuePropertyType[ftpColl.size()] );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "unknown", "docbean" ), ftps );
-    // final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap()
-    // );
 
-    return FeatureFactory.createFeature( null, "0", ft, fpColl.toArray( new FeatureProperty[fpColl.size()] ) );
+    final Feature newFeature = FeatureFactory.createFeature( null, "0", ft, false );
+    FeatureHelper.setProperties( newFeature, fpColl );
+    return newFeature;
   }
 
   /**
