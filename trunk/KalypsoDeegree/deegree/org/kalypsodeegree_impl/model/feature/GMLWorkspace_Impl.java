@@ -18,7 +18,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -180,7 +179,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return collector.getResults( true );
   }
 
-  private final Collection m_listener = new HashSet();
+  private final Collection<ModellEventListener> m_listener = new HashSet<ModellEventListener>();
 
   /**
    * Every listener is registered only once.
@@ -207,7 +206,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     // use array instead of iterator, because the listener list may change in
     // response to this event (lead to a ConcurrentodificationException)
-    final ModellEventListener[] objects = (ModellEventListener[]) m_listener.toArray( new ModellEventListener[m_listener.size()] );
+    final ModellEventListener[] objects = m_listener.toArray( new ModellEventListener[m_listener.size()] );
     for( int i = 0; i < objects.length; i++ )
       objects[i].onModellChange( event );
   }
@@ -495,16 +494,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Object prop = parent.getProperty( propName );
 
     if( prop instanceof List )
-    {
       ((List) prop).add( pos, newFeature );
-    }
     else if( prop == null ) // element not set
-    {
-      final FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
-      parent.setProperty( newProp );
-    }
+      parent.setProperty( propName, newFeature );
     else
       throw new Exception( "New Feature violates maxOccurs" );
+
     m_indexMap.put( newFeature.getId(), newFeature );
 
     // register also features in subtree of new feature
@@ -527,8 +522,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( value == null | overwrite )
     {
       // TODO check if value is allready a feature, then remove it from gmlworkspace
-      final FeatureProperty newProp = FeatureFactory.createFeatureProperty( linkProp, linkedFE );
-      parentFE.setProperty( newProp );
+      parentFE.setProperty( linkProp, linkedFE );
       m_indexMap.put( linkedFE.getId(), linkedFE );
       // accept all subfeatures
       accept( new RegisterVisitor(), linkedFE, FeatureVisitor.DEPTH_INFINITE );
@@ -553,9 +547,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         throw new Exception( "New Feature violates maxOccurs" );
     }
     else if( srcFE.getProperty( linkProp ) == null )
-    {
-      srcFE.setProperty( FeatureFactory.createFeatureProperty( linkProp, featureID ) );
-    }
+      srcFE.setProperty( linkProp, featureID );
     else
       throw new Exception( "New Feature as allready set" );
   }
@@ -579,7 +571,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     else if( srcFE.getProperty( linkProp ) == null )
     {
       // TODO check remove existing correctly
-      srcFE.setProperty( FeatureFactory.createFeatureProperty( linkProp, featureID ) );
+      srcFE.setProperty( linkProp, featureID );
     }
     else
       throw new Exception( "New Feature as allready set" );
@@ -593,7 +585,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     // TODO remove existing link correctly
     if( srcFE.getProperty( linkProp ) == null || overwrite )
-      srcFE.setProperty( FeatureFactory.createFeatureProperty( linkProp, featureID ) );
+      srcFE.setProperty( linkProp, featureID );
     else
       throw new Exception( "feature is allready set" );
   }
@@ -612,7 +604,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
     {
-      parentFeature.setProperty( FeatureFactory.createFeatureProperty( linkProp, null ) );
+      parentFeature.setProperty( linkProp, null );
       return true;
     }
     return false;
@@ -635,7 +627,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       if( parentFeature.getProperty( linkProp ) == childFeature )
       {
-        parentFeature.setProperty( FeatureFactory.createFeatureProperty( linkProp, null ) );
+        parentFeature.setProperty( linkProp, null );
         result = true;
       }
     }

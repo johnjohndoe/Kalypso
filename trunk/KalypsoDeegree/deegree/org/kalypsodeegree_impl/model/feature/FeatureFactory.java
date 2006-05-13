@@ -63,7 +63,9 @@ package org.kalypsodeegree_impl.model.feature;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.Mapper;
@@ -73,7 +75,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -92,20 +93,6 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class FeatureFactory
 {
-  /**
-   * creates an instance of a FeatureProperty from its name and the data (value) it contains
-   * 
-   * @param name
-   *          name of the <CODE>FeatureProperty</CODE>
-   * @return an instance of a <CODE>FeatureProperty</CODE>
-   * @param value
-   *          value of the <CODE>FeatureProperty</CODE>
-   */
-  public static FeatureProperty createFeatureProperty( IPropertyType pt, Object value )
-  {
-    return new FeatureProperty_Impl( pt, value );
-  }
-
   /**
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
@@ -134,56 +121,24 @@ public class FeatureFactory
     return new Feature_Impl( parent, featureType, id, initializeWithDefaults );
   }
 
-  /**
-   * @deprecated use constructor
-   *             <code>Feature createFeature( String id, IFeatureType featureType, boolean initializeWithDefaults )</code>
-   *             instead
-   */
-  public static Feature createFeature( Feature parent, String id, IFeatureType featureType )
+  /** Creates default feature, used by LegendView */
+  public static Feature createDefaultFeature( final Feature parent, final String id, final IFeatureType ft, final boolean createGeometry )
   {
-    return new Feature_Impl( parent, featureType, id );
-  }
+    final IPropertyType[] propTypes = ft.getProperties();
+    final Map<IPropertyType, Object> props = createDefaultFeatureProperty( propTypes, createGeometry );
 
-  /**
-   * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
-   * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
-   * IFeatureType.
-   * 
-   * @param id
-   *          unique id of the <CODE>Feature</CODE>
-   * @param featureType
-   *          <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
-   * @param properties
-   *          properties (content) of the <CODE>Feature</CODE>
-   * @return instance of a <CODE>Feature</CODE>
-   */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final FeatureProperty[] properties )
-  {
-    final Feature result = createFeature( parent, id, featureType, false );
-    for( int i = 0; i < properties.length; i++ )
-    {
-      if( featureType.getProperty( properties[i].getName() ) != null )
-        result.setProperty( properties[i] );
-    }
+    final Feature result = createFeature( parent, id, ft, false );
+    FeatureHelper.setProperties( result, props );
+
     return result;
   }
 
-  
-  /** Creates default feature, used by LegendView */
-  public static Feature createDefaultFeature( Feature parent, final String id, final IFeatureType ft, final boolean createGeometry )
-  {
-    final IPropertyType[] propTypes = ft.getProperties();
-    final FeatureProperty[] props = createDefaultFeatureProperty( propTypes, createGeometry );
-    final Feature feature = FeatureFactory.createFeature( parent, id, ft, props );
-    return feature;
-  }
-
   /** Creates default FeatureProperties, used by LegendView */
-  public static FeatureProperty[] createDefaultFeatureProperty( final IPropertyType[] propTypes, final boolean createGeometry )
+  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final IPropertyType[] propTypes, final boolean createGeometry )
   {
     // TODO handle occurency here and generate empty List or FeatureList as
     // default
-    final List<FeatureProperty> results = new ArrayList<FeatureProperty>();
+    final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>();
     for( int i = 0; i < propTypes.length; i++ )
     {
       final IPropertyType ftp = propTypes[i];
@@ -192,10 +147,10 @@ public class FeatureFactory
       {
         final IValuePropertyType vpt = (IValuePropertyType) ftp;
         final Object value = Mapper.defaultValueforJavaType( vpt, createGeometry );
-        results.add( FeatureFactory.createFeatureProperty( ftp, value ) );
+        results.put( ftp, value );
       }
     }
-    return results.toArray( new FeatureProperty[results.size()] );
+    return results;
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )

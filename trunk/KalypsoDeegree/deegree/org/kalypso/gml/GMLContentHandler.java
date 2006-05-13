@@ -202,7 +202,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       try
       {
         // 2. try : from uri + schemalocation attributes
-        if( schema == null && m_schemaLocationString != null )
+        if( schema == null )
         {
           final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
           final URL schemaLocation = namespaces.get( uri );

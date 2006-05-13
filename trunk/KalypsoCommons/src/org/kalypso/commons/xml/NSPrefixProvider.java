@@ -43,6 +43,7 @@ package org.kalypso.commons.xml;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -89,7 +90,8 @@ public class NSPrefixProvider
   {
     try
     {
-      m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
+      if( Platform.isRunning() )
+          m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
     }
     catch( final CoreException e )
     {

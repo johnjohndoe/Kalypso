@@ -15,8 +15,6 @@ public interface Feature extends DeegreeFeature
 
   public Feature getParent( );
 
-  public void addProperty( final FeatureProperty prop );
-
   public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
 
   public void setProperty( final IPropertyType propertyType, final Object value );
