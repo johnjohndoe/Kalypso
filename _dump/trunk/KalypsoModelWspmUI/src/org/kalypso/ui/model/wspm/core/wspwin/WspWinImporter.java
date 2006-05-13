@@ -363,6 +363,7 @@ public class WspWinImporter
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
+      // TODO: also read wsp fixierungen
       for( final RunOffEventBean bean : runOffEventBeans )
       {
         final WspmRunOffEventReference roeRef = waterBody.createRunOffEvent( bean.getName() );
@@ -377,6 +378,10 @@ public class WspWinImporter
       status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
+    // ////////////////////////// //
+    // add einzelverluste (.psi) //
+    // ////////////////////////// //
+
     // ///////////////////////////// //
     // add calculations (.ber, .001) //
     // ///////////////////////////// //
@@ -385,12 +390,22 @@ public class WspWinImporter
       final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
       for( final CalculationBean bean : calcBeans )
       {
-        // read content
+        try
+        {
+          final CalculationContentBean contentBean = bean.readCalculationContent( profDir );
 
-        // create calculation
-        final TuhhCalculation calc = tuhhProject.createCalculation( waterBody );
-        calc.setName( bean.getName() );
-        calc.setDescription( "Imported from WspWin" );
+          // create calculation
+          final TuhhCalculation calc = tuhhProject.createCalculation( waterBody );
+          calc.setName( bean.getName() );
+          calc.setDescription( "Imported from WspWin" );
+
+          // TODO apply values from content bean into calc
+          contentBean.getClass(); // unused
+        }
+        catch( final Exception e )
+        {
+          status.add( StatusUtilities.statusFromThrowable( e ) );
+        }
       }
     }
     catch( final Exception e )
