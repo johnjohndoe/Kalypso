@@ -49,8 +49,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -128,32 +127,19 @@ public class ParseManager
     final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( "catchmentMember" );
     Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-    {
-      Feature catchmentFE = features[i];
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( catchmentMemberPT, catchmentFE );
-      catchmentCollectionFe.addProperty( property );
-    }
+      FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, features[i] );
 
     // complete Features of ChannelCollections
     final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( "channelMember" );
     features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-    {
-      Feature channelFE = features[i];
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( channelMemberPT, channelFE );
-      channelCollectionFe.addProperty( property );
-
-    }
+      FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, features[i] );
 
     // complete Feature NodeCollection
     final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( "nodeMember" );
     features = m_nodeManager.parseFile( m_conf.getNetFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-    {
-      Feature nodeFE = features[i];
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( nodeMemberPT, nodeFE );
-      nodeCollectionFe.addProperty( property );
-    }
+      FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, features[i] );
 
     // complete Features of StorageChannel
 //    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
@@ -175,20 +161,12 @@ public class ParseManager
     Feature[] features = m_bodartManager.parseFile( m_conf.getBodenartFile().toURL() );
     IPropertyType soilLayerMemberPT = naParaFT.getProperty( "soilLayerMember" );
     for( int i = 0; i < features.length; i++ )
-    {
-      final Feature bodenartFE = features[i];
-      final FeatureProperty prop = FeatureFactory.createFeatureProperty( soilLayerMemberPT, bodenartFE );
-      naParaFe.addProperty( prop );
-    }
+      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
 
     // complete Feature soiltypeMember
     features = m_bodtypManager.parseFile( m_conf.getBodentypFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-    {
-      Feature bodentypFE = features[i];
-      FeatureProperty prop = FeatureFactory.createFeatureProperty( soilLayerMemberPT, bodentypFE );
-      naParaFe.addProperty( prop );
-    }
+      FeatureHelper.addProperty( naParaFe, soilLayerMemberPT, features[i] );
 
     // complete Feature idealLandUseMember
     File nutzungDir = m_conf.getNutzungDir();
@@ -201,11 +179,7 @@ public class ParseManager
       System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
       features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
-      {
-        final Feature idleNutzFE = features[f];
-        final FeatureProperty prop = FeatureFactory.createFeatureProperty( idealLandUseMemberRT, idleNutzFE );
-        naParaFe.addProperty( prop );
-      }
+        FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
     }
     final IPropertyType landuseMemberRT = naParaFT.getProperty( "landuseMember" );
     // complete Feature landuseMember
@@ -215,11 +189,7 @@ public class ParseManager
       System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
-      {
-        final Feature nutzFE = features[f];
-        final FeatureProperty prop = FeatureFactory.createFeatureProperty( landuseMemberRT, nutzFE );
-        naParaFe.addProperty( prop );
-      }
+        FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
     System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
 
@@ -227,11 +197,7 @@ public class ParseManager
     // complete Feature snowMember
     features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
     for( int i = 0; i < features.length; i++ )
-    {
-      final Feature schneeFE = features[i];
-      final FeatureProperty prop = FeatureFactory.createFeatureProperty( snowMemberRT, schneeFE );
-      naParaFe.addProperty( prop );
-    }
+      FeatureHelper.addProperty( naParaFe, snowMemberRT, features[i] );
 
     System.out.println( "\n\n-----------------" );
     return naParaFe;

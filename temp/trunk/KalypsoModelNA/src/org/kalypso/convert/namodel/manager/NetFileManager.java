@@ -50,7 +50,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -74,9 +76,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -138,7 +138,7 @@ public class NetFileManager extends AbstractManager
         return;
 
       final HashMap<String, String> propCollector = new HashMap<String, String>();
-      final Collection<FeatureProperty> fePropCol = new ArrayList<FeatureProperty>();
+      final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
       System.out.println( 3 + ": " + line );
       createProperties( propCollector, line, 2 );
       // final FeatureProperty knotProp = propCollector.get( "knot" );
@@ -192,13 +192,11 @@ public class NetFileManager extends AbstractManager
         final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
 
         final IPropertyType pt = nodeFT.getProperty( "zuflussZRRepository" );
-        FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( pt, link1 );
-        fePropCol.add( linkPropertyRepository );
+        fePropMap.put( pt, link1 );
 
         final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
         final IPropertyType pt2 = nodeFT.getProperty( "zuflussZR" );
-        FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( pt2, link2 );
-        fePropCol.add( linkProperty );
+        fePropMap.put( pt2, link2 );
       }
       if( ivzwg > 0 ) // VERZWEIGUNG
       {
@@ -210,8 +208,7 @@ public class NetFileManager extends AbstractManager
         int ikz = Integer.parseInt( propCollector.get( "ikz" ) );
         final Feature targetNodeFE = getFeature( ikz, nodeFT );
         final IPropertyType pt = nodeFT.getProperty( "verzweigungNodeMember" );
-        final FeatureProperty linkedNodeProp = FeatureFactory.createFeatureProperty( pt, targetNodeFE.getId() );
-        fePropCol.add( linkedNodeProp );
+        fePropMap.put( pt, targetNodeFE.getId() );
       }
       Set set = propCollector.entrySet();
       for( Iterator iter = set.iterator(); iter.hasNext(); )
@@ -226,16 +223,14 @@ public class NetFileManager extends AbstractManager
           // NA_PEGEL
           .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );
       final IPropertyType pt = nodeFT.getProperty( "pegelZR" );
-      final FeatureProperty pegelProp = FeatureFactory.createFeatureProperty( pt, pegelLink );
-      fePropCol.add( pegelProp );
+      fePropMap.put( pt, pegelLink );
 
       final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_"
           + fe.getId() + ".zml", true, true );
       final IPropertyType pt2 = nodeFT.getProperty( "qberechnetZR" );
-      FeatureProperty ergProp = FeatureFactory.createFeatureProperty( pt2, resultLink );
-      fePropCol.add( ergProp );
+      fePropMap.put( pt2, resultLink );
 
-      setParsedProperties( fe, propCollector, fePropCol );
+      setParsedProperties( fe, propCollector, fePropMap );
     }
   }
 

@@ -48,10 +48,11 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
@@ -69,9 +70,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -125,7 +124,7 @@ public class CatchmentManager extends AbstractManager
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
     final HashMap<String, String> propCollector = new HashMap<String, String>();
-    final Collection<FeatureProperty> fePropCol = new ArrayList<FeatureProperty>();
+    final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
     String line;
     // 0-8
     for( int i = 0; i <= 8; i++ )
@@ -140,8 +139,7 @@ public class CatchmentManager extends AbstractManager
     final int anzlayy = Integer.parseInt( propCollector.get( "anzlayy" ) );
     final List<Feature> list = new ArrayList<Feature>();
     final IPropertyType pt = m_catchmentFT.getProperty( "bodenkorrekturmember" );
-    final FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( pt, list );
-    fePropCol.add( bodenkorrekturProperty );
+    fePropMap.put( pt, list );
     // 9
     for( int i = 0; i < anzlayy; i++ )
     {
@@ -171,9 +169,7 @@ public class CatchmentManager extends AbstractManager
     int igwzu = Integer.parseInt( propCollector.get( "igwzu" ) );
     List<Feature> gwList = new ArrayList<Feature>();
 
-    final FeatureProperty property = FeatureFactory.createFeatureProperty( m_catchmentFT.getProperty( "grundwasserabflussMember" ), gwList );
-
-    fePropCol.add( property );
+    fePropMap.put( m_catchmentFT.getProperty( "grundwasserabflussMember" ), gwList );
     if( igwzu > 0 )
     {
       final HashMap<String, String> col2 = new HashMap<String, String>();
@@ -234,13 +230,12 @@ public class CatchmentManager extends AbstractManager
     // no copy
 
     final Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
-    final FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( m_catchmentFT.getProperty( "niederschlagZR" ), relativeLink );
-    fePropCol.add( niederschlagZRProp );
+    fePropMap.put( m_catchmentFT.getProperty( "niederschlagZR" ), relativeLink );
 
     // continue reading
 
     // Collection collection = propCollector.values();
-    setParsedProperties( feature, propCollector, fePropCol );
+    setParsedProperties( feature, propCollector, fePropMap );
     line = reader.readLine();
     return feature;
   }

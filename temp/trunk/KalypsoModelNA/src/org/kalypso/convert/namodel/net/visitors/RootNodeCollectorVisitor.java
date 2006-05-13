@@ -1,14 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -49,6 +38,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
 
 public class RootNodeCollectorVisitor extends NetElementVisitor
 {
@@ -80,6 +78,7 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
   /**
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
+  @Override
   public boolean visit( final NetElement netElement )
   {
     final Feature nodeFE = netElement.getDownStreamNode();

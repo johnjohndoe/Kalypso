@@ -46,7 +46,6 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -64,9 +63,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -159,8 +156,7 @@ public class ChannelManager extends AbstractManager
           // final Collection collection = kmPropCollector.values();
           setParsedProperties( kmParameterFeature, kmPropCollector, null );
           final IPropertyType pt = feature.getFeatureType().getProperty( KMParameterpropName );
-          final FeatureProperty kmProp = FeatureFactory.createFeatureProperty( pt, kmParameterFeature );
-          feature.addProperty( kmProp );
+          FeatureHelper.addProperty( feature, pt, kmParameterFeature );
         }
         break;
       case STORAGECHANNEL:

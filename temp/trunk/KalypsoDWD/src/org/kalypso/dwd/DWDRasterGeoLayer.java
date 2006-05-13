@@ -135,7 +135,7 @@ public class DWDRasterGeoLayer
     final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer" );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
-    final Feature rootFE = FeatureFactory.createFeature( null,"main", layerFT );
+    final Feature rootFE = FeatureFactory.createFeature( null,"main", layerFT, true );
     m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null ,null);
 
     IRelationType cellMemeberPT=(IRelationType) layerFT.getProperty(PROP_CELLMEMBER);
@@ -157,7 +157,7 @@ public class DWDRasterGeoLayer
 
   private Feature createFeature(Feature parent, int pos ) throws Exception
   {
-    final Feature feature = FeatureFactory.createFeature(parent, Integer.toString( pos ), m_positionFeature );
+    final Feature feature = FeatureFactory.createFeature(parent, Integer.toString( pos ), m_positionFeature, true );
     GM_Object point = createGeometryPoint( pos );
     feature.setProperty(  GEO_PROP_POINT, point ) ;
     feature.setProperty(  POS_PROP, new Integer( pos ) );

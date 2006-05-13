@@ -44,6 +44,8 @@ import java.awt.geom.Point2D;
 import java.util.NoSuchElementException;
 
 /**
+ * TODO: move this to commons?
+ * 
  * represents a linear equation such as Y = aX + b
  * 
  * @author schlienger
@@ -203,7 +205,8 @@ public class LinearEquation
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString()
+	@Override
+  public String toString()
 	{
 		return "Y = " + String.valueOf(m_a) + "*X + " + String.valueOf(m_b);
 	}

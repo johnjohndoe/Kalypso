@@ -1,41 +1,3 @@
-package org.kalypso.convert.namodel.manager;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Writer;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -80,6 +42,43 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author huebsch
  */
+package org.kalypso.convert.namodel.manager;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Writer;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
 public class NutzungManager extends AbstractManager
 {
 
@@ -106,6 +105,7 @@ public class NutzungManager extends AbstractManager
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
+  @Override
   public String mapID( int id, IFeatureType ft )
   {
     return null;
@@ -114,22 +114,23 @@ public class NutzungManager extends AbstractManager
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
+  @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
     String nutzDatei = url.getPath().replaceAll( ".+/", "" );
     String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
-    List result = new ArrayList();
+    List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextFeature( reader, nutzID )) != null )
       result.add( fe );
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return result.toArray( new Feature[result.size()] );
   }
 
   private Feature readNextFeature( LineNumberReader reader, String nutzID ) throws Exception
   {
     final HashMap<String, String> landusePropCollector = new HashMap<String, String>();
-    final Collection<FeatureProperty> fePropCol = new ArrayList<FeatureProperty>();
+    final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
     String line;
     // 9
     line = reader.readLine();
@@ -164,13 +165,12 @@ public class NutzungManager extends AbstractManager
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
     final IPropertyType pt = feature.getFeatureType().getProperty( "idealLandUsePeriodLink" );
-    FeatureProperty linkedIdleLanduseProp = FeatureFactory.createFeatureProperty( pt, idleLanduseFE.getId() );
-    fePropCol.add( linkedIdleLanduseProp );
+    fePropMap.put( pt, idleLanduseFE.getId() );
     line = reader.readLine();
 
     // continue reading
     // Collection collection = landusePropCollector.values();
-    setParsedProperties( feature, landusePropCollector, fePropCol );
+    setParsedProperties( feature, landusePropCollector, fePropMap );
     return feature;
   }
 

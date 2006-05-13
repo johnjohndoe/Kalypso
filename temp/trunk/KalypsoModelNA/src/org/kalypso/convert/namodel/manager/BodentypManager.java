@@ -46,7 +46,6 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -58,9 +57,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -159,8 +156,7 @@ public class BodentypManager extends AbstractManager
       setParsedProperties( bodArtParameterFeature, bodArtPropCollector, null );
 
       final IPropertyType pt = m_bodentypFT.getProperty( BodArtParameterPropName );
-      FeatureProperty bodArtProp = FeatureFactory.createFeatureProperty( pt, bodArtParameterFeature );
-      feature.addProperty( bodArtProp );
+      FeatureHelper.addProperty( feature, pt, bodArtParameterFeature );
     }
 
     // continue reading

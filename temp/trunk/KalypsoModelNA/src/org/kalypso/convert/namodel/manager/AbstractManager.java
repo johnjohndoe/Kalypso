@@ -45,17 +45,18 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -230,25 +231,26 @@ public abstract class AbstractManager
     }
   }
 
-  public void setParsedProperties( final Feature feature, final HashMap<String, String> mapCol, Collection<FeatureProperty> featurePropertyCol )
+  public void setParsedProperties( final Feature feature, final HashMap<String, String> mapCol, final Map<IPropertyType, Object> propertyValues )
   {
     if( mapCol != null )
       setParsedProperties( feature, mapCol );
-    if( featurePropertyCol != null )
-      setParsedProperties( feature, featurePropertyCol );
+    if( propertyValues != null )
+      setParsedProperties( feature, propertyValues );
   }
 
-  public void setParsedProperties( Feature feature, Collection<FeatureProperty> collection )
+  public void setParsedProperties( final Feature feature, final Map<IPropertyType, Object> values )
   {
     final IFeatureType ft = feature.getFeatureType();
-    Iterator<FeatureProperty> it = collection.iterator();
-    while( it.hasNext() )
+    for( final Map.Entry<IPropertyType, Object> entry : values.entrySet() )
     {
-      final FeatureProperty feProp = it.next();
-      if( ft.getProperty( feProp.getPropertyType().getQName() ) != null )
-        feature.setProperty( feProp );
+      final IPropertyType propertyType = entry.getKey();
+      final QName qname = propertyType.getQName();
+      final Object value = entry.getValue();
+      if( ft.getProperty( qname ) != null )
+        feature.setProperty( propertyType, value );
       else
-        System.out.println( "property does not exist: >" + feProp.getName() + "=" + feProp.getValue() + "<" );
+        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" );
     }
   }
 
