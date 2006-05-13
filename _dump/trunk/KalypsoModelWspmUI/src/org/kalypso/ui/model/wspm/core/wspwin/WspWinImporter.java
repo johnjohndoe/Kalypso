@@ -85,9 +85,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author thuel2
  */
-/**
- * @author thuel2
- */
 public class WspWinImporter
 {
   public static final String DIR_PROF = "prof";
@@ -371,7 +368,7 @@ public class WspWinImporter
         final WspmRunOffEventReference roeRef = waterBody.createRunOffEvent( bean.getName() );
         // remember for reference from calculation
         readRunOffEvents.put( bean.getName(), roeRef );
-        
+
         // TODO: write values into runoff-observation
       }
     }
@@ -389,11 +386,11 @@ public class WspWinImporter
       for( final CalculationBean bean : calcBeans )
       {
         // read content
-        
+
         // create calculation
         final TuhhCalculation calc = tuhhProject.createCalculation( waterBody );
         calc.setName( bean.getName() );
-        calc.setDescription( "Imported from WspWin");
+        calc.setDescription( "Imported from WspWin" );
       }
     }
     catch( final Exception e )
