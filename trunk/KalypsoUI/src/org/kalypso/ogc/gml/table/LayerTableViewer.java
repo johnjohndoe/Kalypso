@@ -389,7 +389,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     m_focusedFeature = row == null ? null : (Feature) row.getData();
 
-    m_focusedProperty = (column < 0 || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
+    m_focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
   }
 
   public void dispose( )

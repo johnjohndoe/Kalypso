@@ -47,12 +47,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -66,6 +69,7 @@ import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.featureview.KalypsoFeatureViewPlugin;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -121,6 +125,16 @@ public class FeatureView extends ViewPart implements ModellEventListener
 {
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
 
+  /**
+   * Settings constant for section name (value <code>FeatureView</code>).
+   */
+  private static final String STORE_SECTION = "FeatureView"; //$NON-NLS-1$
+
+  /**
+   * Settings constant for show tables (value <code>FeatureView.STORE_SHOW_TABLES</code>).
+   */
+  private static final String STORE_SHOW_TABLES = "FeatureView.STORE_SHOW_TABLES"; //$NON-NLS-1$
+
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
     public void featureChanged( final FeatureChange change )
@@ -136,7 +150,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       // just show this feature in the view, don't change the selection this doesn't work
       // don't change the command manager, changing the feature only work inside the same workspace
-      activateFeature( feature );
+      activateFeature( feature, false );
     }
   };
 
@@ -170,6 +184,25 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
+  private IDialogSettings m_settings;
+
+  private Action m_showTablesAction = null;
+
+  public FeatureView( )
+  {
+    final IDialogSettings viewsSettings = KalypsoFeatureViewPlugin.getDefault().getDialogSettings();
+
+    m_settings = viewsSettings.getSection( STORE_SECTION );
+    if( m_settings == null )
+    {
+      m_settings = viewsSettings.addNewSection( STORE_SECTION );
+      // set default values
+      m_settings.put( STORE_SHOW_TABLES, true);
+    }
+
+    m_featureComposite.setShowTables( m_settings.getBoolean( STORE_SHOW_TABLES ) );
+  }
+
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
    */
@@ -188,11 +221,25 @@ public class FeatureView extends ViewPart implements ModellEventListener
   @Override
   public void dispose( )
   {
-    activateFeature( null ); // to unhook listeners
+    activateFeature( null, false ); // to unhook listeners
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
     page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
+  }
+
+  public void setShowTables( final boolean showTables )
+  {
+    final Feature currentFeature = getCurrentFeature();
+    m_featureComposite.setShowTables( showTables );
+    m_settings.put( STORE_SHOW_TABLES, showTables );
+
+    activateFeature( currentFeature, true );
+  }
+
+  public boolean isShowTables( )
+  {
+    return m_featureComposite.isShowTables();
   }
 
   protected void selectionChanged( final ISelection selection )
@@ -203,12 +250,12 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
       final Feature feature = featureFromSelection( featureSel );
       m_commandManager = featureSel.getWorkspace( feature );
-      activateFeature( feature );
+      activateFeature( feature, false );
     }
     else
     {
       m_commandManager = null;
-      activateFeature( null );
+      activateFeature( null, false );
     }
   }
 
@@ -236,7 +283,24 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_featureComposite.addChangeListener( m_fcl );
 
-    activateFeature( null );
+    activateFeature( null, false );
+
+    // add showTables-Action to menu-bar
+    // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
+    // does not allow to set the checked state dynamically
+    m_showTablesAction = new Action( "Tabellen anzeigen", Action.AS_CHECK_BOX )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        setShowTables( isChecked() );
+      }
+    };
+    m_showTablesAction.setChecked( isShowTables() );
+    getViewSite().getActionBars().getMenuManager().add( m_showTablesAction );
 
     final ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
     selectionChanged( selection );
@@ -251,7 +315,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_mainGroup.setFocus();
   }
 
-  protected void activateFeature( final Feature feature )
+  /**
+   * @param force
+   *          if true, alwys reset this view, else, only if feature has really changed.
+   */
+  protected void activateFeature( final Feature feature, final boolean force )
   {
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
@@ -259,7 +327,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final Feature oldFeature = m_featureComposite.getFeature();
     final GMLWorkspace oldWorkspace = oldFeature == null ? null : oldFeature.getWorkspace();
     final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
-    if( oldWorkspace == workspace && oldFeature == feature )
+    if( !force && oldWorkspace == workspace && oldFeature == feature )
       return;
 
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
@@ -349,7 +417,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   public GMLWorkspace getCurrentworkspace( )
   {
-    return m_featureComposite.getFeature().getWorkspace();
+    final Feature feature = m_featureComposite.getFeature();
+    return feature == null ? null : feature.getWorkspace();
   }
 
   public Feature getCurrentFeature( )
