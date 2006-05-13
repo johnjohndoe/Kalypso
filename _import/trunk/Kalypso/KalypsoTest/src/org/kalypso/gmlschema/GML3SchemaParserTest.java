@@ -46,10 +46,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
-import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
-import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
-import org.kalypso.gmlschema.basics.GmlTreePrintVisitor;
-import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
 
 /**
  * @author doemming
@@ -75,8 +71,11 @@ public class GML3SchemaParserTest extends TestCase
 
       // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/swe" );
       // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/om" );
-      final URL schemaLocationURL = (new File( "C:/eclipse3.1_workspace/KalypsoModelEindim/src/org/kalypso/model/wspm/schemata/wspm.xsd" )).toURL();
+      
       final URL testResourceURL = getClass().getResource( "resources/GML3_wspm/schematree.txt" );
+      final URL schemaLocationURL = new URL( testResourceURL, "../../../../../../../..//KalypsoModelWspm/src/org/kalypso/model/wspm/schemata/wspm.xsd" );
+//      final URL schemaLocationURL = (new File( "C:/eclipse3.1_workspace/KalypsoModelEindim/src/org/kalypso/model/wspm/schemata/wspm.xsd" )).toURL();
+      
 
       GMLSchemaTest.loadAndTestSchema( schemaLocationURL, testResourceURL, false );
 

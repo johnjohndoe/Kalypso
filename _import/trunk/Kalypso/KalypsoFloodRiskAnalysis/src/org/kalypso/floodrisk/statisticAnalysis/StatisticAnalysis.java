@@ -62,6 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
@@ -84,11 +85,11 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid ) throws Exception
   {
-    Hashtable statistics = null;
+    Hashtable<Integer, Vector<Double>> statistics = null;
     // control Geometries
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
 
-    statistics = new Hashtable();
+    statistics = new Hashtable<Integer, Vector<Double>>();
     GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
@@ -112,7 +113,7 @@ public class StatisticAnalysis
 
             if( !statistics.containsKey( landuseKey ) )
             {
-              Vector statisticVector = new Vector();
+              Vector<Double> statisticVector = new Vector<Double>();
               statisticVector.addElement( new Double( damage ) );
               statisticVector.addElement( new Double( damagePerSquaremeter ) );
               statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -120,7 +121,7 @@ public class StatisticAnalysis
             }
             else
             {
-              Vector actualStatisticVector = (Vector) statistics.get( landuseKey );
+              Vector actualStatisticVector = statistics.get( landuseKey );
               double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
               double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
               double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
@@ -133,7 +134,7 @@ public class StatisticAnalysis
               {
                 actualMaxValue = damagePerSquaremeter;
               }
-              Vector statisticVector = new Vector();
+              Vector<Double> statisticVector = new Vector<Double>();
               statisticVector.addElement( new Double( actualDamage ) );
               statisticVector.addElement( new Double( actualMinValue ) );
               statisticVector.addElement( new Double( actualMaxValue ) );
@@ -166,12 +167,12 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
-    Hashtable statistics = null;
+    Hashtable<Integer, Vector<Double>> statistics = null;
     // control Geometries
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
 
-    statistics = new Hashtable();
+    statistics = new Hashtable<Integer, Vector<Double>>();
     GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
@@ -202,7 +203,7 @@ public class StatisticAnalysis
 
                 if( !statistics.containsKey( landuseKey ) )
                 {
-                  Vector statisticVector = new Vector();
+                  Vector<Double> statisticVector = new Vector<Double>();
                   statisticVector.addElement( new Double( damage ) );
                   statisticVector.addElement( new Double( damagePerSquaremeter ) );
                   statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -210,7 +211,7 @@ public class StatisticAnalysis
                 }
                 else
                 {
-                  Vector actualStatisticVector = (Vector) statistics.get( landuseKey );
+                  Vector actualStatisticVector = statistics.get( landuseKey );
                   double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
                   double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
                   double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
@@ -223,7 +224,7 @@ public class StatisticAnalysis
                   {
                     actualMaxValue = damagePerSquaremeter;
                   }
-                  Vector statisticVector = new Vector();
+                  Vector<Double> statisticVector = new Vector<Double>();
                   statisticVector.addElement( new Double( actualDamage ) );
                   statisticVector.addElement( new Double( actualMinValue ) );
                   statisticVector.addElement( new Double( actualMaxValue ) );
@@ -272,11 +273,11 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT );
+    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true );
     // create Collection
     final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-    Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName ), collection ) );
+    final Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT, true );
+    FeatureHelper.addProperty(rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
     // create landuseFeatures
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -300,14 +301,17 @@ public class StatisticAnalysis
       }
       Object[] properties = { "", "", null, landuse, min, max, sum };
       Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties );
-      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName ), landuseFeature ) );
+      FeatureHelper.addProperty(collection, collFT.getProperty( landusePropertyName ), landuseFeature );
+      
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
           + Number.round( max.doubleValue(), 4, mode ) );
       sumAll = sumAll + sum.doubleValue();
     }
-    collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName ), new Double( sumAll ) ) );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty ), new Double( sumAll ) ) );
+    
+    FeatureHelper.addProperty( collection, collFT.getProperty( sumPropertyName ), new Double( sumAll ) );
+    FeatureHelper.addProperty( rootFeature, rootFT.getProperty( overallSumProperty ), new Double( sumAll ) );
+
     System.out.println( "Total damage= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
 
     // create workspace
@@ -331,12 +335,12 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid ) throws Exception
   {
-    Hashtable statistics = null;
+    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
     // control Geometries
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
 
-    statistics = new Hashtable();
+    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
     GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
@@ -361,8 +365,8 @@ public class StatisticAnalysis
             Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
             if( !statistics.containsKey( administrationUnitKey ) )
             {
-              Hashtable statistics_landuse = new Hashtable();
-              Vector statisticVector = new Vector();
+              Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
+              Vector<Double> statisticVector = new Vector<Double>();
               statisticVector.addElement( new Double( damage ) );
               statisticVector.addElement( new Double( damagePerSquaremeter ) );
               statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -371,10 +375,10 @@ public class StatisticAnalysis
             }
             else
             {
-              Hashtable statistics_landuse = (Hashtable) statistics.get( administrationUnitKey );
+              Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
               if( !statistics_landuse.containsKey( landuseKey ) )
               {
-                Vector statisticVector = new Vector();
+                Vector<Double> statisticVector = new Vector<Double>();
                 statisticVector.addElement( new Double( damage ) );
                 statisticVector.addElement( new Double( damagePerSquaremeter ) );
                 statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -382,7 +386,7 @@ public class StatisticAnalysis
               }
               else
               {
-                Vector actualStatisticVector = (Vector) statistics_landuse.get( landuseKey );
+                Vector actualStatisticVector = statistics_landuse.get( landuseKey );
                 double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
                 double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
                 double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
@@ -395,7 +399,7 @@ public class StatisticAnalysis
                 {
                   actualMaxValue = damagePerSquaremeter;
                 }
-                Vector statisticVector = new Vector();
+                Vector<Double> statisticVector = new Vector<Double>();
                 statisticVector.addElement( new Double( actualDamage ) );
                 statisticVector.addElement( new Double( actualMinValue ) );
                 statisticVector.addElement( new Double( actualMaxValue ) );
@@ -430,13 +434,13 @@ public class StatisticAnalysis
    */
   public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
-    Hashtable statistics = null;
+    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
     // control Geometries
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), administrationUnitGrid.getGridDomain() );
     GridGeometryHelper.controlGridGeometries( damageGrid.getGridDomain(), templateGrid.getGridDomain() );
 
-    statistics = new Hashtable();
+    statistics = new Hashtable<Integer, Hashtable<Integer, Vector<Double>>>();
     GM_Point origin = damageGrid.getGridDomain().getOrigin( null );
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
@@ -469,8 +473,8 @@ public class StatisticAnalysis
                 Integer administrationUnitKey = new Integer( ((Double) administrationUnit_rowData.get( j )).intValue() );
                 if( !statistics.containsKey( administrationUnitKey ) )
                 {
-                  Hashtable statistics_landuse = new Hashtable();
-                  Vector statisticVector = new Vector();
+                  Hashtable<Integer, Vector<Double>> statistics_landuse = new Hashtable<Integer, Vector<Double>>();
+                  Vector<Double> statisticVector = new Vector<Double>();
                   statisticVector.addElement( new Double( damage ) );
                   statisticVector.addElement( new Double( damagePerSquaremeter ) );
                   statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -479,10 +483,10 @@ public class StatisticAnalysis
                 }
                 else
                 {
-                  Hashtable statistics_landuse = (Hashtable) statistics.get( administrationUnitKey );
+                  Hashtable<Integer, Vector<Double>> statistics_landuse = statistics.get( administrationUnitKey );
                   if( !statistics_landuse.containsKey( landuseKey ) )
                   {
-                    Vector statisticVector = new Vector();
+                    Vector<Double> statisticVector = new Vector<Double>();
                     statisticVector.addElement( new Double( damage ) );
                     statisticVector.addElement( new Double( damagePerSquaremeter ) );
                     statisticVector.addElement( new Double( damagePerSquaremeter ) );
@@ -490,7 +494,7 @@ public class StatisticAnalysis
                   }
                   else
                   {
-                    Vector actualStatisticVector = (Vector) statistics_landuse.get( landuseKey );
+                    Vector actualStatisticVector = statistics_landuse.get( landuseKey );
                     double actualDamage = ((Double) actualStatisticVector.get( 0 )).doubleValue();
                     double actualMinValue = ((Double) actualStatisticVector.get( 1 )).doubleValue();
                     double actualMaxValue = ((Double) actualStatisticVector.get( 2 )).doubleValue();
@@ -503,7 +507,7 @@ public class StatisticAnalysis
                     {
                       actualMaxValue = damagePerSquaremeter;
                     }
-                    Vector statisticVector = new Vector();
+                    Vector<Double> statisticVector = new Vector<Double>();
                     statisticVector.addElement( new Double( actualDamage ) );
                     statisticVector.addElement( new Double( actualMinValue ) );
                     statisticVector.addElement( new Double( actualMaxValue ) );
@@ -559,7 +563,7 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature(null, "StatisticData0", rootFT );
+    Feature rootFeature = FeatureFactory.createFeature(null, "StatisticData0", rootFT, true );
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -585,9 +589,9 @@ public class StatisticAnalysis
       }
       // create Collection
       final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-      Feature collection = FeatureFactory.createFeature(rootFeature, "Collection" + numOfCol, collFT );
-      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( namePropertyName ), adminUnit ) );
-      rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( collectionPropertyName ), collection ) );
+      Feature collection = FeatureFactory.createFeature(rootFeature, "Collection" + numOfCol, collFT, true );
+      FeatureHelper.addProperty( collection, collFT.getProperty( namePropertyName ), adminUnit );
+      FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
 
       System.out.println( adminUnit + ": " );
       // create landuse-features
@@ -613,19 +617,19 @@ public class StatisticAnalysis
         Object[] properties = { "", "", null, landuse, min, max, sum };
         Feature landuseFeature = FeatureFactory.createFeature( collection,"Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties );
         numOfFeat = numOfFeat + 1;
-        collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( landusePropertyName ), landuseFeature ) );
+        FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
         int mode = BigDecimal.ROUND_HALF_EVEN;
         System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
             + Number.round( max.doubleValue(), 4, mode ) );
       }
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) );
-      collection.addProperty( FeatureFactory.createFeatureProperty( collFT.getProperty( sumPropertyName ), new Double( sum_adminUnit ) ) );
+      FeatureHelper.addProperty( collection, collFT.getProperty( sumPropertyName ), new Double( sum_adminUnit ) );
       sumAll = sumAll + sum_adminUnit;
       numOfCol = numOfCol + 1;
     }
     System.out.println( "Total Damage=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( rootFT.getProperty( overallSumProperty ), new Double( sumAll ) ) );
+    FeatureHelper.addProperty( rootFeature, rootFT.getProperty( overallSumProperty ), new Double( sumAll ) );
 
     // create workspace
     final IFeatureType[] types = schema.getAllFeatureTypes();

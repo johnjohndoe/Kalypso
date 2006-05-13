@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NaModell fid="NaModell0" xmlns="http://www.tuhh.de/kalypsoNA" xmlns:zmlinline="inline.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.tuhh.de/kalypsoNA project:/.model/schema/namodell.xsd">
+<NaModell fid="NaModell0" xmlns="http://www.tuhh.de/kalypsoNA" xmlns:zmlinline="inline.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml">
   <CatchmentCollectionMember>
     <CatchmentCollection fid="CatchmentCollection1">
       <catchmentMember>

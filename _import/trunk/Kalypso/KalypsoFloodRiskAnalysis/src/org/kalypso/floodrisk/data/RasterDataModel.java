@@ -57,6 +57,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
@@ -126,13 +127,13 @@ public class RasterDataModel
     String rgcFeatureTypePropertyName = "RectifiedGridCoverageMember";
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "RasterDataModel0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null, "RasterDataModel0", rootFeatureType, true );
     IPropertyType ftp_rgc = rootFeature.getFeatureType().getProperty( rgcFeatureTypePropertyName );
     // create feature: RectifiedGridCoverage
     Object[] properties = new Object[] { "", "", null, grid.getGridDomain(), grid.getRangeSet() };
     final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( rootFeature, "RectifiedGridCoverage0", ((IRelationType) ftp_rgc).getTargetFeatureType(), properties );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc, rectifiedGridCoverageFeature ) );
-
+    FeatureHelper.addProperty(rootFeature, ftp_rgc, rectifiedGridCoverageFeature );
+    
     // create workspace
     GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, rasterDataModelGML.toURL(), "" );
 

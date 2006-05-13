@@ -65,7 +65,6 @@ public class ParserTest extends TestCase
   {
     super.setUp();
     KalypsoTest.init();
-
   }
 
   public void testload( ) throws Exception

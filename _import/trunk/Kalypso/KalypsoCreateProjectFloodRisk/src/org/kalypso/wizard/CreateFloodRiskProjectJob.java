@@ -121,6 +121,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
@@ -419,7 +420,7 @@ public class CreateFloodRiskProjectJob extends Job
     final IFeatureType[] types = schema.getAllFeatureTypes();
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( null, rootFeatureTypeName + "0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null, rootFeatureTypeName + "0", rootFeatureType, true );
     IPropertyType ftp_feature = rootFeatureType.getProperty( featureTypePropertyName );
 
     // create features: Feature
@@ -437,7 +438,7 @@ public class CreateFloodRiskProjectJob extends Job
       }
       Object[] properties = new Object[] { "", "", null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
       final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties );
-      rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_feature, feature ) );
+      FeatureHelper.addProperty( rootFeature, ftp_feature, feature );
     }
 
     // create workspace
@@ -492,7 +493,7 @@ public class CreateFloodRiskProjectJob extends Job
       contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
       // riskContextModel
       Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, ftLanduse_risk );
-      landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty( featureProperty, landusePropertyName ) );
+      landuseFeature_risk.setProperty( featureProperty, landusePropertyName );
       riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyName, 0, landuseFeature_risk );
     }
     // save changes
@@ -610,7 +611,7 @@ public class CreateFloodRiskProjectJob extends Job
     // create rootFeature
     String rootFeatureName = "WaterlevelData";
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "WaterlevelData0", rootFeatureType );
+    Feature rootFeature = FeatureFactory.createFeature( null, "WaterlevelData0", rootFeatureType, true );
     final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( "WaterlevelMember" );
     // create waterlevelFeature(s)
     String waterlevelFeatureName = "Waterlevel";
@@ -619,11 +620,10 @@ public class CreateFloodRiskProjectJob extends Job
     int identifier = 0;
     for( int i = 0; i < targetFiles.size(); i++ )
     {
-      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName + identifier, waterlevelFeatureType );
+      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName + identifier, waterlevelFeatureType, true );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
       waterlevelFeature.setProperty( featureProperty, waterlevelFile );
-      // TODO use utility methodes for next:
-      rootFeature.addProperty( FeatureFactory.createFeatureProperty( waterlevelMember, waterlevelFeature ) );
+      FeatureHelper.addProperty( rootFeature, waterlevelMember, waterlevelFeature );
       identifier = identifier + 1;
     }
 
