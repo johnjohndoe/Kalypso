@@ -58,7 +58,7 @@ public class FeatureViewManager
 {
   private Map<QName, FeatureviewType> m_templates = new HashMap<QName, FeatureviewType>();
 
-  private boolean m_showTables = false;
+  private boolean m_showTables = true;
 
   /** Generate new templates with or without tables. Cache is cleared. */
   public void setShowTables( final boolean showTable )
