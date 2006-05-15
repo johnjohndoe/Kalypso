@@ -96,7 +96,7 @@ public class AddGeometrieFromFileAction extends AbstractCommandURLAction
     try
     {
       if( contextString == null )
-        context = KalypsoPortalPlugin.getDefault().getContext();
+        context = KalypsoPortalPlugin.getDefault().getActiveProject();
       else
         context = new URL( contextString );
       fileUrl = UrlResolverSingleton.resolveUrl( context, relativePath );
