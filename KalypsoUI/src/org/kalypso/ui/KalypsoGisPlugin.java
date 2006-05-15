@@ -63,7 +63,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -157,21 +156,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public KalypsoGisPlugin( )
   {
     THE_PLUGIN = this;
-
-    // TODO: move everything to start()!
-    
-    configureLogger();
-
-    try
-    {
-      m_resourceBundle = ResourceBundle.getBundle( BUNDLE_NAME );
-    }
-    catch( final MissingResourceException ex )
-    {
-      m_resourceBundle = null;
-
-      ex.printStackTrace();
-    }
 
     try
     {
@@ -295,6 +279,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private void configureLogger( )
   {
+    // TODO:REMOVE THIS: we should always use the eclipse logging mechanisms
     final Logger logger = Logger.getLogger( "org.kalypso" ); //$NON-NLS-N$
     logger.setLevel( Level.INFO );
 
@@ -364,6 +349,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     super.start( context );
 
+    configureLogger();
+
+    try
+    {
+      m_resourceBundle = ResourceBundle.getBundle( BUNDLE_NAME );
+    }
+    catch( final MissingResourceException ex )
+    {
+      m_resourceBundle = null;
+
+      ex.printStackTrace();
+    }
+    
     final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     registerTypeHandler( marshallingRegistry, guiRegistry );
@@ -490,6 +488,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_tsRepositoryContainer.dispose();
     
     GMLSchemaCatalog.release();
+    
+    m_resourceBundle = null;
   }
 
   public static String getId( )
@@ -592,6 +592,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
       final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, ZmlInlineTypeHandler.TN.class );
+      
       if( marshallingRegistry != null )
       {
         TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
