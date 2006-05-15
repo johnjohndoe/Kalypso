@@ -53,6 +53,7 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
         // important: must allways follow openURL-introActions to stay in securityContext for excecuting
         // runAction-introActions
         final URL url = new URL( "http://org.eclipse.ui.intro/openURL?url=" + urlFromConfig );
+//        final URL url = new URL( "http://org.eclipse.ui.intro/runAction?goto=" + urlFromConfig +"&");
         // tricky: generate frame, otherwise relative urls can not be resolved !
         final Element frameSetE = domOwner.createElement( "frameset" );
         parent.appendChild( frameSetE );

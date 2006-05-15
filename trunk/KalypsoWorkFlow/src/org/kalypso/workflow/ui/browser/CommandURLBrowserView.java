@@ -9,6 +9,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.actions.ActionFactory;
 import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
 import org.kalypso.workflow.WorkflowContext;
@@ -131,5 +132,14 @@ public class CommandURLBrowserView extends AbstractBrowserView
       e.printStackTrace();
     }
     updateNavigationActionsState();
+  }
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView#restoreState(org.eclipse.ui.IMemento)
+   */
+  @Override
+  protected void restoreState( IMemento memento )
+  {
+    // TODO Auto-generated method stub
+    super.restoreState(memento);
   }
 }
