@@ -1,4 +1,45 @@
 GMLSchema: http://www.tuhh.de/kalypsoNA
+.  GMLSchema: inline.zml.kalypso.org
+.  GMLSchema: obslink.zml.kalypso.org
+.  .  GMLSchema: http://www.w3.org/1999/xlink
+.  GMLSchema: http://www.opengis.net/gml
+.  .  Feature: {http://www.opengis.net/gml}_Feature
+.  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .       Class: class java.lang.String
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  Feature: {http://www.opengis.net/gml}_FeatureCollection
+.  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureCollectionType
+.  .  .  .  extended by
+.  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureCollectionBaseType
+.  .  .  .  .  .  restricted by
+.  .  .  .  .  .  .  ContentType: {http://www.opengis.net/gml}AbstractFeatureType
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}description
+.  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}name
+.  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
+.  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
+.  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  Feature: {http://www.tuhh.de/kalypsoNA}NaModell
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}NaModellType
 .  .  .  extended by
@@ -635,3 +676,4 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}gwwi
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
+
