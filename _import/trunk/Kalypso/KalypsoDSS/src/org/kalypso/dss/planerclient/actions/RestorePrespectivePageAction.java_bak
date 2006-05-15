@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,13 +20,18 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
 import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.MementoUtils;
+import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
+import org.kalypso.contribs.java.net.ContextMappingURLStreamHandler;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.planerclient.browser.KalypsoWebBrowserView;
@@ -69,17 +75,16 @@ public class RestorePrespectivePageAction extends Action implements IWorkbenchWi
     {
 
       final File sourceFile = new File( dialogResult );
-      XMLMemento originalMemento = XMLMemento.createReadRoot( new FileReader( sourceFile ) );
-      final UrlResolver resolver = new UrlResolver();
-      final IMemento memento = MementoUtils.createMementoWithUrlResolver( originalMemento, new IUrlResolver2()
+      final XMLMemento originalMemento = XMLMemento.createReadRoot( new FileReader( sourceFile ) );
+
+      final IMemento memento = MementoUtils.createMementoWithUrlResolver( originalMemento, null,new IUrlResolver2()
       {
 
         public URL resolveURL( String relative ) throws MalformedURLException
         {
-          return resolver.resolveURL( sourceFile.toURL(), relative );
+          return UrlResolverSingleton.resolveUrl( sourceFile.toURL(), relative );
         }
       } );
-
       IMemento windowMemento = memento.getChild( IWorkbenchConstants.TAG_WINDOW );
       IMemento pageMemento = windowMemento.getChild( IWorkbenchConstants.TAG_PAGE );
       IMemento perspspectiveMemento = pageMemento.getChild( IWorkbenchConstants.TAG_PERSPECTIVES );
@@ -110,11 +115,11 @@ public class RestorePrespectivePageAction extends Action implements IWorkbenchWi
       // page.setPerspective(realDesc);
       // page.resetPerspective();
 
-      IViewPart part = activePage.findView( KalypsoWebBrowserView.WEB_BROWSER_VIEW_ID );
-      if( part instanceof KalypsoWebBrowserView )
-      {
-        ((KalypsoWebBrowserView) part).setURL( KalypsoDSSPlugin.START_URL );
-      }
+      // IViewPart part = activePage.findView( KalypsoWebBrowserView.WEB_BROWSER_VIEW_ID );
+      // if( part instanceof KalypsoWebBrowserView )
+      // {
+      // ((KalypsoWebBrowserView) part).setURL( KalypsoDSSPlugin.START_URL );
+      // }
 
     }
     catch( WorkbenchException e )

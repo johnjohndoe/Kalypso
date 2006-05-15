@@ -7,14 +7,10 @@ Bundle-ClassPath: KalypsoDSS.jar
 Bundle-Activator: org.kalypso.dss.KalypsoDSSPlugin
 Bundle-Vendor: University of Technology Hamburg-Harburg
 Bundle-Localization: plugin
-Export-Package: org.kalypso.dss,
- org.kalypso.dss.actiondelegates,
- org.kalypso.dss.planerclient.browser,
- org.kalypso.dss.resources,
- org.kalypso.dss.wizards
+Export-Package: org.kalypso.dss
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
- org.kalypso.ui,
- org.eclipse.ui.browser;visibility:=reexport
+ org.kalypso.ui;visibility:=reexport,
+ org.kalypso.metadoc
 Eclipse-AutoStart: true
