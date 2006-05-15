@@ -1,12 +1,7 @@
 package org.kalypso.portal;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.eclipse.ui.plugin.*;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -18,9 +13,7 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   // The shared instance.
   private static KalypsoPortalPlugin plugin;
 
-  private URL m_context = null;
-
-  private IProject m_project;
+//  private URL m_context = null;
 
   /**
    * The constructor.
@@ -33,6 +26,7 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
+  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
@@ -41,6 +35,7 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   /**
    * This method is called when the plug-in is stopped
    */
+  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );
@@ -67,13 +62,20 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
     return AbstractUIPlugin.imageDescriptorFromPlugin( "KalypsoPortal", path );
   }
 
-  public URL getActiveProject( ) throws MalformedURLException
-  {
-    return ResourceUtilities.createURL( m_project );
-  }
-
-  public void setActiveProject( IProject project )
-  {
-    m_project = project;
-  }
+  // public void setContext( final IProject project )
+  // {
+  // try
+  // {
+  // m_context = ResourceUtilities.createURL( project );
+  // }
+  // catch( MalformedURLException e )
+  // {
+  // e.printStackTrace();
+  // }
+  // }
+  //
+  // public URL getContext( )
+  // {
+  // return m_context;
+  // }
 }

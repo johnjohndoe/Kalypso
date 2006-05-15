@@ -56,13 +56,17 @@ public class ZoomOutDelegate implements IEditorActionDelegate
 {
   private GisMapEditor m_editor;
 
+  public ZoomOutDelegate( )
+  {
+  }
+
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_editor = (GisMapEditor)targetEditor;
+    m_editor = (GisMapEditor) targetEditor;
   }
 
   /**
@@ -87,6 +91,6 @@ public class ZoomOutDelegate implements IEditorActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-  // nix tun
+    // nix tun
   }
 }

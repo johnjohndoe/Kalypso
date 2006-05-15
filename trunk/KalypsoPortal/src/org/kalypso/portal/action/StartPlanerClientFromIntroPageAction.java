@@ -18,37 +18,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.util.Geometry;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
-import org.eclipse.ui.internal.IWorkbenchConstants;
-import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.dialogs.NewWizard;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
-import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
-import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
-import org.eclipse.ui.internal.registry.PerspectiveRegistry;
 import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.IIntroSite;
-import org.eclipse.ui.intro.config.CustomizableIntroPart;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -59,8 +42,9 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.portal.IKalypsoPortalConstants;
 import org.kalypso.portal.KalypsoPortalPlugin;
-import org.kalypso.portal.dialog.SiteDialog;
 import org.kalypso.portal.wizard.LoadProjectFromWorkspaceWizard;
+import org.kalypso.workflow.WorkflowContext;
+import org.kalypso.workflow.ui.KalypsoWorkFlowPlugin;
 
 public class StartPlanerClientFromIntroPageAction extends Action implements IIntroAction
 {
@@ -72,34 +56,20 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final String urlInitalPage = (String) params.get( IKalypsoPortalConstants.INIT_URL );
     final String urlContentProj = (String) params.get( IKalypsoPortalConstants.INIT_PROJ_URL );
-
-    final IProject project = getProject( workbench );
-    if( project != null )
+    if( urlInitalPage != null && urlInitalPage.length() > 0 )
     {
-      KalypsoPortalPlugin.getDefault().setActiveProject( project );
-      closeIntroPlugin( workbench );
-      URL contUrl = null;
-      if( urlInitalPage != null && urlInitalPage.length() > 0 )
-        try
-        {
-          contUrl = new URL( urlContentProj );
-          // copy the resources from the url to the workspace
-          // (project)
-          copyResourcesToProject( project.getLocation(), contUrl );
-        }
-        catch( MalformedURLException e )
-        {
-          e.printStackTrace();
-        }
-
-      openPlanerPerspective( urlInitalPage, project );
+      final IProject project = getProject( workbench, urlContentProj );
+      if( project != null )
+      {
+        closeIntroPlugin( workbench );
+        openPlanerPerspective( urlInitalPage, project );
+      }
     }
 
   }
 
-  private IProject getProject( IWorkbench workbench )
+  private IProject getProject( IWorkbench workbench, String initialProjectAsArchiveURLString )
   {
-
     IProject newProject = null;
     final NewWizard selectionWizard = new NewWizard();
 
@@ -123,13 +93,27 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
         if( wizard instanceof BasicNewProjectResourceWizard )
         {
           newProject = ((BasicNewProjectResourceWizard) wizard).getNewProject();
+
+          try
+          {
+            final URL initialProjectAsArchiveURLcontURL = new URL( initialProjectAsArchiveURLString );
+            // copy the resources from the url to the workspace
+            // (project)
+            copyResourcesToProject( newProject.getLocation(), initialProjectAsArchiveURLcontURL );
+          }
+          catch( MalformedURLException e )
+          {
+            e.printStackTrace();
+          }
+
         }
         if( wizard instanceof LoadProjectFromWorkspaceWizard )
         {
           newProject = ((LoadProjectFromWorkspaceWizard) wizard).getProject();
         }
       }
-      KalypsoPortalPlugin.getDefault().setActiveProject( newProject );
+      final WorkflowContext defaultWorkflowContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
+      defaultWorkflowContext.setContextProject( newProject );
       return newProject;
     }
     return null;
@@ -138,26 +122,26 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
   private void getProjectFromServer( IWorkbench workbench )
   {
 
-    IWorkbenchPage[] pages = workbench.getActiveWorkbenchWindow().getPages();
-    final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
-    IWorkbenchPartSite site = null;
-    try
-    {
-      IViewPart part = pages[0].showView( IPageLayout.ID_OUTLINE );
-      site = part.getSite();
-    }
-    catch( PartInitException e )
-    {
-      e.printStackTrace();
-    }
-
-    SiteDialog dialog2 = new SiteDialog( shell, site );
-
-    int returnCode = dialog2.open();
-    if( returnCode == Window.OK )
-    {
-      System.out.println();
-    }
+    // IWorkbenchPage[] pages = workbench.getActiveWorkbenchWindow().getPages();
+    // final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
+    // IWorkbenchPartSite site = null;
+    // try
+    // {
+    // IViewPart part = pages[0].showView( IPageLayout.ID_OUTLINE );
+    // site = part.getSite();
+    // }
+    // catch( PartInitException e )
+    // {
+    // e.printStackTrace();
+    // }
+    //
+    // SiteDialog dialog2 = new SiteDialog( shell, site );
+    //
+    // int returnCode = dialog2.open();
+    // if( returnCode == Window.OK )
+    // {
+    // System.out.println();
+    // }
   }
 
   private boolean closeIntroPlugin( IWorkbench workbench )
@@ -192,7 +176,7 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
         reader = new InputStreamReader( file.getContents() );
       }
       else
-      { 
+      {
         contextUrl = firstMementoUrl;
         reader = new InputStreamReader( firstMementoUrl.openStream() );
       }
