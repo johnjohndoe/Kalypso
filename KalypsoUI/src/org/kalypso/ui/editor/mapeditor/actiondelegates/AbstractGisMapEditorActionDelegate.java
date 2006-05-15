@@ -78,7 +78,9 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
           {
             public void run( )
             {
-              editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
+              final IWidget widget = getWidget();
+//              System.out.println( widget.getName() );
+              editor.getMapPanel().getWidgetManager().setActualWidget( widget );
             }
           } );
         }

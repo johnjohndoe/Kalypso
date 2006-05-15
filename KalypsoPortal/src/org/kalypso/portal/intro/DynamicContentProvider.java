@@ -1,6 +1,5 @@
 package org.kalypso.portal.intro;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 
@@ -37,18 +36,9 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
   public void createContent( String id, Element parent )
   {
     final Document domOwner = parent.getOwnerDocument();
-
-    final File file = new File( "C:\\Tomcat 5.0\\webapps\\webdav\\dss\\intro\\intropage.xhtml" );
-    URL url = null;
-    try
-    {
-
-      url = file.toURL();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+    final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.xhtml";
+    // final File file = new File( "C:\\Tomcat 5.0\\webapps\\webdav\\dss\\intro\\intropage.xhtml" );
+    // final File file = new File( "C:/eclipse3.1_workspace/KalypsoFlowsData/dss/intro/intropage.xhtml" );
     if( "headID".equals( id ) )
     {
       final Comment comment = domOwner.createComment( "headID" );
@@ -58,17 +48,28 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
     }
     if( "frameID".equals( id ) )
     {
-      final Element frameSetE = domOwner.createElement( "frameset" );
-      parent.appendChild( frameSetE );
-      final Element frameE = domOwner.createElement( "frame" );
-      frameSetE.appendChild( frameE );
-      frameE.setAttribute( "src", url.toString() );
+      try
+      {
+        // important: must allways follow openURL-introActions to stay in securityContext for excecuting
+        // runAction-introActions
+        final URL url = new URL( "http://org.eclipse.ui.intro/openURL?url=" + urlFromConfig );
+        // tricky: generate frame, otherwise relative urls can not be resolved !
+        final Element frameSetE = domOwner.createElement( "frameset" );
+        parent.appendChild( frameSetE );
+        final Element frameE = domOwner.createElement( "frame" );
+        frameSetE.appendChild( frameE );
+        frameE.setAttribute( "src", url.toString() );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
   public void dispose( )
   {
-
+    // nothing to dispose
   }
 
 }
