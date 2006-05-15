@@ -174,7 +174,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       final URL url = WMSCapabilitiesHelper.createCapabilitiesRequest( new URL( service ) );
 
       final URLConnection c = url.openConnection();
-      
+
       // TODO this is another mechanism than used normally in Kalypso -> we will get problems here with proxies
       NetWorker.configureProxy( c );
 
@@ -190,7 +190,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
       m_wmsCaps = wmsCapFac.createCapabilities( reader );
-      
+
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
 
       // match the local with the remote coordiante system
@@ -261,6 +261,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
   public void updateImage( final GeoTransform geoTransformToLocalSRS, GM_Envelope envRequestLocalSRS ) throws Exception
   {
+    if( m_wmsCaps == null )
+      return;
     // check if nothing to request
     if( envRequestLocalSRS == null )
       return;
@@ -274,9 +276,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
     final String id = "KalypsoWMSRequest" + getName() + Long.toString( (new Date()).getTime() );
     final HashMap<String, String> parameterMap = createGetMapRequestParameter();
-    
+
     final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
-    
+
     final int width = m_lastWidth;
     final int height = m_lastHeight;
     final OGCWebServiceClient client = new OGCWebServiceClient()
@@ -303,7 +305,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
             try
             {
               final WMSGetMapResponse mapResponse = (WMSGetMapResponse) response;
-              
+
               final RenderedImage resultImage = (RenderedImage) (mapResponse).getMap();
               if( resultImage == null )
               {
@@ -311,12 +313,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
                 final Document exception = mapResponse.getException();
                 final StringWriter stringWriter = new StringWriter();
                 XMLHelper.writeDOM( exception, WriterUtility.DEFAULT_ENCODING, stringWriter );
-               
-                final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName() + ". Das Thema sollte unsichtbar geschaltet werden.", null );
+
+                final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName()
+                    + ". Das Thema sollte unsichtbar geschaltet werden.", null );
                 status.add( StatusUtilities.createErrorStatus( "Request war: '" + mapRequest + "'" ) );
                 status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
                 status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, stringWriter.toString(), "\n", null ) );
-                
+
                 return status;
               }
               final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
@@ -377,10 +380,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
               final String[] queryParts = requestPart.split( "=" );
               if( queryParts.length != 2 )
                 continue;
-              
+
               wmsParameter.put( queryParts[0], queryParts[1] );
             }
-            
+
             // the first valid url is enough
             break;
           }
@@ -408,7 +411,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     wmsParameter.put( "HEIGHT", "" + m_lastHeight );
     wmsParameter.put( "SRS", m_remoteSRS.getName() );
 
-    
     // if( m_authentification )
     // {
     // if(m_pass == null || m_user == null )
@@ -422,10 +424,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
     final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
     final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( m_requestedEnvLocalSRS, m_localSRS );
-    if(targetEnvRemoteSRS.getMax().getX()-targetEnvRemoteSRS.getMin().getX()<=0)
-      throw new Exception("invalid bbox");
-    if(targetEnvRemoteSRS.getMax().getY()-targetEnvRemoteSRS.getMin().getY()<=0)
-      throw new Exception("invalid bbox");
+    if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
+      throw new Exception( "invalid bbox" );
+    if( targetEnvRemoteSRS.getMax().getY() - targetEnvRemoteSRS.getMin().getY() <= 0 )
+      throw new Exception( "invalid bbox" );
     final String targetEnvRemoteSRSstring = WMSHelper.env2bboxString( targetEnvRemoteSRS );
     wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
     return wmsParameter;

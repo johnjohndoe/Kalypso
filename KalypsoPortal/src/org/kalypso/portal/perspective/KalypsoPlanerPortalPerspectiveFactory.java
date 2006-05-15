@@ -65,7 +65,8 @@ public class KalypsoPlanerPortalPerspectiveFactory implements
 				idOutline);
 
 		// bottomRight.addPlaceholder(CommandURLBrowserView.WEB_BROWSER_VIEW_ID);
-		bottomLeft.addView("Kalypso.CommandURLBrowserView");
+//		bottomLeft.addView("Kalypso.CommandURLBrowserView");
+		bottomLeft.addView("org.kalypso.workflow.ui.WorkflowBrowserView");
 
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");//$NON-NLS-1$
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");//$NON-NLS-1$
