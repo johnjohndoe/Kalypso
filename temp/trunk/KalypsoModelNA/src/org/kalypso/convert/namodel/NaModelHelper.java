@@ -1,28 +1,3 @@
-package org.kalypso.convert.namodel;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.kalypso.contribs.java.util.ValueIterator;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Geometry;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -63,6 +38,12 @@ import com.vividsolutions.jts.geom.Geometry;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+
 
 public class NaModelHelper
 {
