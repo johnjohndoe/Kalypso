@@ -56,8 +56,8 @@ import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.convert.namodel.optimize.DecoraterCalcDataProvider;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -119,7 +119,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       // final URL modellURL = inputProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
       // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
       final URL analyseXsdURL = inputProvider.getURLForID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID );
-      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( analyseXsdURL );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( analyseXsdURL );
       final List<FeaturePropertyToProcess> list = new ArrayList<FeaturePropertyToProcess>();
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
       for( int i = 0; i < featureTypes.length; i++ )
