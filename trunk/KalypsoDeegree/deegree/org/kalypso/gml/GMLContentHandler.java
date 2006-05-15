@@ -291,9 +291,22 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           int index = atts.getIndex( NS.XLINK, "href" );
           if( index >= 0 )// its a xlink
           {
-            final String refID = atts.getValue( index );// #
-            String refID2 = refID.replaceAll( "^#", "" );
-            FeatureUtils.addChild( feature, (IRelationType) pt, refID2 );
+            final IRelationType rt = (IRelationType) pt;
+
+            final String href = atts.getValue( index );
+            // final String role = getAttributeValue( atts, NS.XLINK, "role", null );
+            // final String arcrole = getAttributeValue( atts, NS.XLINK, "arcrole", null );
+            // final String title = getAttributeValue( atts, NS.XLINK, "title", null );
+            // final String show = getAttributeValue( atts, NS.XLINK, "show", "replace" );
+            // final String actuate = getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
+
+            // TODO: replace String with ProxyFeature implementation
+            // final IFeatureProvider featureProvider = new XLinkFeatureProvider( feature, rt.getTargetFeatureType(),
+            // href, role, arcrole, title, show, actuate );
+            // new DelegatedFeature_Impl( feature, featureProvider );
+
+            final String refID2 = href.replaceAll( "^#", "" );
+            FeatureUtils.addChild( feature, rt, refID2 );
           }
         }
         else
@@ -341,6 +354,13 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         break;
     }
   }
+
+  // DONT REMOVE: used by proto-implementation of DelegateFeature obove
+//  private String getAttributeValue( final Attributes atts, final String uri, final String localName, final String defaultValue )
+//  {
+//    final String value = atts.getValue( uri, localName );
+//    return value == null ? defaultValue : value;
+//  }
 
   /**
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)

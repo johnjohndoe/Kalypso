@@ -76,7 +76,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
@@ -202,23 +201,6 @@ public class FeatureFactory
     // final URL url = schema.getUrl();
     // final String href = url == null ? null : url.toExternalForm();
     return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, schemaLocation );
-  }
-
-  public static void accept( final IFeaturePropertyVisitor visitor, int position, final IPropertyType ftp, final Object property )
-  {
-    if( ftp instanceof IRelationType )
-    {
-      if( property instanceof Feature )
-        visitor.visit( position, ftp, (Feature) property );
-      else if( property instanceof String )
-        visitor.visit( position, ftp, (String) property );
-      else if( property instanceof List )
-        visitor.visit( position, ftp, (List) property );
-
-      // Andreas: we dont know anything about associations with null-data; how to solve this?
-    }
-    else
-      visitor.visit( position, ftp, property );
   }
 
 }

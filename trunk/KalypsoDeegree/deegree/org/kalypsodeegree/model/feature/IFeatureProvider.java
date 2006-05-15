@@ -38,48 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.schema.schemata;
+package org.kalypsodeegree.model.feature;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
- * this catalog resolves all schemas that are original provided by ogc or very close to these
+ * Provides a {@link org.kalypsodeegree.model.feature.Feature} and its
+ * {@link org.kalypso.gmlschema.feature.IFeatureType};
  * 
- * @author doemming
+ * @author Belger
  */
-public class UrlCatalogOGC extends AbstractUrlCatalog
+public interface IFeatureProvider
 {
-  @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
-  {
-    // XLINK
-    catalog.put( NS.XLINK, getClass().getResource( "gml2_2002/xlinks.xsd" ) );
-    // GML
-    // Version 2.1
-//    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+  public IFeatureType getFeatureType( );
 
-    // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
-     catalog.put( NS.GML3, getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
-
-    // WFS
-    catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
-
-    // SWE & OM things
-    try
-    {
-      // TODO move to resources:
-      catalog.put( NS.SWE, new URL( "http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" ) );
-      catalog.put( NS.OM, new URL( "http://dev.bjoernsen.de/ogc/schema/om/1.0.30/observation.xsd" ) );
-    }
-    catch( MalformedURLException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
+  public Feature getFeature( );
 }

@@ -64,12 +64,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.SweRepresentationTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -635,17 +635,12 @@ public class TypeHandlerUtilities
   /**
    * type handler for GML3 types
    * TODO remove Geometry from method name
+   * TODO method name: isn't it GML'3'?
    */
   public static void registerGeometryGML2typeHandler( final ITypeRegistry registry ) throws TypeRegistryException
   {
-    final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-    final Class CL_SWE = net.opengis.swe.ObjectFactory.class;
-    final Class CL_GMD = org.isotc211._2005.gmd.ObjectFactory.class;
-    final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
-    
-    // create the context on all of these factories else the binding won't work
-    final JAXBContext context = JaxbUtilities.createQuiet( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-   
+    final JAXBContext context = KalypsoOGC31Plugin.getDefault().getGMLContext();
+
     // geometrie types
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), new QName( NS.GML3, "Point" ), GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "LineStringPropertyType" ), new QName( NS.GML3, "LineString" ), GM_Curve.class, true ) );
@@ -669,7 +664,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false, true ) );
 
     registry.registerTypeHandler( new MetaDataPropertyTypeHandler() );
-    
+
     // swe types
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType" ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false ) );
     registry.registerTypeHandler( new SweRepresentationTypeHandler() );
