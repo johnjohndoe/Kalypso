@@ -1,5 +1,3 @@
-package org.kalypso.loader;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,8 +38,9 @@ package org.kalypso.loader;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.loader;
 
 public interface IPooledObject
 {
-  public boolean isLoaded();
+  public boolean isLoaded( );
 }

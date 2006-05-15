@@ -298,7 +298,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else
         {
-          // System.out.println( "unknown: " + uri + " " + localName );
+          System.out.println( "unknown: " + uri + " " + localName );
           // unknown element in schema, probably this property is removed
           // from schema and still occurs in the xml
           // instance document
