@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -174,7 +175,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     // handle GML
     m_indent++;
     indent();
-
+    final MultiException schemaNotFoundExceptions = new MultiException();
     // System.out.println( "<" + uri + ":" + localName + ">" );
     if( m_gmlSchema == null )
     {
@@ -195,7 +196,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         catch( final GMLSchemaException e )
         {
-          throw new SAXException( e );
+          schemaNotFoundExceptions.addException( new SAXException( e ) );
         }
       }
 
@@ -216,14 +217,36 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       catch( final Exception e )
       {
         if( schema == null )
-          throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was "
-              + m_schemaLocationString + ")", e );
+          schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
+              + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
       }
 
-      if( schema == null )
-        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + m_schemaLocationString
-            + ")" );
+      // 3. try
+      if( schema == null && m_useSchemaCatalog )
+        try
+        {
+          schema = GMLSchemaCatalog.getSchema( uri.toString() );
+        }
+        catch( Exception e )
+        {
+          schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
+              + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
+        }
 
+      if( schema == null )
+      {
+        if( schemaNotFoundExceptions.isEmpty() )
+          throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was "
+              + m_schemaLocationString + ")" );
+        else
+          throw new SAXException( schemaNotFoundExceptions );
+
+      }
+      if( !schemaNotFoundExceptions.isEmpty() )
+      {
+        System.out.println( "warning: errors occured with schemalocation" );
+        schemaNotFoundExceptions.printStackTrace();
+      }
       m_gmlSchema = schema;
     }
 
