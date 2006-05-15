@@ -1,5 +1,6 @@
 package org.kalypso.portal.action;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,10 +67,6 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
 
   private IStructuredSelection m_selection;
 
-  public StartPlanerClientFromIntroPageAction( )
-  {
-  }
-
   public void run( IIntroSite site, Properties params )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -79,7 +76,7 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
     final IProject project = getProject( workbench );
     if( project != null )
     {
-      KalypsoPortalPlugin.getDefault().setContext( project );
+      KalypsoPortalPlugin.getDefault().setActiveProject( project );
       closeIntroPlugin( workbench );
       URL contUrl = null;
       if( urlInitalPage != null && urlInitalPage.length() > 0 )
@@ -132,6 +129,7 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
           newProject = ((LoadProjectFromWorkspaceWizard) wizard).getProject();
         }
       }
+      KalypsoPortalPlugin.getDefault().setActiveProject( newProject );
       return newProject;
     }
     return null;
@@ -167,11 +165,11 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
     IIntroPart intro = workbench.getIntroManager().getIntro();
     if( intro == null )
       return false;
-//    CustomizableIntroPart cpart = (CustomizableIntroPart) intro;
-//    IntroModelRoot modelRoot = IntroPlugin.getDefault().getIntroModelRoot();
-//    String pageId = modelRoot.getCurrentPageId();
-//    Rectangle bounds = cpart.getControl().getBounds();
-//    Rectangle startBounds = Geometry.toDisplay( cpart.getControl().getParent(), bounds );
+    // CustomizableIntroPart cpart = (CustomizableIntroPart) intro;
+    // IntroModelRoot modelRoot = IntroPlugin.getDefault().getIntroModelRoot();
+    // String pageId = modelRoot.getCurrentPageId();
+    // Rectangle bounds = cpart.getControl().getBounds();
+    // Rectangle startBounds = Geometry.toDisplay( cpart.getControl().getParent(), bounds );
 
     return IntroPlugin.closeIntro();
   }
@@ -186,9 +184,18 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
       project.refreshLocal( IResource.DEPTH_INFINITE, null );
       final URL firstMementoUrl = UrlResolverSingleton.resolveUrl( ResourceUtilities.createURL( project ), urlInitalPage );
       final IFile file = ResourceUtilities.findFileFromURL( firstMementoUrl );
-
-      final InputStreamReader reader = new InputStreamReader( file.getContents() );
-
+      final InputStreamReader reader;
+      final URL contextUrl;
+      if( file != null )
+      {
+        contextUrl = new File( file.getLocation().toString() ).toURL();
+        reader = new InputStreamReader( file.getContents() );
+      }
+      else
+      { 
+        contextUrl = firstMementoUrl;
+        reader = new InputStreamReader( firstMementoUrl.openStream() );
+      }
       final XMLMemento originalMemento = XMLMemento.createReadRoot( reader );
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final Properties props = new Properties();
@@ -199,7 +206,7 @@ public class StartPlanerClientFromIntroPageAction extends Action implements IInt
 
         public URL resolveURL( String relative ) throws MalformedURLException
         {
-          return UrlResolverSingleton.resolveUrl( ResourceUtilities.createURL( project ), relative );
+          return UrlResolverSingleton.resolveUrl( contextUrl, relative );
         }
       } );
 

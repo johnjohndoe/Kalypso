@@ -73,10 +73,10 @@
             name="Command Browser"/>
       <view
             allowMultiple="true"
-            class="org.kalypso.portal.view.LaunchProtocolView"
+            class="org.kalypso.portal.view.MeasuresView"
             icon="icons/sample.gif"
-            id="KalypsoPortal.view.testview"
-            name="Test View"/>
+            id="KalypsoPortal.view.measures"
+            name="Measures View"/>
       <view
             allowMultiple="false"
             class="org.kalypso.portal.view.DefinePotentialInteractionAreaView"
