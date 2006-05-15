@@ -11,7 +11,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -276,19 +275,6 @@ public class Feature_Impl implements Feature
   public Object getVirtuelProperty( VirtualFeatureTypeProperty vpt, GMLWorkspace workspace )
   {
     return vpt.getVirtuelValue( this, workspace );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#accept(org.kalypsodeegree.model.feature.IFeaturePropertyVisitor)
-   */
-  public void accept( final IFeaturePropertyVisitor visitor )
-  {
-    final IFeatureType featureType = getFeatureType();
-    final IPropertyType[] ftps = featureType.getProperties();
-    final Object[] properties = getProperties();
-
-    for( int i = 0; i < ftps.length; i++ )
-      FeatureFactory.accept( visitor, i, ftps[i], properties[i] );
   }
 
   /**

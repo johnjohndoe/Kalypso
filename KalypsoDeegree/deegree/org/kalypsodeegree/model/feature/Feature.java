@@ -20,18 +20,10 @@ public interface Feature extends DeegreeFeature
   public void setProperty( final IPropertyType propertyType, final Object value );
 
   /**
-   * Uses the visitor on each property of this feature.
-   * 
-   * @TODO: REMARK Gernot: this is never used (i used it once, but no more) so maybe we delete it for simplicity? -> if
-   *        we keep it, we should move it to a utility class
-   */
-  public void accept( final IFeaturePropertyVisitor visitor );
-
-  /**
    * @deprecated use getPropery(PropertyType)
    */
   @Deprecated
-  public Object getProperty( String propLocalName );
+  public Object getProperty( final String propLocalName );
 
   /**
    * @deprecated
@@ -44,5 +36,5 @@ public interface Feature extends DeegreeFeature
   /**
    * intended to be called from GMLWorkspace when root feature is set.
    */
-  public void setWorkspace( GMLWorkspace workspace );
+  public void setWorkspace( final GMLWorkspace workspace );
 }
