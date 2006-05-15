@@ -38,8 +38,8 @@
 <view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
 <viewState/>
 </view>
-<view id="Kalypso.CommandURLBrowserView" partName="Command Browser">
-<viewState url=".control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
+<view id="org.kalypso.workflow.ui.WorkflowBrowserView" partName="Workflow Browser">
+<viewState url="../common/.control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
 <scrolbars/>
 </viewState>
 </view>
@@ -88,7 +88,7 @@
 <view id="org.eclipse.ui.views.ResourceNavigator"/>
 <view id="KalypsoPortal.view.gazatteer"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
-<view id="Kalypso.CommandURLBrowserView"/>
+<view id="org.kalypso.workflow.ui.WorkflowBrowserView"/>
 <layout>
 <mainWindow>
 <info part="org.eclipse.ui.editorss"/>
@@ -116,8 +116,8 @@
 </folder>
 </info>
 <info folder="true" part="control" ratio="0.6992231" ratioLeft="630" ratioRight="271" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="Kalypso.CommandURLBrowserView" appearance="2" expanded="2">
-<page content="Kalypso.CommandURLBrowserView" label="Command Browser"/>
+<folder activePageID="org.kalypso.workflow.ui.WorkflowBrowserView" appearance="2" expanded="2">
+<page content="org.kalypso.workflow.ui.WorkflowBrowserView" label="Workflow Browser"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 </presentation>
