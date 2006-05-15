@@ -61,6 +61,10 @@ public class KalypsoTest
         return;
       init = true;
 
+      System.setProperty( "proxySet", "true" );
+      System.setProperty( "proxyHost", "proxy.bce01.de" );
+      System.setProperty( "proxyPort", "8080" );
+      
       // final KalypsoGisPlugin plugin = new KalypsoGisPlugin();
 
       final ITypeRegistry marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
