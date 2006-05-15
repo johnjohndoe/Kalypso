@@ -1,14 +1,3 @@
-package org.kalypso.ui.wizard.wfs.test;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.feature.IFeatureType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -49,6 +38,17 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.wizard.wfs.test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+
 
 public class WFSTest extends TestCase
 {
@@ -66,7 +66,7 @@ public class WFSTest extends TestCase
   public void testLayer( String layer ) throws MalformedURLException
   {
     URL url = new URL( base + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
-    GMLSchema schema = null;
+    IGMLSchema schema = null;
     try
     {
       schema = GMLSchemaFactory.createGMLSchema( url );

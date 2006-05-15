@@ -1,9 +1,11 @@
 package org.kalypso.ogc.gml.schemaeditor;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -159,7 +161,18 @@ public class GMLSchemaEditor extends EditorPart
         // this does not load the schema from the cache but puts it at least into the cache
         return GMLSchemaCatalog.getSchema( context );
       else
-        return GMLSchemaFactory.createGMLSchema( storage.getContents(), context );
+      {
+        InputStream contents = null;
+        try
+        {
+          contents = storage.getContents();
+          return GMLSchemaFactory.createGMLSchema( contents, context );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( contents );
+        }
+      }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
     {
@@ -174,7 +187,7 @@ public class GMLSchemaEditor extends EditorPart
         throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-      
+
     throw new IllegalArgumentException( "Invalid editor input. Must be either IStorageEditorInput or GmlSchemaEditorInput." );
   }
 }
