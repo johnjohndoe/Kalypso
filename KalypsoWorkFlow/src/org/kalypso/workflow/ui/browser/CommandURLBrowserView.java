@@ -9,7 +9,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.actions.ActionFactory;
 import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
 import org.kalypso.workflow.WorkflowContext;
@@ -31,7 +30,6 @@ public class CommandURLBrowserView extends AbstractBrowserView
   public CommandURLBrowserView( )
   {
     m_workflowContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
-    // m_workflowContext = new WorkflowContext();
     m_listener = new CommandLocationListener( m_workflowContext, this );
   }
 
@@ -45,8 +43,6 @@ public class CommandURLBrowserView extends AbstractBrowserView
     configuerActionBar();
     updateNavigationActionsState();
     addLocationListener( m_listener );
-    // setURL( "file:///C:/eclipse3.1_runtime_workspace/TEST_URLROWSER/test1.html" );
-    // setURL( "http://www.tu-harburg.de/wb" );
   }
 
   protected Browser getBrowser( )
@@ -133,13 +129,15 @@ public class CommandURLBrowserView extends AbstractBrowserView
     }
     updateNavigationActionsState();
   }
+
   /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView#restoreState(org.eclipse.ui.IMemento)
+   * @see org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView#setURL(java.lang.String)
    */
   @Override
-  protected void restoreState( IMemento memento )
+  public void setURL( String url )
   {
-    // TODO Auto-generated method stub
-    super.restoreState(memento);
+    super.setURL( url );
+    updateNavigationActionsState();
+
   }
 }

@@ -61,25 +61,21 @@ public class URLActionShowMessage extends AbstractURLAction
 
   private final static String PARAM_MESSAGE = "message";
 
+  private final static String PARAM_DECODE = "decode";
+
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
-    final String message = commandURL.getParameter( PARAM_MESSAGE );
-    final String title = commandURL.getParameter( PARAM_TITLE );
+    String message = commandURL.getParameter( PARAM_MESSAGE );
     if( message == null || message.length() == 0 )
       return false;
+    final String title = commandURL.getParameter( PARAM_TITLE );
+    boolean decoding = Boolean.parseBoolean( commandURL.getParameter( PARAM_DECODE ) );
     final Display display = Display.getCurrent();
     final Shell shell = display.getActiveShell();
-    MessageDialog.openInformation( shell, title, message );
-    // if( m_listener != null )
-    // {
-    // Event event = new Event();
-    // event.type = SWT.OK;
-    // event.data = getParameter( KEY_URL );
-    // m_listener.handleEvent( event );
-    // }
+    MessageDialog.openInformation( shell, title, message + "&decode=" + decoding );
     return true;
   }
 

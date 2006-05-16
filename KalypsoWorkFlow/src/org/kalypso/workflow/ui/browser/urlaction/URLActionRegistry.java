@@ -61,6 +61,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionNavigate() );
       m_defaultInstance.register( new URLActionOpenEditor() );
       m_defaultInstance.register( new URLActionCloseEditor() );
+      m_defaultInstance.register( new URLActionSelectEditor() );
       m_defaultInstance.register( new URLActionOpenView() );
       m_defaultInstance.register( new URLActionCloseView() );
       m_defaultInstance.register( new URLActionChangePerspective() );
@@ -70,6 +71,8 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionSelectProject() );
       m_defaultInstance.register( new URLActionExtract() );
       m_defaultInstance.register( new URLActionAddGeometry() );
+      m_defaultInstance.register( new URLActionOpenURL() );
+      m_defaultInstance.register( new URLActionActivateTheme() );
     }
     catch( URLActionRegistryException e )
     {

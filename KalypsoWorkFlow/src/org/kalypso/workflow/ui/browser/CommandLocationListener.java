@@ -110,8 +110,9 @@ public class CommandLocationListener implements LocationListener, Listener
     final String urlString = event.location;
     if( urlString == null )
       return;
+
     System.out.println( " changed to " + urlString );
-    System.out.print( "" );
+
     if( urlString.startsWith( ICommandURL.PROTOCOL ) )
       return;
     Object source = event.getSource();
@@ -136,16 +137,17 @@ public class CommandLocationListener implements LocationListener, Listener
     // && browser.getData( "navigation" ).equals( "true" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     // return;
     //
-    // final URL url;
-    // try
-    // {
-    // url = new URL( urlString );
-    // }
-    // catch( MalformedURLException e )
-    // {
-    // // e.printStackTrace();
-    // return;
-    // }
+//    final URL url;
+//    try
+//    {
+//      url = new URL( urlString );
+//    }
+//    catch( MalformedURLException e )
+//    {
+//      e.printStackTrace();
+//      return;
+//    }
+
     // final String protocol = url.getProtocol();
     // if( ICommandURL.PROTOCOL.equals( protocol ) )
     // {
@@ -155,13 +157,13 @@ public class CommandLocationListener implements LocationListener, Listener
     // }
     // else
     // {
-    // // if( !parser.hasProtocol() || parser.getHost() == null || parser.getHost().equals( "" ) ) //$NON-NLS-1$
-    // // This will filter out two navigation events fired by the browser
-    // // on a setText. (about:blank and
-    // // res://C:\WINDOWS\System32\shdoclc.dll/navcancl.htm on windows,
-    // // and file:/// on Linux)
-    // if( url.getProtocol() == null || url.getHost() == null || url.getHost().equals( "" ) ) //$NON-NLS-1$
-    // return;
+    // if( !parser.hasProtocol() || parser.getHost() == null || parser.getHost().equals( "" ) ) //$NON-NLS-1$
+    // This will filter out two navigation events fired by the browser
+    // on a setText. (about:blank and
+    // res://C:\WINDOWS\System32\shdoclc.dll/navcancl.htm on windows,
+    // and file:/// on Linux)
+//    if( url.getProtocol() == null || url.getHost() == null || url.getHost().equals( "" ) ) //$NON-NLS-1$
+//      return;
     //
     // if( event.top == true )
     // {
@@ -180,10 +182,9 @@ public class CommandLocationListener implements LocationListener, Listener
     // flagStartOfFrameNavigation();
     // flagStoredTempUrl();
     // }
-    // }
 
-    // @Christoph was macht das:
-    // m_browserView.updateNavigationActionsState();
+    // updates the back and forward navigation buttons in the browser view
+    m_browserView.updateNavigationActionsState();
   }
 
   private void changeActionURLContext( URL actionURLContext )

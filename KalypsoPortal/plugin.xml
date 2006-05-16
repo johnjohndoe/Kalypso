@@ -67,12 +67,6 @@
             name="Projekt Site"/>
       <view
             allowMultiple="true"
-            class="org.kalypso.contribs.eclipse.ui.browser.commandable.CommandURLBrowserView"
-            icon="icons/planerBrowser.gif"
-            id="Kalypso.CommandURLBrowserView"
-            name="Command Browser"/>
-      <view
-            allowMultiple="true"
             class="org.kalypso.portal.view.MeasuresView"
             icon="icons/sample.gif"
             id="KalypsoPortal.view.measures"
