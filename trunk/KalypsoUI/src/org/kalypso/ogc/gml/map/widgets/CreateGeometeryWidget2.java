@@ -47,6 +47,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -396,10 +397,13 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     {
       if( mapPanel == null )
         return; // nothing to do
-      final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
+      final IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell == null )
+        return;
+      final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
       {
-        m_coordinatesSystem = mapPanel.getMapModell().getCoordinatesSystem();
+        m_coordinatesSystem = mapModell.getCoordinatesSystem();
         m_projection = mapPanel.getProjection();
         final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
         m_workspace = fTheme.getWorkspace();
