@@ -75,14 +75,8 @@
 <alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
 <alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
 <alwaysOnActionSet id="KalypsoDebug.config"/>
-<alwaysOnActionSet id="KalypsoFloodRiskAnalysis.Start"/>
-<alwaysOnActionSet id="org_eclipse_ui_examples_readmetool_actionSet"/>
-<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.openExternalFile"/>
 <alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
-<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
 <alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
-<alwaysOnActionSet id="org.eclipse.update.ui.softwareUpdates"/>
 <new_wizard_action id="org.eclipse.ui.wizards.new.folder"/>
 <new_wizard_action id="org.eclipse.ui.wizards.new.file"/>
 <view id="org.eclipse.ui.views.ResourceNavigator"/>
@@ -135,12 +129,7 @@
 </layout>
 </perspective>
 </perspectives>
-<navigationHistory>
-<editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" path="/PROJ/.control/phase1/Plangebiet_definieren.gmt"/>
-</editors>
-<item active="true" historyLabel="Karten Editor" index="0"/>
-</navigationHistory>
+<navigationHistory/>
 <stickyState/>
 </page>
 <workbenchWindowAdvisor/>
