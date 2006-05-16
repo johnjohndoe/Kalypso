@@ -305,7 +305,6 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     clear();

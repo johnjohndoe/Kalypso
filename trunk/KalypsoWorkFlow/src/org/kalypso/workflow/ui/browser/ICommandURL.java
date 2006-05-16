@@ -78,5 +78,7 @@ public interface ICommandURL
    * @return the value of the parameter, or <code>null</code> if the parameter is not defined
    */
   public String getParameter( final String parameterId );
+  
+  public String toString();
 
 }

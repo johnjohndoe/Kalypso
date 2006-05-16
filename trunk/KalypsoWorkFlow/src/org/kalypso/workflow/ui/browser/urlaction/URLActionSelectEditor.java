@@ -40,42 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.contribs.eclipse.core.resources.FindFirstFileVisitor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
- * example<br>
- * kalypso://openView?partId=...&activePartId=...
- * 
- * @author doemming
+ * @author kuepfer
  */
-public class URLActionOpenView extends AbstractURLAction
+public class URLActionSelectEditor extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "openView";
 
-  private final static String PARAM_PART_ID = "partId";
-
-  private final static String PARAM_ACTIVE_PART_ID = "activePartId";
+  private final static String COMMAND_NAME = "selectEditor";
 
   /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
+   * file name that is the input of the editor to be selected
+   */
+  private final static String PARAM_INPUT = "input";
+
+  /**
+   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
+   */
+  public String getActionName( )
+  {
+    return COMMAND_NAME;
+  }
+
+  /**
+   * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
+    final String fileName = commandURL.getParameter( PARAM_INPUT );
+    final IProject project = getWorkFlowContext().getContextProject();
     final IWorkbenchPage activePage = getActivePage();
-    String activePartID = commandURL.getParameter( PARAM_ACTIVE_PART_ID );
-    String viewID = commandURL.getParameter( PARAM_PART_ID );
     try
     {
-      // activate the appropriate view (select the folder), where the new View will be relative to and
-      // shown in
-      if( activePartID != null && activePartID.length() > 1 )
-        activePage.showView( activePartID );
-      activePage.showView( viewID );
+      final FindFirstFileVisitor visitor = new FindFirstFileVisitor( fileName, true );
+      project.accept( visitor );
+      final IFile inputFile = visitor.getFile();
+      final IEditorPart part = activePage.findEditor( new FileEditorInput( inputFile ) );
+      activePage.activate( part );
     }
-    catch( PartInitException e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return false;
@@ -83,11 +94,4 @@ public class URLActionOpenView extends AbstractURLAction
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return COMMAND_NAME;
-  }
 }

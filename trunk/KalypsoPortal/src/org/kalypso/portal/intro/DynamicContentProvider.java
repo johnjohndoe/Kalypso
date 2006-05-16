@@ -36,7 +36,8 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
   public void createContent( String id, Element parent )
   {
     final Document domOwner = parent.getOwnerDocument();
-    final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.xhtml";
+    final String urlFromConfig = "http://localhost:8080/webdav/dss/intro/intropage.xhtml";
+//    final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.xhtml";
     // final File file = new File( "C:\\Tomcat 5.0\\webapps\\webdav\\dss\\intro\\intropage.xhtml" );
     // final File file = new File( "C:/eclipse3.1_workspace/KalypsoFlowsData/dss/intro/intropage.xhtml" );
     if( "headID".equals( id ) )

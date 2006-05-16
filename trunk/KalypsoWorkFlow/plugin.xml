@@ -7,6 +7,7 @@
             allowMultiple="false"
             category="Kalypso"
             class="org.kalypso.workflow.ui.browser.CommandURLBrowserView"
+            icon="icons/workflow_browser.gif"
             id="org.kalypso.workflow.ui.WorkflowBrowserView"
             name="Workflow Browser"/>
    </extension>

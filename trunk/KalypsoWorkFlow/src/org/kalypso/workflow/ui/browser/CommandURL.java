@@ -41,7 +41,10 @@
 package org.kalypso.workflow.ui.browser;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.widgets.Listener;
 
@@ -99,5 +102,29 @@ public class CommandURL implements ICommandURL
   public String getParameter( String parameterId )
   {
     return m_arguments.getProperty( parameterId );
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    String baseString = PROTOCOL + "://" + m_actionName + "?";
+    Properties arguments = getArguments();
+    Set<Entry<Object, Object>> set = arguments.entrySet();
+    for( Iterator iter = set.iterator(); iter.hasNext(); )
+    {
+      Entry<Object, Object> entry = (Entry<Object, Object>) iter.next();
+      String key = entry.getKey().toString();
+      String value = entry.getValue().toString();
+      if( iter.hasNext() )
+        baseString += key + "=" + value + "&";
+      else
+        baseString += key + "=" + value;
+
+    }
+
+    return baseString;
   }
 }

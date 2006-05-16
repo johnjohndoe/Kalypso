@@ -42,38 +42,27 @@ package org.kalypso.workflow.ui.browser.urlaction;
 
 import java.net.URL;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
+import org.kalypso.workflow.ui.browser.CommandURLBrowserView;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
  * example<br>
- * kalypso://openEditor?input=project:file&activate=true&contentType=gmt
+ * kalypso://openURL?url=...&activePartId=...
  * 
  * @author doemming
  */
-public class URLActionOpenEditor extends AbstractURLAction
+public class URLActionOpenURL extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "openEditor";
+  private static final String DEFAULT_BROWSER_VIEW = "org.kalypso.workflow.ui.WorkflowBrowserView";
 
-  private final static String PARAM_INPUT = "input";
+  private final static String COMMAND_NAME = "openURL";
 
-  /**
-   * optional e.g. "gmt"
-   */
-  private final static String PARAM_CONTENT_TYPE = "contentType";
+  private final static String PARAM_URL = "url";
 
-  /**
-   * optional boolean to control if editor should be active after open<br>
-   * default is <code>false</code>
-   */
-  private final static String PARAM_ACTIVATE = "activate";
+  private final static String PARAM_BROWSER_ID = "browserId";
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
@@ -81,24 +70,22 @@ public class URLActionOpenEditor extends AbstractURLAction
   public boolean run( ICommandURL commandURL )
   {
     final IWorkbenchPage activePage = getActivePage();
-    final String inputLocation = commandURL.getParameter( PARAM_INPUT );
-    final String activateEditorAsString = commandURL.getParameter( PARAM_ACTIVATE );
-    final String contentTypeAsString = commandURL.getParameter( PARAM_CONTENT_TYPE );
-    final boolean activateEditor = Boolean.parseBoolean( activateEditorAsString );
-    final IWorkbench workbench = getWorkbench();
-    final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+    final String urlAsString = commandURL.getParameter( PARAM_URL );
+    String id = commandURL.getParameter( PARAM_BROWSER_ID );
     try
     {
-      final URL inputURL = getWorkFlowContext().resolveURL( inputLocation );
-      final IEditorDescriptor defaultDefaultDescriptor;
-      if( contentTypeAsString != null && contentTypeAsString.length() > 0 )
-        defaultDefaultDescriptor = editorRegistry.getDefaultEditor( contentTypeAsString );
-      else
-        defaultDefaultDescriptor = editorRegistry.getDefaultEditor( inputURL.toString() );
-      final IFile file = ResourceUtilities.findFileFromURL( inputURL );
-      
-      final FileEditorInput input = new FileEditorInput( file );
-      activePage.openEditor( input, defaultDefaultDescriptor.getId(), activateEditor );
+      // activate the appropriate view (select the folder), where the new View will be relative to and
+      // shown in.
+      if( id == null  )
+        id = DEFAULT_BROWSER_VIEW;
+      final IViewPart part = activePage.showView( id );
+      if( part instanceof CommandURLBrowserView )
+      {
+        final CommandURLBrowserView browser = (CommandURLBrowserView) part;
+        final URL url = getWorkFlowContext().resolveURL( urlAsString );
+        browser.setURL( url.toString() );
+      }
+
     }
     catch( Exception e )
     {
