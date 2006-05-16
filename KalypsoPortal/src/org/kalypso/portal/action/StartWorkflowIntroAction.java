@@ -63,8 +63,8 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       if( project != null )
       {
         openPlanerPerspective( urlInitalPage, project );
+        closeIntroPlugin( workbench );
       }
-      closeIntroPlugin( workbench );
     }
   }
 

@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -55,7 +56,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -66,6 +67,8 @@ import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -79,14 +82,41 @@ public class URLActionAddGeometry extends AbstractURLAction
   /**
    * optional
    */
-  private final static String PARAM_PATH = "path";
+  private final static String PARAM_TARGETPATH = "targetPath";
+
+  // position, where to place new feature as xpath
+  // optional, else root feature is parent
+  private final static String PARAM_XPATH_PARENT_FEATURE = "xpathParentFeature";
+
+  // required
+  private final static String PARAM_NEW_RELATION_QN = "relationType";
+
+  // featuretype of feature to create <br>
+  // syntax is <namespace>#<localname> <br>
+  // example: createFT=http://kalypso.org#KalypsoFeature
+  // optional, else target of relation if featuretype
+  private final static String PARAM_NEW_FT_QN = "newFeatureType";
+
+  // propername of feature to create
+  // required
+  private final static String PARAM_NEW_PROPERTY_QN = "newPropType";
+
+  // property type that can be selected in source gml <br>
+  // example: opengis.net#PolygonPropertyType
+  // TODO
+  private final static String PARAM_SELECTABLE_PropertyType = "selectPropQName";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
-    final String relativePath = commandURL.getParameter( PARAM_PATH );
+    final String relativeTarget = commandURL.getParameter( PARAM_TARGETPATH );
+    final String placementXPath = commandURL.getParameter( PARAM_XPATH_PARENT_FEATURE );
+    final String createFTQName = commandURL.getParameter( PARAM_NEW_FT_QN );
+    final String relationQNameString = commandURL.getParameter( PARAM_NEW_RELATION_QN );
+    final String createFPQNameString = commandURL.getParameter( PARAM_NEW_PROPERTY_QN );
+
     // final String contextString = commandURL.getParameter( ICommandURLActionKeys.KEY_CONTEXT );
     // final String fPath = commandURL.getParameter( ICommandURLActionKeys.KEY_FEATURE_PATH );
     // final String qName = commandURL.getParameter( ICommandURLActionKeys.KEY_QNAME );
@@ -99,46 +129,87 @@ public class URLActionAddGeometry extends AbstractURLAction
 
     final IProject project = wfContext.getContextProject();
     final GmlShapeFileImportDialog dialog = new GmlShapeFileImportDialog( shell, false, false, true, project, new Class[] { GeometryUtilities.getPolygonClass() } );
-    int open = dialog.open();
-    if( open == Window.OK )
+
+    final int open = dialog.open();
+    if( open != Window.OK )
+      return false;
+
+    final Object newPropertValue = dialog.getSelectedObject();
+
+    // boolean b = GeometryUtilities.isGeometry( value );
+    // add Geometry to file
+
+    try
     {
-      final Object value = dialog.getSelectedObject();
-      // boolean b = GeometryUtilities.isGeometry( value );
-      // add Geometry to file
-      try
-      {
-        final URL fileUrl = wfContext.resolveURL( relativePath );
-        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( fileUrl, new UrlResolver() );
-        final Feature rootFeature = workspace.getRootFeature();
+      // load target workspace
+      final URL targetURL = wfContext.resolveURL( relativeTarget );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( targetURL, new UrlResolver() );
 
-        final IFeatureType featureType = workspace.getFeatureType( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiet" ) );
-        Feature newfeature = workspace.createFeature( rootFeature, featureType );
-        IPropertyType property = featureType.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "gebiet" ) );
-        newfeature.setProperty( property, value );
-        IRelationType relationType = GMLSchemaFactory.createRelationType( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiete" ), rootFeature.getFeatureType(), 0, IPropertyType.UNBOUND_OCCURENCY );
-        workspace.addFeatureAsComposition( rootFeature, relationType, 0, newfeature );
-        final IFile file = ResourceUtilities.findFileFromURL( fileUrl );
-        final SetContentHelper thread = new SetContentHelper()
+      // find parent from feature to create
+      final Feature targetParentFE;
+      if( placementXPath != null && placementXPath.length() > 0 )
+      {
+        final GMLXPath xPath = new GMLXPath( placementXPath );
+        final Object xpathResult = GMLXPathUtilities.query( xPath, workspace );
+        if( !(xpathResult instanceof Feature) )
+          return false;
+        targetParentFE = (Feature) xpathResult;
+      }
+      else
+        targetParentFE = workspace.getRootFeature();
+
+      // find relation where to place new feature
+      final QName relationQName = QNameUtilities.createQName( relationQNameString );
+      final IRelationType relationType = (IRelationType) targetParentFE.getFeatureType().getProperty( relationQName );
+      
+      // find featuretype to create
+      final IFeatureType newFT;
+      if( createFTQName != null && createFTQName.length() > 0 )
+      {
+        final QName newFTQName = QNameUtilities.createQName( createFTQName );
+        newFT = workspace.getGMLSchema().getFeatureType( newFTQName );
+      }
+      else
+      {
+        newFT = relationType.getTargetFeatureType();
+      }
+
+      final Feature newFeature = workspace.createFeature( targetParentFE, newFT );
+      workspace.addFeatureAsComposition( targetParentFE, relationType, 0, newFeature );
+      
+      // find relation where to place new feature
+      final QName newPropQName = QNameUtilities.createQName( createFPQNameString );
+      final IPropertyType newPT = newFT.getProperty( newPropQName );
+      // TODO check is pt is a list
+      newFeature.setProperty( newPT, newPropertValue );
+
+      // final IFeatureType featureType = workspace.getFeatureType( new QName(
+      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiet" ) );
+      // IPropertyType property = featureType.getProperty( new QName(
+      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "gebiet" ) );
+      // newfeature.setProperty( property, newPropertValue );
+      // IRelationType relationType = GMLSchemaFactory.createRelationType( new QName(
+      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiete" ), rootFeature.getFeatureType(), 0,
+      // IPropertyType.UNBOUND_OCCURENCY );
+      // workspace.addFeatureAsComposition( rootFeature, relationType, 0, newfeature );
+
+      final IFile targetResource = ResourceUtilities.findFileFromURL( targetURL );
+      final SetContentHelper thread = new SetContentHelper()
+      {
+
+        @Override
+        protected void write( OutputStreamWriter writer ) throws Throwable
         {
-
-          @Override
-          protected void write( OutputStreamWriter writer ) throws Throwable
-          {
-            GmlSerializer.serializeWorkspace( writer, workspace );
-
-          }
-        };
-        thread.setFileContents( file, false, true, new NullProgressMonitor() );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        return false;
-      }
+          GmlSerializer.serializeWorkspace( writer, workspace );
+        }
+      };
+      thread.setFileContents( targetResource, false, true, new NullProgressMonitor() );
+      targetResource.refreshLocal( IResource.DEPTH_ONE, null );
       return true;
     }
-    else
+    catch( Exception e )
     {
+      e.printStackTrace();
       return false;
     }
   }
