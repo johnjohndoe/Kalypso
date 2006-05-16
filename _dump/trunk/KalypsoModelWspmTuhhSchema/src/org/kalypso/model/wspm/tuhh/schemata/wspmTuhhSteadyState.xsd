@@ -308,10 +308,11 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
+					<!-- change name to kind -->
 					<element name="type" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Art der Berechnung --- </label>
+								<label>???Art der Berechnung</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
 							</documentation>
@@ -669,55 +670,88 @@
 	</complexType>
 	<!-- 
 	-->
-	<simpleType name="LocalEnergyLossType">
-		<restriction base="string">
-			<enumeration value="EINLAUF">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Einlauf</label>
-						<tooltip>???tooltip</tooltip>
-						<description>???description</description>
-					</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="KRUEMMER">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Krümmer</label>
-						<tooltip>???tooltip</tooltip>
-						<description>???description</description>
-					</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="ZUSATZVERLUST">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Zusatz-Verlust</label>
-						<tooltip>???tooltip</tooltip>
-						<description>???description</description>
-					</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="RECHEN">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Rechen</label>
-						<tooltip>???tooltip</tooltip>
-						<description>???description</description>
-					</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="AUSLAUF">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Auslauf</label>
-						<tooltip>???tooltip</tooltip>
-						<description>???description</description>
-					</documentation>
-				</annotation>
-			</enumeration>
-		</restriction>
-	</simpleType>
+	<complexType name="LocalEnergyLossType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???LocalEnergyLossType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="energyLossKind">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???energyLossKind</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="EINLAUF">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Einlauf</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="KRUEMMER">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Krümmer</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="ZUSATZVERLUST">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Zusatz-Verlust</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="RECHEN">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Rechen</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="AUSLAUF">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Auslauf</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="energyLossValue" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???energyLossValue</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 	<!-- 
 	-->
 	<complexType name="subReachDefinitionPropertyType">
