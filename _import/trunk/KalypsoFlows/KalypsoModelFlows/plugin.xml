@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="flows-catalogs"
+         name="Catalogs for Flows"
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.flows.URLCatalogFlows"
+            id="org.kalypso.catalog.flows"/>
+   </extension>
+
+</plugin>

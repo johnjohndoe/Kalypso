@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelFlows Plug-in
+Bundle-SymbolicName: org.kalypso.model.KalypsoModelFlows; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.core
