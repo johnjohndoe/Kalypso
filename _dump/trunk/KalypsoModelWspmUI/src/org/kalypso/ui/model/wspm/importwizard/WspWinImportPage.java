@@ -85,6 +85,7 @@ import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
  * @author thuel2
  */
 public class WspWinImportPage extends WizardResourceImportPage implements Listener
+
 {
   // widgets
   protected Combo sourceNameField;
@@ -144,7 +145,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    */
   public WspWinImportPage( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    this( "fileSystemImportPage1", workbench, selection );//$NON-NLS-1$
+    this( "WspWinImportPage", workbench, selection );//$NON-NLS-1$
   }
 
   /**

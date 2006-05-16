@@ -47,19 +47,23 @@ import java.util.Date;
 
 import org.kalypso.commons.java.io.FileUtilities;
 
+/**
+ * Represents one line of a wsp.cfg file.
+ * @author thuel2
+ */
 public class ZustandBean
 {
-  final String m_name;
+  private final String m_name;
 
-  final String m_waterName;
+  private final String m_waterName;
 
-  final String m_fileName;
+  private final String m_fileName;
 
-  final double m_startStation;
+  private final double m_startStation;
 
-  final double m_endStation;
+  private final double m_endStation;
 
-  final Date m_date;
+  private final Date m_date;
 
   public ZustandBean( final String name, final String waterName, final String fileName, final double startStation, final double endStation, final Date date )
   {

@@ -65,7 +65,52 @@ public class CalculationContentBean
 
       final String line = expectNextLine( lnr );
       
+      
       // TODO: doit: copy code form wspprj.dll
+      
+//        for (i=0; i<13; i++)
+//        {
+//            is.getline(buffer, 256);
+//            cd.m_nWerte[i] = atoi(buffer);
+//            if (cd.m_nWerte[i]<min_bce_values[i] || cd.m_nWerte[i]>max_bce_values[i])
+//                cd.m_nWerte[i] = default_bce_values[i];
+//        }
+//        is.getline(buffer, 256);
+//        cd.m_dGefaelle = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_dQMin = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_dQStep = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_dQMax = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_nAbfluss = atoi(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_dAnfang = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_dEnde = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_strInfo = buffer;
+//        cd.m_strInfo.TrimLeft();
+//        cd.m_strInfo.TrimRight();
+//        is.getline(buffer, 256);
+//        cd.m_dHoehe = atof(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_nHMO = atoi(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_nWSFQ = atoi(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_nWSFL = atoi(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_strQ = buffer;
+//        cd.m_strQ.TrimLeft();
+//        cd.m_strQ.TrimRight();
+//        is.getline(buffer, 256);
+//        cd.m_nUSG = atoi(buffer);
+//        is.getline(buffer, 256);
+//        cd.m_nKalMin = atoi(buffer);
+
+      
 
       return new CalculationContentBean();
     }
