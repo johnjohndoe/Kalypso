@@ -39,25 +39,25 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.tuple.impl;
+package org.kalypso.commons.tuple.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.kalypso.tuple.IColumnKey;
-import org.kalypso.tuple.IKey;
-import org.kalypso.tuple.ITupleModel;
+import org.kalypso.commons.tuple.IColumnKey;
+import org.kalypso.commons.tuple.IRowKey;
+import org.kalypso.commons.tuple.ITupleModel;
 
 /**
  * Standard implementation of ITupleModel
  * 
  * @author schlienger
  */
-public class DefaultTupleModel<R extends IKey, C extends IColumnKey> extends AbstractTupleModel<R, C> implements ITupleModel<R, C>
+public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends AbstractTupleModel<R, C> implements ITupleModel<R, C>
 {
-  private final Set<C> m_columns = new TreeSet<C>();
+  private final Set<C> m_columns = new HashSet<C>();
 
   private final Map<R, Map<C, Object>> m_model = new HashMap<R, Map<C, Object>>();
 

@@ -106,7 +106,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     {
       final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-      TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
+      TypeHandlerUtilities.registerTypeHandlers( registry );
       TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
 
       RefactorThis.registerSpecialTypeHandler( registry );

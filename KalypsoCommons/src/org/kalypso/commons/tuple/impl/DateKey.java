@@ -38,38 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.xml;
+package org.kalypso.commons.tuple.impl;
+
+import java.util.Date;
+
+import org.kalypso.commons.tuple.IRowKey;
 
 /**
- * Global XML Namespace Constants
- * 
- * @author doemming
+ * @author schlienger
  */
-public interface NS
+public class DateKey implements IRowKey
 {
-  // the 'XML-Schema' schema:
-  public final static String XSD_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+  private final Date m_date;
 
-  public final static String XSD = "http://www.w3.org/2001/XMLSchema-instance";
-  public final static String XLINK = "http://www.w3.org/1999/xlink";
-
-  public static final String GML2 = "http://www.opengis.net/gml";
-  public static final String GML3 = GML2;
+  public DateKey( final Date date )
+  {
+    m_date = date;
+  }
   
-  public static final String WFS = "http://www.opengis.net/wfs";
-
-  public static final String SWE = "http://www.opengis.net/swe";
-  public static final String OM = "http://www.opengis.net/om";
-  public static final String XST = "http://www.seegrid.csiro.au/xml/st";
+  /**
+   * @see org.kalypso.tuple.IKey#getKeyName()
+   */
+  public String getKeyName( )
+  {
+    return m_date.toString();
+  }
   
-  public static final String GMD = "http://www.isotc211.org/2005/gmd";
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getKeyName();
+  }
 
-  public static final String KALYPSO_MAPVIEW = "gismapview.template.kalypso.org";
-  public static final String KALYPSO_OBSVIEW = "obsdiagview.template.kalypso.org";
-  public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
-  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
-
-  // TODO check if ADV is korrekt
-  // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)
-  public static final String ADV = "http://www.adv-online.de";
+  /**
+   * @see java.lang.Comparable#compareTo(T)
+   */
+  public int compareTo( final Object o )
+  {
+    return m_date.compareTo( ((DateKey)o).m_date );
+  }
 }

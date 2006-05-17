@@ -38,44 +38,91 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
+package org.kalypso.observation;
 
-import org.kalypso.tuple.IKey;
+import java.util.List;
+
+import org.kalypso.commons.metadata.MetadataObject;
 
 /**
  * @author schlienger
  */
-public class SimpleKey implements IKey
+public class Observation<T> implements IObservation<T>
 {
-  private final String m_name;
+  private String m_name;
+  private String m_desc;
+  private T m_result;
+  private List<MetadataObject> m_md;
 
-  public SimpleKey( final String name )
+  public Observation( final String name, final String desc, final T result, final List<MetadataObject> md )
   {
     m_name = name;
+    m_desc = desc;
+    m_result = result;
+    m_md = md;
   }
-
+  
   /**
-   * @see org.kalypso.tuple.IKey#getKeyName()
+   * @see org.kalypso.om.IObservation#getName()
    */
-  public String getKeyName( )
+  public String getName( )
   {
     return m_name;
   }
 
   /**
-   * @see java.lang.Object#toString()
+   * @see org.kalypso.om.IObservation#setName(java.lang.String)
    */
-  @Override
-  public String toString( )
+  public void setName( final String name )
   {
-    return getKeyName();
+    m_name = name;
   }
 
   /**
-   * @see java.lang.Comparable#compareTo(T)
+   * @see org.kalypso.om.IObservation#getDescription()
    */
-  public int compareTo( final Object o )
+  public String getDescription( )
   {
-    return m_name.compareTo( ((SimpleKey) o).m_name );
+    return m_desc;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    m_desc = desc;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#getMetadataList()
+   */
+  public List<MetadataObject> getMetadataList( )
+  {
+    return m_md;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#setMedataList(java.util.List)
+   */
+  public void setMedataList( final List<MetadataObject> list )
+  {
+    m_md = list;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#getResult()
+   */
+  public T getResult( )
+  {
+    return m_result;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#setResult(T)
+   */
+  public void setResult( final T values )
+  {
+    m_result = values;
   }
 }

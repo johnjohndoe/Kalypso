@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header ------------------------------------------
+/*--------------- Kalypso-Header --------------------------------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,37 +36,34 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- --------------------------------------------------------------------------*/
-
-package org.kalypso.tuple;
-
-import java.util.Set;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.observation;
 
 /**
- * General TupleModel interface.
+ * Eine Exception Klasse für die Exceptions bezüglich dieses sensor Package.
  * 
  * @author schlienger
  */
-public interface ITupleModel<R extends IKey, C extends IColumnKey>
+public class OMException extends Exception
 {
-  public int getRowCount( );
+  public OMException()
+  {
+    super();
+  }
 
-  public int getColumnCount( );
+  public OMException( String message )
+  {
+    super( message );
+  }
 
-  public Set<C> getColumnKeySet( );
+  public OMException( Throwable cause )
+  {
+    super( cause );
+  }
 
-  public Set<R> getRowKeySet( );
-
-  public Object getValue( final R rowKey, final C columnKey );
-
-  public void setValue( final Object value, final R rowKey, final C columnKey );
-
-  public boolean hasValue( final R rowKey, final C columnKey );
-
-  public void removeValue( final R rowKey, final C columnKey );
-
-  public void deleteColumn( final C columnKey );
-
-  public void deleteRow( final R rowKey );
+  public OMException( String message, Throwable cause )
+  {
+    super( message, cause );
+  }
 }

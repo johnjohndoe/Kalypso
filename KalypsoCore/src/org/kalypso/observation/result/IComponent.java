@@ -38,28 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
-
-import org.kalypso.tuple.IColumnKey;
+package org.kalypso.observation.result;
 
 /**
  * @author schlienger
  */
-public class SimpleColumnKey extends SimpleKey implements IColumnKey
+public interface IComponent
 {
-  private final Class< ? > m_clazz;
+  public String getName( );
+  
+  public String getDescription();
 
-  public SimpleColumnKey( final String name, final Class<?> clazz )
-  {
-    super( name );
-    m_clazz = clazz;
-  }
+  public Class< ? > getValueClass( );
 
-  /**
-   * @see org.kalypso.tuple.IColumnKey#getValueClass()
-   */
-  public Class< ? > getValueClass( )
-  {
-    return m_clazz;
-  }
+  public Object getDefaultValue( );
 }

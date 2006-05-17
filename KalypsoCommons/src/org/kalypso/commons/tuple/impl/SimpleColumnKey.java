@@ -38,47 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
+package org.kalypso.commons.tuple.impl;
 
-import org.kalypso.contribs.java.util.DoubleComparator;
-import org.kalypso.tuple.IKey;
+import org.kalypso.commons.tuple.IColumnKey;
 
 /**
  * @author schlienger
  */
-public class NumberKey implements IKey
+public class SimpleColumnKey extends SimpleKey implements IColumnKey
 {
-  private final Number m_number;
-  private final DoubleComparator m_dc;
+  private final Class< ? > m_clazz;
 
-  public NumberKey( final Number number, final DoubleComparator dc )
+  public SimpleColumnKey( final String name, final Class<?> clazz )
   {
-    m_number = number;
-    m_dc = dc;
-  }
-  
-  /**
-   * @see org.kalypso.tuple.IKey#getKeyName()
-   */
-  public String getKeyName( )
-  {
-    return m_number.toString();
-  }
-  
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return getKeyName();
+    super( name );
+    m_clazz = clazz;
   }
 
   /**
-   * @see java.lang.Comparable#compareTo(T)
+   * @see org.kalypso.tuple.IColumnKey#getValueClass()
    */
-  public int compareTo( final Object o )
+  public Class< ? > getValueClass( )
   {
-    return m_dc.compare( this, o );
+    return m_clazz;
   }
 }

@@ -38,46 +38,62 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
-
-import java.util.Date;
-
-import org.kalypso.tuple.IKey;
+package org.kalypso.observation.result;
 
 /**
  * @author schlienger
  */
-public class DateKey implements IKey
+public class Component implements IComponent
 {
-  private final Date m_date;
+  private final String m_name;
+  private final String m_description;
 
-  public DateKey( final Date date )
+  private final Class< ? > m_valueClass;
+
+  private final Object m_defaultValue;
+
+  public Component( String name, String description, Class< ? > valueClass )
   {
-    m_date = date;
+    this( name, description, valueClass, null );
   }
-  
-  /**
-   * @see org.kalypso.tuple.IKey#getKeyName()
-   */
-  public String getKeyName( )
+
+  public Component( String name, String description, Class< ? > valueClass, Object defaultValue )
   {
-    return m_date.toString();
-  }
-  
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return getKeyName();
+    m_name = name;
+    m_description = description;
+    m_valueClass = valueClass;
+    m_defaultValue = defaultValue;
   }
 
   /**
-   * @see java.lang.Comparable#compareTo(T)
+   * @see org.kalypso.om.tuple.IComponent#getName()
    */
-  public int compareTo( final Object o )
+  public String getName( )
   {
-    return m_date.compareTo( ((DateKey)o).m_date );
+    return m_name;
+  }
+
+  /**
+   * @see org.kalypso.tuple.IColumnKey#getValueClass()
+   */
+  public Class< ? > getValueClass( )
+  {
+    return m_valueClass;
+  }
+
+  /**
+   * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
+   */
+  public Object getDefaultValue( )
+  {
+    return m_defaultValue;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_description;
   }
 }
