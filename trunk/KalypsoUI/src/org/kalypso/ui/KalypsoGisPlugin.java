@@ -85,6 +85,7 @@ import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
+import org.kalypso.ogc.gml.om.ObservationGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -612,6 +613,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
         guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
         guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+
+        // TODO find out how to register the observation gui type handler
+        // this, as it is here, does not work
+        //guiRegistry.registerTypeHandler( new ObservationGuiTypeHandler() );
       }
     }
     catch( final Exception e ) // generic exception caught for simplicity
