@@ -77,7 +77,7 @@ public class ImportNA extends TestCase
     final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     // final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-    TypeHandlerUtilities.registerGeometryGML2typeHandler( marshallingRegistry );
+    TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
     RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
 
     final File asciiBaseDir = new File( "C:\\TMP\\na" );
