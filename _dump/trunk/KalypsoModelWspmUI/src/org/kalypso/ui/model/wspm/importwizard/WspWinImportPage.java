@@ -102,11 +102,11 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   private boolean entryChanged = false;
 
   // dialog store id constants
-  private final static String STORE_SOURCE_NAMES_ID = "WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID";//$NON-NLS-1$
+  private final static String STORE_SOURCE_NAMES_ID = "WspWinImportPage.STORE_SOURCE_NAMES_ID";//$NON-NLS-1$
 
-  private final static String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
+  private final static String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WspWinImportPage.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
 
-  private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID = "WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
+  private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID = "WspWinImportPage.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
 
   private static final String SELECT_TYPES_TITLE = DataTransferMessages.DataTransfer_selectTypes;
 
