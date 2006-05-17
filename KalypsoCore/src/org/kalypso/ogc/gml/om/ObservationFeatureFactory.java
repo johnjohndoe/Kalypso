@@ -78,7 +78,7 @@ public class ObservationFeatureFactory
   /**
    * Makes an observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
-  public IObservation<TupleResult> observationFromFeature( final Feature f ) throws ParseException
+  public static IObservation<TupleResult> observationFromFeature( final Feature f ) throws ParseException
   {
     final IFeatureType featureType = f.getFeatureType();
 
@@ -160,7 +160,7 @@ public class ObservationFeatureFactory
    * Writes the contents of an observation into a feature. The feature must substitute
    * http://www.opengis.net/om:Observation.
    */
-  public void writeObservationToFeature( final IObservation source, final Feature target )
+  public static void writeObservationToFeature( final IObservation source, final Feature target )
   {
 
   }
