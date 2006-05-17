@@ -49,6 +49,7 @@ import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import net.opengis.swe.DataDefinitionPropertyType;
 import net.opengis.swe.PhenomenonPropertyType;
 import net.opengis.swe.RelativeMeasureType;
 import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
@@ -68,8 +69,8 @@ import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
-import org.kalypso.gmlschema.types.SweRepresentationTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.ogc.swe.RepresentationTypeHandler;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -633,15 +634,13 @@ public class TypeHandlerUtilities
   }
 
   /**
-   * type handler for GML3 types
-   * TODO remove Geometry from method name
-   * TODO method name: isn't it GML'3'?
+   * Type handler for GML3 types
    */
-  public static void registerGeometryGML2typeHandler( final ITypeRegistry registry ) throws TypeRegistryException
+  public static void registerTypeHandlers( final ITypeRegistry registry ) throws TypeRegistryException
   {
     final JAXBContext context = KalypsoOGC31Plugin.getDefault().getGMLContext();
 
-    // geometrie types
+    // geometry types
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), new QName( NS.GML3, "Point" ), GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "LineStringPropertyType" ), new QName( NS.GML3, "LineString" ), GM_Curve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
@@ -667,8 +666,10 @@ public class TypeHandlerUtilities
 
     // swe types
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType" ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false ) );
-    registry.registerTypeHandler( new SweRepresentationTypeHandler() );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ), new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true ) );
+    
+    registry.registerTypeHandler( new RepresentationTypeHandler() );
     //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinition" ), new QName( NS.SWE, "DataDefinitionType" ), DataDefinitionType.class, false, true ) );
     //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "SWE_RecordSchemaPropertyType" ), new QName( NS.SWE, "component" ), SWERecordSchemaPropertyType.class, false, false ) );
     

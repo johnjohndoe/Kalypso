@@ -38,12 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple;
+package org.kalypso.commons.metadata;
 
 /**
  * @author schlienger
  */
-public interface IColumnKey extends IKey
+public class MetadataObject
 {
-  public Class< ? > getValueClass( );
+  private String m_name;
+  private String m_type;
+  private Object m_value;
+
+  public String getName()
+  {
+    return m_name;
+  }
+  
+  public String getType()
+  {
+    return m_type;
+  }
+  
+  public Object getValue()
+  {
+    return m_value;
+  }
 }

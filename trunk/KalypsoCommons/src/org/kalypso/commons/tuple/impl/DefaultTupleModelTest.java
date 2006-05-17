@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
+package org.kalypso.commons.tuple.impl;
 
 import java.util.Date;
 import java.util.Set;

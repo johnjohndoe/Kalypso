@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple;
+package org.kalypso.commons.tuple;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public final class TupleModelUtils
     // not intended to be instanciated
   }
   
-  public static <R extends IKey, C extends IColumnKey> Map<C , Object> getRow( final ITupleModel<R, C> model, final R rowKey )
+  public static <R extends IRowKey, C extends IColumnKey> Map<C , Object> getRow( final ITupleModel<R, C> model, final R rowKey )
   {
     final Set<C> columnKeySet = model.getColumnKeySet();
 
@@ -65,7 +65,7 @@ public final class TupleModelUtils
     return row;
   }
 
-  public <R extends IKey, C extends IColumnKey> Map<R, Object> getColumn( final ITupleModel<R, C> model, final C columnKey )
+  public <R extends IRowKey, C extends IColumnKey> Map<R, Object> getColumn( final ITupleModel<R, C> model, final C columnKey )
   {
     final Set<R> rowKeySet = model.getRowKeySet();
 
@@ -76,13 +76,13 @@ public final class TupleModelUtils
     return column;
   }
 
-  public <R extends IKey, C extends IColumnKey> void addColumn( final ITupleModel<R, C> model, final C columnKey, final Map<R, Object> column )
+  public <R extends IRowKey, C extends IColumnKey> void addColumn( final ITupleModel<R, C> model, final C columnKey, final Map<R, Object> column )
   {
     for( final Map.Entry<R, Object> entry : column.entrySet() )
       model.setValue( entry.getValue(), entry.getKey(), columnKey );
   }
   
-  public <R extends IKey, C extends IColumnKey> void addColumn( final ITupleModel<R, C> model, final C columnKey, final R[] rowKeys, final Object[] column )
+  public <R extends IRowKey, C extends IColumnKey> void addColumn( final ITupleModel<R, C> model, final C columnKey, final R[] rowKeys, final Object[] column )
   {
     if( rowKeys.length != column.length )
       throw new IllegalArgumentException( "Array Length Not Equal: " + rowKeys.length + " != " + column.length );
@@ -91,7 +91,7 @@ public final class TupleModelUtils
       model.setValue( column[i], rowKeys[i], columnKey );
   }
 
-  public <R extends IKey, C extends IColumnKey> void addModel( final ITupleModel<R, C> model, final ITupleModel<R, C> destModel )
+  public <R extends IRowKey, C extends IColumnKey> void addModel( final ITupleModel<R, C> model, final ITupleModel<R, C> destModel )
   {
     final Set<R> rowKeySet = model.getRowKeySet();
     final Set<C> columnKeySet = model.getColumnKeySet();
@@ -101,12 +101,12 @@ public final class TupleModelUtils
         destModel.setValue( model.getValue( rowKey, colKey ), rowKey, colKey );
   }
   
-  public <R extends IKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model )
+  public <R extends IRowKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model )
   {
     return dump( model, '\t' );
   }
   
-  public <R extends IKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model, final char separator )
+  public <R extends IRowKey, C extends IColumnKey> String dump( final ITupleModel<R, C> model, final char separator )
   {
     final Set<R> rowKeySet = model.getRowKeySet();
     final Set<C> columnKeySet = model.getColumnKeySet();

@@ -38,38 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.xml;
+package org.kalypso.commons.tuple;
 
 /**
- * Global XML Namespace Constants
- * 
- * @author doemming
+ * @author schlienger
  */
-public interface NS
+public interface IRowKey extends IKey, Comparable
 {
-  // the 'XML-Schema' schema:
-  public final static String XSD_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 
-  public final static String XSD = "http://www.w3.org/2001/XMLSchema-instance";
-  public final static String XLINK = "http://www.w3.org/1999/xlink";
-
-  public static final String GML2 = "http://www.opengis.net/gml";
-  public static final String GML3 = GML2;
-  
-  public static final String WFS = "http://www.opengis.net/wfs";
-
-  public static final String SWE = "http://www.opengis.net/swe";
-  public static final String OM = "http://www.opengis.net/om";
-  public static final String XST = "http://www.seegrid.csiro.au/xml/st";
-  
-  public static final String GMD = "http://www.isotc211.org/2005/gmd";
-
-  public static final String KALYPSO_MAPVIEW = "gismapview.template.kalypso.org";
-  public static final String KALYPSO_OBSVIEW = "obsdiagview.template.kalypso.org";
-  public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
-  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
-
-  // TODO check if ADV is korrekt
-  // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)
-  public static final String ADV = "http://www.adv-online.de";
 }

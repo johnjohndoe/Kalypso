@@ -38,18 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple.impl;
+package org.kalypso.commons.tuple.impl;
 
 import java.util.Set;
 
-import org.kalypso.tuple.IColumnKey;
-import org.kalypso.tuple.IKey;
-import org.kalypso.tuple.ITupleModel;
+import org.kalypso.commons.tuple.IColumnKey;
+import org.kalypso.commons.tuple.IRowKey;
+import org.kalypso.commons.tuple.ITupleModel;
 
 /**
  * @author schlienger
  */
-public abstract class AbstractTupleModel<R extends IKey, C extends IColumnKey> implements ITupleModel<R, C>
+public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey> implements ITupleModel<R, C>
 {
   public void setValue( final Object value, final R rowKey, final C columnKey )
   {

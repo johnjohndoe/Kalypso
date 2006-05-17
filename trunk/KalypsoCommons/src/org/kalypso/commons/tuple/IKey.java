@@ -38,12 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.tuple;
+package org.kalypso.commons.tuple;
 
 /**
  * @author schlienger
  */
-public interface IKey extends Comparable
+public interface IKey
 {
   public String getKeyName( );
 }

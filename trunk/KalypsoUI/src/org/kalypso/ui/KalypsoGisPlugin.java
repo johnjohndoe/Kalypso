@@ -596,7 +596,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       if( marshallingRegistry != null )
       {
         TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-        TypeHandlerUtilities.registerGeometryGML2typeHandler( marshallingRegistry );
+        TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
         RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
         marshallingRegistry.registerTypeHandler( wvqInline );
         marshallingRegistry.registerTypeHandler( taInline );
