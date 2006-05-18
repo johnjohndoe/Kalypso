@@ -78,6 +78,8 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private ArrayList<String> m_catalog;
 
+  private ImportWfsFilterWizardPage m_filterWFSPage;
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
@@ -88,12 +90,16 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
+        
         IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
         for( int i = 0; i < layers.length; i++ )
         {
           IWFSLayer layer = layers[i];
-          final Filter filter = m_importWFSPage.getFilter( layer );
-
+          Filter filter = m_importWFSPage.getFilter( layer );
+          if( filter == null )
+          {
+            filter = m_filterWFSPage.getFilter( layer.getFeatureType() );
+          }
           final String xml;
           if( filter instanceof ComplexFilter )
             xml = ((ComplexFilter) filter).toXML().toString();
@@ -166,8 +172,10 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_outlineviewer );
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    addPage( m_importWFSPage );
+    addPage( m_filterWFSPage );
+//    addPage( m_importWFSPage );
   }
 
   @Override
