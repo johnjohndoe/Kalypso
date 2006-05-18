@@ -387,6 +387,7 @@ public class SpatialOperation extends AbstractOperation
         {
           e.printStackTrace();
         }
+        break;
       }
       case OperationDefines.BBOX:
       {
@@ -396,7 +397,16 @@ public class SpatialOperation extends AbstractOperation
       // calvin added on 10/21/2003
       case OperationDefines.DWITHIN:
       {
-        value = getGeometryProperty( feature ).isWithinDistance( getGeometryLiteral(), m_distance );
+        try
+        {
+          Geometry geomWhomToBeWithIn = JTSAdapter.export( getGeometryLiteral() );
+          Geometry geomIsWithIn = JTSAdapter.export( getGeometryProperty( feature ) );
+          value = geomWhomToBeWithIn.isWithinDistance( geomIsWithIn, getDistance() );
+        }
+        catch( GM_Exception e )
+        {
+          e.printStackTrace();
+        }
         break;
       }
       case OperationDefines.CROSSES:

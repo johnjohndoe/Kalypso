@@ -54,15 +54,17 @@ public class CommandURLBrowserView extends AbstractBrowserView
   {
     final IActionBars actionBars = getActionBars();
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    actionBars.setGlobalActionHandler( ActionFactory.FORWARD.getId(), forwardAction );
-    actionBars.setGlobalActionHandler( ActionFactory.BACK.getId(), backAction );
-    toolBarManager.add( backAction );
-    toolBarManager.add( forwardAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REFRESH.getId(), m_refresh );
+    actionBars.setGlobalActionHandler( ActionFactory.FORWARD.getId(), m_forwardAction );
+    actionBars.setGlobalActionHandler( ActionFactory.BACK.getId(), m_backAction );
+    toolBarManager.add( m_refresh );
+    toolBarManager.add( m_backAction );
+    toolBarManager.add( m_forwardAction );
     toolBarManager.update( true );
     actionBars.updateActionBars();
   }
 
-  protected Action backAction = new Action()
+  protected Action m_backAction = new Action()
   {
 
     {
@@ -78,7 +80,7 @@ public class CommandURLBrowserView extends AbstractBrowserView
     }
   };
 
-  protected Action forwardAction = new Action()
+  protected Action m_forwardAction = new Action()
   {
 
     {
@@ -94,12 +96,27 @@ public class CommandURLBrowserView extends AbstractBrowserView
     }
   };
 
+  protected Action m_refresh = new Action()
+  {
+
+    {
+      setToolTipText( "Refresh" );
+      setImageDescriptor( ImageDescriptor.createFromURL( getClass().getResource( "icons/refresh.gif" ) ) );
+    }
+
+    @Override
+    public void run( )
+    {
+      m_viewer.refresh();
+    }
+  };
+
   protected void updateNavigationActionsState( )
   {
 
     // in static html intro, use browser history.
-    forwardAction.setEnabled( m_viewer.isForwardEnabled() );
-    backAction.setEnabled( m_viewer.isBackEnabled() );
+    m_forwardAction.setEnabled( m_viewer.isForwardEnabled() );
+    m_backAction.setEnabled( m_viewer.isBackEnabled() );
   }
 
   protected void navigateBack( )

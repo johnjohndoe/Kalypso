@@ -99,7 +99,6 @@ public class CommandLocationListener implements LocationListener, Listener
     // run actionURL
     m_workFlowContext.setContextActionURL( getActionURLContext() );
     CommandURLUtilities.run( m_workFlowContext, urlString );
-    m_browserView.updateNavigationActionsState();
   }
 
   /**
@@ -137,16 +136,16 @@ public class CommandLocationListener implements LocationListener, Listener
     // && browser.getData( "navigation" ).equals( "true" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     // return;
     //
-//    final URL url;
-//    try
-//    {
-//      url = new URL( urlString );
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      e.printStackTrace();
-//      return;
-//    }
+    // final URL url;
+    // try
+    // {
+    // url = new URL( urlString );
+    // }
+    // catch( MalformedURLException e )
+    // {
+    // e.printStackTrace();
+    // return;
+    // }
 
     // final String protocol = url.getProtocol();
     // if( ICommandURL.PROTOCOL.equals( protocol ) )
@@ -162,8 +161,8 @@ public class CommandLocationListener implements LocationListener, Listener
     // on a setText. (about:blank and
     // res://C:\WINDOWS\System32\shdoclc.dll/navcancl.htm on windows,
     // and file:/// on Linux)
-//    if( url.getProtocol() == null || url.getHost() == null || url.getHost().equals( "" ) ) //$NON-NLS-1$
-//      return;
+    // if( url.getProtocol() == null || url.getHost() == null || url.getHost().equals( "" ) ) //$NON-NLS-1$
+    // return;
     //
     // if( event.top == true )
     // {
@@ -184,12 +183,13 @@ public class CommandLocationListener implements LocationListener, Listener
     // }
 
     // updates the back and forward navigation buttons in the browser view
-    m_browserView.updateNavigationActionsState();
+    // m_browserView.updateNavigationActionsState();
   }
 
   private void changeActionURLContext( URL actionURLContext )
   {
     m_actionURLContext = actionURLContext;
+    m_browserView.updateNavigationActionsState();
   }
 
   private URL getActionURLContext( )
