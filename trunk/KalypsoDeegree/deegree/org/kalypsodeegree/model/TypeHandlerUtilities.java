@@ -78,6 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
 
 /**
@@ -640,7 +641,7 @@ public class TypeHandlerUtilities
     final JAXBContext context = KalypsoOGC31Plugin.getDefault().getGMLContext();
 
     // geometry types
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), SurfaceType.class, false ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
 
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), new QName( NS.GML3, "Point" ), GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "LineStringPropertyType" ), new QName( NS.GML3, "LineString" ), GM_Curve.class, true ) );
