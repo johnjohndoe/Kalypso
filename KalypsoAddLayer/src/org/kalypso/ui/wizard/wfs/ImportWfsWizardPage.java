@@ -50,6 +50,7 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,6 +61,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -326,12 +328,13 @@ public class ImportWfsWizardPage extends WizardPage
     final Composite composite = new Group( parent, SWT.NULL );
     final GridLayout layout = new GridLayout( 1, false );
     composite.setLayout( layout );
+    composite.setLayoutData( new GridData() );
 
     createSourceFields( composite );
 
     createLayerSelectionControl( composite );
 
-    setControl( parent );
+    setControl( composite );
     setPageComplete( false );
   }
 
@@ -409,6 +412,7 @@ public class ImportWfsWizardPage extends WizardPage
      * advanced = createAdvancedControl( composite ); advanced.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT,
      * true, true, 2, 1 ) );
      */
+    fieldGroup.pack();
   }
 
   private void createLayerSelectionControl( Composite composite )
@@ -428,7 +432,7 @@ public class ImportWfsWizardPage extends WizardPage
     m_listLeftSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_listLeftSide.setLabelProvider( labelProvider );
     m_listLeftSide.setContentProvider( contentProvider );
-    
+
     m_listLeftSide.addSelectionChangedListener( m_leftSelectionListener );
     // addSelectionListener( m_leftSelectionListener );
 
@@ -441,7 +445,7 @@ public class ImportWfsWizardPage extends WizardPage
     m_listRightSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_listRightSide.setLabelProvider( labelProvider );
     m_listRightSide.setContentProvider( contentProvider );
-    
+
     m_listRightSide.addSelectionChangedListener( m_rightSelectionListener );
     m_leftsideButtonC = new Composite( m_layerGroup, SWT.NULL );
     m_leftsideButtonC.setLayout( new GridLayout() );
@@ -458,6 +462,7 @@ public class ImportWfsWizardPage extends WizardPage
     m_addFilterButton.addSelectionListener( m_filterButtonSelectionListener );
     m_addFilterButton.setEnabled( false );
     m_layerGroup.setVisible( true );
+    m_layerGroup.pack();
   }
 
   // private Composite createAdvancedControl( Composite arg0 )
@@ -797,9 +802,14 @@ public class ImportWfsWizardPage extends WizardPage
     // the add filter button is only enabled if the selection size == 1
     final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
     final IWFSLayer wfsFT = (IWFSLayer) selection.getFirstElement();
-    final Filter filter = m_filter.get( wfsFT );
+    // TODO: wenn es schon filter gibt zwischen erster Seite und dieser Seite auswählen
+    Filter oldFilter = m_filter.get( wfsFT );
     final IFeatureType ft = wfsFT.getFeatureType();
-    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, filter, null, false );
+    final IWizardPage startingPage = getWizard().getStartingPage();
+    if( startingPage instanceof ImportWfsFilterWizardPage )
+      oldFilter = ((ImportWfsFilterWizardPage) startingPage).getFilter( ft );
+
+    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, false );
     int open = dialog.open();
     if( open == Window.OK )
     {
