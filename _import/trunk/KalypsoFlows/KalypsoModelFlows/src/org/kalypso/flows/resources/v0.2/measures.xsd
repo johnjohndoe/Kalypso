@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Anneliese Fey (TU Hamburg-Harburg) -->
-<schema xmlns:dss="http://www.tuhh.de/kalypsoDSS" xmlns:par="http://www.tuhh.de/parameter" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:sts="http://www.tuhh.de/NA/swaletrenchsystem" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xplan="http://www.xplanung.de/bplangml" targetNamespace="http://www.tuhh.de/kalypsoDSS" elementFormDefault="qualified" version="0.4">
+<schema xmlns:dss="http://www.tuhh.de/kalypsoDSS" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:par="http://www.tuhh.de/parameter" xmlns:sts="http://www.tuhh.de/NA/swaletrenchsystem" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xplan="http://www.xplanung.de/bplangml" targetNamespace="http://www.tuhh.de/kalypsoDSS" elementFormDefault="qualified" version="0.4">
 	<import namespace="http://www.xplanung.de/bplangml" schemaLocation="../xplanung/BPlanGML_2.xsd"/>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd"/>
 	<import namespace="http://www.tuhh.de/parameter" schemaLocation="parameter.xsd"/>
 	<!--
@@ -11,9 +10,9 @@
 	<element name="DSSMeasures" type="dss:DSSMeasuresType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>DSS Maßnahmen Kalypso</label>
-				<tooltip>Maßnahmendatei</tooltip>
-				<description>Maßnahmen</description>
+				<label>DSS Massnahmen Kalypso</label>
+				<tooltip>Massnahmendatei</tooltip>
+				<description>Massnahmen</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<label>DSS measure Kalypso</label>
@@ -45,9 +44,11 @@
 	</complexType>
 	<!--____________________Abstract measure supertype for all measures_______________________________ -->
 	<!-- Um mit XML Spy zu validieren muss abatract=false gesetzt sein (CK 17.11.05)
-		 <element name="_Measure" type="gml:AbstractFeatureType" abstract="false" substitutionGroup="gml:_Feature"> 
+<element name="_Measure" type="gml:AbstractFeatureType" abstract="false" substitutionGroup="gml:_Feature"> 
+	
 	-->
-	<element name="_Measure" type="gml:AbstractFeatureType" abstract="true" substitutionGroup="gml:_Feature">
+	 
+	<element name="_Measure" type="string" abstract="true" substitutionGroup="gml:_Feature">	
 		<annotation>
 			<documentation xml:lang="de">
 
@@ -62,7 +63,7 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Nutzungsaenderung</label>
-				<tooltip>Enthaelt Daten für eine Nutzungsaenderung auf der Grundlage von ALB Nutzungungstypen</tooltip>
+				<tooltip>Enthaelt Daten fuer eine Nutzungsaenderung auf der Grundlage von ALB Nutzungungstypen</tooltip>
 				<description>Nutzungsaenderung auf der Grundlage von ALB Nutzungungstypen</description>
 			</documentation>
 			<documentation xml:lang="en">
@@ -81,7 +82,7 @@
 							<documentation xml:lang="de">
 								<label>System Geometrie</label>
 								<tooltip>Geometrie des Nutzungstypen</tooltip>
-								<description>Fläche der Nutzungsänderung</description>
+								<description>Flaeche der Nutzungsaenderung</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>TODO</label>
@@ -142,7 +143,7 @@
 		</complexContent>
 	</complexType>
 	<!--_____________________________________________Mulden-Rigolen-Maßnahme____________________________________ -->
-	<element name="SwaleTrechSystemMeasure" type="na:SwaleAndTrenchFeatureType" substitutionGroup="dss:_Measure">
+	<element name="SwaleTrechSystemMeasure" type="string" substitutionGroup="dss:_Measure">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Mulen-Rigole</label>
