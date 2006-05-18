@@ -106,9 +106,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected Button deselectAllButton;
 
   // messages and labels
-  private final static String SELECT_ALL_TITLE = "Select All";
+  private static final String SELECT_ALL_TITLE = "Select All";
 
-  private final static String DESELECT_ALL_TITLE = "Deselect All";
+  private static final String DESELECT_ALL_TITLE = "Deselect All";
 
   private static final String SELECT_DESTINATION_MESSAGE = "WspWin-Verzeichnis wählen";
 
@@ -164,9 +164,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
    */
-  public void handleEvent( Event event )
+  public void handleEvent( final Event event )
   {
-    Widget source = event.widget;
+    final Widget source = event.widget;
 
     if( source == destinationBrowseButton )
       handleDestinationBrowseButtonPressed();
@@ -180,7 +180,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected void handleDestinationBrowseButtonPressed( )
   {
 
-    String currentSource = this.destinationNameField.getText();
+    final String currentSource = this.destinationNameField.getText();
     DirectoryDialog dialog = new DirectoryDialog( destinationNameField.getShell(), SWT.SAVE );
     dialog.setText( SELECT_DESTINATION_TITLE );
     dialog.setMessage( SELECT_DESTINATION_MESSAGE );
@@ -202,7 +202,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
 
     initializeDialogUnits( parent );
@@ -223,7 +223,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     createOptionsGroup( composite );
 
     restoreResourceSpecificationWidgetValues(); // ie.- local
-    restoreWidgetValues(); 
+    restoreWidgetValues();
     if( m_selection != null )
       setupBasedOnInitialSelections();
 
@@ -239,7 +239,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param parent
    *          the parent control //
    */
-  protected final void createButtonsGroup( Composite parent )
+  protected final void createButtonsGroup( final Composite parent )
   {
 
     Font font = parent.getFont();
@@ -273,7 +273,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     listener = new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         resourceGroup.setAllSelections( false );
       }
@@ -299,7 +299,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param parent
    *          org.eclipse.swt.widgets.Composite
    */
-  protected void createDestinationGroup( Composite parent )
+  protected void createDestinationGroup( final Composite parent )
   {
     final Font font = parent.getFont();
     // destination specification group
@@ -340,7 +340,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param parent
    *          the parent control
    */
-  protected final void createResourcesGroup( Composite parent )
+  protected final void createResourcesGroup( final Composite parent )
   {
 
     // create the input element, which has the root resource
@@ -376,7 +376,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param optionsGroup
    * @param font
    */
-  protected void createOverwriteExisting( Group optionsGroup, Font font )
+  protected void createOverwriteExisting( Group optionsGroup, final Font font )
   {
     // overwrite... checkbox
     overwriteExistingFilesCheckbox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
@@ -689,8 +689,8 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   }
 
   /**
-   * Sets the destination name of the export to be the supplied path. Adds the name of the path to the list of items in the
-   * destination combo and selects it.
+   * Sets the destination name of the export to be the supplied path. Adds the name of the path to the list of items in
+   * the destination combo and selects it.
    * 
    * @param path
    *          the path to be added

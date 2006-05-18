@@ -40,14 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.exportwizard;
 
+import java.io.File;
+import java.util.Iterator;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
+import org.kalypso.ui.model.wspm.core.wspwin.WspWinExportProjectFeatV;
+import org.kalypso.ui.model.wspm.core.wspwin.WspWinExporter;
 
 /**
  * @author thuel2
@@ -60,7 +71,6 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   private IWorkbench m_workbench;
 
   private WspWinExportPage m_wspWinExportPage;
-  
 
   /**
    * Creates a wizard for exporting workspace resources into a wspwin project.
@@ -104,8 +114,41 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   public boolean performFinish( )
   {
     m_wspWinExportPage.saveWidgetValues();
-    return true;
+    final Shell shell = getContainer().getShell();
+
+    // get model.gml (wspmTuhhModel.gml)
+    final Iterator modelGml = m_wspWinExportPage.getSelectedResourcesIterator();
+
+    // get destination path (wspwin path, not wspwin project path)
+    final File wspwinDir = m_wspWinExportPage.getDestinationDirectory();
+
+    // set visitor loose
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
+    {
+      @Override
+      protected void execute( final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "WspWin Datenexport", 100 );
+
+        try
+        {
+          monitor.subTask( " - Datenexport" );
+          WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
+//          WspWinExportProjectFeatV.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
+    if( !status.isOK() )
+      StatusUtilities.printStackTraces( status );
+    ErrorDialog.openError( shell, "WspWin Daten", "Fehler beim Datenexport", status );
+
+    return status.isOK();
   }
-  
-  
+
 }

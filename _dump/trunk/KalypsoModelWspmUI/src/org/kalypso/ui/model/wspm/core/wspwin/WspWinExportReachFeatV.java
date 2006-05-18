@@ -38,30 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.model.wspm.abstraction;
+package org.kalypso.ui.model.wspm.core.wspwin;
 
-import org.kalypso.observation.IObservation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * @author Gernot
+ * @author thuel2
+ *
  */
-public class WspmRunOffEventReference
+public class WspWinExportReachFeatV implements FeatureVisitor
 {
-  private final String m_href;
 
-  public WspmRunOffEventReference( final String href )
+  public WspWinExportReachFeatV( )
   {
-    m_href = href;
+    super();
+    // TODO Auto-generated constructor stub
   }
 
-  public String getHref( )
-  {
-    return m_href;
-  }
-
-  public void writeObservation( final IObservation runOffObs )
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean visit( Feature f )
   {
     // TODO Auto-generated method stub
-    
+    return false;
   }
+
 }

@@ -99,7 +99,7 @@ public class CalculationContentBean
 
   private final boolean m_isSimpleBerechnungWSPInt;
 
-  private final boolean m_reibungsverlustNachTrapezformal;
+  private final boolean m_reibungsverlustNachTrapezformel;
 
   private final VERZOEGERUNSVERLUST m_verzoegerungsVerlust;
 
@@ -152,7 +152,7 @@ public class CalculationContentBean
     m_output = output;
     m_ausgabeProfilnummer = ausgabeProfilnummer;
     m_isSimpleBerechnungWSPInt = isSimpleBerechnungWSPInt;
-    m_reibungsverlustNachTrapezformal = reibungsverlustNachTrapezformal;
+    m_reibungsverlustNachTrapezformel = reibungsverlustNachTrapezformal;
     m_verzoegerungsVerlust = verzoegerungsVerlust;
     m_artAnfangswasserspiegel = artAnfangswasserspiegel;
     m_berechneBruecken = berechneBruecken;
@@ -292,9 +292,9 @@ public class CalculationContentBean
     return m_output;
   }
 
-  public boolean isReibungsverlustNachTrapezformal( )
+  public boolean isReibungsverlustNachTrapezformel( )
   {
-    return m_reibungsverlustNachTrapezformal;
+    return m_reibungsverlustNachTrapezformel;
   }
 
   public double getStep( )

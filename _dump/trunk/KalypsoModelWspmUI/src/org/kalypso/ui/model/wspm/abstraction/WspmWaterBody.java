@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -140,15 +141,16 @@ public class WspmWaterBody implements IWspmConstants
     m_water.setProperty( prop, new Boolean( directionIsUpstream ) );
   }
 
-  public WspmRunOffEventReference createRunOffEvent( final String hrefHint )
+  public Feature createRunOffEvent(  )
   {
     final FeatureList runOffMembers = (FeatureList) m_water.getProperty( new QName( NS_WSPM, "runOffEventMember" ) );
 
-    final String href = "AbflussEreignisse/" + hrefHint;
-    // TODO: check if this reference is already in use
-
-    runOffMembers.add( href );
-
-    return new WspmRunOffEventReference( href );
+    final IRelationType parentFeatureTypeProperty = runOffMembers.getParentFeatureTypeProperty();
+    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
+    
+    final Feature runOffFeature = m_water.getWorkspace().createFeature( runOffMembers.getParentFeature(), targetFeatureType );
+    runOffMembers.add( runOffFeature );
+    
+    return runOffFeature;
   }
 }

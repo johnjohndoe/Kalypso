@@ -782,7 +782,7 @@
 	</complexType>
 	<complexType name="calcCreationType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="user" type="string">
 						<annotation>
@@ -793,7 +793,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="creationDate" type="dateTime">
+					<element name="date" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Datum</label>

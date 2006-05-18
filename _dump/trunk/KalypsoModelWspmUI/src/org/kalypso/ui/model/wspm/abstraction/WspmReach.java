@@ -106,4 +106,9 @@ public abstract class WspmReach implements IWspmConstants
     return (FeatureList) m_reach.getProperty( new QName( NS_WSPM, "reachSegmentMember" ) );
   }
 
+  public Feature getFeature( )
+  {
+    return m_reach;
+  }
+
 }

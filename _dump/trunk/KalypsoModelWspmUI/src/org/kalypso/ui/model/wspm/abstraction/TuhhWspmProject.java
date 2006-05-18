@@ -108,12 +108,12 @@ public class TuhhWspmProject extends WspmProject
     return newWater.createNewProfile( hrefHint );
   }
   
-  public TuhhCalculation createCalculation( final WspmWaterBody waterBody )
+  public TuhhCalculation createCalculation(  )
   {
     final GMLWorkspace workspace = getFeature().getWorkspace();
     final IFeatureType calcTye = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ) );
     
-    final Feature calcFeature = workspace.createFeature( waterBody.getFeature(), calcTye );
+    final Feature calcFeature = workspace.createFeature( getFeature(), calcTye );
     
     final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
     calcList.add( calcFeature );

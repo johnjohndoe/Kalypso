@@ -22,53 +22,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="calculationModeMember" type="tuhh:CalculationModePropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Referenz auf Art der Berechnung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="AbstractCalculationMode" abstract="true" type="tuhh:AbstractCalculationModeType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Art der Berechnung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationModeWaterlevel" type="tuhh:CalculationModeWaterlevelType" substitutionGroup="tuhh:AbstractCalculationMode">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Wasserspiegellagenberechnung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationModeBankfullUniform" type="tuhh:CalculationModeBankfullUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Bordvollberechnung - stationär gleichförmige Abflussverhältnisse</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationModeBankfullNonUniform" type="tuhh:CalculationModeBankfullNonUniformType" substitutionGroup="tuhh:AbstractCalculationMode">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Bordvollberechnung - stationär ungleichförmige Abflussverhältnisse</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<!-- 
-	-->
 	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
@@ -82,33 +35,6 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Randbedingung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationStartConditionCriticalWaterDepth" type="tuhh:CalculationStartConditionCriticalWaterDepthType" substitutionGroup="tuhh:CalculationStartCondition">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???als Grenztiefe</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationStartConditionUniformBottomSlope" type="tuhh:CalculationStartConditionUniformBottomSlopeType" substitutionGroup="tuhh:CalculationStartCondition">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Annahme stationär gleichförmiges Gefälle</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="CalculationStartConditionWaterlevel" type="tuhh:CalculationStartConditionWaterlevelType" substitutionGroup="tuhh:CalculationStartCondition">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Direkteingabe Wasserspiegel</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -235,6 +161,25 @@
 			</documentation>
 		</annotation>
 	</element>
+	<!--  -->
+	<element name="localEnergyLossMember" type="tuhh:localEnergyLossPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???element:localEnergyLossMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="LocalEnergyLoss" type="tuhh:LocalEnergyLossType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???localEnergyLoss</label>
+				<tooltip>???tooltip</tooltip>
+				<description/>
+			</documentation>
+		</annotation>
+	</element>
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -288,44 +233,41 @@
 					<element ref="tuhh:subReachDefinitionMember"/>
 					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
-					<element ref="tuhh:calculationModeMember"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<complexType name="CalculationModePropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:AbstractCalculationMode"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="AbstractCalculationModeType" abstract="true">
-		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence>
-					<!-- change name to kind -->
-					<element name="type" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???Art der Berechnung</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
+					<element ref="tuhh:calculationStartConditionMember"/>
+					<element ref="tuhh:calculationWaterlevelParameterMember"/>
+					<element name="mode">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="waterlevel">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???Wasserspiegelberechnung</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="bankfullUniform">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???Bordvollberechnung - stationär-gleichförmig</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="bankfullNonUniform">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>???Bordvollberechnung - stationär-ungleichförmig</label>
+											<tooltip>???tooltip</tooltip>
+											<description>???description</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
 					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationModeWaterlevelType">
-		<complexContent>
-			<extension base="tuhh:AbstractCalculationModeType">
-				<sequence>
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
 					<element name="runOffEventMember" type="om:AbstractObservationPropertyType">
 						<annotation>
@@ -336,24 +278,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tuhh:calculationStartConditionMember"/>
-					<element ref="tuhh:calculationWaterlevelParameterMember"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationModeBankfullUniformType">
-		<complexContent>
-			<extension base="tuhh:AbstractCalculationModeType">
-				<sequence/>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationModeBankfullNonUniformType">
-		<complexContent>
-			<extension base="tuhh:AbstractCalculationModeType">
-				<sequence>
-					<element ref="tuhh:calculationStartConditionMember"/>
 					<element name="minimalRunOff" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -381,7 +305,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tuhh:calculationWaterlevelParameterMember"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -400,38 +323,17 @@
 	<complexType name="CalculationStartConditionType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence> </sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationStartConditionCriticalWaterDepthType">
-		<complexContent>
-			<extension base="tuhh:CalculationStartConditionType">
-				<sequence/>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationStartConditionUniformBottomSlopeType">
-		<complexContent>
-			<extension base="tuhh:CalculationStartConditionType">
 				<sequence>
-					<element name="bottomSlope" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???bottomSlope</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
+					<element name="kind">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="criticalWaterDepth"/>
+								<enumeration value="startWaterlevel"/>
+								<enumeration value="uniformBottomSlope"/>
+							</restriction>
+						</simpleType>
 					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="CalculationStartConditionWaterlevelType">
-		<complexContent>
-			<extension base="tuhh:CalculationStartConditionType">
-				<sequence>
+					
 					<element name="waterlevel" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -441,7 +343,17 @@
 							</documentation>
 						</annotation>
 					</element>
-				</sequence>
+					
+					<element name="bottomSlope" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???bottomSlope</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				 </sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -655,21 +567,29 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="localEnergyLoss" type="tuhh:LocalEnergyLossType" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???localEnergyLoss</label>
-								<tooltip>???tooltip</tooltip>
-								<description/>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="tuhh:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!-- 
 	-->
+	<complexType name="localEnergyLossPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???localEnergyLossPropertyType</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:LocalEnergyLoss"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
 	<complexType name="LocalEnergyLossType">
 		<annotation>
 			<documentation xml:lang="de">
@@ -781,7 +701,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="startStation" type="int">
+					<element name="startStation" type="tuhh:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Anfangsstation</label>
@@ -790,7 +710,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="endStation" type="int">
+					<element name="endStation" type="tuhh:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Endstation</label>
@@ -856,4 +776,9 @@
 	</complexType>
 	<!-- 
 	-->
+	<simpleType name="stationDouble">
+		<restriction base="decimal">
+			<fractionDigits value="4"/>
+		</restriction>
+	</simpleType>
 </schema>
