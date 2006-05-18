@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.observation;
 
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 /**
  * Utilities around IObservation.
@@ -50,7 +48,7 @@ import java.util.NoSuchElementException;
  */
 public final class ObservationUtilities
 {
-  private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
+//  private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
 
   private ObservationUtilities( )
   {
