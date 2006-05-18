@@ -66,21 +66,9 @@ import org.xml.sax.ext.LexicalHandler;
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
 
-  private final Class m_gmObjectClass;
-
-  public GenericGM_ObjectBindingTypeHandler( JAXBContext jaxbContext, QName typeQName, QName valueQName, Class gm_objectClass, boolean isGeometry )
+  public GenericGM_ObjectBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class gm_objectClass, boolean isGeometry )
   {
-    super( jaxbContext, typeQName, valueQName, GML3BindingGM_ObjectAdapter.getBindingClassFor( gm_objectClass ), isGeometry );
-    m_gmObjectClass = gm_objectClass;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#getValueClass()
-   */
-  @Override
-  public Class getValueClass( )
-  {
-    return m_gmObjectClass;
+    super( jaxbContext, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false,true );
   }
 
   /**
@@ -120,8 +108,8 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     final GM_Object geometry = (GM_Object) value;
     try
     {
-      final AbstractGeometryType abstractGeomType = GML3BindingGM_ObjectAdapter.createBindingGeometryType( geometry );
-      super.marshal( propQName, abstractGeomType, contentHandler, lexicalHandler, context );
+      final AbstractGeometryType wrappedValue = GML3BindingGM_ObjectAdapter.createBindingGeometryType( geometry );
+      super.marshal( propQName, wrappedValue, contentHandler, lexicalHandler, context );
     }
     catch( final GM_Exception e )
     {

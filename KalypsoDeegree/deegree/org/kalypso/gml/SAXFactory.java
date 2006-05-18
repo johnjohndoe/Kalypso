@@ -187,24 +187,35 @@ public class SAXFactory
     }
     else if( vpt.isList() )
     {
-      for( final Object next : ((List) value) )
+      final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
+      final URL context = null;
+      final LexicalHandler lexicalHandler = null;
+
+      for( final Object singleValue : ((List) value) )
       {
-        next.getClass(); // unused
 
         // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
-        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, null );
+//        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, null );
+        try
+        {
+          th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context );
+        }
+        catch( TypeRegistryException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
 
         // TODO parse content
         // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
-        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+//        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
       }
     }
     else
     {
       final IMarshallingTypeHandler th = (IMarshallingTypeHandler) vpt.getTypeHandler();
-
       final URL context = null;
-      LexicalHandler lexicalHandler = null;
+      final LexicalHandler lexicalHandler = null;
       try
       {
         // m_handler.startElement(uri, localPart, getQName(qName),

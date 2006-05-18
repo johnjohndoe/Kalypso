@@ -72,20 +72,25 @@ public class FeatureParser
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );
-    
+
     if( featureType == null )
       throw new GMLException( "No feature type found for: " + qNameFT );
-    
+
     final String fid;
     // GMLContentHandler.print( atts );
     // TODO check for alternatives xml:id gml:fid
-    final int fIDIndex = atts.getIndex( "fid" );
-    final int gmlIDindex = atts.getIndex( NS.GML2, "id" );
-    // final int gmlIDindex = atts.getIndex("id");
-    if( fIDIndex >= 0 )
-      fid = atts.getValue( fIDIndex );
-    else if( gmlIDindex >= 0 )
-      fid = atts.getValue( gmlIDindex );
+    final int id1 = atts.getIndex( NS.GML2, "fid" );
+    final int id2 = atts.getIndex( "fid" );
+    final int id3 = atts.getIndex( NS.GML2, "id" );
+    final int id4 = atts.getIndex( "id" );
+    if( id1 >= 0 )
+      fid = atts.getValue( id1 );
+    else if( id2 >= 0 )
+      fid = atts.getValue( id2 );
+    else if( id3 >= 0 )
+      fid = atts.getValue( id3 );
+    else if( id4 >= 0 )
+      fid = atts.getValue( id4 );
     else
       fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
     // conflict with other ids
