@@ -19,6 +19,8 @@ public interface Feature extends DeegreeFeature
 
   public void setProperty( final IPropertyType propertyType, final Object value );
 
+  public void setProperty( final QName propQName, final Object value );
+
   /**
    * @deprecated use getPropery(PropertyType)
    */

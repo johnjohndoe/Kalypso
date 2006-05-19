@@ -375,4 +375,16 @@ public class Feature_Impl implements Feature
       buffer.append( "#" + m_id );
     return buffer.toString();
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
+   */
+  public void setProperty( final QName propQName, final Object value )
+  {
+    final IFeatureType featureType = getFeatureType();
+
+    final IPropertyType prop = featureType.getProperty( propQName );
+    
+    setProperty( prop, value );
+  }
 }

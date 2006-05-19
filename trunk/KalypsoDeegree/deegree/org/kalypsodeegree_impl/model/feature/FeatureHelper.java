@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -365,7 +367,7 @@ public class FeatureHelper
       targetFE.setProperty( pt, cloneValue );
     }
   }
-  
+
   /**
    * <ul>
    * <li>If the property is not a list, just set the value</li>
@@ -389,11 +391,27 @@ public class FeatureHelper
     else
       feature.setProperty( pt, newValue );
   }
-  
+
   public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )
   {
     for( final Map.Entry<IPropertyType, Object> entry : props.entrySet() )
       result.setProperty( entry.getKey(), entry.getValue() );
+  }
+
+  /**
+   * Returns a value of the given feature as feature. If it is a link, it will be resolved.
+   * 
+   * @param qname
+   *          Must denote a property of type IRelationType of maxoccurs 1.
+   */
+  public static Feature resolveLink( final Feature feature, final QName qname )
+  {
+    final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
+    final Object value = feature.getProperty( property );
+    if( value instanceof Feature )
+      return (Feature) value;
+    else
+      return feature.getWorkspace().getFeature( (String) value );
   }
 
 }
