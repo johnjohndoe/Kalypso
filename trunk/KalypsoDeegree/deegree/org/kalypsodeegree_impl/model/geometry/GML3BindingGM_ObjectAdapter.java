@@ -362,7 +362,7 @@ public class GML3BindingGM_ObjectAdapter
 
     final DirectPositionType pos = type.getPos();
     if( pos != null )
-      position =createGM_Position( pos );
+      position = createGM_Position( pos );
     else
     {
       final CoordinatesType coordinates = type.getCoordinates();
@@ -389,16 +389,15 @@ public class GML3BindingGM_ObjectAdapter
   {
     final BigInteger srsDimension = positionType.getSrsDimension();
     final List<Double> crdsList = positionType.getValue();
-    
+
     if( srsDimension != null && crdsList.size() != srsDimension.intValue() )
       throw new IllegalArgumentException( "Wrong count of coordinates: " + crdsList.size() );
-    
+
     final double[] crds = ArrayUtils.toPrimitive( crdsList.toArray( new Double[crdsList.size()] ) );
-    
+
     return GeometryFactory.createGM_Position( crds );
   }
 
-  
   private static GM_Position[] createGM_Positions( final CoordinatesType coordinates )
   {
     final String coordinateSepearator = coordinates.getCs();
@@ -555,20 +554,23 @@ public class GML3BindingGM_ObjectAdapter
     // interior
 
     final List<JAXBElement<AbstractRingPropertyType>> interiorContainer = polygonType.getInterior();
-    for( int i = 0; i < interiorRings.length; i++ )
+    if( interiorRings != null )
     {
-      final GM_Ring ring = interiorRings[i];
-      final LinearRingType interiorLinearRingType = gml3Fac.createLinearRingType();
+      for( int i = 0; i < interiorRings.length; i++ )
+      {
+        final GM_Ring ring = interiorRings[i];
+        final LinearRingType interiorLinearRingType = gml3Fac.createLinearRingType();
 
-      final CoordinatesType interiorCoordinatesType = createCoordinatesType( ring.getPositions() );
-      linearRingType.setCoordinates( interiorCoordinatesType );
-      final JAXBElement<LinearRingType> interiorLinearRing = gml3Fac.createLinearRing( interiorLinearRingType );
+        final CoordinatesType interiorCoordinatesType = createCoordinatesType( ring.getPositions() );
+        linearRingType.setCoordinates( interiorCoordinatesType );
+        final JAXBElement<LinearRingType> interiorLinearRing = gml3Fac.createLinearRing( interiorLinearRingType );
 
-      final AbstractRingPropertyType interiorAbstractRingPropertyType = gml3Fac.createAbstractRingPropertyType();
-      abstractRingPropertyType.setRing( interiorLinearRing );
+        final AbstractRingPropertyType interiorAbstractRingPropertyType = gml3Fac.createAbstractRingPropertyType();
+        abstractRingPropertyType.setRing( interiorLinearRing );
 
-      final Interior interior = gml3Fac.createInterior( interiorAbstractRingPropertyType );
-      interiorContainer.add( interior );
+        final Interior interior = gml3Fac.createInterior( interiorAbstractRingPropertyType );
+        interiorContainer.add( interior );
+      }
     }
     //
     polygonType.setSrsName( csName );

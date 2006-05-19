@@ -183,7 +183,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {
           final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
-          if( firstElement instanceof Feature )
+          if( firstElement instanceof Feature && firstElement != null )
           {
             m_selectedGeom = ((Feature) firstElement).getDefaultGeometryProperty();
             m_themeName = activeTheme.getName();
@@ -228,7 +228,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
         }
       }
     } );
-    Group spatialOpsGroup = new Group( main, SWT.NONE );
+    Group spatialOpsGroup = new Group( main, SWT.HORIZONTAL );
     spatialOpsGroup.setLayout( new GridLayout( 2, false ) );
     spatialOpsGroup.setLayoutData( new GridData() );
     spatialOpsGroup.setText( "Unterstütze Räumliche Operatoren" );

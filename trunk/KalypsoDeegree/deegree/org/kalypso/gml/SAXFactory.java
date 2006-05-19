@@ -176,7 +176,7 @@ public class SAXFactory
       // write empty tag if this property is required
       if( vpt.getMinOccurs() > 0 )
       {
-        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, null );
+        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
 
         // TODO: put default value if element is not nullable?
 
@@ -195,7 +195,7 @@ public class SAXFactory
       {
 
         // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
-//        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, null );
+//        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
         try
         {
           th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context );
@@ -219,7 +219,7 @@ public class SAXFactory
       try
       {
         // m_handler.startElement(uri, localPart, getQName(qName),
-        // null);
+        // new AttributesImpl());
         th.marshal( prefixedQName, value, m_handler, lexicalHandler, context );
         // th.marshal(vpt.getQName(), value, m_handler, lexicalHandler,
         // context);
@@ -273,7 +273,7 @@ public class SAXFactory
     final String localPart = prefixedQName.getLocalPart();
     if( next instanceof Feature )
     {
-      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, null );
+      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
 
       process( (Feature) next, new AttributesImpl() );
       m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );

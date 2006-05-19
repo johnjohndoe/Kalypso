@@ -73,6 +73,8 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionAddGeometry() );
       m_defaultInstance.register( new URLActionOpenURL() );
       m_defaultInstance.register( new URLActionActivateTheme() );
+      m_defaultInstance.register( new URLActionSaveActiveTheme() );
+      m_defaultInstance.register( new URLActionSaveActiveGMT() );
     }
     catch( URLActionRegistryException e )
     {

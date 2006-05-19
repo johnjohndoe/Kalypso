@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gml.ToStringContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.SimpleTypeUnmarshalingContentHandler;
@@ -109,21 +110,30 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
     try
     {
       // xml to memory
-      final ToStringContentHandler toStringHandler = new ToStringContentHandler();
+      final StringBuffer buffer = new StringBuffer();
+      final ToStringContentHandler toStringHandler = new ToStringContentHandler( new ILogger()
+      {
+
+        public void log( String message )
+        {
+          buffer.append( message );
+        }
+
+      } );
       final UnmarshalResultProvider result = new UnmarshalResultProvider()
       {
         public Object getResult( )
         {
           try
           {
-            final String stringResult = toStringHandler.getResult();
+            final String stringResult = buffer.toString();
             return parseType( stringResult );
           }
           catch( final Exception e )
           {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            
+
             // why no rethrow exception here?
           }
           return null;
@@ -173,7 +183,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
     {
       e.printStackTrace();
       return null;
-      
+
       // TODO: throw parse exception?!
     }
   }

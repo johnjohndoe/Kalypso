@@ -170,11 +170,11 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public Object getFirstElement( )
   {
-    if( !m_map.isEmpty() )
-      return m_map.keySet().iterator().next();
-      
-      // this is veeeery bug prone!!! a least return null!!
-    return new Object();
+    Set<Feature> keySet = m_map.keySet();
+    if( !keySet.isEmpty() )
+      return keySet.iterator().next();
+    return null;
+
   }
 
   /**

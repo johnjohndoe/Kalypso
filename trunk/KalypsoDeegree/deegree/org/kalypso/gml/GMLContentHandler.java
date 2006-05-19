@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -100,6 +101,8 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   private final boolean m_useSchemaCatalog;
 
   private ToStringContentHandler m_exceptionContentHandler = null;
+
+  StringBuffer m_errorBuffer = new StringBuffer();
 
   private final URL m_context;
 
@@ -160,14 +163,30 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     // deegree1-service
     if( localName != null && localName.endsWith( "Exception" ) )
     {
-      m_exceptionContentHandler = new ToStringContentHandler();
+      m_exceptionContentHandler = new ToStringContentHandler( new ILogger()
+      {
+
+        public void log( String message )
+        {
+          m_errorBuffer.append( message );
+        }
+
+      } );
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );
       return;
     }
     // deegree2-service
     if( localName != null && localName.equals( "ServiceExceptionReport" ) )
     {
-      m_exceptionContentHandler = new ToStringContentHandler();
+      m_exceptionContentHandler = new ToStringContentHandler( new ILogger()
+      {
+
+        public void log( String message )
+        {
+          m_errorBuffer.append( message );
+        }
+
+      } );
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );
       return;
     }
@@ -356,11 +375,12 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   }
 
   // DONT REMOVE: used by proto-implementation of DelegateFeature obove
-//  private String getAttributeValue( final Attributes atts, final String uri, final String localName, final String defaultValue )
-//  {
-//    final String value = atts.getValue( uri, localName );
-//    return value == null ? defaultValue : value;
-//  }
+  // private String getAttributeValue( final Attributes atts, final String uri, final String localName, final String
+  // defaultValue )
+  // {
+  // final String value = atts.getValue( uri, localName );
+  // return value == null ? defaultValue : value;
+  // }
 
   /**
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
@@ -527,7 +547,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       return m_rootFeature;
 
     if( m_exceptionContentHandler != null )
-      throw new GMLException( m_exceptionContentHandler.getResult() );
+      throw new GMLException( m_errorBuffer.toString() );
 
     throw new GMLException( "Could not load GML, Root-Feature was not created." );
   }

@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -58,13 +59,13 @@ import org.xml.sax.XMLReader;
  */
 public class GMLWorkspaceReader implements XMLReader
 {
-//  private String nsu = ""; // NamespaceURI
+  // private String nsu = ""; // NamespaceURI
 
-//  private Attributes atts = new AttributesImpl();
+  // private Attributes atts = new AttributesImpl();
 
-//  private String rootElement = "addressbook";
+  // private String rootElement = "addressbook";
 
-//  private String indent = "\n    "; // for readability!
+  // private String indent = "\n "; // for readability!
 
   private final List<String> m_enabledFeatures = new ArrayList<String>();
 
@@ -89,10 +90,20 @@ public class GMLWorkspaceReader implements XMLReader
   {
     if( input == null || !(input instanceof GMLWorkspaceInputSource) )
       throw new SAXException( "inputSource is null or not of type: " + GMLWorkspaceInputSource.class.getName() );
+
+    final ToStringContentHandler toStringHandler = new ToStringContentHandler( new ILogger()
+    {
+      public void log( String message )
+      {
+        System.out.print( message );
+      }
+    } );
+
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
-    final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
-    
+     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
+//    final IndentingContentHandler indentHandler = new IndentingContentHandler( toStringHandler, 1 );
+
     final SAXFactory factory = new SAXFactory( indentHandler );
     handler.startDocument();
     factory.process( workspace );
