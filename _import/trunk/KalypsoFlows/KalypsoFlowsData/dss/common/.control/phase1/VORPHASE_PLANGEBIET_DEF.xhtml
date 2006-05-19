@@ -13,8 +13,18 @@
 		function digitize()
 		{
 			kalypso://selectEditor?input=Plangebiet_definieren.gmt;
+			kalypso://activateTheme?theme=Plangebiet;
 			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate;
 			
+		}
+
+		function finishStep()
+		{
+			kalypso://selectEditor?input=Plangebiet_definieren.gmt;
+			kalypso://activateTheme?theme=Plangebiet;
+			kalypso://saveActiveTheme?;
+			kalypso://saveActiveGMT?;
+			kalypso://openURL?url=VORPHASE_BETROFFENHEIT_DEF.xhtml;
 		}
 	 -->
  </script>
@@ -71,7 +81,7 @@ Das Plangebiet kann auf zwei Arten definiert werden:
 	  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 	  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 	  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-	  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">abschliessen...</span><a href="kalypso://openURL?url=VORPHASE_BETROFFENHEIT_DEF.xhtml&browserId=org.kalypso.workflow.ui.WorkflowBrowserView" style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><img alt="" src="../img/lc10617.gif" style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a>
+	  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">abschliessen...</span><a href="kalypso://runScript?type=text/kalypso&function=finishStep" style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><img alt="" src="../img/lc10617.gif" style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a>
     </ol>
 
   </ol>
