@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import java.util.ArrayList;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -121,4 +123,26 @@ public class TuhhWspmProject extends WspmProject
     return new TuhhCalculation( calcFeature );
   }
 
+  public TuhhCalculation[] getCalculations( )
+  {
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+    
+    final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
+    final ArrayList<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
+    for( final Object o : calcList )
+    {
+      final Feature calcFeature;
+      if( o instanceof Feature )
+        calcFeature = (Feature) o;
+      else
+        calcFeature = workspace.getFeature( (String)o );
+      
+      calcs.add( new TuhhCalculation( calcFeature ) );
+    }
+    
+    return calcs.toArray( new TuhhCalculation[calcs.size()] );
+  }
+
+
+  
 }

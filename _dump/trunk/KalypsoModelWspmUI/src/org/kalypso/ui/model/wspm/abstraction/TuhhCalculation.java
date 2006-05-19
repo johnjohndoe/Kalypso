@@ -42,6 +42,7 @@ package org.kalypso.ui.model.wspm.abstraction;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -50,10 +51,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.observation.IObservation;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -105,7 +108,7 @@ public class TuhhCalculation implements IWspmConstants
   private final Feature m_calcFeature;
 
   // TODO: get number of fractions digits from gml-schema
-  private static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
+  public static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
 
   public TuhhCalculation( final Feature calcFeature )
   {
@@ -141,9 +144,7 @@ public class TuhhCalculation implements IWspmConstants
   {
     final QName qname = new QName( NS_WSPM, "calcCreationMember" );
 
-    final IPropertyType createProp = m_calcFeature.getFeatureType().getProperty( qname );
-
-    Feature calcCreationFeature = (Feature) m_calcFeature.getProperty( createProp );
+    Feature calcCreationFeature = (Feature) m_calcFeature.getProperty( qname );
 
     if( calcCreationFeature == null )
     {
@@ -152,40 +153,34 @@ public class TuhhCalculation implements IWspmConstants
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM, "CalcCreation" ) );
       calcCreationFeature = workspace.createFeature( m_calcFeature, featureType );
-      m_calcFeature.setProperty( createProp, calcCreationFeature );
+      m_calcFeature.setProperty( qname, calcCreationFeature );
     }
 
-    final IFeatureType featureType = calcCreationFeature.getFeatureType();
-    final IPropertyType userProp = featureType.getProperty( new QName( NS_WSPM, "user" ) );
-    calcCreationFeature.setProperty( userProp, user );
+    calcCreationFeature.setProperty( new QName( NS_WSPM, "user" ), user );
 
-    final IPropertyType dateProp = featureType.getProperty( new QName( NS_WSPM, "date" ) );
     final Calendar calendar = Calendar.getInstance();
     calendar.setTime( date );
 
-    calcCreationFeature.setProperty( dateProp, new XMLGregorianCalendarImpl( (GregorianCalendar) calendar ) );
+    calcCreationFeature.setProperty( new QName( NS_WSPM, "date" ), new XMLGregorianCalendarImpl( (GregorianCalendar) calendar ) );
   }
 
   public void setReachRef( final TuhhReach reach )
   {
-    final IPropertyType reachProp = m_calcFeature.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ) );
-    m_calcFeature.setProperty( reachProp, reach.getFeature().getId() );
+    m_calcFeature.setProperty( new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ), reach.getFeature().getId() );
   }
 
   public void setFliessgesetz( final FLIESSGESETZ gesetz )
   {
-    final IPropertyType fliessProp = m_calcFeature.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ) );
-
     switch( gesetz )
     {
       case MANNING_STRICKLER:
-        m_calcFeature.setProperty( fliessProp, "manningStrickler" );
+        m_calcFeature.setProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), "manningStrickler" );
         break;
       case DARCY_WEISSBACH:
-        m_calcFeature.setProperty( fliessProp, "darcyRohr" );
+        m_calcFeature.setProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), "darcyRohr" );
         break;
       case DARCY_WEISSBACH_MIT_FORMEINFLUSS:
-        m_calcFeature.setProperty( fliessProp, "darcyOffeneGerinne" );
+        m_calcFeature.setProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), "darcyOffeneGerinne" );
         break;
     }
   }
@@ -194,9 +189,8 @@ public class TuhhCalculation implements IWspmConstants
   {
     final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" );
 
-    final IPropertyType subProp = m_calcFeature.getFeatureType().getProperty( qname );
 
-    Feature subReachFeature = (Feature) m_calcFeature.getProperty( subProp );
+    Feature subReachFeature = (Feature) m_calcFeature.getProperty( qname );
 
     if( subReachFeature == null )
     {
@@ -205,25 +199,18 @@ public class TuhhCalculation implements IWspmConstants
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "SubReachDefinition" ) );
       subReachFeature = workspace.createFeature( m_calcFeature, featureType );
-      m_calcFeature.setProperty( subProp, subReachFeature );
+      m_calcFeature.setProperty( qname, subReachFeature );
     }
 
-    final IFeatureType featureType = subReachFeature.getFeatureType();
-
-    final IPropertyType startProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "startStation" ) );
-    subReachFeature.setProperty( startProp, new BigDecimal( startStation, STATION_MATH_CONTEXT ) );
-
-    final IPropertyType endProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "endStation" ) );
-    subReachFeature.setProperty( endProp, new BigDecimal( endStation, STATION_MATH_CONTEXT ) );
+    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "startStation" ), new BigDecimal( startStation, STATION_MATH_CONTEXT ) );
+    subReachFeature.setProperty( new QName( NS_WSPM_TUHH, "endStation" ), new BigDecimal( endStation, STATION_MATH_CONTEXT ) );
   }
 
   public void setStartCondition( final START_KONDITION_KIND type, final double startWsp, final double startSlope )
   {
     final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
 
-    final IPropertyType conditionProp = m_calcFeature.getFeatureType().getProperty( qname );
-
-    Feature conditionFeature = (Feature) m_calcFeature.getProperty( conditionProp );
+    Feature conditionFeature = (Feature) m_calcFeature.getProperty( qname );
 
     if( conditionFeature == null )
     {
@@ -232,10 +219,8 @@ public class TuhhCalculation implements IWspmConstants
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "StartCondition" ) );
       conditionFeature = workspace.createFeature( m_calcFeature, featureType );
-      m_calcFeature.setProperty( conditionProp, conditionFeature );
+      m_calcFeature.setProperty( qname, conditionFeature );
     }
-
-    final IFeatureType featureType = conditionFeature.getFeatureType();
 
     final String kind;
     switch( type )
@@ -254,23 +239,16 @@ public class TuhhCalculation implements IWspmConstants
         break;
     }
 
-    final IPropertyType kindProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "kind" ) );
-    conditionFeature.setProperty( kindProp, kind );
-
-    final IPropertyType waterlevelProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "waterlevel" ) );
-    conditionFeature.setProperty( waterlevelProp, new Double( startWsp ) );
-
-    final IPropertyType slopeProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ) );
-    conditionFeature.setProperty( slopeProp, new Double( startSlope ) );
+    conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "kind" ), kind );
+    conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "waterlevel" ), new Double( startWsp ) );
+    conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ), new Double( startSlope ) );
   }
 
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, boolean doCalcBarrages )
   {
     final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
 
-    final IPropertyType parameterProp = m_calcFeature.getFeatureType().getProperty( qname );
-
-    Feature parameterFeature = (Feature) m_calcFeature.getProperty( parameterProp );
+    Feature parameterFeature = (Feature) m_calcFeature.getProperty( qname );
 
     if( parameterFeature == null )
     {
@@ -279,59 +257,52 @@ public class TuhhCalculation implements IWspmConstants
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "WaterlevelParameter" ) );
       parameterFeature = workspace.createFeature( m_calcFeature, featureType );
-      m_calcFeature.setProperty( parameterProp, parameterFeature );
+      m_calcFeature.setProperty( qname, parameterFeature );
     }
 
-    final IFeatureType featureType = parameterFeature.getFeatureType();
-
-    final IPropertyType iterationProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "wspIteration" ) );
     switch( iterationType )
     {
       default:
       case SIMPLE:
-        parameterFeature.setProperty( iterationProp, "simpleIteration" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "wspIteration" ), "simpleIteration" );
         break;
 
       case EXACT:
-        parameterFeature.setProperty( iterationProp, "exactIteration" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "wspIteration" ), "exactIteration" );
         break;
     }
 
-    final IPropertyType verzProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ) );
     switch( verzType )
     {
       default:
       case BJOERNSEN:
-        parameterFeature.setProperty( verzProp, "bjoernsen" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), "bjoernsen" );
         break;
 
       case DVWK:
-        parameterFeature.setProperty( verzProp, "dvwk" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), "dvwk" );
         break;
 
       case DFG:
-        parameterFeature.setProperty( verzProp, "dfg" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), "dfg" );
         break;
     }
 
-    final IPropertyType reibProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ) );
     switch( reibType )
     {
       default:
       case TRAPEZ_FORMULA:
-        parameterFeature.setProperty( reibProp, "trapezFormula" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ), "trapezFormula" );
         break;
 
       case GEOMETRIC_FORMULA:
-        parameterFeature.setProperty( reibProp, "geometricFormula" );
+        parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ), "geometricFormula" );
         break;
     }
 
     final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
 
-    final IPropertyType specialProp = parameterFeature.getFeatureType().getProperty( specialQname );
-
-    Feature specialFeature = (Feature) parameterFeature.getProperty( specialProp );
+    Feature specialFeature = (Feature) parameterFeature.getProperty( specialQname );
 
     if( specialFeature == null )
     {
@@ -340,37 +311,29 @@ public class TuhhCalculation implements IWspmConstants
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType specialType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "SpecialOptions" ) );
       specialFeature = workspace.createFeature( parameterFeature, specialType );
-      parameterFeature.setProperty( specialProp, specialFeature );
+      parameterFeature.setProperty( specialQname, specialFeature );
     }
 
-    final IFeatureType specialType = specialFeature.getFeatureType();
-
-    final IPropertyType bridgesProp = specialType.getProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ) );
-    specialFeature.setProperty( bridgesProp, new Boolean( doCalcBridges ) );
-
-    final IPropertyType barragesProp = specialType.getProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ) );
-    specialFeature.setProperty( barragesProp, new Boolean( doCalcBarrages ) );
+    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), new Boolean( doCalcBridges ) );
+    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), new Boolean( doCalcBarrages ) );
 
   }
 
   public void setCalcMode( final MODE mode )
   {
     final Feature feature = getFeature();
-    final IFeatureType featureType = feature.getFeatureType();
-
-    final IPropertyType modeProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "mode" ) );
 
     switch( mode )
     {
       case WSP:
-        feature.setProperty( modeProp, "waterlevel" );
+        feature.setProperty( new QName( NS_WSPM_TUHH, "mode" ), "waterlevel" );
         break;
       case BF_UNIFORM:
-        feature.setProperty( modeProp, "bankfullUniform" );
+        feature.setProperty( new QName( NS_WSPM_TUHH, "mode" ), "bankfullUniform" );
         break;
 
       case BF_NON_UNIFORM:
-        feature.setProperty( modeProp, "bankfullNonUniform" );
+        feature.setProperty( new QName( NS_WSPM_TUHH, "mode" ), "bankfullNonUniform" );
         break;
 
       default:
@@ -381,25 +344,37 @@ public class TuhhCalculation implements IWspmConstants
   public void setQRange( final double minQ, final double maxQ, final double Qstep )
   {
     final Feature feature = getFeature();
-    final IFeatureType featureType = feature.getFeatureType();
 
-    final IPropertyType minProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "minimalRunOff" ) );
-    feature.setProperty( minProp, new Double( minQ ) );
-
-    final IPropertyType maxProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "maximalRunOff" ) );
-    feature.setProperty( maxProp, new Double( maxQ ) );
-
-    final IPropertyType stepProp = featureType.getProperty( new QName( NS_WSPM_TUHH, "runOffStep" ) );
-    feature.setProperty( stepProp, new Double( Qstep ) );
+    feature.setProperty( new QName( NS_WSPM_TUHH, "minimalRunOff" ), new Double( minQ ) );
+    feature.setProperty( new QName( NS_WSPM_TUHH, "maximalRunOff" ), new Double( maxQ ) );
+    feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( Qstep ) );
   }
 
   public void setRunOffRef( final String runOffRef )
   {
-    final Feature feature = getFeature();
-    final IFeatureType featureType = feature.getFeatureType();
-
-    final IPropertyType prop = featureType.getProperty( new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
-    feature.setProperty( prop, runOffRef );
+    getFeature().setProperty( new QName( NS_WSPM_TUHH, "runOffEventMember" ), runOffRef );
   }
 
+  public TuhhReach getReach( )
+  {
+    final Feature reachFeature = FeatureHelper.resolveLink( m_calcFeature, new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ) );
+    return new TuhhReach( reachFeature );
+  }
+
+  public IObservation getRunOffEvent( )
+  {
+    final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
+    
+    try
+    {
+      return ObservationFeatureFactory.observationFromFeature( runOffEvent );
+    }
+    catch( final ParseException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return null;
+  }
 }

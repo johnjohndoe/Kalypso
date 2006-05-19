@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
@@ -64,8 +66,7 @@ public class TuhhReachProfileSegment implements IWspmConstants
 
   public void setProfileMember( final WspmProfileReference profileReference )
   {
-    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM, "profileMember" ) );
-    m_reachSegment.setProperty( gmlDescProp, profileReference.getHref() );
+    m_reachSegment.setProperty( new QName( NS_WSPM, "profileMember" ), profileReference.getHref() );
   }
 
   public void setDistanceL( final double distanceL )
@@ -82,8 +83,23 @@ public class TuhhReachProfileSegment implements IWspmConstants
 
   public void setDistanceR( final double distanceR )
   {
-    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceR" ) );
-    m_reachSegment.setProperty( gmlDescProp, distanceR );
+    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
+  }
+
+  public BigDecimal getStation( )
+  {
+    return (BigDecimal) m_reachSegment.getProperty( new QName( NS_WSPM, "station" ) );
+  }
+
+  public WspmProfileReference getProfileMember( )
+  {
+    final String href = (String) m_reachSegment.getProperty( new QName( NS_WSPM, "profileMember" ) );
+    return new WspmProfileReference( href );
+  }
+
+  public void setStation( final double station )
+  {
+    m_reachSegment.setProperty( new QName( NS_WSPM, "station" ), new BigDecimal( station, TuhhCalculation.STATION_MATH_CONTEXT ) );
   }
 
 }

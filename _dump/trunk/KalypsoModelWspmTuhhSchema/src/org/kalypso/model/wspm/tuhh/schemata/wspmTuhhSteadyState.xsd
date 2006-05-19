@@ -701,7 +701,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="startStation" type="tuhh:stationDouble">
+					<element name="startStation" type="wspm:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Anfangsstation</label>
@@ -710,7 +710,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="endStation" type="tuhh:stationDouble">
+					<element name="endStation" type="wspm:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Endstation</label>
@@ -776,9 +776,4 @@
 	</complexType>
 	<!-- 
 	-->
-	<simpleType name="stationDouble">
-		<restriction base="decimal">
-			<fractionDigits value="4"/>
-		</restriction>
-	</simpleType>
 </schema>

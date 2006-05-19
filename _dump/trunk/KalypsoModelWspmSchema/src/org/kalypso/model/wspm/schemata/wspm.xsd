@@ -372,7 +372,7 @@
 			</annotation>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="station" type="double">
+					<element name="station" type="wspm:stationDouble">
 						<annotation>
 							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
 							<documentation xml:lang="de">
@@ -808,4 +808,10 @@
 	</complexType>
 	<!-- 
 	-->
+	<simpleType name="stationDouble">
+		<restriction base="decimal">
+			<fractionDigits value="4"/>
+		</restriction>
+	</simpleType>
+	
 </schema>

@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
@@ -52,14 +56,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
- *
  */
 public class TuhhReach extends WspmReach implements IWspmConstants
 {
   public TuhhReach( final Feature reach )
   {
     super( reach );
-    
+
     if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
       throw new IllegalStateException( "Feature is of wrong type: " + reach );
   }
@@ -67,30 +70,45 @@ public class TuhhReach extends WspmReach implements IWspmConstants
   /**
    * Creates and adds a new profile segment to this reach.
    */
-  public TuhhReachProfileSegment createProfileSegment( final WspmProfileReference profileReference, final double distanceL, final double distanceM, final double distanceR )
+  public TuhhReachProfileSegment createProfileSegment( final WspmProfileReference profileReference, final double station, final double distanceL, final double distanceM, final double distanceR )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
     final Feature parentFeature = reachSegmentList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    
+
     final IRelationType parentFeatureTypeProperty = reachSegmentList.getParentFeatureTypeProperty();
 
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
-    
+
     final IFeatureType tuhhProfileReachSegmentType = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
-    
+
     final Feature feature = workspace.createFeature( parentFeature, tuhhProfileReachSegmentType );
 
     reachSegmentList.add( feature );
-    
+
     final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
-    
+
     // set default values
     tuhhProfilesegment.setProfileMember( profileReference );
+    tuhhProfilesegment.setStation( station );
     tuhhProfilesegment.setDistanceL( distanceL );
     tuhhProfilesegment.setDistanceM( distanceM );
     tuhhProfilesegment.setDistanceR( distanceR );
-    
+
     return tuhhProfilesegment;
+  }
+
+  public TuhhReachProfileSegment[] getReachProfileSegments( )
+  {
+    final FeatureList reachSegmentList = getReachSegmentList();
+    final List<TuhhReachProfileSegment> profilesegments = new ArrayList<TuhhReachProfileSegment>();
+    for( final Object object : reachSegmentList )
+    {
+      final Feature segment = (Feature) object;
+      if( GMLSchemaUtilities.substitutes( segment.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
+        profilesegments.add( new TuhhReachProfileSegment( segment ) );
+    }
+
+    return profilesegments.toArray( new TuhhReachProfileSegment[profilesegments.size()] );
   }
 }

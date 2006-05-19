@@ -78,7 +78,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
@@ -121,9 +120,6 @@ public class WspWinImporter
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
 
     monitor.subTask( " - Initialisiere KALYPSO..." );
-
-    // HACK: initialize KalypsoUI
-    KalypsoGisPlugin.getDefault();
 
     try
     {
@@ -339,7 +335,7 @@ public class WspWinImporter
         final ProfileBean fromBean = new ProfileBean( waterName, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
         final WspmProfileReference fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean );
 
-        reach.createProfileSegment( fromProf, bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
+        reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
       }
       catch( final IOException e )
       {
@@ -354,7 +350,7 @@ public class WspWinImporter
           final ProfileBean toBean = new ProfileBean( waterName, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
           final WspmProfileReference toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean );
 
-          reach.createProfileSegment( toProf, 0.0, 0.0, 0.0 );
+          reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
         }
         catch( final IOException e )
         {

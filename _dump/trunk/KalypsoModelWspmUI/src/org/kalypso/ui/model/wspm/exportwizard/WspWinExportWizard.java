@@ -43,6 +43,7 @@ package org.kalypso.ui.model.wspm.exportwizard;
 import java.io.File;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -57,7 +58,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
-import org.kalypso.ui.model.wspm.core.wspwin.WspWinExportProjectFeatV;
 import org.kalypso.ui.model.wspm.core.wspwin.WspWinExporter;
 
 /**
@@ -126,15 +126,16 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
       @Override
-      protected void execute( final IProgressMonitor monitor )
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "WspWin Datenexport", 100 );
 
         try
         {
           monitor.subTask( " - Datenexport" );
-          WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
-//          WspWinExportProjectFeatV.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
+          final IStatus status = WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
+          if( !status.isOK() )
+            throw new CoreException( status );
         }
         finally
         {

@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.core.wspwin;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +64,12 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.IWspmConstants;
-import org.kalypso.ui.model.wspm.abstraction.WspmProject;
+import org.kalypso.ui.model.wspm.abstraction.ReachSegmentStationComparator;
+import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
+import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
+import org.kalypso.ui.model.wspm.abstraction.TuhhReachProfileSegment;
+import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
+import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -102,14 +114,37 @@ public class WspWinExporter
           if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) )
           {
             // TODO: sicherstellen, dass es sich um ein TU-HH-Modell handelt?
-            
+
             // load (initialize) WspmProject
             monitor.subTask( " - Modell " + resource.getName() + " wird geladen..." );
             final Feature modelRootFeature = gmlWrkSpce.getRootFeature();
-            final WspmProject wspmProject = new WspmProject( modelRootFeature );
+            final TuhhWspmProject wspmProject = new TuhhWspmProject( modelRootFeature );
 
-            // write data into wspwinDir
+            // create unique wspwinProjectDir
+            File wspwinProjDir = new File( wspwinDir, wspmProject.getName() );
+            int ii = 0;
+
+            while( wspwinProjDir.exists() )
+            {
+              ii++;
+              wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii );
+            }
+            wspwinProjDir.mkdirs();
+
+            // write data into wspwinDir projectDir
             monitor.subTask( " - Daten werden konvertiert..." );
+
+            // CalculationTuhh
+            final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
+            for( final TuhhCalculation calculation : tuhhCalcs )
+            {
+              final File dir = new File( wspwinProjDir, calculation.getFeature().getId() );
+              writeForTuhhKernel( calculation, dir );
+            }
+
+            // reachTuhh
+
+            //
 
           }
         }
@@ -129,5 +164,56 @@ public class WspWinExporter
       }
     }
     return Status.OK_STATUS;
+  }
+
+  // TODO Unterscheide wspwin bzw. rechenkern via flag: schreibt Berechnungsparameter unterschiedlich
+  /**
+   * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
+   */
+  private static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException
+  {
+    dir.mkdirs();
+
+    final File profDir = WspWinImporter.getProfDir( dir );
+    final File batFile = new File( profDir, "bat.001" );
+    final File zustFile = new File( profDir, "zustand.001" );
+    final File qwtFile = new File( profDir, "qwert.001" );
+
+//    write1DTuhhSteuerparameter( calculation, batFile );
+    write1DTuhhZustand( calculation.getReach(), zustFile );
+//    write1DTuhhZustand( calculation.getRunOffEvent(), qwtFile );
+  }
+
+  private static void write1DTuhhZustand( final TuhhReach reach, final File zustFile ) throws IOException
+  {
+    final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
+    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
+    
+    Arrays.sort( segments, new ReachSegmentStationComparator( isDirectionUpstreams ) );
+    
+    PrintWriter writer = null;
+    try
+    {
+      zustFile.getParentFile().mkdirs();
+      writer = new PrintWriter( new BufferedWriter( new FileWriter( zustFile ) ) );
+
+      for( final TuhhReachProfileSegment segment : segments )
+      {
+        final BigDecimal station = segment.getStation();
+        final WspmProfileReference profileMember = segment.getProfileMember();
+        final String href = profileMember.getHref();
+
+        writer.print( href );
+        writer.print( " " );
+        writer.println( station.doubleValue() );
+      }
+      
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+    
   }
 }

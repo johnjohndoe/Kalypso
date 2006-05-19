@@ -137,8 +137,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
   {
-    final IPropertyType prop = m_water.getFeatureType().getProperty( new QName( NS_WSPM, "isDirectionUpstream" ) );
-    m_water.setProperty( prop, new Boolean( directionIsUpstream ) );
+    m_water.setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
   }
 
   public Feature createRunOffEvent(  )
@@ -152,5 +151,10 @@ public class WspmWaterBody implements IWspmConstants
     runOffMembers.add( runOffFeature );
     
     return runOffFeature;
+  }
+
+  public boolean isDirectionUpstreams( )
+  {
+    return (Boolean) m_water.getProperty( new QName( NS_WSPM, "isDirectionUpstream" ) );
   }
 }
