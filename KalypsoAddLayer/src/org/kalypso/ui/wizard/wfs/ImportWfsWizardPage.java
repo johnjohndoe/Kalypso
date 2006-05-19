@@ -272,7 +272,12 @@ public class ImportWfsWizardPage extends WizardPage
     public String getText( Object element )
     {
       if( element instanceof IWFSLayer )
-        return ((IWFSLayer) element).getTitle();
+      {
+        String title = ((IWFSLayer) element).getTitle();
+        if( title == null )
+          return ((IWFSLayer) element).getQName().getLocalPart();
+        return title;
+      }
       return "...";
     }
   };
@@ -301,13 +306,10 @@ public class ImportWfsWizardPage extends WizardPage
   private Composite m_leftsideButtonC;
 
   // private Label m_authLabel;
-  //
-  // private final IMapModell m_mapModel;
 
   public ImportWfsWizardPage( final String pageName )
   {
     super( pageName );
-    // m_mapModel = model;
     setTitle( "Web Feature Service einbinden" );
     setMessage( "Web Feature Service Daten einbinden." );
     setPageComplete( false );
@@ -316,7 +318,6 @@ public class ImportWfsWizardPage extends WizardPage
   public ImportWfsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    // m_mapModel = model;
     setPageComplete( false );
   }
 
@@ -325,16 +326,18 @@ public class ImportWfsWizardPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-    final Composite composite = new Group( parent, SWT.NULL );
-    final GridLayout layout = new GridLayout( 1, false );
-    composite.setLayout( layout );
+    final Composite top = new Composite(parent, SWT.NULL);
+    top.setLayout( new GridLayout());
+    top.setLayoutData( new GridData());
+    final Group composite = new Group( top, SWT.NULL );
+    composite.setLayout( new GridLayout( 1, false ) );
     composite.setLayoutData( new GridData() );
 
     createSourceFields( composite );
 
     createLayerSelectionControl( composite );
 
-    setControl( composite );
+    setControl( top );
     setPageComplete( false );
   }
 
@@ -342,8 +345,8 @@ public class ImportWfsWizardPage extends WizardPage
   {
     final Group fieldGroup = new Group( parent, SWT.NULL );
     fieldGroup.setLayout( new GridLayout( 2, false ) );
-    fieldGroup.setText( "Verbindungsdaten" );
     fieldGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    fieldGroup.setText( "Verbindungsdaten" );
 
     // add url
     m_labelUrl = new Label( fieldGroup, SWT.NONE );

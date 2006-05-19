@@ -170,7 +170,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public Object getFirstElement( )
   {
-    return m_map.keySet().iterator().next();
+    if( !m_map.isEmpty() )
+      return m_map.keySet().iterator().next();
+    return new Object();
   }
 
   /**
