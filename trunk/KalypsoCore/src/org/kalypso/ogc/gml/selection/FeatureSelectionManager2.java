@@ -172,6 +172,8 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   {
     if( !m_map.isEmpty() )
       return m_map.keySet().iterator().next();
+      
+      // this is veeeery bug prone!!! a least return null!!
     return new Object();
   }
 
