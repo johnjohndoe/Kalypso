@@ -175,7 +175,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_outlineviewer );
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     addPage( m_filterWFSPage );
-//    addPage( m_importWFSPage );
+    addPage( m_importWFSPage );
   }
 
   @Override

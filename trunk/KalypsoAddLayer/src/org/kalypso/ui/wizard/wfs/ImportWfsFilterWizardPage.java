@@ -68,6 +68,7 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -124,10 +125,10 @@ public class ImportWfsFilterWizardPage extends WizardPage
    */
   public void createControl( Composite parent )
   {
-    Composite toptop = new Composite( parent, SWT.NONE );
-    toptop.setLayout( new GridLayout() );
-    toptop.setLayoutData( new GridData() );
-    Group topGroup = new Group( toptop, SWT.NONE );
+    final Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 2, true ) );
+    main.setLayoutData( new GridData() );
+    final Group topGroup = new Group( main, SWT.NONE );
     topGroup.setLayout( new GridLayout( 2, false ) );
     topGroup.setLayoutData( new GridData() );
     m_bufferButton = new Button( topGroup, SWT.CHECK );
@@ -191,7 +192,9 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setPageComplete( validate() );
       }
     } );
+    // just for formating
     Label dummyLabel = new Label( topGroup, SWT.NONE );
+    dummyLabel.setText( "" );
     m_BBoxButton = new Button( topGroup, SWT.CHECK );
     m_BBoxButton.setText( "aktueller Kartenausschnitt (BBOX)" );
     m_BBoxButton.addSelectionListener( new SelectionAdapter()
@@ -210,28 +213,42 @@ public class ImportWfsFilterWizardPage extends WizardPage
         {
           final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
           final MapPanel mapPanel = gisMapEditor.getMapPanel();
-          try
-          {
-            m_BBox = GeometryFactory.createGM_Surface( mapPanel.getBoundingBox(), mapPanel.getMapModell().getCoordinatesSystem() );
-          }
-          catch( GM_Exception e1 )
-          {
-            e1.printStackTrace();
-          }
+          GM_Envelope boundingBox = mapPanel.getBoundingBox();
+          if( boundingBox != null )
+            try
+            {
+              m_BBox = GeometryFactory.createGM_Surface( boundingBox, mapPanel.getMapModell().getCoordinatesSystem() );
+            }
+            catch( GM_Exception ex )
+            {
+              ex.printStackTrace();
+              setPageComplete( validate() );
+            }
           setPageComplete( validate() );
         }
       }
     } );
-    Group spatialOpsGroup = new Group( toptop, SWT.NONE );
+    Group spatialOpsGroup = new Group( main, SWT.NONE );
     spatialOpsGroup.setLayout( new GridLayout( 2, false ) );
     spatialOpsGroup.setLayoutData( new GridData() );
     spatialOpsGroup.setText( "Unterstütze Räumliche Operatoren" );
     Label opsLabel = new Label( spatialOpsGroup, SWT.NONE );
     opsLabel.setText( "Operatoren" );
     m_spatialOpsCombo = new Combo( spatialOpsGroup, SWT.READ_ONLY );
+    m_spatialOpsCombo.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        setPageComplete( validate() );
+      }
+    } );
     m_spatialOpsCombo.setItems( new String[] { OPS_INTERSECTION, OPS_CONTAINS, OPS_TOUCHES } );
     m_spatialOpsCombo.select( 0 );
-    setControl( parent );
+    setControl( main );
     setPageComplete( false );
 
   }
@@ -320,6 +337,8 @@ public class ImportWfsFilterWizardPage extends WizardPage
       ops = OperationDefines.TOUCHES;
     // TODO wählen des Poperties wenn mehrere gibt, zur Zeit wird nur das defautltGeometryProperty genommen
     final IValuePropertyType geom = ft.getDefaultGeometryProperty();
+    if( geom == null )
+      return null;
     final PropertyName propertyName = new PropertyName( geom.getQName().getLocalPart() );
 
     String val = m_distance.getText();
