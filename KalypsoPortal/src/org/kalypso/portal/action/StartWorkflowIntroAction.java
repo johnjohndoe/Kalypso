@@ -63,7 +63,8 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       if( project != null )
       {
         openPlanerPerspective( urlInitalPage, project );
-        closeIntroPlugin( workbench );
+        // closeIntroPlugin( workbench );
+        IntroPlugin.closeIntro();
       }
     }
   }
@@ -152,18 +153,18 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
   // }
   // }
 
-  private boolean closeIntroPlugin( IWorkbench workbench )
-  {
-    IIntroPart intro = workbench.getIntroManager().getIntro();
-    if( intro == null )
-      return false;
-    // CustomizableIntroPart cpart = (CustomizableIntroPart) intro;
-    // IntroModelRoot modelRoot = IntroPlugin.getDefault().getIntroModelRoot();
-    // String pageId = modelRoot.getCurrentPageId();
-    // Rectangle bounds = cpart.getControl().getBounds();
-    // Rectangle startBounds = Geometry.toDisplay( cpart.getControl().getParent(), bounds );
-    return IntroPlugin.closeIntro();
-  }
+//  private boolean closeIntroPlugin( IWorkbench workbench )
+//  {
+//    IIntroPart intro = workbench.getIntroManager().getIntro();
+//    if( intro == null )
+//      return false;
+//    // CustomizableIntroPart cpart = (CustomizableIntroPart) intro;
+//    // IntroModelRoot modelRoot = IntroPlugin.getDefault().getIntroModelRoot();
+//    // String pageId = modelRoot.getCurrentPageId();
+//    // Rectangle bounds = cpart.getControl().getBounds();
+//    // Rectangle startBounds = Geometry.toDisplay( cpart.getControl().getParent(), bounds );
+//    return IntroPlugin.closeIntro();
+//  }
 
   private boolean openPlanerPerspective( final String stateURLAsString, final IProject project )
   {
@@ -172,21 +173,6 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
     {
       final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
       final URL stateURL = wfContext.resolveURL( stateURLAsString );
-      // refresh after copying the files into the workspace
-      // project.refreshLocal( IResource.DEPTH_INFINITE, null );
-      // final URL firstMementoUrl = UrlResolverSingleton.resolveUrl( ResourceUtilities.createURL( project ),
-      // stateURLAsString );
-      // final IFile file = ResourceUtilities.findFileFromURL( firstMementoUrl );
-      // if( file != null )
-      // {
-      // contextUrl = new File( file.getLocation().toString() ).toURL();
-      // reader = new InputStreamReader( file.getContents() );
-      // }
-      // else
-      // {
-      // contextUrl = firstMementoUrl;
-      // }
-
       final InputStreamReader reader = new InputStreamReader( stateURL.openStream() );
       final XMLMemento originalMemento = XMLMemento.createReadRoot( reader );
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -194,14 +180,6 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       props.setProperty( MementoWithUrlResolver.PATH_KEY, root.getLocation().toString() );
       props.setProperty( MementoWithUrlResolver.PROJECT_KEY, project.getName() );
       replacableMemento = new MementoWithUrlResolver( originalMemento, props, wfContext );
-      // IUrlResolver2()
-      // {
-      //
-      // public URL resolveURL( String relative ) throws MalformedURLException
-      // {
-      // return UrlResolverSingleton.resolveUrl( contextUrl, relative );
-      // }
-      // } );
 
     }
     catch( Exception e )

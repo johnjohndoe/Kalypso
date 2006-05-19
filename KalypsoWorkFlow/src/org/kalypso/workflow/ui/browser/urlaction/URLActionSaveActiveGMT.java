@@ -38,55 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.workflow.ui.browser;
+package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.workflow.WorkflowContext;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.workflow.ui.browser.AbstractURLAction;
+import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
  * @author kuepfer
  */
-public abstract class AbstractURLAction implements IURLAction
+public class URLActionSaveActiveGMT extends AbstractURLAction
 {
 
-  private WorkflowContext m_workFlowContext = null;
+  private final static String COMMAND_NAME = "saveActiveGMT";
 
   /**
-   * init will called befor run
+   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
-  public void init( final WorkflowContext workFlowActivityContext )
+  public String getActionName( )
   {
-    m_workFlowContext = workFlowActivityContext;
+    return COMMAND_NAME;
   }
 
-  public WorkflowContext getWorkFlowContext( )
+  /**
+   * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
+   */
+  public boolean run( ICommandURL commandURL )
   {
-    return m_workFlowContext;
-  }
-
-  protected IWorkbench getWorkbench( )
-  {
-    return PlatformUI.getWorkbench();
-  }
-
-  protected IWorkbenchPage getActivePage( )
-  {
-    return getWorkbench().getActiveWorkbenchWindow().getActivePage();
-  }
-
-  protected IWorkspaceRoot getWorkspaceRoot( )
-  {
-    return ResourcesPlugin.getWorkspace().getRoot();
-  }
-
-  protected IEditorPart getActiveEditor( )
-  {
-    return getActivePage().getActiveEditor();
+    final IEditorPart activeEditor = getActiveEditor();
+    if( activeEditor instanceof GisMapEditor )
+    {
+      final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
+      gisMapEditor.doSave( new NullProgressMonitor() );
+      return true;
+    }
+    return false;
   }
 
 }

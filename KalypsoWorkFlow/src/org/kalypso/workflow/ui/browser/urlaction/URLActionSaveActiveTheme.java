@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -52,25 +54,9 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 /**
  * @author kuepfer
  */
-public class URLActionActivateTheme extends AbstractURLAction
+public class URLActionSaveActiveTheme extends AbstractURLAction
 {
-
-  private final static String COMMAND_NAME = "activateTheme";
-
-  /**
-   * optional
-   */
-  private final static String PARAM_THEME = "theme";
-
-  /**
-   * It is assumed the active part is the GisMapEditor, use the URLSelectEditor to activate the apporpriate Editor.
-   * 
-   * @see URLActionSelectEditor
-   */
-
-  public URLActionActivateTheme( )
-  {
-  }
+  private final static String COMMAND_NAME = "saveActiveTheme";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
@@ -81,37 +67,33 @@ public class URLActionActivateTheme extends AbstractURLAction
   }
 
   /**
+   * Assumes the active Editor is the GisMapEditor, use URLCommandActivateEditor befor running this command
+   * 
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
-    final IEditorPart activePage = getActiveEditor();
-    String theme = commandURL.getParameter( PARAM_THEME );
-    if( activePage instanceof GisMapEditor )
+    final IEditorPart activeEditor = getActiveEditor();
+    if( activeEditor instanceof GisMapEditor )
     {
-      final GisMapEditor editor = (GisMapEditor) activePage;
-      final MapPanel mapPanel = editor.getMapPanel();
-      if( mapPanel != null )
+      final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
+      final MapPanel mapPanel = gisMapEditor.getMapPanel();
+      final IMapModell modell = mapPanel.getMapModell();
+      final IKalypsoTheme activeTheme = modell.getActiveTheme();
+      if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IMapModell mapModell = mapPanel.getMapModell();
-        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        final String themeName = activeTheme.getName();
-        if( themeName != theme )
+        final IKalypsoFeatureTheme kTheme = (IKalypsoFeatureTheme) activeTheme;
+        try
         {
-          IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-          for( int i = 0; i < allThemes.length; i++ )
-          {
-            IKalypsoTheme layer = allThemes[i];
-            String name = layer.getName();
-            if( name.equals( theme ) )
-            {
-              mapModell.activateTheme( layer );
-              return true;
-            }
-          }
+          gisMapEditor.saveTheme( kTheme, new NullProgressMonitor() );
+        }
+        catch( CoreException e )
+        {
+          e.printStackTrace();
+          return false;
         }
       }
-
+      return true;
     }
     return false;
   }

@@ -45,8 +45,6 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Event;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.CommandURLUtilities;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -105,14 +103,6 @@ public class URLActionRunScript extends AbstractURLAction
       final Function function = script.getFunction( functionName );
       final List<String> commands = function.getCommands();
       return CommandURLUtilities.runCommands( getWorkFlowContext(), commands );
-      // for( final String command : commands )
-      // {
-      // // generate new events
-      // Event event = new Event();
-      // event.type = SWT.OK;
-      // event.data = command;
-      // }
-      // m_listener.handleEvent( event );
     }
     catch( Exception e )
     {

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -49,7 +50,13 @@ import org.xml.sax.Locator;
  */
 public class ToStringContentHandler implements ContentHandler
 {
-  private final StringBuffer m_buffer = new StringBuffer();
+  // private final StringBuffer m_buffer = new StringBuffer();
+  private final ILogger m_logger;
+
+  public ToStringContentHandler( final ILogger logger )
+  {
+    m_logger = logger;
+  }
 
   /**
    * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
@@ -98,7 +105,10 @@ public class ToStringContentHandler implements ContentHandler
   public void startElement( String uri, String localName, String qName, Attributes atts )
   {
     // m_buffer.append( qName + " " + atts.toString() + "\n" );
-    m_buffer.append( qName + " " + "\n" );
+    m_logger.log( "<" + qName );
+    for( int i = 0; i < atts.getLength(); i++ )
+      m_logger.log( " " + atts.getQName( i ) + "=" + atts.getValue( i ) );
+    m_logger.log( ">\n" );
   }
 
   /**
@@ -106,7 +116,7 @@ public class ToStringContentHandler implements ContentHandler
    */
   public void endElement( String uri, String localName, String qName )
   {
-    m_buffer.append( "/" + qName + "\n" );
+    m_logger.log( "</" + qName + ">\n" );
   }
 
   /**
@@ -114,7 +124,7 @@ public class ToStringContentHandler implements ContentHandler
    */
   public void characters( char[] ch, int start, int length )
   {
-    m_buffer.append( ch, start, length );
+    m_logger.log( String.copyValueOf( ch, start, length ) );
   }
 
   /**
@@ -122,7 +132,7 @@ public class ToStringContentHandler implements ContentHandler
    */
   public void ignorableWhitespace( char[] ch, int start, int length )
   {
-    m_buffer.append( ch, start, length );
+    m_logger.log( String.copyValueOf( ch, start, length ) );
   }
 
   /**
@@ -130,7 +140,7 @@ public class ToStringContentHandler implements ContentHandler
    */
   public void processingInstruction( String target, String data )
   {
-    m_buffer.append( "processingInstruction: " + target + " / " + data + "\n" );
+    m_logger.log( "processingInstruction: " + target + " / " + data + "\n" );
   }
 
   /**
@@ -138,13 +148,8 @@ public class ToStringContentHandler implements ContentHandler
    */
   public void skippedEntity( String name )
   {
-    m_buffer.append( "skippedEntity: " + name + "\n" );
+    m_logger.log( "skippedEntity: " + name + "\n" );
 
-  }
-
-  public String getResult( )
-  {
-    return m_buffer.toString();
   }
 
 }
