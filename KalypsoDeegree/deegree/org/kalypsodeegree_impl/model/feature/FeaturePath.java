@@ -126,6 +126,7 @@ public class FeaturePath
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString( )
   {
     final StringBuffer buffer = new StringBuffer();
@@ -239,10 +240,7 @@ public class FeaturePath
           return null;
         }
 
-        final IFeatureType targetFeatureType = relationPT.getTargetFeatureType();
-        final IFeatureType[] targetFeatureTypes = targetFeatureType.getSubstituts( null, false, true );
-        if( targetFeatureTypes.length > 0 )
-          return targetFeatureTypes[0];
+        return relationPT.getTargetFeatureType();
       }
       return null;
     }
@@ -250,6 +248,7 @@ public class FeaturePath
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString( )
     {
       final StringBuffer buffer = new StringBuffer();
