@@ -104,6 +104,7 @@ public class TuhhCalculation implements IWspmConstants
 
   private final Feature m_calcFeature;
 
+  // TODO: get number of fractions digits from gml-schema
   private static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
 
   public TuhhCalculation( final Feature calcFeature )
@@ -218,7 +219,7 @@ public class TuhhCalculation implements IWspmConstants
 
   public void setStartCondition( final START_KONDITION_KIND type, final double startWsp, final double startSlope )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "calculationStartConditionMember" );
+    final QName qname = new QName( NS_WSPM_TUHH, "startConditionMember" );
 
     final IPropertyType conditionProp = m_calcFeature.getFeatureType().getProperty( qname );
 
@@ -229,7 +230,7 @@ public class TuhhCalculation implements IWspmConstants
       // neues machen
       final GMLWorkspace workspace = m_calcFeature.getWorkspace();
       final IGMLSchema schema = workspace.getGMLSchema();
-      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "CalculationStartCondition" ) );
+      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "StartCondition" ) );
       conditionFeature = workspace.createFeature( m_calcFeature, featureType );
       m_calcFeature.setProperty( conditionProp, conditionFeature );
     }
@@ -265,7 +266,7 @@ public class TuhhCalculation implements IWspmConstants
 
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, boolean doCalcBarrages )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "calculationWaterlevelParameterMember" );
+    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
 
     final IPropertyType parameterProp = m_calcFeature.getFeatureType().getProperty( qname );
 
@@ -276,7 +277,7 @@ public class TuhhCalculation implements IWspmConstants
       // neues machen
       final GMLWorkspace workspace = m_calcFeature.getWorkspace();
       final IGMLSchema schema = workspace.getGMLSchema();
-      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "CalculationWaterlevelParameter" ) );
+      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "WaterlevelParameter" ) );
       parameterFeature = workspace.createFeature( m_calcFeature, featureType );
       m_calcFeature.setProperty( parameterProp, parameterFeature );
     }

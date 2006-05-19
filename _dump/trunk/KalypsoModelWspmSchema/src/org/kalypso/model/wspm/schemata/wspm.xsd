@@ -55,7 +55,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="resultDocumentMember" type="wspm:ResultDocumentPropertyType" substitutionGroup="gml:featureMember">
+	<element name="documentMember" type="wspm:DocumentPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???resultDocumentMember</label>
@@ -64,7 +64,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="ResultDocument" type="wspm:ResultDocumentType" substitutionGroup="gml:_Feature">
+	<element name="Document" type="wspm:DocumentType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???resultDocument</label>
@@ -473,7 +473,7 @@
 		<complexContent>
 			<extension base="wspm:NamedFeatureBaseType">
 				<sequence>
-					<element name="waterBodyRefNr" type="string">
+					<element name="refNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???waterBodyRefNr</label>
@@ -557,8 +557,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:resultDocumentMember" minOccurs="0" maxOccurs="unbounded"/>
-					<element name="resultObservationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element ref="wspm:documentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="observationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???resultObservationMember</label>
@@ -573,16 +573,16 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="ResultDocumentPropertyType">
+	<complexType name="DocumentPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="wspm:ResultDocument"/>
+					<element ref="wspm:Document"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="ResultDocumentType">
+	<complexType name="DocumentType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>

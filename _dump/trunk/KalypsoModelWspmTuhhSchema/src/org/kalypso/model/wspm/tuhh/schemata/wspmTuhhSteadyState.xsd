@@ -22,7 +22,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="calculationStartConditionMember" type="tuhh:CalculationStartConditionPropertyType" substitutionGroup="gml:featureMember">
+	<element name="startConditionMember" type="tuhh:StartConditionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???calculationStartConditionMember</label>
@@ -31,7 +31,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="CalculationStartCondition" type="tuhh:CalculationStartConditionType" substitutionGroup="gml:_Feature">
+	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Randbedingung</label>
@@ -42,7 +42,7 @@
 	</element>
 	<!--
 	-->
-	<element name="calculationWaterlevelParameterMember" type="tuhh:CalculationWaterlevelParameterPropertyType" substitutionGroup="gml:featureMember">
+	<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???Referenz auf numerische Parameter</label>
@@ -51,7 +51,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="CalculationWaterlevelParameter" type="tuhh:CalculationWaterlevelParameterType" substitutionGroup="gml:_Feature">
+	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???numerische Parameter</label>
@@ -233,8 +233,8 @@
 					<element ref="tuhh:subReachDefinitionMember"/>
 					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
-					<element ref="tuhh:calculationStartConditionMember"/>
-					<element ref="tuhh:calculationWaterlevelParameterMember"/>
+					<element ref="tuhh:startConditionMember"/>
+					<element ref="tuhh:waterlevelParameterMember"/>
 					<element name="mode">
 						<simpleType>
 							<restriction base="string">
@@ -311,16 +311,16 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="CalculationStartConditionPropertyType">
+	<complexType name="StartConditionPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="tuhh:CalculationStartCondition"/>
+					<element ref="tuhh:StartCondition"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="CalculationStartConditionType">
+	<complexType name="StartConditionType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
@@ -359,16 +359,16 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="CalculationWaterlevelParameterPropertyType">
+	<complexType name="WaterlevelParameterPropertyType">
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
-					<element ref="tuhh:CalculationWaterlevelParameter"/>
+					<element ref="tuhh:WaterlevelParameter"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<complexType name="CalculationWaterlevelParameterType">
+	<complexType name="WaterlevelParameterType">
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
@@ -601,7 +601,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="energyLossKind">
+					<element name="kind">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???energyLossKind</label>
@@ -659,7 +659,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="energyLossValue" type="double">
+					<element name="value" type="double">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???energyLossValue</label>
