@@ -47,6 +47,7 @@ import java.net.URL;
 
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -72,7 +73,7 @@ public class UpdateModell
   {
     try
     {
-      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       UpdateModell modell2 = new UpdateModell();
       modell2.updateIt();

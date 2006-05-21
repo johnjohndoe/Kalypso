@@ -26,6 +26,7 @@ import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -93,7 +94,7 @@ public class ImportShapeFile
 
       // IPropertyType o = shapeFT.getProperty("TEILGEBNR");
 
-      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( schemaURL );
       final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
