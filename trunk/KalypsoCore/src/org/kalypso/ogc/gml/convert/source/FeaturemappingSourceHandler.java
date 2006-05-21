@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBElement;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.AddFeaturesMappingType;
 import org.kalypso.gml.util.ChangeFeaturesMappingType;
@@ -49,19 +51,19 @@ public class FeaturemappingSourceHandler implements ISourceHandler
    */
   public GMLWorkspace getWorkspace() throws GmlConvertException
   {
-    final List sourceList = m_source.getSource();
-    final Iterator sourceIt = sourceList.iterator();
+    final List<JAXBElement<? extends SourceType>> sourceList = m_source.getSource();
+    final Iterator<JAXBElement<? extends SourceType>> sourceIt = sourceList.iterator();
 
     // XSD schreibt vor, dass es genau 2 sources gibt
-    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt.next(),
+    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceIt.next().getValue(),
         m_externData );
-    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt.next(),
+    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceIt.next().getValue(),
         m_externData );
 
-    final List mappingList = m_source.getMapping();
-    for( final Iterator mappingIt = mappingList.iterator(); mappingIt.hasNext(); )
+    final List<JAXBElement<? extends MappingType>> mappingList = m_source.getMapping();
+    for( final JAXBElement< ? extends MappingType> name : mappingList )
     {
-      final MappingType mapping = (MappingType)mappingIt.next();
+      final MappingType mapping = name.getValue();
       final String fromPath = mapping.getFromPath();
       final String toPath = mapping.getToPath();
 

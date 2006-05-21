@@ -63,23 +63,23 @@ import org.xml.sax.InputSource;
  * of the XML is as follows:
  * 
  * <pre>
- *         &lt;set&gt;
- *          &lt;validity&gt;15.10.2004 17:53:17&lt;/validity&gt;
- *          &lt;params&gt;
- *            &lt;w1&gt;-38,12000&lt;/w1&gt;
- *            &lt;lnk1&gt;-7,87274&lt;/lnk1&gt;
- *            &lt;k2&gt;2,25925&lt;/k2&gt;
- *            &lt;wgr&gt;170,00000&lt;/wgr&gt;
- *          &lt;/params&gt;
- *          &lt;params&gt;
- *            &lt;w1&gt;-43,32000&lt;/w1&gt;
- *            &lt;lnk1&gt;-7,24065&lt;/lnk1&gt;
- *            &lt;k2&gt;2,13100&lt;/k2&gt;
- *          &lt;/params&gt;
- *         &lt;/set&gt;
- *    		&lt;set&gt;
- *    			...
- *    		&lt;/set&gt;
+ *           &lt;set&gt;
+ *            &lt;validity&gt;15.10.2004 17:53:17&lt;/validity&gt;
+ *            &lt;params&gt;
+ *              &lt;w1&gt;-38,12000&lt;/w1&gt;
+ *              &lt;lnk1&gt;-7,87274&lt;/lnk1&gt;
+ *              &lt;k2&gt;2,25925&lt;/k2&gt;
+ *              &lt;wgr&gt;170,00000&lt;/wgr&gt;
+ *            &lt;/params&gt;
+ *            &lt;params&gt;
+ *              &lt;w1&gt;-43,32000&lt;/w1&gt;
+ *              &lt;lnk1&gt;-7,24065&lt;/lnk1&gt;
+ *              &lt;k2&gt;2,13100&lt;/k2&gt;
+ *            &lt;/params&gt;
+ *           &lt;/set&gt;
+ *      		&lt;set&gt;
+ *      			...
+ *      		&lt;/set&gt;
  * </pre>
  * 
  * <p>
@@ -119,16 +119,15 @@ public class WechmannFactory
         final XMLWechmannSet wset = (XMLWechmannSet) it.next();
         final WechmannParams[] wparams = new WechmannParams[wset.getParams().size()];
         int j = 0;
-        for( Iterator itp = wset.getParams().iterator(); itp.hasNext(); )
+        for( final XMLWechmannParams wp : wset.getParams() )
         {
-          XMLWechmannParams wp = (XMLWechmannParams) itp.next();
-          double k2 = wp.getK2();
-          double lnk1 = wp.getLnk1();
-          double w1 = wp.getW1();
-          double wgr = wp.getWgr().doubleValue(); // if not existing defaults to -1
+          final double k2 = wp.getK2();
+          final double lnk1 = wp.getLnk1();
+          final double w1 = wp.getW1();
+          final Double wgr = wp.getWgr(); // if not existing defaults to -1
           // (see schema)
           // wgr is optional
-          if( wgr <= 0 )
+          if( wgr == null )
             wparams[j] = new WechmannParams( w1, lnk1, k2 );
           else
             wparams[j] = new WechmannParams( w1, lnk1, k2, wgr );

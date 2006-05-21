@@ -7,7 +7,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -75,18 +74,16 @@ public class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final RatingTableList xmlTableList = parseSimple( ins );
-      final List xmlTables = xmlTableList.getTable();
+      final List<RatingTable> xmlTables = xmlTableList.getTable();
       final WQTable[] tables = new WQTable[xmlTables.size()];
       int iTable = 0;
-      for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
+      for( final RatingTable ratingTable : xmlTables )
       {
-        final RatingTable xmlTable = (RatingTable) it.next();
+        final Date validity = ratingTable.getValidity().getTime();
+        final Integer offset = ratingTable.getOffset();
 
-        final Date validity = xmlTable.getValidity().getTime();
-        final int offset = xmlTable.getOffset();
-
-        final String[] strX = xmlTable.getX().split( "," );
-        final String[] strY = xmlTable.getY().split( "," );
+        final String[] strX = ratingTable.getX().split( "," );
+        final String[] strY = ratingTable.getY().split( "," );
 
         if( strX.length != strY.length )
           throw new WQException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
@@ -99,7 +96,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
           Q[i] = Double.parseDouble( strY[i] );
         }
 
-        tables[iTable++] = new WQTable( validity, offset, W, Q );
+        tables[iTable++] = new WQTable( validity, offset == null ? 0 : offset, W, Q );
       }
 
       return new WQTableSet( tables, xmlTableList.getFromType(), xmlTableList.getToType() );

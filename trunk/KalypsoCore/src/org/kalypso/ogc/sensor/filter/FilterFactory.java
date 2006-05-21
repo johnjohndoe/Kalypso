@@ -209,7 +209,8 @@ public class FilterFactory
   {
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) JC_FILTER.createUnmarshaller().unmarshal( ins );
+      final JAXBElement<AbstractFilterType> element = (JAXBElement<AbstractFilterType>) JC_FILTER.createUnmarshaller().unmarshal( ins );
+      final AbstractFilterType af = element.getValue();
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
