@@ -212,7 +212,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
       }
     }
 
-    final Object object = FeatureUtils.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp).getValueClass(), mapping.getFormat(), values );
+    final Object object = FeatureUtils.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values );
     f.setProperty( ftp, object );
   }
 

@@ -76,16 +76,17 @@ import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
-import org.kalypso.ogc.gml.om.ObservationGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -363,8 +364,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       ex.printStackTrace();
     }
     
-    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     registerTypeHandler( marshallingRegistry, guiRegistry );
     registerVirtualFeatureTypeHandler();
     
@@ -585,7 +586,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_tsRepositoryContainer;
   }
 
-  public static void registerTypeHandler( final ITypeRegistry marshallingRegistry, final ITypeRegistry guiRegistry )
+  public static void registerTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry, final ITypeRegistry<IGuiTypeHandler> guiRegistry )
   {
     try
     {

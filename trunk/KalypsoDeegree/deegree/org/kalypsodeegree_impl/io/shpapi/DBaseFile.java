@@ -65,15 +65,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -103,7 +104,7 @@ public class DBaseFile
 
   private static String NS_SHAPEFILE = "namespace";
 
-  private ArrayList colHeader = new ArrayList();
+  private ArrayList<String> colHeader = new ArrayList<String>();
 
   // representing the datasection of the dBase file
   // only needed for writing a dBase file
@@ -113,7 +114,7 @@ public class DBaseFile
   private IFeatureType m_featureType = null;
 
   // Hashtable to contain info abouts in the table
-  private Hashtable column_info = new Hashtable();
+  private Hashtable<String, dbfCol> column_info = new Hashtable<String, dbfCol>();
 
   // references to the dbase file
   private RandomAccessFile rafDbf;
@@ -128,8 +129,6 @@ public class DBaseFile
   // representing the name of the dBase file
   // only needed for writing the dBase file
   private final String fname;
-
-  final private QName m_ftName = null;
 
   // number of records in the table
   private double file_numrecs;
@@ -343,15 +342,15 @@ public class DBaseFile
 
     final IPropertyType[] ftp = new IPropertyType[colHeader.size() + 1];
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
-    final ITypeHandler integerTH = registry.getTypeHandlerForClassName( Integer.class );
-    final ITypeHandler longTH = registry.getTypeHandlerForClassName( Long.class );
-    final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
-    final ITypeHandler floatTH = registry.getTypeHandlerForClassName( Float.class );
-    final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
-    final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
+    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final ITypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
+    final ITypeHandler longTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "long" ) );
+    final ITypeHandler doubleTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
+    final ITypeHandler floatTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "float" ) );
+    // final ITypeHandler booleanTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "boolean" ) );
+    final ITypeHandler dateTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) );
 
     final ITypeHandler byteArrayOutputStreamTH = registry.getTypeHandlerForClassName( ByteArrayOutputStream.class );
 
@@ -359,62 +358,35 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      column = (dbfCol) column_info.get( colHeader.get( i ) );
+      column = column_info.get( colHeader.get( i ) );
       final ITypeHandler th;
       if( column.type.equalsIgnoreCase( "C" ) )
         th = stringTH;
-      // ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, column.name ),
-      // stringTH.getTypeName()[0], stringTH, 1, 1 );
       else if( column.type.equalsIgnoreCase( "F" ) || column.type.equalsIgnoreCase( "N" ) )
       {
         if( column.prec == 0 )
         {
           if( column.size < 10 )
-          {
             th = integerTH;
-            // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.Integer.class, true );
-          }
           else
-          {
             th = longTH;
-            // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.Long.class, true );
-          }
         }
         else
         {
           if( column.size < 8 )
-          {
-            // th = doubleTH;
             th = floatTH;
-            // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.Float.class, true );
-          }
           else
-          {
             th = doubleTH;
-            // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.Double.class, true );
-          }
         }
       }
       else if( column.type.equalsIgnoreCase( "M" ) )
-      {
         th = stringTH;
-        // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.String.class, true );
-      }
       else if( column.type.equalsIgnoreCase( "L" ) )
-      {
         th = stringTH;
-        // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.lang.String.class, true );
-      }
       else if( column.type.equalsIgnoreCase( "D" ) )
-      {
         th = dateTH;
-        // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.util.Date.class, true );
-      }
       else if( column.type.equalsIgnoreCase( "B" ) )
-      {
         th = byteArrayOutputStreamTH;
-        // ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, java.io.ByteArrayOutputStream.class, true );
-      }
       else
         th = null;
       ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, column.name ), th.getTypeName(), th, 1, 1 );
@@ -423,7 +395,7 @@ public class DBaseFile
     // remove everything before "\" or "/"
     final QName qNameFT = new QName( NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class geoClass = getGeometryType();
-    final ITypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
+    final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
     ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1 );
     return GMLSchemaFactory.createFeatureType( qNameFT, ftp );
   }
@@ -509,7 +481,7 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      dbfCol column = (dbfCol) column_info.get( col_name );
+      dbfCol column = column_info.get( col_name );
 
       // seek the starting offset of the current record,
       // as indicated by record_number
@@ -561,11 +533,9 @@ public class DBaseFile
   public String[] getProperties( ) throws DBaseException
   {
     if( filemode == 1 )
-    {
       throw new DBaseException( "class is initialized in write-only mode" );
-    }
 
-    return (String[]) colHeader.toArray( new String[colHeader.size()] );
+    return colHeader.toArray( new String[colHeader.size()] );
   }
 
   /**
@@ -586,7 +556,7 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      column = (dbfCol) column_info.get( colHeader.get( i ) );
+      column = column_info.get( colHeader.get( i ) );
 
       datatypes[i] = column.type.trim();
     }
@@ -615,7 +585,7 @@ public class DBaseFile
    */
   public int getDataLength( String field ) throws DBaseException
   {
-    dbfCol col = (dbfCol) column_info.get( field );
+    dbfCol col = column_info.get( field );
     if( col == null )
       throw new DBaseException( "Field " + field + " not found" );
 
@@ -633,24 +603,24 @@ public class DBaseFile
       throw new DBaseException( "class is initialized in write-only mode" );
     }
 
-    ArrayList vec = new ArrayList();
+    ArrayList<String> vec = new ArrayList<String>();
     dbfCol column;
 
     for( int i = 0; i < colHeader.size(); i++ )
     {
       // check if the current (i'th) column (string) is
       // within the array of specified columns
-      if( contains( fields, (String) colHeader.get( i ) ) )
+      if( contains( fields, colHeader.get( i ) ) )
       {
         // retrieve the dbfCol object which corresponds
         // to this column.
-        column = (dbfCol) column_info.get( colHeader.get( i ) );
+        column = column_info.get( colHeader.get( i ) );
 
         vec.add( column.type.trim() );
       }
     }
 
-    return (String[]) vec.toArray( new String[vec.size()] );
+    return vec.toArray( new String[vec.size()] );
   }
 
   /**
@@ -671,7 +641,7 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      dbfCol column = (dbfCol) column_info.get( colHeader.get( i ) );
+      dbfCol column = column_info.get( colHeader.get( i ) );
 
       String value = getColumn( column.name.trim() );
       // System.out.print(value);
@@ -777,7 +747,7 @@ public class DBaseFile
     {
       // retrieve the dbfCol object which corresponds
       // to this column.
-      column = (dbfCol) column_info.get( colHeader.get( i ) );
+      column = column_info.get( colHeader.get( i ) );
 
       value = getColumn( column.name.trim() );
 

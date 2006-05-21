@@ -39,7 +39,7 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.interpolation.grid.Grid;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,7 +75,7 @@ public class MeshElement
   private final static IFeatureType m_featureType;
   static
   {
-    final ITypeHandler geomTH = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
+    final IMarshallingTypeHandler geomTH = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
     final IValuePropertyType pt = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1 );
     final IPropertyType[] pts = new IPropertyType[] { pt };
     m_featureType = GMLSchemaFactory.createFeatureType( new QName( ns, "MeshElement" ), pts );
@@ -88,7 +88,7 @@ public class MeshElement
   public MeshElement( final String id, final GM_Position[] positions, final double[] values, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
-    Feature f = FeatureFactory.createFeature(null, id, m_featureType, false );
+    Feature f = FeatureFactory.createFeature( null, id, m_featureType, false );
     f.setProperty( "GEOM", surface );
     m_feature = f;
     m_values = values;
@@ -221,7 +221,7 @@ public class MeshElement
 
   public MeshElement[] splitElement( ) throws Exception
   {
-    List res = new ArrayList();
+    List<MeshElement> res = new ArrayList<MeshElement>();
     String eID1 = getMeshElementID() + ".1";
     String eID2 = getMeshElementID() + ".2";
 
@@ -316,7 +316,7 @@ public class MeshElement
     // res.add( e1 );
     // res.add( e2 );
     // }
-    return (MeshElement[]) res.toArray( new MeshElement[res.size()] );
+    return res.toArray( new MeshElement[res.size()] );
   }
 
   /**

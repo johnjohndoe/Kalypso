@@ -122,7 +122,7 @@ public class FeatureHelper
 
       final Object object = sourceFeature.getProperty( sourceFTP );
 
-      final Object newobject = cloneData( object, sourceFTP.getValueClass() );
+      final Object newobject = cloneData( object, sourceFTP );
 
       targetFeature.setProperty( targetFTP, newobject );
     }
@@ -133,38 +133,18 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Object object, Class clazz ) throws CloneNotSupportedException
+  public static Object cloneData( final Object object, final IPropertyType pt ) throws CloneNotSupportedException
   {
     if( object == null )
       return null;
 
-    // TODO: we still need a type handler for the simple types
-
-    // imutable types
-    if( object instanceof Boolean )
-      return object;
-    if( object instanceof String )
-      return object;
-    if( object instanceof Number )
-      return object;
-
     // if we have an IMarhsallingTypeHandler, it will do the clone for us.
-    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) typeRegistry.getTypeHandlerForClassName( clazz );
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( pt );
     if( typeHandler != null )
       return typeHandler.cloneObject( object );
 
-    // TODO: delete these lines AFTEr we have checked that it is still working
-    // if( object instanceof GM_Point )
-    // {
-    // final GM_Point point = (GM_Point)object;
-    // // todo: is there a universal clone-method for GM_Geometries?
-    // final GM_Position position = point.getPosition();
-    // final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
-    // return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
-    // }
-
-    throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + clazz.getName() + "' nicht kopieren." );
+    throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
   public static boolean isCompositionLink( Feature srcFE, IRelationType linkProp, Feature destFE )
@@ -238,33 +218,30 @@ public class FeatureHelper
 
   public static int[] getPositionOfAllAssociations( Feature feature )
   {
-    ArrayList res = new ArrayList();
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      IPropertyType property = properties[i];
-      if( property instanceof IRelationType )
-      {
-        res.add( new Integer( i ) );
-      }
-    }
-    Integer[] positions = (Integer[]) res.toArray( new Integer[res.size()] );
-    return ArrayUtils.toPrimitive( positions );
-  }
-
-  public static IRelationType[] getAllAssociations( Feature feature )
-  {
-    final ArrayList res = new ArrayList();
+    final ArrayList<Integer> res = new ArrayList<Integer>();
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       final IPropertyType property = properties[i];
       if( property instanceof IRelationType )
-        res.add( property );
+        res.add( new Integer( i ) );
     }
-    return (IRelationType[]) res.toArray( new IRelationType[res.size()] );
+    Integer[] positions = res.toArray( new Integer[res.size()] );
+    return ArrayUtils.toPrimitive( positions );
+  }
+
+  public static IRelationType[] getAllAssociations( Feature feature )
+  {
+    final ArrayList<IRelationType> res = new ArrayList<IRelationType>();
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType[] properties = featureType.getProperties();
+    for( final IPropertyType property : properties )
+    {
+      if( property instanceof IRelationType )
+        res.add( (IRelationType) property );
+    }
+    return res.toArray( new IRelationType[res.size()] );
   }
 
   public static boolean isCollection( Feature f )
@@ -363,7 +340,7 @@ public class FeatureHelper
     {
       final IValuePropertyType pt = (IValuePropertyType) property;
       final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = cloneData( valueOriginal, pt.getValueClass() );
+      final Object cloneValue = cloneData( valueOriginal, pt );
       targetFE.setProperty( pt, cloneValue );
     }
   }

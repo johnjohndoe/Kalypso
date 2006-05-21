@@ -41,15 +41,11 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -83,10 +79,10 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractVirtualProper
       final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor( workspace, m_linkName, 2 );
       visitor.visit( feature );
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
-      final List curves = new ArrayList();
+      final List<GM_Curve> curves = new ArrayList<GM_Curve>();
       for( int i = 0; i < destGeo.length; i++ )
         curves.add( GeometryUtilities.createArrowLineString( srcGeo.getCentroid(), destGeo[i].getCentroid(), 0.8, 0.01 ) );
-      return GeometryFactory.createGM_MultiCurve( (GM_Curve[]) curves.toArray( new GM_Curve[curves.size()] ) );
+      return GeometryFactory.createGM_MultiCurve( curves.toArray( new GM_Curve[curves.size()] ) );
     }
     catch( GM_Exception e )
     {

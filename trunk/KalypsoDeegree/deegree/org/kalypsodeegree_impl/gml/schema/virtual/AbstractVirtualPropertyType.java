@@ -45,8 +45,8 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -56,7 +56,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeProperty, IAdaptable
 {
-
   private final QName m_name;
 
   private final ITypeHandler m_typeHandler;
@@ -70,13 +69,13 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
    *          of virtual property
    * @pt typehandler of virtual property
    */
-  public AbstractVirtualPropertyType( QName qName, int minOccurs, int maxOccurs, Class valueClass )
+  public AbstractVirtualPropertyType( QName qName, int minOccurs, int maxOccurs, final Class valueClazz )
   {
     m_name = qName;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_typeHandler = registry.getTypeHandlerForClassName( valueClass );
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    m_typeHandler = registry.getTypeHandlerForClassName( valueClazz );
   }
 
   /**

@@ -113,9 +113,9 @@ public class CommandURL implements ICommandURL
     String baseString = PROTOCOL + "://" + m_actionName + "?";
     Properties arguments = getArguments();
     Set<Entry<Object, Object>> set = arguments.entrySet();
-    for( Iterator iter = set.iterator(); iter.hasNext(); )
+    for( Iterator<Entry<Object,Object>> iter = set.iterator(); iter.hasNext(); )
     {
-      Entry<Object, Object> entry = (Entry<Object, Object>) iter.next();
+      Entry<Object, Object> entry = iter.next();
       String key = entry.getKey().toString();
       String value = entry.getValue().toString();
       if( iter.hasNext() )

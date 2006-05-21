@@ -14,6 +14,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -50,7 +51,7 @@ public class CsvSourceHandler implements ISourceHandler
     final CsvFeatureReader reader = new CsvFeatureReader();
     final List propList = m_type.getFeatureproperty();
     InputStream stream = null;
-    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
       for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
@@ -63,11 +64,9 @@ public class CsvSourceHandler implements ISourceHandler
           final Integer col = columnList.get( i );
           columns[i] = col.intValue();
         }
-        final Class clazz = Class.forName( element.getType() );
-        final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForClassName( clazz );
-        // final IPropertyType ftp = FeatureFactory.createFeatureTypeProperty( new QName( "namespace", element.getName()
-        // ), clazz, false, null );
-        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", element.getName() ), typeHandler.getTypeName(), typeHandler, 0, 1 );
+        final QName qname = new QName( "namespace", element.getName() );
+        final ITypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qname );
+        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler.getTypeName(), typeHandler, 0, 1 );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
         reader.addInfo( ftp, info );
       }

@@ -54,26 +54,21 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.gmlschema.DateWithoutTime;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
  * This control behaves in two ways: if the type of the proeprty to edit is simple, it opens a fitting dialog to edit
@@ -115,24 +110,13 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     // final String typename = ftp.getType();
     if( ftp instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final Class clazz = vpt.getValueClass();
-      if( DateWithoutTime.class == clazz ) // TODO register in registry !
-        return new CalendarFeatureDialog( feature, vpt );
-
-      if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( clazz ) )
-      {
-        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( clazz );
+      final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+      final IGuiTypeHandler handler = typeRegistry.getTypeHandlerFor( ftp );
+      if( handler != null )
         return handler.createFeatureDialog( feature, ftp );
-      }
-      // TODO: use GUITypeHandler for those two!
-      if( RectifiedGridDomain.class == clazz )
-        return new RectifiedGridDomainFeatureDialog( feature, ftp );
-
-      if( RangeSet.class == clazz )
-        return new RangeSetFeatureDialog( feature, ftp );
     }
 
+    // TODO: make gui type handler for this?
     if( ftp instanceof IRelationType )
     {
       if( ftp.isList() )

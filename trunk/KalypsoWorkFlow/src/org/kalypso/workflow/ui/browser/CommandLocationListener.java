@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.workflow.WorkflowContext;
-import org.kalypso.workflow.ui.browser.urlaction.URLActionRegistry;
 
 /**
  * LocationListener that can excecute CommandURLs and listens to Events from the underlying CommandURL. The event can be

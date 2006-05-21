@@ -116,10 +116,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /* Used for the compability-hack. Is it possible to get this from the binding classes? */
   public static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
 
-  /** Map of especially added view-templates.*/
+  /** Map of especially added view-templates. */
   private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
 
-  /** This meber menages the generated view-templates.*/
+  /** This meber menages the generated view-templates. */
   private FeatureViewManager m_defaultViews = new FeatureViewManager();
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
@@ -131,7 +131,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private Control m_control = null;
 
   private final IFeatureSelectionManager m_selectionManager;
-
 
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
   {
@@ -162,12 +161,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_defaultViews.setShowTables( showTables );
     updateControl();
   }
-  
+
   public boolean isShowTables( )
   {
-    return m_defaultViews.isShowTables( );
+    return m_defaultViews.isShowTables();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
@@ -354,8 +353,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final String[] labels = new String[entryList.size()];
       final Object[] values = new Object[entryList.size()];
 
-      final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) typeRegistry.getTypeHandlerFor( ftp );
+      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( ftp );
 
       for( int i = 0; i < labels.length; i++ )
       {

@@ -60,7 +60,6 @@ import ogc31.www.opengis.net.gml.GridDomainType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 import ogc31.www.opengis.net.gml.RectifiedGridDomainType;
-import ogc31.www.opengis.net.gml.SurfaceType;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -68,6 +67,7 @@ import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -86,22 +86,6 @@ import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
  */
 public class TypeHandlerUtilities
 {
-  // commn typehandler that will always exist
-
-  // final ITypeHandler stringTH = registry.getTypeHandlerForClassName(
-  // String.class );
-  // final ITypeHandler integerTH = registry.getTypeHandlerForClassName(
-  // Integer.class );
-  // final ITypeHandler longTH = registry.getTypeHandlerForClassName(
-  // Long.class );
-  // final ITypeHandler doubleTH = registry.getTypeHandlerForClassName(
-  // Double.class );
-  // final ITypeHandler floatTH = registry.getTypeHandlerForClassName(
-  // Float.class );
-  // final ITypeHandler booleanTH = registry.getTypeHandlerForClassName(
-  // Boolean.class );
-  // final ITypeHandler dateTH = registry.getTypeHandlerForClassName(
-  // Date.class );
   /**
    * simple type handler of build-in XMLSCHEMA types <br>
    * TODO typehandler for lists of simpletypes <br>
@@ -109,7 +93,7 @@ public class TypeHandlerUtilities
    * TODO better solution for anytype <br>
    * TODO substitutiongroups of simple types
    */
-  public static void registerXSDSimpleTypeHandler( ITypeRegistry registry )
+  public static void registerXSDSimpleTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> registry )
   {
     try
     {
@@ -126,10 +110,8 @@ public class TypeHandlerUtilities
       // <element name="dateTime" type="dateTime" />
 
       final String[] calendarTypes = { "gMonthDay", "gDay", "gMonth", "gYear", "gYearMonth", "date", "time", "dateTime" };
-      for( int i = 0; i < calendarTypes.length; i++ )
+      for( final String xmlTypeName : calendarTypes )
       {
-        final String xmlTypeName = calendarTypes[i];
-
         registry.registerTypeHandler( new XsdBaseTypeHandler<XMLGregorianCalendar>( xmlTypeName, XMLGregorianCalendar.class )
         {
           /**
@@ -190,10 +172,8 @@ public class TypeHandlerUtilities
       // <element name="anyType" type="anyType" />
 
       final String[] stringTypes = { "string", "normalizedString", "token", "language", "Name", "NCName", "ID", "ENTITY", "NMTOKEN", "anyURI", "IDREF", "IDREFS", "anyType" };
-      for( int i = 0; i < stringTypes.length; i++ )
+      for( final String xmlTypeName : stringTypes )
       {
-        final String xmlTypeName = stringTypes[i];
-
         registry.registerTypeHandler( new XsdBaseTypeHandler<String>( xmlTypeName, String.class )
         {
           /**
@@ -219,10 +199,8 @@ public class TypeHandlerUtilities
       // <element name="ENTITIES" type="ENTITIES" />
       // <element name="NMTOKENS" type="NMTOKENS" />
       final String[] stringArrayTypes = { "ENTITIES", "NMTOKENS" };
-      for( int i = 0; i < stringArrayTypes.length; i++ )
+      for( final String xmlType : stringArrayTypes )
       {
-        final String xmlType = stringArrayTypes[i];
-
         registry.registerTypeHandler( new XsdBaseTypeHandler<String[]>( xmlType, String[].class )
         {
           /**
@@ -374,9 +352,8 @@ public class TypeHandlerUtilities
       // <element name="nonNegativeInteger" type="nonNegativeInteger" />
       // <element name="unsignedLong" type="unsignedLong" />
       final String[] bigIntegerTypes = { "integer", "positiveInteger", "nonPositiveInteger", "negativeInteger", "nonNegativeInteger", "unsignedLong" };
-      for( int i = 0; i < bigIntegerTypes.length; i++ )
+      for( final String xmlType : bigIntegerTypes )
       {
-        final String xmlType = bigIntegerTypes[i];
         registry.registerTypeHandler( new XsdBaseTypeHandler<BigInteger>( xmlType, BigInteger.class )
         {
           /**
@@ -402,10 +379,8 @@ public class TypeHandlerUtilities
       // <element name="long" type="long" />
       // <element name="unsignedInt" type="unsignedInt" />
       final String[] longTypes = { "long", "unsignedInt" };
-      for( int i = 0; i < longTypes.length; i++ )
+      for( String xmlType : longTypes )
       {
-        final String xmlType = longTypes[i];
-
         registry.registerTypeHandler( new XsdBaseTypeHandler<Long>( xmlType, Long.class )
         {
           /**
@@ -431,9 +406,8 @@ public class TypeHandlerUtilities
       // <element name="int" type="int" />
       // <element name="unsignedShort" type="unsignedShort" />
       final String[] integerTypes = { "int", "unsignedShort" };
-      for( int i = 0; i < integerTypes.length; i++ )
+      for( String xmlType : integerTypes )
       {
-        final String xmlType = integerTypes[i];
         registry.registerTypeHandler( new XsdBaseTypeHandler<Integer>( xmlType, Integer.class )
         {
           /**
@@ -458,9 +432,8 @@ public class TypeHandlerUtilities
       // <element name="short" type="short" />
       // <element name="unsignedByte" type="unsignedByte" />
       final String[] shortTypes = { "short", "unsignedByte" };
-      for( int i = 0; i < shortTypes.length; i++ )
+      for( final String xmlType : shortTypes )
       {
-        final String xmlType = shortTypes[i];
         registry.registerTypeHandler( new XsdBaseTypeHandler<Short>( xmlType, Short.class )
         {
           /**
@@ -546,97 +519,17 @@ public class TypeHandlerUtilities
           return value.toString();
         }
       } );
-
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("boolean",
-      // Boolean.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("integer",
-      // BigInteger.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("int",
-      // Integer.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("integer",
-      // Integer.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("long",
-      // Long.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("double",
-      // Double.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("date",
-      // XMLGregorianCalendar.class));
-      // registry.registerTypeHandler(new XsdBaseTypeHandler("decimal",
-      // BigDecimal.class));
-
-      // registry.registerTypeHandler( new XSDDateTypeHandler() ); // date
-      // registry.registerTypeHandler( new XSDDateTimeTypeHandler() ); //
-      // datetime
-      // registry.registerTypeHandler( new XSDStringTypeHandler() ); //
-      // string
-      // registry.registerTypeHandler( new XSDBooleanTypeHandler() ); //
-      // boolean
-      // registry.registerTypeHandler( new XSDIntegerTypeHandler() ); //
-      // integer
-      // registry.registerTypeHandler( new XSDLongTypeHandler() ); // long
-      // registry.registerTypeHandler( new XSDDoubleTypeHandler() ); //
-
-      /*
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlGMonthDay.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlGDay.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlGMonth.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlGYear.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlGYearMonth.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlDate.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlTime.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlDateTime.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlDuration.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlString.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlNormalizedString.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlToken.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlLanguage.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlName.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlNCName.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlID.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlIDREF.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlIDREFS.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlENTITY.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlENTITIES.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlNMTOKEN.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlNMTOKENS.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlBoolean.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlBase64Binary.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlHexBinary.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlFloat.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlDecimal.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlInteger.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlNonPositiveInteger.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlNegativeInteger.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlLong.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlInt.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlShort.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlByte.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlNonNegativeInteger.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlUnsignedLong.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlUnsignedInt.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlUnsignedShort.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlUnsignedByte.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlPositiveInteger.type));
-       * registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlDouble.type)); registry.registerTypeHandler(new
-       * GenericXMLBeanTypeHandler( XmlAnyURI.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler(
-       * XmlQName.type)); registry.registerTypeHandler(new GenericXMLBeanTypeHandler( XmlNOTATION.type));
-       */
-      // registry.registerTypeHandler( new XSDDateTypeHandler() ); // date
-      // registry.registerTypeHandler( new XSDDateTimeTypeHandler() ); //
-      // datetime
-      // registry.registerTypeHandler( new XSDStringTypeHandler() ); //
-      // string
-      // registry.registerTypeHandler( new XSDBooleanTypeHandler() ); //
-      // boolean
-      // registry.registerTypeHandler( new XSDIntegerTypeHandler() ); //
-      // integer
-      // registry.registerTypeHandler( new XSDLongTypeHandler() ); // long
-      // registry.registerTypeHandler( new XSDDoubleTypeHandler() ); //
-      // double
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-
   }
 
   /**
    * Type handler for GML3 types
    */
-  public static void registerTypeHandlers( final ITypeRegistry registry ) throws TypeRegistryException
+  public static void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
     final JAXBContext context = KalypsoOGC31Plugin.getDefault().getGMLContext();
 

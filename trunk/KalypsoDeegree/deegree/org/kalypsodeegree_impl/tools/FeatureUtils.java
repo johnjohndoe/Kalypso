@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.tools;
 
 import java.text.ParseException;
 
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -60,29 +61,16 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class FeatureUtils
 {
   /**
-   * Creates a data object sutiable for a feature property out of string.
+   * Creates a data object suitable for a feature property out of string.
    * 
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
-  public static final Object createFeaturePropertyFromStrings( final Class type, final String format, final String[] input )
+  public static final Object createFeaturePropertyFromStrings( final IValuePropertyType type, final String format, final String[] input )
   {
-    if( String.class == type )
-      return input[0];
+    final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( type );
 
-    if( Integer.class == type )
-      return new Integer( input[0] );
-
-    if( Long.class == type )
-      return new Long( input[0] );
-
-    if( Float.class == type )
-      return new Float( input[0] );
-
-    if( Double.class == type )
-      return new Double( input[0].replace( ',', '.' ) );
-
-    if( GeometryUtilities.getPointClass() == type )
+    if( GeometryUtilities.getPointClass() == type.getValueClass() )
     {
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();
@@ -103,7 +91,6 @@ public class FeatureUtils
       return GeometryFactory.createGM_Point( rw, hw, crs );
     }
 
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
     if( typeHandler != null )
     {
       try

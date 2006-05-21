@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -30,7 +31,7 @@ public class GmlConvertFactoryTest extends TestCase
 
   public GmlConvertFactoryTest( ) throws TypeRegistryException
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     registry.registerTypeHandler( new ObservationLinkHandler() );
     registry.registerTypeHandler( new RangeSetTypeHandler() );

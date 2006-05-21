@@ -10,17 +10,17 @@ import org.kalypso.gmlschema.types.TypeRegistry_impl;
  */
 public class GuiTypeRegistrySingleton
 {
-  private static ITypeRegistry m_typeRegistry = null;
+  private static ITypeRegistry<IGuiTypeHandler> m_typeRegistry = null;
 
   private GuiTypeRegistrySingleton()
   {
   // wird nicht instantiiert
   }
 
-  public static ITypeRegistry getTypeRegistry()
+  public static ITypeRegistry<IGuiTypeHandler> getTypeRegistry()
   {
     if( m_typeRegistry == null )
-      m_typeRegistry = new TypeRegistry_impl();
+      m_typeRegistry = new TypeRegistry_impl<IGuiTypeHandler>();
 
     return m_typeRegistry;
   }

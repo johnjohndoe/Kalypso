@@ -11,6 +11,7 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -35,7 +36,7 @@ public class Point
 
   private final IFeatureType m_featureType;
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPointClass() );
     final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
 
@@ -51,7 +52,7 @@ public class Point
   public Point( String pointID, Double val, double x, double y, CS_CoordinateSystem crs )
   {
     GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
-    Feature f = FeatureFactory.createFeature( null, pointID, this.m_featureType, false );
+    Feature f = FeatureFactory.createFeature( null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );
     f.setProperty( "value", val );
     this.feature = f;
