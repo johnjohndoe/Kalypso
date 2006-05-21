@@ -49,6 +49,7 @@ import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -74,7 +75,7 @@ public class ImportNA extends TestCase
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(),new DeegreeUrlCatalog(), new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     // final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
     TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );

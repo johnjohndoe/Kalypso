@@ -50,6 +50,7 @@ import org.kalypso.floodrisk.process.impl.ProcessResultEater;
 import org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -76,7 +77,7 @@ public class CalculateFloodRiskJobTest extends TestCase
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
     //  register typeHandler
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
       registry.registerTypeHandler( new RangeSetTypeHandler() );

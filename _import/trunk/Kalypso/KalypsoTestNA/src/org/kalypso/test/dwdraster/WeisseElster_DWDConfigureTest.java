@@ -56,6 +56,7 @@ import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
 import org.kalypso.dwd.schema.UrlCatalogDWD;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -90,7 +91,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
 
   public void testDWDRaster() throws Exception
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
     // initalize urlcatalogs

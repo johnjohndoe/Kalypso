@@ -37,6 +37,7 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
@@ -67,7 +68,7 @@ public class KalypsoTest
       
       // final KalypsoGisPlugin plugin = new KalypsoGisPlugin();
 
-      final ITypeRegistry marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       // TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
       // TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
       // RefactorThis.registerSpecialTypeHandler(registry);

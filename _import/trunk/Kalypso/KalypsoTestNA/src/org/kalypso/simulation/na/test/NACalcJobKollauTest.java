@@ -53,6 +53,7 @@ import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -79,7 +80,7 @@ public class NACalcJobKollauTest extends TestCase
         new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 //    registry.registerTypeHandler( new DiagramTypeHandler() );
     try
