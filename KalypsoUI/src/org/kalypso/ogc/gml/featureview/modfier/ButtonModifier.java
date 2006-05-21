@@ -173,7 +173,7 @@ public class ButtonModifier implements IFeatureModifier
       if( m_ftp instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = ((IValuePropertyType) m_ftp);
-        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( vpt.getValueClass() );
+        final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
         if( handler != null && value != null )
           return handler.getText( value );
       }

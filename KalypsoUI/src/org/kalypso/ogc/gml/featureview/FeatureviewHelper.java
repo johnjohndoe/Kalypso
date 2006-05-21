@@ -108,7 +108,7 @@ public class FeatureviewHelper
       final QName valueQName = vpt.getValueQName();
       if( GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( valueQName ) )
       {
-        final IGuiTypeHandler handler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
+        final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
 
         jaxbType = handler.createFeatureviewControl( ftp, FACTORY );
 

@@ -70,8 +70,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       if( vpt.isGeometry() )
         return new ButtonModifier( vpt, fcl );
 
-      final Class valueClass = (vpt).getValueClass();
-      final IGuiTypeHandler typeHandler = (IGuiTypeHandler) GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( valueClass );
+      final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
       if( typeHandler != null )
         return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );
       return new StringModifier( vpt );

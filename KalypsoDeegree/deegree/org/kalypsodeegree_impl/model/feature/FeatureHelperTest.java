@@ -10,9 +10,11 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -26,26 +28,26 @@ public final class FeatureHelperTest extends TestCase
   public final void testCopyProperties( ) throws CloneNotSupportedException
   {
     // zwei feature types erzeugen
-    final String NS = "namespace";
-    final QName SOURCE_STRING_PROP = new QName( NS, "sourceStringprop" );
-    final QName SOURCE_DOUBLE_PROP = new QName( NS, "sourceDoubleprop" );
-    final QName SOURCE_INT_PROP = new QName( NS, "sourceIntprop" );
+    final String NAMESPACE = "namespace";
+    final QName SOURCE_STRING_PROP = new QName( NAMESPACE, "sourceStringprop" );
+    final QName SOURCE_DOUBLE_PROP = new QName( NAMESPACE, "sourceDoubleprop" );
+    final QName SOURCE_INT_PROP = new QName( NAMESPACE, "sourceIntprop" );
 
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
-    final ITypeHandler integerTH = registry.getTypeHandlerForClassName( Integer.class );
-    final ITypeHandler longTH = registry.getTypeHandlerForClassName( Long.class );
-    final ITypeHandler doubleTH = registry.getTypeHandlerForClassName( Double.class );
-    final ITypeHandler floatTH = registry.getTypeHandlerForClassName( Float.class );
-    final ITypeHandler booleanTH = registry.getTypeHandlerForClassName( Boolean.class );
-    final ITypeHandler dateTH = registry.getTypeHandlerForClassName( Date.class );
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+//    final ITypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
+//    final ITypeHandler longTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "long" ) );
+//    final ITypeHandler doubleTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
+//    final ITypeHandler floatTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "float" ) );
+//    final ITypeHandler booleanTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "boolean" ) );
+//    final ITypeHandler dateTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) );
 
     final IPropertyType[] sourceProps = new IPropertyType[] {
     // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
         GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH.getTypeName(), stringTH, 1, 1 ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, stringTH.getTypeName(), stringTH, 1, 1 ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, stringTH.getTypeName(), stringTH, 1, 1 ) };
-    final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( new QName( NS, "sourceFT" ), sourceProps );
+    final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( new QName( NAMESPACE, "sourceFT" ), sourceProps );
 
     // zwei features erzeugen
     final Feature sourcefeature = FeatureFactory.createFeature( null, "source", sourceFTP, new Object[] { "Hallo", new Double( 3.14 ), new Integer( 1 ) } );

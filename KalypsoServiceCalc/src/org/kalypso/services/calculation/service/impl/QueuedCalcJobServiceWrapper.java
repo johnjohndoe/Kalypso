@@ -63,6 +63,7 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
@@ -104,7 +105,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
     try
     {
-      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
       TypeHandlerUtilities.registerTypeHandlers( registry );
       TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );

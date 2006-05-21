@@ -50,12 +50,14 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -227,10 +229,9 @@ public class ShapeSerializer
 
   public static Feature createShapeRootFeature( final IFeatureType ft )
   {
-
     // final IPropertyType nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME, String.class, true );
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1 );
 
     final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );

@@ -41,7 +41,6 @@
 package org.kalypso.workflow.ui.browser.urlaction;
 
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;

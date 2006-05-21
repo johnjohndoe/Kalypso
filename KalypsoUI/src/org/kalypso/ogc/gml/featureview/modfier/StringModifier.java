@@ -82,12 +82,12 @@ public class StringModifier implements IFeatureModifier
     NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
 
-    // wen need both registered type handler types
-    final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = (IGuiTypeHandler) guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+    // we need both registered type handler types
+    final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
 
-    final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_marshallingTypeHandler = (IMarshallingTypeHandler) marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getValueClass() );
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    m_marshallingTypeHandler = marshallingTypeRegistry.getTypeHandlerFor( m_ftp );
   }
 
   public NumberFormat getNumberFormat( final IPropertyType ftp )

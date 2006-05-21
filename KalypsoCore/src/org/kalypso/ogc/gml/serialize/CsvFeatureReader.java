@@ -128,13 +128,13 @@ public final class CsvFeatureReader
           throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getQName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
       }
 
-      data[i] = parseColumns( vpt.getValueClass(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
+      data[i] = parseColumns( vpt, info.format, info.columns, tokens, info.ignoreFormatExceptions );
     }
 
     return FeatureFactory.createFeature( parent, index, featureType, data );
   }
 
-  private static Object parseColumns( final Class type, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
+  private static Object parseColumns( final IValuePropertyType vpt, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
   {
     try
     {
@@ -142,10 +142,10 @@ public final class CsvFeatureReader
       for( int i = 0; i < input.length; i++ )
         input[i] = tokens[columns[i]];
 
-      final Object data = FeatureUtils.createFeaturePropertyFromStrings( type, format, input );
+      final Object data = FeatureUtils.createFeaturePropertyFromStrings( vpt, format, input );
 
       if( data == null )
-        throw new CsvException( "Unbekannter Datentyp: " + type );
+        throw new CsvException( "Unbekannter Datentyp: " + vpt.getQName() );
 
       return data;
     }

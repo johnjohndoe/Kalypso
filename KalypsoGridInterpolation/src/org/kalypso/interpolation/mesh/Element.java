@@ -12,9 +12,11 @@ import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -47,9 +49,9 @@ public class Element
   private final IFeatureType m_featureType;
 
   {
-    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler geomTH = registry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
-    final ITypeHandler stringTH = registry.getTypeHandlerForClassName( String.class );
+    final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IPropertyType[] pts = new IPropertyType[]//
     { GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1 ),//
         GMLSchemaFactory.createValuePropertyType( new QName( ns, "vertList" ), stringTH.getTypeName(), stringTH, 1, 1 ) //

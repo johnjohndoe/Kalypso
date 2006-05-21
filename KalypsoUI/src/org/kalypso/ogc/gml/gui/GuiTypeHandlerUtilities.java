@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -58,12 +59,12 @@ public class GuiTypeHandlerUtilities
     // do not instantiate
   }
 
-  public static void registerXSDSimpleTypeHandler( final ITypeRegistry guiRegistry ) throws TypeRegistryException
+  public static void registerXSDSimpleTypeHandler( final ITypeRegistry<IGuiTypeHandler> guiRegistry ) throws TypeRegistryException
   {
-    final ITypeRegistry marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     // we simply wrap all XsdBaseTypeHandler's
-    final ITypeHandler[] registeredTypeHandler = marshallingRegistry.getRegisteredTypeHandler();
+    final IMarshallingTypeHandler[] registeredTypeHandler = marshallingRegistry.getRegisteredTypeHandler( new IMarshallingTypeHandler[0] );
     for( final ITypeHandler handler : registeredTypeHandler )
     {
       if( handler instanceof XsdBaseTypeHandler )
