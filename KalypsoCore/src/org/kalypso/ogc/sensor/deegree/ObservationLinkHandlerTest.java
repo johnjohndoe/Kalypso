@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.deegree;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -59,8 +60,8 @@ public class ObservationLinkHandlerTest extends TestCase
   {
     final ObjectFactory factory = new ObjectFactory();
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-    
-    final Marshaller m_marshaller = JaxbUtilities.createMarshaller(jc);
+
+    final Marshaller m_marshaller = JaxbUtilities.createMarshaller( jc );
     m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     final TimeseriesLinkType link = factory.createTimeseriesLinkType();
@@ -68,6 +69,7 @@ public class ObservationLinkHandlerTest extends TestCase
     link.setHref( "path=blubb" );
     link.setType( "simple" );
 
-    m_marshaller.marshal( link, System.out );
+    final JAXBElement<TimeseriesLinkType> element = factory.createTimeseriesLink( link );
+    m_marshaller.marshal( element, System.out );
   }
 }

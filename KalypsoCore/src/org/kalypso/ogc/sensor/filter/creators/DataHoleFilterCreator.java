@@ -71,7 +71,9 @@ public class DataHoleFilterCreator implements IFilterCreator
     if( ft.isReplace() )
       replaceWith = new Double( ft.getReplaceWith() );
 
-    final DataHoleFilter filter = new DataHoleFilter( ft.getValue(), ft.getStatus(), replaceWith );
+    final Double value = ft.getValue();
+    final Integer status = ft.getStatus();
+    final DataHoleFilter filter = new DataHoleFilter( value.doubleValue(), status.intValue(), replaceWith );
 
     filter.initFilter( null, filteredObs, context );
 

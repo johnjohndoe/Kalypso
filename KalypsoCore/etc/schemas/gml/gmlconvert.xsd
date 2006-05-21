@@ -1,4 +1,7 @@
-<xs:schema xmlns="util.gml.kalypso.org" xmlns:layer="types.template.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" targetNamespace="util.gml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns="util.gml.kalypso.org" xmlns:layer="types.template.kalypso.org"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xlinkext="http://www.w3.org/1999/xlinkext" targetNamespace="util.gml.kalypso.org"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd"/>
 	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd"/>
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="../template/layerTypes.xsd"/>
@@ -6,10 +9,14 @@
 		<xs:annotation>
 			<xs:documentation>
 				<pr>Konvertiert eine GML-Datenquelle in ein GML-Datenziel.</pr>
-				<pr>Dabei k�n sowohl w㧲end des Lesens oder w㧲end des Schreibens verschiedenen Konvertierungen durchgef�erden.</pr>
-				<pr>Wie, was, warum etwas konvertiert wird, wird in der jeweiligen Quelle bzw. im jeweiligen Ziel definiert.</pr>
-				<pr>Auf Codeseite ist es die Klasse org.kalypso.ogc.gml.convert.GmlConvertFactory um die sich alles dreht.</pr>
-				<pr>Intern werden die Daten in einen GMlWorkspace gelesen, alle Operationen basieren dann tatäschlich auf Operationen auf diesen Workspace.</pr>
+				<pr>Dabei k�n sowohl w㧲end des Lesens oder w㧲end des Schreibens verschiedenen
+					Konvertierungen durchgef�erden.</pr>
+				<pr>Wie, was, warum etwas konvertiert wird, wird in der jeweiligen Quelle bzw. im
+					jeweiligen Ziel definiert.</pr>
+				<pr>Auf Codeseite ist es die Klasse org.kalypso.ogc.gml.convert.GmlConvertFactory um
+					die sich alles dreht.</pr>
+				<pr>Intern werden die Daten in einen GMlWorkspace gelesen, alle Operationen basieren
+					dann tatäschlich auf Operationen auf diesen Workspace.</pr>
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
@@ -29,7 +36,8 @@
 	</xs:complexType>
 	<xs:element name="csvtarget" type="CsvTargetType" substitutionGroup="target">
 		<xs:annotation>
-			<xs:documentation>Schreibt die Daten in eine CSV (Comma Separated Values) Datei.</xs:documentation>
+			<xs:documentation>Schreibt die Daten in eine CSV (Comma Separated Values)
+			Datei.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="CsvTargetType">
@@ -38,19 +46,25 @@
 				<xs:sequence>
 					<xs:element name="column" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation>Erzeugt eine Spalte in der Ausgabedatei. Der Inhalt bezeichnet die Feature-Property, die in diese Spalte geschrieben wird.</xs:documentation>
+							<xs:documentation>Erzeugt eine Spalte in der Ausgabedatei. Der Inhalt
+								bezeichnet die Feature-Property, die in diese Spalte geschrieben
+								wird.</xs:documentation>
 						</xs:annotation>
 						<xs:complexType>
 							<xs:simpleContent>
 								<xs:extension base="xs:string">
-									<xs:attribute name="default" type="xs:string" use="optional" default="-">
+									<xs:attribute name="default" type="xs:string" use="optional"
+										default="-">
 										<xs:annotation>
-											<xs:documentation>Was geschrieben werden soll, wenn die abgefragte Property null ist..</xs:documentation>
+											<xs:documentation>Was geschrieben werden soll, wenn die
+												abgefragte Property null ist..</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
 									<xs:attribute name="label" type="xs:string" use="optional">
 										<xs:annotation>
-											<xs:documentation>Der Spaltenname, falls gesetzt und 'writeHeader' true ist. Sonst wird der Name der Property genommen.</xs:documentation>
+											<xs:documentation>Der Spaltenname, falls gesetzt und
+												'writeHeader' true ist. Sonst wird der Name der
+												Property genommen.</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
 								</xs:extension>
@@ -60,17 +74,20 @@
 				</xs:sequence>
 				<xs:attribute name="featurePath" type="xs:string">
 					<xs:annotation>
-						<xs:documentation>Beschreibt die Features, die in die Datei geschrieben werden. Muss eine FeatureList sein.</xs:documentation>
+						<xs:documentation>Beschreibt die Features, die in die Datei geschrieben
+							werden. Muss eine FeatureList sein.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:attribute name="delemiter" type="xs:string">
 					<xs:annotation>
-						<xs:documentation>Das Trennzeichen zwischen den Spalteneinträgen.</xs:documentation>
+						<xs:documentation>Das Trennzeichen zwischen den
+						Spalteneinträgen.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:attribute name="writeHeader" type="xs:boolean" use="optional" default="false">
 					<xs:annotation>
-						<xs:documentation>Falls true, wird in die erste Zeile die Spaltennamen geschrieben.</xs:documentation>
+						<xs:documentation>Falls true, wird in die erste Zeile die Spaltennamen
+							geschrieben.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
@@ -123,7 +140,9 @@
 	</xs:complexType>
 	<xs:element name="registersource" type="RegisterSourceType" substitutionGroup="source">
 		<xs:annotation>
-			<xs:documentation>Holt die Daten aus einem der sog. 'externen-data-map'. Praktisch, um ein Skript programmatisch anzusteuern und einen bereits geladenen workspace zu verwenden.</xs:documentation>
+			<xs:documentation>Holt die Daten aus einem der sog. 'externen-data-map'. Praktisch, um
+				ein Skript programmatisch anzusteuern und einen bereits geladenen workspace zu
+				verwenden.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="RegisterSourceType">
@@ -131,7 +150,8 @@
 			<xs:extension base="SourceType">
 				<xs:attribute name="registeredID" type="xs:string">
 					<xs:annotation>
-						<xs:documentation>Unter dieser ID wird der Workspace aus der Map geholt.</xs:documentation>
+						<xs:documentation>Unter dieser ID wird der Workspace aus der Map
+						geholt.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
@@ -141,7 +161,8 @@
 		<xs:annotation>
 			<xs:documentation>
 				<p>Liest die Daten aus einer CSV Datei.</p>
-				<pr>Zur Zeit müssen sowohl alle Spalten die gelesen werden sollen als auch deren Typ angegeben werden.</pr>
+				<pr>Zur Zeit müssen sowohl alle Spalten die gelesen werden sollen als auch deren Typ
+					angegeben werden.</pr>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -151,38 +172,49 @@
 				<xs:sequence minOccurs="0" maxOccurs="unbounded">
 					<xs:element name="featureproperty">
 						<xs:annotation>
-							<xs:documentation>Mit dieser Liste von featureproperties wird der FeatureType spezifiziert, den der gelesene Workspace erhält.</xs:documentation>
+							<xs:documentation>Mit dieser Liste von featureproperties wird der
+								FeatureType spezifiziert, den der gelesene Workspace
+							erhält.</xs:documentation>
 						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence minOccurs="0" maxOccurs="unbounded">
 								<xs:element name="column" type="xs:int">
 									<xs:annotation>
-										<xs:documentation>Spezifiziert, aus welcher(n) Spalte)n) des csv diese FeatureProperty gelesen wird. Es können durchaus mehrere Spalten sein, wie z.B. im Falle einer Punktgeometrie.</xs:documentation>
+										<xs:documentation>Spezifiziert, aus welcher(n) Spalte)n) des
+											csv diese FeatureProperty gelesen wird. Es können
+											durchaus mehrere Spalten sein, wie z.B. im Falle einer
+											Punktgeometrie.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="name" type="xs:string" use="required">
 								<xs:annotation>
-									<xs:documentation>Name der erzeugten FeatureProperty</xs:documentation>
+									<xs:documentation>Name der erzeugten
+									FeatureProperty</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
-							<xs:attribute name="type" type="xs:string" use="required">
+							<xs:attribute name="type" type="xs:QName" use="required">
 								<xs:annotation>
-									<xs:documentation>Java-Typ der erzeugten Feature-Property</xs:documentation>
+									<xs:documentation>Typ (QName) der erzeugten Feature-Property.
+										Ein entsprechender IMarhsallingTypeHandler muss für diesen
+										Typ registriert vorliegen.</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
 							<xs:attribute name="format" type="xs:string" use="optional" default="">
 								<xs:annotation>
 									<xs:documentation>
 										<p>Wird eventuell zu parsen der FeatureProperty benutzt.</p>
-										<p>Gibt im Falle einer Punktgeometrie z.B. das Koordinatensystem an.</p>
+										<p>Gibt im Falle einer Punktgeometrie z.B. das
+											Koordinatensystem an.</p>
 									</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
-							<xs:attribute name="ignoreFormatExceptions" type="xs:boolean" use="optional" default="false">
+							<xs:attribute name="ignoreFormatExceptions" type="xs:boolean"
+								use="optional" default="false">
 								<xs:annotation>
 									<xs:documentation>
-										<p>Falls true, werden Fehler beim Parsen dieser Spalten ignoriert..</p>
+										<p>Falls true, werden Fehler beim Parsen dieser Spalten
+											ignoriert..</p>
 									</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
@@ -192,7 +224,8 @@
 				<xs:attributeGroup ref="xlink:locatorLink"/>
 				<xs:attribute name="comment" type="xs:string">
 					<xs:annotation>
-						<xs:documentation>Kommentarzeichen. Zeilen im csv, die mit diesem String beginnen, werden ignoriert.</xs:documentation>
+						<xs:documentation>Kommentarzeichen. Zeilen im csv, die mit diesem String
+							beginnen, werden ignoriert.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:attribute name="delemiter" type="xs:string">
@@ -202,7 +235,8 @@
 				</xs:attribute>
 				<xs:attribute name="lineskip" type="xs:int" use="optional" default="0">
 					<xs:annotation>
-						<xs:documentation>Anzahl der Zeilen, die am Anfang der Datei übersprungen werden.</xs:documentation>
+						<xs:documentation>Anzahl der Zeilen, die am Anfang der Datei übersprungen
+							werden.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
@@ -210,7 +244,9 @@
 	</xs:complexType>
 	<xs:element name="featuremapping" type="FeaturemappingSourceType" substitutionGroup="source">
 		<xs:annotation>
-			<xs:documentation>Eine Datenquelle, die Daten aus zwei Quellen liest und dann Daten aus der ersten in die zweite Quelle überträgt. Letztere ist dann das Ergebnis dieser Datenquelle.</xs:documentation>
+			<xs:documentation>Eine Datenquelle, die Daten aus zwei Quellen liest und dann Daten aus
+				der ersten in die zweite Quelle überträgt. Letztere ist dann das Ergebnis dieser
+				Datenquelle.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="FeaturemappingSourceType">
@@ -219,7 +255,9 @@
 				<xs:sequence>
 					<xs:element ref="source" minOccurs="2" maxOccurs="2">
 						<xs:annotation>
-							<xs:documentation>Die beiden Datenquellen, die gelesen werden. Die zweite wird als Ergebnis der Operation (nach den diversen Änderungen betrachtet).</xs:documentation>
+							<xs:documentation>Die beiden Datenquellen, die gelesen werden. Die
+								zweite wird als Ergebnis der Operation (nach den diversen Änderungen
+								betrachtet).</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element ref="mapping" minOccurs="0" maxOccurs="unbounded"/>
@@ -230,8 +268,10 @@
 	<xs:element name="mapping" type="MappingType">
 		<xs:annotation>
 			<xs:documentation>
-				<pr>Beschreibt, die Daten der einen Datenquelle in die andere Datenquelle geschrieben werden.</pr>
-				<pr>Prinzipiell werden FeatureProperties einer FeatureListe aus der ersten Quelle in enie FeatureList der zweiten Quelle geschrieben.</pr>
+				<pr>Beschreibt, die Daten der einen Datenquelle in die andere Datenquelle
+					geschrieben werden.</pr>
+				<pr>Prinzipiell werden FeatureProperties einer FeatureListe aus der ersten Quelle in
+					enie FeatureList der zweiten Quelle geschrieben.</pr>
 				<pr>Die Daten werden Dabei entweder überschrieben oder neu angehängt.</pr>
 			</xs:documentation>
 		</xs:annotation>
@@ -242,12 +282,14 @@
 				<xs:complexType>
 					<xs:attribute name="from" type="xs:string" use="required">
 						<xs:annotation>
-							<xs:documentation>Name der FeatureProperty aus der gelesen wird.</xs:documentation>
+							<xs:documentation>Name der FeatureProperty aus der gelesen
+							wird.</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
 					<xs:attribute name="to" type="xs:string" use="required">
 						<xs:annotation>
-							<xs:documentation>Name der FeatureProperty in die geschrieben wird.</xs:documentation>
+							<xs:documentation>Name der FeatureProperty in die geschrieben
+							wird.</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
 				</xs:complexType>
@@ -255,49 +297,63 @@
 		</xs:sequence>
 		<xs:attribute name="fromPath" type="xs:string">
 			<xs:annotation>
-				<xs:documentation>Aus diesen Features der ersten Quelle wird gelesen. Muss eine FeatureList sein.</xs:documentation>
+				<xs:documentation>Aus diesen Features der ersten Quelle wird gelesen. Muss eine
+					FeatureList sein.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="fromID" type="xs:string">
 			<xs:annotation>
-				<xs:documentation>ID der Quelle (Name der Property) für Zuordnungen zwischen Quelle und Ziel.</xs:documentation>
+				<xs:documentation>ID der Quelle (Name der Property) für Zuordnungen zwischen Quelle
+					und Ziel.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="toPath" type="xs:string">
 			<xs:annotation>
-				<xs:documentation>In diese Features der zweiten Quelle wird geschrieben. Muss eine FeatureList sein.</xs:documentation>
+				<xs:documentation>In diese Features der zweiten Quelle wird geschrieben. Muss eine
+					FeatureList sein.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="toID" type="xs:string">
 			<xs:annotation>
-				<xs:documentation>ID des Ziels (Name der Property) für zuordnungen zwiuschen Quelle und Ziel.</xs:documentation>
+				<xs:documentation>ID des Ziels (Name der Property) für zuordnungen zwiuschen Quelle
+					und Ziel.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="addFeaturesMapping" type="AddFeaturesMappingType" substitutionGroup="mapping">
 		<xs:annotation>
-			<xs:documentation>Fügt für jedes Feature der ersten FeatureList ein neues Element in die zweite FeatureList ein. Die Properties werden dann entsprechend der Zuordnung gesetzt.</xs:documentation>
+			<xs:documentation>Fügt für jedes Feature der ersten FeatureList ein neues Element in die
+				zweite FeatureList ein. Die Properties werden dann entsprechend der Zuordnung
+				gesetzt.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="AddFeaturesMappingType">
 		<xs:complexContent>
 			<xs:extension base="MappingType">
-				<xs:attribute name="handleExisting" type="handleExistingType" use="optional" default="overwrite">
+				<xs:attribute name="handleExisting" type="handleExistingType" use="optional"
+					default="overwrite">
 					<xs:annotation>
-						<xs:documentation>Was passiert, wenn schon ein Feature mit dem gleichen Primärschlüssel da ist?</xs:documentation>
+						<xs:documentation>Was passiert, wenn schon ein Feature mit dem gleichen
+							Primärschlüssel da ist?</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:attribute name="fid" type="xs:string" use="optional" default="${fromID}">
 					<xs:annotation>
-						<xs:documentation>Gibt an, wie die FeatureID (fid) der neuen Featurs generiert wird. Als Vairiable werden zur Zeit unterstützt: 'fromID', 'toID', 'fID', 'count'. Default ist: '${fromID}_${count}'</xs:documentation>
+						<xs:documentation>Gibt an, wie die FeatureID (fid) der neuen Featurs
+							generiert wird. Als Vairiable werden zur Zeit unterstützt: 'fromID',
+							'toID', 'fID', 'count'. Default ist:
+						'${fromID}_${count}'</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType" substitutionGroup="mapping">
+	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType"
+		substitutionGroup="mapping">
 		<xs:annotation>
-			<xs:documentation>Ändert lediglich bereits vorhandene Features der zweiten Liste. Für jedes Feature der ersten Liste wird einen mit gleicher ID in der zweiten gesucht und geändert, falls vorhanden.</xs:documentation>
+			<xs:documentation>Ändert lediglich bereits vorhandene Features der zweiten Liste. Für
+				jedes Feature der ersten Liste wird einen mit gleicher ID in der zweiten gesucht und
+				geändert, falls vorhanden.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="changeFeaturesMappingType">
@@ -307,13 +363,10 @@
 	</xs:complexType>
 	<xs:simpleType name="handleExistingType">
 		<xs:annotation>
-			<xs:documentation>
-      Enumeration for addFeatureMappingType.
-      If a feature with the target property (toID) already exists, do what?
-      change: change existing, that is overwrite its properties.
-      overwrite: creates a new feature and sets its properties. The old is removed.
-      nothing: odl features stays.
-      </xs:documentation>
+			<xs:documentation> Enumeration for addFeatureMappingType. If a feature with the target
+				property (toID) already exists, do what? change: change existing, that is overwrite
+				its properties. overwrite: creates a new feature and sets its properties. The old is
+				removed. nothing: odl features stays. </xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="change"/>
@@ -323,7 +376,8 @@
 	</xs:simpleType>
 	<xs:element name="changesource" type="ChangeSourceType" substitutionGroup="source">
 		<xs:annotation>
-			<xs:documentation>Eine Datenquelle, die Daten aus einer Quelle liest und diese verändert.</xs:documentation>
+			<xs:documentation>Eine Datenquelle, die Daten aus einer Quelle liest und diese
+				verändert.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="ChangeSourceType">
@@ -332,28 +386,35 @@
 				<xs:sequence>
 					<xs:element ref="source" minOccurs="1" maxOccurs="1">
 						<xs:annotation>
-							<xs:documentation>Die Datenquelle, die gelesen und dann verändert wird.</xs:documentation>
+							<xs:documentation>Die Datenquelle, die gelesen und dann verändert
+							wird.</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="visitor" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation>Ändert Featueres anhand eines FeatureVisitors.</xs:documentation>
+							<xs:documentation>Ändert Featueres anhand eines
+							FeatureVisitors.</xs:documentation>
 						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="argument" minOccurs="0" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>Argumente für den FeatureVisitor Es wird davon ausgegangen, dass der FeatureVisitor einen Konsturktor hat, welcher ein Properties-Objekt als Parameter bekomment kann..</xs:documentation>
+										<xs:documentation>Argumente für den FeatureVisitor Es wird
+											davon ausgegangen, dass der FeatureVisitor einen
+											Konsturktor hat, welcher ein Properties-Objekt als
+											Parameter bekomment kann..</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:attribute name="name" type="xs:string">
 											<xs:annotation>
-												<xs:documentation>Key des Arguments.</xs:documentation>
+												<xs:documentation>Key des
+												Arguments.</xs:documentation>
 											</xs:annotation>
 										</xs:attribute>
 										<xs:attribute name="value" type="xs:string">
 											<xs:annotation>
-												<xs:documentation>Wert des Arguments.</xs:documentation>
+												<xs:documentation>Wert des
+												Arguments.</xs:documentation>
 											</xs:annotation>
 										</xs:attribute>
 									</xs:complexType>
@@ -361,17 +422,20 @@
 							</xs:sequence>
 							<xs:attribute name="visitorclass" type="xs:string" use="optional">
 								<xs:annotation>
-									<xs:documentation>Klassennamen des FeatureVisitors, der den Wert (Object) der Property erzeugt.</xs:documentation>
+									<xs:documentation>Klassennamen des FeatureVisitors, der den Wert
+										(Object) der Property erzeugt.</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
 							<xs:attribute name="visitorid" type="xs:string" use="optional">
 								<xs:annotation>
-									<xs:documentation>Extension-ID eines FeatureVisitor,der den Wert (Object) der Property erzeugt.</xs:documentation>
+									<xs:documentation>Extension-ID eines FeatureVisitor,der den Wert
+										(Object) der Property erzeugt.</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
 							<xs:attribute name="featurePath" type="xs:string">
 								<xs:annotation>
-									<xs:documentation>Auf diesen Feature-Path wird der Visitor angewendet.</xs:documentation>
+									<xs:documentation>Auf diesen Feature-Path wird der Visitor
+										angewendet.</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
 						</xs:complexType>

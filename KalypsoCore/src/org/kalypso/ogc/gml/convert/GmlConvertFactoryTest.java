@@ -18,9 +18,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 
 /**
  * @author belger
@@ -32,10 +30,12 @@ public class GmlConvertFactoryTest extends TestCase
   public GmlConvertFactoryTest( ) throws TypeRegistryException
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
+    TypeHandlerUtilities.registerTypeHandlers( registry );
 
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new RangeSetTypeHandler() );
-    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+    // registry.registerTypeHandler( new ObservationLinkHandler() );
+    // registry.registerTypeHandler( new RangeSetTypeHandler() );
+    // registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
   }
 
   public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException

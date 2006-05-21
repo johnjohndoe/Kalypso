@@ -338,9 +338,8 @@ public class ZmlFactory
 
         parser = getParserFactory().createParser( type, format );
         if( parser instanceof DateParser && timeZone != null )
-        {
           ((DateParser) parser).setTimezone( timeZone );
-        }
+
         values = createValues( context, tmpAxis, parser, data );
       }
       catch( final Exception e ) // generic exception caught for simplicity
