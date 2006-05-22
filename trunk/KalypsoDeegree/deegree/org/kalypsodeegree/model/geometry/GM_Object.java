@@ -63,11 +63,9 @@ package org.kalypsodeegree.model.geometry;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
  * The basic interface for all geometries. it declares the methods that are common to all geometries. this doesn't means
  * for example that all geometries defines a valid boundary but is there asked for they should be able to answer (with
  * null).
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -83,12 +81,12 @@ public interface GM_Object
   /**
    * returns the bounding box of a geometry
    */
-  GM_Envelope getEnvelope();
+  GM_Envelope getEnvelope( );
 
   /**
    * returns the boundary of a geometry
    */
-  GM_Boundary getBoundary();
+  GM_Boundary getBoundary( );
 
   /**
    * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
@@ -96,23 +94,23 @@ public interface GM_Object
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  int getDimension();
+  int getDimension( );
 
   /**
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  int getCoordinateDimension();
+  int getCoordinateDimension( );
 
   /**
    * returns the spatial reference system of a geometry
    */
-  CS_CoordinateSystem getCoordinateSystem();
+  CS_CoordinateSystem getCoordinateSystem( );
 
   /**
    * returns true if no geometry values resp. points stored within the geometry.
    */
-  boolean isEmpty();
+  boolean isEmpty( );
 
   /**
    * The operation "distance" shall return the distance between this GM_Object and another GM_Object. This distance is
@@ -141,13 +139,14 @@ public interface GM_Object
    * largest dimension. For example, when calculating the centroid of surfaces, an average is taken weighted by area.
    * Since curves have no area they do not contribute to the average.
    */
-  GM_Point getCentroid();
+  GM_Point getCentroid( );
 
   /**
    * The operation "convexHull" shall return a GM_Object that represents the convex hull of this GM_Object.
+   * 
    * @throws GM_Exception
    */
-  GM_Object getConvexHull() throws GM_Exception;
+  GM_Object getConvexHull( ) throws GM_Exception;
 
   /**
    * The operation "buffer" shall return a GM_Object containing all points whose distance from this GM_Object is less
@@ -196,5 +195,4 @@ public interface GM_Object
    * provide optimized proximity queries within for a distance . calvin added on 10/21/2003
    */
   boolean isWithinDistance( GM_Object gmo, double distance );
-
 }

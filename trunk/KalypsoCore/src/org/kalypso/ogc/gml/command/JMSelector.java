@@ -65,10 +65,8 @@ public class JMSelector
 {
   /**
    * // selects all features (display elements) that are located within the submitted bounding box. // GMLGeometry
-   * gmlGeometry=GMLFactory.createGMLGeometry(bbox);
-   * 
-   * //Operation operation=new SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new
-   * ComplexFilter(operation);
+   * gmlGeometry=GMLFactory.createGMLGeometry(bbox); //Operation operation=new
+   * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new ComplexFilter(operation);
    */
   public List<Feature> select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus )
   {
@@ -81,16 +79,19 @@ public class JMSelector
 
       while( containerIterator.hasNext() )
       {
-        final Feature fe = (Feature)containerIterator.next();
+        final Feature fe = (Feature) containerIterator.next();
 
         final GM_Object defaultGeometryProperty = fe.getDefaultGeometryProperty();
-        final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
+        if( defaultGeometryProperty != null )
+        {
 
-        final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+          final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-        if( ( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) )
-            || ( !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) ) )
-          testFE.add( fe );
+          final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+
+          if( (selectWithinBoxStatus && bbox.contains( defaultGeometryProperty )) || (!selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty )) )
+            testFE.add( fe );
+        }
       }
 
       return testFE;
@@ -139,9 +140,7 @@ public class JMSelector
    */
   public List<Feature> select( final GM_Position pos, double r, final FeatureList list, boolean withinStatus )
   {
-    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
-        .getY()
-        + r );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos.getY() + r );
     final List<Feature> resultDE = select( env, list, withinStatus );
 
     return resultDE;
@@ -154,7 +153,7 @@ public class JMSelector
     final List listFE = select( pos.getPosition(), r, list, withinStatus );
     for( int i = 0; i < listFE.size(); i++ )
     {
-      final Feature fe = (Feature)listFE.get( i );
+      final Feature fe = (Feature) listFE.get( i );
 
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
@@ -183,25 +182,24 @@ public class JMSelector
     {
       if( geom instanceof GM_Surface )
       {
-        GM_Surface surface = (GM_Surface)geom;
+        GM_Surface surface = (GM_Surface) geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )
       {
-        GM_Curve curve = (GM_Curve)geom;
+        GM_Curve curve = (GM_Curve) geom;
         positions = curve.getAsLineString().getPositions();
       }
       else if( geom instanceof GM_Point )
       {
-        GM_Point point = (GM_Point)geom;
-        positions = new GM_Position[]
-        { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
+        GM_Point point = (GM_Point) geom;
+        positions = new GM_Position[] { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
       }
     }
     catch( GM_Exception e )
     {
       e.printStackTrace();
-      //do nothing else
+      // do nothing else
     }
     for( int i = 0; i < positions.length; i++ )
     {

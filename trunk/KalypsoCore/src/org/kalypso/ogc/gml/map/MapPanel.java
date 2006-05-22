@@ -93,7 +93,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
     ISelectionProvider
 {
-  public static final String WIDGET_EDIT_FEATURE_WITH_GEOMETRY = "EDIT_";
 
   public static final int MODE_SELECT = 0;
 
@@ -126,6 +125,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE_WITH_GEOMETRY";
 
   public final static String WIDGET_SELECT = "SELECT";
+
+  public final static String WIDGET_EDIT_GEOMETRY = "EDIT_GEOMETRY";
 
   public final static String WIDGET_UNSELECT = "UNSELECT";
 
