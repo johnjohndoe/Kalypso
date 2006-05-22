@@ -527,7 +527,7 @@ public class WspWinImporter
     }
 
     final IObservation<TupleResult> obs = new Observation<TupleResult>( name,"Importiert aus WspWin", result, new ArrayList() );
-    ObservationFeatureFactory.writeObservationToFeature( obs, runOffFeature );
+    ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
 
   /** Returns the content of the prof/probez.txt file */

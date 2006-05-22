@@ -42,7 +42,6 @@ package org.kalypso.ui.model.wspm.abstraction;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -188,7 +187,6 @@ public class TuhhCalculation implements IWspmConstants
   public void setSubReachDef( final double startStation, final double endStation )
   {
     final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" );
-
 
     Feature subReachFeature = (Feature) m_calcFeature.getProperty( qname );
 
@@ -364,17 +362,7 @@ public class TuhhCalculation implements IWspmConstants
   public IObservation getRunOffEvent( )
   {
     final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
-    
-    try
-    {
-      return ObservationFeatureFactory.observationFromFeature( runOffEvent );
-    }
-    catch( final ParseException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    
-    return null;
+
+    return ObservationFeatureFactory.toObservation( runOffEvent );
   }
 }
