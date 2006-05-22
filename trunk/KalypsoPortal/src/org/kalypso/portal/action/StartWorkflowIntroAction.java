@@ -1,20 +1,16 @@
 package org.kalypso.portal.action;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -24,19 +20,14 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.internal.dialogs.NewWizard;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
-import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.MementoUtils;
 import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
-import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.portal.KalypsoPortalPlugin;
 import org.kalypso.portal.wizard.LoadProjectFromWorkspaceWizard;
 import org.kalypso.workflow.WorkflowContext;
@@ -63,7 +54,6 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       if( project != null )
       {
         openPlanerPerspective( urlInitalPage, project );
-        // closeIntroPlugin( workbench );
         IntroPlugin.closeIntro();
       }
     }
@@ -153,29 +143,16 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
   // }
   // }
 
-//  private boolean closeIntroPlugin( IWorkbench workbench )
-//  {
-//    IIntroPart intro = workbench.getIntroManager().getIntro();
-//    if( intro == null )
-//      return false;
-//    // CustomizableIntroPart cpart = (CustomizableIntroPart) intro;
-//    // IntroModelRoot modelRoot = IntroPlugin.getDefault().getIntroModelRoot();
-//    // String pageId = modelRoot.getCurrentPageId();
-//    // Rectangle bounds = cpart.getControl().getBounds();
-//    // Rectangle startBounds = Geometry.toDisplay( cpart.getControl().getParent(), bounds );
-//    return IntroPlugin.closeIntro();
-//  }
-
   private boolean openPlanerPerspective( final String stateURLAsString, final IProject project )
   {
     IMemento replacableMemento = null;
     try
     {
+      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
       final URL stateURL = wfContext.resolveURL( stateURLAsString );
       final InputStreamReader reader = new InputStreamReader( stateURL.openStream() );
       final XMLMemento originalMemento = XMLMemento.createReadRoot( reader );
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final Properties props = new Properties();
       props.setProperty( MementoWithUrlResolver.PATH_KEY, root.getLocation().toString() );
       props.setProperty( MementoWithUrlResolver.PROJECT_KEY, project.getName() );
