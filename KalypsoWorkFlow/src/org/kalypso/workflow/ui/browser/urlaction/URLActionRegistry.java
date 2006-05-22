@@ -75,6 +75,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionActivateTheme() );
       m_defaultInstance.register( new URLActionSaveActiveTheme() );
       m_defaultInstance.register( new URLActionSaveActiveGMT() );
+      m_defaultInstance.register( new URLActionAddThemeGMT() );
     }
     catch( URLActionRegistryException e )
     {
