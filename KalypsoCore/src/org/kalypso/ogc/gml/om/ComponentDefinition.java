@@ -42,53 +42,73 @@ package org.kalypso.ogc.gml.om;
 
 import java.util.Date;
 
-import net.opengis.swe.PhenomenonType;
-
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.DateComponent;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.swe.RepresentationType;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author schlienger
  */
 public class ComponentDefinition
 {
-  private final PhenomenonType m_phenomenonValue;
   private final RepresentationType m_representationType;
 
-  public ComponentDefinition( PhenomenonType phenomenonValue, RepresentationType representationType )
+  private final String m_name;
+
+  private final String m_desc;
+
+  public ComponentDefinition( final String name, final String desc, final RepresentationType representationType )
   {
-    m_phenomenonValue = phenomenonValue;
+    m_name = name;
+    m_desc = desc;
     m_representationType = representationType;
+  }
+  
+  public String getName( )
+  {
+    return m_name;
+  }
+  
+  public String getDescription( )
+  {
+    return m_desc;
+  }
+
+  public RepresentationType getRepresentationType( )
+  {
+    return m_representationType;
+  }
+  
+  public XsdBaseTypeHandler<Object> getTypeHandler( )
+  {
+    return (XsdBaseTypeHandler<Object>) m_representationType.getTypeHandler();
   }
   
   public IComponent toComponent( )
   {
     final Class valueClass = m_representationType.getTypeHandler().getValueClass();
     
-    final String name = m_phenomenonValue.getName().get(0).getValue().getValue();
-    final String desc = m_phenomenonValue.getDescription().getValue();
-    
     if( Number.class.isAssignableFrom( valueClass ) )
     {
       final String unit = "";
-      return new ValueComponent( name, desc, valueClass, unit );
+      return new ValueComponent( m_name, m_desc, valueClass, unit );
     }
     
     if( Date.class.isAssignableFrom( valueClass ) )
     {
       final String tzName = "";
-      return new DateComponent( name, desc, valueClass, tzName );
+      return new DateComponent( m_name, m_desc, valueClass, tzName );
     }
     
-    return new Component( name, desc, valueClass );
+    return new Component( m_name, m_desc, valueClass );
   }
   
-  public IMarshallingTypeHandler getTypeHandler( )
+  public static ComponentDefinition create( final IComponent component )
   {
-    return m_representationType.getTypeHandler();
+    // TODO [marc] finish this stuff
+    return new ComponentDefinition( null, null, null);
   }
 }

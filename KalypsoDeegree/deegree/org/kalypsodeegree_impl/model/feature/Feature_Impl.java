@@ -19,7 +19,6 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -76,7 +75,7 @@ public class Feature_Impl implements Feature
       else
         m_properties[i] = null;
     }
-
+    
     if( initializeWithDefaults )
     {
       final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
@@ -84,7 +83,7 @@ public class Feature_Impl implements Feature
       {
         final IPropertyType pt = entry.getKey();
         final Object value = entry.getValue();
-
+        
         if( value != null && pt.getMaxOccurs() == 1 )
           setProperty( pt, value );
       }
@@ -228,7 +227,7 @@ public class Feature_Impl implements Feature
     return (GM_Object) prop;
   }
 
-  /**
+   /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
   public GM_Envelope getEnvelope( )

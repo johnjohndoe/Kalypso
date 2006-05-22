@@ -40,19 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
-import net.opengis.swe.PhenomenonPropertyType;
-import net.opengis.swe.PhenomenonType;
-
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -61,50 +58,73 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.swe.RepresentationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author schlienger
  */
 public class ObservationFeatureFactory
 {
+  public final static QName GML_NAME = new QName( NS.GML3, "name" );
+
+  public final static QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
+
+  public final static QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" );
+
+  public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" );
+
+  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" );
+
+  public final static QName OM_RESULT = new QName( NS.OM, "result" );
+
   public final static QName SWE_COMPONENT = new QName( NS.SWE, "component" );
 
   public final static QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" );
 
   public final static QName SWE_PROPERTY = new QName( NS.SWE, "property" );
+  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "PhenomenonType" );
 
   public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" );
 
   /**
-   * Makes an observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
+   * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
-  public static IObservation<TupleResult> observationFromFeature( final Feature f ) throws ParseException
+  @SuppressWarnings("unchecked")
+  public static IObservation<TupleResult> toObservation( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
 
-    if( !GMLSchemaUtilities.substitutes( featureType, new QName( NS.OM, "Observation" ) ) )
+    if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
       throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
 
-    final String name = (String) f.getProperty( new QName( NS.GML3, "name" ) );
-    final String desc = (String) f.getProperty( new QName( NS.GML3, "description" ) );
-    final List<MetadataObject> meta = (List<MetadataObject>) f.getProperty( new QName( NS.GML3, "metadata" ) );
+    final String name = (String) FeatureHelper.getFirstProperty( f, GML_NAME );
+    final String desc = (String) FeatureHelper.getFirstProperty( f, GML_DESCRIPTION );
+    final List<MetadataObject> meta = (List<MetadataObject>) f.getProperty( GML_METADATA );
 
-    final Feature recordDefinition = (Feature) f.getProperty( new QName( NS.OM, "resultDefinition" ) );
-    final String result = (String) f.getProperty( new QName( NS.OM, "result" ) );
-    
+    final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
+
+    final String result = (String) f.getProperty( OM_RESULT );
+
     final TupleResult tupleResult = buildTupleResult( recordDefinition, result );
 
     return new Observation<TupleResult>( name, desc, tupleResult, meta );
   }
 
-  public static TupleResult buildTupleResult( final Feature recordDefinition, final String result ) throws ParseException
+  /**
+   * Helper: builds the tuple result for a tuple based observation according to the record definition encoded as a
+   * feature (subtype of ItemDefinition).
+   * <p>
+   * This method is declared protected, but if the need emanes, it could be made public.
+   */
+  protected static TupleResult buildTupleResult( final Feature recordDefinition, final String result )
   {
     final ComponentDefinition[] definitions = buildComponentDefinitions( recordDefinition );
     final IComponent[] components = new IComponent[definitions.length];
-    
+
     for( int i = 0; i < definitions.length; i++ )
       components[i] = definitions[i].toComponent();
-    
+
     final TupleResult tupleResult = new TupleResult( components );
 
     final StringTokenizer tk = new StringTokenizer( result );
@@ -117,51 +137,143 @@ public class ObservationFeatureFactory
         record = tupleResult.createRecord();
         tupleResult.add( record );
       }
-      
+
       final String token = tk.nextToken();
-      final Object value = definitions[nb].getTypeHandler().parseType( token );
+      final Object value = definitions[nb].getTypeHandler().convertToJavaValue( token );
       record.setValue( components[nb], value );
 
       nb++;
       nb = nb % definitions.length;
     }
-    
+
     return tupleResult;
   }
 
   /**
-   * Builds the list of component definitions defined as ItemDefinitions within the recordDefinition element
+   * Helper: builds the list of component definitions defined as ItemDefinitions within the recordDefinition element.
+   * <p>
+   * This method is declared protected, but if the need emanes, it could be made public.
    */
-  public static ComponentDefinition[] buildComponentDefinitions( final Feature recordDefinition )
+  protected static ComponentDefinition[] buildComponentDefinitions( final Feature recordDefinition )
   {
     final List<ComponentDefinition> components = new ArrayList<ComponentDefinition>();
 
-    final Object[] props = recordDefinition.getProperties();
-    for( int i = 0; i < props.length; i++ )
+    final FeatureList comps = (FeatureList) recordDefinition.getProperty( SWE_COMPONENT );
+    for( int i = 0; i < comps.size(); i++ )
     {
-      final Feature f = (Feature) props[i];
-      if( f.getFeatureType().getQName().equals( SWE_COMPONENT ) )
-      {
-        final Feature itemDef = (Feature) f.getProperty( SWE_ITEMDEFINITION );
+      final Feature itemDef = (Feature) comps.get( i );
 
-        final PhenomenonPropertyType phenomenonProp = (PhenomenonPropertyType) itemDef.getProperty( SWE_PROPERTY );
-        final PhenomenonType phenomenonValue = phenomenonProp.getPhenomenon().getValue();
+      final Feature phenomenon = FeatureHelper.resolveLink( itemDef, SWE_PROPERTY );
+      if( phenomenon == null )
+        continue;
+      
+      final String name = (String) FeatureHelper.getFirstProperty( phenomenon, GML_NAME );
+      final String desc = (String) FeatureHelper.getFirstProperty( phenomenon, GML_DESCRIPTION );
+      
+      final RepresentationType rep = (RepresentationType) itemDef.getProperty( SWE_REPRESENTATION );
 
-        final RepresentationType rep = (RepresentationType) itemDef.getProperty( SWE_REPRESENTATION );
-
-        components.add( new ComponentDefinition( phenomenonValue, rep ) );
-      }
+      components.add( new ComponentDefinition( name, desc, rep ) );
     }
 
-    return components.toArray( new ComponentDefinition[components.size()]);
+    return components.toArray( new ComponentDefinition[components.size()] );
   }
 
   /**
-   * Writes the contents of an observation into a feature. The feature must substitute
+   * Helper: builds the list of component definitions from the components of the tuple result.
+   * <p>
+   * This method is declared protected, but if the need emanes, it could be made public.
+   */
+  protected static ComponentDefinition[] buildComponentDefinitions( final TupleResult result )
+  {
+    final IComponent[] components = result.getComponents();
+    final ComponentDefinition[] compDefs = new ComponentDefinition[components.length];
+
+    // for each component, set a component property, create a feature: ItemDefinition
+    for( int i = 0; i < components.length; i++ )
+      compDefs[i] = ComponentDefinition.create( components[i] );
+
+    return compDefs;
+  }
+
+  /**
+   * Writes the contents of a tuple based observation into a feature. The feature must substitute
    * http://www.opengis.net/om:Observation.
    */
-  public static void writeObservationToFeature( final IObservation source, final Feature target )
+  public static void toFeature( final IObservation<TupleResult> source, final Feature targetObsFeature )
   {
+    final IFeatureType featureType = targetObsFeature.getFeatureType();
 
+    if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
+      throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
+
+    targetObsFeature.setProperty( GML_NAME, source.getName() );
+    targetObsFeature.setProperty( GML_DESCRIPTION, source.getDescription() );
+
+    final List<MetadataObject> mdList = source.getMetadataList();
+    targetObsFeature.setProperty( GML_METADATA, mdList );
+
+    final TupleResult result = source.getResult();
+
+    final ComponentDefinition[] componentDefinitions = buildComponentDefinitions( result );
+
+    final Feature rd = buildRecordDefinition( targetObsFeature, componentDefinitions );
+    targetObsFeature.setProperty( OM_RESULTDEFINITION, rd );
+
+    final String strResult = serializeResultAsString( componentDefinitions, result );
+    targetObsFeature.setProperty( OM_RESULT, strResult );
+  }
+
+  /**
+   * Helper: builds the record definition according to the components of the tuple result.
+   * <p>
+   * This method is declared protected, but if the need emanes, it could be made public.
+   */
+  protected static Feature buildRecordDefinition( final Feature targetObsFeature, final ComponentDefinition[] componentDefinitions )
+  {
+    final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
+
+    // set resultDefinition property, create RecordDefinition feature
+    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( OM_RESULTDEFINITION ) );
+
+    // for each component, set a component property, create a feature: ItemDefinition
+    for( int i = 0; i < componentDefinitions.length; i++ )
+    {
+      final Feature featureItemDef = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_ITEMDEFINITION ) );
+
+      final Feature featurePhenomenon = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
+      featurePhenomenon.setProperty( GML_NAME, componentDefinitions[i].getName() );
+      featurePhenomenon.setProperty( GML_DESCRIPTION, componentDefinitions[i].getDescription() );
+      
+      featureItemDef.setProperty( SWE_PROPERTY, featurePhenomenon );
+      featureItemDef.setProperty( SWE_REPRESENTATION, componentDefinitions[i].getRepresentationType() );
+
+      featureRD.setProperty( SWE_COMPONENT, featureItemDef );
+    }
+
+    return featureRD;
+  }
+
+  private static String serializeResultAsString( final ComponentDefinition[] componentDefinitions, final TupleResult result )
+  {
+    final StringBuffer buffer = new StringBuffer();
+
+    final IComponent[] components = result.getComponents();
+    for( IRecord record : result )
+    {
+      for( int i = 0; i < components.length; i++ )
+      {
+        if( i > 0 )
+          buffer.append( " " );
+
+        final Object value = record.getValue( components[i] );
+        final String strValue = componentDefinitions[i].getTypeHandler().convertToXMLString( value );
+
+        buffer.append( strValue );
+      }
+
+      buffer.append( "\n" );
+    }
+
+    return buffer.toString();
   }
 }
