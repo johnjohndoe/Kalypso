@@ -95,11 +95,10 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     final IEditorPart activeEditor = activePage.getActiveEditor();
     if( activeEditor != null )
     {
-      final Menu menu = menuManager.createContextMenu( m_viewer.getControl() );
+      m_viewer.setMenu( menuManager );
       // TODO check if we can register the menu more global, even when we have
       // no active editor
       activeEditor.getSite().registerContextMenu( menuManager, m_viewer );
-      m_viewer.getControl().setMenu( menu );
     }
     return m_viewer.getControl();
   }
