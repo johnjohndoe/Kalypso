@@ -25,18 +25,38 @@
 	<element name="startConditionMember" type="tuhh:StartConditionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???calculationStartConditionMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Untere Randbedingung (1. Profil)</label>
+				<tooltip>Untere Randbedingung (1. Profil)</tooltip>
+				<description>Untere Randbedingung (1. Profil)</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???Randbedingung</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Untere Randbedingung (1. Profil)</label>
+				<tooltip>Untere Randbedingung (1. Profil)</tooltip>
+				<description>Untere Randbedingung (1. Profil)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Abflussintervall</label>
+				<tooltip>Abflussintervall</tooltip>
+				<description>Abflussintervall</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Abflussintervall</label>
+				<tooltip>Abflussintervall</tooltip>
+				<description>Abflussintervall</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -45,18 +65,18 @@
 	<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???Referenz auf numerische Parameter</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Numerische Parameter</label>
+				<tooltip>Numerische Parameter</tooltip>
+				<description>Numerische Parameter</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???numerische Parameter</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Numerische Parameter</label>
+				<tooltip>Numerische Parameter</tooltip>
+				<description>Numerische Parameter</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -126,18 +146,18 @@
 	<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???subReachDefinitionMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Berechnungsabschnitt</label>
+				<tooltip>Berechnungsabschnitt</tooltip>
+				<description>Berechnungsabschnitt</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???subReachDefinition</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Berechnungsabschnitt</label>
+				<tooltip>Berechnungsabschnitt</tooltip>
+				<description>Berechnungsabschnitt</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -146,37 +166,38 @@
 	<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???element:specialOptionsMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Zusatzoptionen</label>
+				<tooltip>Zusatzoptionen</tooltip>
+				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???element:specialOptions</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Zusatzoptionen</label>
+				<tooltip>Zusatzoptionen</tooltip>
+				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
 			</documentation>
 		</annotation>
 	</element>
-	<!--  -->
+	<!--  
+	-->
 	<element name="localEnergyLossMember" type="tuhh:localEnergyLossPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???element:localEnergyLossMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Einzelverluste</label>
+				<tooltip>Einzelverluste</tooltip>
+				<description>Einzelverluste</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="LocalEnergyLoss" type="tuhh:LocalEnergyLossType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???localEnergyLoss</label>
-				<tooltip>???tooltip</tooltip>
-				<description/>
+				<label>Einzelverluste</label>
+				<tooltip>Einzelverluste</tooltip>
+				<description>Einzelverluste</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -193,9 +214,9 @@
 					<element name="fliessgesetz">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Fließgesetz</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Fließgesetz</label>
+								<tooltip>Fließgesetz</tooltip>
+								<description>verwendetes Fließgesetz</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -203,27 +224,27 @@
 								<enumeration value="darcyRohr">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (Rohrströmungen)</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks)</label>
+											<tooltip>Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks)</tooltip>
+											<description>Fließgesetz nach Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="darcyOffeneGerinne">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???äquivalente Sandrauheiten nach Darcy-Weisbach (offene Gerinne mit Formeinfluss)</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks)</label>
+											<tooltip>Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks)</tooltip>
+											<description>Fließgesetz nach Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="manningStrickler">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???Rauheitsbeiwerte nach Gauckler-Manning-Strickler</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst)</label>
+											<tooltip>Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst)</tooltip>
+											<description>Fließgesetz nach Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -236,32 +257,39 @@
 					<element ref="tuhh:startConditionMember"/>
 					<element ref="tuhh:waterlevelParameterMember"/>
 					<element name="mode">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnung</label>
+								<tooltip>Berechnung</tooltip>
+								<description>Berechnungsart</description>
+							</documentation>
+						</annotation>
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="waterlevel">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???Wasserspiegelberechnung</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Wasserspiegellagenberechnung</label>
+											<tooltip>Wasserspiegellagenberechnung</tooltip>
+											<description>Wasserspiegellagenberechnung</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="bankfullUniform">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???Bordvollberechnung - stationär-gleichförmig</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse</label>
+											<tooltip>Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse</tooltip>
+											<description>Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="bankfullNonUniform">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???Bordvollberechnung - stationär-ungleichförmig</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse</label>
+											<tooltip>Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse</tooltip>
+											<description>Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -272,39 +300,13 @@
 					<element name="runOffEventMember" type="om:AbstractObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Referenz auf Abflussereignis</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Abflussereignis</label>
+								<tooltip>Abflussereignis</tooltip>
+								<description>Abflussereignis</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="minimalRunOff" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???minimalRunOff</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="maximalRunOff" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???maximalRunOff</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="runOffStep" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???runOffStep</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
+					<element ref="tuhh:runOffIntervalMember"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -327,33 +329,102 @@
 					<element name="kind">
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="criticalWaterDepth"/>
-								<enumeration value="startWaterlevel"/>
-								<enumeration value="uniformBottomSlope"/>
+								<enumeration value="criticalWaterDepth">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Grenztiefe</label>
+											<tooltip>Grenztiefe</tooltip>
+											<description>Untere Randbedingung (1.Profil): Grenztiefe</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="startWaterlevel">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Anfangswasserspiegel</label>
+											<tooltip>Anfangswasserspiegel</tooltip>
+											<description>Untere Randbedingung (1.Profil): Anfangswasserspiegel</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="uniformBottomSlope">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>stationär-gleichförmiges Gefälle</label>
+											<tooltip>stationär-gleichförmiges Gefälle</tooltip>
+											<description>Untere Randbedingung (1.Profil): stationär-gleichförmiges Gefälle</description>
+										</documentation>
+									</annotation>
+								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>
-					
 					<element name="waterlevel" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Anfangswasserspiegel</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Anfangswasserspiegel</label>
+								<tooltip>Anfangswasserspiegel</tooltip>
+								<description>Untere Randbedingung (1.Profil): Anfangswasserspiegel</description>
 							</documentation>
 						</annotation>
 					</element>
-					
 					<element name="bottomSlope" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???bottomSlope</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>stationär-gleichförmiges Gefälle</label>
+								<tooltip>stationär-gleichförmiges Gefälle</tooltip>
+								<description>Untere Randbedingung (1.Profil): stationär-gleichförmiges Gefälle</description>
 							</documentation>
 						</annotation>
 					</element>
-				 </sequence>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="RunOffIntervalPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="tuhh:RunOffInterval"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="RunOffIntervalType">
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<!-- TODO: Element Abflussintervall machen -->
+					<element name="minimalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Minimaler Abfluss [m³/s]</label>
+								<tooltip>Minimaler Abfluss [m³/s]</tooltip>
+								<description>Minimaler Abfluss [m³/s] des Abflussintervalls</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runOffStep" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schrittbreite [m³/s]</label>
+								<tooltip>Schrittbreite [m³/s]</tooltip>
+								<description>Schrittbreite [m³/s] des Abflussintervalls</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maximalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Maximaler Abfluss [m³/s]</label>
+								<tooltip>Maximaler Abfluss [m³/s]</tooltip>
+								<description>Maximaler Abfluss [m³/s] des Abflussintervalls</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -375,9 +446,9 @@
 					<element name="wspIteration">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Berechnung des Waserspiegels</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Iterationsgenauigkeit</label>
+								<tooltip>Iterationsgenauigkeit</tooltip>
+								<description>Iterationsgenauigkeit (Berechnung des Wasserspiegels)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -385,18 +456,18 @@
 								<enumeration value="simpleIteration">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???einfache Iteration</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>einfache Iteration</label>
+											<tooltip>einfache Iteration</tooltip>
+											<description>Iterationsgenauigkeit: einfache Iteration</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="exactIteration">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???genaue Berechnung durch Einschlussiteration</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>genaue Berechnung durch Einschlussintervall</label>
+											<tooltip>genaue Berechnung durch Einschlussintervall</tooltip>
+											<description>Iterationsgenauigkeit: genaue Berechnung durch Einschlussintervall</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -406,9 +477,9 @@
 					<element name="verzoegerungsverlust">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Verzögerungsverlust</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Verzögerungsverlust</label>
+								<tooltip>Verzögerungsverlust</tooltip>
+								<description>Verzögerungsverlust</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -416,27 +487,27 @@
 								<enumeration value="dvwk">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???nach DVWK (beta = 0.67)</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>nach DVWK (beta = 0.67)</label>
+											<tooltip>nach DVWK (beta = 0.67)</tooltip>
+											<description>Verzögerungsverlust nach DVWK (beta = 0.67)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="bjoernsen">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???nach Björnsen (beta = 0.5)</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>nach Björnsen (beta = 0.5)</label>
+											<tooltip>nach Björnsen (beta = 0.5)</tooltip>
+											<description>Verzögerungsverlust nach Björnsen (beta = 0.5)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="dfg">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
+											<description>Verzögerungsverlust nach DFG (beta = 2 / (1+Ai + 1/Ai) )</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -446,9 +517,9 @@
 					<element name="reibungsverlust">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Art der Berechnung von Reibungsverlust</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Berechnung von Reibungsverlusten</label>
+								<tooltip>Berechnung von Reibungsverlusten</tooltip>
+								<description>Berechnung von Reibungsverlusten</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -456,18 +527,18 @@
 								<enumeration value="trapezFormula">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???nach Trapezformel</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>nach Trapezformel</label>
+											<tooltip>nach Trapezformel</tooltip>
+											<description>Berechnung von Reibungsverlusten nach Trapezformel</description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="geometricFormula">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>???durch geometrische Mittelung</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<label>durch geometrische Mittelung</label>
+											<tooltip>durch geometrische Mittelung</tooltip>
+											<description>Berechnung von Reibungsverlusten durch geometrische Mittelung</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -575,13 +646,6 @@
 	<!-- 
 	-->
 	<complexType name="localEnergyLossPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???localEnergyLossPropertyType</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
@@ -591,22 +655,15 @@
 		</complexContent>
 	</complexType>
 	<complexType name="LocalEnergyLossType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???LocalEnergyLossType</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="kind">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???energyLossKind</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Art</label>
+								<tooltip>Art</tooltip>
+								<description>Art des Einzelverlusts</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -615,8 +672,8 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Einlauf</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<tooltip>Einlauf</tooltip>
+											<description>Einlauf</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -624,8 +681,8 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Krümmer</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<tooltip>Krümmer</tooltip>
+											<description>Krümmer</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -633,8 +690,8 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Zusatz-Verlust</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<tooltip>Zusatz-Verlust</tooltip>
+											<description>Zusatz-Verlust</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -642,8 +699,8 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Rechen</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<tooltip>Rechen</tooltip>
+											<description>Rechen</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -651,8 +708,8 @@
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Auslauf</label>
-											<tooltip>???tooltip</tooltip>
-											<description>???description</description>
+											<tooltip>Auslauf</tooltip>
+											<description>Auslauf</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -662,9 +719,9 @@
 					<element name="value" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???energyLossValue</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Wert</label>
+								<tooltip>Wert</tooltip>
+								<description>Wert des Einzelverlusts</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -675,13 +732,6 @@
 	<!-- 
 	-->
 	<complexType name="subReachDefinitionPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???subReachDefinitionPropertyType</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
@@ -691,31 +741,24 @@
 		</complexContent>
 	</complexType>
 	<complexType name="subReachDefinitionType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???subReachDefinitionType</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="startStation" type="wspm:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Anfangsstation</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Anfangsstation</label>
+								<tooltip>Anfangsstation</tooltip>
+								<description>Anfangsstation des Berechnungsabschnitts</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="endStation" type="wspm:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Endstation</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Endstation</label>
+								<tooltip>Endstation</tooltip>
+								<description>Endstation des Berechnungsabschnitts</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -726,13 +769,6 @@
 	<!-- 
 	-->
 	<complexType name="specialOptionsPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???propertyType:Zusatzoptionen</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<restriction base="gml:FeaturePropertyType">
 				<sequence>
@@ -742,31 +778,24 @@
 		</complexContent>
 	</complexType>
 	<complexType name="specialOptionsType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???specialOptionsType:Zusatztoptionen</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
 					<element name="doCalcBridges" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Brücken mit Berechnen</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Brücken mit berechnen</label>
+								<tooltip>Brücken mit berechnen</tooltip>
+								<description>Brücken mit berechnen</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="doCalcBarrages" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???Wehre mit Berechnen</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Wehre mit berechnen</label>
+								<tooltip>Wehre mit berechnen</tooltip>
+								<description>Wehre mit berechnen</description>
 							</documentation>
 						</annotation>
 					</element>

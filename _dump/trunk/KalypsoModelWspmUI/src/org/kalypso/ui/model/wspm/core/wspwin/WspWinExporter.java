@@ -90,7 +90,7 @@ public class WspWinExporter
 
     monitor.subTask( " - Initialisiere KALYPSO..." );
 
-    // modelGml holds the selected resources (very general)
+    // modelGml holds all selected resources (very general)
     while( modelGml.hasNext() )
     {
 
@@ -179,18 +179,18 @@ public class WspWinExporter
     final File zustFile = new File( profDir, "zustand.001" );
     final File qwtFile = new File( profDir, "qwert.001" );
 
-//    write1DTuhhSteuerparameter( calculation, batFile );
+    // write1DTuhhSteuerparameter( calculation, batFile );
     write1DTuhhZustand( calculation.getReach(), zustFile );
-//    write1DTuhhZustand( calculation.getRunOffEvent(), qwtFile );
+    // write1DTuhhZustand( calculation.getRunOffEvent(), qwtFile );
   }
 
   private static void write1DTuhhZustand( final TuhhReach reach, final File zustFile ) throws IOException
   {
     final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
-    
+
     Arrays.sort( segments, new ReachSegmentStationComparator( isDirectionUpstreams ) );
-    
+
     PrintWriter writer = null;
     try
     {
@@ -207,13 +207,13 @@ public class WspWinExporter
         writer.print( " " );
         writer.println( station.doubleValue() );
       }
-      
+
       writer.close();
     }
     finally
     {
       IOUtils.closeQuietly( writer );
     }
-    
+
   }
 }

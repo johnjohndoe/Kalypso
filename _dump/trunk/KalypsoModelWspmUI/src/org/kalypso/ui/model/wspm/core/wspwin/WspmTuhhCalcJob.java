@@ -40,29 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.core.wspwin;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
+import java.io.File;
+import java.net.URL;
+
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.ui.model.wspm.IWspmConstants;
 
 /**
  * @author thuel2
- *
  */
-public class WspWinExportReachFeatV implements FeatureVisitor
+public class WspmTuhhCalcJob implements ISimulation
 {
 
-  public WspWinExportReachFeatV( )
+  public WspmTuhhCalcJob( )
   {
-    super();
-    // TODO Auto-generated constructor stub
+    // will not be instantiated
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
-  public boolean visit( Feature f )
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
-    // TODO Auto-generated method stub
-    return false;
+
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+   */
+  public URL getSpezifikation( )
+  {
+    return getClass().getResource( IWspmConstants.CALCJOB_SPEC );
   }
 
 }

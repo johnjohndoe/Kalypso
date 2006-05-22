@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.commons,
  org.kalypso.core,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.simulation.core
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.ui.model.wspm,
  org.kalypso.ui.model.wspm.core.wspwin,
