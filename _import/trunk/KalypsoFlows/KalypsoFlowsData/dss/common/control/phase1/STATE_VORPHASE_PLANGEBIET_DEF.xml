@@ -30,8 +30,8 @@
 </folder>
 </info>
 </editorArea>
-<editor focus="true" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" name="Plangebiet_definieren.gmt" partName="Plangebiet_definieren.gmt" path="PATH/PROJ/.control/phase1/Plangebiet_definieren.gmt" title="Plangebiet_definieren.gmt" tooltip="PROJ/.control/phase1/Plangebiet_definieren.gmt" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/PROJ/.control/phase1/Plangebiet_definieren.gmt"/>
+<editor focus="true" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" name="Plangebiet_definieren.gmt" partName="Plangebiet_definieren.gmt" path="PATH/PROJ/.maps/Plangebiet_definieren.gmt" title="Plangebiet_definieren.gmt" tooltip="PROJ/.maps/Plangebiet_definieren.gmt" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/PROJ/.maps/Plangebiet_definieren.gmt"/>
 </editor>
 </editors>
 <views>
@@ -39,7 +39,7 @@
 <viewState/>
 </view>
 <view id="org.kalypso.workflow.ui.WorkflowBrowserView" partName="Workflow Browser">
-<viewState url="../common/.control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
+<viewState url="../common/control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
 <scrolbars/>
 </viewState>
 </view>
