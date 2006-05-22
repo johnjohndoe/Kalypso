@@ -1,55 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <om:ObservationCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="
-     http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
-     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
-     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd
-     http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
-     org.kalypso.gml.om ../schema_om.xsd
+     http://www.opengis.net/om ../../../../../../KalypsoContributionsOGC31/etc/schemas/original/om/1.0.30/om.xsd
+     http://www.opengis.net/gml ../../../../../../KalypsoContributionsOGC31/etc/schemas/original/gml/3.1.1/base/gml.xsd
+     http://www.w3.org/1999/xlink ../../../../../../KalypsoContributionsOGC31/etc/schemas/original/gml/3.1.1/xlink/xlinks.xsd
+     http://www.opengis.net/swe ../../../../../../KalypsoContributionsOGC31/etc/schemas/original/sweCommon/1.0.30/swe.xsd
+     http://www.ksp.org/om ../../../../../../KalypsoContributionsOGC31/etc/schemas/original/kalypso/omExtensions.xsd
      "
-     xmlns:kom="org.kalypso.gml.om" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kom="http://www.ksp.org/om" xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe">
-
+     
      <gml:name>Wasserstandsmessung mit W/Q-Beziehung und Alarmstufen</gml:name>
-     <om:time><!-- fï¿½r uns bringts nix denke ich, angabe ist aber erforderlich sonst dok nicht gï¿½ltig --></om:time>
+     <om:time><!-- für uns bringts nix denke ich, angabe ist aber erforderlich sonst dok nicht gültig --></om:time>
      
      <om:member>
           <om:Observation gml:id="wasserstandsmessung">
                <!-- die reine Zeitreihe wird als CommonObservation
-                         modelliert. Als resultDefinition kommt DataDefinition
-                         zum Einsatz. Es ermï¿½glicht die inline-Spezifikation
-                         des Datenblock im result.
-                          -->
+                    modelliert. Als resultDefinition kommt DataDefinition
+                    zum Einsatz. Es ermöglicht die inline-Spezifikation
+                    des Datenblock im result.
+               -->
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaDataList>
-                         <kom:MetaData>
-                              <name>Gewï¿½sser</name>
-                              <value>Schwarze Elster</value>
-                         </kom:MetaData>
-                         <kom:MetaData>
-                              <name>Kennziffer</name>
-                              <value>553050</value>
-                         </kom:MetaData>
-                         <kom:MetaData>
-                              <name>Szenario</name>
-                              <value/>
-                         </kom:MetaData>
-                         <kom:MetaData>
-                              <name>Vorhersage</name>
-                              <value type="DateRangeMarker">
-                                   <dateFrom>2005-05-18T11:00:00</dateFrom>
-                                   <dateTo>2005-08-24T11:00:00</dateTo>
-                              </value>
-                         </kom:MetaData>
-                         <kom:MetaData>
-                              <name>OCS-ID</name>
-                              <value type="URI"
-                                   >kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.553050</value>
-                         </kom:MetaData>
-                    </kom:MetaDataList>
+                    <kom:MetaData>
+                         <name>Gewässer</name>
+                         <value>Schwarze Elster</value>
+                    </kom:MetaData>
                </gml:metaDataProperty>
-               <gml:description/>
+               <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
+                    <kom:MetaData>
+                         <name>Kennziffer</name>
+                         <value>553050</value>
+                    </kom:MetaData>
+               </gml:metaDataProperty>
+               <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
+                    <kom:MetaData>
+                         <name>Szenario</name>
+                         <value/>
+                    </kom:MetaData>
+               </gml:metaDataProperty>
+               <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
+                    <kom:MetaData>
+                         <name>Vorhersage</name>
+                         <value type="DateRangeMarker">
+                              <dateFrom>2005-05-18T11:00:00</dateFrom>
+                              <dateTo>2005-08-24T11:00:00</dateTo>
+                         </value>
+                    </kom:MetaData>
+               </gml:metaDataProperty>
+               <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
+                    <kom:MetaData>
+                         <name>OCS-ID</name>
+                         <value type="URI"
+                              >kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.553050</value>
+                    </kom:MetaData>
+               </gml:metaDataProperty>
+               <gml:description>Eine kurze Beschreibung</gml:description>
                <gml:name>Bad Liebenwerda.W.15</gml:name>
                <om:time/>
                <om:procedure>
@@ -69,7 +75,7 @@
                     <om:Station gml:id="pegelstation">
                          <!-- das Feature (featureOfInterest) -->
                          <gml:description/>
-                         <gml:name>Lï¿½ben</gml:name>
+                         <gml:name>Löben</gml:name>
                          <om:position>
                               <!-- TODO: ist die Frage ob man mit dem SRS so als URN kodiert zu Recht kommt -->
                               <gml:Point srsName="urn:kalypso:def:crs:EPSG:5:31468">
@@ -85,7 +91,11 @@
                          <swe:component>
                               <swe:ItemDefinition gml:id="datum">
                                    <gml:name/>
-                                   <swe:property/>
+                                   <swe:property>
+                                        <swe:Phenomenon gml:id="pDatum">
+                                             <gml:name>Datum</gml:name>
+                                        </swe:Phenomenon>
+                                   </swe:property>
                                    <swe:representation>
                                         <swe:SimpleType>
                                              <st:restriction base="dateTime"
@@ -115,7 +125,7 @@
                </om:resultDefinition>
                <om:result>
                     <!-- wir benutzen ein CDATA-Block damit der Layout so bleibt, 
-                              sonst wï¿½rde die automatische Formatierung die Sachen durcheinander bringen -->
+                         sonst würde die automatische Formatierung die Sachen durcheinander bringen -->
                     <![CDATA[
 2004-04-18T12:03:04Z 170.0
 2004-04-19T12:03:04Z 154.8
@@ -123,76 +133,66 @@
 ]]></om:result>
           </om:Observation>
      </om:member>
-
+     
      <om:member>
-
+          
           <om:Observation gml:id="wq_table1">
-
+               
                <!-- die WQ-Beziehung wird als Observation modelliert
-                         weil man hier fï¿½r die resultDefinition auf eines in einem
-                         dictionnary gespeicherte Spezifikation zurï¿½ckgreift. Das geht nicht
-                         fï¿½r CommonObservation (DataDefinitionType leitet nicht von DefinitionType ab).
-                         Schade. 
-                         
-                         die observedProperty (hier wq-table im phenomenon dictionary) sagt 
-                         was das fï¿½r eine Observation ist: nÃ¤mlich eine WQ-Table Observation
-                         mit der entsprechende resultDefinition usw. 
-                          -->
-
+                    weil man hier für die resultDefinition auf eines in einem
+                    dictionnary gespeicherte Spezifikation zurückgreift. Das geht nicht
+                    für CommonObservation (DataDefinitionType leitet nicht von DefinitionType ab).
+                    Schade. 
+                    
+                    die observedProperty (hier wq-table im phenomenon dictionary) sagt 
+                    was das für eine Observation ist: nämlich eine WQ-Table Observation
+                    mit der entsprechende resultDefinition usw. 
+               -->
+               
                <gml:description>Beinhaltet die WQ-Beziehung</gml:description>
                <om:time>
-                    <!-- in time kï¿½nnte der Gï¿½ltigkeitsbereich der WQ-Beziehung
-                              kodiert sein -->
+                    <!-- in time könnte der Gültigkeitsbereich der WQ-Beziehung
+                         kodiert sein -->
                     <gml:TimeInstant>
                          <gml:timePosition>2005-06-06+02:00</gml:timePosition>
                     </gml:TimeInstant>
                </om:time>
                <om:procedure>
-                    <om:ObservationProcedure gml:id="wq-table">
+                    <om:ObservationProcedure gml:id="proc-wq-table">
                          <gml:description>KALYPSO WQ-Tabelle</gml:description>
                          <gml:name>WQ-Tabelle</gml:name>
                          <om:method/>
                     </om:ObservationProcedure>
                </om:procedure>
                <om:observedProperty>
-                    <swe:Phenomenon gml:id="wq-table">
+                    <swe:Phenomenon gml:id="phen-wq-table">
                          <gml:name>WQ-Tabelle</gml:name>
                     </swe:Phenomenon>
                </om:observedProperty>
                <om:featureOfInterest xlink:href="#pegelstation"/>
                <om:resultDefinition>
-                    <swe:GridDefinition dimension="2" gml:id="wq-table">
-                         <gml:name>WQ-Tabelle Datenblock Spezifikation</gml:name>
-                         <swe:map>
-                              <!-- map kann eine href  enthalten - der IndexArray sollte irgendwie ausgelager werden-->
-                              <swe:IndexArray gml:id="wq_index" arrayLength="unbounded">
+                    <swe:RecordDefinition gml:id="wq_rd" recordLength="2">
+                         <gml:name/>
+                         <swe:component xlink:href="#pegelhoehe"/>
+                         <swe:component>
+                              <swe:ItemDefinition gml:id="abflussmenge">
                                    <gml:name/>
-                              </swe:IndexArray>
-                         </swe:map>
-                         <swe:tupleMap>
-                              <swe:RecordDefinition gml:id="wq_rd" recordLength="2">
-                                   <gml:name/>
-                                   <swe:component xlink:href="#pegelhoehe"/> 
-                                   <swe:component>
-                                        <swe:ItemDefinition gml:id="abflussmenge">
-                                             <gml:name/>
-                                             <swe:property xlink:href="dict_phenomenon.xml#abfluss"/>
-                                             <swe:representation>
-                                                  <swe:SimpleType>
-                                                       <st:restriction base="decimal" xmlns:st="http://www.seegrid.csiro.au/xml/st">
-                                                            <st:minInclusive value="0.0"/>
-                                                            <st:fractionDigits value="4"/>
-                                                       </st:restriction>
-                                                       <gml:unitOfMeasure uom="#m3s"/>
-                                                  </swe:SimpleType>
-                                             </swe:representation>
-                                        </swe:ItemDefinition>
-                                   </swe:component> 
-                              </swe:RecordDefinition>
-                         </swe:tupleMap>
-                    </swe:GridDefinition>
+                                   <swe:property xlink:href="dict_phenomenon.xml#abfluss"/>
+                                   <swe:representation>
+                                        <swe:SimpleType>
+                                             <st:restriction base="decimal"
+                                                  xmlns:st="http://www.seegrid.csiro.au/xml/st">
+                                                  <st:minInclusive value="0.0"/>
+                                                  <st:fractionDigits value="4"/>
+                                             </st:restriction>
+                                             <gml:unitOfMeasure uom="#m3s"/>
+                                        </swe:SimpleType>
+                                   </swe:representation>
+                              </swe:ItemDefinition>
+                         </swe:component>
+                    </swe:RecordDefinition>
                </om:resultDefinition>
-               <!-- Ich nehme mal an, dass die einheit fï¿½r die Pegelhï¿½he in cm angegeben ist - das muss man im Dictionairy anpassen -->
+               <!-- Ich nehme mal an, dass die einheit für die Pegelhöhe in cm angegeben ist - das muss man im Dictionairy anpassen -->
                <om:result><![CDATA[
 -69.0 0.0
 -68.0 0.0
@@ -208,60 +208,55 @@
                </om:result>
           </om:Observation>
      </om:member>
-
-     <!-- jetzt kommen die Alarmstufen, als einzelne Measurement -->
-     <om:member>
+     
+     <!--om:member>
           <om:Measurement>
-
-               <!-- die observedProperty (hier alarmstufe im phenomenon dictionary) sagt 
-                              was das fï¿½r eine Observation ist.
-                         -->
-
-               <gml:name>Alarmstufe 1</gml:name>
-               <om:time/>
-               <om:procedure>
-                    <om:ObservationProcedure gml:id="alarmstufeneinteilung">
-                         <gml:name/>
-                         <om:method/>
-                    </om:ObservationProcedure>
-               </om:procedure>
-               <om:observedProperty>
-                    <swe:Phenomenon gml:id="alarmstufe">
-                         <gml:name>Alarmstufe</gml:name>
-                    </swe:Phenomenon>
-               </om:observedProperty>
-               <om:featureOfInterest xlink:href="#pegelstation"/>
-               <om:result uom="dict_uom.xml#cmaP">20</om:result>
+          
+          <gml:name>Alarmstufe 1</gml:name>
+          <om:time/>
+          <om:procedure>
+          <om:ObservationProcedure gml:id="alarmstufeneinteilung">
+          <gml:name/>
+          <om:method/>
+          </om:ObservationProcedure>
+          </om:procedure>
+          <om:observedProperty>
+          <swe:Phenomenon gml:id="alarmstufe">
+          <gml:name>Alarmstufe</gml:name>
+          </swe:Phenomenon>
+          </om:observedProperty>
+          <om:featureOfInterest xlink:href="#pegelstation"/>
+          <om:result uom="dict_uom.xml#cmaP">20</om:result>
           </om:Measurement>
-     </om:member>
-     <om:member>
+          </om:member>
+          <om:member>
           <om:Measurement>
-               <gml:name>Alarmstufe 2</gml:name>
-               <om:time/>
-               <om:procedure xlink:href="#alarmstufeneinteilung"/>
-               <om:observedProperty xlink:href="#alarmstufe"/>
-               <om:featureOfInterest xlink:href="#pegelstation"/>
-               <om:result uom="dict_uom.xml#cmaP">30</om:result>
+          <gml:name>Alarmstufe 2</gml:name>
+          <om:time/>
+          <om:procedure xlink:href="#alarmstufeneinteilung"/>
+          <om:observedProperty xlink:href="#alarmstufe"/>
+          <om:featureOfInterest xlink:href="#pegelstation"/>
+          <om:result uom="dict_uom.xml#cmaP">30</om:result>
           </om:Measurement>
-     </om:member>
-     <om:member>
+          </om:member>
+          <om:member>
           <om:Measurement>
-               <gml:name>Alarmstufe 3</gml:name>
-               <om:time/>
-               <om:procedure xlink:href="#alarmstufeneinteilung"/>
-               <om:observedProperty xlink:href="#alarmstufe"/>
-               <om:featureOfInterest xlink:href="#pegelstation"/>
-               <om:result uom="dict_uom.xml#cmaP">40</om:result>
+          <gml:name>Alarmstufe 3</gml:name>
+          <om:time/>
+          <om:procedure xlink:href="#alarmstufeneinteilung"/>
+          <om:observedProperty xlink:href="#alarmstufe"/>
+          <om:featureOfInterest xlink:href="#pegelstation"/>
+          <om:result uom="dict_uom.xml#cmaP">40</om:result>
           </om:Measurement>
-     </om:member>
-     <om:member>
+          </om:member>
+          <om:member>
           <om:Measurement>
-               <gml:name>Alarmstufe 4</gml:name>
-               <om:time/>
-               <om:procedure xlink:href="#alarmstufeneinteilung"/>
-               <om:observedProperty xlink:href="#alarmstufe"/>
-               <om:featureOfInterest xlink:href="#pegelstation"/>
-               <om:result uom="dict_uom.xml#cmaP">50</om:result>
+          <gml:name>Alarmstufe 4</gml:name>
+          <om:time/>
+          <om:procedure xlink:href="#alarmstufeneinteilung"/>
+          <om:observedProperty xlink:href="#alarmstufe"/>
+          <om:featureOfInterest xlink:href="#pegelstation"/>
+          <om:result uom="dict_uom.xml#cmaP">50</om:result>
           </om:Measurement>
-     </om:member>
+          </om:member-->
 </om:ObservationCollection>
