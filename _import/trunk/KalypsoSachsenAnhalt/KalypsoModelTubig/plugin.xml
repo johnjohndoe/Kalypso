@@ -23,7 +23,7 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulation
-            catalogClass="org.kalypso.lhwsachsenanhalt.tubig.TubigUrlCatalog"
+            catalogClass="org.kalypso.model.wspm.tuhh.schemata.WspmTuhhUrlCatalog"
             simulationClass="org.kalypso.lhwsachsenanhalt.tubig.TubigCalcJob"
             typeID="TubigV1.0"/>
    </extension>
