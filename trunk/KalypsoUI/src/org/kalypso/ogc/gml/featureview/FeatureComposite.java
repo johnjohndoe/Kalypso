@@ -119,7 +119,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /** Map of especially added view-templates. */
   private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
 
-  /** This meber menages the generated view-templates. */
+  /** This member manages the generated view-templates. */
   private FeatureViewManager m_defaultViews = new FeatureViewManager();
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();

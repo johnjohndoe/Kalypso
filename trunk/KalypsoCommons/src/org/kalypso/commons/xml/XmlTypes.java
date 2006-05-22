@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.xml;
 
+import java.util.TimeZone;
+
 import org.kalypso.commons.parser.impl.DateParser;
 import org.kalypso.commons.parser.impl.DoubleParser;
 
@@ -55,6 +57,8 @@ public class XmlTypes
   // do not instanciate
   }
 
+  public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  
   /**
    * Parser for the type <code>date</code>. It uses following format string:
    * 
@@ -62,7 +66,13 @@ public class XmlTypes
    * yyyy-MM-dd'T'HH:mm:ss
    * </pre>
    */
-//  public final static DateParser PDATE = new DateParser( "yyyy-MM-dd'T'HH:mm:ss" );
+  public final static DateParser getDateParser( final TimeZone timezone )
+  {
+    final DateParser parser = new DateParser( XML_DATETIME_FORMAT );
+    parser.setTimezone( timezone );
+    
+    return parser;
+  }
 
   /**
    * Parser for the type <code>double</code>. It uses the default behaviour of the java.lang.Double class.

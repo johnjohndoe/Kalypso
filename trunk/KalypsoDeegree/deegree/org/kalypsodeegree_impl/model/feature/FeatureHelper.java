@@ -303,6 +303,30 @@ public class FeatureHelper
   }
 
   /**
+   * Returns the value of the given property. If the property is a java.util.List, it then returns the first element of
+   * the list or null if the list is empty.
+   */
+  public static Object getFirstProperty( final Feature feature, final QName property )
+  {
+    Object prop = feature.getProperty( property );
+
+    if( prop == null )
+      return null;
+
+    if( prop instanceof List )
+    {
+      final List list = (List) prop;
+
+      if( list.size() > 0 )
+        return list.get( 0 );
+      else
+        return null;
+    }
+
+    return prop;
+  }
+  
+  /**
    * copys all simple type properties from the source feature into the target feature
    * 
    * @param srcFE
@@ -390,5 +414,4 @@ public class FeatureHelper
     else
       return feature.getWorkspace().getFeature( (String) value );
   }
-
 }

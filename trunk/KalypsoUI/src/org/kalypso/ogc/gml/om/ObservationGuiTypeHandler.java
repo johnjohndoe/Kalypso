@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import java.text.ParseException;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
@@ -68,26 +66,19 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ObservationGuiTypeHandler implements IGuiTypeHandler
 {
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType)
    */
   public IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp )
   {
-    try
-    {
-      final IObservation<TupleResult> obs = ObservationFeatureFactory.observationFromFeature( feature.getParent() );
-      
-      return new ObservationFeatureDialog( obs );
-    }
-    catch( final ParseException e )
-    {
-      e.printStackTrace();
-      
-      return null;
-    }
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature.getParent() );
+
+    return new ObservationFeatureDialog( obs );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.template.featureview.ObjectFactory)
    */
   public JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory )
   {
@@ -95,7 +86,9 @@ public class ObservationGuiTypeHandler implements IGuiTypeHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
   public IFeatureModifier createFeatureModifier( IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl )
   {
@@ -164,7 +157,7 @@ public class ObservationGuiTypeHandler implements IGuiTypeHandler
    */
   public QName getTypeName( )
   {
-    return new QName(NS.OM, "result");
+    return new QName( NS.OM, "result" );
   }
 
   /**

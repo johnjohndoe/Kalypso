@@ -71,6 +71,7 @@ import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.parser.impl.DateParser;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -570,9 +571,7 @@ public class ZmlFactory
 
   private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb, final TimeZone timezone ) throws SensorException
   {
-    final DateParser dateParser = new DateParser();
-    dateParser.setTimezone( timezone );
-    // XmlTypes.PDATE.setTimezone( timezone );
+    final DateParser dateParser = XmlTypes.getDateParser( timezone );
 
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
