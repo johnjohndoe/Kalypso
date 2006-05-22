@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author von Dömming
+ * @author dömming
  */
 public class CreateGeometryFeatureWidget extends AbstractWidget
 {

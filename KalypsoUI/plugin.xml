@@ -404,6 +404,16 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
+          <action
+               toolbarPath="karte/tools"
+               label="Geometrie editieren"
+               tooltip="Geometrien editieren"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate"
+               icon="icons/feature/geom_multipolygon.gif"
+               style="radio"
+               state="false"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               id="org.kalypso.ui.editor.mapeditor.action.EditGeometry"/>
          <action
                toolbarPath="karte/tools"
                label="Geometrie zeichnen"

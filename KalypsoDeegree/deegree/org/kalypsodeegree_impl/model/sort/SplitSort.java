@@ -21,7 +21,7 @@ public class SplitSort implements FeatureList
 {
   public static boolean showIndexEnv = false;
 
-  private SplitSortContainer myRootContainer = null;
+  private SplitSortContainer m_rootContainer = null;
 
   private List m_objects = new ArrayList();
 
@@ -39,7 +39,7 @@ public class SplitSort implements FeatureList
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    myRootContainer = new SplitSortContainer( null, env );
+    m_rootContainer = new SplitSortContainer( null, env );
   }
 
   public boolean add( final Object object )
@@ -54,11 +54,11 @@ public class SplitSort implements FeatureList
     if( env == null )
       return;
 
-    if( myRootContainer == null )
-      myRootContainer = new SplitSortContainer( null, env );
+    if( m_rootContainer == null )
+      m_rootContainer = new SplitSortContainer( null, env );
 
-    if( myRootContainer.getEnvelope().contains( env ) )
-      myRootContainer.add( env, object );
+    if( m_rootContainer.getEnvelope().contains( env ) )
+      m_rootContainer.add( env, object );
     else
     {
       double maxX = env.getMax().getX();
@@ -66,20 +66,20 @@ public class SplitSort implements FeatureList
       double minX = env.getMin().getX();
       double minY = env.getMin().getY();
 
-      GM_Envelope envRoot = myRootContainer.getEnvelope();
+      GM_Envelope envRoot = m_rootContainer.getEnvelope();
 
       double maxXroot = envRoot.getMax().getX();
       double maxYroot = envRoot.getMax().getY();
       double minXroot = envRoot.getMin().getX();
       double minYroot = envRoot.getMin().getY();
-      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY
-          : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY : maxYroot );
+      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY
+          : maxYroot );
 
       SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv );
-      myRootContainer.setParent( newRootContainer );
-      newRootContainer.createSubContainers( myRootContainer );
-      myRootContainer = newRootContainer;
-      myRootContainer.add( env, object );
+      m_rootContainer.setParent( newRootContainer );
+      newRootContainer.createSubContainers( m_rootContainer );
+      m_rootContainer = newRootContainer;
+      m_rootContainer.add( env, object );
     }
   }
 
@@ -87,8 +87,8 @@ public class SplitSort implements FeatureList
   {
     if( result == null )
       result = new ArrayList();
-    if( myRootContainer != null )
-      result = myRootContainer.query( queryEnv, result );
+    if( m_rootContainer != null )
+      result = m_rootContainer.query( queryEnv, result );
     return result;
   }
 
@@ -110,12 +110,12 @@ public class SplitSort implements FeatureList
 
   private void remove( GM_Envelope env, Object object )
   {
-    if( myRootContainer != null )
+    if( m_rootContainer != null )
     {
       if( env != null )
-        myRootContainer.remove( env, object );
+        m_rootContainer.remove( env, object );
       else
-        myRootContainer.remove( object );
+        m_rootContainer.remove( object );
     }
   }
 
@@ -132,12 +132,12 @@ public class SplitSort implements FeatureList
   {
     if( object instanceof DisplayElement )
     {
-      DisplayElement de = (DisplayElement)object;
+      DisplayElement de = (DisplayElement) object;
       return getEnvelope( de.getFeature() );
     }
     else if( object instanceof Feature )
     {
-      Feature fe = (Feature)object;
+      Feature fe = (Feature) object;
       GM_Envelope env = fe.getEnvelope();
       return env;
     }
@@ -149,29 +149,41 @@ public class SplitSort implements FeatureList
 
   public void paint( Graphics g, GeoTransform geoTransform )
   {
-    if( myRootContainer != null )
-      myRootContainer.paint( g, geoTransform );
+    if( m_rootContainer != null )
+      m_rootContainer.paint( g, geoTransform );
   }
 
-  public int rsize()
+  public int rsize( )
   {
-    if( myRootContainer != null )
-      return myRootContainer.rsize();
+    if( m_rootContainer != null )
+      return m_rootContainer.rsize();
     return 0;
   }
 
-  public GM_Envelope getBoundingBox()
+  public GM_Envelope getBoundingBox( )
   {
     // TODO es muss die boundingbox aus den Objecten innerhalb des
     // rootcontainers gebildet werden
-    if( myRootContainer != null )
-      return myRootContainer.getEnvelope();
+    if( m_rootContainer != null )
+      return m_rootContainer.getEnvelope();
     return null;
   }
 
-  public void resort()
+  public void resort( Feature feature )
   {
-    myRootContainer = null;
+    if( !contains( feature ) )
+      return;
+    if( m_rootContainer != null )
+      m_rootContainer.remove( feature );
+    final GM_Envelope envelope = getEnvelope( feature );
+    if( envelope == null )
+      System.out.println( "no envelope !" );
+    spacialAdd( envelope, feature );
+  }
+
+  public void resort( )
+  {
+    m_rootContainer = null;
 
     GM_Envelope bbox = null;
 
@@ -187,7 +199,7 @@ public class SplitSort implements FeatureList
     }
     if( bbox != null )
     {
-      myRootContainer = new SplitSortContainer( null, bbox );
+      m_rootContainer = new SplitSortContainer( null, bbox );
       for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
       {
         final Object next = iter.next();
@@ -196,13 +208,13 @@ public class SplitSort implements FeatureList
       }
     }
     else
-      myRootContainer = null;
+      m_rootContainer = null;
   }
 
   /**
    * @see java.util.List#size()
    */
-  public int size()
+  public int size( )
   {
     return m_objects.size();
   }
@@ -210,10 +222,10 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#clear()
    */
-  public void clear()
+  public void clear( )
   {
     // TODO: dispose it?
-    myRootContainer = null;
+    m_rootContainer = null;
 
     m_objects.clear();
   }
@@ -221,7 +233,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#isEmpty()
    */
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_objects.isEmpty();
   }
@@ -229,7 +241,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#toArray()
    */
-  public Object[] toArray()
+  public Object[] toArray( )
   {
     return m_objects.toArray();
   }
@@ -337,7 +349,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#iterator()
    */
-  public Iterator iterator()
+  public Iterator iterator( )
   {
     return m_objects.iterator();
   }
@@ -353,7 +365,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#listIterator()
    */
-  public ListIterator listIterator()
+  public ListIterator listIterator( )
   {
     return m_objects.listIterator();
   }
@@ -386,10 +398,10 @@ public class SplitSort implements FeatureList
    * @deprecated use toArray() cause in a splitsort can be also featureIds (String), if feature is linked from the list
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
-  public Feature[] toFeatures()
+  public Feature[] toFeatures( )
   {
 
-    return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
+    return (Feature[]) m_objects.toArray( new Feature[m_objects.size()] );
   }
 
   /**
@@ -401,14 +413,14 @@ public class SplitSort implements FeatureList
     {
       final Object object = iter.next();
       if( object instanceof Feature )
-        visitor.visit( (Feature)object );
+        visitor.visit( (Feature) object );
     }
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
    */
-  public Feature getParentFeature()
+  public Feature getParentFeature( )
   {
     return m_parentFeature;
   }
@@ -416,7 +428,7 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    */
-  public IRelationType getParentFeatureTypeProperty()
+  public IRelationType getParentFeatureTypeProperty( )
   {
     return m_parentFeatureTypeProperty;
   }

@@ -89,7 +89,7 @@ public class WidgetHelper
       return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ));
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
       return (new CreateGeometeryWidget2( "create Geometry", "", null ));
-    if( widgetID.equals( MapPanel.WIDGET_EDIT_FEATURE_WITH_GEOMETRY ) )
+    if( widgetID.equals( MapPanel.WIDGET_EDIT_GEOMETRY ) )
       return (new EditGeometryWidget( "edit Geometry", "" ));
     //
     if( MapPanel.WIDGET_SELECT.equals( widgetID ) )

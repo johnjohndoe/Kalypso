@@ -208,7 +208,6 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void leftPressed( Point p )
   {
-
   // not implemented by default
   }
 

@@ -330,7 +330,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     // close the ring
     posArray.add( posArray.get( 0 ) );
     final GM_Position[] positions = posArray.toArray( new GM_Position[posArray.size()] );
-    return GeometryFactory.createGM_Surface( positions, null, null, m_coordinatesSystem );
+    return GeometryFactory.createGM_Surface( positions, new GM_Position[0][0], null, m_coordinatesSystem );
   }
 
   private GM_Curve getLineString( final List<GM_Position> posArray ) throws GM_Exception
