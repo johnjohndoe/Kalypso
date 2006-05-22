@@ -96,7 +96,7 @@ public class PanToWidget extends AbstractWidget
 
   public void perform()
   {
-    if( startPoint != null && endPoint != null )
+    if( startPoint != null && endPoint != null && !startPoint.equals( endPoint ))
     {
       final MapPanel mapPanel = getMapPanel();
       final double mx = mapPanel.getWidth() / 2d - ( endPoint.getX() - startPoint.getX() );
