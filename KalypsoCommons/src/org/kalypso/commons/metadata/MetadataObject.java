@@ -49,6 +49,18 @@ public class MetadataObject
   private String m_type;
   private Object m_value;
 
+  public MetadataObject( final String name, final Object value )
+  {
+    this( name, value, "" );
+  }
+  
+  public MetadataObject( final String name, final Object value, final String type )
+  {
+    m_name = name;
+    m_value = value;
+    m_type = type;
+  }
+  
   public String getName()
   {
     return m_name;

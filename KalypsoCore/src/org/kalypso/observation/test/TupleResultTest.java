@@ -42,6 +42,7 @@ package org.kalypso.observation.test;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -59,11 +60,9 @@ public class TupleResultTest extends TestCase
     assertEquals( 0, result.getComponents().length );
     assertEquals( 0, result.size() );
 
-    final IComponent comp = new ValueComponent( "Abfluss", "", Double.class, "m³/s" );
+    final IComponent comp = new ValueComponent( "Abfluss", "", XmlTypes.XS_DOUBLE, "m³/s" );
     result.addComponent( comp );
     assertEquals( 1, result.getComponents().length );
-
-//    ListIterator<IRecord> it = result.listIterator();
 
     IRecord r1 = result.createRecord();
     result.add( r1 );
@@ -72,7 +71,7 @@ public class TupleResultTest extends TestCase
 
     try
     {
-      result.setValue( r1, new Component( "Non-Existent", "", Integer.class ), 0 );
+      result.setValue( r1, new Component( "Non-Existent", "", XmlTypes.XS_INTEGER ), 0 );
 
       fail( "there should be an exception if we set a value of a nonexistent component" );
     }
@@ -82,7 +81,7 @@ public class TupleResultTest extends TestCase
 
     try
     {
-      r1.setValue( new Component( "Non-Existent", "", Integer.class ), 0 );
+      r1.setValue( new Component( "Non-Existent", "", XmlTypes.XS_INTEGER ), 0 );
 
       fail( "there should be an exception if we set a value of a nonexistent component" );
     }
@@ -110,10 +109,10 @@ public class TupleResultTest extends TestCase
 
   public void testComponent( )
   {
-    ValueComponent comp = new ValueComponent( "Abfluss", null, Double.class, "m³/s" );
+    ValueComponent comp = new ValueComponent( "Abfluss", null, XmlTypes.XS_DOUBLE, "m³/s" );
     assertEquals( "Abfluss", comp.getName() );
     assertNull( comp.getDescription() );
     assertEquals( "m³/s", comp.getUnit() );
-    assertEquals( Double.class, comp.getValueClass() );
+    assertEquals( XmlTypes.XS_DOUBLE, comp.getValueTypeName() );
   }
 }

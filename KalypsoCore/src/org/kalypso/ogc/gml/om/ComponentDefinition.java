@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.DateComponent;
 import org.kalypso.observation.result.IComponent;
@@ -98,21 +94,21 @@ public class ComponentDefinition
    */
   public IComponent toComponent( )
   {
-    final Class valueClass = m_representationType.getTypeHandler().getValueClass();
+    final QName valueTypeName = m_representationType.getValueTypeName();
 
-    if( Number.class.isAssignableFrom( valueClass ) )
+    if( XmlTypes.isNumber( valueTypeName ) )
     {
       final String unit = "";
-      return new ValueComponent( m_name, m_desc, valueClass, unit );
+      return new ValueComponent( m_name, m_desc, valueTypeName, unit );
     }
 
-    if( Date.class.isAssignableFrom( valueClass ) )
+    if( XmlTypes.isDate( valueTypeName ) )
     {
       final String tzName = "";
-      return new DateComponent( m_name, m_desc, valueClass, tzName );
+      return new DateComponent( m_name, m_desc, valueTypeName, tzName );
     }
 
-    return new Component( m_name, m_desc, valueClass );
+    return new Component( m_name, m_desc, valueTypeName );
   }
 
   /**
@@ -120,53 +116,34 @@ public class ComponentDefinition
    */
   public static ComponentDefinition create( final IComponent component )
   {
-    final Class< ? > valueClass = component.getValueClass();
-    
-    if( ValueComponent.class.isAssignableFrom( component.getClass() ) )
-    {
-      final RepresentationType rt = new RepresentationType( KIND.Number, new QName( NS.XSD_SCHEMA, toTypeName( valueClass ) ) );
-      return new ComponentDefinition( component.getName(), component.getDescription(), rt );
-    }
+    final QName valueTypeName = component.getValueTypeName();
 
-    if( DateComponent.class.isAssignableFrom( component.getClass() ) )
-    {
-      final RepresentationType rt = new RepresentationType( KIND.SimpleType, new QName( NS.XSD_SCHEMA, "dateTime" ) );
-      return new ComponentDefinition( component.getName(), component.getDescription(), rt );
-    }
+    String unit = "";
+    String frame = "";
+    String classification = "";
 
-    final RepresentationType rt = new RepresentationType( toKindType( valueClass ), new QName( NS.XSD_SCHEMA, toTypeName( valueClass ) ) );
+    if( component instanceof ValueComponent )
+      unit = ((ValueComponent) component).getUnit();
+
+    if( component instanceof DateComponent )
+      frame = ((DateComponent) component).getTimezoneName();
+
+    final RepresentationType rt = new RepresentationType( toKind( valueTypeName ), valueTypeName, unit, frame, classification );
     return new ComponentDefinition( component.getName(), component.getDescription(), rt );
   }
-  
-  /**
-   * TODO extend this for more types
-   */
-  private static String toTypeName( final Class< ? > valueClass )
-  {
-    if( valueClass == Double.class )
-      return "double";
-    
-    if( valueClass == BigDecimal.class )
-      return "decimal";
-    
-    if( valueClass == Boolean.class )
-      return "boolean";
-    
-    if( valueClass == XMLGregorianCalendar.class )
-      return "dateTime";
-
-    return "string";
-  }
 
   /**
-   * TODO extend this for more types
+   * Finds the best KIND that suits the given QName
    */
-  private static KIND toKindType( final Class< ? > valueClass )
+  private static KIND toKind( final QName valueTypeName )
   {
-    if( valueClass == Boolean.class )
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return KIND.Boolean;
-    
-    if( valueClass == XMLGregorianCalendar.class )
+
+    if( XmlTypes.isNumber( valueTypeName ) )
+      return KIND.Number;
+
+    if( XmlTypes.isDate( valueTypeName ) )
       return KIND.SimpleType;
 
     return KIND.Word;

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author schlienger
  */
@@ -47,14 +49,14 @@ public class DateComponent extends Component
 {
   private final String m_timezoneName;
   
-  public DateComponent( String name, String description, Class< ? > valueClass, String timezoneName )
+  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
   {
-    this( name, description, valueClass, null, timezoneName );
+    this( name, description, valueTypeName, null, timezoneName );
   }
 
-  public DateComponent( String name, String description, Class< ? > valueClass, Object defaultValue, String timezoneName )
+  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
   {
-    super( name, description, valueClass, defaultValue );
+    super( name, description, valueTypeName, defaultValue );
     
     m_timezoneName = timezoneName;
   }

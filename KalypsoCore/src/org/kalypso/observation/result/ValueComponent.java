@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author schlienger
  */
@@ -47,14 +49,14 @@ public class ValueComponent extends Component
 {
   private final String m_unit;
 
-  public ValueComponent( String name, String description, Class< ? > valueClass, String unit )
+  public ValueComponent( final String name, final String description, final QName valueTypeName, final String unit )
   {
-    this( name, description, valueClass, null, unit );
+    this( name, description, valueTypeName, null, unit );
   }
 
-  public ValueComponent( String name, String description, Class< ? > valueClass, Object defaultValue, String unit )
+  public ValueComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String unit )
   {
-    super( name, description, valueClass, defaultValue );
+    super( name, description, valueTypeName, defaultValue );
     
     m_unit = unit;
   }
