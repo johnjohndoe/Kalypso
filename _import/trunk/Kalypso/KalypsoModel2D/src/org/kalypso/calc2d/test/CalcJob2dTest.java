@@ -105,6 +105,10 @@ public class CalcJob2dTest extends TestCase
       {
         return (CalcJob2d.MODELL_ID.equals( id ) || CalcJob2d.CONTROL_ID.equals( id ));
       }
+
+      public void dispose( )
+      {
+      }
     };
 
     ISimulationResultEater resultEater = new ISimulationResultEater()

@@ -133,6 +133,12 @@ public class NACalcJobKollauTest extends TestCase
       {
         return getInputForID( id ) != null;
       }
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+        
+      }
     };
 
     final ISimulationResultEater resultEater = createResultEater();
@@ -173,6 +179,12 @@ public class NACalcJobKollauTest extends TestCase
       public boolean hasID( String id )
       {
         return getInputForID( id ) != null;
+      }
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+        
       }
     };
 
@@ -216,6 +228,12 @@ public class NACalcJobKollauTest extends TestCase
       {
         return getInputForID( id ) != null;
       }
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+        
+      }
     };
 
     final ISimulationResultEater resultEater = createResultEater();
@@ -258,6 +276,12 @@ public class NACalcJobKollauTest extends TestCase
       public boolean hasID( String id )
       {
         return getInputForID( id ) != null;
+      }
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+        
       }
     };
 

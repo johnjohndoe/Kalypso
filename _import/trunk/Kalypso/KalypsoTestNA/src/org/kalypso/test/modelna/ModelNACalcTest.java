@@ -57,7 +57,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.util.JarSimulationcDataProvider;
+import org.kalypso.simulation.core.util.JarSimulationDataProvider;
 import org.kalypso.test.util.CalcJobTestUtilis;
 
 /**
@@ -146,7 +146,7 @@ public class ModelNACalcTest extends TestCase
     final URL modelSpec = getClass().getResource( "testData/" + modellID + "/modelspec" + spec + ".xml" );
     final DataHandler dataHandler = new DataHandler( resource );
     final SimulationDataPath[] beans = createBeans( modelSpec );
-    final JarSimulationcDataProvider jarProvider = new JarSimulationcDataProvider( dataHandler, null, beans );
+    final JarSimulationDataProvider jarProvider = new JarSimulationDataProvider( dataHandler, null, beans );
 
     final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
@@ -176,6 +176,12 @@ public class ModelNACalcTest extends TestCase
         {
           throw new SimulationException( e.getMessage(), e );
         }
+      }
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+        
       }
     };
 

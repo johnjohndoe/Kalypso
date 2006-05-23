@@ -114,4 +114,11 @@ public class ProcessDataProvider implements ISimulationDataProvider
     return (URL) m_idhash.get( id );
   }
 
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#dispose()
+   */
+  public void dispose( )
+  {
+  }
+
 }
