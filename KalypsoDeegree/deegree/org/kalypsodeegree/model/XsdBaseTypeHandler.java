@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.gml.ToStringContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.SimpleTypeUnmarshalingContentHandler;
@@ -113,7 +114,6 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
       final StringBuffer buffer = new StringBuffer();
       final ToStringContentHandler toStringHandler = new ToStringContentHandler( new ILogger()
       {
-
         public void log( String message )
         {
           buffer.append( message );
@@ -127,7 +127,15 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
           try
           {
             final String stringResult = buffer.toString();
-            return parseType( stringResult );
+            
+            // HACK: remove CDATA section markers
+            // shouldn't the saxparser handle this?
+            final String withoutCDATA = stringResult.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
+            
+//            if( !withoutCDATA.equals( stringResult ) )
+//              System.out.println();
+            
+            return parseType( withoutCDATA );
           }
           catch( final Exception e )
           {

@@ -43,6 +43,7 @@ package org.kalypsodeegree.model;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -65,6 +66,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -180,7 +182,7 @@ public class TypeHandlerUtilities
            * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
            */
           @Override
-          public String convertToJavaValue( String xmlString )
+          public String convertToJavaValue( final String xmlString )
           {
             return xmlString;
           }
