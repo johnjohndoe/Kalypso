@@ -40,28 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author schlienger
  */
 public class Component implements IComponent
 {
   private final String m_name;
+
   private final String m_description;
 
-  private final Class< ? > m_valueClass;
+  private final QName m_valueTypeName;
 
   private final Object m_defaultValue;
 
-  public Component( String name, String description, Class< ? > valueClass )
+  public Component( final String name, final String description, final QName valueTypeName )
   {
-    this( name, description, valueClass, null );
+    this( name, description, valueTypeName, null );
   }
 
-  public Component( String name, String description, Class< ? > valueClass, Object defaultValue )
+  public Component( final String name, final String description, final QName valueTypeName, final Object defaultValue )
   {
     m_name = name;
     m_description = description;
-    m_valueClass = valueClass;
+    m_valueTypeName = valueTypeName;
     m_defaultValue = defaultValue;
   }
 
@@ -74,13 +77,13 @@ public class Component implements IComponent
   }
 
   /**
-   * @see org.kalypso.tuple.IColumnKey#getValueClass()
+   * @see org.kalypso.observation.result.IComponent#getValueTypeName()
    */
-  public Class< ? > getValueClass( )
+  public QName getValueTypeName( )
   {
-    return m_valueClass;
+    return m_valueTypeName;
   }
-
+  
   /**
    * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
    */

@@ -68,6 +68,7 @@ public interface NS
   public static final String KALYPSO_OBSVIEW = "obsdiagview.template.kalypso.org";
   public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
   public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
+  public static final String KALYPSO_OM = "http://www.ksp.org/om";
 
   // TODO check if ADV is korrekt
   // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)

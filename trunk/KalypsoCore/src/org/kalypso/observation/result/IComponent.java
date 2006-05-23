@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author schlienger
  */
@@ -49,7 +51,7 @@ public interface IComponent
   
   public String getDescription();
 
-  public Class< ? > getValueClass( );
+  public QName getValueTypeName();
 
   public Object getDefaultValue( );
 }
