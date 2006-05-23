@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -75,7 +76,7 @@ public class Feature_Impl implements Feature
       else
         m_properties[i] = null;
     }
-    
+
     if( initializeWithDefaults )
     {
       final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
@@ -83,7 +84,7 @@ public class Feature_Impl implements Feature
       {
         final IPropertyType pt = entry.getKey();
         final Object value = entry.getValue();
-        
+
         if( value != null && pt.getMaxOccurs() == 1 )
           setProperty( pt, value );
       }
@@ -227,7 +228,7 @@ public class Feature_Impl implements Feature
     return (GM_Object) prop;
   }
 
-   /**
+  /**
    * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
    */
   public GM_Envelope getEnvelope( )
@@ -284,13 +285,33 @@ public class Feature_Impl implements Feature
   {
     if( pt == null )
       return;
+
+    // Check if value fits to property
+    // Example1: QName is xs:double -> value must be Double
+    // Exmaple2: property is list -> value must be a list
+    if( pt.isList() && !(value instanceof List) )
+      throw new IllegalArgumentException( "Value must be a list for qname: " + pt.getQName() );
+
+    if( !pt.isList() )
+    {
+      if( pt instanceof IValuePropertyType )
+      {
+        final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
+        if( value != null && !valueClass.isAssignableFrom( value.getClass() ) )
+          throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " + pt.getQName() );
+      }
+      else if( pt instanceof IRelationType )
+      {
+        if( value != null && !(value instanceof Feature) && !(value instanceof String) )
+          throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " + pt.getQName() );
+      }
+    }
+
     final int pos = m_featureType.getPropertyPosition( pt );
     m_properties[pos] = value;
     if( GeometryUtilities.isGeometry( pt ) )
       invalidEnvelope();
   }
-
- 
 
   /**
    * @deprecated use getProperty(IPropertyType)
@@ -384,7 +405,7 @@ public class Feature_Impl implements Feature
     final IFeatureType featureType = getFeatureType();
 
     final IPropertyType prop = featureType.getProperty( propQName );
-    
+
     setProperty( prop, value );
   }
 }

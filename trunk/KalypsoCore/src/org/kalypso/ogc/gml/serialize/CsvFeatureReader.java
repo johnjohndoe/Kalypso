@@ -19,8 +19,8 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
@@ -142,7 +142,7 @@ public final class CsvFeatureReader
       for( int i = 0; i < input.length; i++ )
         input[i] = tokens[columns[i]];
 
-      final Object data = FeatureUtils.createFeaturePropertyFromStrings( vpt, format, input );
+      final Object data = FeatureHelper.createFeaturePropertyFromStrings( vpt, format, input );
 
       if( data == null )
         throw new CsvException( "Unbekannter Datentyp: " + vpt.getQName() );

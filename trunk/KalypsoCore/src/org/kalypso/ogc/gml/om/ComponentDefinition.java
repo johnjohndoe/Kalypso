@@ -137,12 +137,15 @@ public class ComponentDefinition
     final RepresentationType rt = new RepresentationType( toKindType( valueClass ), new QName( NS.XSD_SCHEMA, toTypeName( valueClass ) ) );
     return new ComponentDefinition( component.getName(), component.getDescription(), rt );
   }
-
+  
   /**
    * TODO extend this for more types
    */
   private static String toTypeName( final Class< ? > valueClass )
   {
+    if( valueClass == Double.class )
+      return "double";
+    
     if( valueClass == BigDecimal.class )
       return "decimal";
     

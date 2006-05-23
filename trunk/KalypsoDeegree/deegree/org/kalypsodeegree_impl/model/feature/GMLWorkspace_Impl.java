@@ -470,6 +470,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature createFeature( final Feature parent, final IFeatureType type )
   {
+    if( type.isAbstract() )
+    {
+      // TODO: throw an exception?
+      // throw new IllegalArgumentException( "Cannot create feature from abstract type: " + type );
+      System.out.println( "Creating feature from abstract type: " + type );
+    }
+
     final String newId = createFeatureId( type );
     final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, false );
     m_indexMap.put( newId, newFeature );

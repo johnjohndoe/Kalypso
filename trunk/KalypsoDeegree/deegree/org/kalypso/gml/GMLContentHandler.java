@@ -58,7 +58,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.tools.FeatureUtils;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -325,7 +325,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
             // new DelegatedFeature_Impl( feature, featureProvider );
 
             final String refID2 = href.replaceAll( "^#", "" );
-            FeatureUtils.addChild( feature, rt, refID2 );
+            FeatureHelper.addChild( feature, rt, refID2 );
           }
         }
         else
@@ -357,7 +357,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           }
 
           final Feature childFE = m_featureParser.getCurrentFeature();
-          FeatureUtils.addChild( parentFE, (IRelationType) pt, childFE );
+          FeatureHelper.addChild( parentFE, (IRelationType) pt, childFE );
           m_status = START_PROPERTY_END_FEATURE;
         }
         else
