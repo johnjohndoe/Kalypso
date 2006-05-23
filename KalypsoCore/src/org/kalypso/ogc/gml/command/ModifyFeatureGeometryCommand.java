@@ -50,8 +50,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
  * @author belger
@@ -133,7 +133,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
       // m_workspace.accept( visitor, m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     }
     for( Feature feature : feList )
-      FeatureUtils.resortFeature( feature );
+      FeatureHelper.resortFeature( feature );
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList ) );
   }
 

@@ -212,7 +212,7 @@ public class ObservationFeatureFactory
     if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
       throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
 
-    targetObsFeature.setProperty( GML_NAME, source.getName() );
+    FeatureHelper.addProperty( targetObsFeature, GML_NAME, source.getName() );
     targetObsFeature.setProperty( GML_DESCRIPTION, source.getDescription() );
 
     final List<MetadataObject> mdList = source.getMetadataList();
@@ -247,13 +247,13 @@ public class ObservationFeatureFactory
       final Feature featureItemDef = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_ITEMDEFINITION ) );
 
       final Feature featurePhenomenon = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
-      featurePhenomenon.setProperty( GML_NAME, compDef.getName() );
+      FeatureHelper.addProperty(  featurePhenomenon, GML_NAME, compDef.getName() );
       featurePhenomenon.setProperty( GML_DESCRIPTION, compDef.getDescription() );
 
       featureItemDef.setProperty( SWE_PROPERTY, featurePhenomenon );
       featureItemDef.setProperty( SWE_REPRESENTATION, compDef.getRepresentationType() );
 
-      featureRD.setProperty( SWE_COMPONENT, featureItemDef );
+      FeatureHelper.addProperty( featureRD, SWE_COMPONENT, featureItemDef );
     }
 
     return featureRD;

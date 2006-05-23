@@ -1,6 +1,7 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,12 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -325,7 +332,7 @@ public class FeatureHelper
 
     return prop;
   }
-  
+
   /**
    * copys all simple type properties from the source feature into the target feature
    * 
@@ -414,4 +421,133 @@ public class FeatureHelper
     else
       return feature.getWorkspace().getFeature( (String) value );
   }
+
+  public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
+  {
+    if( rt.isList() )
+    {
+      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
+      list.add( childFE );
+    }
+    else
+      parentFE.setProperty( rt, childFE );
+  }
+
+  public static void addChild( Feature parentFE, IRelationType rt, String featureID )
+  {
+    if( rt.isList() )
+    {
+      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
+      list.add( featureID );
+    }
+    else
+      parentFE.setProperty( rt, featureID );
+  }
+
+  /**
+   * Creates a data object suitable for a feature property out of string.
+   * 
+   * @return null, if the data-type is unknown
+   * @throws NumberFormatException
+   */
+  public static final Object createFeaturePropertyFromStrings( final IValuePropertyType type, final String format, final String[] input )
+  {
+    final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( type );
+
+    if( GeometryUtilities.getPointClass() == type.getValueClass() )
+    {
+      final String rwString = input[0].trim();
+      final String hwString = input[1].trim();
+
+      final String crsString;
+      if( input.length > 2 )
+        crsString = input[2];
+      else
+        crsString = format;
+
+      final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( crsString );
+      if( rwString == null || rwString.length() == 0 || hwString == null || hwString.length() == 0 )
+        return GeometryFactory.createGM_Point( 0, 0, crs );
+
+      final double rw = Double.parseDouble( rwString );
+      final double hw = Double.parseDouble( hwString );
+
+      return GeometryFactory.createGM_Point( rw, hw, crs );
+    }
+
+    if( typeHandler != null )
+    {
+      try
+      {
+        return typeHandler.parseType( input[0] );
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return null;
+  }
+
+  public static void resortFeature( Feature feature )
+  {
+    Feature parent = feature.getParent();
+    if( parent == null )
+      return; // nothing to do
+    final IPropertyType[] properties = parent.getFeatureType().getProperties();
+    for( IPropertyType propType : properties )
+    {
+      if( propType instanceof IRelationType )
+      {
+        final IRelationType relationType = (IRelationType) propType;
+        if( relationType.isList() )
+        {
+          final Object property = parent.getProperty( relationType );
+          if( property instanceof SplitSort )
+          {
+            final SplitSort sort = (SplitSort) property;
+            sort.resort( feature );
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Retrieves a property as a feature. Linked features are not suported.
+   * <p>
+   * If the property is not yet set, the feature is generated and set.
+   * </p>
+   */
+  public static Feature getSubFeature( final Feature parent, final QName propertyName )
+  {
+    final Feature subFeature = (Feature) parent.getProperty( propertyName );
+    if( subFeature != null )
+      return subFeature;
+
+    final IFeatureType parentType = parent.getFeatureType();
+    final IPropertyType property = parentType.getProperty( propertyName );
+    if( !(property instanceof IRelationType) )
+      throw new IllegalArgumentException( "Property is no relation: " + propertyName );
+
+    final IRelationType rt = (IRelationType) property;
+    final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+
+    // neues machen
+    final GMLWorkspace workspace = parent.getWorkspace();
+    final Feature newSubFeature = workspace.createFeature( parent, targetFeatureType );
+    parent.setProperty( propertyName, newSubFeature );
+    return newSubFeature;
+  }
+
+  /**
+   * @see #addProperty(Feature, IPropertyType, Object)
+   */
+  public static void addProperty( final Feature feature, final QName propertyName, final Object value )
+  {
+    final IPropertyType property = feature.getFeatureType().getProperty( propertyName );
+    addProperty( feature, property, value );
+  }
+
 }
