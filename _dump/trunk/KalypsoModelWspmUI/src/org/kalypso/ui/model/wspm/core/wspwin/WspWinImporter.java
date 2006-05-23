@@ -66,19 +66,17 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ValueComponent;
-import org.kalypso.ogc.gml.om.ComponentDefinition;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
@@ -519,8 +517,8 @@ public class WspWinImporter
 
   private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent stationComp = new ValueComponent( "Station", "Station", Double.class, "km" );
-    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", Double.class, "m³/s" );
+    final IComponent stationComp = new ValueComponent( "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
+    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
     final TupleResult result = new TupleResult( new IComponent[] { stationComp, abflussComp } );
 
     final Map<Double, Double> values = bean.getEntries();
