@@ -3,8 +3,9 @@
 <stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/>
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
 <mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
+<mapEntry key="calc.xpath" value="id( 'CalculationWspmTuhhSteadyState0' )"/>
 <mapEntry key="model.path" value="/KalypsoDataWspmTuhhDemo/test/DemoBCE"/>
-<mapEntry key="result.path" value="/KalypsoDataWspmTuhhDemo/test/DemoBCE/Ergebnisse/Calc0"/>
+<mapEntry key="result.path" value="Ergebnisse/Calc0"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">

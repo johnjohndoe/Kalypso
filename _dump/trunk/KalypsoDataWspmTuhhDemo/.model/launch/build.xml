@@ -30,26 +30,22 @@
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
 
-		<property name="calc.xpath" value="CalculationWspmTuhhSteadyState0" />
+		<eclipse.convertPath resourcePath="${model.path}/${result.path}" property="result.dir"/>
 
-		<eclipse.convertPath resourcePath="${result.path}" property="result.dir"/>
-
-		<property name="result.path.aktuell" value="${result.path}/aktuell" />
-		<property name="result.dir.aktuell" value="${result.dir}/aktuell" />
-
-		<!-- TODO: use xpath -->
-		<property name="calc.xpath" value="#Calculation0" />
+		<!-- der Result path ist immer relativ zum Modellverzeichnis -->
+		<property name="result.path.aktuell" value="${result.path}/#aktuell" />
+		<property name="result.dir.aktuell" value="${result.dir}/#aktuell" />
 
 		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${model.path}">
 			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
 			<input id="CALC_PATH" path="${calc.xpath}" />
+			<input id="PROFILES" path="Profile" relativeToCalcCase="true"/>
 
-			<output id="Logs" path="Log-Dateien" relativeToCalcCase="true" />
-			<output id="Ergebnisse" path="" relativeToCalcCase="true" />
+			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="false" />
 			<output id="bv_Ergebnisse" />
 			<output id="WQ_Tabellen" />
-			<output id="SimulationLog" />
+			<output id="SimulationLog" path="${result.path.aktuell}" relativeToCalcCase="true"/>
 			<output id="ControlFile" />
 			<output id="TabularResult" />
 			<output id="LengthSection" />
