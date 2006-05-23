@@ -1,0 +1,73 @@
+<project default="fake">
+
+	<!-- ================================= 
+          target: fake                      nur damit das Projekt nicht schreit
+          ================================= -->
+	<target name="fake" />
+
+
+	<!-- ================================= 
+          target: calculationProperties                      Initializes properties from .calculation
+         ================================= -->
+	<target name="calculationProperties">
+	</target>
+
+
+	<!-- ================================= 
+          target: cleanupErgebnisse              
+         ================================= -->
+	<target name="cleanupErgebnisse" description="Löscht frühere Ergebnisse">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${calc.dir}/Zeitreihen/Pegel/Vorhersage" includes="*/**" />
+			<fileset dir="${calc.dir}/Zeitreihen/Speicher/Vorhersage" includes="*/**" />
+			<fileset dir="${calc.dir}/Zeitreihen/Speicherzufluss" includes="*/**" />
+			<fileset dir="${calc.dir}/Log-Dateien" includes="*/**" />
+		</delete>
+	</target>
+
+	<!-- ================================= 
+          target: runCalculation              
+         ================================= -->
+	<target name="runCalculation" description="Führt die Berechnung durch">
+
+		<property name="calc.xpath" value="CalculationWspmTuhhSteadyState0" />
+
+		<eclipse.convertPath resourcePath="${result.path}" property="result.dir"/>
+
+		<property name="result.path.aktuell" value="${result.path}/aktuell" />
+		<property name="result.dir.aktuell" value="${result.dir}/aktuell" />
+
+		<!-- TODO: use xpath -->
+		<property name="calc.xpath" value="#Calculation0" />
+
+		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${model.path}">
+			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
+			<input id="CALC_PATH" path="${calc.xpath}" />
+
+			<output id="Logs" path="Log-Dateien" relativeToCalcCase="true" />
+			<output id="Ergebnisse" path="" relativeToCalcCase="true" />
+			<output id="bv_Ergebnisse" />
+			<output id="WQ_Tabellen" />
+			<output id="SimulationLog" />
+			<output id="ControlFile" />
+			<output id="TabularResult" />
+			<output id="LengthSection" />
+			<output id="BeiwerteAus" />
+
+			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
+			<clearAfterCalc path="${result.path.aktuell}" relativeToCalcCase="true" />
+		</kalypso.runCalculation>
+
+		<!-- copy results to timestamped dir-->
+		<tstamp>
+			<format property="now" pattern="yyyy.MM.dd#HH_mm_ss" />
+		</tstamp>
+		<property name="result.dir.time" value="${result.dir}/${now}" />
+		<copy todir="${result.dir.time}">
+			<fileset dir="${result.dir.aktuell}" includes="**/*"/>
+		</copy>
+	</target>
+
+
+</project>

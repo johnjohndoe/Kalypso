@@ -7,5 +7,6 @@
 	<buildSpec>
 	</buildSpec>
 	<natures>
+		<nature>org.kalypso.simulation.ui.ModelNature</nature>
 	</natures>
 </projectDescription>
