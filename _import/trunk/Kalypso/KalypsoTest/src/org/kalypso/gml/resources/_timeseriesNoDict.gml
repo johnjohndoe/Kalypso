@@ -22,38 +22,38 @@
                     des Datenblock im result.
                -->
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaData>
+                    <kom:metaData>
                          <name>Gewässer</name>
                          <value>Schwarze Elster</value>
-                    </kom:MetaData>
+                    </kom:metaData>
                </gml:metaDataProperty>
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaData>
+                    <kom:metaData>
                          <name>Kennziffer</name>
                          <value>553050</value>
-                    </kom:MetaData>
+                    </kom:metaData>
                </gml:metaDataProperty>
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaData>
+                    <kom:metaData>
                          <name>Szenario</name>
                          <value/>
-                    </kom:MetaData>
+                    </kom:metaData>
                </gml:metaDataProperty>
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaData>
+                    <kom:metaData>
                          <name>Vorhersage</name>
                          <value type="DateRangeMarker">
                               <dateFrom>2005-05-18T11:00:00</dateFrom>
                               <dateTo>2005-08-24T11:00:00</dateTo>
                          </value>
-                    </kom:MetaData>
+                    </kom:metaData>
                </gml:metaDataProperty>
                <gml:metaDataProperty gml:remoteSchema="schema_om.xsd">
-                    <kom:MetaData>
+                    <kom:metaData>
                          <name>OCS-ID</name>
                          <value type="URI"
                               >kalypso-ocs:wiski://HVZ_Modellierung_Saale.Wasserstand.553050</value>
-                    </kom:MetaData>
+                    </kom:metaData>
                </gml:metaDataProperty>
                <gml:description>Eine kurze Beschreibung</gml:description>
                <gml:name>Bad Liebenwerda.W.15</gml:name>
