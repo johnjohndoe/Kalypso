@@ -109,7 +109,7 @@ public class ProcessDataProvider implements ISimulationDataProvider
   /**
    * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
    */
-  public URL getURLForID( String id )
+  public Object getInputForID( String id )
   {
     return (URL) m_idhash.get( id );
   }

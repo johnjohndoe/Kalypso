@@ -118,15 +118,15 @@ public class CalculateFloodRiskJob implements ISimulation
       // Generate input
       // annualDamageRaster
       monitor.setMessage( "Lese Eingabedateien" );
-      URL annualDamageRasterGML = inputProvider.getURLForID( AnnualDamageRasterDataID );
+      URL annualDamageRasterGML = (URL) inputProvider.getInputForID( AnnualDamageRasterDataID );
       RectifiedGridCoverage annualDamageRaster = rasterDataModel.getRectifiedGridCoverage( annualDamageRasterGML );
 
       // landuseRaster
-      URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
+      URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       // contextModel
-      URL riskContextModelGML = inputProvider.getURLForID( RiskContextModelID );
+      URL riskContextModelGML = (URL) inputProvider.getInputForID( RiskContextModelID );
       RiskContextModel riskContextModel = new RiskContextModel( riskContextModelGML );
 
       monitor.setProgress( 40 );

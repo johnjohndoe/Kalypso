@@ -214,13 +214,13 @@ public class TubigCalcJob implements ISimulation
       dirHelp = new File( bodevorDir, TubigConst.PEGEL );
       if( dirHelp.isDirectory() )
       {
-        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, inputProvider.getURLForID( "MODELL_GML" ),
+        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, (URL) inputProvider.getInputForID( "MODELL_GML" ),
             metaMap );
       }
       dirHelp = new File( bodevorDir, TubigConst.SPEICHER );
       if( dirHelp.isDirectory() )
       {
-        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, inputProvider.getURLForID( "MODELL_GML" ),
+        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, (URL) inputProvider.getInputForID( "MODELL_GML" ),
             metaMap );
       }
       // IDs für addResult sind in der ModelSpec.xml (Client) und

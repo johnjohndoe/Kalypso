@@ -33,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -146,9 +145,8 @@ public class ModelNACalcTest extends TestCase
       spec = "_" + spec;
     final URL modelSpec = getClass().getResource( "testData/" + modellID + "/modelspec" + spec + ".xml" );
     final DataHandler dataHandler = new DataHandler( resource );
-    // final CalcJobClientBean[] beans =
     final SimulationDataPath[] beans = createBeans( modelSpec );
-    final JarSimulationcDataProvider jarProvider = new JarSimulationcDataProvider( dataHandler, beans );
+    final JarSimulationcDataProvider jarProvider = new JarSimulationcDataProvider( dataHandler, null, beans );
 
     final ISimulationDataProvider dataProvider = new ISimulationDataProvider()
     {
@@ -162,7 +160,7 @@ public class ModelNACalcTest extends TestCase
         return jarProvider.hasID( id );
       }
 
-      public URL getURLForID( String id ) throws SimulationException
+      public Object getInputForID( String id ) throws SimulationException
       {
         try
         {
@@ -172,7 +170,7 @@ public class ModelNACalcTest extends TestCase
             return getClass().getResource( "testData/we/parameter.gml" );
           if( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID.equals( id ) )
             return getClass().getResource( "testData/schema/namodelTest.xsd" );
-          return jarProvider.getURLForID( id );
+          return jarProvider.getInputForID( id );
         }
         catch( SimulationException e )
         {
@@ -243,11 +241,11 @@ public class ModelNACalcTest extends TestCase
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final Modeldata modeldata = (Modeldata) unmarshaller.unmarshal( modelSpec );
-    final List input = modeldata.getInput();
+    final List<Input> input = modeldata.getInput();
 
-    for( Iterator iter = input.iterator(); iter.hasNext(); )
+    for( final Input inputItem : input )
     {
-      final Input inputItem = (Input) iter.next();
+      // TODO: do this only if type is uri
       String inputPath = inputItem.getPath();
       inputPath = inputPath.replaceAll( "project:/", "" );
       if( inputItem.isRelativeToCalcCase() )

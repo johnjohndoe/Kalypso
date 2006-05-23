@@ -86,11 +86,11 @@ public class GenerateTemplateRasterJob implements ISimulation
     {
       // Generate input
       // Raster1
-      URL raster1GML = inputProvider.getURLForID( Raster1ID );
+      URL raster1GML = (URL) inputProvider.getInputForID( Raster1ID );
       RectifiedGridCoverage raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML );
 
       // Raster2
-      URL raster2GML = inputProvider.getURLForID( Raster2ID );
+      URL raster2GML = (URL) inputProvider.getInputForID( Raster2ID );
       RectifiedGridCoverage raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML );
 
       // Calculation

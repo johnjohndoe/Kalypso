@@ -102,20 +102,20 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       monitor.setMessage( "Lese Eingabedateien" );
 
       //administrationUnitVectorData: featureList
-      URL administrationUnitVectorDataGML = inputProvider.getURLForID( AdministrationUnitDataID );
+      URL administrationUnitVectorDataGML = (URL) inputProvider.getInputForID( AdministrationUnitDataID );
       GMLWorkspace administrationUnitVectorData;
       administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
       List featureList = (List)featureMember.getFeature( administrationUnitVectorData );
 
       //contextModel: administrationUnitTypeList
-      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
       Hashtable administrationUnitTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
       administrationUnitTypeList = contextModel.getAdministrationUnitList();
 
       //baseRaster
-      URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
+      URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
       RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 

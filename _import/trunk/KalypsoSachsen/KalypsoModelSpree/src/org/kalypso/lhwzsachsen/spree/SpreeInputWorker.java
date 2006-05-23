@@ -70,14 +70,14 @@ public class SpreeInputWorker
       final File nativedir = new File( tmpdir, "native" );
       nativedir.mkdirs();
 
-      final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
+      final URL controlGmlURL = (URL) inputProvider.getInputForID( "CONTROL_GML" );
 
       logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
       final Map map = parseControlFile( controlGmlURL, nativedir );
       props.putAll( map );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ) );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "GML" ) );
 
       props.put( SpreeCalcJob.DATA_GML, workspace );
 
@@ -319,7 +319,7 @@ public class SpreeInputWorker
    */
   public static TSMap readZML( final ISimulationDataProvider inputProvider, final TSMap tsmap ) throws IOException, SimulationException
   {
-    final URL zmlURL = inputProvider.getURLForID( "ZML" );
+    final URL zmlURL = (URL) inputProvider.getInputForID( "ZML" );
     final String zmlURLstr = zmlURL.toExternalForm();
     final URL zmlURLDir = new URL( zmlURLstr + "/" );
 

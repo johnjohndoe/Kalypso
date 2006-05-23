@@ -102,14 +102,14 @@ public class TubigInputWorker
     copyAndUnzipRechenkern( dirCalc );
 
     // .calculation (Control-File) holen und parsen
-    calcData = new TubigCalculationData( inputData.getURLForID( "CONTROL_GML" ) );
+    calcData = new TubigCalculationData( (URL) inputData.getInputForID( "CONTROL_GML" ) );
 
     // AKTDT.TXT erzeugen (startforecast = IST_Zeit)
     TubigConverter.createAktDtTxt( dirCalc, calcData.getStartforecast() );
 
     // Parameter aus modell.gml in Dateien schreiben (Speicher, Pegel)
     // und auch Zeitreihen in TUBIG-Dateien konvertieren
-    writeParameterAndTimeseries( inputData.getURLForID( "MODELL_GML" ), dirCalc, calcData.getStartforecast(), metaMap );
+    writeParameterAndTimeseries( (URL) inputData.getInputForID( "MODELL_GML" ), dirCalc, calcData.getStartforecast(), metaMap );
 
     return calcData;
   }

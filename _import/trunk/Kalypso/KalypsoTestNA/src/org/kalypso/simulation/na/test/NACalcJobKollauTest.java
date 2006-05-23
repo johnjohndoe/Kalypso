@@ -41,7 +41,6 @@
 package org.kalypso.simulation.na.test;
 
 import java.io.File;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -113,7 +112,7 @@ public class NACalcJobKollauTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id )
+      public Object getInputForID( String id )
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
@@ -132,7 +131,7 @@ public class NACalcJobKollauTest extends TestCase
        */
       public boolean hasID( String id )
       {
-        return getURLForID( id ) != null;
+        return getInputForID( id ) != null;
       }
     };
 
@@ -152,7 +151,7 @@ public class NACalcJobKollauTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id )
+      public Object getInputForID( String id )
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
@@ -173,7 +172,7 @@ public class NACalcJobKollauTest extends TestCase
        */
       public boolean hasID( String id )
       {
-        return getURLForID( id ) != null;
+        return getInputForID( id ) != null;
       }
     };
 
@@ -193,7 +192,7 @@ public class NACalcJobKollauTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id )
+      public Object getInputForID( String id )
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
@@ -215,7 +214,7 @@ public class NACalcJobKollauTest extends TestCase
        */
       public boolean hasID( String id )
       {
-        return getURLForID( id ) != null;
+        return getInputForID( id ) != null;
       }
     };
 
@@ -237,7 +236,7 @@ public class NACalcJobKollauTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id )
+      public Object getInputForID( String id )
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
@@ -258,7 +257,7 @@ public class NACalcJobKollauTest extends TestCase
        */
       public boolean hasID( String id )
       {
-        return getURLForID( id ) != null;
+        return getInputForID( id ) != null;
       }
     };
 

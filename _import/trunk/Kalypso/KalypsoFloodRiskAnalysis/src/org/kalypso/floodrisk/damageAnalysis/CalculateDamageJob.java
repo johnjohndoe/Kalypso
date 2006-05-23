@@ -138,23 +138,23 @@ public class CalculateDamageJob implements ISimulation
       //Generate input
       //landuseRaster
       monitor.setMessage( "Lese Eingabedateien" );
-      URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
+      URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       //administrationUnitRaster
       RectifiedGridCoverage administrationUnitRaster = null;
-      if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
+      if( inputProvider.getInputForID( AdministrationUnitRasterDataID ) != null )
       {
-        URL administrationUnitRasterGML = inputProvider.getURLForID( AdministrationUnitRasterDataID );
+        URL administrationUnitRasterGML = (URL) inputProvider.getInputForID( AdministrationUnitRasterDataID );
         administrationUnitRaster = rasterDataModel.getRectifiedGridCoverage( administrationUnitRasterGML );
       }
 
       //contextModel
-      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
       ContextModel contextModel = new ContextModel( contextModelGML );
 
       //WaterlevelData
-      TreeMap waterlevelGrids = readWaterlevelData( inputProvider.getURLForID( WaterlevelDataID ) );
+      TreeMap waterlevelGrids = readWaterlevelData( (URL) inputProvider.getInputForID( WaterlevelDataID ) );
       monitor.setProgress( 40 );
 
       //start damageAnalysis

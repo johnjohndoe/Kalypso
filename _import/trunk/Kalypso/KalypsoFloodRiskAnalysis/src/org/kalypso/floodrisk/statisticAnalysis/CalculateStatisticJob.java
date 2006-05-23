@@ -97,23 +97,23 @@ public class CalculateStatisticJob implements ISimulation
       // Generate input
       // damageRaster
       monitor.setMessage( "Lese Eingabedateien" );
-      URL damageRasterGML = inputProvider.getURLForID( DamageRasterID );
+      URL damageRasterGML = (URL) inputProvider.getInputForID( DamageRasterID );
       RectifiedGridCoverage damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
 
       // landuseRaster
-      URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
+      URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       // administrationUnitRaster
       RectifiedGridCoverage administrationUnitRaster = null;
-      if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
+      if( inputProvider.getInputForID( AdministrationUnitRasterDataID ) != null )
       {
-        URL administrationUnitRasterGML = inputProvider.getURLForID( AdministrationUnitRasterDataID );
+        URL administrationUnitRasterGML = (URL) inputProvider.getInputForID( AdministrationUnitRasterDataID );
         administrationUnitRaster = rasterDataModel.getRectifiedGridCoverage( administrationUnitRasterGML );
       }
 
       // contextModel
-      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
       ContextModel contextModel = new ContextModel( contextModelGML );
 
       monitor.setProgress( 40 );
@@ -122,10 +122,10 @@ public class CalculateStatisticJob implements ISimulation
       // statisticAnalysis
       monitor.setMessage( "Berechne" );
       Hashtable statistics = null;
-      if( inputProvider.getURLForID( TemplateRasterID ) != null )
+      if( inputProvider.getInputForID( TemplateRasterID ) != null )
       {
         // templateRaster
-        URL templateRasterGML = inputProvider.getURLForID( TemplateRasterID );
+        URL templateRasterGML = (URL) inputProvider.getInputForID( TemplateRasterID );
         RectifiedGridCoverage templateRaster = rasterDataModel.getRectifiedGridCoverage( templateRasterGML );
         if( administrationUnitRaster != null )
           statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster, administrationUnitRaster, templateRaster );

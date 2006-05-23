@@ -194,8 +194,8 @@ public class SaaleCalcJob implements ISimulation
     stammdatdir.mkdir();
 
     // gml nur einmal lesen
-    final URL gmlURL = inputProvider.getURLForID( "MODELL" );
-    final URL controlURL = inputProvider.getURLForID( "CONTROL" );
+    final URL gmlURL = (URL) inputProvider.getInputForID( "MODELL" );
+    final URL controlURL = (URL) inputProvider.getInputForID( "CONTROL" );
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlURL );
 
     // braucht mans?

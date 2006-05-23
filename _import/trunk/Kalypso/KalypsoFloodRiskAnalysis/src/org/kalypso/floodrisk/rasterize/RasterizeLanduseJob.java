@@ -98,20 +98,20 @@ public class RasterizeLanduseJob implements ISimulation
       monitor.setMessage( "Lese Eingabedateien" );
 
       // landuseVectorData: featureList
-      URL landuseVectorDataGML = inputProvider.getURLForID( LanduseVectorDataID );
+      URL landuseVectorDataGML = (URL) inputProvider.getInputForID( LanduseVectorDataID );
       GMLWorkspace landuseVectorData;
       landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
       List featureList = (List) featureMember.getFeature( landuseVectorData );
 
       // contextModel: landuseTypeList
-      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
       Hashtable landuseTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
       landuseTypeList = contextModel.getLanduseList();
 
       // baseRaster
-      URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
+      URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
       RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 

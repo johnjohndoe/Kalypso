@@ -56,7 +56,6 @@
 package org.kalypso.calc2d.test;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -89,7 +88,7 @@ public class CalcJob2dTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
        */
-      public URL getURLForID( String id ) throws SimulationException
+      public Object getInputForID( String id ) throws SimulationException
       {
         if( CalcJob2d.MODELL_ID.equals( id ) )
           return getClass().getResource( "calcCaseResultMesh.gml" );

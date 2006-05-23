@@ -68,7 +68,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -155,11 +154,11 @@ public class CalcJob2d implements ISimulation
       monitor.setMessage( "generating ascii files for 2D simulation..." );
 
       ConvertGML2Asci gml2asci = new ConvertGML2Asci( exeDir );
-      gml2asci.convertGML2Asci( inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
+      gml2asci.convertGML2Asci( (URL) inputProvider.getInputForID( MODELL_ID ), schemaModellURL );
       monitor.setMessage( "generating mesh ascii file" );
 
       ConvertBC2Ascii bc2asci = new ConvertBC2Ascii( exeDir );
-      bc2asci.convertBC2Ascii( inputProvider.getURLForID( CONTROL_ID ), schemaControlURL, inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
+      bc2asci.convertBC2Ascii( (URL)inputProvider.getInputForID( CONTROL_ID ), schemaControlURL, (URL)inputProvider.getInputForID( MODELL_ID ), schemaModellURL );
       monitor.setMessage( "generating boundary conditions ascii file" );
 
       copySim( exeDir );
@@ -313,8 +312,8 @@ public class CalcJob2d implements ISimulation
       errStream = new InputStreamReader( process.getErrorStream() );
       while( true )
       {
-        CopyUtils.copy( inStream, outWriter );
-        CopyUtils.copy( errStream, errWriter );
+        IOUtils.copy( inStream, outWriter );
+        IOUtils.copy( errStream, errWriter );
         try
         {
           process.exitValue();
