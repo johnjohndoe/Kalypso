@@ -69,13 +69,13 @@ public class DecoraterCalcDataProvider implements ISimulationDataProvider
     m_map.put( id, url );
   }
 
-  public URL getURLForID( String id ) throws SimulationException 
+  public Object getInputForID( String id ) throws SimulationException 
   {
     if( m_map.containsKey( id ) )
     {
       return (URL)m_map.get( id );
     }
-    return m_calcDataProvider.getURLForID( id );
+    return m_calcDataProvider.getInputForID( id );
   }
 
   public boolean hasID( String id )

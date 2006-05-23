@@ -141,7 +141,7 @@ public class NAOptimizingJob implements IOptimizingJob
     m_monitor = monitor;
 
     // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
     // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
@@ -149,7 +149,7 @@ public class NAOptimizingJob implements IOptimizingJob
     m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
 
     // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
@@ -160,7 +160,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
     final Unmarshaller unmarshaller = context.createUnmarshaller();
 
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( dataProvider.getURLForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( (File) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
 
     // correct in intervall autocalibration
     final Pegel pegel = m_autoCalibration.getPegel();
@@ -258,7 +258,7 @@ public class NAOptimizingJob implements IOptimizingJob
    */
   public void optimize( Parameter[] parameterConf, double values[] ) throws Exception
   {
-    final Document dom = XMLHelper.getAsDOM( m_dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ), true );
+    final Document dom = XMLHelper.getAsDOM( (File) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), true );
 
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )
@@ -306,7 +306,7 @@ public class NAOptimizingJob implements IOptimizingJob
       URL measuredURL = null;
       try
       {
-        measuredURL = new URL( m_dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ), m_linkMeasuredTS.getHref() );
+        measuredURL = new URL( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), m_linkMeasuredTS.getHref() );
       }
       catch( Exception e )
       {

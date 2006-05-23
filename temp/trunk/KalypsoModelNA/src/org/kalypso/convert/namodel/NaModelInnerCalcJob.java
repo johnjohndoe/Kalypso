@@ -81,7 +81,6 @@ import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
@@ -120,7 +119,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
-//import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -214,7 +212,7 @@ public class NaModelInnerCalcJob implements ISimulation
       // -siehe modelspec- dorthin kopiert):
       if( monitor.isCanceled() )
         return;
-      unzipTemplates( inputProvider.getURLForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+      unzipTemplates( (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
 
       // performance
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
@@ -225,7 +223,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // not generate them.
         // WARNING: never use result files or files that vary during
         // optimization.
-        final URL url = inputProvider.getURLForID( NAOptimizingJob.IN_BestOptimizedRunDir_ID );
+        final URL url = (URL) inputProvider.getInputForID( NAOptimizingJob.IN_BestOptimizedRunDir_ID );
         final File from1 = new File( url.getFile(), "klima.dat" );
         final File to1 = new File( tmpdir, "klima.dat" );
         if( from1.exists() && to1.exists() )
@@ -252,9 +250,9 @@ public class NaModelInnerCalcJob implements ISimulation
       // calualtion model
 
       final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURL(), tmpdir );
-      conf.setZMLContext( inputProvider.getURLForID( NaModelConstants.IN_META_ID ) );
+      conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
-      final URL naControlURL = inputProvider.getURLForID( NaModelConstants.IN_CONTROL_ID );
+      final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
 
       if( monitor.isCanceled() )
@@ -471,23 +469,23 @@ public class NaModelInnerCalcJob implements ISimulation
     // final URL newModellURL = newModellFile.toURL();
     // final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
 
     // model Parameter
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
       parameterWorkspace = null;
 
     // initialize model with values of control file
-    initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
+    initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
-    ((GMLWorkspace_Impl) modellWorkspace).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
+    ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
 
     final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace, conf.getZMLContext() );
     conf.setNodeResultProvider( nodeResultProvider );
@@ -499,13 +497,13 @@ public class NaModelInnerCalcJob implements ISimulation
     // model Parameter
     final GMLWorkspace synthNWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_SYNTHN_ID ) )
-      synthNWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_SYNTHN_ID ) );
+      synthNWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_SYNTHN_ID ) );
     else
       synthNWorkspace = null;
 
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ) );
       final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )

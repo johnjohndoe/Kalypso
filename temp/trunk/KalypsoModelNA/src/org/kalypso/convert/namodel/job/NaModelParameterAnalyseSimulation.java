@@ -118,7 +118,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       // final FeatureXPath path = new FeatureXPath("/bla/bla");
       // final URL modellURL = inputProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
       // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
-      final URL analyseXsdURL = inputProvider.getURLForID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID );
+      final URL analyseXsdURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID );
       final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( analyseXsdURL );
       final List<FeaturePropertyToProcess> list = new ArrayList<FeaturePropertyToProcess>();
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
@@ -195,7 +195,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     final FeatureVisitor visitor = new AnalysisFeatureVisitor( prop, mode );
     final File baseDir = new File( m_analyseDir, key );
     baseDir.mkdirs();
-    final URL modellURL = m_inputProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
+    final URL modellURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
     modellWorkspace.accept( visitor, modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     final File modellFile = new File( baseDir, "modell" + key + ".gml" );

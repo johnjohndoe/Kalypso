@@ -120,7 +120,7 @@ public class NaModelCalcJob implements ISimulation
 
       // testen ob calcjob optimization hat
       // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( innerDataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) innerDataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
       final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 
@@ -171,7 +171,7 @@ public class NaModelCalcJob implements ISimulation
     {
       logger.info( "start using dataset 'measure' for updating the model ..." );
       /** Get available Measuers */
-      final URL measureURL = originalDataProvider.getURLForID( NaModelConstants.IN_MEASURE_ID );
+      final URL measureURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_MEASURE_ID );
       final GMLWorkspace measureWorkspace = GmlSerializer.createGMLWorkspace( measureURL );
       /** Insert implemented Measure */
       insertStorageChannelMeasure( measureWorkspace, originalDataProvider, result, logger, tmpDir );
@@ -196,7 +196,7 @@ public class NaModelCalcJob implements ISimulation
    */
   private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, DecoraterCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
-    final URL hydrotopURL = originalDataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID );
+    final URL hydrotopURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     // Versiegelungsgrad Measure
     final IFeatureType sealingFT = measureWorkspace.getFeatureType( MEASURE_SEAL_FEATURE );
     final Feature[] sealingFEs = measureWorkspace.getFeatures( sealingFT );
@@ -282,8 +282,8 @@ public class NaModelCalcJob implements ISimulation
    */
   private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, DecoraterCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
-    final URL measureURL = originalDataProvider.getURLForID( NaModelConstants.IN_MEASURE_ID );
-    final URL modelURL = originalDataProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
+    final URL measureURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_MEASURE_ID );
+    final URL modelURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     // *Get available Measuers*/
     final IFeatureType measureRhbFT = measureWorkspace.getFeatureType( MEASURE_RETENSION_BASIN_FEATURE );
     final Feature[] measureRhbFEs = measureWorkspace.getFeatures( measureRhbFT );
