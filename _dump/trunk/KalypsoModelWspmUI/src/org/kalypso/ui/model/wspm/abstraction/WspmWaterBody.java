@@ -42,6 +42,7 @@ package org.kalypso.ui.model.wspm.abstraction;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -147,7 +148,9 @@ public class WspmWaterBody implements IWspmConstants
     final IRelationType parentFeatureTypeProperty = runOffMembers.getParentFeatureTypeProperty();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
     
-    final Feature runOffFeature = m_water.getWorkspace().createFeature( runOffMembers.getParentFeature(), targetFeatureType );
+    final IFeatureType observationType = targetFeatureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
+    
+    final Feature runOffFeature = m_water.getWorkspace().createFeature( runOffMembers.getParentFeature(), observationType );
     runOffMembers.add( runOffFeature );
     
     return runOffFeature;

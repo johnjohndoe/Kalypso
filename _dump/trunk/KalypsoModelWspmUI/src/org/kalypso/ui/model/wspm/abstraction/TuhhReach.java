@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -76,10 +75,6 @@ public class TuhhReach extends WspmReach implements IWspmConstants
     final Feature parentFeature = reachSegmentList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentFeatureTypeProperty = reachSegmentList.getParentFeatureTypeProperty();
-
-    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
-
     final IFeatureType tuhhProfileReachSegmentType = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
 
     final Feature feature = workspace.createFeature( parentFeature, tuhhProfileReachSegmentType );
@@ -91,9 +86,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants
     // set default values
     tuhhProfilesegment.setProfileMember( profileReference );
     tuhhProfilesegment.setStation( station );
-    tuhhProfilesegment.setDistanceL( distanceL );
-    tuhhProfilesegment.setDistanceM( distanceM );
-    tuhhProfilesegment.setDistanceR( distanceR );
+//    tuhhProfilesegment.setDistanceL( distanceL );
+//    tuhhProfilesegment.setDistanceM( distanceM );
+//    tuhhProfilesegment.setDistanceR( distanceR );
 
     return tuhhProfilesegment;
   }

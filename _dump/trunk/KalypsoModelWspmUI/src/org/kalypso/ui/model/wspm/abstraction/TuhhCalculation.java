@@ -245,18 +245,7 @@ public class TuhhCalculation implements IWspmConstants
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, boolean doCalcBarrages )
   {
     final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-
-    Feature parameterFeature = (Feature) m_calcFeature.getProperty( qname );
-
-    if( parameterFeature == null )
-    {
-      // neues machen
-      final GMLWorkspace workspace = m_calcFeature.getWorkspace();
-      final IGMLSchema schema = workspace.getGMLSchema();
-      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "WaterlevelParameter" ) );
-      parameterFeature = workspace.createFeature( m_calcFeature, featureType );
-      m_calcFeature.setProperty( qname, parameterFeature );
-    }
+    final Feature parameterFeature = FeatureHelper.getSubFeature(  m_calcFeature, qname );
 
     switch( iterationType )
     {
@@ -299,22 +288,9 @@ public class TuhhCalculation implements IWspmConstants
     }
 
     final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
-
-    Feature specialFeature = (Feature) parameterFeature.getProperty( specialQname );
-
-    if( specialFeature == null )
-    {
-      // neues machen
-      final GMLWorkspace workspace = parameterFeature.getWorkspace();
-      final IGMLSchema schema = workspace.getGMLSchema();
-      final IFeatureType specialType = schema.getFeatureType( new QName( NS_WSPM_TUHH, "SpecialOptions" ) );
-      specialFeature = workspace.createFeature( parameterFeature, specialType );
-      parameterFeature.setProperty( specialQname, specialFeature );
-    }
-
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), new Boolean( doCalcBridges ) );
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), new Boolean( doCalcBarrages ) );
-
   }
 
   public void setCalcMode( final MODE mode )
@@ -341,8 +317,8 @@ public class TuhhCalculation implements IWspmConstants
 
   public void setQRange( final double minQ, final double maxQ, final double Qstep )
   {
-    final Feature feature = getFeature();
-
+    final Feature feature = FeatureHelper.getSubFeature( getFeature(), new QName( NS_WSPM_TUHH, "runOffIntervalMember" ) );
+    
     feature.setProperty( new QName( NS_WSPM_TUHH, "minimalRunOff" ), new Double( minQ ) );
     feature.setProperty( new QName( NS_WSPM_TUHH, "maximalRunOff" ), new Double( maxQ ) );
     feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( Qstep ) );

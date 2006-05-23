@@ -76,6 +76,8 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.ValueComponent;
+import org.kalypso.ogc.gml.om.ComponentDefinition;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
@@ -362,10 +364,14 @@ public class WspWinImporter
 
     final WspmWaterBody waterBody = reach.getWaterBody();
 
+    // base name for runOffEvents and calculations. Needed, because in WspWin the runOffs and calculations belonged
+    // always to a zustand.
+    final String baseName = waterBody.getName() + "-" + zustandBean.getName() + " - ";
+
     // ////////////////////////////// //
     // add runoff events (.wsf, .qwt) //
     // ///////////////////////////// ///
-    
+
     // map is used to remember position of runoff: used later by calculation to find reference
     final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
     try
@@ -375,8 +381,8 @@ public class WspWinImporter
       int count = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
-        final Feature runOffFeature = waterBody.createRunOffEvent(  );
-        writeRunOffBeanIntoFeature( bean, reach.getName() + " - " + bean.getName(), runOffFeature );
+        final Feature runOffFeature = waterBody.createRunOffEvent();
+        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), runOffFeature );
 
         // remember for reference from calculation
         readRunOffEvents.put( count++, runOffFeature.getId() );
@@ -406,7 +412,7 @@ public class WspWinImporter
           // create calculation
           final TuhhCalculation calc = tuhhProject.createCalculation();
 
-          calc.setName( zustandBean.getName() + " - " + bean.getName() );
+          calc.setName( baseName + bean.getName() );
           calc.setDescription( "Imported from WspWin" );
           calc.setCalcCreation( "WspWin Import", new Date() );
           calc.setReachRef( reach );
@@ -452,7 +458,7 @@ public class WspWinImporter
           if( contentBean.isSimpleBerechnungWSPInt() )
             iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
           else
-            iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
+            iterationType = TuhhCalculation.WSP_ITERATION_TYPE.EXACT;
 
           final TuhhCalculation.VERZOEGERUNSVERLUST_TYPE verzType;
           switch( contentBean.getVerzoegerungsVerlust() )
@@ -494,7 +500,7 @@ public class WspWinImporter
 
           final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
           calc.setRunOffRef( runOffRef );
-          
+
           calc.setQRange( contentBean.getMin(), contentBean.getMax(), contentBean.getStep() );
         }
         catch( final Exception e )
@@ -513,9 +519,9 @@ public class WspWinImporter
 
   private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent stationComp = new Component( "Station", "Station", Double.class );
-    final IComponent abflussComp = new Component( "Abfluss", "Abfluss", Double.class );
-    final TupleResult result = new TupleResult( new IComponent[]{ stationComp, abflussComp } );
+    final IComponent stationComp = new ValueComponent( "Station", "Station", Double.class, "km" );
+    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", Double.class, "m³/s" );
+    final TupleResult result = new TupleResult( new IComponent[] { stationComp, abflussComp } );
 
     final Map<Double, Double> values = bean.getEntries();
     for( final Map.Entry<Double, Double> entry : values.entrySet() )
@@ -526,8 +532,9 @@ public class WspWinImporter
       record.setValue( abflussComp, entry.getValue() );
     }
 
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( name,"Importiert aus WspWin", result, new ArrayList() );
-    ObservationFeatureFactory.toFeature( obs, runOffFeature );
+    final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList() );
+    // TODO: comment in
+//    ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
 
   /** Returns the content of the prof/probez.txt file */

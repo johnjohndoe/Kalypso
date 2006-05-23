@@ -288,7 +288,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="gml:name">
+					<element ref="gml:name" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???Name</label>

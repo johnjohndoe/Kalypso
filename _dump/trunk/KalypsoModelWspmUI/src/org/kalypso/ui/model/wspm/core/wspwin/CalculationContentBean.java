@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.text.ParseException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -317,7 +316,7 @@ public class CalculationContentBean
     return m_verzoegerungsVerlust;
   }
 
-  public static CalculationContentBean read( final File file ) throws IOException, ParseException
+  public static CalculationContentBean read( final File file ) throws IOException
   {
     LineNumberReader lnr = null;
 
@@ -373,7 +372,7 @@ public class CalculationContentBean
       final boolean ausgabeProfilnummer = readBoolean( lnr );
 
       // ZEILE 4 //
-      final boolean isSimpleBerechnungWSPInt = readInt( lnr ) != 2;
+      final boolean isSimpleBerechnungWSPInt = readInt( lnr ) == 1;
 
       // ZEILE 5 //
       final boolean reibungsverlustNachTrapezformal = readInt( lnr ) == 1;
@@ -406,18 +405,15 @@ public class CalculationContentBean
       switch( anfangswasserspiegelInt )
       {
         case 1:
-          artAnfangswasserspiegel = ART_ANFANGS_WSP.GRENZTIEFE;
-          break;
-
-        case 2:
-          artAnfangswasserspiegel = ART_ANFANGS_WSP.STATIONAER_GLEICHFOERMIGES_GEFAELLE;
-          break;
-
-        case 3:
           artAnfangswasserspiegel = ART_ANFANGS_WSP.DIREKTEINGABE;
           break;
 
+        case 2:
         default:
+          artAnfangswasserspiegel = ART_ANFANGS_WSP.GRENZTIEFE;
+          break;
+
+        case 3:
           artAnfangswasserspiegel = ART_ANFANGS_WSP.STATIONAER_GLEICHFOERMIGES_GEFAELLE;
           break;
       }
@@ -479,28 +475,30 @@ public class CalculationContentBean
     }
   }
 
-  private static double readDouble( final LineNumberReader lnr ) throws ParseException, IOException
+  private static double readDouble( final LineNumberReader lnr ) throws IOException
   {
     final String line = expectNextLine( lnr );
-    return new Double( line );
+    return line.length() == 0 ? 0.0 : Double.parseDouble( line );
   }
 
-  private static boolean readBoolean( final LineNumberReader lnr ) throws ParseException, IOException
+  private static boolean readBoolean( final LineNumberReader lnr ) throws IOException
   {
     return readInt( lnr ) == 1 ? true : false;
   }
 
-  private static Integer readInt( final LineNumberReader lnr ) throws ParseException, IOException
+  private static int readInt( final LineNumberReader lnr ) throws IOException
   {
     final String line = expectNextLine( lnr );
-    return new Integer( line );
+    return line.length() == 0 ? 0 : Integer.parseInt( line );
   }
 
-  private static String expectNextLine( final LineNumberReader lnr ) throws ParseException, IOException
+  /** Returns the empty the, if no more lines are available. */
+  private static String expectNextLine( final LineNumberReader lnr ) throws IOException
   {
     final String line = lnr.ready() ? lnr.readLine() : null;
     if( line == null )
-      throw new ParseException( "More lines expected", lnr.getLineNumber() );
+////      throw new ParseException( "More lines expected", lnr.getLineNumber() );
+      return "";
 
     return line;
   }

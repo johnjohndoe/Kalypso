@@ -45,7 +45,6 @@ import java.math.BigDecimal;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -69,22 +68,21 @@ public class TuhhReachProfileSegment implements IWspmConstants
     m_reachSegment.setProperty( new QName( NS_WSPM, "profileMember" ), profileReference.getHref() );
   }
 
-  public void setDistanceL( final double distanceL )
-  {
-    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceL" ) );
-    m_reachSegment.setProperty( gmlDescProp, distanceL );
-  }
-
-  public void setDistanceM( final double distanceM )
-  {
-    final IPropertyType gmlDescProp = m_reachSegment.getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "distanceM" ) );
-    m_reachSegment.setProperty( gmlDescProp, distanceM );
-  }
-
-  public void setDistanceR( final double distanceR )
-  {
-    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
-  }
+  // Commented out, because not used by the tuhh-model
+//  public void setDistanceL( final double distanceL )
+//  {
+//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceL" ), distanceL );
+//  }
+//
+//  public void setDistanceM( final double distanceM )
+//  {
+//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceM" ), distanceM );
+//  }
+//
+//  public void setDistanceR( final double distanceR )
+//  {
+//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
+//  }
 
   public BigDecimal getStation( )
   {
