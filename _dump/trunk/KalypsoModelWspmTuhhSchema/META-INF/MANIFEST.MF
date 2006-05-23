@@ -9,5 +9,8 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.contribs.java,
- org.kalypso.ui.model.wspm
+ org.kalypso.ui.model.wspm,
+ org.kalypso.simulation.core,
+ org.kalypso.deegree,
+ org.kalypso.core
 Eclipse-AutoStart: true

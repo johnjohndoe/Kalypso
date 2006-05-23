@@ -70,27 +70,10 @@ public class TuhhWspmProject extends WspmProject
    * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
-  public TuhhReach createNewReach( final String waterName )
+  public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams )
   {
-    final WspmWaterBody water = findWater( waterName );
-    if( water != null )
-      return water.createNewReach();
-
-    final WspmWaterBody newWater = createWaterBody();
-    newWater.setName( waterName );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return newWater.createNewReach();
-  }
-
-  private WspmWaterBody findWater( final String waterName )
-  {
-    final WspmWaterBody[] waters = getWaterBodies();
-    for( final WspmWaterBody body : waters )
-    {
-      if( waterName.equals( body.getName() ) )
-        return body;
-    }
-
-    return null;
   }
 
   /**
@@ -99,34 +82,29 @@ public class TuhhWspmProject extends WspmProject
    * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
-  public WspmProfileReference createNewProfile( final String waterName, final String hrefHint )
+  public WspmProfileReference createNewProfile( final String waterName, final boolean isDirectionUpstreams, final String hrefHint )
   {
-    final WspmWaterBody water = findWater( waterName );
-    if( water != null )
-      return water.createNewProfile( hrefHint );
-
-    final WspmWaterBody newWater = createWaterBody();
-    newWater.setName( waterName );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return newWater.createNewProfile( hrefHint );
   }
-  
-  public TuhhCalculation createCalculation(  )
+
+  public TuhhCalculation createCalculation( )
   {
     final GMLWorkspace workspace = getFeature().getWorkspace();
-    final IFeatureType calcTye = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ) );
-    
+    final IFeatureType calcTye = workspace.getGMLSchema().getFeatureType( TuhhCalculation.QNAME_TUHH_CALC );
+
     final Feature calcFeature = workspace.createFeature( getFeature(), calcTye );
-    
+
     final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
     calcList.add( calcFeature );
-    
+
     return new TuhhCalculation( calcFeature );
   }
 
   public TuhhCalculation[] getCalculations( )
   {
     final GMLWorkspace workspace = getFeature().getWorkspace();
-    
+
     final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
     final ArrayList<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
     for( final Object o : calcList )
@@ -135,14 +113,12 @@ public class TuhhWspmProject extends WspmProject
       if( o instanceof Feature )
         calcFeature = (Feature) o;
       else
-        calcFeature = workspace.getFeature( (String)o );
-      
+        calcFeature = workspace.getFeature( (String) o );
+
       calcs.add( new TuhhCalculation( calcFeature ) );
     }
-    
+
     return calcs.toArray( new TuhhCalculation[calcs.size()] );
   }
 
-
-  
 }

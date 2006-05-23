@@ -25,11 +25,5 @@
          </description>
       </wizard>
    </extension>
-   <extension
-         point="org.kalypso.simulation.core.simulation">
-      <simulation
-            simulationClass="org.kalypso.ui.model.wspm.core.wspwin.WspmTuhhCalcJob"
-            typeID="WspmTuhhV1.0"/>
-   </extension>
 
 </plugin>

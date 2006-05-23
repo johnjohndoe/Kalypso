@@ -144,6 +144,11 @@ public class CalculationContentBean
 
   private final boolean m_kalMin;
 
+  /**
+   * @param min minimal runoff [dl/s]
+   * @param max maximal runoff [dl/s]
+   * @param step runoff step [dl/s]
+   */
   public CalculationContentBean( final KIND calcKind, final FLIESSGESETZ fliessgesetz, final OUTPUT output, final boolean ausgabeProfilnummer, final boolean isSimpleBerechnungWSPInt, final boolean reibungsverlustNachTrapezformal, final VERZOEGERUNSVERLUST verzoegerungsVerlust, final ART_ANFANGS_WSP artAnfangswasserspiegel, final boolean berechneBruecken, final boolean berechneWehre, final boolean ausgabewerteInLiter, final boolean erstelleWQDateien, final boolean ergebnislistenErstellen, final double gefaelle, final double min, final double step, final double max, final int abfluss, final double anfang, final double ende, final String strInfo, final double hoehe, final boolean nhmo, final boolean nwsfq, final boolean nwsfl, final String strQ, final boolean nusg, final boolean kalMin )
   {
     m_calcKind = calcKind;

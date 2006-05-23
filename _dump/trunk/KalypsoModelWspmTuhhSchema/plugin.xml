@@ -7,5 +7,11 @@
             class="org.kalypso.model.wspm.tuhh.schemata.WspmTuhhUrlCatalog"
             id="org.kalypso.model.wspm.tuhh.urlcatalog"/>
    </extension>
-
+   <extension
+      point="org.kalypso.simulation.core.simulation">
+      <simulation
+         simulationClass="org.kalypso.model.wspm.tuhh.simulation.WspmTuhhCalcJob"
+         typeID="WspmTuhhV1.0"/>
+   </extension>
+   
 </plugin>

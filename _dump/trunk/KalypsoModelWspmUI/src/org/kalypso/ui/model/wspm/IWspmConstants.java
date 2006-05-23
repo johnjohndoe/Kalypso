@@ -54,7 +54,4 @@ public interface IWspmConstants
   public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
 
   public static String NS_NA_WSPM = "org.kalypso.model.wspm.nawspm";
-
-  public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
-
 }

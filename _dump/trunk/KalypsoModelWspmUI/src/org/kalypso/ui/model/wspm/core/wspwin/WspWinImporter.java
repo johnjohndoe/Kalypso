@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -77,6 +78,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ValueComponent;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
@@ -182,12 +184,15 @@ public class WspWinImporter
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
       final TuhhWspmProject tuhhProject = new TuhhWspmProject( modelRootFeature );
 
+      // TODO: ask direction from user
+      final boolean isDirectionUpstreams = true;
+
       // /////////////// //
       // import profiles //
       // /////////////// //
       final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
       final Map<String, WspmProfileReference> importedProfiles = new HashMap<String, WspmProfileReference>( commonProfiles.length );
-      logStatus.add( importProfiles( getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles ) );
+      logStatus.add( importProfiles( getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
 
       // ////////////// //
       // import reaches //
@@ -197,7 +202,7 @@ public class WspWinImporter
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams ) );
         }
         catch( final Exception e )
         {
@@ -236,7 +241,7 @@ public class WspWinImporter
    * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
    * the profile is added as reference to it.
    */
-  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfileReference> addedProfiles )
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfileReference> addedProfiles, final boolean isDirectionUpstreams )
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import PROFPROJ.TXT", null );
 
@@ -244,7 +249,7 @@ public class WspWinImporter
     {
       try
       {
-        importProfile( profDir, tuhhProject, addedProfiles, bean );
+        importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
       }
       catch( final MalformedURLException e )
       {
@@ -263,14 +268,14 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfileReference importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfileReference> knownProfiles, final ProfileBean bean ) throws IOException
+  private static WspmProfileReference importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfileReference> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws IOException
   {
     final String fileName = bean.getFileName();
 
     if( knownProfiles.containsKey( fileName ) )
       return knownProfiles.get( fileName );
 
-    final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), fileName );
+    final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams, fileName );
     knownProfiles.put( fileName, prof );
 
     // TODO: fill data into profile
@@ -306,13 +311,14 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles, final boolean isDirectionUpstreams ) throws IOException, ParseException
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
 
     final String name = zustandBean.getName();
     final String waterName = zustandBean.getWaterName();
-    final TuhhReach reach = tuhhProject.createNewReach( waterName );
+
+    final TuhhReach reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
     reach.setName( name );
 
     final StringBuffer descBuffer = new StringBuffer();
@@ -333,7 +339,7 @@ public class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
-        final WspmProfileReference fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean );
+        final WspmProfileReference fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
       }
@@ -348,7 +354,7 @@ public class WspWinImporter
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
-          final WspmProfileReference toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean );
+          final WspmProfileReference toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
 
           reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
         }
@@ -422,10 +428,10 @@ public class WspWinImporter
               calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.MANNING_STRICKLER );
               break;
             case DARCY_WEISSBACH:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISSBACH );
+              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH );
               break;
             case DARCY_WEISSBACH_MIT_FORMEINFLUSS:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISSBACH_MIT_FORMEINFLUSS );
+              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS );
               break;
           }
 
@@ -484,7 +490,7 @@ public class WspWinImporter
           switch( contentBean.getCalcKind() )
           {
             case WSP:
-              calc.setCalcMode( TuhhCalculation.MODE.WSP );
+              calc.setCalcMode( TuhhCalculation.MODE.WATERLEVEL );
               break;
 
             case BF_UNIFORM:
@@ -499,7 +505,8 @@ public class WspWinImporter
           final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
           calc.setRunOffRef( runOffRef );
 
-          calc.setQRange( contentBean.getMin(), contentBean.getMax(), contentBean.getStep() );
+          // set q-Range. Remeber: Q-Range in CalculationcontentBean is in dl/s
+          calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
         }
         catch( final Exception e )
         {
@@ -530,9 +537,8 @@ public class WspWinImporter
       record.setValue( abflussComp, entry.getValue() );
     }
 
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList() );
-    // TODO: comment in
-//    ObservationFeatureFactory.toFeature( obs, runOffFeature );
+    final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
+    ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
 
   /** Returns the content of the prof/probez.txt file */

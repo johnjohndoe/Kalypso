@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.deegree_impl.gml.GMLFactory;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -117,9 +116,25 @@ public class WspmProject implements IWspmConstants
     return (FeatureList) m_wspProject.getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
   }
 
-  /** Creates a new water body and adds it to this project. */
-  public WspmWaterBody createWaterBody( )
+  public WspmWaterBody findWater( final String waterName )
   {
+    final WspmWaterBody[] waters = getWaterBodies();
+    for( final WspmWaterBody body : waters )
+    {
+      if( waterName.equals( body.getName() ) )
+        return body;
+    }
+
+    return null;
+  }
+
+  /** Creates a new water body and adds it to this project.<p>If a waterBody with the same name is already present, this will be retuned instead.</p> */
+  public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams )
+  {
+    final WspmWaterBody water = findWater( name );
+    if( water != null )
+      return water;
+    
     final FeatureList waterBodyList = getWaterBodyList();
     final Feature parentFeature = waterBodyList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
@@ -135,11 +150,11 @@ public class WspmProject implements IWspmConstants
     final WspmWaterBody wspmWaterBody = new WspmWaterBody( feature );
     
     // set default values
-    wspmWaterBody.setName( "" );
+    wspmWaterBody.setName( name );
     wspmWaterBody.setDescription( "" );
     wspmWaterBody.setRefNr( "" );
     wspmWaterBody.setCenterLine( null );
-    wspmWaterBody.setDirectionUpstreams( false );
+    wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
     
     return wspmWaterBody;
   }

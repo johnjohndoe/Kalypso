@@ -234,7 +234,7 @@
 			<extension base="wspm:AbstractCalculationType">
 				<sequence>
 					<element ref="tuhh:reachWspmTuhhSteadyStateMember"/>
-					<element name="fliessgesetz">
+					<element name="fliessgesetz" default="DARCY_WEISBACH_MIT_FORMEINFLUSS">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Fließgesetz</label>
@@ -244,7 +244,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="darcyRohr">
+								<enumeration value="DARCY_WEISBACH">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Darcy-Weisbach (Rohrströmungen, äquivalente
@@ -257,7 +257,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="darcyOffeneGerinne">
+								<enumeration value="DARCY_WEISBACH_MIT_FORMEINFLUSS">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Darcy-Weisbach (offene Gerinne mit Formeinfluss,
@@ -270,7 +270,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="manningStrickler">
+								<enumeration value="MANNING_STRICKLER">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Gauckler-Manning-Strickler (Rauheitsbeiwerte,
@@ -290,7 +290,7 @@
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
 					<element ref="tuhh:startConditionMember"/>
 					<element ref="tuhh:waterlevelParameterMember"/>
-					<element name="mode">
+					<element name="mode" default="WATERLEVEL">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnung</label>
@@ -300,7 +300,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="waterlevel">
+								<enumeration value="WATERLEVEL">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Wasserspiegellagenberechnung</label>
@@ -309,7 +309,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="bankfullUniform">
+								<enumeration value="BF_UNIFORM">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Bordvollberechnung - stationär-gleichförmige
@@ -322,7 +322,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="bankfullNonUniform">
+								<enumeration value="BF_NON_UNIFORM">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Bordvollberechnung - stationär-ungleichförmige
@@ -368,10 +368,17 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="kind">
+					<element name="kind" default="CRITICAL_WATER_DEPTH">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art</label>
+								<tooltip>Art der Randbedingung</tooltip>
+								<description>Art der Randbedingung</description>
+							</documentation>
+						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="criticalWaterDepth">
+								<enumeration value="CRITICAL_WATER_DEPTH">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Grenztiefe</label>
@@ -381,7 +388,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="startWaterlevel">
+								<enumeration value="WATERLEVEL">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Anfangswasserspiegel</label>
@@ -391,7 +398,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="uniformBottomSlope">
+								<enumeration value="UNIFORM_BOTTOM_SLOPE">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>stationär-gleichförmiges Gefälle</label>
@@ -493,7 +500,7 @@
 		<complexContent>
 			<extension base="wspm:EmptyFeatureBaseType">
 				<sequence>
-					<element name="wspIteration">
+					<element name="wspIteration" default="SIMPLE">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Iterationsgenauigkeit</label>
@@ -504,7 +511,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="simpleIteration">
+								<enumeration value="SIMPLE">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>einfache Iteration</label>
@@ -514,7 +521,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="exactIteration">
+								<enumeration value="EXACT">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>genaue Berechnung durch Einschlussintervall</label>
@@ -527,7 +534,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="verzoegerungsverlust">
+					<element name="verzoegerungsverlust" default="BJOERNSEN">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Verzögerungsverlust</label>
@@ -537,7 +544,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="dvwk">
+								<enumeration value="DVWK">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>nach DVWK (beta = 0.67)</label>
@@ -547,7 +554,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="bjoernsen">
+								<enumeration value="BJOERNSEN">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>nach Björnsen (beta = 0.5)</label>
@@ -557,7 +564,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="dfg">
+								<enumeration value="DFG">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
@@ -570,7 +577,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reibungsverlust">
+					<element name="reibungsverlust" default="TRAPEZ_FORMULA">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnung von Reibungsverlusten</label>
@@ -580,7 +587,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="trapezFormula">
+								<enumeration value="TRAPEZ_FORMULA">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>nach Trapezformel</label>
@@ -590,7 +597,7 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="geometricFormula">
+								<enumeration value="GEOMETRIC_FORMULA">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>durch geometrische Mittelung</label>

@@ -491,7 +491,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="isDirectionUpstream" type="boolean">
+					<element name="isDirectionUpstream" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>???isDirectionUpstream</label>
