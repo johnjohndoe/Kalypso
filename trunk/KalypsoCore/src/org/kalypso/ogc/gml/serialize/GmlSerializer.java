@@ -97,10 +97,10 @@ public final class GmlSerializer
   {
     try
     {
-      // TODO use encoding
       final TransformerFactory tFac = TransformerFactory.newInstance();
       tFac.setAttribute( "indent-number", new Integer( 4 ) );
       final Transformer transformer = tFac.newTransformer();
+      transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
 
       final XMLReader reader = new GMLWorkspaceReader();
       reader.setFeature( "http://xml.org/sax/features/namespaces", true );
@@ -111,7 +111,6 @@ public final class GmlSerializer
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
       transformer.transform( source, result );
-
     }
     catch( final Exception e )
     {
@@ -190,6 +189,7 @@ public final class GmlSerializer
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
+
     final SAXParser saxParser = saxFac.newSAXParser();
     final XMLReader xmlReader = saxParser.getXMLReader();
     final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, context );
@@ -201,7 +201,6 @@ public final class GmlSerializer
     final String schemaLocationString = contentHandler.getSchemaLocationString();
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString );
     return workspace;
-
   }
 
   public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache ) throws Exception
