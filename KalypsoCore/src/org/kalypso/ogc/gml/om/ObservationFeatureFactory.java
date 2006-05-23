@@ -41,13 +41,16 @@
 package org.kalypso.ogc.gml.om;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -74,16 +77,19 @@ public class ObservationFeatureFactory
 
   public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" );
 
-  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" );
-
   public final static QName OM_RESULT = new QName( NS.OM, "result" );
+
+  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" );
 
   public final static QName SWE_COMPONENT = new QName( NS.SWE, "component" );
 
   public final static QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" );
 
   public final static QName SWE_PROPERTY = new QName( NS.SWE, "property" );
-  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "PhenomenonType" );
+
+  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "Phenomenon" );
+
+  public final static QName SWE_RECORDDEFINITIONTYPE = new QName( NS.SWE, "RecordDefinition" );
 
   public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" );
 
@@ -166,10 +172,10 @@ public class ObservationFeatureFactory
       final Feature phenomenon = FeatureHelper.resolveLink( itemDef, SWE_PROPERTY );
       if( phenomenon == null )
         continue;
-      
+
       final String name = (String) FeatureHelper.getFirstProperty( phenomenon, GML_NAME );
       final String desc = (String) FeatureHelper.getFirstProperty( phenomenon, GML_DESCRIPTION );
-      
+
       final RepresentationType rep = (RepresentationType) itemDef.getProperty( SWE_REPRESENTATION );
 
       components.add( new ComponentDefinition( name, desc, rep ) );
@@ -183,16 +189,16 @@ public class ObservationFeatureFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static ComponentDefinition[] buildComponentDefinitions( final TupleResult result )
+  protected static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
   {
     final IComponent[] components = result.getComponents();
-    final ComponentDefinition[] compDefs = new ComponentDefinition[components.length];
+    final Map<IComponent,ComponentDefinition> map = new HashMap<IComponent,ComponentDefinition>( components.length );
 
     // for each component, set a component property, create a feature: ItemDefinition
     for( int i = 0; i < components.length; i++ )
-      compDefs[i] = ComponentDefinition.create( components[i] );
+      map.put( components[i], ComponentDefinition.create( components[i] ) );
 
-    return compDefs;
+    return map;
   }
 
   /**
@@ -214,12 +220,12 @@ public class ObservationFeatureFactory
 
     final TupleResult result = source.getResult();
 
-    final ComponentDefinition[] componentDefinitions = buildComponentDefinitions( result );
+    final Map<IComponent, ComponentDefinition> map = buildComponentDefinitions( result );
 
-    final Feature rd = buildRecordDefinition( targetObsFeature, componentDefinitions );
+    final Feature rd = buildRecordDefinition( targetObsFeature, map );
     targetObsFeature.setProperty( OM_RESULTDEFINITION, rd );
 
-    final String strResult = serializeResultAsString( componentDefinitions, result );
+    final String strResult = serializeResultAsString( result, map );
     targetObsFeature.setProperty( OM_RESULT, strResult );
   }
 
@@ -228,24 +234,24 @@ public class ObservationFeatureFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static Feature buildRecordDefinition( final Feature targetObsFeature, final ComponentDefinition[] componentDefinitions )
+  protected static Feature buildRecordDefinition( final Feature targetObsFeature, final Map<IComponent, ComponentDefinition> map )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
     // set resultDefinition property, create RecordDefinition feature
-    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( OM_RESULTDEFINITION ) );
+    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_RECORDDEFINITIONTYPE ) );
 
     // for each component, set a component property, create a feature: ItemDefinition
-    for( int i = 0; i < componentDefinitions.length; i++ )
+    for( ComponentDefinition compDef : map.values() )
     {
       final Feature featureItemDef = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_ITEMDEFINITION ) );
 
       final Feature featurePhenomenon = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
-      featurePhenomenon.setProperty( GML_NAME, componentDefinitions[i].getName() );
-      featurePhenomenon.setProperty( GML_DESCRIPTION, componentDefinitions[i].getDescription() );
-      
+      featurePhenomenon.setProperty( GML_NAME, compDef.getName() );
+      featurePhenomenon.setProperty( GML_DESCRIPTION, compDef.getDescription() );
+
       featureItemDef.setProperty( SWE_PROPERTY, featurePhenomenon );
-      featureItemDef.setProperty( SWE_REPRESENTATION, componentDefinitions[i].getRepresentationType() );
+      featureItemDef.setProperty( SWE_REPRESENTATION, compDef.getRepresentationType() );
 
       featureRD.setProperty( SWE_COMPONENT, featureItemDef );
     }
@@ -253,7 +259,7 @@ public class ObservationFeatureFactory
     return featureRD;
   }
 
-  private static String serializeResultAsString( final ComponentDefinition[] componentDefinitions, final TupleResult result )
+  private static String serializeResultAsString( final TupleResult result, final Map<IComponent, ComponentDefinition> map )
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -266,7 +272,7 @@ public class ObservationFeatureFactory
           buffer.append( " " );
 
         final Object value = record.getValue( components[i] );
-        final String strValue = componentDefinitions[i].getTypeHandler().convertToXMLString( value );
+        final String strValue = map.get( components[i] ).getTypeHandler().convertToXMLString( value );
 
         buffer.append( strValue );
       }
@@ -274,6 +280,6 @@ public class ObservationFeatureFactory
       buffer.append( "\n" );
     }
 
-    return buffer.toString();
+    return XMLUtilities.encapsulateInCDATA( buffer.toString() );
   }
 }
