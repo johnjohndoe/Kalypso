@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree_impl.tools.FeatureUtils;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
@@ -212,7 +212,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
       }
     }
 
-    final Object object = FeatureUtils.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values );
+    final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values );
     f.setProperty( ftp, object );
   }
 
