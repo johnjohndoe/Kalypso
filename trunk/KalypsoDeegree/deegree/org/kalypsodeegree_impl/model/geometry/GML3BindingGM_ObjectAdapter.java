@@ -90,6 +90,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Element;
 
@@ -163,13 +164,13 @@ public class GML3BindingGM_ObjectAdapter
     return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
   }
 
-  public static Object createGM_Object( final Object bindingObject ) throws GM_Exception
+  public static Object createGM_Object( final Object bindingObject, final Class geometryClass ) throws GM_Exception
   {
     if( bindingObject == null )
       return null;
     if( bindingObject instanceof JAXBElement )
     {
-      return createGM_Object( ((JAXBElement) bindingObject).getValue() );
+      return createGM_Object( ((JAXBElement) bindingObject).getValue(), geometryClass );
     }
     if( bindingObject instanceof AbstractGeometryType )
     {
@@ -178,7 +179,15 @@ public class GML3BindingGM_ObjectAdapter
       if( bindingTypeObject instanceof PointType )
         return createGM_Point( (PointType) bindingTypeObject, cs );
       if( bindingTypeObject instanceof PolygonType )
-        return createGM_Surface( (PolygonType) bindingTypeObject, cs );
+      {
+        final GM_Surface surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
+        {
+          final GM_Surface[] surfaces = new GM_Surface[] { surface };
+          return GeometryFactory.createGM_MultiSurface( surfaces );
+        }
+        return surface;
+      }
       if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
       if( bindingTypeObject instanceof MultiPolygonType )
@@ -188,9 +197,9 @@ public class GML3BindingGM_ObjectAdapter
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }
-    if(bindingObject instanceof EnvelopeType)
+    if( bindingObject instanceof EnvelopeType )
     {
-      return createGM_Envelope((EnvelopeType)bindingObject );
+      return createGM_Envelope( (EnvelopeType) bindingObject );
     }
 
     throw new UnsupportedOperationException( bindingObject.getClass().getName() + " is not supported" );
@@ -535,11 +544,11 @@ public class GML3BindingGM_ObjectAdapter
         final LinearRingType interiorLinearRingType = gml3Fac.createLinearRingType();
 
         final CoordinatesType interiorCoordinatesType = createCoordinatesType( ring.getPositions() );
-        linearRingType.setCoordinates( interiorCoordinatesType );
+        interiorLinearRingType.setCoordinates( interiorCoordinatesType );
         final JAXBElement<LinearRingType> interiorLinearRing = gml3Fac.createLinearRing( interiorLinearRingType );
 
         final AbstractRingPropertyType interiorAbstractRingPropertyType = gml3Fac.createAbstractRingPropertyType();
-        abstractRingPropertyType.setRing( interiorLinearRing );
+        interiorAbstractRingPropertyType.setRing( interiorLinearRing );
 
         final Interior interior = gml3Fac.createInterior( interiorAbstractRingPropertyType );
         interiorContainer.add( interior );

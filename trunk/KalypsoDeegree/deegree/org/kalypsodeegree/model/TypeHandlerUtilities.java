@@ -43,16 +43,12 @@ package org.kalypsodeegree.model;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import net.opengis.swe.DataDefinitionPropertyType;
-import net.opengis.swe.PhenomenonPropertyType;
-import net.opengis.swe.RelativeMeasureType;
 import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
 import ogc31.www.opengis.net.gml.CoverageFunctionType;
 import ogc31.www.opengis.net.gml.DerivationUnitTermType;
@@ -61,12 +57,13 @@ import ogc31.www.opengis.net.gml.GridDomainType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 import ogc31.www.opengis.net.gml.RectifiedGridDomainType;
+//import ogc31.www.opengis.net.swe.DataDefinitionPropertyType;
+//import ogc31.www.opengis.net.swe.RelativeMeasureType;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -564,8 +561,8 @@ public class TypeHandlerUtilities
 
     // swe types
     //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType" ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false, false, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ), new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true, false ) );
+//    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false, false, false ) );
+//    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ), new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true, false ) );
 
     registry.registerTypeHandler( new RepresentationTypeHandler() );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinition" ), new

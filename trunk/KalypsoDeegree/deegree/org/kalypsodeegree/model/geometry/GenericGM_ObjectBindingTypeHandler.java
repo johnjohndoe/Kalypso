@@ -85,7 +85,8 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
         final Object geometryValue;
         try
         {
-          geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object( value );
+          final Class geometryClass = getValueClass();
+          geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object(  value ,geometryClass);
           marshalResultEater.eat( geometryValue );
         }
         catch( final GM_Exception e )
