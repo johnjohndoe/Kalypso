@@ -163,7 +163,7 @@ public class GML3BindingGM_ObjectAdapter
     return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
   }
 
-  public static GM_Object createGM_Object( final Object bindingObject ) throws GM_Exception
+  public static Object createGM_Object( final Object bindingObject ) throws GM_Exception
   {
     if( bindingObject == null )
       return null;
@@ -188,37 +188,10 @@ public class GML3BindingGM_ObjectAdapter
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }
-    // else
-    // {
-    // if (bindingObject instanceof PointPropertyType)
-    // {
-    // final PointPropertyType propType = (PointPropertyType) bindingObject;
-    // return createGM_Object(propType.getPoint());
-    // }
-    // if (bindingObject instanceof LineStringPropertyType)
-    // {
-    // final LineStringPropertyType propType = (LineStringPropertyType)
-    // bindingObject;
-    // return createGM_Object(propType.getLineString());
-    // }
-    // if (bindingObject instanceof PolygonProperty)
-    // {
-    // final PolygonProperty prop = (PolygonProperty) bindingObject;
-    // return createGM_Object(prop.getValue().getPolygon());
-    // }
-    // if (bindingObject instanceof MultiPointPropertyType)
-    // {
-    // final MultiPointPropertyType propType = (MultiPointPropertyType)
-    // bindingObject;
-    // return createGM_Object(propType.getMultiPoint());
-    // }
-    // if (bindingObject instanceof MultiLineStringPropertyType)
-    // {
-    // final MultiLineStringPropertyType propType =
-    // (MultiLineStringPropertyType) bindingObject;
-    // return createGM_Object(propType.getMultiLineString());
-    // }
-    // }
+    if(bindingObject instanceof EnvelopeType)
+    {
+      return createGM_Envelope((EnvelopeType)bindingObject );
+    }
 
     throw new UnsupportedOperationException( bindingObject.getClass().getName() + " is not supported" );
   }

@@ -17,7 +17,16 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.kalypso.portal.application"
-            name="FLOWS DSS Portal">
+            name="Kalypso Enterprise">
+         <property
+               name="aboutImage"
+               value="etc/aboutKalypso.gif"/>
+         <property
+               name="aboutText"
+               value="%productBlurb"/>
+         <property
+               name="windowImages"
+               value="etc/kalypso16.gif"/>
       </product>
    </extension>
    <extension
