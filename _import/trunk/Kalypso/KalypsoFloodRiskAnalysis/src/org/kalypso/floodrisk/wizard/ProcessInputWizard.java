@@ -55,8 +55,8 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
  * ProcessInputWizard

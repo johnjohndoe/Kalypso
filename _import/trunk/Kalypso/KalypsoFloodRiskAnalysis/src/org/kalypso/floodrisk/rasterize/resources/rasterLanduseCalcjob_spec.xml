@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="RasterizeLanduseJob">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="RasterizeLanduseJob">
 
 	<input id="LanduseVectorData" description="Vektordaten Landnutzung"/>
 	<input id="ContextModel" description="Steuerungsdatei, LanduseCollection mit Zuordnung id - landuseProperty wird für die Rasterung benötigt"/>

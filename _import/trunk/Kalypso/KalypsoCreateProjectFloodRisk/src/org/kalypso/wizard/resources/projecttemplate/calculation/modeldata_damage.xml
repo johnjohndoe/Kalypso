@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateDamageJob">
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateDamageJob">
 	<input id="LanduseRasterData" path="Landuse/landuseData.gml" relativeToCalcCase="false"/>
 	<input id="WaterlevelData" path="Control/waterlevelData.gml" relativeToCalcCase="false"/>
 	<input id="ContextModel" path="Control/contextModell.gml" relativeToCalcCase="false"/>

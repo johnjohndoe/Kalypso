@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateStatisticJob">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateStatisticJob">
 
 	<input id="DamageRaster" description="Räumliche Verteilung des Schadenspotenzials"/>
 	<input id="LanduseRasterData" description="Rasterdaten Landnutzung"/>

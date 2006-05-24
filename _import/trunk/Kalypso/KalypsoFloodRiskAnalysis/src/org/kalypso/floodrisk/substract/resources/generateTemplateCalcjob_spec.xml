@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="GenerateTemplateRasterJob">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="GenerateTemplateRasterJob">
 
 	<input id="Raster1" description="Raster1"/>
 	<input id="Raster2" description="Raster2"/>

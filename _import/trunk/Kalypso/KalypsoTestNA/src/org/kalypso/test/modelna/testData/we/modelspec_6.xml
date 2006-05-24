@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
     <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
     <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="Control" path=".nacontrol_6.gml" relativeToCalcCase="true"/>

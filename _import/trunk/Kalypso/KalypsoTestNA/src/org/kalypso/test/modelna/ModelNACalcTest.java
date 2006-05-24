@@ -49,14 +49,14 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.model.xml.Modeldata;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.Modeldata.Input;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.util.JarSimulationDataProvider;
 import org.kalypso.test.util.CalcJobTestUtilis;
 

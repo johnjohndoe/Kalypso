@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Saale_SA_V1">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Saale_SA_V1">
 	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 	<input id="MODELL" description="Modelldaten"/>
 	<input id="CONTROL" description="Steuerdaten"/>
