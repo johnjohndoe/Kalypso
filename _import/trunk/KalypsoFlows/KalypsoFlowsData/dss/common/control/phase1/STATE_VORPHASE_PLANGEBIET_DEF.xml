@@ -39,7 +39,7 @@
 <viewState/>
 </view>
 <view id="org.kalypso.workflow.ui.WorkflowBrowserView" partName="Workflow Browser">
-<viewState url="../common/control/phase1/VORPHASE_PLANGEBIET_DEF.xhtml">
+<viewState url="../common/control/phase1/VORPHASE_PLANGEBIET_DEF.html">
 <scrolbars/>
 </viewState>
 </view>
