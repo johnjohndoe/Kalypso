@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
 import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -49,10 +48,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
+import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -195,14 +196,20 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     }
   }
 
-  protected Object[] setPropertySelection( PropertyName propertyName )
+  protected Object[] setPropertySelection( Expression expression )
   {
-    if( propertyName != null )
+    String value = null;
+    if( expression != null )
     {
+      if( expression instanceof Literal )
+        value = ((Literal) expression).getValue();
+      else if( expression instanceof PropertyName )
+        value = ((PropertyName) expression).getValue();
+
       IPropertyType[] properties = m_ft.getProperties();
       for( IPropertyType type : properties )
       {
-        if( type.getQName().getLocalPart().equals( propertyName.getValue() ) )
+        if( type.getQName().getLocalPart().equals( value ) )
           return new Object[] { type };
       }
     }

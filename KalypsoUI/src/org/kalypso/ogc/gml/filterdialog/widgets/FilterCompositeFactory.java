@@ -42,6 +42,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 
 /**
@@ -92,6 +93,13 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
           operatorName = "Unbekannter Spatial Operator";
         ((Group) parent).setText( "Eigenschaften-" + operatorName );
         c = new SpatialComposite( parent, SWT.NULL, (SpatialOperation) operation, errorMessageReciever, ft, spatialOperator );
+      }
+      else if( operation instanceof PropertyIsNullOperation )
+      {
+        if( operatorName == null )
+          operatorName = "Unbekannter IsNull Operator";
+        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+        c = new PropertyIsNullOperationComposite( parent, SWT.NULL, (PropertyIsNullOperation) operation, ft, errorMessageReciever );
       }
     }
     return c;

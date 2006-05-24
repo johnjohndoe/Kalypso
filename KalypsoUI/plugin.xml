@@ -659,6 +659,11 @@
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
+          <action
+                label="IsNull Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsNullOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
+                id="org.kalypso.objectclass.fiterencoding.create.isnulloperation"/>
   </objectContribution>
        <objectContribution
              adaptable="false"
@@ -706,6 +711,11 @@
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
+          <action
+                label="IsNull Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsNullOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
+                id="org.kalypso.objectclass.fiterencoding.create.isnulloperation"/>
        </objectContribution>
 		<objectContribution
              adaptable="false"

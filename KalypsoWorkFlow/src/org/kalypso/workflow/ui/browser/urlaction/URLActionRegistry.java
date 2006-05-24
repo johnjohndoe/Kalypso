@@ -72,10 +72,12 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionExtract() );
       m_defaultInstance.register( new URLActionAddGeometry() );
       m_defaultInstance.register( new URLActionOpenURL() );
+      m_defaultInstance.register( new URLActionSaveAllThemes() );
       m_defaultInstance.register( new URLActionActivateTheme() );
       m_defaultInstance.register( new URLActionSaveActiveTheme() );
       m_defaultInstance.register( new URLActionSaveActiveGMT() );
       m_defaultInstance.register( new URLActionAddThemeGMT() );
+      m_defaultInstance.register( new URLActionOpenWorkflowBrowser() );
     }
     catch( URLActionRegistryException e )
     {
