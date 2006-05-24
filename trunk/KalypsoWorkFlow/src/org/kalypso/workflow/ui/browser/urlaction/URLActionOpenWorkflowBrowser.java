@@ -40,56 +40,82 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import java.net.URL;
+
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
+import org.kalypso.workflow.WorkflowContext;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
+import org.kalypso.workflow.ui.browser.CommandURLBrowserView;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
- * example<br>
- * kalypso://openView?partId=...&activePartId=...
+ * This URLAction opens the WorkflowBrowser relatvie to a optional ViewPart
  * 
- * @author doemming
+ * @author kuepfer
  */
-public class URLActionOpenView extends AbstractURLAction
+public class URLActionOpenWorkflowBrowser extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "openView";
+  /**
+   * The id of the view ExtenstionPoint where the WorkflowBrowser is registerd.
+   * 
+   * @see org.kalypso.workflow.ui.KalypsoWorkFlowPlugin (plugin.xml)
+   */
+  private final String WORKFLOW_BROWSER_PART_ID = "org.kalypso.workflow.ui.WorkflowBrowserView";
 
-  private final static String PARAM_PART_ID = "partId";
+  private final String COMMAND_NAME = "openWorkflowBrowser";
 
   /**
-   * optional: If the view is allows multiple views
+   * required: the URL to load the first page from this is also the first context of the Browser
    */
+  private final String PARAM_URL = "url";
+
   private final static String PARAM_SECONDARY_PART_ID = "secondaryPartId";
 
   /**
-   * optional: the id of the part (container) to which the new View is relative toF
+   * optional: activePartId to open the browser relative to.
    */
-
-  private final static String PARAM_ACTIVE_PART_ID = "activePartId";
+  private final String PARAM_ACTIVE_PARTID = "activePartId";
 
   /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
+   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
+   */
+  public String getActionName( )
+  {
+    return COMMAND_NAME;
+  }
+
+  /**
+   * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
-    final IWorkbenchPage activePage = getActivePage();
-    final String activePartID = commandURL.getParameter( PARAM_ACTIVE_PART_ID );
-    final String viewID = commandURL.getParameter( PARAM_PART_ID );
+    final String activePartId = commandURL.getParameter( PARAM_ACTIVE_PARTID );
     final String secondaryViewID = commandURL.getParameter( PARAM_SECONDARY_PART_ID );
-
+    final String url = commandURL.getParameter( PARAM_URL );
+    IViewPart viewPart = null;
     try
     {
       // activate the appropriate view (select the folder), where the new View will be relative to and
       // shown in
-      if( activePartID != null && activePartID.length() > 1 )
-        activePage.showView( activePartID );
+      if( activePartId != null && activePartId.length() > 1 )
+        getActivePage().showView( activePartId );
       if( secondaryViewID != null )
-        activePage.showView( viewID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
+        viewPart = getActivePage().showView( WORKFLOW_BROWSER_PART_ID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
       else
-        activePage.showView( viewID );
+        viewPart = getActivePage().showView( WORKFLOW_BROWSER_PART_ID );
+
+      if( viewPart instanceof CommandURLBrowserView )
+      {
+        final CommandURLBrowserView browserView = (CommandURLBrowserView) viewPart;
+        WorkflowContext workFlowContext = getWorkFlowContext();
+        URL url2 = workFlowContext.resolveURL( url );
+        (browserView).setURL( url2.toString() );
+      }
+      else
+        return false; // should never happen only of the browser view was not found
     }
-    catch( PartInitException e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return false;
@@ -97,11 +123,4 @@ public class URLActionOpenView extends AbstractURLAction
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return COMMAND_NAME;
-  }
 }

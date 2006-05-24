@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
+import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
+import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
@@ -57,9 +62,11 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
 {
   private Label m_firstRowLabel;
 
-  private Combo m_fristRowCombo;
+  Combo m_fristRowCombo;
 
-  private PropertyIsNullOperation m_operation;
+  PropertyIsNullOperation m_operation;
+
+  private ComboViewer m_propViewer;
 
   public PropertyIsNullOperationComposite( final Composite parent, final int style, PropertyIsNullOperation operation, final IFeatureType ft, final IErrorMessageReciever errorMessageReciever )
   {
@@ -74,9 +81,11 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
     if( m_operation != null )
       expression = m_operation.getExpression();
     // TODO add new LiteralType's
-    else if( m_operation == null )
+    if( expression == null )
+    {
       expression = new PropertyName( EMPTY_VALUE );
-
+      m_operation.setExpression( expression );
+    }
     // String value = null;
     // if( expression instanceof PropertyName )
     // value = ( (PropertyName)expression ).getValue();
@@ -85,23 +94,32 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
 
     m_firstRowLabel = new Label( this, SWT.NULL );
     m_firstRowLabel.setText( expression.getExpressionName().trim() );
-    m_fristRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY );
-    for( int i = 0; i < m_ft.getProperties().length; i++ )
+    Combo firstRowCombo = new Combo( this, SWT.NULL );
+    m_propViewer = new ComboViewer( firstRowCombo );
+    m_propViewer.setContentProvider( new FeatureTypeContentProvider() );
+    m_propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
+//    m_propViewer.addFilter( new NonGeometryPropertyFilter() );
+    m_propViewer.add( m_ft.getProperties() );
+    m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      IPropertyType ftp = m_ft.getProperties()[i];
-      m_fristRowCombo.add( ftp.getQName().getLocalPart().trim() );
-    }
-    m_fristRowCombo.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        // empty
-      }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void selectionChanged( SelectionChangedEvent event )
       {
-        // empty
+        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        if( firstElement instanceof IValuePropertyType )
+        {
+          String item = ((IValuePropertyType) firstElement).getQName().getLocalPart();
+
+          Expression expr = m_operation.getExpression();
+          if( expr == null )
+            expr = new PropertyName( item );
+          else if( expr instanceof PropertyName )
+            ((PropertyName) expr).setValue( item );
+          m_operation.setExpression( expr );
+        }
+
       }
     } );
+    m_propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getExpression() ) ) );
   }
 }
