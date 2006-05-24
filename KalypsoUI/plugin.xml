@@ -949,4 +949,11 @@
          <adapter type="org.eclipse.ui.IActionFilter"/>
       </factory>
    </extension>
+   <extension
+         point="org.kalypso.contribs.eclipsercp.actionFilters">
+      <actionFilter
+            class="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter"
+            id="org.kalypso.ui.actionFilter.featureTypeFilter"
+            targetType="org.kalypsodeegree.model.feature.Feature"/>
+   </extension>
  </plugin>
