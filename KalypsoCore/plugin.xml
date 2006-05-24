@@ -60,6 +60,10 @@
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.e.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="E"/>
+      <adapter
+            axisType="N"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter"
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter.n.label"/>
    </extension>
    <extension
          id="org.kalypso.core.urlcatalog.extentsion"
