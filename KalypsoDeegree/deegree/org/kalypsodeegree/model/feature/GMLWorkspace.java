@@ -37,6 +37,9 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public Feature[] getFeatures( final IFeatureType ft );
 
+  /**
+   * Returns the linked feature that has the given id or null if not found.
+   */
   public Feature getFeature( final String id );
 
   /**
@@ -145,7 +148,7 @@ public interface GMLWorkspace extends ModellEventProvider
    *         <code>false</code> if it is a composition <br>
    *         caution: is link is <code>null</code> return value is undefined
    */
-  public boolean isAggrigatedLink( Feature parent, final IRelationType linkProperty, int pos );
+  public boolean isAggregatedLink( Feature parent, final IRelationType linkProperty, int pos );
 
   /**
    * @param parentFE

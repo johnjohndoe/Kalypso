@@ -550,4 +550,17 @@ public class FeatureHelper
     addProperty( feature, property, value );
   }
 
+  /**
+   * If the given object is a feature, return it, else return the feature with id (String)linkOrFeature.
+   */
+  public static Feature getFeature( final GMLWorkspace wrk, final Object linkOrFeature )
+  {
+    if( linkOrFeature instanceof Feature )
+      return (Feature) linkOrFeature;
+
+    if( linkOrFeature instanceof String )
+      return wrk.getFeature( (String) linkOrFeature );
+
+    return null;
+  }
 }

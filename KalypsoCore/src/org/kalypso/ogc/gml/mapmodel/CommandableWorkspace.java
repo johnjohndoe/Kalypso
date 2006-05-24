@@ -326,9 +326,9 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
-  public boolean isAggrigatedLink( Feature parent, IRelationType linkPropName, int pos )
+  public boolean isAggregatedLink( Feature parent, IRelationType linkPropName, int pos )
   {
-    return m_workspace.isAggrigatedLink( parent, linkPropName, pos );
+    return m_workspace.isAggregatedLink( parent, linkPropName, pos );
   }
 
   /**
