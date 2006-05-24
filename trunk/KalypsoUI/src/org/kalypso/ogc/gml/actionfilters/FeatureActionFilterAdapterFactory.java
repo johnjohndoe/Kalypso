@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.actionfilters;
 
-import org.deegree.model.feature.Feature;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IActionFilter;
 import org.kalypso.contribs.eclipse.ui.actionfilters.ActionFilterRegistry;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author schlienger
