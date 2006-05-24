@@ -26,7 +26,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author doemming implementation of ogc feature that supports different cardinalities of properties, but not "unbound"
  *         cardinalities (use FeatureCollections for unbound cardinalities)
  */
-public class Feature_Impl implements Feature
+public class Feature_Impl extends AbstractFeature implements Feature
 {
   private Object m_parent = null;
 

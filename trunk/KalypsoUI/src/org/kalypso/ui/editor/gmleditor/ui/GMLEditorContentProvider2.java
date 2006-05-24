@@ -111,7 +111,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         final Feature feature = features[i];
         if( feature != null )
         {
-          if( m_workspace.isAggrigatedLink( parentFeature, ftp, i ) )
+          if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) )
             result.add( new LinkedFeatureElement2( feature ) );
           else
             result.add( feature );

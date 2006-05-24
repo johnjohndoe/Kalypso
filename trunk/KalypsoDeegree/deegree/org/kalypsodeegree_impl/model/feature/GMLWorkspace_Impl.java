@@ -51,7 +51,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_indexMap.get( id );
   }
-
+  
   // schema , featureTypes, rootFeature, context
   public GMLWorkspace_Impl( final GMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
   {
@@ -693,7 +693,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
-  public boolean isAggrigatedLink( Feature parent, IRelationType linkProp, int pos )
+  public boolean isAggregatedLink( Feature parent, IRelationType linkProp, int pos )
   {
     final boolean undefined = false;
     final Object value = parent.getProperty( linkProp );

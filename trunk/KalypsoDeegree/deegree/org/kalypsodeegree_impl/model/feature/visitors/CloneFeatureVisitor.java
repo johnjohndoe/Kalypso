@@ -65,7 +65,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
         {
           final Feature childFEOriginal = childFEsOriginal[j];
           // clone child features
-          if( m_workspace.isAggrigatedLink( parentFEOriginal, linkPT, j ) )
+          if( m_workspace.isAggregatedLink( parentFEOriginal, linkPT, j ) )
           { // aggregation
             try
             {

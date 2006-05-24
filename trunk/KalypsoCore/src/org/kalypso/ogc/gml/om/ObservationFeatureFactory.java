@@ -48,6 +48,7 @@ import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -67,7 +68,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author schlienger
  */
-public class ObservationFeatureFactory
+public class ObservationFeatureFactory implements IAdapterFactory
 {
   public final static QName GML_NAME = new QName( NS.GML3, "name" );
 
@@ -167,7 +168,7 @@ public class ObservationFeatureFactory
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( SWE_COMPONENT );
     for( int i = 0; i < comps.size(); i++ )
     {
-      final Feature itemDef = (Feature) comps.get( i );
+      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
 
       final Feature phenomenon = FeatureHelper.resolveLink( itemDef, SWE_PROPERTY );
       if( phenomenon == null )
@@ -281,5 +282,25 @@ public class ObservationFeatureFactory
     }
 
     return XMLUtilities.encapsulateInCDATA( buffer.toString() );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+   */
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  {
+    if( adapterType == IObservation.class && adaptableObject instanceof Feature )
+      return toObservation( (Feature) adaptableObject );
+
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
+   */
+  public Class[] getAdapterList( )
+  {
+    final Class[] classes = { IObservation.class };
+    return classes;
   }
 }

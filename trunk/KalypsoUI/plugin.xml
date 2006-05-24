@@ -763,6 +763,22 @@
              <separator name="styleops"/>
           </menu>
        </objectContribution>
+       <objectContribution
+             adaptable="false"
+             id="org.kalypso.objectclass.observationfeature"
+             objectClass="org.kalypsodeegree.model.feature.Feature">
+          <action
+                class="org.kalypso.ogc.gml.om.EditObservation"
+                enablesFor="1"
+                icon="icons/observation/zml-icon.gif"
+                id="org.kalypso.ogc.gml.om.EditObservation"
+                label="Observation editieren"
+                style="push"
+                tooltip="Editiert die ausgewählte Feature als Observation"/>
+          <filter
+                name="featureType"
+                value="http://www.opengis.net/om#Observation"/>
+       </objectContribution>
    </extension>
    <extension
          id="resourceFilters"
@@ -924,5 +940,13 @@
 	  <activityPatternBinding
           activityId="org.kalypso.ui.activity"
           pattern="org\.eclipse\.compare/.*"/>   
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
+         <adapter type="org.eclipse.ui.IActionFilter"/>
+      </factory>
    </extension>
  </plugin>

@@ -124,4 +124,13 @@ public class FeatureSelectionHelper
     }
     return result.toArray( new Feature[result.size()] );
   }
+
+  /**
+   * Returns either the focused feature or the first element.
+   */
+  public static Feature getSelectedFeature( final IFeatureSelection selection )
+  {
+    final Feature feature = selection.getFocusedFeature();
+    return feature == null ? getFirstFeature( selection ) : feature;
+  }
 }

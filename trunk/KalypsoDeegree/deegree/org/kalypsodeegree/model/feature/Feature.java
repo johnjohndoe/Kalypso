@@ -2,14 +2,20 @@ package org.kalypsodeegree.model.feature;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 
 /**
+ * A GML Feature represents a general object.
+ * <p>
+ * A Feature is adaptable, thus allowing Adapter Factories and/or Subclasses to provide another "view" over a feature
+ * object. For instance, an observation-feature can be directly represented as an observation.
+ * 
  * @author doemming this class extends the deegree feature interface and implements methods to handle properties that
  *         have maxOccurs > 1
  */
-public interface Feature extends DeegreeFeature
+public interface Feature extends DeegreeFeature, IAdaptable
 {
   public GMLWorkspace getWorkspace( );
 

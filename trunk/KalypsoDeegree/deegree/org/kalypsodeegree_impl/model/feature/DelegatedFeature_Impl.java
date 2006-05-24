@@ -23,7 +23,7 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
  * 
  * @author Gernot Belger
  */
-public class DelegatedFeature_Impl implements Feature
+public class DelegatedFeature_Impl extends AbstractFeature implements Feature
 {
   private final IFeatureProvider m_provider;
 

@@ -38,53 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.ogc.gml.actionfilters;
 
-import java.util.Collection;
+import javax.xml.namespace.QName;
 
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
-import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO [marc] fullfill the interface
+ * TODO register within plugin.xml
  * 
  * @author schlienger
  */
-public class ObservationFeatureDialog implements IFeatureDialog
+public class FeatureTypeActionFilter implements IActionFilterEx
 {
-  private final IObservation<TupleResult> m_obs;
-
-  public ObservationFeatureDialog( final IObservation<TupleResult> obs )
-  {
-    m_obs = obs;
-  }
+  public final static String ATTR_FEATURE_TYPE = "featureType";
   
   /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
+   * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
-  public int open( Shell shell )
+  public boolean testAttribute( Object target, String name, String value )
   {
-    final ObservationDialog dialog = new ObservationDialog( shell, m_obs );
+    if( !(target instanceof Feature) )
+      return false;
     
-    return dialog.open();
+    final Feature f = (Feature) target;
+    
+    if( ATTR_FEATURE_TYPE.equals( name ) )
+    {
+      final QName qName = QNameUtilities.createQName( value );
+      return f.getFeatureType().getQName().equals( qName );
+    }
+    
+    return false;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
+   * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
    */
-  public void collectChanges( Collection<FeatureChange> c )
+  public String[] getNames( )
   {
-    // TODO Auto-generated method stub
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
-   */
-  public String getLabel( )
-  {
-    return m_obs.getName();
+    return new String[] { ATTR_FEATURE_TYPE };
   }
 }

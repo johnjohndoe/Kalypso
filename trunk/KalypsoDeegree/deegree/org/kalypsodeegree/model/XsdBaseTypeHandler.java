@@ -129,7 +129,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
             final String stringResult = buffer.toString();
             
             // HACK: remove CDATA section markers
-            // shouldn't the saxparser handle this?
+            // TODO shouldn't the saxparser handle this? Check if this is ok what is done here...
             final String withoutCDATA = stringResult.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
             
 //            if( !withoutCDATA.equals( stringResult ) )
