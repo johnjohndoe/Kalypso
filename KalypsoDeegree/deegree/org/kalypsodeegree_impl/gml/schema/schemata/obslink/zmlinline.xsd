@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="inline.zml.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:inlinezml="inline.zml.kalypso.org" version="0.9">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:inlinezml="inline.zml.kalypso.org" targetNamespace="inline.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.9">
 	<simpleType name="ZmlInlineType">
 		<restriction base="string"/>
 	</simpleType>
-
-
-
-<!-- 
-doemming: hinzugefuegt 8.Feb.2006, da es aus namodell.v0.5 referenziert wird
--->
-    <simpleType name="ZmlInlineWVQType">
+	<!-- W V Q z.B. RHB-->
+	<simpleType name="ZmlInlineWVQType">
 		<restriction base="string"/>
 	</simpleType>
-<!--
-
--->
-
-    <!-- W Q v z.B. RHB-->
-    <simpleType name="ZmlInlineWQVType">
-		<restriction base="string"/>
-	</simpleType>
-    <!-- T A z.B. Zeit-Flächenfunktion-->
-    <simpleType name="ZmlInlineTAType">
+	<!-- T A z.B. Zeit-Flächenfunktion-->
+	<simpleType name="ZmlInlineTAType">
 		<restriction base="string"/>
 	</simpleType>
 	<!-- idealisierte Kc Wt Lai Jahresgangvegetation z.B. Korrekturfaktor Verdunst/pot.Versdunst-Wurzeltiefe-Interzeptionspeicherinhalt-idealisiert -->
-    <simpleType name="ZmlInlineIdealKcWtLaiType">
+	<simpleType name="ZmlInlineIdealKcWtLaiType">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="ZmlInlineTNType">
 		<restriction base="string"/>
 	</simpleType>
 </schema>
