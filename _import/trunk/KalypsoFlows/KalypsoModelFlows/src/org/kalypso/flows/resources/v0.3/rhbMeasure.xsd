@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:rhb="http://schema.kalypso.wb.tu-harburg.de/measure/rhb"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://schema.kalypso.wb.tu-harburg.de/measure/rhb"
+	elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd" />
+	<element name="RhbMeasure" type="rhb:RhbMeasureType" />
+	<complexType name="RhbMeasureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="rhbMeasureMember"
+						type="rhb:RhbMeasureAssociationType" minOccurs="0"
+						maxOccurs="unbounded" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ________ScrabLayerGeomFeature__________________ -->
+	<complexType name="RhbMeasureAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rhb:RhbMeasureFeature" minOccurs="0"
+						maxOccurs="unbounded" />
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RhbMeasureFeature" type="rhb:RhbMeasureFeatureType"
+		substitutionGroup="gml:_Feature" />
+	<complexType name="RhbMeasureFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="area"
+						type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>
+									Rueckhaltebecken-Geometrie
+								</label>
+								<tooltip>
+									Flaeche der Massnahme
+									Rueckhaltebecken
+								</tooltip>
+								<description>
+									Geometrie der Massnahme
+									Rueckhaltebecken
+								</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Retension Basin-Geometry</label>
+								<tooltip>
+									Area of retension basin measure
+								</tooltip>
+								<description>
+									Geometry of retension basin measure
+								</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="depth" type="double" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

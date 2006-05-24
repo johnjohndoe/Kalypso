@@ -53,7 +53,9 @@ public class URLCatalogFlows extends AbstractUrlCatalog
     // .getResource( "resources/v0.1/BPlan-Minimal_measures.xsd" ) );
     catalog.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ) );
     catalog.put( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", getClass().getResource( "resources/v0.1/plangebiet.xsd" ) );
-    catalog.put( "http://www.tuhh.de/kalypsoDSS", getClass().getResource( "resources/v0.3/measures.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", getClass().getResource( "resources/v0.3/rhbMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/mrs", getClass().getResource( "resources/v0.3/mrsMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/sealing", getClass().getResource( "resources/v0.3/sealingMeasure.xsd" ) );
 
   }
 
