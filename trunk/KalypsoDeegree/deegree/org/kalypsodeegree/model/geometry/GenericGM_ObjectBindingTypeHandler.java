@@ -82,7 +82,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     {
       public void eat( Object value ) throws GMLSchemaException
       {
-        final GM_Object geometryValue;
+        final Object geometryValue;
         try
         {
           geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object( value );
