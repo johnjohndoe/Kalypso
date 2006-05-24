@@ -128,7 +128,6 @@ public class CalcTuhhAction implements IActionDelegate
           }
         }
       };
-      calcJob.setRule( new MutexRule() );
       calcJob.schedule();
     }
 
