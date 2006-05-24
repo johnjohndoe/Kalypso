@@ -30,26 +30,31 @@
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
 
-		<eclipse.convertPath resourcePath="${model.path}/${result.path}" property="result.dir"/>
+		<echo message="Result path: ${result.path}"/>
+		<echo message="Calc XPath: ${calc.xpath}"/>
+		
+		<property name="result.dir" value="${calc.dir}/${result.path}"/>
 
 		<!-- der Result path ist immer relativ zum Modellverzeichnis -->
 		<property name="result.path.aktuell" value="${result.path}/#aktuell" />
 		<property name="result.dir.aktuell" value="${result.dir}/#aktuell" />
 
-		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${model.path}">
+		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${calc.path}">
 			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
 			<input id="CALC_PATH" path="${calc.xpath}" />
-			<input id="PROFILES" path="Profile" relativeToCalcCase="true"/>
+			<input id="PROFILES" path="Profile" relativeToCalcCase="true" />
 
-			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="false" />
+			<output id="SimulationLog" path="${result.path.aktuell}/simulation.log" relativeToCalcCase="true" />
+			<!--
+			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="true" />
 			<output id="bv_Ergebnisse" />
 			<output id="WQ_Tabellen" />
-			<output id="SimulationLog" path="${result.path.aktuell}" relativeToCalcCase="true"/>
 			<output id="ControlFile" />
 			<output id="TabularResult" />
 			<output id="LengthSection" />
 			<output id="BeiwerteAus" />
+			-->
 
 			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 			<clearAfterCalc path="${result.path.aktuell}" relativeToCalcCase="true" />
@@ -61,7 +66,7 @@
 		</tstamp>
 		<property name="result.dir.time" value="${result.dir}/${now}" />
 		<copy todir="${result.dir.time}">
-			<fileset dir="${result.dir.aktuell}" includes="**/*"/>
+			<fileset dir="${result.dir.aktuell}" includes="**/*" />
 		</copy>
 	</target>
 
