@@ -25,5 +25,23 @@
          </description>
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.ui.model.wspm.objectContribution.calcTuhh"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="org.kalypso.model.wspm.tuhh#CalculationWspmTuhhSteadyState"/>
+         <action
+               class="org.kalypso.ui.model.wspm.tuhh.actions.CalcTuhhAction"
+               icon="icons/obj16/startCalulation.gif"
+               id="org.kalypso.ui.model.wspm.calcTuhhAction"
+               label="Berechnung starten"
+               style="push"
+               tooltip="Startet die selektierten Berechnungen"/>
+      </objectContribution>
+   </extension>
 
 </plugin>
