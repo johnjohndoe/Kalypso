@@ -312,13 +312,9 @@
 								<enumeration value="BF_UNIFORM">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Bordvollberechnung - stationär-gleichförmige
-												Abflussverhältnisse</label>
-											<tooltip>Bordvollberechnung - stationär-gleichförmige
-												Abflussverhältnisse</tooltip>
-											<description>Bordvollberechnung -
-												stationär-gleichförmige
-											Abflussverhältnisse</description>
+											<label><![CDATA[Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse]]></label>
+											<tooltip><![CDATA[ Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse ]]></tooltip>
+											<description><![CDATA[ Bordvollberechnung -	stationär-gleichförmige Abflussverhältnisse ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
