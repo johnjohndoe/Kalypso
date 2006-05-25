@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -49,8 +49,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -94,12 +93,13 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    */
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
-    // if we get a ClassCastExxception here, something is very wrong
+    // if we get a ClassCastException here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) property;
 
     final Class valueClass = getValueClass();
     final QName qname = property.getQName();
 
+    // Booleans get a check box
     if( Boolean.class == valueClass )
     {
       final Checkbox checkbox = factory.createCheckbox();
@@ -110,31 +110,8 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       return factory.createCheckbox( checkbox );
     }
 
-    // if we have an enumeration, create a combo
-    final IRestriction[] restrictions = vpt.getRestriction();
-    final List<Entry> comboEntries = new ArrayList<Entry>();
-    
-    // join alle enumeration constants
-    for( final IRestriction restriction : restrictions )
-    {
-      if( restriction instanceof EnumerationRestriction )
-      {
-        final String[] values = ((EnumerationRestriction) restriction).getEnumeration();
-        final String[] labels = ((EnumerationRestriction) restriction).getLabels();
-
-        for( int i = 0; i < labels.length; i++ )
-        {
-          final String value = values[i];
-          final String label = labels[i];
-
-          final Entry entry = factory.createComboEntry();
-          entry.setValue( value );
-          entry.setLabel( label );
-          comboEntries.add( entry );
-        }
-      }
-    }
-
+    // Enumeration will get a Combo-Box
+    final Map<String, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     if( comboEntries.size() > 0 )
     {
       final Combo combo = factory.createCombo();
@@ -142,7 +119,14 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       combo.setProperty( qname );
 
       final List<Entry> entries = combo.getEntry();
-      entries.addAll( comboEntries );
+      for( final Map.Entry<String, String> comboEntry : comboEntries.entrySet() )
+      {
+        final Entry entry = factory.createComboEntry();
+        entry.setLabel( comboEntry.getKey() );
+        entry.setValue( comboEntry.getValue() );
+
+        entries.add( entry );
+      }
 
       return factory.createCombo( combo );
     }
