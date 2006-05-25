@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -90,14 +89,6 @@ public class GMLWorkspaceReader implements XMLReader
   {
     if( input == null || !(input instanceof GMLWorkspaceInputSource) )
       throw new SAXException( "inputSource is null or not of type: " + GMLWorkspaceInputSource.class.getName() );
-
-    final ToStringContentHandler toStringHandler = new ToStringContentHandler( new ILogger()
-    {
-      public void log( String message )
-      {
-        System.out.print( message );
-      }
-    } );
 
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
