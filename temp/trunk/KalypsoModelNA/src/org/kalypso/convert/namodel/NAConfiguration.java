@@ -121,6 +121,8 @@ public class NAConfiguration
 
   private final File m_nutzungDir;
 
+  private final File m_swaleAndTrenchFile;
+
   // private final URL m_parameterSchemaURL;
   //
   // private final URL m_hydrotopSchemaUrl;
@@ -128,6 +130,7 @@ public class NAConfiguration
   private final URL m_parameterFormatURL;
 
   private final URL m_hydrotopFormatURL;
+  private final URL m_swaleAndTrenchFormatURL;
 
   private int m_minutesTimeStep = 60;
 
@@ -146,6 +149,8 @@ public class NAConfiguration
   private String m_precipitationForm;
 
   private URL m_zmlContext;
+
+  private Boolean m_iniWrite;
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -175,7 +180,7 @@ public class NAConfiguration
     m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
     m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" );
     m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" );
-
+    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" );
     // ASCII
     (new File( asciiBaseDir, "inp.dat" )).mkdirs();
     (new File( asciiBaseDir, "hydro.top" )).mkdirs();
@@ -189,7 +194,9 @@ public class NAConfiguration
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
+    m_swaleAndTrenchFile = new File( asciiBaseDir, "hydro.top/we_nat.mr" );
 
+    m_iniWrite = false;
   }
 
   public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
@@ -392,6 +399,11 @@ public class NAConfiguration
     return m_nutzungDir;
   }
 
+  public File getSwaleAndTrenchFile( )
+  {
+    return m_swaleAndTrenchFile;
+  }
+
   public IFeatureType getBodartFT( )
   {
     return m_bodartFT;
@@ -497,4 +509,18 @@ public class NAConfiguration
 
   }
 
+  public void setIniWrite( Boolean iniWrite )
+  {
+    m_iniWrite = iniWrite;
+  }
+
+  public Boolean getIniWrite( )
+  {
+    return m_iniWrite;
+  }
+
+  public URL getSwaleAndTrenchFormatURL( )
+  {
+    return m_swaleAndTrenchFormatURL;
+  }
 }

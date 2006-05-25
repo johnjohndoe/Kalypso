@@ -94,14 +94,14 @@ public class NAControlConverter
     appendResultsToGenerate( conf, controlFE, b );
     appendResultInformation( modellWorkspace, controlWorkspace, b, conf.getIdManager() );
     // Startwerte fuer die kurzzeitsimulation
-    appendInitailDates( controlFE, b );
+    appendInitailDates( controlFE, b, conf );
     // write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
     writer.close();
   }
 
-  private static void appendInitailDates( final Feature controlFE, final StringBuffer b )
+  private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
   {
     List dateList = (List) controlFE.getProperty( "InitialValueDate" );
     if( dateList != null )
@@ -117,6 +117,7 @@ public class NAControlConverter
           SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
           String iniDate = format.format( initialDate );
           b.append( iniDate + "\n" );
+          conf.setIniWrite(true);
         }
       }
     }

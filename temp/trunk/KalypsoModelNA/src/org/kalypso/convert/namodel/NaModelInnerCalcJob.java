@@ -63,9 +63,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -80,6 +86,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
@@ -136,14 +143,13 @@ public class NaModelInnerCalcJob implements ISimulation
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  // private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
   private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
   private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
 
-  private final String EXE_FILE_2_03beta = "start/kalypso_2.0.3beta.exe";
-
   private final String EXE_FILE_2_04beta = "start/kalypso_2.0.4beta.exe";
+
+  private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
   private boolean m_succeeded = false;
 
@@ -176,31 +182,22 @@ public class NaModelInnerCalcJob implements ISimulation
   public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final Logger logger = Logger.getAnonymousLogger();
-    File infoFile = new File( tmpdir, "infolog.txt" );
-    FileWriter writer = null;
+    Formatter f = new SimpleFormatter();
+    Handler h = null;
     try
     {
-      writer = new FileWriter( infoFile );
-      final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
-      writer.write( "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
-
+      File loggerFile = new File( tmpdir, "infoLog.txt" );
+      h = new StreamHandler( new FileOutputStream( loggerFile ), f );
+      logger.addHandler( h );
+      h.flush();
     }
-    catch( IOException e1 )
+    catch( FileNotFoundException e1 )
     {
+      e1.printStackTrace();
       logger.fine( e1.getLocalizedMessage() );
     }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-    try
-    {
-      resultEater.addResult( NaModelConstants.LOG_INFO_ID, infoFile );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
+    final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
+    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
     final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
     try
     {
@@ -212,8 +209,13 @@ public class NaModelInnerCalcJob implements ISimulation
       // -siehe modelspec- dorthin kopiert):
       if( monitor.isCanceled() )
         return;
-      unzipTemplates( (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+      // Kopieren von Berechnungsstandardverzeichnis
 
+      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+
+      // Kopieren von zu verwendenden Anfangswerten in das Berechnungsverzeichnis
+      final File lzsimDir = new File( tmpdir, "lzsim" );
+      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
       // performance
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
       {
@@ -285,6 +287,7 @@ public class NaModelInnerCalcJob implements ISimulation
       e.printStackTrace();
       throw new SimulationException( "Simulation konnte nicht durchgefuehrt werden", e );
     }
+
   }
 
   /**
@@ -463,12 +466,6 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
   {
-    // final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
-    //
-    // // calualtion model
-    // final URL newModellURL = newModellFile.toURL();
-    // final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
-
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
     final Feature metaFE = metaWorkspace.getRootFeature();
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
@@ -484,6 +481,7 @@ public class NaModelInnerCalcJob implements ISimulation
     initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
+    ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
     // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
 
@@ -523,10 +521,14 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // setting duration of simulation...
     // start
-    conf.setSimulationStart( (Date) metaFE.getProperty( "startsimulation" ) );
+    // conf.setSimulationStart( (Date) metaFE.getProperty( "startsimulation" ) );
+    final Date start = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( "startsimulation" ) );
+    conf.setSimulationStart( start );
     conf.setSzenarioID( (String) metaFE.getProperty( "scenarioId" ) );
     // start forecast
-    final Date startForecastDate = (Date) metaFE.getProperty( "startforecast" );
+
+    // final Date startForecastDate = (Date) metaFE.getProperty( "startforecast" );
+    final Date startForecastDate = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( "startforecast" ) );
     conf.setSimulationForecasetStart( startForecastDate );
     // end of simulation
     int hoursForecast = 0; // default length of forecast hours
@@ -575,18 +577,18 @@ public class NaModelInnerCalcJob implements ISimulation
     // create temperatur und verdunstung timeseries
     final File klimaDir = new File( tmpDir, "klima.dat" );
     // TODO: wird das hier noch benötigt (Weisse Elster)?
-//    final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
-//    final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
+    // final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
+    // final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
     final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf.getSimulationEnd() );
 
-//    if( !tempFile.exists() )
-//    {
-//      writer.writeTmpFile( tempFile );
-//    }
-//    if( !verdFile.exists() )
-//    {
-//      writer.writeVerdFile( verdFile );
-//    }
+    // if( !tempFile.exists() )
+    // {
+    // writer.writeTmpFile( tempFile );
+    // }
+    // if( !verdFile.exists() )
+    // {
+    // writer.writeVerdFile( verdFile );
+    // }
     // dump idmapping to file
 
     final IDManager idManager = conf.getIdManager();
@@ -841,12 +843,18 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_02;
     else if( kalypsoNAVersion.equals( "test" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" ) || kalypsoNAVersion.equals( "latest" ) )
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
-    else if( kalypsoNAVersion.equals( "km" ) || kalypsoNAVersion.equals( "v2.0.4" ) )
+    else if( kalypsoNAVersion.equals( "v2.0.4" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
+    else if( kalypsoNAVersion.equals( "v2.0.5" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_05beta;
     else
+    {
+      System.out.println( "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
+          + " Es wird mit der default version gerechnet." );
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+    }
   }
 
   private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws Exception
@@ -961,6 +969,10 @@ public class NaModelInnerCalcJob implements ISimulation
       logger.info( "konnte Umhüllende nicht generieren, evt. keine WQ-Informationen vorhanden , Fehler: " + e.getLocalizedMessage() );
     }
     loadTextFileResults( tmpdir, logger, resultDir );
+    if( conf.getIniWrite() )
+    {
+      loadIniValues( tmpdir, logger, resultEater );
+    }
     loadLogs( tmpdir, logger, resultEater );
     final File[] files = resultDir.listFiles();
     if( files != null )
@@ -973,6 +985,32 @@ public class NaModelInnerCalcJob implements ISimulation
           return;
         }
       }
+    }
+  }
+
+  private void loadIniValues( final File tmpDir, final Logger logger, final ISimulationResultEater resultEater )
+  {
+    try
+    {
+      final String[] wildcards = new String[] { "*" + "lzs", "*" + "lzg" };
+      File lzsimDir = new File( tmpDir, "lzsim" );
+      final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
+      final File[] lzsimFiles = lzsimDir.listFiles( filter );
+      File lzsimZIP = new File( tmpDir, "lzsim.zip" );
+      try
+      {
+        ZipUtilities.zip( lzsimZIP, lzsimFiles, lzsimDir );
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      resultEater.addResult( NaModelConstants.LZSIM_OUT_ID, lzsimZIP );
+    }
+    catch( SimulationException e )
+    {
+      e.printStackTrace();
+      logger.info( e.getMessage() );
     }
   }
 
@@ -1107,7 +1145,7 @@ public class NaModelInnerCalcJob implements ISimulation
     // n Speicherueberlauf .sub [m³/s]
     loadTSResults( "sub", rhbChannelFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d, conf );
     // n Speicherinhalt .spi [hm³] - Umrechnung auf m³
-    loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir, modellWorkspace, logger, outputDir, 0.000001d, conf );
+    loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir, modellWorkspace, logger, outputDir, 1000000.0d, conf );
     // n Talsperrenverdunstung .spv [m³/d]
     // loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
     // modellWorkspace, logger, outputDir, 1.0d , idManager);
@@ -1144,7 +1182,7 @@ public class NaModelInnerCalcJob implements ISimulation
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" ))|| resultFT == (modellWorkspace.getFeatureType( "StorageChannel" )))
+        if( resultFT == (modellWorkspace.getFeatureType( "Node" )) || resultFT == (modellWorkspace.getFeatureType( "Catchment" )) || resultFT == (modellWorkspace.getFeatureType( "StorageChannel" )) )
         {
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
@@ -1413,6 +1451,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private void loadLogs( final File tmpDir, final Logger logger, ISimulationResultEater resultEater )
   {
+
     try
     {
       resultEater.addResult( NaModelConstants.LOG_EXE_STDOUT_ID, new File( tmpDir, "exe.log" ) );
@@ -1450,6 +1489,24 @@ public class NaModelInnerCalcJob implements ISimulation
       e.printStackTrace();
       logger.info( e.getMessage() );
     }
+
+    Handler[] handlers = logger.getHandlers();
+    for( int i = 0; i < handlers.length; i++ )
+    {
+      Handler h = handlers[i];
+      h.flush();
+      h.close();
+    }
+    try
+    {
+      resultEater.addResult( NaModelConstants.LOG_INFO_ID, new File( tmpDir, "infoLog.txt" ) );
+    }
+    catch( SimulationException e )
+    {
+      e.printStackTrace();
+      logger.info( e.getMessage() );
+    }
+
   }
 
   private void copyExecutable( File basedir ) throws Exception
@@ -1473,7 +1530,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void unzipTemplates( URL asciiZipURL, File exeDir )
+  private void unzipInput( URL asciiZipURL, File exeDir )
   {
     try
     {
@@ -1492,7 +1549,7 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeFile = new File( basedir, m_kalypsoKernelPath );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
-    long timeOut = 1000l * 60l * 10l; // max 10 minutes
+    long timeOut = 1000l * 60l * 60l; // max 60 minutes
     PrintWriter logWriter = null;
     PrintWriter errorWriter = null;
     try

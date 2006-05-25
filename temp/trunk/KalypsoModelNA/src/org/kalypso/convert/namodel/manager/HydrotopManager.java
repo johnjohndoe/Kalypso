@@ -3,6 +3,7 @@ package org.kalypso.convert.namodel.manager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -203,13 +204,13 @@ public class HydrotopManager extends AbstractManager
         {
           anzHydrotope += 1;
           final Feature hydrotopFE = (Feature) hydIter.next();
-          writeFeature( asciiBuffer, hydrotopFE, anzHydrotope );
+          writeFeature( asciiBuffer, hydrotopFE, anzHydrotope, catchmentFE );
         }
       }
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope, Feature catchmentFeature ) throws Exception
   {
     double HGesFlaeche = ((Double) feature.getProperty( "area" )).doubleValue();
     Double SealingRate = (Double) m_landuseMap.get( feature.getProperty( "landuse" ) );
@@ -237,9 +238,19 @@ public class HydrotopManager extends AbstractManager
     b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
     b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
-
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "corrSealing" ), "*" ) );
-
+    
+    String hydType = (String) feature.getProperty( "hydType"  );
+    int hydTypeNumber=0;
+    if( hydType==null || hydType.equals("Bodenspeicher")) 
+      hydTypeNumber = 0;
+    else if(hydType.equals("MuldenRigole"))
+    hydTypeNumber = 1;
+    else if(hydType.equals("Dachbegruenung"))
+      hydTypeNumber = 2;
+    else
+      System.out.println("Kein gültiger Hydrotoptyp");
+    b.append(" " + hydTypeNumber);
     asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
   }
 

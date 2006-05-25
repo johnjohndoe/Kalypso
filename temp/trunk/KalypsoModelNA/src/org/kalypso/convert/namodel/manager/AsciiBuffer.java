@@ -69,6 +69,7 @@ public class AsciiBuffer
   private final List m_featuresToWrite = new ArrayList();
 
   private final StringBuffer m_zftBuffer= new StringBuffer();
+  private final StringBuffer m_swaleTrenchBuffer= new StringBuffer();
 
   public AsciiBuffer()
   {
@@ -129,5 +130,10 @@ public class AsciiBuffer
   public StringBuffer getZFTBuffer()
   {
     return m_zftBuffer;
+  }
+
+  public StringBuffer getSwaleTrenchBuffer( )
+  {
+    return m_swaleTrenchBuffer;
   }
 }
