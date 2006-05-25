@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -51,6 +52,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -82,6 +85,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   private Combo m_combo = null;
 
   private final String[] m_labels;
+
   private final Object[] m_values;
 
   public ComboFeatureControl( final IPropertyType ftp, final String[] labels, final Object[] values )
@@ -93,8 +97,24 @@ public class ComboFeatureControl extends AbstractFeatureControl
   {
     super( feature, ftp );
 
-    m_labels = labels;
-    m_values = values;
+    if( (labels == null || labels.length == 0) && ftp instanceof IValuePropertyType )
+    {
+      final Map<String, String> entries = PropertyUtils.createComboEntries( (IValuePropertyType) ftp );
+      m_labels = new String[entries.size()];
+      m_values = new String[entries.size()];
+      int count = 0;
+      for( final Map.Entry<String, String> entry : entries.entrySet() )
+      {
+        m_labels[count] = entry.getKey();
+        m_values[count] = entry.getValue();
+        count++;
+      }
+    }
+    else
+    {
+      m_labels = labels;
+      m_values = values;
+    }
   }
 
   /**

@@ -58,18 +58,26 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
   {
     // XLINK
     catalog.put( NS.XLINK, getClass().getResource( "gml2_2002/xlinks.xsd" ) );
+    prefixes.put( NS.XLINK, "xlink" );
+
     // GML
     // Version 2.1
     // catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
     catalog.put( NS.GML3, getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
+    prefixes.put( NS.GML3, "gml" );
 
     // WFS
     catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
+    prefixes.put( NS.WFS, "wfs" );
 
     // SWE & OM things
     catalog.put( NS.SWE, getClass().getResource( "sweCommon/1.0.30/swe.xsd" ) );
+    prefixes.put( NS.SWE, "swe" );
+
     catalog.put( NS.OM, getClass().getResource( "om/1.0.30/observation.xsd" ) );
+    prefixes.put( NS.OM, "om" );
+
   }
 }

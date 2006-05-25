@@ -112,7 +112,7 @@
 	</xs:element>
 	<xs:element name="combo" substitutionGroup="ns1:control">
 		<xs:annotation>
-			<xs:documentation>A combo let the user choose between severel values.</xs:documentation>
+			<xs:documentation>A combo let the user choose between several values.</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
@@ -121,8 +121,8 @@
 						<xs:element name="entry" minOccurs="1" maxOccurs="unbounded">
 							<xs:annotation>
 								<xs:documentation>
-									An entry represant a slectable item from the combo box. The
-									label is the string diaplyed to the user. The value (string
+									An entry represant a selectable item from the combo box. The
+									label is the string displayed to the user. The value (string
 									element content) will be parsed by the appropriate
 									IMarhsallingTypeHandler to the required value.
 								</xs:documentation>

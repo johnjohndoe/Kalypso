@@ -102,7 +102,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
   private ToStringContentHandler m_exceptionContentHandler = null;
 
-  StringBuffer m_errorBuffer = new StringBuffer();
+  final StringBuffer m_errorBuffer = new StringBuffer();
 
   private final URL m_context;
 
@@ -152,7 +152,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
     // handle OGC Exceptions
     if( m_exceptionContentHandler != null )
@@ -160,32 +160,20 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );
       return;
     }
-    // deegree1-service
-    if( localName != null && localName.endsWith( "Exception" ) )
+
+    // Handle degree1 + deegree2 exepctions.
+    // deegree1-service: ...Exception
+    // deegree2-service: ServiceExceptionReport
+    // TODO: isn't this dangerous, because if we ever get gml's with an element 'exception' we are lost.
+    // Should'nt we at least test if we are at level 0?
+    if( localName != null && (localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" )) )
     {
       m_exceptionContentHandler = new ToStringContentHandler( new ILogger()
       {
-
-        public void log( String message )
+        public void log( final String message )
         {
           m_errorBuffer.append( message );
         }
-
-      } );
-      m_exceptionContentHandler.startElement( uri, localName, qName, atts );
-      return;
-    }
-    // deegree2-service
-    if( localName != null && localName.equals( "ServiceExceptionReport" ) )
-    {
-      m_exceptionContentHandler = new ToStringContentHandler( new ILogger()
-      {
-
-        public void log( String message )
-        {
-          m_errorBuffer.append( message );
-        }
-
       } );
       m_exceptionContentHandler.startElement( uri, localName, qName, atts );
       return;
@@ -194,91 +182,18 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     // handle GML
     m_indent++;
     indent();
-    final MultiException schemaNotFoundExceptions = new MultiException();
-    // System.out.println( "<" + uri + ":" + localName + ">" );
+
     if( m_gmlSchema == null )
-    {
-      // first element may have schemalocation
-      m_schemaLocationString = getSchemalocation( atts );
+      m_gmlSchema = loadGMLSchema( uri, atts );
 
-      GMLSchema schema = null;
-
-      // 1. try : use hint
-      if( m_schemaLocationHint != null )
-      {
-        try
-        {
-          if( m_useSchemaCatalog )
-            schema = GMLSchemaCatalog.getSchema( m_schemaLocationHint );
-          else
-            schema = GMLSchemaFactory.createGMLSchema( m_schemaLocationHint );
-        }
-        catch( final GMLSchemaException e )
-        {
-          schemaNotFoundExceptions.addException( new SAXException( e ) );
-        }
-      }
-
-      try
-      {
-        // 2. try : from uri + schemalocation attributes
-        if( schema == null )
-        {
-          final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
-          final URL schemaLocation = namespaces.get( uri );
-
-          if( m_useSchemaCatalog )
-            schema = GMLSchemaCatalog.getSchema( uri, schemaLocation );
-          else if( schemaLocation != null )
-            schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
-        }
-      }
-      catch( final Exception e )
-      {
-        if( schema == null )
-          schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
-              + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
-      }
-
-      // 3. try
-      if( schema == null && m_useSchemaCatalog )
-        try
-        {
-          schema = GMLSchemaCatalog.getSchema( uri.toString() );
-        }
-        catch( Exception e )
-        {
-          schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
-              + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
-        }
-
-      if( schema == null )
-      {
-        if( schemaNotFoundExceptions.isEmpty() )
-          throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was "
-              + m_schemaLocationString + ")" );
-        else
-          throw new SAXException( schemaNotFoundExceptions );
-
-      }
-      if( !schemaNotFoundExceptions.isEmpty() )
-      {
-        System.out.println( "warning: errors occured with schemalocation" );
-        schemaNotFoundExceptions.printStackTrace();
-      }
-      m_gmlSchema = schema;
-    }
-
-    if( uri == null || uri.length() < 1 )
-      uri = m_gmlSchema.getTargetNamespace();
-
+    final String localUri = ( uri == null || uri.length() < 1 ) ? m_gmlSchema.getTargetNamespace() : uri;
     switch( m_status )
     {
       case FIRST_FEATURE:
       {
         try
         {
-          m_featureParser.createFeature( null, uri, localName, atts );
+          m_featureParser.createFeature( null, localUri, localName, atts );
         }
         catch( final GMLException e )
         {
@@ -293,7 +208,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       case START_PROPERTY_END_FEATURE:
       {
         final Feature feature = m_featureParser.getCurrentFeature();
-        m_propParser.createProperty( feature, uri, localName, atts );
+        m_propParser.createProperty( feature, localUri, localName, atts );
 
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
         // final Feature parentFE = m_featureParser.getCurrentFeature();
@@ -302,7 +217,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         {
           final IValuePropertyType vpt = (IValuePropertyType) pt;
 
-          m_propParser.setContent( feature, vpt, m_xmlReader, uri, localName, qName, atts );
+          m_propParser.setContent( feature, vpt, m_xmlReader, localUri, localName, qName, atts );
           // we skip the end tag
         }
         else if( pt instanceof IRelationType )// its a relation
@@ -330,7 +245,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else
         {
-          System.out.println( "unknown: " + uri + " " + localName );
+          System.out.println( "unknown: " + localUri + " " + localName );
           // unknown element in schema, probably this property is removed
           // from schema and still occurs in the xml
           // instance document
@@ -349,7 +264,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         {
           try
           {
-            m_featureParser.createFeature( parentFE, uri, localName, atts );
+            m_featureParser.createFeature( parentFE, localUri, localName, atts );
           }
           catch( final GMLException e )
           {
@@ -372,6 +287,82 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       default:
         break;
     }
+  }
+
+  private GMLSchema loadGMLSchema( final String uri, final Attributes atts ) throws SAXException
+  {
+    final MultiException schemaNotFoundExceptions = new MultiException();
+
+    // first element may have schemalocation
+    m_schemaLocationString = getSchemalocation( atts );
+
+    GMLSchema schema = null;
+
+    // 1. try : use hint
+    if( m_schemaLocationHint != null )
+    {
+      try
+      {
+        if( m_useSchemaCatalog )
+          schema = GMLSchemaCatalog.getSchema( m_schemaLocationHint );
+        else
+          schema = GMLSchemaFactory.createGMLSchema( m_schemaLocationHint );
+      }
+      catch( final GMLSchemaException e )
+      {
+        schemaNotFoundExceptions.addException( new SAXException( e ) );
+      }
+    }
+
+    try
+    {
+      // 2. try : from uri + schemalocation attributes
+      if( schema == null )
+      {
+        final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
+        final URL schemaLocation = namespaces.get( uri );
+
+        if( m_useSchemaCatalog )
+          schema = GMLSchemaCatalog.getSchema( uri, schemaLocation );
+        else if( schemaLocation != null )
+          schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
+      }
+    }
+    catch( final Exception e )
+    {
+      if( schema == null )
+        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
+            + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
+    }
+
+    // 3. try
+    if( schema == null && m_useSchemaCatalog )
+      try
+      {
+        schema = GMLSchemaCatalog.getSchema( uri.toString() );
+      }
+      catch( Exception e )
+      {
+        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
+            + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
+      }
+
+    if( schema == null )
+    {
+      if( schemaNotFoundExceptions.isEmpty() )
+        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint + ") (schemaLocation was " + m_schemaLocationString
+            + ")" );
+      else
+        throw new SAXException( schemaNotFoundExceptions );
+    }
+
+    if( !schemaNotFoundExceptions.isEmpty() )
+    {
+      System.out.println( "warning: errors occured with schemalocation" );
+      schemaNotFoundExceptions.printStackTrace();
+    }
+    
+    return schema;
   }
 
   // DONT REMOVE: used by proto-implementation of DelegateFeature obove
