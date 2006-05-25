@@ -13,12 +13,16 @@ import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.TypeHandlerUtilities;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 /**
  * @author belger
@@ -27,15 +31,25 @@ public class GmlConvertFactoryTest extends TestCase
 {
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
-  public GmlConvertFactoryTest( ) throws TypeRegistryException
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
   {
+    super.setUp();
+
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
     TypeHandlerUtilities.registerTypeHandlers( registry );
 
-    // registry.registerTypeHandler( new ObservationLinkHandler() );
-    // registry.registerTypeHandler( new RangeSetTypeHandler() );
-    // registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+    final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(), new DeegreeUrlCatalog() } );
+    final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
+    if( !cacheDirectory.exists() )
+      cacheDirectory.mkdirs();
+    cacheDirectory.deleteOnExit();
+    GMLSchemaCatalog.init( catalog, cacheDirectory );
+
   }
 
   public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
