@@ -47,11 +47,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -141,6 +145,8 @@ public class StringModifier implements IFeatureModifier
 
     if( data instanceof Date )
       return DATE_FORMATTER.format( data );
+    else if( data instanceof XMLGregorianCalendar )
+      return DATE_FORMATTER.format( DateUtilities.toDate( (XMLGregorianCalendar) data ) );
     else if( data instanceof Number )
       return NUMBER_FORMAT.format( data );
 
@@ -184,6 +190,18 @@ public class StringModifier implements IFeatureModifier
       return new Boolean( text );
     else if( clazz == Date.class )
       return DATE_FORMATTER.parse( text );
+    else if( clazz == XMLGregorianCalendar.class )
+    {
+      final Date date = DATE_FORMATTER.parse( text );
+      try
+      {
+        return DateUtilities.toXMLGregorianCalendar( date );
+      }
+      catch( DatatypeConfigurationException e )
+      {
+        throw new ParseException( text, 0 );
+      }
+    }
     else if( clazz == Double.class )
       // allways use NumberUtils to parse double, so to allow input of '.' or ','
       return new Double( NumberUtils.parseDouble( text ) );
