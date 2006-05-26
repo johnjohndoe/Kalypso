@@ -55,6 +55,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -102,7 +103,6 @@ public class SwaleAndTrenchManager extends AbstractManager
     while( iter.hasNext() )
     {
       final Feature swaleTrenchFE = (Feature) iter.next();
-      if( asciiBuffer.writeFeature( swaleTrenchFE ) )
         writeFeature( asciiBuffer, workspace, swaleTrenchFE );
     }
   }
@@ -111,13 +111,13 @@ public class SwaleAndTrenchManager extends AbstractManager
   {
     final IDManager idManager = m_conf.getIdManager();
     // Line 5
-    final GM_LineString sTGeomProp = (GM_LineString) feature.getProperty( "position" );
+    final GM_Curve sTGeomProp = (GM_Curve) feature.getProperty( "position" );
     final Feature modelRootFeature = workSpace.getRootFeature();
     final Feature modelCol = (Feature) modelRootFeature.getProperty( "CatchmentCollectionMember" );
     final List catchmentList = (List) modelCol.getProperty( "catchmentMember" );
     final Iterator catchmentIter = catchmentList.iterator();
     int catchmentAsciiID = 0;
-    while( catchmentIter.hasNext() || catchmentAsciiID > 0 )
+    while( catchmentIter.hasNext() & catchmentAsciiID == 0 )
     {
       final Feature catchmentFE = (Feature) catchmentIter.next();
       final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( "Ort" );
@@ -150,7 +150,7 @@ public class SwaleAndTrenchManager extends AbstractManager
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "dischargeNode" );
     final Feature nodeFeSTDischarge = workSpace.resolveLink( feature, rt );
     if( nodeFeSTDischarge != null )
-      asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" );
+      asciiBuffer.getSwaleTrenchBuffer().append(" "+ FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" );
     asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " );
 
   }

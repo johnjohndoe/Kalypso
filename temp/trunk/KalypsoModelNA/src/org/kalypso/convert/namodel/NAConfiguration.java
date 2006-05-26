@@ -194,7 +194,7 @@ public class NAConfiguration
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
-    m_swaleAndTrenchFile = new File( asciiBaseDir, "hydro.top/we_nat.mr" );
+    m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" );
 
     m_iniWrite = false;
   }
