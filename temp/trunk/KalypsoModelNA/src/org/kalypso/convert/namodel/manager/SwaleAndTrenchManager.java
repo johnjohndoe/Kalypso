@@ -40,61 +40,37 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author doemming
+ * @author huebsch
  */
-public class SwaleAndTranchManager extends AbstractManager
+public class SwaleAndTrenchManager extends AbstractManager
 {
-  private final IFeatureType m_swaleAndTrenchFT;
-
-//  private final IFeatureType m_grundwasserabflussFT;
-
   private final NAConfiguration m_conf;
 
-
-  private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
-
-  public SwaleAndTranchManager( GMLSchema schema, NAConfiguration conf ) throws IOException
+  public SwaleAndTrenchManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getSwaleAndTrenchFormatURL() );
     m_conf = conf;
-    m_swaleAndTrenchFT = schema.getFeatureType( "SwaleAndTrench" );
 
-//    final IRelationType ftp2 = (IRelationType) m_swaleAndTrenchFT.getProperty( "grundwasserabflussMember" );
-//    m_grundwasserabflussFT = ftp2.getTargetFeatureType();
   }
 
   /**
@@ -113,6 +89,7 @@ public class SwaleAndTranchManager extends AbstractManager
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
+    // TODO: code!!!
     return null;
   }
 
@@ -133,9 +110,49 @@ public class SwaleAndTranchManager extends AbstractManager
   private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, final Feature feature ) throws Exception
   {
     final IDManager idManager = m_conf.getIdManager();
-    int asciiID = idManager.getAsciiID( feature );
-    
-    asciiBuffer.getSwaleTrenchBuffer().append( "           " );
+    // Line 5
+    final GM_LineString sTGeomProp = (GM_LineString) feature.getProperty( "position" );
+    final Feature modelRootFeature = workSpace.getRootFeature();
+    final Feature modelCol = (Feature) modelRootFeature.getProperty( "CatchmentCollectionMember" );
+    final List catchmentList = (List) modelCol.getProperty( "catchmentMember" );
+    final Iterator catchmentIter = catchmentList.iterator();
+    int catchmentAsciiID = 0;
+    while( catchmentIter.hasNext() || catchmentAsciiID > 0 )
+    {
+      final Feature catchmentFE = (Feature) catchmentIter.next();
+      final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( "Ort" );
+      if( tGGeomProp.contains( sTGeomProp.getStartPoint() ) )
+      {
+        catchmentAsciiID = idManager.getAsciiID( catchmentFE );
+        asciiBuffer.getSwaleTrenchBuffer().append( catchmentAsciiID + "\n" );
+      }
+    }
+
+    // Line 6
+    // (area,*)_(nutzung,*)_(boden,*)_(maxPerk,*)_(InflowGW,*)
+    final Double width = (Double) feature.getProperty( "widthTrench" );
+    final double length = sTGeomProp.getLength();
+    final double area = width.doubleValue() * length;
+    asciiBuffer.getSwaleTrenchBuffer().append( area );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutzung" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "maxPerk" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "InflowGW" ), "*" ) + "\n" );
+
+    // Line 7
+    // (diameterPipe,*)_(kfPipe,*)_(drainPipeSlope,*)_(roughnessPipe,*)_(widthTrench,*)_(dischargeNode,*)
+    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "widthTrench" ), "*" ) );
+
+    final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( "dischargeNode" );
+    final Feature nodeFeSTDischarge = workSpace.resolveLink( feature, rt );
+    if( nodeFeSTDischarge != null )
+      asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" );
+    asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " );
+
   }
 
   /**

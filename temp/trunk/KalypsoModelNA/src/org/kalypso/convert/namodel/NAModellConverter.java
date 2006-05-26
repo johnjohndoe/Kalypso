@@ -59,6 +59,7 @@ import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.ParseManager;
 import org.kalypso.convert.namodel.manager.RHBManager;
 import org.kalypso.convert.namodel.manager.SchneeManager;
+import org.kalypso.convert.namodel.manager.SwaleAndTrenchManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -104,7 +105,9 @@ public class NAModellConverter
 
   private final SchneeManager m_schneeManager;
 
+  private final SwaleAndTrenchManager m_swaleAndTrenchManager;
   private final IdleLanduseManager m_idleLanduseManager;
+
 
 //  public static void main( String[] args )
 //  {
@@ -221,6 +224,7 @@ public class NAModellConverter
     m_nodeManager = new NetFileManager( m_conf );
     m_rhbManager = new RHBManager( m_modelSchema, m_conf );
     m_hydrotopManager = new HydrotopManager( m_conf );
+    m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
@@ -242,6 +246,7 @@ public class NAModellConverter
     m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace, nodeResultProvider );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
+    m_swaleAndTrenchManager.writeFile( asciiBuffer, modelWorkspace );
 
     Writer writer3 = new FileWriter( m_conf.getNetFile() );
     writer3.write( asciiBuffer.getNetBuffer().toString() );
@@ -254,6 +259,10 @@ public class NAModellConverter
     Writer writer2 = new FileWriter( m_conf.getChannelFile() );
     writer2.write( asciiBuffer.getChannelBuffer().toString() );
     writer2.close();
+    
+    Writer writer10 = new FileWriter( m_conf.getSwaleAndTrenchFile() );
+    writer10.write( asciiBuffer.getSwaleTrenchBuffer().toString() );
+    writer10.close();
 
     Writer writer4 = new FileWriter( m_conf.getRHBFile() );
     writer4.write( asciiBuffer.getRhbBuffer().toString() );
