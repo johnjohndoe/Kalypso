@@ -295,10 +295,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
     if( !pt.isList() )
     {
       if( pt instanceof IValuePropertyType )
-      {
-        final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
-        if( value != null && !valueClass.isAssignableFrom( value.getClass() ) )
-          throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " + pt.getQName() );
+      {//TODO:This doesn´t work - what to do?
+        // final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
+        // if( value != null && !valueClass.isAssignableFrom( value.getClass() ) )
+        // throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " +
+        // pt.getQName() );
       }
       else if( pt instanceof IRelationType )
       {
