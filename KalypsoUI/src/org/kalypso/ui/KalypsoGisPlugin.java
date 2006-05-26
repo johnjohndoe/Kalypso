@@ -91,6 +91,7 @@ import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandle
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
@@ -363,12 +364,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       ex.printStackTrace();
     }
-    
+
     final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     registerTypeHandler( marshallingRegistry, guiRegistry );
     registerVirtualFeatureTypeHandler();
-    
+
     try
     {
       reconfigure();
@@ -462,7 +463,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         e.printStackTrace();
 
         // at least log it
-        getLog().log( StatusUtilities.statusFromThrowable(e, "Error while initializing schema catalog") );
+        getLog().log( StatusUtilities.statusFromThrowable( e, "Error while initializing schema catalog" ) );
       }
     }
   }
@@ -488,9 +489,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
-    
+
     GMLSchemaCatalog.release();
-    
+
     m_resourceBundle = null;
   }
 
@@ -590,11 +591,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     try
     {
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, ZmlInlineTypeHandler.TA.class );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
-      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, ZmlInlineTypeHandler.TN.class );
-      
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
+
       if( marshallingRegistry != null )
       {
         TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
@@ -617,7 +618,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
         // TODO find out how to register the observation gui type handler
         // this, as it is here, does not work
-        //guiRegistry.registerTypeHandler( new ObservationGuiTypeHandler() );
+        // guiRegistry.registerTypeHandler( new ObservationGuiTypeHandler() );
       }
     }
     catch( final Exception e ) // generic exception caught for simplicity
