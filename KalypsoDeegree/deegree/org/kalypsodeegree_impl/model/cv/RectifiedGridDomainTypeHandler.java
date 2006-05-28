@@ -1,7 +1,6 @@
 package org.kalypsodeegree_impl.model.cv;
 
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Vector;
 
 import javax.xml.namespace.QName;
@@ -25,7 +24,6 @@ import org.w3c.dom.NodeList;
  */
 public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-
   private String NSGML = XMLHelper.GMLSCHEMA_NS;
 
   private static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
@@ -55,7 +53,6 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
   @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
-
     RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
     Document ownerDocument = node.getOwnerDocument();
 
@@ -125,7 +122,7 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
-  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
     Node node_rg = ((Element) node).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
 
@@ -160,7 +157,7 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
       System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 
       NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NSRGC, "offsetVector" );
-      Vector offSetVectors = new Vector();
+      Vector<double[]> offSetVectors = new Vector<double[]>();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
         Node n_offsetVector = nl_offSetVector.item( i );
@@ -174,9 +171,9 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
         offSetVectors.addElement( vectorCoo );
       }
       double[] offset = new double[2];
-      double[] p1 = (double[]) offSetVectors.get( 0 );
+      double[] p1 = offSetVectors.get( 0 );
       offset[1] = p1[1];
-      double[] p2 = (double[]) offSetVectors.get( 1 );
+      double[] p2 = offSetVectors.get( 1 );
       offset[0] = p2[0];
       System.out.println( "OffSetX: " + p2[0] + ", OffSetY: " + p1[1] );
 
@@ -210,7 +207,7 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( final String text ) throws ParseException
+  public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }

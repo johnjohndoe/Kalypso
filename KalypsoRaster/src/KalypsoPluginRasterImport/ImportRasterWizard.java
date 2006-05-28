@@ -106,6 +106,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
+  @Override
   public void addPages()
   {
     super.addPages();
@@ -119,6 +120,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performCancel()
    */
+  @Override
   public boolean performCancel()
   {
     return true;
@@ -127,6 +129,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
+  @Override
   public boolean performFinish()
   {
     final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
@@ -142,6 +145,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
       {
         Job importGridJob = new Job( "Raster importieren" )
         {
+          @Override
           protected IStatus run( final IProgressMonitor monitor )
           {
             try

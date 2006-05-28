@@ -10,16 +10,15 @@ import java.util.Vector;
  */
 public class RangeSet
 {
-
   /**
    * Vector, which stores the rangeSet data; the data of each row is stored in a Vector
    */
-  private Vector rangeSetData = null;
+  private Vector m_rangeSetData = null;
 
   /**
    * name of rangeSetData-file ("xy.dat")
    */
-  String rangeSetDataFile = null;
+  private String m_rangeSetDataFile = null;
 
   /**
    * constructs a RangeSet with the given rangeSetData
@@ -28,10 +27,10 @@ public class RangeSet
    * @param rangeSetDataFileName
    *          name of rangeSetData-file ("xy.dat")
    */
-  public RangeSet( Vector rangeSetData, String rangeSetDataFileName )
+  public RangeSet( Vector<Vector<Double>> rangeSetData, String rangeSetDataFileName )
   {
-    this.rangeSetData = rangeSetData;
-    this.rangeSetDataFile = rangeSetDataFileName;
+    m_rangeSetData = rangeSetData;
+    m_rangeSetDataFile = rangeSetDataFileName;
   }
 
   /**
@@ -39,7 +38,7 @@ public class RangeSet
    */
   public Vector getRangeSetData()
   {
-    return rangeSetData;
+    return m_rangeSetData;
   }
 
   /**
@@ -48,7 +47,7 @@ public class RangeSet
    */
   public void setRangeSetData( Vector rangeSetData )
   {
-    this.rangeSetData = rangeSetData;
+    this.m_rangeSetData = rangeSetData;
   }
 
   /**
@@ -56,7 +55,7 @@ public class RangeSet
    */
   public String getRangeSetDataFile()
   {
-    return rangeSetDataFile;
+    return m_rangeSetDataFile;
   }
 
   /**
@@ -65,7 +64,7 @@ public class RangeSet
    */
   public void setRangeSetDataFile( String rangeSetDataFileName )
   {
-    this.rangeSetDataFile = rangeSetDataFileName;
+    this.m_rangeSetDataFile = rangeSetDataFileName;
   }
 
   /**
@@ -74,9 +73,9 @@ public class RangeSet
   public double getMinValue()
   {
     double min = Double.MAX_VALUE;
-    for( int i = 0; i < rangeSetData.size(); i++ )
+    for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      Vector rowData = (Vector)rangeSetData.get( i );
+      Vector rowData = (Vector)m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
@@ -98,9 +97,9 @@ public class RangeSet
   public double getMaxValue()
   {
     double max = Double.MIN_VALUE;
-    for( int i = 0; i < rangeSetData.size(); i++ )
+    for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      Vector rowData = (Vector)rangeSetData.get( i );
+      Vector rowData = (Vector)m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
