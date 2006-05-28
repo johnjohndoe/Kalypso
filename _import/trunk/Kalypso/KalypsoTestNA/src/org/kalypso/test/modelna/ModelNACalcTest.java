@@ -49,7 +49,6 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -244,7 +243,7 @@ public class ModelNACalcTest extends TestCase
   private SimulationDataPath[] createBeans( URL modelSpec ) throws JAXBException
   {
     final List<SimulationDataPath> result = new ArrayList<SimulationDataPath>();
-    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+    final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final Modeldata modeldata = (Modeldata) unmarshaller.unmarshal( modelSpec );
     final List<Input> input = modeldata.getInput();
