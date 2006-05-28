@@ -83,7 +83,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
 
-  protected ArrayList m_aggregate = new ArrayList( 500 );
+  protected ArrayList<GM_Object> m_aggregate = new ArrayList<GM_Object>( 500 );
 
   /**
    * Creates a new GM_Aggregate_Impl object.
@@ -242,7 +242,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "invalid index/position: " + index + " to remove a geometry!" );
     }
 
-    GM_Object gmo = (GM_Object)m_aggregate.remove( index );
+    GM_Object gmo = m_aggregate.remove( index );
 
     setValid( false );
 
@@ -265,7 +265,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public GM_Object getObjectAt( int index )
   {
-    return (GM_Object)m_aggregate.get( index );
+    return m_aggregate.get( index );
   }
 
   /**
@@ -275,7 +275,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     GM_Object[] gmos = new GM_Object[this.getSize()];
 
-    return (GM_Object[])m_aggregate.toArray( gmos );
+    return m_aggregate.toArray( gmos );
   }
 
   /**
@@ -297,6 +297,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns true if no geometry stored within the collection.
    */
+  @Override
   public boolean isEmpty()
   {
     return ( getSize() == 0 );
@@ -308,6 +309,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * @param crs
    *          new spatial reference system
    */
+  @Override
   public void setCoordinateSystem( CS_CoordinateSystem crs )
   {
     super.setCoordinateSystem( crs );
@@ -325,6 +327,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
+  @Override
   public void translate( double[] d )
   {
     try
@@ -343,6 +346,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     setValid( false );
   }
 
+  @Override
   public boolean equals( Object other )
   {
     // envelope was not valid
@@ -379,6 +383,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
+  @Override
   public boolean intersects( GM_Object gmo )
   {
     boolean inter = false;
@@ -400,6 +405,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     return inter;
   }
 
+  @Override
   public String toString()
   {
     String ret = null;

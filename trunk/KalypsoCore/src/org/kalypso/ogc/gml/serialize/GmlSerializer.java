@@ -98,9 +98,10 @@ public final class GmlSerializer
     try
     {
       final TransformerFactory tFac = TransformerFactory.newInstance();
-      tFac.setAttribute( "indent-number", new Integer( 4 ) );
+//      tFac.setAttribute( "indent-number", new Integer( 4 ) );
       final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
+      transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
 
       final XMLReader reader = new GMLWorkspaceReader();
       reader.setFeature( "http://xml.org/sax/features/namespaces", true );
@@ -137,7 +138,7 @@ public final class GmlSerializer
       // richtige enconding im xml-header steht.
       stream = new BufferedInputStream( gmlURL.openStream() );
 
-      return createGMLWorkspace( new InputSource( stream ), gmlURL, null );
+      return createGMLWorkspace( new InputSource( stream ), gmlURL );
     }
     finally
     {
@@ -177,7 +178,7 @@ public final class GmlSerializer
         rt.addConfiguredToken( token );
       }
 
-      return createGMLWorkspace( new InputSource( rt ), gmlURL, urlResolver );
+      return createGMLWorkspace( new InputSource( rt ), gmlURL );
     }
     finally
     {
@@ -185,7 +186,7 @@ public final class GmlSerializer
     }
   }
 
-  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IUrlResolver urlResolver ) throws Exception
+  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context ) throws Exception
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );

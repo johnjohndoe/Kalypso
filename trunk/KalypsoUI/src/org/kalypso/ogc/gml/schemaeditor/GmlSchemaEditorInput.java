@@ -57,9 +57,12 @@ public class GmlSchemaEditorInput implements IEditorInput
 
   private final URL m_location;
 
-  public GmlSchemaEditorInput( final String namespace, final URL location )
+  private final String m_gmlVersion;
+
+  public GmlSchemaEditorInput( final String namespace, final String gmlVersion, final URL location )
   {
     m_namespace = namespace;
+    m_gmlVersion = gmlVersion;
     m_location = location;
   }
 
@@ -119,6 +122,11 @@ public class GmlSchemaEditorInput implements IEditorInput
   public URL getLocation( )
   {
     return m_location;
+  }
+
+  public String getGmlVersion( )
+  {
+    return m_gmlVersion;
   }
 
 }

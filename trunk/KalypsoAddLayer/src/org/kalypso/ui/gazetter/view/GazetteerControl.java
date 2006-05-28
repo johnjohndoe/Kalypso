@@ -266,7 +266,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     {
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
       QName featureType = m_gazetteerLocation.getFeatureType();
-      final IFeatureType ft = workspace.getFeatureType( featureType );
+      final IFeatureType ft = workspace.getGMLSchema().getFeatureType( featureType );
       final Feature[] features = workspace.getFeatures( ft );
       final Object result[] = new Object[features.length + 1];
       result[0] = GazetteerConstants.NO_SELECTION_IN_COMBO;

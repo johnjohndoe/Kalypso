@@ -66,7 +66,7 @@ import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class IntervallFilterTest extends TestCase
 {
-  public void testIntervallFilter()
+  public void testIntervallFilter( )
   {
     final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
@@ -81,7 +81,7 @@ public class IntervallFilterTest extends TestCase
       xlink.setHref( href );
 
       final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet(ObjectFactory.class);
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final ZmlFilterType zmlFilter = fac.createZmlFilterType();
       zmlFilter.setZml( xlink );
 
@@ -91,26 +91,25 @@ public class IntervallFilterTest extends TestCase
       intervallFilter.setMode( "sum" );
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
-      intervallFilter.setFilter( fac.createZmlFilter(zmlFilter) );
+      intervallFilter.setFilter( fac.createZmlFilter( zmlFilter ) );
       writer = new StringWriter();
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.marshal( intervallFilter, writer );
       writer.close();
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );
       final String filterInline = XMLUtilities.prepareInLine( string );
       final URL zmlURL = new URL( href + "?" + filterInline );
       final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
-      
+
       // ZML geht von
-      //      "2005-02-16T16:50:00"
-      //      bis
-      //      "2005-02-23T17:00:00"
+      // "2005-02-16T16:50:00"
+      // bis
+      // "2005-02-23T17:00:00"
       final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
       final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T18:36:00" );
-//      final Date from = XML_DATETIME_FORMAT.parse( "2005-02-23T16:00:00" );
-//      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-23T18:00:00" );
-      String dump = ObservationUtilities.dump( observation
-          .getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
+      // final Date from = XML_DATETIME_FORMAT.parse( "2005-02-23T16:00:00" );
+      // final Date to = XML_DATETIME_FORMAT.parse( "2005-02-23T18:00:00" );
+      String dump = ObservationUtilities.dump( observation.getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
       System.out.println( dump );
     }
     catch( Exception e )

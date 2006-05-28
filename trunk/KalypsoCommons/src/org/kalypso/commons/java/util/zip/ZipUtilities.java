@@ -53,7 +53,6 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -118,7 +117,7 @@ public class ZipUtilities
           else
             os = new BufferedOutputStream( new FileOutputStream( newfile ) );
 
-          CopyUtils.copy( zis, os );
+          IOUtils.copy( zis, os );
         }
         finally
         {
@@ -229,7 +228,7 @@ public class ZipUtilities
     {
       contentStream = new BufferedInputStream( new FileInputStream( file ) );
 
-      CopyUtils.copy( contentStream, zos );
+      IOUtils.copy( contentStream, zos );
     }
     finally
     {

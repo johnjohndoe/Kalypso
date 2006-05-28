@@ -170,10 +170,10 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone )
   {
-    // why not?
-    throw new CloneNotSupportedException();
+    final String stringOfClone = convertToXMLString( (T)objectToClone );
+    return parseType( stringOfClone );
   }
 
   /**

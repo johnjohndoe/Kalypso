@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 
@@ -83,8 +82,8 @@ public abstract class ProcessWraper
 
       while( true )
       {
-        CopyUtils.copy( inStream, log );
-        CopyUtils.copy( errStream, nul_dev );
+        IOUtils.copy( inStream, log );
+        IOUtils.copy( errStream, nul_dev );
 
         try
         {

@@ -181,6 +181,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * removes all GM_Curve from the aggregation.
    */
+  @Override
   public void removeAll()
   {
     super.removeAll();
@@ -199,7 +200,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_Curve[] getAllCurves()
   {
-    return (GM_Curve[])m_aggregate.toArray( new GM_Curve[getSize()] );
+    return m_aggregate.toArray( new GM_Curve[getSize()] );
   }
 
   /**
@@ -215,6 +216,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * <p>
    * not implemented yet
    */
+  @Override
   public GM_Boundary getBoundary()
   {
     return null;
@@ -227,8 +229,8 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   {
     GM_Envelope bb = getCurveAt( 0 ).getEnvelope();
 
-    double[] min = (double[])bb.getMin().getAsArray().clone();
-    double[] max = (double[])bb.getMax().getAsArray().clone();
+    double[] min = bb.getMin().getAsArray().clone();
+    double[] max = bb.getMax().getAsArray().clone();
 
     for( int i = 1; i < getSize(); i++ )
     {
@@ -298,6 +300,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * calculates the centroid and envelope of the aggregation
    */
+  @Override
   protected void calculateParam()
   {
     calculateCentroid();
@@ -311,6 +314,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension()
   {
     return 1;
@@ -320,6 +324,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension()
   {
     GM_CurveSegment sp = null;
@@ -337,6 +342,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns a shallow copy of the geometry
    */
+  @Override
   public Object clone()
   {
     GM_MultiCurve mc = null;

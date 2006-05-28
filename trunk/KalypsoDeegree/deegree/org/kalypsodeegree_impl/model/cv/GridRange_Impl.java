@@ -57,15 +57,14 @@ import org.kalypsodeegree.model.coverage.GridRange;
  */
 public class GridRange_Impl implements GridRange
 {
+  private double[] m_low = null;
 
-  private double[] low = null;
-
-  private double[] high = null;
+  private double[] m_high = null;
 
   public GridRange_Impl( double[] low, double[] high )
   {
-    this.low = low;
-    this.high = high;
+    this.m_low = low;
+    this.m_high = high;
   }
 
   /**
@@ -75,7 +74,7 @@ public class GridRange_Impl implements GridRange
    */
   public double[] getHigh()
   {
-    return high;
+    return m_high;
   }
 
   /**
@@ -85,11 +84,12 @@ public class GridRange_Impl implements GridRange
    */
   public double[] getLow()
   {
-    return low;
+    return m_low;
   }
 
+  @Override
   public Object clone()
   {
-    return new GridRange_Impl( (double[])low.clone(), (double[])high.clone() );
+    return new GridRange_Impl( m_low.clone(), m_high.clone() );
   }
 }

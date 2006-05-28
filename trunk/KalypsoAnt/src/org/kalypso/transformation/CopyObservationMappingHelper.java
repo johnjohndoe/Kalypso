@@ -75,7 +75,7 @@ public class CopyObservationMappingHelper
    */
   public static GMLWorkspace createMappingWorkspace( final URL context ) throws Exception
   {
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String)null );
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
     final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );

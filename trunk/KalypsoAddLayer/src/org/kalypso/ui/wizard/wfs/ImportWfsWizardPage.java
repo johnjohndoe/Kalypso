@@ -50,7 +50,6 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -691,7 +690,7 @@ public class ImportWfsWizardPage extends WizardPage
   {
     // FIXME this method is not working properly, it has to be adjusted
     // when the Schema parser is adjusted!!!!!!
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( null, getSchemaURL( layer ) );
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     if( featureTypes.length == 1 )
       return featureTypes[0].getQName().getLocalPart();

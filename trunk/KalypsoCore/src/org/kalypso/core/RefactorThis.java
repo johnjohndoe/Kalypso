@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core;
 
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
@@ -55,7 +56,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class RefactorThis
 {
 
-  public static void registerSpecialTypeHandler( ITypeRegistry registry ) throws TypeRegistryException
+  public static void registerSpecialTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
     // TODO move these to extentionpoints...
     registry.registerTypeHandler( new RangeSetTypeHandler() );

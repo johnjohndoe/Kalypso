@@ -86,9 +86,9 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4226497939552424434L;
 
-  private GM_Position ep = null;
+  private GM_Position m_ep = null;
 
-  private GM_Position sp = null;
+  private GM_Position m_sp = null;
 
   /**
    * constructor of curve_boundary with CS_CoordinateSystem and startpoint and endpoint
@@ -97,8 +97,8 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   {
     super( crs );
 
-    this.sp = sp;
-    this.ep = ep;
+    m_sp = sp;
+    m_ep = ep;
 
     setValid( false );
   }
@@ -126,13 +126,14 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * returns a shallow copy of the geometry
    */
+  @Override
   public Object clone()
   {
     GM_CurveBoundary cb = null;
 
     try
     {
-      cb = new GM_CurveBoundary_Impl( getCoordinateSystem(), sp, ep );
+      cb = new GM_CurveBoundary_Impl( getCoordinateSystem(), m_sp, m_ep );
     }
     catch( Exception ex )
     {
@@ -147,7 +148,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    */
   public GM_Position getStartPoint()
   {
-    return sp;
+    return m_sp;
   }
 
   /**
@@ -155,7 +156,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    */
   public GM_Position getEndPoint()
   {
-    return ep;
+    return m_ep;
   }
 
   /**
@@ -164,6 +165,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * @param other
    *          object to compare to
    */
+  @Override
   public boolean equals( Object other )
   {
     if( !super.equals( other ) || !( other instanceof GM_CurveBoundary_Impl ) )
@@ -171,8 +173,8 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
       return false;
     }
 
-    if( !ep.equals( ( (GM_CurveBoundary)other ).getEndPoint() )
-        || !sp.equals( ( (GM_CurveBoundary)other ).getStartPoint() ) )
+    if( !m_ep.equals( ( (GM_CurveBoundary)other ).getEndPoint() )
+        || !m_sp.equals( ( (GM_CurveBoundary)other ).getStartPoint() ) )
     {
       return false;
     }
@@ -185,11 +187,12 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
+  @Override
   public boolean intersects( GM_Object gmo )
   {
     boolean inter = false;
-    GM_Point p1 = new GM_Point_Impl( sp, crs );
-    GM_Point p2 = new GM_Point_Impl( ep, crs );
+    GM_Point p1 = new GM_Point_Impl( m_sp, getCoordinateSystem() );
+    GM_Point p2 = new GM_Point_Impl( m_ep, getCoordinateSystem() );
 
     try
     {
@@ -257,8 +260,8 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    */
   private void calculateEnvelope()
   {
-    double[] min = (double[])sp.getAsArray().clone();
-    double[] max = (double[])ep.getAsArray().clone();
+    double[] min = m_sp.getAsArray().clone();
+    double[] max = m_ep.getAsArray().clone();
 
     for( int i = 0; i < min.length; i++ )
     {
@@ -276,14 +279,16 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * calculates the envelope of the curve boundary
    */
+  @Override
   protected void calculateParam()
   {
     calculateEnvelope();
     setValid( true );
   }
 
+  @Override
   public String toString()
   {
-    return "point1: [" + sp + "] - point2: [" + ep + "]";
+    return "point1: [" + m_sp + "] - point2: [" + m_ep + "]";
   }
 }

@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 
-import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
@@ -91,8 +91,8 @@ public class ProcessHelper
       errStreamRdr = new InputStreamReader( process.getErrorStream() );
       while( true )
       {
-        CopyUtils.copy( inStreamRdr, wLog );
-        CopyUtils.copy( errStreamRdr, wErr );
+        IOUtils.copy( inStreamRdr, wLog );
+        IOUtils.copy( errStreamRdr, wErr );
 
         try
         {

@@ -89,15 +89,15 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
 
   protected static double mute = 0.000000001;
 
-  protected CS_CoordinateSystem crs = null;
+  private CS_CoordinateSystem m_crs = null;
 
-  protected GM_Boundary boundary = null;
+  protected GM_Boundary m_boundary = null;
 
   protected GM_Envelope envelope = null;
 
   protected GM_Point centroid = null;
 
-  protected boolean empty = true;
+  protected boolean m_empty = true;
 
   protected boolean m_valid = false;
 
@@ -117,7 +117,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public CS_CoordinateSystem getCoordinateSystem( )
   {
-    return crs;
+    return m_crs;
   }
 
   /**
@@ -128,13 +128,14 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public void setCoordinateSystem( CS_CoordinateSystem crs )
   {
-    this.crs = crs;
+    this.m_crs = crs;
   }
 
   /**
    * returns a shallow copy of the geometry. this isn't realized at this level so a CloneNotSupportedException will be
    * thrown.
    */
+  @Override
   public Object clone( ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
@@ -145,7 +146,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public boolean isEmpty( )
   {
-    return empty;
+    return m_empty;
   }
 
   /**
@@ -153,7 +154,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public void setEmpty( boolean empty )
   {
-    this.empty = empty;
+    m_empty = empty;
   }
 
   /**
@@ -165,7 +166,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     {
       calculateParam();
     }
-    return boundary;
+    return m_boundary;
   }
 
   /**
@@ -448,16 +449,17 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
    */
-  public boolean equals( Object that )
+  public@Override
+   boolean equals( Object that )
   {
     if( (that == null) || !(that instanceof GM_Object_Impl) )
     {
       return false;
     }
 
-    if( crs != null )
+    if( m_crs != null )
     {
-      if( !crs.equals( ((GM_Object) that).getCoordinateSystem() ) )
+      if( !m_crs.equals( ((GM_Object) that).getCoordinateSystem() ) )
       {
         return false;
       }
@@ -527,11 +529,12 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   protected abstract void calculateParam( );
 
+  @Override
   public String toString( )
   {
     String ret = null;
-    ret = "CoordinateSystem = " + crs + "\n";
-    ret += ("empty = " + empty + "\n");
+    ret = "CoordinateSystem = " + m_crs + "\n";
+    ret += ("empty = " + m_empty + "\n");
     ret += ("mute = " + mute + "\n");
     return ret;
   }

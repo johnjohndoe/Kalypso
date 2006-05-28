@@ -93,7 +93,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 9157144642050604928L;
 
-  private GM_Position[] points = null;
+  private GM_Position[] m_points = null;
 
   private GM_SurfacePatch m_sp = null;
 
@@ -121,12 +121,12 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   private void calculateEnvelope()
   {
-    double[] min = (double[])points[0].getAsArray().clone();
-    double[] max = (double[])min.clone();
+    double[] min = m_points[0].getAsArray().clone();
+    double[] max = min.clone();
 
-    for( int i = 1; i < points.length; i++ )
+    for( int i = 1; i < m_points.length; i++ )
     {
-      double[] pos = points[i].getAsArray();
+      double[] pos = m_points[i].getAsArray();
 
       for( int j = 0; j < pos.length; j++ )
       {
@@ -187,17 +187,17 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   {
     if( getOrientation() == '-' )
     {
-      GM_Position[] temp = new GM_Position[points.length];
+      GM_Position[] temp = new GM_Position[m_points.length];
 
-      for( int i = 0; i < points.length; i++ )
+      for( int i = 0; i < m_points.length; i++ )
       {
-        temp[i] = points[( points.length - 1 ) - i];
+        temp[i] = m_points[( m_points.length - 1 ) - i];
       }
 
       return temp;
     }
 
-    return points;
+    return m_points;
   }
 
   /**
@@ -205,7 +205,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   protected void setPositions( GM_Position[] positions ) throws GM_Exception
   {
-    this.points = positions;
+    this.m_points = positions;
 
     // checks if the ring has more than 3 elements [!(points.length > 3)]
     if( positions.length < 3 )
@@ -227,7 +227,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   public GM_CurveSegment getAsCurveSegment() throws GM_Exception
   {
-    return new GM_LineString_Impl( points, getCoordinateSystem() );
+    return new GM_LineString_Impl( m_points, getCoordinateSystem() );
   }
 
   /**
@@ -236,7 +236,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   public GM_CurveBoundary getCurveBoundary()
   {
-    return (GM_CurveBoundary)boundary;
+    return (GM_CurveBoundary)m_boundary;
   }
 
   /**
@@ -245,6 +245,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * @param other
    *          object to compare to
    */
+  @Override
   public boolean equals( Object other )
   {
     if( !super.equals( other ) || !( other instanceof GM_Ring_Impl ) )
@@ -259,7 +260,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
     GM_Position[] p2 = ( (GM_Ring)other ).getPositions();
 
-    if( !Arrays.equals( points, p2 ) )
+    if( !Arrays.equals( m_points, p2 ) )
     {
       return false;
     }
@@ -270,13 +271,14 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * returns a shallow copy of the geometry
    */
+  @Override
   public Object clone()
   {
     GM_Ring r = null;
 
     try
     {
-      GM_Position[] p = (GM_Position[])points.clone();
+      GM_Position[] p = m_points.clone();
 
       r = new GM_Ring_Impl( p, getCoordinateSystem(), getOrientation() );
     }
@@ -293,13 +295,14 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
+  @Override
   public boolean intersects( GM_Object gmo )
   {
     boolean inter = false;
 
     try
     {
-      GM_CurveSegment sp = new GM_LineString_Impl( points, crs );
+      GM_CurveSegment sp = new GM_LineString_Impl( m_points, getCoordinateSystem() );
 
       if( gmo instanceof GM_Point )
       {
@@ -355,6 +358,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * </p>
    * At the moment the operation just works with point geometries
    */
+  @Override
   public boolean contains( GM_Object gmo )
   {
 
@@ -362,7 +366,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     {
       if( m_sp == null )
       {
-        m_sp = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), points, null, crs );
+        m_sp = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), m_points, null, getCoordinateSystem() );
       }
       return m_sp.contains( gmo );
     }
@@ -379,6 +383,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * </p>
    * dummy implementation
    */
+  @Override
   public boolean contains( GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
@@ -391,20 +396,21 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   {
     double[] cen = new double[getCoordinateDimension()];
 
-    for( int i = 0; i < points.length; i++ )
+    for( int i = 0; i < m_points.length; i++ )
     {
       for( int j = 0; j < getCoordinateDimension(); j++ )
       {
-        cen[j] += ( points[i].getAsArray()[j] / points.length );
+        cen[j] += ( m_points[i].getAsArray()[j] / m_points.length );
       }
     }
 
-    centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), crs );
+    centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() );
   }
 
   /**
    * calculates the centroid and the envelope of the ring
    */
+  @Override
   protected void calculateParam()
   {
     calculateCentroid();
@@ -412,10 +418,11 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     setValid( true );
   }
 
+  @Override
   public String toString()
   {
     String ret = null;
-    ret = "points = " + points + "\n";
+    ret = "points = " + m_points + "\n";
     ret += ( "envelope = " + envelope + "\n" );
     return ret;
   }
