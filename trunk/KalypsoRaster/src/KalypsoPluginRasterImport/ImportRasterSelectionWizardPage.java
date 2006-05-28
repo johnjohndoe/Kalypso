@@ -90,7 +90,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
-  final List m_selectionListener = new ArrayList();
+  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
   private Composite m_topLevel = null;
 
@@ -187,6 +187,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         if( m_format.equals( formats[0] ) )
@@ -250,6 +251,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
     csCombo.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         selectedCoordinateSystemName = csCombo.getText();
@@ -314,6 +316,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
     button.addSelectionListener( new SelectionAdapter()
     {
+      @Override
       public void widgetSelected( SelectionEvent e )
       {
         try
@@ -419,6 +422,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
+  @Override
   public boolean canFlipToNextPage( )
   {
     return false;
@@ -427,6 +431,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose( )
   {
     super.dispose();

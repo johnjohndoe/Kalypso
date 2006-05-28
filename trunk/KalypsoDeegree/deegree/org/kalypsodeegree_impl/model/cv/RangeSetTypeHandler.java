@@ -16,7 +16,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,7 +52,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
    *      java.net.URL)
    */
   @Override
-  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context )
 
   {
     RangeSet rangeSet = (RangeSet) object;
@@ -87,7 +86,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   @Override
-  public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver )
   {
     // TODO do not give context here, better give resolver
     Node node_File = ((Element) node).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
@@ -113,7 +112,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
       System.out.println( ioException );
     }
     // read rangeSetData
-    Vector rangeSetData = null;
+    Vector<Vector<Double>> rangeSetData = null;
     try
     {
       rangeSetData = getRangeSetData( rangeSetDataReader );
@@ -141,14 +140,14 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
    *          File, where rangeSetData is stored
    * @return Vector, which stores the rangeSet data; the data of each row is stored in a Vector
    */
-  public static Vector getRangeSetData( InputStreamReader rangeSetReader ) throws Exception
+  public static Vector<Vector<Double>> getRangeSetData( final InputStreamReader rangeSetReader ) throws Exception
   {
-    Vector rangeSetData = new Vector();
-    BufferedReader br = new BufferedReader( rangeSetReader );
+    final Vector<Vector<Double>> rangeSetData = new Vector<Vector<Double>>();
+    final BufferedReader br = new BufferedReader( rangeSetReader );
     String line = null;
     while( (line = br.readLine()) != null )
     {
-      Vector rowData = new Vector();
+      final Vector<Double> rowData = new Vector<Double>();
       String[] dataAsString = line.split( " " );
       for( int i = 0; i < dataAsString.length; i++ )
       {

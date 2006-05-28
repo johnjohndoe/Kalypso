@@ -1,12 +1,6 @@
 package org.kalypsodeegree_impl.model.cv;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Class for reading and writing RectifiedGridCoverages
@@ -15,9 +9,6 @@ import org.w3c.dom.Element;
  */
 public class RectifiedGridCoverageFactory
 {
-
-  private static String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
-
   /**
    * creates a RectifiedGridCoverage of a RectifiedGridCoverage-Feature
    * 

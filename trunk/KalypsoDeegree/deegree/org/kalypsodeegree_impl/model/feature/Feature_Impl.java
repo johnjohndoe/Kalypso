@@ -144,22 +144,6 @@ public class Feature_Impl extends AbstractFeature implements Feature
     return getProperty( pos );
   }
 
-  // /**
-  // * format of name if "namespace:name" or just "name" - both will work
-  // *
-  // * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
-  // * java.util.List-objects
-  // * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
-  // */
-  // public Object getProperty( QName name )
-  // {
-  // final int pos = FeatureTypeUtilities.getFirstPropertyPosition(this, name );
-  // if( pos == -1 )
-  // return null;
-  //
-  // return m_properties[pos];
-  // }
-
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
@@ -181,7 +165,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
     {
       if( GeometryUtilities.isGeometry( ftp[p] ) )
       {
-        Object o = getProperty( p );
+        final Object o = getProperty( p );
         if( o == null )
           continue;
         if( o instanceof List )
@@ -196,7 +180,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
     {
       if( GeometryUtilities.isGeometry( vftp[p] ) )
       {
-        Object o = getVirtuelProperty( vftp[p], null );
+        final Object o = getVirtuelProperty( vftp[p], null );
         if( o == null )
           continue;
         if( o instanceof List )
