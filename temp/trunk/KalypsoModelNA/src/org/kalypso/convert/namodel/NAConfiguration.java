@@ -158,9 +158,9 @@ public class NAConfiguration
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
-    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
-    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
+    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
+    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String)null );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );

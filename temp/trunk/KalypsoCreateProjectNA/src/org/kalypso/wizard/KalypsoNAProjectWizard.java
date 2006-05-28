@@ -193,8 +193,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     GMLSchema schema = null;
     try
     {
-      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA" ); //$NON-NLS-1$
-      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop" ); //$NON-NLS-1$
+      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String)null ); //$NON-NLS-1$
+      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String)null ); //$NON-NLS-1$
       setNeedsProgressMonitor( true );
     }
     catch( Exception e1 )

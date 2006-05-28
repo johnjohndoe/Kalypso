@@ -132,7 +132,7 @@ public class DWDRasterGeoLayer
 
   private void init( CS_CoordinateSystem targetCS ) throws Exception
   {
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer" );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String)null );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
     final Feature rootFE = FeatureFactory.createFeature( null,"main", layerFT, true );

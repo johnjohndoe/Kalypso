@@ -119,7 +119,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       // final URL modellURL = inputProvider.getURLForID( NaModelConstants.IN_MODELL_ID );
       // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
       final URL analyseXsdURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID );
-      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( analyseXsdURL );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( null, analyseXsdURL );
       final List<FeaturePropertyToProcess> list = new ArrayList<FeaturePropertyToProcess>();
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
       for( int i = 0; i < featureTypes.length; i++ )

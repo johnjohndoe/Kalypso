@@ -96,7 +96,7 @@ public class ImportShapeFile
 
       final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-      GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( schemaURL );
+      GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( null, schemaURL );
       final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( targetFT );
       String label = annotation.getLabel();
