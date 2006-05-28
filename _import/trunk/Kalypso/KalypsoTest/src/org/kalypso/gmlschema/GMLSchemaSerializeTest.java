@@ -45,6 +45,10 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
+
 /**
  * @author doemming
  */
@@ -58,26 +62,40 @@ public class GMLSchemaSerializeTest extends TestCase
    */
   public void testCreateSchemaJarArchive( ) throws Exception
   {
+    File tmpArchive1 = null;
+    File tmpArchive2 = null;
+    File zipDir = null;
     try
     {
-      final File tmpArchive1 = File.createTempFile( "kalypsoSchema", "jar" );
-      
-      // TODO: better load schema from resources because not everybody can
-      // acces the internet (proxy!)
-      final URL schemaURL = new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" );
+      tmpArchive1 = File.createTempFile( "kalypsoSchema", ".jar" );
+
+      final URL schemaURL = UrlCatalogOGC.class.getResource( "gml/3.1.1/base/gml.xsd" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL, tmpArchive1 );
 
-      final URL schemaURL2 = GMLSchemaUtilities.getSchemaURLForArchive( schemaURL );
+      zipDir = FileUtilities.createNewTempDir( "zipDir" );
+      zipDir.mkdirs();
+      ZipUtilities.unzip( tmpArchive1, zipDir );
 
-      final File tmpArchive2 = File.createTempFile( "kalypsoSchema", "jar" );
+      final URL schemaURL2 = new URL( zipDir.toURL(), GMLSchemaUtilities.BASE_SCHEMA_IN_JAR );
+
+      tmpArchive2 = File.createTempFile( "kalypsoSchema", ".jar" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL2, tmpArchive2 );
-      tmpArchive1.delete();
-      tmpArchive2.delete();
     }
     catch( Exception e )
     {
       e.printStackTrace();
       throw e;
+    }
+    finally
+    {
+      if( tmpArchive1 != null )
+        tmpArchive1.delete();
+
+      if( zipDir != null )
+        FileUtilities.deleteRecursive( zipDir );
+
+      if( tmpArchive2 != null )
+        tmpArchive2.delete();
     }
   }
 

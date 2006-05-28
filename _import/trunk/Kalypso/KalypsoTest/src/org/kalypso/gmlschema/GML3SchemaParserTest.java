@@ -60,6 +60,15 @@ public class GML3SchemaParserTest extends TestCase
     KalypsoTest.init();
   }
 
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release(  );
+  }
+
   public void testParseGML3Schema( ) throws Exception
   {
     try
@@ -70,11 +79,9 @@ public class GML3SchemaParserTest extends TestCase
 
       // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/swe" );
       // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/om" );
-      
+
       final URL testResourceURL = getClass().getResource( "resources/GML3_wspm/schematree.txt" );
-      final URL schemaLocationURL = new URL( testResourceURL, "../../../../../../../..//KalypsoModelWspm/src/org/kalypso/model/wspm/schemata/wspm.xsd" );
-//      final URL schemaLocationURL = (new File( "C:/eclipse3.1_workspace/KalypsoModelEindim/src/org/kalypso/model/wspm/schemata/wspm.xsd" )).toURL();
-      
+      final URL schemaLocationURL = getClass().getResource( "resources/GML3_wspm/wspm.xsd" );
 
       GMLSchemaTest.loadAndTestSchema( schemaLocationURL, testResourceURL, false );
 

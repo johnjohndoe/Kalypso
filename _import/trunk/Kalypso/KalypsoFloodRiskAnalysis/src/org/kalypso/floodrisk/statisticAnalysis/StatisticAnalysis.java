@@ -261,7 +261,7 @@ public class StatisticAnalysis
   public static void exportStatisticAsXML( Hashtable statistics, Hashtable landuseTypeList, URL statisticDataURL ) throws Exception
   {
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
     String rootFeatureName = "StatisticData";
@@ -277,7 +277,7 @@ public class StatisticAnalysis
     // create Collection
     final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
     final Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT, true );
-    FeatureHelper.addProperty(rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
+    FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
     // create landuseFeatures
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -301,14 +301,14 @@ public class StatisticAnalysis
       }
       Object[] properties = { "", "", null, landuse, min, max, sum };
       Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties );
-      FeatureHelper.addProperty(collection, collFT.getProperty( landusePropertyName ), landuseFeature );
-      
+      FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
+
       int mode = BigDecimal.ROUND_HALF_EVEN;
       System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
           + Number.round( max.doubleValue(), 4, mode ) );
       sumAll = sumAll + sum.doubleValue();
     }
-    
+
     FeatureHelper.addProperty( collection, collFT.getProperty( sumPropertyName ), new Double( sumAll ) );
     FeatureHelper.addProperty( rootFeature, rootFT.getProperty( overallSumProperty ), new Double( sumAll ) );
 
@@ -550,7 +550,7 @@ public class StatisticAnalysis
   public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList, Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException, InvocationTargetException
   {
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
     String rootFeatureName = "StatisticData";
@@ -563,7 +563,7 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum";
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature(null, "StatisticData0", rootFT, true );
+    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true );
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -589,7 +589,7 @@ public class StatisticAnalysis
       }
       // create Collection
       final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-      Feature collection = FeatureFactory.createFeature(rootFeature, "Collection" + numOfCol, collFT, true );
+      Feature collection = FeatureFactory.createFeature( rootFeature, "Collection" + numOfCol, collFT, true );
       FeatureHelper.addProperty( collection, collFT.getProperty( namePropertyName ), adminUnit );
       FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
 
@@ -615,7 +615,7 @@ public class StatisticAnalysis
           }
         }
         Object[] properties = { "", "", null, landuse, min, max, sum };
-        Feature landuseFeature = FeatureFactory.createFeature( collection,"Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties );
+        Feature landuseFeature = FeatureFactory.createFeature( collection, "Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties );
         numOfFeat = numOfFeat + 1;
         FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
         int mode = BigDecimal.ROUND_HALF_EVEN;

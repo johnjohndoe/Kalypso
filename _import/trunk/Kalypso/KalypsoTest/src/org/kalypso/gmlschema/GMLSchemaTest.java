@@ -109,6 +109,15 @@ public class GMLSchemaTest extends TestCase
 
     // m_listToTest
   }
+  
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
+  }
 
   public void testSchemas( ) throws Exception
   {
@@ -137,7 +146,7 @@ public class GMLSchemaTest extends TestCase
   public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
     System.out.println( " test " + schemaLocationURL.toString() );
-    final IGMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( schemaLocationURL );
+    final IGMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( null, schemaLocationURL );
 
     if( gmlSchema != null )
     {

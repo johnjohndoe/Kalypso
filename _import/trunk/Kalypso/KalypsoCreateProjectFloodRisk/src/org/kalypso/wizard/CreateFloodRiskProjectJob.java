@@ -409,7 +409,7 @@ public class CreateFloodRiskProjectJob extends Job
     File landuseDataGML = m_workspacePath.append( m_projectHandel.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile();
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String)null );
 
     String rootFeatureTypeName = "VectorDataCollection";
     String featureTypePropertyName = "FeatureMember";
@@ -604,7 +604,7 @@ public class CreateFloodRiskProjectJob extends Job
     File waterlevelDataFile = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toFile();
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String)null );
 
     final IFeatureType[] types = schema.getAllFeatureTypes();
 

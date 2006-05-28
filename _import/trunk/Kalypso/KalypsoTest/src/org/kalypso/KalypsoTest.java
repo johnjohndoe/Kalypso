@@ -52,20 +52,20 @@ import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
  */
 public class KalypsoTest
 {
-  private static boolean init = false;
+  private static File tmpDir = null;
 
-  public static void init( ) throws Exception
+  /** Returns the temporarily used directory to allow clients to delete it. */
+  public synchronized static void init( ) throws Exception
   {
     try
     {
-      if( init )
+      if( tmpDir != null )
         return;
-      init = true;
 
       System.setProperty( "proxySet", "true" );
       System.setProperty( "proxyHost", "proxy.bce01.de" );
       System.setProperty( "proxyPort", "8080" );
-      
+
       // final KalypsoGisPlugin plugin = new KalypsoGisPlugin();
 
       final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -74,7 +74,7 @@ public class KalypsoTest
       // RefactorThis.registerSpecialTypeHandler(registry);
       KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
       final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
-          ,new UrlCatalogOGC()//
+          , new UrlCatalogOGC()//
           , new DeegreeUrlCatalog() //
           } );
       final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
@@ -156,6 +156,10 @@ public class KalypsoTest
       // GMLSchemaCatalog.init( theCatalog, cacheDir );
       //
       DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
+
+      tmpDir = cacheDirectory;
+
+      return;
     }
     catch( Exception e )
     {
@@ -164,5 +168,13 @@ public class KalypsoTest
 
     }
     //
+  }
+
+  /** Release the by init taken resources. */
+  public synchronized static void release( )
+  {
+    FileUtilities.deleteRecursive( tmpDir );
+    GMLSchemaCatalog.release();
+    tmpDir = null;
   }
 }

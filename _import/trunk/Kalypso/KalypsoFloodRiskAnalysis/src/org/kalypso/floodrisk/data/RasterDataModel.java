@@ -118,7 +118,7 @@ public class RasterDataModel
   {
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL, (String)null );
 
     // create feature and workspace gml
     final IFeatureType[] types = schema.getAllFeatureTypes();

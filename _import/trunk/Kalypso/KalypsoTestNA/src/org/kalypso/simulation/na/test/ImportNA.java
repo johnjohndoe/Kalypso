@@ -93,7 +93,7 @@ public class ImportNA extends TestCase
     final File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" );
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
-    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
+    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null, " project:/.model/schema/parameter.xsd" );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );
