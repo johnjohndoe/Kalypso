@@ -141,7 +141,7 @@ public class RiskContextModel
    */
   public Hashtable getRiskClassLists()
   {
-    Hashtable riskClassLists = new Hashtable();
+    Hashtable<Integer, Hashtable> riskClassLists = new Hashtable<Integer, Hashtable>();
     Feature intervalMappingCollection = (Feature)rootFeature.getProperty( "IntervalMappingCollectionMember" );
     List intervalMappingList = (List)intervalMappingCollection.getProperty( "IntervalMappingMember" );
     for( int i = 0; i < intervalMappingList.size(); i++ )
@@ -175,7 +175,7 @@ public class RiskContextModel
    */
   public Hashtable getRiskClassList( Feature intervalCollection )
   {
-    Hashtable riskClassList = new Hashtable();
+    Hashtable<Integer, Interval> riskClassList = new Hashtable<Integer, Interval>();
     List intervalMemberList = (List)intervalCollection.getProperty( "IntervalMember" );
     for( int i = 0; i < intervalMemberList.size(); i++ )
     {

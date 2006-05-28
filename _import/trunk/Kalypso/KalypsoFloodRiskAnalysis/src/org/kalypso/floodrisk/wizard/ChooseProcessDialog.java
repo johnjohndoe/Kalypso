@@ -87,6 +87,7 @@ public class ChooseProcessDialog extends Dialog
    * 
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   protected Control createDialogArea( final Composite parent )
   {
     getShell().setText( "Prozesse auswählen..." );
@@ -110,6 +111,7 @@ public class ChooseProcessDialog extends Dialog
       checkButton.setSelection( check );
       checkButton.addSelectionListener( new SelectionAdapter()
       {
+        @Override
         public void widgetSelected( SelectionEvent e )
         {
           check = checkButton.getSelection();

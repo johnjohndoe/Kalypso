@@ -76,14 +76,14 @@ public class RasterTools
 
     RectifiedGridDomain resultGridDomain = new RectifiedGridDomain( grid1.getGridDomain().getOrigin( null ), grid1
         .getGridDomain().getOffset(), grid1.getGridDomain().getGridRange() );
-    Vector resultRangeSetData = new Vector();
+    Vector<Vector<Double>> resultRangeSetData = new Vector<Vector<Double>>();
     Vector grid1RangeSetData = grid1.getRangeSet().getRangeSetData();
     Vector grid2RangeSetData = grid2.getRangeSet().getRangeSetData();
     for( int i = 0; i < grid1RangeSetData.size(); i++ )
     {
       Vector grid1_rowData = (Vector)grid1RangeSetData.get( i );
       Vector grid2_rowData = (Vector)grid2RangeSetData.get( i );
-      Vector result_rowData = new Vector();
+      Vector<Double> result_rowData = new Vector<Double>();
       for( int j = 0; j < grid1_rowData.size(); j++ )
       {
         if( grid1_rowData.get( j ) != null )

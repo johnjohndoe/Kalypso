@@ -47,7 +47,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Vector;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
@@ -152,9 +151,9 @@ public abstract class GridUtils
     GM_Point origin = null;
     double[] offset = new double[2];
     String nodata = null;
-    Vector rangeSetData = new Vector();
+    Vector<Vector<Double>> rangeSetData = new Vector<Vector<Double>>();
     //StringBuffer rangeData = new StringBuffer();
-    Vector rangeData = new Vector();
+    Vector<String> rangeData = new Vector<String>();
     try
     {
       BufferedReader br = new BufferedReader( new FileReader( in ) );
@@ -206,7 +205,7 @@ public abstract class GridUtils
     //String[] dataAsString = rangeData.toString().split(" ");
     for( int i = 0; i < nRows; i++ )
     {
-      Vector rowData = new Vector();
+      Vector<Double> rowData = new Vector<Double>();
       for( int n = 0; n < nCols; n++ )
       {
         if( rangeData.get( n + ( i * nCols ) ).equals( nodata ) )
@@ -215,7 +214,7 @@ public abstract class GridUtils
         }
         else
         {
-          double actualValue = Double.parseDouble( (String)rangeData.get( n + ( i * nCols ) ) );
+          double actualValue = Double.parseDouble( rangeData.get( n + ( i * nCols ) ) );
           rowData.addElement( new Double( actualValue ) );
         }
       }

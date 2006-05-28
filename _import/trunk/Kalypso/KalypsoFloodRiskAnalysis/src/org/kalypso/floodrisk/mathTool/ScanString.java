@@ -62,7 +62,7 @@ public class ScanString extends Object
   /*
    * * The hash table containing the keyword/value pairs.
    */
-  private Hashtable kwords = new Hashtable();
+  private Hashtable<String, Integer> kwords = new Hashtable<String, Integer>();
 
   /*********************************************************************************************************************
    * ***************** * * Constructors *
@@ -70,7 +70,7 @@ public class ScanString extends Object
   /**
    * Instantiate the Class
    */
-  public ScanString()
+  public ScanString( )
   {
     string = null;
     position = 0;
@@ -105,7 +105,7 @@ public class ScanString extends Object
     if( s == null )
       return;
     string = new String( s );
-    //System.out.println("ScanSring: string="+string);
+    // System.out.println("ScanSring: string="+string);
   }
 
   /**
@@ -126,7 +126,7 @@ public class ScanString extends Object
       kwlength = s.length();
     kwords.put( s.toLowerCase(), new Integer( i ) );
 
-    //System.out.println("addKeyWord: key="+s.toLowerCase()+" value="+i);
+    // System.out.println("addKeyWord: key="+s.toLowerCase()+" value="+i);
 
   }
 
@@ -144,7 +144,7 @@ public class ScanString extends Object
     if( !kwords.containsKey( s.toLowerCase() ) )
       return UNKNOWN;
 
-    Integer i = (Integer)kwords.get( s.toLowerCase() );
+    Integer i = kwords.get( s.toLowerCase() );
 
     if( i == null )
       return UNKNOWN;
@@ -155,7 +155,7 @@ public class ScanString extends Object
   /**
    * Clear the table containing the keyword/token pairs
    */
-  public void resetKeyWords()
+  public void resetKeyWords( )
   {
     kwords.clear();
     kwlength = 0;
@@ -166,7 +166,7 @@ public class ScanString extends Object
    * 
    * @return token found
    */
-  public int nextWord()
+  public int nextWord( )
   {
     int i;
     char c;
@@ -194,16 +194,16 @@ public class ScanString extends Object
      * * Is this the start of a number ?
      */
 
-    if( ( c >= '0' && c <= '9' ) || c == '.' )
+    if( (c >= '0' && c <= '9') || c == '.' )
     {
 
-      //System.out.println("ScanString: Scan for number!");
+      // System.out.println("ScanString: Scan for number!");
 
       for( i = position; i < string.length(); i++ )
       {
         c = string.charAt( i );
 
-        if( exponent && ( c < '0' || c > '9' ) )
+        if( exponent && (c < '0' || c > '9') )
           break;
 
         if( c == 'E' || c == 'e' || c == 'D' || c == 'd' )
@@ -254,8 +254,8 @@ public class ScanString extends Object
     /*
      * * Scan for a keyword
      */
-    //System.out.println("ScanString: Scan for Word!");
-    //System.out.println("ScanString: Maximum Keyword length "+kwlength);
+    // System.out.println("ScanString: Scan for Word!");
+    // System.out.println("ScanString: Maximum Keyword length "+kwlength);
     int last = UNKNOWN;
     int nchar = 0;
     int pos = position;
@@ -271,8 +271,8 @@ public class ScanString extends Object
       {
         last = word;
         nchar = count;
-        //System.out.println("ScanString: Found KeyWord - "+
-        //       new String(buffer,0,count));
+        // System.out.println("ScanString: Found KeyWord - "+
+        // new String(buffer,0,count));
       }
       else if( nchar == 0 && count >= kwlength )
       {
@@ -282,8 +282,8 @@ public class ScanString extends Object
       {
         sval = new String( buffer, 0, nchar );
         position += nchar;
-        //System.out.println("ScanString: Returning KeyWord - "+
-        //         sval);
+        // System.out.println("ScanString: Returning KeyWord - "+
+        // sval);
         return last;
       }
     }
@@ -292,8 +292,8 @@ public class ScanString extends Object
     {
       sval = new String( buffer, 0, nchar );
       position += nchar;
-      //System.out.println("ScanString: Returning KeyWord - "+
-      //                 sval);
+      // System.out.println("ScanString: Returning KeyWord - "+
+      // sval);
       return last;
     }
 

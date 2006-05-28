@@ -82,12 +82,12 @@ public class FloodRiskAnalysis
         null ), annualDamageGrid.getGridDomain().getOffset(), annualDamageGrid.getGridDomain().getGridRange() );
     Vector annualDamage_rangeSetData = annualDamageGrid.getRangeSet().getRangeSetData();
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector floodRisk_rangeSetData = new Vector();
+    Vector<Vector<Double>> floodRisk_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < annualDamage_rangeSetData.size(); i++ )
     {
       Vector annualDamage_rowData = (Vector)annualDamage_rangeSetData.get( i );
       Vector landuse_rowData = (Vector)landuse_rangeSetData.get( i );
-      Vector floodRisk_rowData = new Vector();
+      Vector<Double> floodRisk_rowData = new Vector<Double>();
       for( int j = 0; j < annualDamage_rowData.size(); j++ )
       {
         if( annualDamage_rowData.get( j ) != null && landuse_rowData.get( j ) != null )

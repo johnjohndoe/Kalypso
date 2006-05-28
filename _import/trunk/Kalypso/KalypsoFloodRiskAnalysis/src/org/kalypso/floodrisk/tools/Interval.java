@@ -41,20 +41,17 @@
 package org.kalypso.floodrisk.tools;
 
 /**
- * 
  * Interval
  * <p>
- * 
  * created by
  * 
  * @author Nadja Peiler (17.06.2005)
  */
 public class Interval
 {
+  private double m_lowerLimit;
 
-  private double lowerLimit;
-
-  private double upperLimit;
+  private double m_upperLimit;
 
   /**
    * constructs an Interval with the given lower and upper limit
@@ -64,8 +61,8 @@ public class Interval
    */
   public Interval( double lowerLimit, double upperLimit )
   {
-    this.lowerLimit = lowerLimit;
-    this.upperLimit = upperLimit;
+    this.m_lowerLimit = lowerLimit;
+    this.m_upperLimit = upperLimit;
   }
 
   /**
@@ -76,23 +73,23 @@ public class Interval
    */
   public boolean contains( double x )
   {
-    return ( ( lowerLimit <= x ) && ( x <= upperLimit ) );
+    return ((m_lowerLimit <= x) && (x <= m_upperLimit));
   }
 
   /**
    * @return Returns the lowerLimit.
    */
-  public double getLowerLimit()
+  public double getLowerLimit( )
   {
-    return lowerLimit;
+    return m_lowerLimit;
   }
 
   /**
    * @return Returns the upperLimit.
    */
-  public double getUpperLimit()
+  public double getUpperLimit( )
   {
-    return upperLimit;
+    return m_upperLimit;
   }
 
   /**
@@ -101,7 +98,7 @@ public class Interval
    */
   public void setLowerLimit( double lowerLimit )
   {
-    this.lowerLimit = lowerLimit;
+    this.m_lowerLimit = lowerLimit;
   }
 
   /**
@@ -110,6 +107,6 @@ public class Interval
    */
   public void setUpperLimit( double upperLimit )
   {
-    this.upperLimit = upperLimit;
+    this.m_upperLimit = upperLimit;
   }
 }

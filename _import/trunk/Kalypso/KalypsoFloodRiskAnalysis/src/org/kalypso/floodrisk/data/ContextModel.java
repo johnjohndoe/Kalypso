@@ -152,7 +152,7 @@ public class ContextModel
    */
   public Hashtable getDamageFunctionList()
   {
-    Hashtable<String, ParseFunction> damageFunctionList = new Hashtable();
+    Hashtable<String, ParseFunction> damageFunctionList = new Hashtable<String, ParseFunction>();
     Feature damageFunctionMappingCollection = (Feature)rootFeature
         .getProperty( "DamageFunctionMappingCollectionMember" );
     Object mappingList = damageFunctionMappingCollection.getProperty( "DamageFunctionMappingMember" );
