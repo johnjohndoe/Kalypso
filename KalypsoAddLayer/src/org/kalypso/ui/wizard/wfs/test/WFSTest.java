@@ -43,6 +43,8 @@ package org.kalypso.ui.wizard.wfs.test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -69,7 +71,7 @@ public class WFSTest extends TestCase
     IGMLSchema schema = null;
     try
     {
-      schema = GMLSchemaFactory.createGMLSchema( url );
+      schema = GMLSchemaFactory.createGMLSchema( null,  url );
     }
     catch( Exception e )
     {
@@ -77,13 +79,12 @@ public class WFSTest extends TestCase
       e.printStackTrace();
     }
 
-    IFeatureType[] featureTypes = schema.getAllFeatureTypes();
+    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
-      IFeatureType type = featureTypes[i];
-      System.out.println( type.getNamespace() + ":" + type.getName() );
-      System.out.println( type.getNamespace() + ":" + type.getName() );
-
+      final IFeatureType type = featureTypes[i];
+      final QName name = type.getQName();
+      System.out.println( name );
     }
   }
 }

@@ -95,7 +95,7 @@ public class WFSLayer implements IWFSLayer
     {
       try
       {
-        m_gmlSchema = GMLSchemaFactory.createGMLSchema( m_describeFeatureTypeURL );
+        m_gmlSchema = GMLSchemaFactory.createGMLSchema( null, m_describeFeatureTypeURL );
       }
       catch( GMLSchemaException e )
       {

@@ -141,6 +141,9 @@ public class NSPrefixProvider
 
   private String generatePrefix( final String namespaceUri, int tryIndex )
   {
+    // TODO: remove parameter or use it
+    namespaceUri.getClass();
+    
     // TODO better methodes to generate prefix
     switch( tryIndex )
     {

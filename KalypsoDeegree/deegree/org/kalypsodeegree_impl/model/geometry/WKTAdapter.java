@@ -425,7 +425,7 @@ public class WKTAdapter
     wkt = wkt.trim();
 
     GM_Position[] ext = null;
-    ArrayList inn = new ArrayList();
+    ArrayList<GM_Position[]> inn = new ArrayList<GM_Position[]>();
     if( wkt.indexOf( "((" ) > 0 )
     {
       wkt = wkt.substring( 9, wkt.length() - 1 );
@@ -469,7 +469,7 @@ public class WKTAdapter
     GM_Position[][] inner = null;
     if( inn.size() > 0 )
     {
-      inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
+      inner = inn.toArray( new GM_Position[inn.size()][] );
     }
     GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
 
@@ -518,7 +518,7 @@ public class WKTAdapter
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiCurve" );
 
-    ArrayList crvs = new ArrayList();
+    ArrayList<GM_Curve> crvs = new ArrayList<GM_Curve>();
 
     wkt = wkt.trim();
     int pos = wkt.indexOf( ")" );
@@ -554,7 +554,7 @@ public class WKTAdapter
       }
     }
 
-    GM_Curve[] curves = (GM_Curve[])crvs.toArray( new GM_Curve[crvs.size()] );
+    GM_Curve[] curves = crvs.toArray( new GM_Curve[crvs.size()] );
     GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
 
     Debug.debugMethodEnd();
@@ -571,14 +571,14 @@ public class WKTAdapter
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiSurface" );
 
-    ArrayList srfcs = new ArrayList();
+    ArrayList<GM_Surface> srfcs = new ArrayList<GM_Surface>();
 
     wkt = wkt.substring( 13 );
     // for each polygon
     while( wkt.indexOf( "((" ) > -1 )
     {
       GM_Position[] ext = null;
-      ArrayList inn = new ArrayList();
+      ArrayList<GM_Position[]> inn = new ArrayList<GM_Position[]>();
       int pos1 = wkt.indexOf( "))" );
       String tmp = wkt.substring( 2, pos1 + 1 );
       //  exterior ring
@@ -620,13 +620,13 @@ public class WKTAdapter
       GM_Position[][] inner = null;
       if( inn.size() > 0 )
       {
-        inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
+        inner = inn.toArray( new GM_Position[inn.size()][] );
       }
       GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
       srfcs.add( sur );
       wkt = wkt.substring( pos1 + 3 );
     }
-    GM_Surface[] surfaces = (GM_Surface[])srfcs.toArray( new GM_Surface[srfcs.size()] );
+    GM_Surface[] surfaces = srfcs.toArray( new GM_Surface[srfcs.size()] );
     GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces );
     Debug.debugMethodEnd();
     return ms;

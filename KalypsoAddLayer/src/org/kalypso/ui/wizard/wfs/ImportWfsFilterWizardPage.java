@@ -297,11 +297,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setErrorMessage( "Es ist kein Element selektiert" );
         return false;
       }
-      else if( !(m_selectedGeom instanceof GM_Object) )
-      {
-        setErrorMessage( "Das selektierte Element ist keine bekannte Geometrie" );
-        return false;
-      }
+//      else if( !(m_selectedGeom instanceof GM_Object) )
+//      {
+//        setErrorMessage( "Das selektierte Element ist keine bekannte Geometrie" );
+//        return false;
+//      }
     }
     // the bbox can not be null
     if( m_BBoxButton.getSelection() )

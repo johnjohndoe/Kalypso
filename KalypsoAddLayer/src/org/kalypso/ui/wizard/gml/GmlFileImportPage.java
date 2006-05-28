@@ -114,11 +114,11 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   private String m_source;
 
-  private HashSet m_feature = null;
+  private HashSet<Feature> m_feature = null;
 
   private IRelationType m_fatp = null;
 
-  private HashSet m_featureAssTypeProp = null;
+  private HashSet<IRelationType> m_featureAssTypeProp = null;
 
   private List m_pathList;
 
@@ -278,8 +278,8 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   void validateFeaturePathFromSelection( final IStructuredSelection selection )
   {
-    final List pathList = new ArrayList();
-    final List titleList = new ArrayList();
+    final List<String> pathList = new ArrayList<String>();
+    final List<String> titleList = new ArrayList<String>();
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof Feature )
     { // create featurepath for element
@@ -375,7 +375,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   public Feature[] getFeatures( )
   {
-    return (Feature[]) m_feature.toArray( new Feature[m_feature.size()] );
+    return m_feature.toArray( new Feature[m_feature.size()] );
   }
 
   public void removerListeners( )
@@ -386,7 +386,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   public IRelationType[] getFeatureAssociations( )
   {
-    return (IRelationType[]) m_featureAssTypeProp.toArray( new IRelationType[m_featureAssTypeProp.size()] );
+    return m_featureAssTypeProp.toArray( new IRelationType[m_featureAssTypeProp.size()] );
 
   }
 

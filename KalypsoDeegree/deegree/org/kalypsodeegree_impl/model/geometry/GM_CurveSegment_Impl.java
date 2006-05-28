@@ -87,7 +87,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -8102075931849374162L;
 
-  protected CS_CoordinateSystem crs = null;
+  protected CS_CoordinateSystem m_crs = null;
 
   protected GM_Position[] points = new GM_Position[0];
 
@@ -109,7 +109,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
     points = gmps;
 
     // get spatial reference system of the curve segment from the first point
-    this.crs = crs;
+    m_crs = crs;
   }
 
   /**
@@ -118,7 +118,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public GM_Point getStartPoint()
   {
-    return new GM_Point_Impl( points[0], crs );
+    return new GM_Point_Impl( points[0], m_crs );
   }
 
   /**
@@ -127,7 +127,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public GM_Point getEndPoint()
   {
-    return new GM_Point_Impl( points[getNumberOfPoints() - 1], crs );
+    return new GM_Point_Impl( points[getNumberOfPoints() - 1], m_crs );
   }
 
   /**
@@ -174,7 +174,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public CS_CoordinateSystem getCoordinateSystem()
   {
-    return crs;
+    return m_crs;
   }
 
   /**
@@ -183,6 +183,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * @param other
    *          object to compare to
    */
+  @Override
   public boolean equals( Object other )
   {
     if( ( other == null ) || !( other instanceof GM_CurveSegment_Impl ) )
@@ -190,14 +191,14 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
       return false;
     }
 
-    if( ( crs == null ) && ( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() != null ) )
+    if( ( m_crs == null ) && ( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() != null ) )
     {
       return false;
     }
 
-    if( crs != null )
+    if( m_crs != null )
     {
-      if( !crs.equals( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() ) )
+      if( !m_crs.equals( ( (GM_CurveSegment_Impl)other ).getCoordinateSystem() ) )
       {
         return false;
       }
@@ -231,11 +232,12 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
     throw new NoSuchMethodError( "the contains operation for curve segments " + "isn't supported at the moment." );
   }
 
+  @Override
   public String toString()
   {
     String ret = null;
     ret = "points = ";
-    ret += ( "crs = " + crs + "\n" );
+    ret += ( "crs = " + m_crs + "\n" );
     return ret;
   }
 }

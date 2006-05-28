@@ -304,9 +304,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       try
       {
         if( m_useSchemaCatalog )
-          schema = GMLSchemaCatalog.getSchema( m_schemaLocationHint );
+          schema = GMLSchemaCatalog.getSchema( null, m_schemaLocationHint );
         else
-          schema = GMLSchemaFactory.createGMLSchema( m_schemaLocationHint );
+          schema = GMLSchemaFactory.createGMLSchema( null, m_schemaLocationHint );
       }
       catch( final GMLSchemaException e )
       {
@@ -323,9 +323,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final URL schemaLocation = namespaces.get( uri );
 
         if( m_useSchemaCatalog )
-          schema = GMLSchemaCatalog.getSchema( uri, schemaLocation );
+          schema = GMLSchemaCatalog.getSchema( uri, null, schemaLocation );
         else if( schemaLocation != null )
-          schema = GMLSchemaFactory.createGMLSchema( schemaLocation );
+          schema = GMLSchemaFactory.createGMLSchema( null, schemaLocation );
       }
     }
     catch( final Exception e )
@@ -339,7 +339,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     if( schema == null && m_useSchemaCatalog )
       try
       {
-        schema = GMLSchemaCatalog.getSchema( uri.toString() );
+        schema = GMLSchemaCatalog.getSchema( uri.toString(), (String)null );
       }
       catch( Exception e )
       {

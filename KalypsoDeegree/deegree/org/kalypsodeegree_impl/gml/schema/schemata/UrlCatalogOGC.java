@@ -60,12 +60,17 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     catalog.put( NS.XLINK, getClass().getResource( "gml2_2002/xlinks.xsd" ) );
     prefixes.put( NS.XLINK, "xlink" );
 
+    // HACK: to retrieve the right schema locations for each version, we put pseudo-namespaces into
+    // the catalog.
+    // the normal gml namespace should now never be used.
+    // if you have other needs, contact me. Gernot
+
     // GML
     // Version 2.1
-//     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+    catalog.put( NS.GML2 + "#2", getClass().getResource( "gml2_2002/feature.xsd" ) );
 
     // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
-    catalog.put( NS.GML3, getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
+    catalog.put( NS.GML3 + "#3", getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
     prefixes.put( NS.GML3, "gml" );
 
     // WFS
@@ -78,6 +83,16 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
 
     catalog.put( NS.OM, getClass().getResource( "om/1.0.30/observation.xsd" ) );
     prefixes.put( NS.OM, "om" );
-
   }
+
+  public static URL gmlLocationForVersion( final String gmlVersion )
+  {
+    if( gmlVersion.startsWith( "2" ) )
+      return UrlCatalogOGC.class.getResource( "gml2_2002/feature.xsd" );
+    if( gmlVersion.startsWith( "3" ) )
+      return UrlCatalogOGC.class.getResource( "gml/3.1.1/base/gml.xsd" );
+
+    throw new UnsupportedOperationException( "Unsupported gml version: " + gmlVersion );
+  }
+
 }

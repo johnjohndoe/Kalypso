@@ -83,7 +83,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 5655221930434396483L;
 
-  protected char orientation = '+';
+  private char m_orientation = '+';
 
   /**
    * the constructor sets the curves orientation
@@ -109,7 +109,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    */
   public char getOrientation()
   {
-    return orientation;
+    return m_orientation;
   }
 
   /**
@@ -128,6 +128,6 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
       throw new GM_Exception( orientation + " isn't a valid direction" );
     }
 
-    this.orientation = orientation;
+    m_orientation = orientation;
   }
 }

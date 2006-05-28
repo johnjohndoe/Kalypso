@@ -190,7 +190,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_Point[] getAllPoints()
   {
-    return (GM_Point[])m_aggregate.toArray( new GM_Point[getSize()] );
+    return m_aggregate.toArray( new GM_Point[getSize()] );
   }
 
   /**
@@ -200,8 +200,8 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   {
     GM_Point gmp = getPointAt( 0 );
 
-    double[] min = (double[])gmp.getAsArray().clone();
-    double[] max = (double[])min.clone();
+    double[] min = gmp.getAsArray().clone();
+    double[] max = min.clone();
 
     for( int i = 1; i < getSize(); i++ )
     {
@@ -255,6 +255,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * calculates the centroid and envelope of the aggregation
    */
+  @Override
   protected void calculateParam()
   {
     calculateCentroid();
@@ -268,6 +269,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
+  @Override
   public int getDimension()
   {
     return 0;
@@ -277,6 +279,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
+  @Override
   public int getCoordinateDimension()
   {
     GM_Point sp = null;
@@ -296,6 +299,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * returns a shallow copy of the geometry
    */
+  @Override
   public Object clone()
   {
     GM_MultiPoint mp = null;

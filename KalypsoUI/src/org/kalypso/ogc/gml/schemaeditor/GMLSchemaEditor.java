@@ -159,14 +159,14 @@ public class GMLSchemaEditor extends EditorPart
       // if we have a context, load the schema via the cache
       if( context != null )
         // this does not load the schema from the cache but puts it at least into the cache
-        return GMLSchemaCatalog.getSchema( context );
+        return GMLSchemaCatalog.getSchema( null, context );
       else
       {
         InputStream contents = null;
         try
         {
           contents = storage.getContents();
-          return GMLSchemaFactory.createGMLSchema( contents, context );
+          return GMLSchemaFactory.createGMLSchema( contents, null, context );
         }
         finally
         {
@@ -180,7 +180,7 @@ public class GMLSchemaEditor extends EditorPart
 
       try
       {
-        return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getLocation() );
+        return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
       }
       catch( final InvocationTargetException e )
       {

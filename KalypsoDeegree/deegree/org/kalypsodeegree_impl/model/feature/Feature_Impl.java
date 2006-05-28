@@ -295,7 +295,13 @@ public class Feature_Impl extends AbstractFeature implements Feature
     if( !pt.isList() )
     {
       if( pt instanceof IValuePropertyType )
-      {//TODO:This doesn´t work - what to do?
+      {
+      //TODO:This doesn´t work - what to do?
+      // REMARK: WHAT? does nto work?? This is a test if thee value fits to
+      // the type of the property. Test here is necessary because if
+      // we do not test here we will get later ClassCastExceptions
+      // and there we do not know why.
+      // Next: please contact me instead of just commenting ist out. Gernot
         // final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
         // if( value != null && !valueClass.isAssignableFrom( value.getClass() ) )
         // throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " +

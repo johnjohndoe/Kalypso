@@ -85,17 +85,17 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1081219767894344990L;
 
-  private GM_Position max = null;
+  private GM_Position m_max = null;
 
-  private GM_Position min = null;
+  private GM_Position m_min = null;
 
   /**
    * Creates a new GM_Envelope_Impl object.
    */
   public GM_Envelope_Impl()
   {
-    this.min = new GM_Position_Impl();
-    this.max = new GM_Position_Impl();
+    this.m_min = new GM_Position_Impl();
+    this.m_max = new GM_Position_Impl();
   }
 
   /**
@@ -106,9 +106,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope_Impl( GM_Position min, GM_Position max )
   {
-    this.min = GeometryFactory.createGM_Position( min.getX() < max.getX() ? min.getX() : max.getX(), min.getY() < max.getY() ? min.getY() : max
+    this.m_min = GeometryFactory.createGM_Position( min.getX() < max.getX() ? min.getX() : max.getX(), min.getY() < max.getY() ? min.getY() : max
         .getY() );
-    this.max = GeometryFactory.createGM_Position( min.getX() > max.getX() ? min.getX() : max.getX(), min.getY() > max.getY() ? min.getY() : max
+    this.m_max = GeometryFactory.createGM_Position( min.getX() > max.getX() ? min.getX() : max.getX(), min.getY() > max.getY() ? min.getY() : max
         .getY() );
   }
 
@@ -116,9 +116,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    * 
    * @see java.lang.Object#clone()
    */
+  @Override
   public Object clone()
   {
-    return new GM_Envelope_Impl( (GM_Position)( (GM_Position_Impl)min ).clone(), (GM_Position)( (GM_Position_Impl)max ).clone() );
+    return new GM_Envelope_Impl( (GM_Position)( (GM_Position_Impl)m_min ).clone(), (GM_Position)( (GM_Position_Impl)m_max ).clone() );
   }
 
   /**
@@ -126,7 +127,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Position getMin()
   {
-    return min;
+    return m_min;
   }
 
   /**
@@ -134,7 +135,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Position getMax()
   {
-    return max;
+    return m_max;
   }
 
   /**
@@ -158,7 +159,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public boolean contains( GM_Position point )
   {
-    if( ( point.getX() >= min.getX() ) && ( point.getX() <= max.getX() ) && ( point.getY() >= min.getY() ) && ( point.getY() <= max.getY() ) )
+    if( ( point.getX() >= m_min.getX() ) && ( point.getX() <= m_max.getX() ) && ( point.getY() >= m_min.getY() ) && ( point.getY() <= m_max.getY() ) )
     {
       return true;
     }
@@ -176,10 +177,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       return true;
     
     // coordinates of this GM_Envelope's BBOX
-    double minx1 = min.getX();
-    double miny1 = min.getY();
-    double maxx1 = max.getX();
-    double maxy1 = max.getY();
+    double minx1 = m_min.getX();
+    double miny1 = m_min.getY();
+    double maxx1 = m_max.getX();
+    double maxy1 = m_max.getY();
 
     // coordinates of the other GM_Envelope's BBOX
     double minx2 = bb.getMin().getX();
@@ -329,6 +330,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * checks if this point is completly equal to the submitted geometry
    */
+  @Override
   public boolean equals( Object other )
   {
     if( ( other == null ) || !( other instanceof GM_Envelope_Impl ) )
@@ -336,28 +338,28 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       return false;
     }
 
-    return ( min.equals( ( (GM_Envelope)other ).getMin() ) && max.equals( ( (GM_Envelope)other ).getMax() ) );
+    return ( m_min.equals( ( (GM_Envelope)other ).getMin() ) && m_max.equals( ( (GM_Envelope)other ).getMax() ) );
   }
 
   public GM_Envelope getBuffer( double b )
   {
     GM_Position bmin = new GM_Position_Impl( new double[]
     {
-        min.getX() - b,
-        min.getY() - b } );
+        m_min.getX() - b,
+        m_min.getY() - b } );
     GM_Position bmax = new GM_Position_Impl( new double[]
     {
-        max.getX() + b,
-        max.getY() + b } );
+        m_max.getX() + b,
+        m_max.getY() + b } );
     return GeometryFactory.createGM_Envelope( bmin, bmax );
   }
 
   public GM_Envelope getMerged( GM_Position pos )
   {
-    double minx = min.getX();
-    double miny = min.getY();
-    double maxx = max.getX();
-    double maxy = max.getY();
+    double minx = m_min.getX();
+    double miny = m_min.getY();
+    double maxx = m_max.getX();
+    double maxy = m_max.getY();
     if( pos != null )
     {
       if( pos.getX() < minx )
@@ -378,10 +380,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope getMerged( GM_Envelope envelope )
   {
-    double minx = min.getX();
-    double miny = min.getY();
-    double maxx = max.getX();
-    double maxy = max.getY();
+    double minx = m_min.getX();
+    double miny = m_min.getY();
+    double maxx = m_max.getX();
+    double maxy = m_max.getY();
     if( envelope != null )
     {
       if( envelope.getMin().getX() < minx )
@@ -396,11 +398,12 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
   }
 
+  @Override
   public String toString()
   {
     String ret = null;
-    ret = "min = " + min;
-    ret += ( " max = " + max + "\n" );
+    ret = "min = " + m_min;
+    ret += ( " max = " + m_max + "\n" );
     return ret;
   }
 
@@ -423,6 +426,11 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.16  2006/05/28 15:47:16  devgernot
+ * - GML-Version is now determined automatically! Use annotations, default is 2.1;
+ * - some yellow thingies
+ * - repaired some tests (KalypsoCommon, Core is clean, some Test in KalypsoTest are still not running due to GMLSchemaParser/Writer Problems)
+ *
  * Revision 1.15  2005/09/29 12:35:21  doemming
  * *** empty log message ***
  *

@@ -82,8 +82,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 /**
  * <p>
  * ------------------------------------------------------------
@@ -920,7 +918,7 @@ final public class GeometryFactory
 
     offset += 4;
 
-    ArrayList list = new ArrayList( numPoly );
+    ArrayList<GM_Surface> list = new ArrayList<GM_Surface>( numPoly );
 
     for( int ip = 0; ip < numPoly; ip++ )
     {
@@ -1056,7 +1054,7 @@ final public class GeometryFactory
 
     for( int i = 0; i < list.size(); i++ )
     {
-      multisurface.addSurface( (GM_Surface) list.get( i ) );
+      multisurface.addSurface( list.get( i ) );
     }
 
     return multisurface;
