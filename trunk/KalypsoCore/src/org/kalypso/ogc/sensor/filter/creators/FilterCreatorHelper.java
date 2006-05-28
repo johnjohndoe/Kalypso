@@ -43,6 +43,8 @@ package org.kalypso.ogc.sensor.filter.creators;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -96,13 +98,13 @@ public final class FilterCreatorHelper
    * 
    * @return array of filtered observations
    */
-  public static IObservation[] resolveFilters( final List afts, final IObservation baseObs, final URL context )
+  public static IObservation[] resolveFilters( final List<JAXBElement< ? extends AbstractFilterType>> afts, final IObservation baseObs, final URL context )
       throws SensorException
   {
     final IObservation[] obs = new IObservation[afts.size()];
 
     for( int i = 0; i < obs.length; i++ )
-      obs[i] = resolveFilter( (AbstractFilterType)afts.get( i ), baseObs, context );
+      obs[i] = resolveFilter( afts.get( i ).getValue(), baseObs, context );
 
     return obs;
   }

@@ -214,7 +214,6 @@ public class DBFDataSection
           break;
         default:
           throw new DBaseException( "data type not supported" );
-
       }
 
       offset += fddata[16];

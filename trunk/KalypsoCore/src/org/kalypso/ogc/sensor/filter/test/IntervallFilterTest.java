@@ -66,7 +66,7 @@ import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class IntervallFilterTest extends TestCase
 {
-  public void testIntervallFilter( )
+  public void testIntervallFilter( ) throws Exception
   {
     final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
@@ -81,7 +81,10 @@ public class IntervallFilterTest extends TestCase
       xlink.setHref( href );
 
       final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+      // TODO: probably the second filter factory will be forgotten everywhere
+      // so move instantiation into central helper class and use it everywhere
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class );
+
       final ZmlFilterType zmlFilter = fac.createZmlFilterType();
       zmlFilter.setZml( xlink );
 
@@ -94,7 +97,7 @@ public class IntervallFilterTest extends TestCase
       intervallFilter.setFilter( fac.createZmlFilter( zmlFilter ) );
       writer = new StringWriter();
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
-      marshaller.marshal( intervallFilter, writer );
+      marshaller.marshal( fac.createIntervallFilter(intervallFilter), writer );
       writer.close();
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );
       final String filterInline = XMLUtilities.prepareInLine( string );
@@ -111,10 +114,6 @@ public class IntervallFilterTest extends TestCase
       // final Date to = XML_DATETIME_FORMAT.parse( "2005-02-23T18:00:00" );
       String dump = ObservationUtilities.dump( observation.getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
       System.out.println( dump );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
     }
     finally
     {
