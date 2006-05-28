@@ -2,10 +2,11 @@
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
 	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<annotation>
-		<appinfo>
-			<kalypsonamespaceversion uri="http://www.opengis.net/gml" version="3.1"/>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
+	
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM = 'water surface profile model' -->

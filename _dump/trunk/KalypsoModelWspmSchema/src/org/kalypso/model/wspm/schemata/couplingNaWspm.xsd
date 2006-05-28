@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.wspm.nawspm" xmlns:nawspm="org.kalypso.model.wspm.nawspm" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	
 	<import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
