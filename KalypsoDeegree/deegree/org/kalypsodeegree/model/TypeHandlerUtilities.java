@@ -62,7 +62,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -527,7 +527,7 @@ public class TypeHandlerUtilities
    */
   public static void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
-    final JAXBContext context = KalypsoOGC31Plugin.getDefault().getGMLContext();
+    final JAXBContext context = KalypsoOGC31JAXBcontext.getContext();
 
     // geometry types
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
