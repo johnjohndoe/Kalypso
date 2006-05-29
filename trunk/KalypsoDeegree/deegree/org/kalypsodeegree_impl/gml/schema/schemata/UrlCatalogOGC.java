@@ -76,23 +76,5 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     // WFS
     catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
     prefixes.put( NS.WFS, "wfs" );
-
-    // SWE & OM things
-    catalog.put( NS.SWE, getClass().getResource( "sweCommon/1.0.30/swe.xsd" ) );
-    prefixes.put( NS.SWE, "swe" );
-
-    catalog.put( NS.OM, getClass().getResource( "om/1.0.30/observation.xsd" ) );
-    prefixes.put( NS.OM, "om" );
   }
-
-  public static URL gmlLocationForVersion( final String gmlVersion )
-  {
-    if( gmlVersion.startsWith( "2" ) )
-      return UrlCatalogOGC.class.getResource( "gml2_2002/feature.xsd" );
-    if( gmlVersion.startsWith( "3" ) )
-      return UrlCatalogOGC.class.getResource( "gml/3.1.1/base/gml.xsd" );
-
-    throw new UnsupportedOperationException( "Unsupported gml version: " + gmlVersion );
-  }
-
 }
