@@ -238,7 +238,7 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      pw.print( runOffEvent.getName() );
+      pw.print( runOffEvent.getName().replaceAll(" ", "_") );
       pw.print( " " );
       pw.println( result.size() );
 
@@ -278,7 +278,7 @@ public class WspWinExporter
       // TODO: passt das zum RK?
       pw.println();
       pw.println( "# mögliche Werte:" );
-      pw.println( "# WSP" );
+      pw.println( "# WATERLEVEL" );
       pw.println( "# BF_UNIFORM" );
       pw.println( "# BF_NON_UNIFORM" );
       pw.println( "BERECHNUNGSMODUS=" + calculation.getCalcMode().name() );
@@ -286,8 +286,8 @@ public class WspWinExporter
       // TODO: passt das zum RK?
       pw.println();
       pw.println( "# mögliche Werte:" );
-      pw.println( "# DARCY_WEISSBACH" );
-      pw.println( "# DARCY_WEISSBACH_MIT_FORMEINFLUSS" );
+      pw.println( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS" );
+      pw.println( "# DARCY_WEISBACH_MIT_FORMEINFLUSS" );
       pw.println( "# MANNING_STRICKLER" );
       pw.println( "FLIESSGESETZ=" + calculation.getFliessgesetz().name() );
 

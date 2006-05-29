@@ -2,13 +2,15 @@
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="WspmTuhhV1.0">
     <!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
     <input id="MODELL_GML" description="Modelldaten"/>
-    <input id="CALC_PATH" type="xs:string" description="Feature-Path zur Berechnung in der Modell.gml"/>    
+    <input id="CALC_PATH" type="xs:string" description="Feature-Path zur Berechnung in der Modell.gml"/>
     
     <!-- Ergebnis-Dateien/Verzeichnisse -->
-    <!-- <output id="Ergebnisse" description="Ergebnisse"/> -->
+    <output id="SimulationLog" description="Log of the simulation job"/>
+    <output id="KernelLog" description="Log of the kernel"/>
+
+
     <output id="bv_Ergebnisse" optional="true" description="Ergebnisse zu bordvoll Berechnungen"/>
     <output id="WQ_Tabellen" optional="true" description="W/Q-Tabellen"/>
-    <output id="SimulationLog" description="Log of the simulation job"/>
     <output id="ControlFile" optional="true" description="Controlfile of the tuhh model"/>
     <output id="TabularResult" optional="true" description="Tabular output of the tuhh model"/>
     <output id="LengthSection" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt)"/>

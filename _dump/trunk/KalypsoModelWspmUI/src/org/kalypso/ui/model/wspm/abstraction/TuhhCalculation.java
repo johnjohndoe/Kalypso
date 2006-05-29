@@ -76,7 +76,7 @@ public class TuhhCalculation implements IWspmConstants
 
   public static enum FLIESSGESETZ
   {
-    DARCY_WEISBACH,
+    DARCY_WEISBACH_OHNE_FORMEINFLUSS,
     DARCY_WEISBACH_MIT_FORMEINFLUSS,
     MANNING_STRICKLER;
   }

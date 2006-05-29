@@ -49,22 +49,18 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.ui.calccase.ModelNature;
-import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -80,19 +76,10 @@ public class CalcTuhhAction implements IActionDelegate
    */
   public void run( final IAction action )
   {
-    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "", null );
-
     final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
     for( final Feature feature : features )
     {
       final TuhhCalculation calculation = new TuhhCalculation( feature );
-      System.out.println( "Berechne: " + calculation.getName() );
-
-      // determine properties for calculation: e.g. name gives result-dir name
-
-      // modell-path + feature id
-
-      // start ant
 
       final URL context = feature.getWorkspace().getContext();
       final IFile gmlFile = ResourceUtilities.findFileFromURL( context );
@@ -115,7 +102,9 @@ public class CalcTuhhAction implements IActionDelegate
             final String resultPath = "Ergebnisse/" + calculation.getName();
 
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
-
+            if( nature == null )
+              return StatusUtilities.createWarningStatus( "Das Projekt ist kein Simulationsprojekt. D.h. Die Modelnature existiert nicht: " + ModelNature.ID );
+            
             final Map<String, Object> properties = new HashMap<String, Object>();
             properties.put( "calc.xpath", calcxpath );
             properties.put( "result.path", resultPath );
@@ -130,8 +119,6 @@ public class CalcTuhhAction implements IActionDelegate
       };
       calcJob.schedule();
     }
-
-    ErrorDialog.openError( null, "Berechnung starten", "Some errors occured while starting the calculation", status );
   }
 
   protected void addInput( final List<Input> list, final String id, final String path, final boolean relative )

@@ -56,15 +56,15 @@ public class CalculationContentBean
 {
   public static enum KIND
   {
-    WSP,
+    WATERLEVEL,
     BF_UNIFORM,
     BF_NON_UNIFORM;
   }
 
   public static enum FLIESSGESETZ
   {
-    DARCY_WEISSBACH,
-    DARCY_WEISSBACH_MIT_FORMEINFLUSS,
+    DARCY_WEISBACH_OHNE_FORMEINFLUSS,
+    DARCY_WEISBACH_MIT_FORMEINFLUSS,
     MANNING_STRICKLER;
   }
 
@@ -335,7 +335,7 @@ public class CalculationContentBean
       switch( calcKindInt )
       {
         case 1:
-          calcKind = KIND.WSP;
+          calcKind = KIND.WATERLEVEL;
           break;
         case 2:
           calcKind = KIND.BF_UNIFORM;
@@ -345,7 +345,7 @@ public class CalculationContentBean
           break;
 
         default:
-          calcKind = KIND.WSP;
+          calcKind = KIND.WATERLEVEL;
           break;
       }
 
@@ -355,17 +355,17 @@ public class CalculationContentBean
       switch( fliessgesetzInt )
       {
         case 1:
-          fliessgesetz = FLIESSGESETZ.DARCY_WEISSBACH;
+          fliessgesetz = FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS;
           break;
         case 2:
-          fliessgesetz = FLIESSGESETZ.DARCY_WEISSBACH_MIT_FORMEINFLUSS;
+          fliessgesetz = FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS;
           break;
         case 3:
           fliessgesetz = FLIESSGESETZ.MANNING_STRICKLER;
           break;
 
         default:
-          fliessgesetz = FLIESSGESETZ.DARCY_WEISSBACH;
+          fliessgesetz = FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS;
           break;
       }
 

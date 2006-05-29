@@ -42,12 +42,18 @@ package org.kalypso.model.wspm.tuhh.simulation;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -68,6 +74,13 @@ public class WspmTuhhCalcJob implements ISimulation
 {
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
 
+  public static final String WSPMTUHH_CODEPAGE = "Cp1252";
+
+  // Timeout beim Rechnen([ms])
+  public static final int PROCESS_TIMEOUT = 600000;
+
+  public static final String MESS_BERECHNUNG_ABGEBROCHEN = "Modell: Berechnung abgebrochen";
+
   public WspmTuhhCalcJob( )
   {
     // will not be instantiated
@@ -77,30 +90,37 @@ public class WspmTuhhCalcJob implements ISimulation
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    long lTimeout = PROCESS_TIMEOUT;
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
 
-    final File simulogFile = new File( tmpdir, "simulation.log" );
+    final File simulogFile = new File( tmpDir, "simulation.log" );
     resultEater.addResult( "SimulationLog", simulogFile );
 
-    PrintWriter pw = null;
+    PrintWriter pwSimuLog = null;
+    InputStream zipInputStream = null;
+    FileOutputStream strmErr = null;
+    PrintWriter pwErr = null;
+    PrintWriter pwInParams = null;
+    StringWriter swLog = null;
+
     try
     {
-      pw = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
+      pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
 
-      pw.println( "Parsing GMLXPath: " + calcXPath );
+      pwSimuLog.println( "Parsing GMLXPath: " + calcXPath );
       monitor.setMessage( "Parsing GMLXPath: " + calcXPath );
       final GMLXPath calcpath = new GMLXPath( calcXPath );
 
       // load gml
-      pw.println( "Loading GML: " + modellGmlURL );
+      pwSimuLog.println( "Loading GML: " + modellGmlURL );
       monitor.setMessage( "Loading GML: " + modellGmlURL );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL );
 
       // get calculation via path
-      pw.println( "Loading Calculation: " + calcXPath );
+      pwSimuLog.println( "Loading Calculation: " + calcXPath );
       monitor.setMessage( "Loading Calculation: " + calcXPath );
 
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
@@ -111,20 +131,54 @@ public class WspmTuhhCalcJob implements ISimulation
       }
 
       final Feature calculationFeature = (Feature) calcObject;
-      // workspace.getFeature( calcXPath );
       final TuhhCalculation calculation = new TuhhCalculation( calculationFeature );
 
       monitor.setProgress( 10 );
-      pw.println( "Writing files for tuhh-mode" );
+      pwSimuLog.println( "Writing files for tuhh-mode" );
       monitor.setMessage( "Writing kernel data" );
 
       // write calculation to tmp dir
-      WspWinExporter.writeForTuhhKernel( calculation, tmpdir, modellGmlURL );
+      WspWinExporter.writeForTuhhKernel( calculation, tmpDir, modellGmlURL );
 
-      // unpack + start exe
+      // ensure availability of DATH directory (for results)
+      final File dathDir = new File( tmpDir, "dath" );
+      dathDir.mkdirs();
+
+      // unpack kernel
+      zipInputStream = WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" );
+      ZipUtilities.unzip( zipInputStream, tmpDir, false );
 
       monitor.setProgress( 20 );
       monitor.setMessage( "Executing model" );
+
+      // start calculation
+      // prepare error log - kernel logs only to SystemOut (and doesn't use SystemErr)
+      final File fleErr = new File( tmpDir, "kernel.log" );
+      resultEater.addResult( "KernelLog", fleErr );
+      strmErr = new FileOutputStream( fleErr );
+      pwErr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmErr, WSPMTUHH_CODEPAGE ) ) );
+
+      // TODO
+      // input Stream: n, prof/calc.properties
+      final File fleInParams = new File( tmpDir, "input.txt" );
+      pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
+      pwInParams.println( "n" );
+      pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "prof" + File.separator + "calc.properties" );
+      pwInParams.close();
+
+      if( monitor.isCanceled() )
+      {
+        pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
+      }
+
+      String sCmd = tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath();
+      swLog = new StringWriter();
+      // ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, swLog, pwErr );
+      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, pwErr, pwErr );
+      if( monitor.isCanceled() )
+      {
+        pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
+      }
 
       // load results + copy to result folder + unzip templates
       monitor.setProgress( 80 );
@@ -136,7 +190,11 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     finally
     {
-      IOUtils.closeQuietly( pw );
+      IOUtils.closeQuietly( pwSimuLog );
+      IOUtils.closeQuietly( zipInputStream );
+      IOUtils.closeQuietly( strmErr );
+      IOUtils.closeQuietly( pwErr );
+      IOUtils.closeQuietly( pwInParams );
     }
   }
 

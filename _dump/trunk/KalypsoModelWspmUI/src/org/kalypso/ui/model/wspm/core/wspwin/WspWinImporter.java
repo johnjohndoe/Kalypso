@@ -427,10 +427,10 @@ public class WspWinImporter
             case MANNING_STRICKLER:
               calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.MANNING_STRICKLER );
               break;
-            case DARCY_WEISSBACH:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH );
+            case DARCY_WEISBACH_OHNE_FORMEINFLUSS:
+              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS );
               break;
-            case DARCY_WEISSBACH_MIT_FORMEINFLUSS:
+            case DARCY_WEISBACH_MIT_FORMEINFLUSS:
               calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS );
               break;
           }
@@ -489,7 +489,7 @@ public class WspWinImporter
 
           switch( contentBean.getCalcKind() )
           {
-            case WSP:
+            case WATERLEVEL:
               calc.setCalcMode( TuhhCalculation.MODE.WATERLEVEL );
               break;
 
