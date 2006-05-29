@@ -5,24 +5,10 @@
           ================================= -->
 	<target name="fake" />
 
-
 	<!-- ================================= 
           target: calculationProperties                      Initializes properties from .calculation
          ================================= -->
 	<target name="calculationProperties">
-	</target>
-
-
-	<!-- ================================= 
-          target: cleanupErgebnisse              
-         ================================= -->
-	<target name="cleanupErgebnisse" description="Löscht frühere Ergebnisse">
-		<delete includeemptydirs="true" failonerror="false">
-			<fileset dir="${calc.dir}/Zeitreihen/Pegel/Vorhersage" includes="*/**" />
-			<fileset dir="${calc.dir}/Zeitreihen/Speicher/Vorhersage" includes="*/**" />
-			<fileset dir="${calc.dir}/Zeitreihen/Speicherzufluss" includes="*/**" />
-			<fileset dir="${calc.dir}/Log-Dateien" includes="*/**" />
-		</delete>
 	</target>
 
 	<!-- ================================= 
@@ -46,6 +32,7 @@
 			<input id="PROFILES" path="Profile" relativeToCalcCase="true" />
 
 			<output id="SimulationLog" path="${result.path.aktuell}/simulation.log" relativeToCalcCase="true" />
+			<output id="KernelLog" path="${result.path.aktuell}/kernel.log" relativeToCalcCase="true" />
 			<!--
 			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="true" />
 			<output id="bv_Ergebnisse" />
@@ -69,6 +56,4 @@
 			<fileset dir="${result.dir.aktuell}" includes="**/*" />
 		</copy>
 	</target>
-
-
 </project>
