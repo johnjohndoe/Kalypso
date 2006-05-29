@@ -49,7 +49,11 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -67,7 +71,7 @@ public class ParserTest extends TestCase
     KalypsoTest.init();
   }
 
-  public void testload( ) throws Exception
+  public void ftestload( ) throws Exception
   {
     try
     {
@@ -80,19 +84,42 @@ public class ParserTest extends TestCase
       final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writer, workspace );
       IOUtils.closeQuietly( writer );
-      // secound pass
 
+      // secound pass
       final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( file.toURL() );
       final File file2 = new File( "C:/TMP/newParserInAndNewOut2.gml" );
       final OutputStreamWriter writer2 = new OutputStreamWriter( new FileOutputStream( file2 ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writer2, workspace2 );
       IOUtils.closeQuietly( writer2 );
-
     }
     catch( Exception e )
     {
       e.printStackTrace();
       throw e;
+    }
+  }
+
+  public void testObsToFeature( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/_timeseriesNoDict.gml" );
+
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
+
+    final Feature f = workspace.getFeature( "wasserstandsmessung" );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( f );
+
+    ObservationFeatureFactory.toFeature( obs, f );
+
+    OutputStreamWriter writer = null;
+    try
+    {
+      writer = new OutputStreamWriter( new FileOutputStream( new File( "C:/TMP/obsSerialized.gml" ) ), "ISO-8859-1" );
+      GmlSerializer.serializeWorkspace( writer, workspace );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
     }
   }
 }
