@@ -67,21 +67,15 @@ public class TubigCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
-      final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
 
   {
     final File outputDir; // Grundverzeichnis für Ergebnisse (Logs, Zeitreihen)
-    final File ergDir; // Verzeichnis, in dem Ergebnisse im ZML-Format stehen
-    // (Unterverzeichnis zu outputDir)
-    final File logDir; // Verzeichnis, in dem Log-Dateien erzeugt werden
-    // (Unterverzeichnis zu outputDir)
-    final File logCopyErgDir; // Verzeichnis, in dem Logs zu den bceCpyErg_xy -
-    // Batches stehen
-    final File logCopyInDir; // Verzeichnis, in dem Logs zu den bceCpyIn_xy -
-    // Batches stehen
-    final File bodevorDir; // Verzeichnis, in dem gerechnet wird (BODEVOR bei
-    // WinPro, calc hier auf Server)
+    final File ergDir; // Verzeichnis, in dem Ergebnisse im ZML-Format stehen (Unterverzeichnis zu outputDir)
+    final File logDir; // Verzeichnis, in dem Log-Dateien erzeugt werden (Unterverzeichnis zu outputDir)
+    final File logCopyErgDir; // Verzeichnis, in dem Logs zu den bceCpyErg_xy - Batches stehen
+    final File logCopyInDir; // Verzeichnis, in dem Logs zu den bceCpyIn_xy - Batches stehen
+    final File bodevorDir; // Verzeichnis, in dem gerechnet wird (BODEVOR bei WinPro, calc hier auf Server)
     File dirHelp; // Hilfsverzeichnis
 
     final File fleCalcLog;
@@ -134,14 +128,11 @@ public class TubigCalcJob implements ISimulation
       {
         sBatNme = dataCrtl.getBatches()[ii];
         monitor.setMessage( TubigConst.MESS_BERECHNUNG_WIRD_GESTARTET + " (" + sBatNme + ")" );
-        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_WIRD_GESTARTET + " (" + sBatNme + ", "
-            + TubigUtils.getAktuelleUhrzeit() + ")" );
+        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_WIRD_GESTARTET + " (" + sBatNme + ", " + TubigUtils.getAktuelleUhrzeit() + ")" );
 
         // Falls erforderlich, werden Eingangsdaten noch manipuliert (umbenannt)
-        fleBatLog = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme
-            + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme
-            + TubigConst.NAME_EXT_ERR );
+        fleBatLog = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme + TubigConst.NAME_EXT_LOG );
+        fleBatErr = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_IN_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
         if( monitor.isCanceled() )
@@ -163,10 +154,8 @@ public class TubigCalcJob implements ISimulation
 
         // Ergebnis-Dateien werden in Unterverzeichnisse Pegel, bzw. Speicher
         // kopiert
-        fleBatLog = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme
-            + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme
-            + TubigConst.NAME_EXT_ERR );
+        fleBatLog = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme + TubigConst.NAME_EXT_LOG );
+        fleBatErr = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_OUT_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
         if( monitor.isCanceled() )
@@ -197,8 +186,7 @@ public class TubigCalcJob implements ISimulation
         }
 
         monitor.setMessage( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ")" );
-        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ", " + TubigUtils.getAktuelleUhrzeit()
-            + ")" );
+        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ", " + TubigUtils.getAktuelleUhrzeit() + ")" );
 
       }
       monitor.setMessage( TubigConst.MESS_BERECHNUNG_BEENDET );
@@ -214,14 +202,12 @@ public class TubigCalcJob implements ISimulation
       dirHelp = new File( bodevorDir, TubigConst.PEGEL );
       if( dirHelp.isDirectory() )
       {
-        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, (URL) inputProvider.getInputForID( "MODELL_GML" ),
-            metaMap );
+        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, (URL) inputProvider.getInputForID( "MODELL_GML" ), metaMap );
       }
       dirHelp = new File( bodevorDir, TubigConst.SPEICHER );
       if( dirHelp.isDirectory() )
       {
-        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, (URL) inputProvider.getInputForID( "MODELL_GML" ),
-            metaMap );
+        FileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, (URL) inputProvider.getInputForID( "MODELL_GML" ), metaMap );
       }
       // IDs für addResult sind in der ModelSpec.xml (Client) und
       // tubigcalcjob_spec.xml (Server) festgelegt
@@ -237,15 +223,14 @@ public class TubigCalcJob implements ISimulation
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Encoding " + TubigConst.TUBIG_CODEPAGE
-          + " wird für Calc-Log nicht unterstützt.", e );
+      throw new SimulationException( "Encoding " + TubigConst.TUBIG_CODEPAGE + " wird für Calc-Log nicht unterstützt.", e );
     }
     catch( final TubigBatchException e )
     {
       // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
-      pwCalcLog.println(TubigConst.FINISH_ERROR_TEXT);
+      pwCalcLog.println( TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final TubigException e )
     {
@@ -262,7 +247,7 @@ public class TubigCalcJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( TubigConst.CALCJOB_SPEC );
   }

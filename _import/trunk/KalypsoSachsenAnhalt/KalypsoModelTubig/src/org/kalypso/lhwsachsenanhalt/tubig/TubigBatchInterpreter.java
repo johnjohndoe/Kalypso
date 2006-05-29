@@ -60,11 +60,9 @@ public class TubigBatchInterpreter
    * Verwendung für die Tubig-Modelle
    * 
    * @throws TubigBatchException
-   * 
    * @author Thül
    */
-  public static void runBatch( final File fleExeDir, final File fleBatch, final ISimulationMonitor cancelable )
-      throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final File fleBatch, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final File fleLog;
     final File fleErr;
@@ -74,8 +72,7 @@ public class TubigBatchInterpreter
     runBatch( fleExeDir, fleBatch, fleLog, fleErr, cancelable );
   }
 
-  public static void runBatch( final File fleExeDir, final File fleBatch, File fleLog, File fleErr,
-      final ISimulationMonitor cancelable ) throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final File fleBatch, File fleLog, File fleErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final FileOutputStream strmLog;
     final FileOutputStream strmErr;
@@ -109,8 +106,7 @@ public class TubigBatchInterpreter
     }
   }
 
-  public static void runBatch( final File fleExeDir, final File fleBatch, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final File fleBatch, final PrintWriter pwLog, final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     InputStreamReader rdrBatch;
 
@@ -132,8 +128,7 @@ public class TubigBatchInterpreter
     }
   }
 
-  public static void runBatch( final File fleExeDir, final Reader rdrBatch, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final Reader rdrBatch, final PrintWriter pwLog, final PrintWriter pwErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";
@@ -262,10 +257,8 @@ public class TubigBatchInterpreter
                             pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
 
-                          // TODO Monika Ende-Token **ende** noch
-                          // weiterverabeiten (BODESTEU liefert aber noch keine Ausgabe)
+                          // TODO Monika Ende-Token **ende** noch weiterverabeiten
                           bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr, cancelable );
-
                         }
                       }
                     }
@@ -307,19 +300,19 @@ public class TubigBatchInterpreter
 
   public static void main( String[] args ) throws IOException, TubigBatchException
   {
-    //    final File leseDatei = new File( System.getProperty( "java.io.tmpdir" ),
+    // final File leseDatei = new File( System.getProperty( "java.io.tmpdir" ),
     // "RUN1.bat" );
-    //    final File exeDir = new File( System.getProperty( "java.io.tmpdir" ) );
+    // final File exeDir = new File( System.getProperty( "java.io.tmpdir" ) );
     final File leseDatei = new File( "C:/BODEVOR", "RUN1.bat" );
-    //    final File logDatei = new File( "C:/BODEVOR", "bode_batch.log" );
-    //    final File errDatei = new File( "C:/BODEVOR", "bode_batch.err" );
+    // final File logDatei = new File( "C:/BODEVOR", "bode_batch.log" );
+    // final File errDatei = new File( "C:/BODEVOR", "bode_batch.err" );
     final File exeDir = new File( "C:/BODEVOR" );
     final InputStreamReader reader = new FileReader( leseDatei );
     final PrintWriter wrtrErr = new PrintWriter( System.out );
     final PrintWriter wrtrLog = new PrintWriter( System.out );
     // ICancelable übergeben
-    //   runBatch( exeDir, reader, wrtrLog, wrtrErr, null );
-    //runBatch( exeDir, leseDatei, logDatei, errDatei, null );
+    // runBatch( exeDir, reader, wrtrLog, wrtrErr, null );
+    // runBatch( exeDir, leseDatei, logDatei, errDatei, null );
     runBatch( exeDir, leseDatei, null );
     IOUtils.closeQuietly( reader );
     IOUtils.closeQuietly( wrtrLog );
