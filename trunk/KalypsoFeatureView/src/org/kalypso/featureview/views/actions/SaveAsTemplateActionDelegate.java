@@ -42,7 +42,10 @@
 package org.kalypso.featureview.views.actions;
 
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -157,10 +160,12 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
           template.setLayer( layer );
 
           final List<FeatureviewType> viewList = template.getView();
+          viewList.addAll( Arrays.asList( view.getCurrentViewTemplates() ) );
 
-          viewList.add( view.getCurrentViewTemplates() );
-
-          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC );
+          final Map<String, String> prefixes = new HashMap<String, String>( 1 );
+          prefixes.put( "featureview.template.kalypso.org", "gft" );
+          
+          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );
           final SetContentHelper helper = new SetContentHelper()
           {
             @Override

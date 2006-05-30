@@ -101,4 +101,10 @@ public class SubFeatureControl extends AbstractFeatureControl
     m_fc.removeModifyListener( l );
   }
 
+  /** Returns the used feature control. */
+  public IFeatureControl getFeatureControl( )
+  {
+    return m_fc;
+  }
+
 }

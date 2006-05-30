@@ -676,4 +676,26 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       } );
     }
   }
+
+  /** Traverse the tree feature controls adds all found feature view types to the given collection */
+  public void collectViewTypes( final Collection<FeatureviewType> types )
+  {
+    final Feature feature = getFeature();
+    if( feature == null )
+      return;
+
+    types.add( getFeatureview( feature.getFeatureType() ) );
+
+    for( final IFeatureControl control : m_featureControls )
+    {
+      if( control instanceof FeatureComposite )
+        ((FeatureComposite) control).collectViewTypes( types );
+      else if( control instanceof SubFeatureControl )
+      {
+        final IFeatureControl fc = ((SubFeatureControl) control).getFeatureControl();
+        if( fc instanceof FeatureComposite )
+          ((FeatureComposite) fc).collectViewTypes( types );
+      }
+    }
+  }
 }

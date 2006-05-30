@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
@@ -62,7 +61,6 @@ import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
-import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -118,15 +116,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" );
       combo.setProperty( qname );
 
-      final List<Entry> entries = combo.getEntry();
-      for( final Map.Entry<String, String> comboEntry : comboEntries.entrySet() )
-      {
-        final Entry entry = factory.createComboEntry();
-        entry.setLabel( comboEntry.getKey() );
-        entry.setValue( comboEntry.getValue() );
-
-        entries.add( entry );
-      }
+      // do not create entries. The feature composite will create default entries for an empty combo
 
       return factory.createCombo( combo );
     }
