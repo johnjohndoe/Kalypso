@@ -162,6 +162,7 @@ public class NSPrefixProvider
         do
         {
           ns = "ns" + index;
+          index++;
         }
         while( !isValidPrefix( ns ) );
         return ns;
@@ -175,7 +176,7 @@ public class NSPrefixProvider
       return false;
     if( ns.indexOf( " " ) >= 0 ) // TODO better check
       return false;
-    return !m_prefixMap.containsKey( ns );
+    return !m_prefixMap.containsValue( ns );
   }
 
 }
