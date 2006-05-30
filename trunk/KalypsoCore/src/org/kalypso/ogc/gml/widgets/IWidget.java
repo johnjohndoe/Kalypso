@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -57,7 +58,14 @@ public interface IWidget
 
   public void dragged( Point p );
 
-  public void finish();
+  public void finish( );
+
+  // KeyEvents
+  public void keyPressed( KeyEvent e );
+
+  public void keyReleased( KeyEvent e );
+
+  public void keyTyped( KeyEvent e );
 
   // MouseClicks
   public void leftClicked( Point p );
@@ -71,9 +79,9 @@ public interface IWidget
   public void middlePressed( Point p );
 
   public void middleReleased( Point p );
-  
+
   public void doubleClickedLeft( Point p );
-  
+
   public void doubleClickedRight( Point p );
 
   // MouseMotions
@@ -85,7 +93,7 @@ public interface IWidget
   /**
    * fuehrt die aktion aus
    */
-  public void perform();
+  public void perform( );
 
   public void rightClicked( Point p );
 
@@ -93,7 +101,8 @@ public interface IWidget
 
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
 
-  public String getName();
+  public String getName( );
 
-  public String getToolTip();
+  public String getToolTip( );
+
 }

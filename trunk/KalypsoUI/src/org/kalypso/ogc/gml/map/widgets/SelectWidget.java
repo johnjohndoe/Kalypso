@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.widgets;
 import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
- * 
  * @author doemming
  */
 public class SelectWidget extends AbstractSelectWidget
@@ -55,16 +54,18 @@ public class SelectWidget extends AbstractSelectWidget
   }
 
   @Override
-  protected int getSelectionMode()
+  protected int getSelectionMode( )
   {
     return MapPanel.MODE_SELECT;
   }
 
-  @Override /**
+  @Override
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
    */
-  boolean allowOnlyOneSelectedFeature()
+  boolean allowOnlyOneSelectedFeature( )
   {
     return false;
   }
+
 }

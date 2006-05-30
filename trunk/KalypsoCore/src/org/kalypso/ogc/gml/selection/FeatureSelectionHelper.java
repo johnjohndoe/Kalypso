@@ -42,6 +42,7 @@
 package org.kalypso.ogc.gml.selection;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -132,5 +133,31 @@ public class FeatureSelectionHelper
   {
     final Feature feature = selection.getFocusedFeature();
     return feature == null ? getFirstFeature( selection ) : feature;
+  }
+
+  public static EasyFeatureWrapper[] mergeWrapper( final EasyFeatureWrapper[] one, final EasyFeatureWrapper[] two )
+  {
+    // wird verwendt um zu prüfen ob das Feature schon im ersten EasyFeatureWrapper[] array vorkommt
+    final HashSet<Feature> features = new HashSet<Feature>();
+    final HashSet<EasyFeatureWrapper> res = new HashSet<EasyFeatureWrapper>();
+    for( int i = 0; i < one.length; i++ )
+    {
+      final EasyFeatureWrapper wrapper = one[i];
+      boolean b = features.add( wrapper.getFeature() );
+      if( b )
+      {
+        res.add( wrapper );
+      }
+    }
+    for( int i = 0; i < two.length; i++ )
+    {
+      final EasyFeatureWrapper wrapper = two[i];
+      boolean b = features.add( wrapper.getFeature() );
+      if( b )
+      {
+        res.add( wrapper );
+      }
+    }
+    return res.toArray( new EasyFeatureWrapper[res.size()] );
   }
 }
