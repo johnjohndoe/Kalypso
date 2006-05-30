@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.featureview.views;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -197,7 +199,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       m_settings = viewsSettings.addNewSection( STORE_SECTION );
       // set default values
-      m_settings.put( STORE_SHOW_TABLES, true);
+      m_settings.put( STORE_SHOW_TABLES, true );
     }
 
     m_featureComposite.setShowTables( m_settings.getBoolean( STORE_SHOW_TABLES ) );
@@ -426,12 +428,16 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return m_featureComposite.getFeature();
   }
 
-  public FeatureviewType getCurrentViewTemplates( )
+  /** Returns the view template of the current feature composite and its children. */
+  public FeatureviewType[] getCurrentViewTemplates( )
   {
     final Feature feature = getCurrentFeature();
     if( feature == null )
       return null;
 
-    return m_featureComposite.getFeatureview( feature.getFeatureType() );
+    final Set<FeatureviewType> types = new HashSet<FeatureviewType>( 5 );
+    m_featureComposite.collectViewTypes( types );
+
+    return types.toArray( new FeatureviewType[types.size()] );
   }
 }
