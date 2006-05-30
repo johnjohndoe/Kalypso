@@ -115,4 +115,11 @@ class Record implements IRecord
     }
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#getOwner()
+   */
+  public TupleResult getOwner( )
+  {
+    return m_result;
+  }
 }

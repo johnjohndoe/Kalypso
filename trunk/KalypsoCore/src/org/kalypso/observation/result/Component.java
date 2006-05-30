@@ -62,6 +62,11 @@ public class Component implements IComponent
 
   public Component( final String name, final String description, final QName valueTypeName, final Object defaultValue )
   {
+    if( name == null )
+      throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
+    if( valueTypeName == null )
+      throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
+
     m_name = name;
     m_description = description;
     m_valueTypeName = valueTypeName;
@@ -83,7 +88,7 @@ public class Component implements IComponent
   {
     return m_valueTypeName;
   }
-  
+
   /**
    * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
    */

@@ -40,38 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.metadata;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+
 /**
  * @author schlienger
  */
 public class MetadataObject
 {
+  public final static QName DEFAULT_TYPE = new QName( NS.XSD_SCHEMA, "string" );
+
   private String m_name;
-  private String m_type;
+
+  private QName m_type;
+
   private Object m_value;
 
   public MetadataObject( final String name, final Object value )
   {
-    this( name, value, "" );
+    this( name, value, DEFAULT_TYPE );
   }
-  
-  public MetadataObject( final String name, final Object value, final String type )
+
+  public MetadataObject( final String name, final Object value, final QName type )
   {
     m_name = name;
     m_value = value;
     m_type = type;
   }
-  
-  public String getName()
+
+  public String getName( )
   {
     return m_name;
   }
-  
-  public String getType()
+
+  public QName getType( )
   {
     return m_type;
   }
-  
-  public Object getValue()
+
+  public Object getValue( )
   {
     return m_value;
   }
