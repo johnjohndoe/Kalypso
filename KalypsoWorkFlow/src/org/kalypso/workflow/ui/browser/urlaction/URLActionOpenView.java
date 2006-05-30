@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
@@ -82,12 +83,13 @@ public class URLActionOpenView extends AbstractURLAction
     {
       // activate the appropriate view (select the folder), where the new View will be relative to and
       // shown in
-      if( activePartID != null && activePartID.length() > 1 )
-        activePage.showView( activePartID );
-      if( secondaryViewID != null )
-        activePage.showView( viewID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
-      else
-        activePage.showView( viewID );
+      if( activePartID != null )
+      {
+        final IViewPart activePart = activePage.findView( activePartID );
+        activePage.activate( activePart );
+      }
+      final IViewPart viewPart = activePage.showView( viewID, secondaryViewID, IWorkbenchPage.VIEW_CREATE );
+      activePage.bringToTop( viewPart );
     }
     catch( PartInitException e )
     {
