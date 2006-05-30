@@ -42,15 +42,15 @@ package org.kalypso.model.wspm.tuhh.simulation;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -61,6 +61,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
+import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation.MODE;
 import org.kalypso.ui.model.wspm.core.wspwin.WspWinExporter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -101,10 +102,9 @@ public class WspmTuhhCalcJob implements ISimulation
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
-    FileOutputStream strmErr = null;
-    PrintWriter pwErr = null;
+    FileOutputStream strmKernelLog = null;
+    FileOutputStream strmKernelErr = null;
     PrintWriter pwInParams = null;
-    StringWriter swLog = null;
 
     try
     {
@@ -137,44 +137,52 @@ public class WspmTuhhCalcJob implements ISimulation
       pwSimuLog.println( "Writing files for tuhh-mode" );
       monitor.setMessage( "Writing kernel data" );
 
-      // write calculation to tmp dir
+      // write calculation to tmpDir
       WspWinExporter.writeForTuhhKernel( calculation, tmpDir, modellGmlURL );
 
       // ensure availability of DATH directory (for results)
       final File dathDir = new File( tmpDir, "dath" );
       dathDir.mkdirs();
 
-      // unpack kernel
+      // unpack kernel into tmpDir
       zipInputStream = WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" );
       ZipUtilities.unzip( zipInputStream, tmpDir, false );
 
-      monitor.setProgress( 20 );
-      monitor.setMessage( "Executing model" );
+      // prepare kernel logs (log and err)
+      final File fleKernelLog = new File( tmpDir, "kernel.log" );
+      resultEater.addResult( "KernelLog", fleKernelLog );
+      strmKernelLog = new FileOutputStream( fleKernelLog );
+      final File fleKernelErr = new File( tmpDir, "kernel.err" );
+      resultEater.addResult( "KernelErr", fleKernelErr );
+      strmKernelErr = new FileOutputStream( fleKernelErr );
 
-      // start calculation
-      // prepare error log - kernel logs only to SystemOut (and doesn't use SystemErr)
-      final File fleErr = new File( tmpDir, "kernel.log" );
-      resultEater.addResult( "KernelLog", fleErr );
-      strmErr = new FileOutputStream( fleErr );
-      pwErr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmErr, WSPMTUHH_CODEPAGE ) ) );
-
-      // TODO
-      // input Stream: n, prof/calc.properties
+      // input.txt: n, prof/calc.properties
       final File fleInParams = new File( tmpDir, "input.txt" );
       pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
       pwInParams.println( "n" );
       pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "prof" + File.separator + "calc.properties" );
+      // TODO remove 1
+      pwInParams.println( "1" ); // 1 für die Einheit des Durchflusses
       pwInParams.close();
 
+      // generate start.bat
+      final File fleBat = new File( tmpDir, "start.bat" );
+      PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
+      pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath() );
+      pwBat.close();
+      String sCmd = fleBat.getAbsolutePath();
+
+      monitor.setProgress( 20 );
+      monitor.setMessage( "Executing model" );
+
+      new String();
       if( monitor.isCanceled() )
       {
         pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
       }
 
-      String sCmd = tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath();
-      swLog = new StringWriter();
-      // ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, swLog, pwErr );
-      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, pwErr, pwErr );
+      // start calculation
+      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
       if( monitor.isCanceled() )
       {
         pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
@@ -183,6 +191,60 @@ public class WspmTuhhCalcJob implements ISimulation
       // load results + copy to result folder + unzip templates
       monitor.setProgress( 80 );
       monitor.setMessage( "Retrieving results" );
+
+      // alle Modi
+      final File ctrlFile = new File( dathDir, "Kontroll.log" );
+      if( ctrlFile.exists() )
+        resultEater.addResult( "ControlFile", ctrlFile );
+
+      final File beiwerteFile = new File( dathDir, "Beiwerte.aus" );
+      if( beiwerteFile.exists() )
+        resultEater.addResult( "BeiwerteAus", beiwerteFile );
+
+      final File lambdaFile = new File( dathDir, "lambda_i.txt" );
+      if( lambdaFile.exists() )
+        resultEater.addResult( "LambdaI", lambdaFile );
+
+      MODE calcMode = calculation.getCalcMode();
+      switch( calcMode )
+      {
+        case WATERLEVEL:
+        {
+          // Wasserspiegel-Mode
+          // *.wsl ignorieren (Teil der Längsschnitt.txt)
+          // laengsschnitt.txt
+          final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
+          if( lenSecFile.exists() )
+            resultEater.addResult( "LengthSection", lenSecFile );
+
+          // *.tab (-> fester Namen "Ergebnis.list")
+          final FileFilter ergListFilter = FileFilterUtils.suffixFileFilter( ".tab" );
+          final File[] ergListFile = dathDir.listFiles( ergListFilter );
+          if( ergListFile.length > 0 )
+            // Annahme: es existiert maximal eine TAB-Datei
+            resultEater.addResult( "resultList", ergListFile[0] );
+//TODO Längssschnitt verarbeiten mit Reaches zu Bruchkanten.gml
+          calculation.getReach().getReachProfileSegments();
+          break;
+        }
+        case BF_NON_UNIFORM:
+        // TODO ggf. noch andere Ergebnisse holen
+        {
+          // bordvoll ungleichförmig
+          // *.qb2 = Q als Treppenfunktion, holen wir nicht
+          // *.qb1 = bordvoll-Längschnitt 
+          final FileFilter qb1Filter = FileFilterUtils.suffixFileFilter( ".qb1" );
+          final File[] bfLenSecFile = dathDir.listFiles( qb1Filter );
+          if( bfLenSecFile.length > 0 )
+            // Annahme: es existiert maximal eine QB1-Datei
+            resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
+        }
+        case BF_UNIFORM:
+        {
+          // bordvoll gleichförmig
+          // TODO zusätzliche Ergebnisse holen
+        }
+      }
     }
     catch( final Exception e )
     {
@@ -192,8 +254,8 @@ public class WspmTuhhCalcJob implements ISimulation
     {
       IOUtils.closeQuietly( pwSimuLog );
       IOUtils.closeQuietly( zipInputStream );
-      IOUtils.closeQuietly( strmErr );
-      IOUtils.closeQuietly( pwErr );
+      IOUtils.closeQuietly( strmKernelLog );
+      IOUtils.closeQuietly( strmKernelErr );
       IOUtils.closeQuietly( pwInParams );
     }
   }

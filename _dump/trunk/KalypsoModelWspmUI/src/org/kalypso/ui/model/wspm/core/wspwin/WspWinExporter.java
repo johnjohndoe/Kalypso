@@ -332,6 +332,9 @@ public class WspWinExporter
       pw.println( "ABFLUSSEREIGNIS=" + qwtFile.getName() );
 
       pw.println();
+      pw.println( "EINZELVERLUSTE=" + "TODO" );
+
+      pw.println();
       pw.println( "MIN_Q=" + Double.toString( calculation.getMinQ() ) );
       pw.println( "MAX_Q=" + Double.toString( calculation.getMaxQ() ) );
       pw.println( "DELTA_Q=" + Double.toString( calculation.getQStep() ) );

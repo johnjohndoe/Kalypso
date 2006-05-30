@@ -505,7 +505,7 @@ public class WspWinImporter
           final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
           calc.setRunOffRef( runOffRef );
 
-          // set q-Range. Remeber: Q-Range in CalculationcontentBean is in dl/s
+          // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
           calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
         }
         catch( final Exception e )
