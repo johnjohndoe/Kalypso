@@ -38,29 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.ogc.gml.om;
+
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+
+import de.belger.swtchart.axis.AxisRange;
+import de.belger.swtchart.layer.IChartLayer;
+import de.belger.swtchart.layer.ILayerProvider;
+import de.belger.swtchart.util.SwitchDelegate;
 
 /**
- * A record holds the values for the components of a tuple result.
- * 
  * @author schlienger
+ *
  */
-public interface IRecord
+public class ObservationLayerProvider implements ILayerProvider
 {
-  /**
-   * @return the <code>TupleResult</code> that owns this record
-   */
-  public TupleResult getOwner();
+  private final IObservation<TupleResult> m_obs;
+  private final IComponent m_domainComponent;
+  private final IComponent m_rangeComponent;
 
+  public ObservationLayerProvider( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent rangeComponent )
+  {
+    m_obs = obs;
+    m_domainComponent = domainComponent;
+    m_rangeComponent = rangeComponent;
+  }
+  
   /**
-   * @return the value for the given component (can be null)
-   * @throws IllegalArgumentException if the component is unknown to this record
+   * @see de.belger.swtchart.layer.ILayerProvider#getLayers()
    */
-  public Object getValue( IComponent comp );
-
-  /**
-   * Sets the value for the given component
-   * @throws IllegalArgumentException if the component is unknown to this record
-   */
-  public void setValue( IComponent comp, Object value );
+  public IChartLayer[] getLayers( )
+  {
+    final AxisRange domRange = new AxisRange( m_domainComponent.getName(), SwitchDelegate.HORIZONTAL );
+    final AxisRange valueRange = new AxisRange( m_rangeComponent.getName(), SwitchDelegate.VERTICAL );
+    
+    //return new IChartLayer[] { new TupleResultChartLayer( m_obs.getResult(), domRange, valueRange ) };
+    return null;
+  }
 }

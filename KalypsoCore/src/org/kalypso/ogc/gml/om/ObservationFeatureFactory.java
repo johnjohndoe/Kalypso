@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -172,7 +173,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       final Feature phenomenon = FeatureHelper.resolveLink( itemDef, SWE_PROPERTY );
       if( phenomenon == null )
+      {
+        Logger.getLogger( ObservationFeatureFactory.class.getName() ).warning( "Phenomenon could not be found for ItemDefinition: " + itemDef );
         continue;
+      }
 
       final String name = (String) FeatureHelper.getFirstProperty( phenomenon, GML_NAME );
       final String desc = (String) FeatureHelper.getFirstProperty( phenomenon, GML_DESCRIPTION );

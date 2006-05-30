@@ -768,10 +768,10 @@
              id="org.kalypso.objectclass.observationfeature"
              objectClass="org.kalypsodeegree.model.feature.Feature">
           <action
-                class="org.kalypso.ogc.gml.om.EditObservation"
+                class="org.kalypso.ogc.gml.om.EditObservationAction"
                 enablesFor="1"
                 icon="icons/observation/zml-icon.gif"
-                id="org.kalypso.ogc.gml.om.EditObservation"
+                id="org.kalypso.ogc.gml.om.EditObservationAction"
                 label="Observation editieren"
                 style="push"
                 tooltip="Editiert die ausgewählte Feature als Observation"/>

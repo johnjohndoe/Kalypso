@@ -38,29 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.ogc.gml.om;
+
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * A record holds the values for the components of a tuple result.
- * 
  * @author schlienger
  */
-public interface IRecord
+public class TupleResultContentProvider implements IStructuredContentProvider
 {
   /**
-   * @return the <code>TupleResult</code> that owns this record
+   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public TupleResult getOwner();
+  public void dispose( )
+  {
+    // empty
+  }
 
   /**
-   * @return the value for the given component (can be null)
-   * @throws IllegalArgumentException if the component is unknown to this record
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
-  public Object getValue( IComponent comp );
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  {
+    // empty
+  }
 
   /**
-   * Sets the value for the given component
-   * @throws IllegalArgumentException if the component is unknown to this record
+   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public void setValue( IComponent comp, Object value );
+  public Object[] getElements( Object inputElement )
+  {
+    if( inputElement instanceof TupleResult )
+    {
+      final TupleResult result = (TupleResult) inputElement;
+
+      return result.toArray();
+    }
+
+    return null;
+  }
 }

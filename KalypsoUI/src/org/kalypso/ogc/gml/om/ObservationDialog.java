@@ -40,25 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import org.eclipse.jface.dialogs.Dialog;
+import ogc31.www.opengis.net.gml.GriddedSurface2;
+
+import org.eclipse.compare.internal.ResizableDialog;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
  */
-public class ObservationDialog extends Dialog
+public class ObservationDialog extends ResizableDialog
 {
   private final IObservation<TupleResult> m_obs;
 
   protected ObservationDialog( Shell parentShell, IObservation<TupleResult> obs )
   {
-    super( parentShell );
+    super( parentShell, KalypsoGisPlugin.getDefault().getResourceBundle() );
 
     m_obs = obs;
   }
@@ -73,15 +75,10 @@ public class ObservationDialog extends Dialog
 
     panel.getShell().setText( m_obs.getName() );
 
-    // TODO [marc] this is just a fast test, we simply put the columns
-    // into the table viewer according to the components
-    // the contents (tuples) are still missing here
-    final DefaultTableViewer viewer = new DefaultTableViewer( panel );
-
-    final TupleResult result = m_obs.getResult();
-    final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-      viewer.addColumn( components[i].getName(), components[i].getName(), 100, true );
+    final ObservationTableViewer viewer = new ObservationTableViewer( panel );
+    viewer.setInput( m_obs.getResult() );
+    
+    viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return panel;
   }

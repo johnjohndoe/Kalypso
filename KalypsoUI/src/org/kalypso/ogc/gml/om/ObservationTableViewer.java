@@ -38,29 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.ogc.gml.om;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * A record holds the values for the components of a tuple result.
- * 
  * @author schlienger
  */
-public interface IRecord
+public class ObservationTableViewer extends DefaultTableViewer
 {
-  /**
-   * @return the <code>TupleResult</code> that owns this record
-   */
-  public TupleResult getOwner();
+  public ObservationTableViewer( Composite parent )
+  {
+    this( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+  }
 
-  /**
-   * @return the value for the given component (can be null)
-   * @throws IllegalArgumentException if the component is unknown to this record
-   */
-  public Object getValue( IComponent comp );
+  public ObservationTableViewer( Composite parent, int style )
+  {
+    super( parent, style );
+    
+    final Table table = getTable();
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+    
+    setContentProvider( new TupleResultContentProvider() );
+    setLabelProvider( new TupleResultLabelProvider() );
+  }
 
-  /**
-   * Sets the value for the given component
-   * @throws IllegalArgumentException if the component is unknown to this record
-   */
-  public void setValue( IComponent comp, Object value );
+  public void setInput( final TupleResult result )
+  {
+    removeAllColumns();
+    
+    final IComponent[] components = result.getComponents();
+    for( int i = 0; i < components.length; i++ )
+      addColumn( components[i].getName(), components[i].getName(), 100, true );
+    
+    refreshColumnProperties();
+    
+    super.setInput( result );
+  }
 }
