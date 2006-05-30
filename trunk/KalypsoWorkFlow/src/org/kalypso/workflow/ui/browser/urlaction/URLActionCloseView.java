@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -55,7 +55,16 @@ public class URLActionCloseView extends AbstractURLAction
 {
   private final static String COMMAND_NAME = "closeView";
 
+  /**
+   * required: the id where the view was registred in the extension point org.eclipse.ui.view
+   */
   private final static String PARAM_PART_ID = "partId";
+
+  /**
+   * optional: if the view can be oppend multiple times it needs a secondary id to distinguish the diffrent instances of
+   * the view.
+   */
+  private final static String PARAM_SECONDARY_PART_ID = "secondaryPartId";
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
@@ -64,10 +73,11 @@ public class URLActionCloseView extends AbstractURLAction
   {
     final IWorkbenchPage activePage = getActivePage();
     final String viewID = commandURL.getParameter( PARAM_PART_ID );
-    final IViewPart viewPart = activePage.findView( viewID );
-    if( viewPart != null )
+    final String secondaryID = commandURL.getParameter( PARAM_SECONDARY_PART_ID );
+    final IViewReference viewRef = activePage.findViewReference( viewID, secondaryID );
+    if( viewRef != null )
     {
-      activePage.hideView( viewPart );
+      activePage.hideView( viewRef );
       return true;
     }
     return false;

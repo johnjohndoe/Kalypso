@@ -20,13 +20,13 @@
             name="Kalypso Enterprise">
          <property
                name="aboutImage"
-               value="etc/aboutKalypso.gif"/>
+               value="icons/aboutKalypso.gif"/>
          <property
                name="aboutText"
                value="%productBlurb"/>
          <property
                name="windowImages"
-               value="etc/kalypso16.gif"/>
+               value="icons/planerIconApplication.gif"/>
       </product>
    </extension>
    <extension
@@ -74,12 +74,6 @@
             class="org.eclipse.target.internal.ui.SiteExplorerView"
             id="KalypsoPortal.view.site"
             name="Projekt Site"/>
-      <view
-            allowMultiple="true"
-            class="org.kalypso.portal.view.MeasuresView"
-            icon="icons/sample.gif"
-            id="KalypsoPortal.view.measures"
-            name="Measures View"/>
       <view
             allowMultiple="false"
             class="org.kalypso.portal.view.DefinePotentialInteractionAreaView"

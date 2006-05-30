@@ -1,5 +1,6 @@
 package org.kalypso.portal.intro;
 
+import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -27,10 +28,21 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   {
     IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
     configurer.setInitialSize( new Point( 700, 550 ) );
-    configurer.setShowCoolBar( true );
-    configurer.setShowStatusLine( false );
+    configurer.setShowStatusLine( true );
     configurer.setShowProgressIndicator( true );
+    configurer.setShowMenuBar( true );
+    configurer.setShowPerspectiveBar( true );
     configurer.setTitle( "FLOWS Planer Portal" );
+    configureCoolBar( configurer );
+
+  }
+
+  private void configureCoolBar( IWorkbenchWindowConfigurer configurer )
+  {
+    configurer.setShowCoolBar( true );
+    final IActionBarConfigurer actionBarConfigurer = configurer.getActionBarConfigurer();
+    final ICoolBarManager coolBarManager = actionBarConfigurer.getCoolBarManager();
+    coolBarManager.removeAll();
 
   }
 

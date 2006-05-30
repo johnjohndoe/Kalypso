@@ -84,6 +84,8 @@ public class URLActionSelectEditor extends AbstractURLAction
       project.accept( visitor );
       final IFile inputFile = visitor.getFile();
       final IEditorPart part = activePage.findEditor( new FileEditorInput( inputFile ) );
+      if( part == null )
+        return false;
       activePage.activate( part );
     }
     catch( Exception e )
