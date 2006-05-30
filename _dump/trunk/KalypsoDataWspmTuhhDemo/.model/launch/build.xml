@@ -16,13 +16,14 @@
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
 
-		<echo message="Result path: ${result.path}"/>
-		<echo message="Calc XPath: ${calc.xpath}"/>
-		
-		<property name="result.dir" value="${calc.dir}/${result.path}"/>
+		<echo message="Result path: ${result.path}" />
+		<echo message="Calc XPath: ${calc.xpath}" />
+
+		<property name="result.dir" value="${calc.dir}/${result.path}" />
 
 		<!-- der Result path ist immer relativ zum Modellverzeichnis -->
 		<property name="result.path.aktuell" value="${result.path}/#aktuell" />
+		<property name="result.path.aktuell.logs" value="${result.path.aktuell}/Log-Dateien" />
 		<property name="result.dir.aktuell" value="${result.dir}/#aktuell" />
 
 		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${calc.path}">
@@ -31,16 +32,28 @@
 			<input id="CALC_PATH" path="${calc.xpath}" />
 			<input id="PROFILES" path="Profile" relativeToCalcCase="true" />
 
-			<output id="SimulationLog" path="${result.path.aktuell}/simulation.log" relativeToCalcCase="true" />
-			<output id="KernelLog" path="${result.path.aktuell}/kernel.log" relativeToCalcCase="true" />
-			<!--
+			<output id="SimulationLog" path="${result.path.aktuell.logs}/simulation.log" relativeToCalcCase="true" />
+			<output id="KernelLog" path="${result.path.aktuell.logs}/kernel.log" relativeToCalcCase="true" />
+			<output id="KernelErr" path="${result.path.aktuell.logs}/kernel.err" relativeToCalcCase="true" />
+
+			<output id="ControlFile" path="${result.path.aktuell.logs}/Kontroll.log" relativeToCalcCase="true" />
+			<output id="BeiwerteAus" path="${result.path.aktuell}/Beiwerte.aus" relativeToCalcCase="true" />
+			<output id="LambdaI" path="${result.path.aktuell}/lambda_i.txt" relativeToCalcCase="true" />
+			
+			<!-- results for WATERLEVEL mode -->
+			<output id="LengthSection" path="${result.path.aktuell}/laengsschnitt.txt" relativeToCalcCase="true" />
+			<output id="resultList" path="${result.path.aktuell}/Ergebnis.list" relativeToCalcCase="true" />
+			<output id="Bruchkanten" path="${result.path.aktuell}/bruchkanten.gml" relativeToCalcCase="true" />
+			<!-- results for BANKFUL NONUNIFORM mode -->
+			<output id="bfLengthSection" path="${result.path.aktuell}/test.qb1" relativeToCalcCase="true" />
+
+			<!-- results for BANKFUL UNIFORM mode -->
+
+			<!-- noch unsortiert 
 			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="true" />
+			<output id="TabularResult" />
 			<output id="bv_Ergebnisse" />
 			<output id="WQ_Tabellen" />
-			<output id="ControlFile" />
-			<output id="TabularResult" />
-			<output id="LengthSection" />
-			<output id="BeiwerteAus" />
 			-->
 
 			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
