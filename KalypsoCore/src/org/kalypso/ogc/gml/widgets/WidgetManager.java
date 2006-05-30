@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -56,7 +58,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
  * 
  * @author vdoemming
  */
-public class WidgetManager implements MouseListener, MouseMotionListener
+public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener
 {
   private IWidget m_actualWidget = null;
 
@@ -90,30 +92,30 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     else
       switch( e.getButton() )
       {
-      case MouseEvent.BUTTON1:
-      {
-        if( e.getClickCount() == 1 )
-          actualWidget.leftClicked( e.getPoint() );
-        else if( e.getClickCount() == 2 )
-          actualWidget.doubleClickedLeft( e.getPoint() );
-      }
-        break;
+        case MouseEvent.BUTTON1:
+        {
+          if( e.getClickCount() == 1 )
+            actualWidget.leftClicked( e.getPoint() );
+          else if( e.getClickCount() == 2 )
+            actualWidget.doubleClickedLeft( e.getPoint() );
+        }
+          break;
 
-      case MouseEvent.BUTTON2:
-        actualWidget.middleClicked( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON2:
+          actualWidget.middleClicked( e.getPoint() );
+          break;
 
-      case MouseEvent.BUTTON3:
-      {
-        if( e.getClickCount() == 1 )
-          actualWidget.rightClicked( e.getPoint() );
-        else if( e.getClickCount() == 2 )
-          actualWidget.doubleClickedRight( e.getPoint() );
-      }
-        break;
+        case MouseEvent.BUTTON3:
+        {
+          if( e.getClickCount() == 1 )
+            actualWidget.rightClicked( e.getPoint() );
+          else if( e.getClickCount() == 2 )
+            actualWidget.doubleClickedRight( e.getPoint() );
+        }
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
   }
 
@@ -145,12 +147,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public void mouseEntered( MouseEvent e )
   {
-  //
+    //
   }
 
   public void mouseExited( MouseEvent e )
   {
-  //
+    //
   }
 
   public void mousePressed( MouseEvent e )
@@ -163,20 +165,20 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     else
       switch( e.getButton() )
       {
-      case MouseEvent.BUTTON1:
-        actualWidget.leftPressed( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON1:
+          actualWidget.leftPressed( e.getPoint() );
+          break;
 
-      case MouseEvent.BUTTON2:
-        actualWidget.middlePressed( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON2:
+          actualWidget.middlePressed( e.getPoint() );
+          break;
 
-      case MouseEvent.BUTTON3:
-        actualWidget.rightPressed( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON3:
+          actualWidget.rightPressed( e.getPoint() );
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
   }
 
@@ -191,20 +193,20 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     else
       switch( e.getButton() )
       {
-      case MouseEvent.BUTTON1: // Left
-        actualWidget.leftReleased( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON1: // Left
+          actualWidget.leftReleased( e.getPoint() );
+          break;
 
-      case MouseEvent.BUTTON2:
-        actualWidget.middleReleased( e.getPoint() );
-        break;
+        case MouseEvent.BUTTON2:
+          actualWidget.middleReleased( e.getPoint() );
+          break;
 
-      case MouseEvent.BUTTON3: //Right
-        actualWidget.perform();
-        break;
+        case MouseEvent.BUTTON3: // Right
+          actualWidget.perform();
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
   }
 
@@ -214,7 +216,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       getActualWidget().paint( g );
   }
 
-  public IWidget getActualWidget()
+  public IWidget getActualWidget( )
   {
     return m_actualWidget;
   }
@@ -252,4 +254,30 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     for( int i = 0; i < listener.length; i++ )
       listener[i].widgetChanged( newWidget );
   }
+
+  /**
+   * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+   */
+  public void keyTyped( KeyEvent e )
+  {
+    getActualWidget().keyTyped( e );
+  }
+
+  /**
+   * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+   */
+  public void keyPressed( KeyEvent e )
+  {
+    getActualWidget().keyPressed( e );
+  }
+
+  /**
+   * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+   */
+  public void keyReleased( KeyEvent e )
+  {
+    getActualWidget().keyReleased( e );
+
+  }
+
 }

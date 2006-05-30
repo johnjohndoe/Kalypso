@@ -90,8 +90,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author vdoemming
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
-    ISelectionProvider
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider, ISelectionProvider
 {
 
   public static final int MODE_SELECT = 0;
@@ -132,7 +131,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
 
-  //  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  // public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
   public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY";
 
   public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT";
@@ -165,8 +164,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs,
-      final IFeatureSelectionManager manager )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
@@ -176,14 +174,16 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
+    addKeyListener( m_widgetManager );
     addComponentListener( this );
     setVisible( true );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
+    removeKeyListener( m_widgetManager );
 
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
 
@@ -199,7 +199,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     repaint();
   }
 
-  public void clearOffset() // used by pan method
+  public void clearOffset( ) // used by pan method
   {
     xOffset = 0;
     yOffset = 0;
@@ -266,8 +266,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         // this fixes the error that sometimes a layer is not visible when are mapview opens
         setValidMap( true );
 
-        m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
-            getHeight(), model );
+        m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(), getHeight(), model );
         if( m_mapImage == null )
           setValidMap( false );
       }
@@ -312,7 +311,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     validMap = status;
   }
 
-  private boolean hasValidMap()
+  private boolean hasValidMap( )
   {
     return validMap;
   }
@@ -325,7 +324,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell()
+  public IMapModell getMapModell( )
   {
     return m_model;
   }
@@ -364,7 +363,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     double gisMX = transform.getSourceX( mx );
     double gisMY = transform.getSourceY( my );
 
-    double gisDX = ( transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ) );
+    double gisDX = (transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ));
     double gisDY = gisDX * ratio;
     double gisX1 = gisMX - gisDX;
     double gisX2 = gisMX + gisDX;
@@ -379,17 +378,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    * 
    * @return scale of the map
    */
-  public double getCurrentScale()
+  public double getCurrentScale( )
   {
     return MapModellHelper.calcScale( m_model, getBoundingBox(), getWidth(), getHeight() );
   }
 
-  public GeoTransform getProjection()
+  public GeoTransform getProjection( )
   {
     return m_projection;
   }
 
-  public synchronized GM_Envelope getBoundingBox()
+  public synchronized GM_Envelope getBoundingBox( )
   {
     return m_boundingBox;
   }
@@ -434,33 +433,33 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     double maxX = env.getMax().getX();
     double maxY = env.getMax().getY();
 
-    double dx = ( maxX - minX ) / 2d;
-    double dy = ( maxY - minY ) / 2d;
+    double dx = (maxX - minX) / 2d;
+    double dy = (maxY - minY) / 2d;
 
     if( dx * ratio > dy )
       dy = dx * ratio;
     else
       dx = dy / ratio;
 
-    double mx = ( maxX + minX ) / 2d;
-    double my = ( maxY + minY ) / 2d;
+    double mx = (maxX + minX) / 2d;
+    double my = (maxY + minY) / 2d;
 
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
-  private double getRatio()
+  private double getRatio( )
   {
-    return ( (double)getHeight() ) / ( (double)getWidth() );
+    return ((double) getHeight()) / ((double) getWidth());
   }
 
-  public GM_Envelope getZoomOutBoundingBox()
+  public GM_Envelope getZoomOutBoundingBox( )
   {
     GeoTransform transform = getProjection();
     double ratio = getRatio();
     double gisMX = transform.getSourceX( getWidth() / 2d );
     double gisMY = transform.getSourceY( getHeight() / 2d );
 
-    double gisDX = 2 * ( gisMX - transform.getSourceX( 0 ) );
+    double gisDX = 2 * (gisMX - transform.getSourceX( 0 ));
     double gisDY = gisDX * ratio;
     double gisX1 = gisMX - gisDX;
     double gisX2 = gisMX + gisDX;
@@ -470,7 +469,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public WidgetManager getWidgetManager()
+  public WidgetManager getWidgetManager( )
   {
     return m_widgetManager;
   }
@@ -480,7 +479,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentHidden( ComponentEvent e )
   {
-  //  
+    //  
   }
 
   /**
@@ -488,7 +487,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentMoved( ComponentEvent e )
   {
-  //  
+    //  
   }
 
   /**
@@ -547,18 +546,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return StructuredSelection.EMPTY;
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
+    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return StructuredSelection.EMPTY;
 
-    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme,
-        m_selectionManager, null, null );
+    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme) activeTheme, m_selectionManager, null, null );
   }
 
   protected void globalSelectionChanged( final IFeatureSelection selection )
@@ -576,13 +574,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireSelectionChanged();
   }
 
-  public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode,
-      final boolean useOnlyFirstChoosen )
+  public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode, final boolean useOnlyFirstChoosen )
   {
     final GeoTransform transform = getProjection();
 
     final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-    if( activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
+    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
 
     if( startPoint != null )
@@ -601,14 +598,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
-        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
-            .getFeatureListVisible( null ), false );
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
 
         final List<Feature> listFe = new ArrayList<Feature>();
         if( fe != null )
           listFe.add( fe );
 
-        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
+        changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, m_selectionManager, selectionMode );
       }
       else
       // dragged
@@ -629,8 +625,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List<Feature> features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
-              .getFeatureListVisible( null ), withinStatus );
+          final List<Feature> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
@@ -640,14 +635,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
             features.add( object );
           }
 
-          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
+          changeSelection( features, (IKalypsoFeatureTheme) activeTheme, m_selectionManager, selectionMode );
         }
       }
     }
   }
 
-  private void changeSelection( final List features, final IKalypsoFeatureTheme theme,
-      final IFeatureSelectionManager selectionManager2, final int selectionMode )
+  private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
     // nothing was choosen by the user, clear selection
     if( features.isEmpty() )
@@ -666,7 +660,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {
-      final Feature f = (Feature)features.get( i );
+      final Feature f = (Feature) features.get( i );
       selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
     }
 
@@ -675,33 +669,33 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     switch( selectionMode )
     {
-    case MODE_TOGGLE: // dreht die selection der auswahl um
-      // BUG: past nicht mehr zur beschreibung!
-      toRemove = new Feature[0];
-      toAdd = selectedWrapped;
-      break;
+      case MODE_TOGGLE: // dreht die selection der auswahl um
+        // BUG: past nicht mehr zur beschreibung!
+        toRemove = new Feature[0];
+        toAdd = selectedWrapped;
+        break;
 
-    case MODE_SELECT: // selectert genau das, was ausgewählt wurde
-      //      toRemove = featureList.toFeatures();
-      final EasyFeatureWrapper[] allFeatures = selectionManager2.getAllFeatures();
-      toRemove = new Feature[allFeatures.length];
-      for( int i = 0; i < allFeatures.length; i++ )
-        toRemove[i] = allFeatures[i].getFeature();
-      toAdd = selectedWrapped;
-      break;
+      case MODE_SELECT: // selectert genau das, was ausgewählt wurde
+        // toRemove = featureList.toFeatures();
+        final EasyFeatureWrapper[] allFeatures = selectionManager2.getAllFeatures();
+        toRemove = new Feature[allFeatures.length];
+        for( int i = 0; i < allFeatures.length; i++ )
+          toRemove[i] = allFeatures[i].getFeature();
+        toAdd = selectedWrapped;
+        break;
 
-    case MODE_UNSELECT: // löscht alles augewählte aus der selection
-      toRemove = featureList.toFeatures();
-      toAdd = new EasyFeatureWrapper[0];
+      case MODE_UNSELECT: // löscht alles augewählte aus der selection
+        toRemove = featureList.toFeatures();
+        toAdd = new EasyFeatureWrapper[0];
 
-    default:
-      throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
+      default:
+        throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );
   }
 
-  private final void fireSelectionChanged()
+  private final void fireSelectionChanged( )
   {
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
@@ -711,7 +705,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
-        public void run()
+        public void run( )
         {
           l.selectionChanged( e );
         }

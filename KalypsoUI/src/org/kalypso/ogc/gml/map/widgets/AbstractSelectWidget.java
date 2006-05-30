@@ -42,9 +42,20 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.dialogs.NewFolderDialog;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 
 /**
- * 
  * @author doemming
  */
 public abstract class AbstractSelectWidget extends AbstractWidget
@@ -69,9 +80,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    */
   private final int m_radius = 20;
 
-  abstract int getSelectionMode();
+  private int KEY_COMBINATION_CTRL_MOUSE_BUTTON_LEFT = KeyEvent.CTRL_DOWN_MASK | KeyEvent.BUTTON1_DOWN_MASK;
 
-  abstract boolean allowOnlyOneSelectedFeature();
+  abstract int getSelectionMode( );
+
+  abstract boolean allowOnlyOneSelectedFeature( );
 
   @Override
   public void dragged( Point p )
@@ -116,19 +129,19 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      int px = (int)( m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX() );
-      int py = (int)( m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY() );
-      int dx = (int)Math.abs( m_endPoint.getX() - m_startPoint.getX() );
-      int dy = (int)Math.abs( m_endPoint.getY() - m_startPoint.getY() );
+      int px = (int) (m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX());
+      int py = (int) (m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY());
+      int dx = (int) Math.abs( m_endPoint.getX() - m_startPoint.getX() );
+      int dy = (int) Math.abs( m_endPoint.getY() - m_startPoint.getY() );
 
       if( dx != 0 && dy != 0 )
         g.drawRect( px, py, dx, dy );
     }
   }
 
-  public void perform()
+  public void perform( )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -140,5 +153,68 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     m_startPoint = null;
     m_endPoint = null;
     super.finish();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( KeyEvent e )
+  {
+    if( e.getKeyCode() == KeyEvent.VK_DELETE )
+    {
+      final ISelection selection = getMapPanel().getSelection();
+      if( selection instanceof KalypsoFeatureThemeSelection )
+      {
+        final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection) selection;
+        final EasyFeatureWrapper[] allFeatures = fts.getAllFeatures();
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
+        final IMapModell mapModell = getMapPanel().getMapModell();
+        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+        if( activeTheme instanceof IKalypsoFeatureTheme )
+        {
+          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+          final CommandableWorkspace workspace = theme.getWorkspace();
+          try
+          {
+            workspace.postCommand( command );
+          }
+          catch( Exception e1 )
+          {
+            e1.printStackTrace();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    int modifiersEx = e.getModifiersEx();
+    if( modifiersEx == KEY_COMBINATION_CTRL_MOUSE_BUTTON_LEFT )
+    {
+      // TODO add Feature to selection by pressing strg+LeftMouseKey
+      // final ISelection oldSelection = getMapPanel().getSelection();
+      // if( oldSelection instanceof KalypsoFeatureThemeSelection )
+      // {
+      // final KalypsoFeatureThemeSelection oldFts = (KalypsoFeatureThemeSelection) oldSelection;
+      // final EasyFeatureWrapper[] oldFeatures = oldFts.getAllFeatures();
+      // getMapPanel().select( m_startPoint, m_endPoint, m_radius, getSelectionMode(), allowOnlyOneSelectedFeature() );
+      // final ISelection newSelection = getMapPanel().getSelection();
+      // EasyFeatureWrapper[] newFeatures = new EasyFeatureWrapper[0];
+      // if( newSelection instanceof KalypsoFeatureThemeSelection )
+      // {
+      // final KalypsoFeatureThemeSelection newFts = (KalypsoFeatureThemeSelection) newSelection;
+      // newFeatures = newFts.getAllFeatures();
+      // }
+      // EasyFeatureWrapper[] newWrappedSelection = FeatureSelectionHelper.mergeWrapper( oldFeatures, newFeatures );
+      // System.out.println();
+      // }
+
+    }
   }
 }

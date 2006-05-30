@@ -31,6 +31,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -433,6 +434,18 @@ public class CreateGeometeryWidget2 extends AbstractWidget
     catch( Exception e )
     {
       m_valid = false;
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( KeyEvent e )
+  {
+    if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
+    {
+      clear();
     }
   }
 
