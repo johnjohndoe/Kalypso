@@ -98,6 +98,8 @@ public class SwaleAndTrenchManager extends AbstractManager
   {
     Feature rootFeature = workspace.getRootFeature();
     Feature col = (Feature) rootFeature.getProperty( "SwaleAndTrenchCollectionMember" );
+    if( col == null )
+      return;
     List list = (List) col.getProperty( "swaleTrenchMember" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
