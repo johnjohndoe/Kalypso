@@ -30,17 +30,32 @@
 package org.kalypso.dss;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
  */
 public class MeasuresConstants
 {
-  public static final String DSS_MEASURES_NS = "http://www.tuhh.de/kalypsoDSS";
+  public static final String DSS_MEASURES_NS_SEALING = "http://schema.kalypso.wb.tu-harburg.de/measure/sealing";
 
-  public static final String DSS_MEASURES_SUBST_GROUP = "_Measure";
+  public static final String DSS_MEASURES_NS_RHB = "http://schema.kalypso.wb.tu-harburg.de/measure/rhb";
+
+  public static final String DSS_MEASURES_NS_MRS = "http://schema.kalypso.wb.tu-harburg.de/measure/mrs";
+
+  public static final String DSS_MEASURE_FT_SEALING = "SealingMeasureFeature";
+
+  /** Bean id's */
+  public static final String IN_MEASURE_RHB_ID = "measureRHB";
+
+  public static final String IN_MEASURE_MRS_ID = "measureMRS";
+
+  public static final String IN_MEASURE_SEALING_ID = "measureSealing";
 
   /** All geometry property names in the measures.xsd are called position */
   public static final String DSS_MEASURES_GEOMETRY_PROPERTY_NAME = "position";
+
+  public static final String DSS_MEASURE_SEALING_FACTOR = "sealingfactor";
+
+  public static final String DEFAULT_ENCONDING = "UTF-8";
+
 }

@@ -1,0 +1,150 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.dss.calcjob;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
+
+/**
+ * @author kuepfer
+ */
+public class NaSimulationDataProvieder implements ISimulationDataProvider
+{
+
+  private URL m_calcDir;
+
+  public NaSimulationDataProvieder( URL calcDir )
+  {
+    m_calcDir = calcDir;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#getInputForID(java.lang.String)
+   */
+  public Object getInputForID( String id ) throws SimulationException
+  {
+    try
+    {
+
+      if( id.equals( NaModelConstants.IN_CONTROL_ID ) )
+      {
+        return new URL( m_calcDir, "expertControl.gml" );
+      }
+      if( id.equals( NaModelConstants.IN_MODELL_ID ) )
+      {
+        return new URL( m_calcDir, "calcCase.gml" );
+      }
+      if( id.equals( NaModelConstants.IN_HYDROTOP_ID ) )
+      {
+        return new URL( m_calcDir, "calcHydrotop.gml" );
+      }
+      if( id.equals( NaModelConstants.IN_META_ID ) )
+      {
+        return new URL( m_calcDir, ".calculation" );
+      }
+      if( id.equals( NaModelConstants.IN_PARAMETER_ID ) )
+      {
+        return new URL( m_calcDir, "calcParameter.gml" );
+      }
+      if( id.equals( NaModelConstants.IN_TEMPLATE_ID ) )
+      {
+        return new URL( m_calcDir, "../.asciitemplate.zip" );
+      }
+      if( id.equals( NaModelConstants.IN_OPTIMIZECONF_ID ) )
+      {
+        return new URL( m_calcDir, ".sce.xml" );
+      }
+      if( id.equals( NaModelConstants.IN_KLIMA_DIR_ID ) )
+      {
+        return new URL( m_calcDir, "Klima" );
+      }
+      if( id.equals( NaModelConstants.IN_RAINFALL_ID ) )
+      {
+        return new URL( m_calcDir, "Niederschlag" );
+      }
+      if( id.equals( NaModelConstants.IN_GAUGING_STATION_ID ) )
+      {
+        return new URL( m_calcDir, "Pegel" );
+      }
+      if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
+      {
+        return new URL( m_calcDir, "Ergebnisse/Anfangswerte/lzsim.zip" );
+      }
+      if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
+      {
+        return new URL( m_calcDir, "Ergebnisse" );
+      }
+
+    }
+    catch( MalformedURLException e )
+    {
+      throw new SimulationException( "Error while creating data provieder for RRM ", e );
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#hasID(java.lang.String)
+   */
+  public boolean hasID( String id )
+  {
+    if( id.equals( NaModelConstants.LZSIM_IN_ID ) || id.equals( NaModelConstants.IN_CONTROL_ID ) || id.equals( NaModelConstants.IN_GAUGING_STATION_ID ) || id.equals( NaModelConstants.IN_HYDROTOP_ID )
+        || id.equals( NaModelConstants.IN_KLIMA_DIR_ID ) || id.equals( NaModelConstants.IN_META_ID ) || id.equals( NaModelConstants.IN_MODELL_ID ) || id.equals( NaModelConstants.IN_OPTIMIZECONF_ID )
+        || id.equals( NaModelConstants.IN_PARAMETER_ID ) || id.equals( NaModelConstants.IN_RAINFALL_ID ) || id.equals( NaModelConstants.IN_RESULTS_DIR_ID )
+        || id.equals( NaModelConstants.IN_TEMPLATE_ID ) )
+      return true;
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#dispose()
+   */
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+}

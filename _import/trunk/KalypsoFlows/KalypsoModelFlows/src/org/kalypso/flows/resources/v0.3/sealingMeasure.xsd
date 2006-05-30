@@ -36,7 +36,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="area"
+					<element name="position"
 						type="gml:PolygonPropertyType">
 						<annotation>
 							<documentation xml:lang="de">

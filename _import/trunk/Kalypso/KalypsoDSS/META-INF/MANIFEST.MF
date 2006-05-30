@@ -12,5 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
  org.kalypso.ui;visibility:=reexport,
- org.kalypso.metadoc
+ org.kalypso.metadoc,
+ org.kalypso.simulation.core,
+ org.kalypso.simulation.ui,
+ org.kalypso.NACalcJob
 Eclipse-AutoStart: true
