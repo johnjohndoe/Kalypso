@@ -29,24 +29,70 @@
  */
 package org.kalypso.commons.java.lang;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
- * 
  * @author Thül
  */
 public class ProcessHelper
 {
-
-  public ProcessHelper()
+  public static class StreamStreamer extends Thread
   {
-  // wird nicht instantiiert
+    private final OutputStream m_os;
+
+    private final InputStream m_is;
+
+    public StreamStreamer( final InputStream is, final OutputStream os )
+    {
+      m_os = os;
+      m_is = is;
+
+      start();
+    }
+
+    @Override
+    public void run( )
+    {
+      if( m_is == null )
+        return;
+
+      try
+      {
+        final byte[] stuff = new byte[40];
+
+        while( true )
+        {
+          final int read = m_is.read( stuff );
+          if( read == -1 )
+            break;
+
+          // System.out.print( new String( stuff, 0, read ) );
+
+          if( m_os != null )
+            m_os.write( stuff, 0, read );
+        }
+      }
+      catch( final IOException ioe )
+      {
+        ioe.printStackTrace();
+      }
+    }
+  }
+
+  public ProcessHelper( )
+  {
+    // wird nicht instantiiert
   }
 
   /**
@@ -62,19 +108,18 @@ public class ProcessHelper
    *          Time-out in milliseconds
    * @param wLog
    * @param wErr
-   * 
    * @throws IOException
    * @throws ProcessTimeoutException
+   * 
+   * @deprecated use {@link #startProcess(String, String[], File, ICancelable, long, OutputStream, OutputStream, InputStream)
    */
-  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir,
-      final ICancelable cancelable, final long lTimeOut, final Writer wLog, final Writer wErr ) throws IOException,
-      ProcessTimeoutException
-
+  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final Writer wLog, final Writer wErr ) throws IOException, ProcessTimeoutException
   {
     final Process process;
     int iRetVal = -1;
     InputStreamReader inStreamRdr = null;
     InputStreamReader errStreamRdr = null;
+    OutputStreamWriter outStreamWtr = null;
     ProcessControlThread procCtrlThread = null;
 
     try
@@ -87,8 +132,10 @@ public class ProcessHelper
         procCtrlThread.start();
       }
 
-      inStreamRdr = new InputStreamReader( process.getInputStream() );
-      errStreamRdr = new InputStreamReader( process.getErrorStream() );
+      outStreamWtr = new OutputStreamWriter( new BufferedOutputStream( process.getOutputStream() ) );
+
+      inStreamRdr = new InputStreamReader( /* new BufferedInputStream( */process.getInputStream() )/* ) */;
+      errStreamRdr = new InputStreamReader( new BufferedInputStream( process.getErrorStream() ) );
       while( true )
       {
         IOUtils.copy( inStreamRdr, wLog );
@@ -127,6 +174,101 @@ public class ProcessHelper
       // (wird geworfen von Thread.sleep( 100 ))
       e.printStackTrace();
     }
+    finally
+    {
+      IOUtils.closeQuietly( inStreamRdr );
+      IOUtils.closeQuietly( errStreamRdr );
+      IOUtils.closeQuietly( outStreamWtr );
+    }
+
+    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
+    {
+      throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
+    }
+    return iRetVal;
+  }
+
+  /**
+   * startet Prozess (sCmd, envp, fleExeDir), schreibt Ausgaben nach wLog, wErr, beendet den Prozess automatisch nach
+   * iTOut ms (iTOut = 0 bedeutet, dass der Prozess nicht abgebrochen wird), die Abarbeitung des Prozesses beachtet auch
+   * den Cancel-Status von cancelable
+   * 
+   * @param sCmd
+   * @param envp
+   * @param fleExeDir
+   * @param cancelable
+   * @param lTimeOut
+   *          Time-out in milliseconds
+   * @param wLog
+   * @param wErr
+   * @throws IOException
+   * @throws ProcessTimeoutException
+   */
+  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final OutputStream wLog, final OutputStream wErr, final InputStream rIn ) throws IOException, ProcessTimeoutException
+  {
+    final Process process;
+    int iRetVal = -1;
+    InputStream inStream = null;
+    InputStream errStream = null;
+    OutputStream outStream = null;
+    ProcessControlThread procCtrlThread = null;
+
+    try
+    {
+      process = Runtime.getRuntime().exec( sCmd, envp, fleExeDir );
+
+      if( lTimeOut > 0 )
+      {
+        procCtrlThread = new ProcessControlThread( process, lTimeOut );
+        procCtrlThread.start();
+      }
+
+      new StreamStreamer( process.getInputStream(), wLog );
+      new StreamStreamer( process.getErrorStream(), wErr );
+      new StreamStreamer( rIn, process.getOutputStream() );
+
+      while( true )
+      {
+        try
+        {
+          iRetVal = process.exitValue();
+          break;
+        }
+        catch( final IllegalThreadStateException e )
+        {
+          // Prozess noch nicht fertig, weiterlaufen lassen
+        }
+
+        if( cancelable.isCanceled() )
+        {
+          process.destroy();
+          if( procCtrlThread != null )
+          {
+            procCtrlThread.endProcessControl();
+          }
+          iRetVal = process.exitValue();
+          return iRetVal;
+        }
+        Thread.sleep( 100 );
+      }
+      if( procCtrlThread != null )
+      {
+        procCtrlThread.endProcessControl();
+      }
+    }
+    catch( final InterruptedException e )
+    {
+      // kann aber eigentlich gar nicht passieren
+      // (wird geworfen von Thread.sleep( 100 ))
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inStream );
+      IOUtils.closeQuietly( errStream );
+      IOUtils.closeQuietly( outStream );
+    }
+
     if( procCtrlThread != null && procCtrlThread.procDestroyed() )
     {
       throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
@@ -157,7 +299,7 @@ public class ProcessHelper
     }
 
     @Override
-    public void run()
+    public void run( )
     {
       synchronized( this )
       {
@@ -179,14 +321,14 @@ public class ProcessHelper
       }
     }
 
-    public synchronized void endProcessControl()
+    public synchronized void endProcessControl( )
     {
       // stoppt die Überwachung des Prozesses
       m_bProcCtrlActive = false;
       notifyAll();
     }
 
-    public boolean procDestroyed()
+    public boolean procDestroyed( )
     {
       // wurde der Prozess durch diesen Thread abbgebrochen?
       return m_bProcDestroyed;
@@ -195,7 +337,7 @@ public class ProcessHelper
 
   public static class ProcessTimeoutException extends Exception
   {
-    public ProcessTimeoutException()
+    public ProcessTimeoutException( )
     {
       super();
 
