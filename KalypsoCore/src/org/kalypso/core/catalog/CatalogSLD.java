@@ -55,6 +55,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.XMLTools;
@@ -67,6 +68,15 @@ import org.w3c.dom.Element;
  */
 public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
 {
+
+  private static CatalogSLD M_CatalogFeatureTypeStyle = null;
+
+  public static CatalogSLD getDefault( )
+  {
+    if( M_CatalogFeatureTypeStyle == null )
+      M_CatalogFeatureTypeStyle = new CatalogSLD( CatalogManager.getDefault(), FileUtilities.createNewTempDir( "style-catalog" ) );
+    return M_CatalogFeatureTypeStyle;
+  }
 
   public CatalogSLD( final CatalogManager cManager, final File repositoryBase )
   {

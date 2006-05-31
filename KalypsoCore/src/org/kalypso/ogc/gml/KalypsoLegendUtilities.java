@@ -96,7 +96,16 @@ public class KalypsoLegendUtilities
     {
       final Object legendValue = getLegendValue( properties[i] );
       if( legendValue != null )
-        legendFeature.setProperty( properties[i], legendValue );
+      {
+        try
+        {
+          legendFeature.setProperty( properties[i], legendValue );
+        }
+        catch( Exception e )
+        {
+          // TODO generate legendFeature, that has String properties where are no geometries
+        }
+      }
     }
   }
 

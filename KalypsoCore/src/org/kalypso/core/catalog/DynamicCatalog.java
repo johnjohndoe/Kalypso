@@ -56,10 +56,12 @@ import javax.xml.namespace.QName;
 
 import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.DelegateURI;
+import oasis.names.tc.entity.xmlns.xml.catalog.NextCatalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.Public;
 import oasis.names.tc.entity.xmlns.xml.catalog.System;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
 
@@ -75,22 +77,27 @@ public class DynamicCatalog implements ICatalog
   private static final int SYSTEM_RESOLVE_1 = 1;
 
   /**
+   * system entry matches the specified system identifier of <i>imported</i> catalogs (next catalog), it is used
+   */
+  private static final int SYSTEM_RESOLVE_NEXT_CATALOG_2 = 2;
+
+  /**
    * no system entry matches the specified system identifier<br>
    * but a rewrite entry matches, it is used
    */
-  private static final int SYSTEM_REWRITE_2 = 2;
+  private static final int SYSTEM_REWRITE_3 = 3;
 
   /**
    * public entry matches the specified public identifier and either prefer is public or no system identifier is
    * provided, it is used.
    */
-  private static final int PUBLIC_RESOLVE_3 = 3;
+  private static final int PUBLIC_RESOLVE_4 = 4;
 
   /**
    * no exact match was found, but it matches one or more of the partial identifiers specified in delegates entries, the
    * delegate catalogs are searched for a matching identifier
    */
-  private static final int DELEGATE_SEARCH_4 = 4;
+  private static final int DELEGATE_SEARCH_5 = 5;
 
   private Catalog m_catalog;
 
@@ -98,21 +105,22 @@ public class DynamicCatalog implements ICatalog
 
   private final CatalogManager m_manager;
 
-  protected DynamicCatalog( CatalogManager manager, final File baseDir, final Catalog catalog )
+  protected DynamicCatalog( CatalogManager manager, final URL context, final Catalog catalog )
   {
     m_manager = manager;
     m_catalog = catalog;
-    final String base = getBase();
-    final String relativaPathForCatalog = CatalogUtilities.getPathForCatalog( base );
-    try
-    {
-      m_context = UrlResolverSingleton.resolveUrl( baseDir.toURL(), relativaPathForCatalog );
-    }
-    catch( MalformedURLException e )
-    {
-      // do not throw exception, because context may never be used .e.g. read-only catalog
-      e.printStackTrace();
-    }
+    // final String base = getBase();
+    // final String relativaPathForCatalog = CatalogUtilities.getPathForCatalog( base );
+    m_context = context;
+    // try
+    // {
+    // m_context = UrlResolverSingleton.resolveUrl( baseDir.toURL(), relativaPathForCatalog );
+    // }
+    // catch( MalformedURLException e )
+    // {
+    // // do not throw exception, because context may never be used .e.g. read-only catalog
+    // e.printStackTrace();
+    // }
   }
 
   public String getCatalogID( )
@@ -126,11 +134,25 @@ public class DynamicCatalog implements ICatalog
     return otherAttributes.get( CatalogUtilities.BASE );
   }
 
-  private void internalAddEntry( final String uri, final String systemID, final String publicID )
+  private void internalAddEntry( String uri, final String systemID, final String publicID, boolean relative )
   {
     // TODO check if entry allready exists
     if( uri == null || uri.length() < 1 )
       throw new UnsupportedOperationException();
+    if( relative )
+    {
+      try
+      {
+        final URI uri2 = new URI( uri );
+        final String absolute = uri2.toURL().toExternalForm();
+        final String relativePath = FileUtilities.getRelativePathTo( m_context.toExternalForm(), absolute );
+        uri = relativePath;
+      }
+      catch( Exception e )
+      {
+        // no
+      }
+    }
     final List<Object> publicOrSystemOrUri = m_catalog.getPublicOrSystemOrUri();
     if( systemID != null && systemID.length() > 0 )
     {
@@ -146,6 +168,19 @@ public class DynamicCatalog implements ICatalog
       public_.setUri( uri );
       publicOrSystemOrUri.add( CatalogManager.OBJECT_FACTORY_CATALOG.createPublic( public_ ) );
     }
+
+  }
+
+  /**
+   * @see org.kalypso.core.catalog.ICatalog#addNextCatalog(java.net.URL)
+   */
+  public void addNextCatalog( final URL catalogURL )
+  {
+    final List<Object> publicOrSystemOrUri = m_catalog.getPublicOrSystemOrUri();
+    final NextCatalog nextCatalog = CatalogManager.OBJECT_FACTORY_CATALOG.createNextCatalog();
+    nextCatalog.setCatalog( catalogURL.toExternalForm() );
+    final JAXBElement<NextCatalog> element = CatalogManager.OBJECT_FACTORY_CATALOG.createNextCatalog( nextCatalog );
+    publicOrSystemOrUri.add( element );
   }
 
   /**
@@ -154,16 +189,28 @@ public class DynamicCatalog implements ICatalog
   public void addEntry( final String uri, final String systemID, final String publicID )
   {
     if( systemID != null && !"".equals( systemID ) )
-      addEntry( uri, systemID, SYSTEM_ID );
+      addEntry( uri, systemID, SYSTEM_ID, false );
     if( publicID != null && !"".equals( publicID ) )
-      addEntry( uri, publicID, PUBLIC_ID );
+      addEntry( uri, publicID, PUBLIC_ID, false );
   }
 
   private static final int SYSTEM_ID = 1;
 
   private static final int PUBLIC_ID = 2;
 
-  private void addEntry( final String uri, final String entryID, int entryType ) // , final String publicID )
+  /**
+   * @see org.kalypso.core.catalog.ICatalog#addEntryRelative(java.lang.String, java.lang.String, java.lang.String)
+   */
+  public void addEntryRelative( String uri, String systemID, String publicID )
+  {
+    if( systemID != null && !"".equals( systemID ) )
+      addEntry( uri, systemID, SYSTEM_ID, true );
+    if( publicID != null && !"".equals( publicID ) )
+      addEntry( uri, publicID, PUBLIC_ID, true );
+  }
+
+  @SuppressWarnings("unchecked")
+  private void addEntry( final String uri, final String entryID, int entryType, boolean relative )
   {
     if( entryID == null || "".equals( entryID ) )
       return;
@@ -172,10 +219,10 @@ public class DynamicCatalog implements ICatalog
       switch( entryType )
       {
         case SYSTEM_ID:
-          internalAddEntry( uri, entryID, null );
+          internalAddEntry( uri, entryID, null, relative );
           break;
         case PUBLIC_ID:
-          internalAddEntry( uri, null, entryID );
+          internalAddEntry( uri, null, entryID, relative );
           break;
         default:
           throw new UnsupportedOperationException();
@@ -198,10 +245,10 @@ public class DynamicCatalog implements ICatalog
       switch( entryType )
       {
         case SYSTEM_ID:
-          internalAddEntry( uri, entryID, null );
+          internalAddEntry( uri, entryID, null, relative );
           break;
         case PUBLIC_ID:
-          internalAddEntry( uri, null, entryID );
+          internalAddEntry( uri, null, entryID, relative );
           break;
         default:
           throw new UnsupportedOperationException();
@@ -220,13 +267,30 @@ public class DynamicCatalog implements ICatalog
         final String uriStartString = delegateURI.getUriStartString();
         if( baseURN.startsWith( uriStartString ) )
         {
+          // delegate matches
           final String catalogID = delegateURI.getCatalog();
           final String uriToCatalog = resolve( catalogID, catalogID );
           final ICatalog catalog;
           try
           {
             catalog = m_manager.getCatalog( new URI( uriToCatalog ) );
-            catalog.addEntry( uri, entryID, null );
+            switch( entryType )
+            {
+              case SYSTEM_ID:
+                if( relative )
+                  catalog.addEntryRelative( uri, entryID, null );
+                else
+                  catalog.addEntry( uri, entryID, null );
+                break;
+              case PUBLIC_ID:
+                if( relative )
+                  catalog.addEntryRelative( uri, null, entryID );
+                else
+                  catalog.addEntry( uri, null, entryID );
+                break;
+              default:
+                throw new UnsupportedOperationException();
+            }
             return;
           }
           catch( URISyntaxException e )
@@ -243,7 +307,15 @@ public class DynamicCatalog implements ICatalog
     final String urnSection = CatalogUtilities.getUrnSection( baseURN, maxLevel + 1 );
     final String newCatalogURIBase = CatalogUtilities.addURNSection( myBaseURN, urnSection ) + ":";
     final String newCatalogURN = CatalogUtilities.createCatalogURN( newCatalogURIBase );
-    m_manager.ensureExisting( newCatalogURIBase );
+    try
+    {
+      m_manager.ensureExisting( newCatalogURIBase );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw new UnsupportedOperationException( e );
+    }
 
     // create a delegate to a new catalog
     // the catalog will be created on demand
@@ -254,10 +326,10 @@ public class DynamicCatalog implements ICatalog
 
     final System catalogSystemEntry = CatalogManager.OBJECT_FACTORY_CATALOG.createSystem();
     catalogSystemEntry.setSystemId( newCatalogURN );
-    catalogSystemEntry.setUri( urnSection + File.separator + CatalogUtilities.CATALOG_FILE_NAME );
+    catalogSystemEntry.setUri( urnSection +"/" + CatalogUtilities.CATALOG_FILE_NAME );
     publicOrSystemOrUri.add( CatalogManager.OBJECT_FACTORY_CATALOG.createSystem( catalogSystemEntry ) );
     // next time catalog will be available
-    addEntry( uri, entryID, entryType );
+    addEntry( uri, entryID, entryType, relative );
   }
 
   /**
@@ -274,7 +346,12 @@ public class DynamicCatalog implements ICatalog
   @SuppressWarnings("unchecked")
   public String resolve( final String systemID, final String publicID )
   {
-    final List<String> result = internResolve( systemID, publicID, null, false, false );
+    return resolveLocal( systemID, publicID, false );
+  }
+
+  private String resolveLocal( final String systemID, final String publicID, boolean local )
+  {
+    final List<String> result = internResolve( systemID, publicID, null, false, false, local );
     if( result.size() > 0 )
       return result.get( 0 );
     return systemID;
@@ -285,11 +362,60 @@ public class DynamicCatalog implements ICatalog
    */
   public List<String> getEnryURNS( String urnPattern )
   {
-    final List<String> result = internResolve( urnPattern, urnPattern, null, true, true );
+    final List<String> result = internResolve( urnPattern, urnPattern, null, true, true, false );
     return result;
   }
 
-  private List<String> internResolve( final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern )
+  /**
+   * @return true results of resolve
+   */
+  private List<String> internResolveDelegate( final String hrefCatalog, final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern )
+  {
+    final String uriToCatalog = resolveLocal( hrefCatalog, hrefCatalog, true );
+    final URI catalogURI;
+    try
+    {
+      final URL url = new URL( uriToCatalog );
+      catalogURI = url.toURI();
+      final ICatalog catalog = m_manager.getCatalog( catalogURI );
+      if( catalog instanceof DynamicCatalog )
+      {
+        final DynamicCatalog dynCatalog = (DynamicCatalog) catalog;
+        collector = dynCatalog.internResolve( systemID, publicID, collector, doCollectURN, supportPattern, false );
+      }
+      else
+      {
+        if( doCollectURN )
+        {
+          final String uriFromSystemID = catalog.resolve( systemID, null );
+          if( systemID != null && !systemID.equals( uriFromSystemID ) )
+            collector.add( systemID );
+          final String uriFromPublicID = catalog.resolve( null, publicID );
+          if( publicID != null && !publicID.equals( uriFromPublicID ) )
+            collector.add( publicID );
+        }
+        else
+        {
+          final String uri = catalog.resolve( systemID, publicID );
+          collector.add( uri );
+        }
+      }
+
+    }
+    catch( URISyntaxException e )
+    {
+      // invalid catalog entry
+      e.printStackTrace();
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return collector;
+  }
+
+  private List<String> internResolve( final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern, boolean local )
   {
     if( collector == null )
       collector = new ArrayList<String>();
@@ -298,7 +424,7 @@ public class DynamicCatalog implements ICatalog
     final List entries = new ArrayList();
     entries.addAll( publicOrSystemOrUri );
     // TODO add entries from imported catalogs or extension-point catalogs
-    for( int step = SYSTEM_RESOLVE_1; step <= DELEGATE_SEARCH_4; step++ )
+    for( int step = SYSTEM_RESOLVE_1; step <= DELEGATE_SEARCH_5; step++ )
     {
       for( Object entry : entries )
       {
@@ -330,10 +456,20 @@ public class DynamicCatalog implements ICatalog
               }
             }
             break;
-          case SYSTEM_REWRITE_2:
+          case SYSTEM_RESOLVE_NEXT_CATALOG_2:
+            if( item instanceof NextCatalog && !local )
+            {
+              final NextCatalog nextCatalog = (NextCatalog) item;
+              final String catalogHref = nextCatalog.getCatalog();
+              collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );
+              if( !doCollectURN && collector.size() > 0 )
+                return collector;
+            }
+            break;
+          case SYSTEM_REWRITE_3:
             // TODO
             break;
-          case PUBLIC_RESOLVE_3:
+          case PUBLIC_RESOLVE_4:
             if( item instanceof Public && publicID != null )
             {
               final Public public_ = (Public) item;
@@ -358,8 +494,8 @@ public class DynamicCatalog implements ICatalog
               }
             }
             break;
-          case DELEGATE_SEARCH_4:
-            if( item instanceof DelegateURI )
+          case DELEGATE_SEARCH_5:
+            if( item instanceof DelegateURI && !local )
             {
               final DelegateURI delegateURI = (DelegateURI) item;
               final String uriStartString = delegateURI.getUriStartString();
@@ -367,45 +503,10 @@ public class DynamicCatalog implements ICatalog
                   || // 
                   (publicID.startsWith( uriStartString ) && publicID != null) )
               {
-                final String catalogID = delegateURI.getCatalog();
-                String uriToCatalog = resolve( catalogID, catalogID );
-                final URI catalogURI;
-                try
-                {
-                  catalogURI = new URI( uriToCatalog );
-                  final ICatalog catalog = m_manager.getCatalog( catalogURI );
-                  if( catalog instanceof DynamicCatalog )
-                  {
-                    final DynamicCatalog dynCatalog = (DynamicCatalog) catalog;
-                    collector = dynCatalog.internResolve( systemID, publicID, collector, doCollectURN, supportPattern );
-                    if( !doCollectURN )
-                      return collector;
-                  }
-                  else
-                  {
-                    if( doCollectURN )
-                    {
-                      final String uriFromSystemID = catalog.resolve( systemID, null );
-                      if( systemID != null && !systemID.equals( uriFromSystemID ) )
-                        collector.add( systemID );
-                      final String uriFromPublicID = catalog.resolve( null, publicID );
-                      if( publicID != null && !publicID.equals( uriFromPublicID ) )
-                        collector.add( publicID );
-                    }
-                    else
-                    {
-                      final String uri = catalog.resolve( systemID, publicID );
-                      collector.add( uri );
-                      return collector;
-                    }
-                  }
-
-                }
-                catch( URISyntaxException e )
-                {
-                  // invalid catalog entry
-                  e.printStackTrace();
-                }
+                final String catalogHref = delegateURI.getCatalog();
+                collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );
+                if( !doCollectURN && collector.size() > 0 )
+                  return collector;
               }
             }
             break;
@@ -468,11 +569,7 @@ public class DynamicCatalog implements ICatalog
   @Override
   public String toString( )
   {
-    return "XML-Catalog: \n ID=" + m_catalog.getId().toString() + "\n Base=" + getBase();
+    return "XML-Catalog: \n ID=" + m_catalog.getId().toString() + "\n Base=" + getBase() + "\n context: " + m_context.toString();
   }
-
-  /**
-   * @see org.kalypso.core.catalog.ICatalog#getEnryURNS(java.lang.String)
-   */
 
 }

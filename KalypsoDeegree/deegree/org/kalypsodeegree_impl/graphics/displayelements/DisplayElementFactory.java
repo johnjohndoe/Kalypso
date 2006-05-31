@@ -62,6 +62,8 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -98,7 +100,6 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.gc.GC_GridCoverage;
@@ -129,7 +130,7 @@ public class DisplayElementFactory
 
       try
       {
-        String featureTypeName = feature.getFeatureType().getName();
+        final QName featureTypeQName = feature.getFeatureType().getQName();
 
         for( int i = 0; i < styles.length; i++ )
         {
@@ -149,7 +150,10 @@ public class DisplayElementFactory
 
             for( int k = 0; k < fts.length; k++ )
             {
-              if( fts[k].getFeatureTypeName() == null || featureTypeName.equals( fts[k].getFeatureTypeName() ) )
+              final QName styleFTQName = fts[k].getFeatureTypeName();
+              if( styleFTQName == null //
+                  || featureTypeQName.equals( styleFTQName ) //
+                  || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
               {
                 Rule[] rules = fts[k].getRules();
 

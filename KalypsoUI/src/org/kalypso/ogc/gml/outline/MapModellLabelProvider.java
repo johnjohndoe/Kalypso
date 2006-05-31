@@ -48,6 +48,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author bce
@@ -76,7 +77,7 @@ public class MapModellLabelProvider implements ILabelProvider
   {
     if( element instanceof IKalypsoTheme )
     {
-      final IKalypsoTheme kalypsoTheme = (IKalypsoTheme)element;
+      final IKalypsoTheme kalypsoTheme = (IKalypsoTheme) element;
 
       final StringBuffer sb = new StringBuffer( kalypsoTheme.getType() + kalypsoTheme.getName() );
 
@@ -86,13 +87,20 @@ public class MapModellLabelProvider implements ILabelProvider
 
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
+        final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) kalypsoTheme;
 
         final CommandableWorkspace workspace = kft.getWorkspace();
         if( workspace == null )
           sb.append( " - loading..." );
-        else if( workspace.isDirty() )
-          sb.append( '*' );
+        else
+        {
+          final FeatureList featureList = kft.getFeatureList();
+          if(featureList!=null)
+            sb.append( "("+featureList.size()+")" );
+            
+          if( workspace.isDirty() )
+            sb.append( '*' );
+        }
       }
 
       return sb.toString();
@@ -102,7 +110,7 @@ public class MapModellLabelProvider implements ILabelProvider
       return element.toString();
 
     if( element instanceof UserStyle )
-      return ( (UserStyle)element ).getName();
+      return ((UserStyle) element).getName();
 
     return element.toString();
   }
@@ -112,15 +120,15 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  // unsused
+    // unsused
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // unused
+    // unused
   }
 
   /**
@@ -136,6 +144,6 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  // unused
+    // unused
   }
 }

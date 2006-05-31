@@ -41,7 +41,10 @@
 package org.kalypso.core.catalog;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -56,6 +59,9 @@ import javax.xml.namespace.QName;
 import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.jwsdp.JaxbUtilities;
 
@@ -65,7 +71,11 @@ import org.kalypso.jwsdp.JaxbUtilities;
 public class CatalogManager
 {
 
-  private static CatalogManager DEFAULT = new CatalogManager( new File( "C:/TMP/test-catalog" ) );
+  /**
+   * the default-catalog is dynamic, but changes will not be saved <br>
+   * TODO put into .metadata-pluign-preferences
+   */
+  private static CatalogManager DEFAULT_MANAGER = null;
 
   public final static JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
 
@@ -81,24 +91,58 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
+  /**
+   * methode to get the singelton catalog, with default catalog location
+   */
   public static CatalogManager getDefault( )
   {
-    return DEFAULT;
+    if( DEFAULT_MANAGER == null )
+    {
+      final File catalogBaseDir = FileUtilities.createNewTempDir( "kalypso-default-catalog" );
+      DEFAULT_MANAGER = getDefault( catalogBaseDir );
+    }
+    return DEFAULT_MANAGER;
+  }
+
+  /**
+   * methode to get the singelton catalog, but sets the location of the base catalog<br>
+   * use this methode for tests
+   */
+  public static CatalogManager getDefault( final File catalogBaseDir )
+  {
+    if( DEFAULT_MANAGER != null )
+      throw new UnsupportedOperationException( "catalog is alllready initialized" );
+    DEFAULT_MANAGER = new CatalogManager( catalogBaseDir );
+    DEFAULT_MANAGER.loadExtensions();
+    return DEFAULT_MANAGER;
+  }
+
+  private void loadExtensions( )
+  {
+    try
+    {
+      KalypsoCoreExtensions.loadXMLCatalogs( this );
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   private final File m_baseDir;
 
   private final Hashtable<URI, DynamicCatalog> m_openCatalogs = new Hashtable<URI, DynamicCatalog>();
 
-  public CatalogManager( final File baseDir )
+  private CatalogManager( final File baseDir )
   {
     m_baseDir = baseDir;
   }
 
   public ICatalog getBaseCatalog( )
   {
-    if( !m_baseDir.exists() )
-      throw new UnsupportedOperationException( "unknown catalog base" );
+    // if( !m_baseDir.exists() )
+    // throw new UnsupportedOperationException( "unknown catalog base" );
     final String baseURN = new String( "urn:" );
     final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
@@ -106,23 +150,17 @@ public class CatalogManager
 
     try
     {
+      ensureExisting( baseURN );
       return getCatalog( catalogFile.toURI() );
     }
     catch( Exception e )
     {
-      ensureExisting( baseURN );
-      return getCatalog( catalogFile.toURI() );
+      e.printStackTrace();
+      return null;
     }
   }
-//
-//  public ICatalog getCatalogForURN( String urn ) throws Exception
-//  {
-//    if( urn != null && urn.length() > 0 && !urn.endsWith( ":" ) )
-//      throw new Exception( "it is not a catalog URN (must end with ':' )" + urn );
-//    final ICatalog baseCatalog = getBaseCatalog();
-//    return baseCatalog.getCatalogFor( urn );
-//  }
 
+  @SuppressWarnings("unchecked")
   public ICatalog getCatalog( final URI catalogURI )
   {
     try
@@ -134,14 +172,15 @@ public class CatalogManager
         final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
         final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( catalogURL );
         final Catalog catalog = object.getValue();
-        final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, m_baseDir, catalog );
+
+        final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, catalogURL, catalog );
         m_openCatalogs.put( catalogURI, newOpenCatalog );
       }
       return m_openCatalogs.get( catalogURI );
     }
     catch( Exception e )
     {
-      e.printStackTrace();
+      // e.printStackTrace();
       // TODO generate new type of exception CatalogException
       throw new UnsupportedOperationException( e );
     }
@@ -175,10 +214,28 @@ public class CatalogManager
       m_openCatalogs.remove( catalogURI );
   }
 
-  public void ensureExisting( final String baseURN )
+  public void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) )
       throw new UnsupportedOperationException( "catalog uRN must end with ':' " + baseURN );
+
+    final String href = CatalogUtilities.getPathForCatalog( baseURN );
+    final URL catalogURL = new URL( m_baseDir.toURL(), href );
+    final URI catalogURI = catalogURL.toURI();
+    if(m_openCatalogs.containsKey(catalogURI))
+      return;
+    boolean exists = true;
+    try
+    {
+      InputStream stream = catalogURL.openStream();
+    }
+    catch( Exception e )
+    {
+      exists = false;
+    }
+    if( exists )
+      return;
+    // create
     final ObjectFactory catalogFac = new ObjectFactory();
     final Catalog catalog = catalogFac.createCatalog();
     final Map<QName, String> attributes = catalog.getOtherAttributes();
@@ -188,15 +245,16 @@ public class CatalogManager
     attributes.put( CatalogUtilities.BASE, baseURN );
     catalog.setId( baseURN );
 
-    final File catalogFile = new File( m_baseDir, path );
-    final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, m_baseDir, catalog );
-    m_openCatalogs.put( catalogFile.toURI(), newOpenCatalog );
+    // final File catalogFile = new File( m_baseDir, path );
+    // final URL catalogURL = catalogFile.toURL();
+    final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, catalogURL, catalog );
+    m_openCatalogs.put( catalogURI, newOpenCatalog );
   }
 
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
    */
-  public IURNGenerator getURNGeneratorFor( final Class supportingClass)
+  public IURNGenerator getURNGeneratorFor( final Class supportingClass )
   {
     return m_urnGenerators.get( supportingClass );
   }

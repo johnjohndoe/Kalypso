@@ -62,13 +62,13 @@ import javax.xml.bind.JAXBException;
 public interface ICatalog
 {
 
-//  /**
-//   * resolves catalog for baseURN<br>
-//   * TODO this method is intended for categorized catalogs in kalypso and it must be checked if we can remove it from
-//   * the interface (althought catalogs are kept categorized intern)
-//   */
-//  @SuppressWarnings("unchecked")
-//  public ICatalog getCatalogFor( final String baseURN ) throws Exception;
+  // /**
+  // * resolves catalog for baseURN<br>
+  // * TODO this method is intended for categorized catalogs in kalypso and it must be checked if we can remove it from
+  // * the interface (althought catalogs are kept categorized intern)
+  // */
+  // @SuppressWarnings("unchecked")
+  // public ICatalog getCatalogFor( final String baseURN ) throws Exception;
 
   /**
    * returns a uri (absolute) or the systemID if no match was found int the catalog<br>
@@ -90,8 +90,29 @@ public interface ICatalog
   public List<String> getEnryURNS( String urnPattern ) throws MalformedURLException, JAXBException;
 
   /**
- * TODO
- */
+   * adds an entry to the catalog
+   * 
+   * @param uri
+   *          absolute pointer to the resource
+   * @param publicID
+   *          the systemID
+   * @param systemID
+   *          the publicID
+   */
   public void addEntry( String uri, String systemID, String publicID );
+
+  /**
+   * adds an entry to the catalog, but changes the uri to a relative reference to the catalog itself<br>
+   * 
+   * @param uri
+   *          absolute pointer to the resource
+   * @param publicID
+   *          the systemID
+   * @param systemID
+   *          the publicID
+   */
+  public void addEntryRelative( String uri, String systemID, String publicID );
+
+  public void addNextCatalog( URL catalogURL );
 
 }

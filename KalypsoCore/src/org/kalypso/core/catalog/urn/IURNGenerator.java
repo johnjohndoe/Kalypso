@@ -43,7 +43,6 @@ package org.kalypso.core.catalog.urn;
 /**
  * URNGenerator generates well known URNs for objects. In combination with the usage of catalog-resolvers well-known
  * URNs can be used to build repositories of well known resources
- * 
  * @author doemming
  */
 public interface IURNGenerator

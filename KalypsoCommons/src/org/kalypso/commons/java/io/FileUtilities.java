@@ -303,7 +303,7 @@ public class FileUtilities
     if( !absolute.startsWith( base ) )
     {
       if( base.lastIndexOf( "/" ) > -1 )
-        base = base.substring( 0, base.lastIndexOf( "/" ) + 1 );
+        base = base.substring( 0, base.lastIndexOf( "/" )  );
       //      base=base.replaceAll(File.separator+".+$","");
       String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
@@ -313,9 +313,9 @@ public class FileUtilities
         return null;
       String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      String x = back.replaceAll( "([a-zA-Z0-9]|\\.)+", ".." );
+      String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
       if( x.length() > 0 )
-        return x + File.separator + difference;
+        return x + "/"+ difference;
       return difference;
     }
     final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
