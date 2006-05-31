@@ -36,13 +36,23 @@ package org.kalypso.dss;
  */
 public class MeasuresConstants
 {
-  public static final String DSS_MEASURES_NS_SEALING = "http://schema.kalypso.wb.tu-harburg.de/measure/sealing";
+  public static final String NS_MEASURES_SEALING = "http://schema.kalypso.wb.tu-harburg.de/measure/sealing";
 
-  public static final String DSS_MEASURES_NS_RHB = "http://schema.kalypso.wb.tu-harburg.de/measure/rhb";
+  public static final String NS_MEASURES_RHB = "http://schema.kalypso.wb.tu-harburg.de/measure/rhb";
 
-  public static final String DSS_MEASURES_NS_MRS = "http://schema.kalypso.wb.tu-harburg.de/measure/mrs";
+  public static final String NS_MEASURES_MRS = "http://schema.kalypso.wb.tu-harburg.de/measure/mrs";
 
-  public static final String DSS_MEASURE_FT_SEALING = "SealingMeasureFeature";
+  public static final String MEASURE_SEALING_FE = "SealingMeasureFeature";
+
+  public static final String MEASURE_RHB_FE = "RhbMeasureFeature";
+
+  public static final String MEASURE_MRS_FE = "MrsMeasureFeature";
+
+  public static final String RHB_MEASURE_PROP_QMAX = "qmax";
+
+  public static final String RHB_MEASURE_PROP_DEPTH = "depth";
+
+  public static final String RHB_MEASURE_PROP_SLOPE = "slopeRhb";
 
   /** Bean id's */
   public static final String IN_MEASURE_RHB_ID = "measureRHB";
@@ -52,9 +62,13 @@ public class MeasuresConstants
   public static final String IN_MEASURE_SEALING_ID = "measureSealing";
 
   /** All geometry property names in the measures.xsd are called position */
-  public static final String DSS_MEASURES_GEOMETRY_PROPERTY_NAME = "position";
+  public static final String MRS_MEASURE_GEOMETRY_PROP = "position";
 
-  public static final String DSS_MEASURE_SEALING_FACTOR = "sealingfactor";
+  public static final String RHB_MEASURE_GEOMETRY_PROP = "position";
+
+  public static final String SEALING_MEASURE_GEOMETRY_PROP = "position";
+
+  public static final String SEALING_MEASURE_SEALINGFACTOR_PROP = "sealingfactor";
 
   public static final String DEFAULT_ENCONDING = "UTF-8";
 

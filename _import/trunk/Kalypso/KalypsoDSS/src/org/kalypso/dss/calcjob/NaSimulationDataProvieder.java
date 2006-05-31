@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.dss.calcjob;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -53,9 +54,11 @@ import org.kalypso.simulation.core.SimulationException;
 public class NaSimulationDataProvieder implements ISimulationDataProvider
 {
 
-  private URL m_calcDir;
+  public static final String CALC_DIR = "CALC_DIR";
 
-  public NaSimulationDataProvieder( URL calcDir )
+  private final File m_calcDir;
+
+  public NaSimulationDataProvieder( final File calcDir )
   {
     m_calcDir = calcDir;
   }
@@ -70,51 +73,59 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
 
       if( id.equals( NaModelConstants.IN_CONTROL_ID ) )
       {
-        return new URL( m_calcDir, "expertControl.gml" );
+        return new URL( m_calcDir.toURL(), "expertControl.gml" );
       }
       if( id.equals( NaModelConstants.IN_MODELL_ID ) )
       {
-        return new URL( m_calcDir, "calcCase.gml" );
+        return new URL( m_calcDir.toURL(), "calcCase.gml" );
       }
       if( id.equals( NaModelConstants.IN_HYDROTOP_ID ) )
       {
-        return new URL( m_calcDir, "calcHydrotop.gml" );
+        return new URL( m_calcDir.toURL(), "calcHydrotop.gml" );
       }
       if( id.equals( NaModelConstants.IN_META_ID ) )
       {
-        return new URL( m_calcDir, ".calculation" );
+        return new URL( m_calcDir.toURL(), ".calculation" );
       }
       if( id.equals( NaModelConstants.IN_PARAMETER_ID ) )
       {
-        return new URL( m_calcDir, "calcParameter.gml" );
+        return new URL( m_calcDir.toURL(), "calcParameter.gml" );
       }
       if( id.equals( NaModelConstants.IN_TEMPLATE_ID ) )
       {
-        return new URL( m_calcDir, "../.asciitemplate.zip" );
+        return new URL( m_calcDir.toURL(), "../.asciitemplate.zip" );
       }
       if( id.equals( NaModelConstants.IN_OPTIMIZECONF_ID ) )
       {
-        return new URL( m_calcDir, ".sce.xml" );
+        return new URL( m_calcDir.toURL(), ".sce.xml" );
       }
       if( id.equals( NaModelConstants.IN_KLIMA_DIR_ID ) )
       {
-        return new URL( m_calcDir, "Klima" );
+        return new URL( m_calcDir.toURL(), "Klima" );
       }
       if( id.equals( NaModelConstants.IN_RAINFALL_ID ) )
       {
-        return new URL( m_calcDir, "Niederschlag" );
+        return new URL( m_calcDir.toURL(), "Niederschlag" );
       }
       if( id.equals( NaModelConstants.IN_GAUGING_STATION_ID ) )
       {
-        return new URL( m_calcDir, "Pegel" );
+        return new URL( m_calcDir.toURL(), "Pegel" );
       }
       if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
       {
-        return new URL( m_calcDir, "Ergebnisse/Anfangswerte/lzsim.zip" );
+        return new URL( m_calcDir.toURL(), "Ergebnisse/Anfangswerte/lzsim.zip" );
       }
       if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       {
-        return new URL( m_calcDir, "Ergebnisse" );
+        return new URL( m_calcDir.toURL(), "Ergebnisse" );
+      }
+      if( id.equals( CALC_DIR ) )
+      {
+        final File file = new File( m_calcDir, "calcDir" );
+        file.deleteOnExit();
+        if( !file.exists() )
+          file.mkdirs();
+        return file;
       }
 
     }
@@ -143,8 +154,6 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
    */
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
+    // nothing to dispose
   }
-
 }
