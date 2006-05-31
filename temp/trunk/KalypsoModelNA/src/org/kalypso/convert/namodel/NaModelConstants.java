@@ -45,8 +45,23 @@ package org.kalypso.convert.namodel;
  */
 public interface NaModelConstants
 {
-  // Bean IDs
+  /** namespaces */
+  public static final String NS_NAMETA = "org.kalypso.na.control";
 
+  public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";
+
+  public static final String NS_NACONTROL = "org.kalypso.namodell.control";
+
+  public static final String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop";
+
+  public static final String NS_NAPARAMETER = "http://www.tuhh.de/parameter";
+
+  public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
+
+  public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
+
+  /** server client bean constants */
+  // input
   public static final String IN_META_ID = "MetaSteuerdaten";
 
   public final static String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD";
@@ -65,28 +80,40 @@ public interface NaModelConstants
 
   public static final String IN_OPTIMIZECONF_ID = "SceConf";
 
-  public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
+  public static final String IN_KLIMA_DIR_ID = "KlimaDir";
 
-  public final static String LZSIM_OUT_ID = "LZSIM_OUT";
+  public static final String IN_RAINFALL_ID = "NiederschlagDir";
+
+  public static final String IN_GAUGING_STATION_ID = "PegelDir";
+
+  public static final String IN_RESULTS_DIR_ID = "ErgebnisDir";
 
   public final static String LZSIM_IN_ID = "LZSIM_IN";
 
-  public static final String NS_NAMETA = "org.kalypso.na.control";
+  // output
+  public static final String OUT_ZML = "OUT_ZML";
 
-  public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";
+  public static final String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE";
 
-  public static final String NS_NACONTROL = "org.kalypso.namodell.control";
+  public static final String OUTPUT_DIR_NAME = "results";
 
-  public static final String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop";
+  public final static String LZSIM_OUT_ID = "LZSIM_OUT";
 
-  public static final String NS_NAPARAMETER = "http://www.tuhh.de/parameter";
+  public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
 
-  public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
+  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
 
-  public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
+  public static final String LOG_OUTRES_ID = "LOG_OUTRES";
 
-  // Data model constants
+  public static final String LOG_OUTERR_ID = "LOG_OUTERR";
 
+  public static final String LOG_INFO_ID = "LOG_INFO";
+
+  /** GML property constants */
+  public static final String GML_FEATURE_NAME_PROP = "name";
+
+  /** RRM constants */
+  // hydrotop
   public static final String HYDRO_MEMBER = "hydrotopMember";
 
   public static final String HYDRO_PROP_SEAL_CORR_FACTOR = "corrSealing";
@@ -99,21 +126,10 @@ public interface NaModelConstants
 
   public static final String HYDRO_PROP_HYDTYPE = "hydType";
 
-  public static final String PARA_PROP_SEALING_MEMBER = "sealingMember";
+  // channels
+  public static final String CHANNEL_GEOM_PROP = "Ort";
 
-  public static final String PARA_PROP_LANDUSE_MEMBER = "landuseMember";
-
-  public static final String PARA_LANDUSE_PROP_SEALING = "m_vers";
-
-  public static final String PARA_LANDUSE_PROP_SEALING_LINK = "sealingLink";
-
-  public static final String GML_PROP_NAME = "name";
-
-  public static final String MODEL_CHANNEL_GEOM_PROP = "Ort";
-
-  public static final String MODEL_CATCHMENT_GEOM_PROP = "Ort";
-
-  public static final String MODEL_NODE_GEOM_PROP = "Ort";
+  public static final String CATCHMENT_GEOM_PROP = "Ort";
 
   public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd";
 
@@ -125,43 +141,66 @@ public interface NaModelConstants
 
   public static final String STORAGE_CHANNEL_C_PROP = "c";
 
-  // Link Properties
+  // nodes
+  public static final String NODE_GEOM_PROP = "Ort";
+
+  // catchments
+  public static final String CATCHMENT_COLLECTION_MEMBER_PROP = "CatchmentCollectionMember";
+
+  public static final String CATCHMENT_MEMBER_PROP = "catchmentMember";
+
+  // swale and trench
+
+  public static final String MRS_FT = "SwaleAndTrench";
+
+  public static final String MRS_COLLECTION_FT = "SwaleAndTrenchCollection";
+
+  public static final String MRS_COLLECTION_MEMBER_PROP = "SwaleAndTrenchCollectionMember";
+
+  public static final String MRS_MEMBER_PROP = "swaleTrenchMember";
+
+  public static final String MRS_GEOM_PROP = "position";
+
+  public static final String MRS_LENGTH_PROP = "length";
+
+  public static final String MRS_WIDTH_PROP = "widthTrench";
+
+  public static final String MRS_SLOPE_PROP = "drainPipeSlope";
+
+  public static final String MRS_KF_PIPE_PROP = "kfPipe";
+
+  public static final String MRS_DIAMETER_PIPE_PROP = "diameterPipe";
+
+  public static final String MRS_ROUGHNESS_PIPE_PROP = "roughnessPipe";
+
+  public static final String MRS_LANDUSE_TYPE_PROP = "nutzung";
+
+  public static final String MRS_SOIL_PROFIL_TYPE_PROP = "boden";
+
+  public static final String MRS_MAX_PERK_PROP = "maxPerk";
+
+  public static final String MRS_INFLOW_GW_PROP = "InflowGW";
+
+  // parameter
+  public static final String PARA_PROP_SEALING_MEMBER = "sealingMember";
+
+  public static final String PARA_PROP_LANDUSE_MEMBER = "landuseMember";
+
+  public static final String PARA_LANDUSE_PROP_SEALING = "m_vers";
+
+  public static final String PARA_LANDUSE_PROP_SEALING_LINK = "sealingLink";
+
+  // link Properties
   public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
 
   public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
 
   public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
 
-  // flows
-  public final static String IN_MEASURE_ID = "Measure";
+  public static final String LINK_MRS_DISCHARGE_NODE_PROP = "dischargeNode";
 
-  // flows
-  public static final String NS_MEASURE = "http://www.tuhh.de/kalypsoDSS";
+  // default values
+  public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
 
-  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
-
-  public static final String LOG_OUTRES_ID = "LOG_OUTRES";
-
-  public static final String LOG_OUTERR_ID = "LOG_OUTERR";
-
-  public static final String OUT_ZML = "OUT_ZML";
-
-  public static final String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE";
-
-  public static final String OUTPUT_DIR_NAME = "results";
-
-  public static final String LOG_INFO_ID = "LOG_INFO";
-
-  public static final String IN_KLIMA_DIR_ID = "KlimaDir";
-
-  public static final String IN_RAINFALL_ID = "NiederschlagDir";
-
-  public static final String IN_GAUGING_STATION_ID = "PegelDir";
-
-  public static final String IN_RESULTS_DIR_ID = "ErgebnisDir";
-
-  public static final String MRS_FT_PROP = "SwaleAndTrench";
-
-  public static final String MRS_COLLECTION_PROP = "SwaleAndTrenchCollection";
-
+  public static final String DEFAULT_MRS_LANDUSE_PROP = "MRS_N";
 }
