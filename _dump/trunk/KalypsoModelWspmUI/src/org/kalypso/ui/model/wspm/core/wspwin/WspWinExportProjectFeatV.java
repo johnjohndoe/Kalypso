@@ -41,10 +41,7 @@
 package org.kalypso.ui.model.wspm.core.wspwin;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -53,7 +50,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -64,10 +60,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
-import org.kalypso.ui.model.wspm.abstraction.WspmProject;
-import org.kalypso.ui.model.wspm.abstraction.WspmReach;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
