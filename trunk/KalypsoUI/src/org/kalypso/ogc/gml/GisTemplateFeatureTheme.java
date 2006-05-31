@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,6 +55,11 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -69,12 +75,15 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * <p>
@@ -293,9 +302,29 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             final IFeatureType featureType = getFeatureType();
             if( featureType != null )
             {
-              final UserStyle style = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
-              // DO not use xml-tags in this names please
-              final GisTemplateUserStyle kus = new GisTemplateUserStyle( style, "default" );
+
+              final CatalogSLD styleCatalog = CatalogSLD.getDefault();
+              final URL context = m_layerKey.getContext();
+              final IUrlResolver2 resolver = new IUrlResolver2()
+              {
+                public URL resolveURL( final String href ) throws MalformedURLException
+                {
+                  return UrlResolverSingleton.resolveUrl( context, href );
+                }
+              };
+              final FeatureTypeStyle fts = styleCatalog.getDefault( resolver, featureType );
+              final UserStyle userStyle;
+              if( fts != null )
+              {
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts );
+                // final GisTemplateUserStyle kus = new GisTemplateUserStyle( fts, "default" );
+              }
+              else
+              {
+                userStyle = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
+                // DO not use xml-tags in this names please
+              }
+              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, "default" );
               addStyle( kus );
             }
           }

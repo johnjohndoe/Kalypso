@@ -112,6 +112,7 @@ public class DefaultStyleFactory
    */
   public URL getDefaultStyle( IFeatureType featureType, String styleName ) throws StyleNotDefinedException
   {
+    // called from import-raster-source-wizard
     String myStyleName = styleName;
     if( myStyleName == null )
     {
@@ -179,6 +180,7 @@ public class DefaultStyleFactory
 
   public static StyledLayerDescriptor createDefaultStyle( String styleName, Symbolizer[] symbolizer )
   {
+    // called from flood-riek-job
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
 
     StyledLayerDescriptor sld = null;

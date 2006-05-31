@@ -95,8 +95,10 @@ public abstract class ObjectCatalog<O> extends Storage
     }
     catch( Exception e )
     {
+      e.printStackTrace();
+      return null;
       // TODO make new exceptionType CatalogException
-      throw new UnsupportedOperationException();
+//      throw new UnsupportedOperationException();
     }
   }
 
@@ -109,10 +111,20 @@ public abstract class ObjectCatalog<O> extends Storage
     return getStore( objectURN );
   }
 
+  public void addRelative( final O object, final URI storeLocation ) throws Exception
+  {
+    add( object, storeLocation, true );
+  }
+
   /**
    * caller may store object first
    */
   public void add( final O object, final URI storeLocation ) throws Exception
+  {
+    add( object, storeLocation, false );
+  }
+
+  private void add( final O object, final URI storeLocation, boolean relative ) throws Exception
   {
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     if( generator == null )
@@ -122,7 +134,11 @@ public abstract class ObjectCatalog<O> extends Storage
     final String uriAsString = storeLocation.toString();
     final String systemID = objectURN;
     final String publicID = null;
-    m_manager.getBaseCatalog().addEntry( uriAsString, systemID, publicID );
+    if( relative )
+      m_manager.getBaseCatalog().addEntryRelative( uriAsString, systemID, publicID );
+    else
+      m_manager.getBaseCatalog().addEntry( uriAsString, systemID, publicID );
+
   }
 
   public List<String> getEntryURNs( Object parent ) throws Exception
@@ -134,9 +150,18 @@ public abstract class ObjectCatalog<O> extends Storage
 
   public O getDefault( final IUrlResolver2 resolver, final Object parent )
   {
-    final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
-    final String defaultURN = generator.generateDefaultURNForRelated( parent );
-    return getValue( resolver, defaultURN, defaultURN );
+    try
+    {
+      final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
+      if( generator == null )
+        return null;
+      final String defaultURN = generator.generateDefaultURNForRelated( parent );
+      return getValue( resolver, defaultURN, defaultURN );
+    }
+    catch( Exception e )
+    {
+      return null;
+    }
   }
 
   protected URI getStore( String entryURN )

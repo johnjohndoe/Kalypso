@@ -50,6 +50,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.ICatalogContribution;
+import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
@@ -61,6 +64,8 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 public class KalypsoCoreExtensions
 {
   private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor";
+
+  private final static String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution";
 
   /** id -> config-element */
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
@@ -91,5 +96,37 @@ public class KalypsoCoreExtensions
       ((IPropertiesFeatureVisitor) visitor).init( properties );
 
     return visitor;
+  }
+
+  public static void loadXMLCatalogs( final CatalogManager catalogManager ) throws CoreException
+  {
+    if( !Platform.isRunning() )
+    {
+      System.out.println( "Platform is not running, plugins are not available" );
+      return;
+    }
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( CATALOG_CONTRIBUTIONS_EXTENSION_POINT );
+
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( int i = 0; i < configurationElements.length; i++ )
+    {
+      final IConfigurationElement element = configurationElements[i];
+      final String name = element.getName();
+      String value = element.getValue();
+      if( "catalogContribution".equals( name ) )
+      {
+        final Object createExecutableExtension = element.createExecutableExtension( "class" );
+        final ICatalogContribution catalogContribution = (ICatalogContribution) createExecutableExtension;
+        catalogContribution.contributeTo( catalogManager );
+      }
+      else if( "urnGenerator".equals( name ) )
+      {
+        final Object createExecutableExtension = element.createExecutableExtension( "class" );
+        final IURNGenerator urnGenerator = (IURNGenerator) createExecutableExtension;
+        catalogManager.register( urnGenerator );
+      }
+    }
   }
 }
