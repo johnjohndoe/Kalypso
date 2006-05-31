@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
-import org.kalypso.convert.namodel.optimize.DecoraterCalcDataProvider;
+import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -116,27 +116,31 @@ public class NaModelCalcJob implements ISimulation
       final Logger logger = Logger.getAnonymousLogger();
 
       // TODO make seperate calcjob for next function !
-      final ISimulationDataProvider innerDataProvider = getDataProviderFromMeasure( logger, dataProvider, tmpdir );
+      // final ISimulationDataProvider innerDataProvider = getDataProviderFromMeasure( logger, dataProvider, tmpdir );
 
       // testen ob calcjob optimization hat
       // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) innerDataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
+      // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) innerDataProvider.getInputForID(
+      // NaModelConstants.IN_CONTROL_ID ) );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
       final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 
       if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
-        m_calcJob = new NaModelParameterAnalyseSimulation(logger);
+        m_calcJob = new NaModelParameterAnalyseSimulation( logger );
       else if( optimize )
       {
         final IOptimizingJob optimizeJob;
-        optimizeJob = new NAOptimizingJob( tmpdir, innerDataProvider, monitor );
+        // optimizeJob = new NAOptimizingJob( tmpdir, innerDataProvider, monitor );
+        optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, monitor );
         m_calcJob = new OptimizerCalJob( logger, optimizeJob );
       }
       else
         m_calcJob = new NaModelInnerCalcJob();
 
       if( m_calcJob != null )
-        m_calcJob.run( tmpdir, innerDataProvider, resultEater, monitor );
+        // m_calcJob.run( tmpdir, innerDataProvider, resultEater, monitor );
+        m_calcJob.run( tmpdir, dataProvider, resultEater, monitor );
     }
     catch( Exception e )
     {
@@ -153,7 +157,7 @@ public class NaModelCalcJob implements ISimulation
    */
   private ISimulationDataProvider getDataProviderFromMeasure( final Logger logger, final ISimulationDataProvider originalDataProvider, final File tmpDir )
   {
-    final DecoraterCalcDataProvider result = new DecoraterCalcDataProvider( originalDataProvider );
+    final CalcDataProviderDecorater result = new CalcDataProviderDecorater( originalDataProvider );
     if( !(originalDataProvider.hasID( NaModelConstants.IN_MEASURE_ID ) && originalDataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) && originalDataProvider.hasID( NaModelConstants.IN_MODELL_ID )) )
     {
       final StringBuffer buffer = new StringBuffer();
@@ -194,7 +198,7 @@ public class NaModelCalcJob implements ISimulation
    * @param tmpDir
    * @throws Exception
    */
-  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, DecoraterCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
+  private void insertSealingChangeMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, CalcDataProviderDecorater result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
     final URL hydrotopURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     // Versiegelungsgrad Measure
@@ -280,7 +284,7 @@ public class NaModelCalcJob implements ISimulation
    * @param tmpDir
    * @throws Exception
    */
-  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, DecoraterCalcDataProvider result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
+  private void insertStorageChannelMeasure( GMLWorkspace measureWorkspace, ISimulationDataProvider originalDataProvider, CalcDataProviderDecorater result, Logger logger, File tmpDir ) throws SimulationException, IOException, Exception
   {
     final URL measureURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_MEASURE_ID );
     final URL modelURL = (URL) originalDataProvider.getInputForID( NaModelConstants.IN_MODELL_ID );

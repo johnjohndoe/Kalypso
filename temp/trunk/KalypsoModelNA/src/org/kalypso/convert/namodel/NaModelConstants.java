@@ -68,7 +68,7 @@ public interface NaModelConstants
   public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
 
   public final static String LZSIM_OUT_ID = "LZSIM_OUT";
-  
+
   public final static String LZSIM_IN_ID = "LZSIM_IN";
 
   public static final String NS_NAMETA = "org.kalypso.na.control";
@@ -84,6 +84,53 @@ public interface NaModelConstants
   public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
 
   public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
+
+  // Data model constants
+
+  public static final String HYDRO_MEMBER = "hydrotopMember";
+
+  public static final String HYDRO_PROP_SEAL_CORR_FACTOR = "corrSealing";
+
+  public static final String HYDRO_PROP_GEOM = "position";
+
+  public static final String HYDRO_PROP_AREA = "area";
+
+  public static final String HYDRO_PROP_LANDUSE_NAME = "landuse";
+
+  public static final String HYDRO_PROP_HYDTYPE = "hydType";
+
+  public static final String PARA_PROP_SEALING_MEMBER = "sealingMember";
+
+  public static final String PARA_PROP_LANDUSE_MEMBER = "landuseMember";
+
+  public static final String PARA_LANDUSE_PROP_SEALING = "m_vers";
+
+  public static final String PARA_LANDUSE_PROP_SEALING_LINK = "sealingLink";
+
+  public static final String GML_PROP_NAME = "name";
+
+  public static final String MODEL_CHANNEL_GEOM_PROP = "Ort";
+
+  public static final String MODEL_CATCHMENT_GEOM_PROP = "Ort";
+
+  public static final String MODEL_NODE_GEOM_PROP = "Ort";
+
+  public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd";
+
+  public static final String STORAGE_CHANNEL_VMAX_PROP = "vmax";
+
+  public static final String STORAGE_CHANNEL_VMIN_PROP = "vmin";
+
+  public static final String STORAGE_CHANNEL_SV_PROP = "sv";
+
+  public static final String STORAGE_CHANNEL_C_PROP = "c";
+
+  // Link Properties
+  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
+
+  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
+
+  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
 
   // flows
   public final static String IN_MEASURE_ID = "Measure";
@@ -104,5 +151,17 @@ public interface NaModelConstants
   public static final String OUTPUT_DIR_NAME = "results";
 
   public static final String LOG_INFO_ID = "LOG_INFO";
+
+  public static final String IN_KLIMA_DIR_ID = "KlimaDir";
+
+  public static final String IN_RAINFALL_ID = "NiederschlagDir";
+
+  public static final String IN_GAUGING_STATION_ID = "PegelDir";
+
+  public static final String IN_RESULTS_DIR_ID = "ErgebnisDir";
+
+  public static final String MRS_FT_PROP = "SwaleAndTrench";
+
+  public static final String MRS_COLLECTION_PROP = "SwaleAndTrenchCollection";
 
 }

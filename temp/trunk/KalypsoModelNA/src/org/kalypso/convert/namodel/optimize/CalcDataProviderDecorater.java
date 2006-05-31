@@ -48,16 +48,15 @@ import org.kalypso.simulation.core.SimulationException;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * @author doemming
-   * TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
-*/
-public class DecoraterCalcDataProvider implements ISimulationDataProvider
+ * @author doemming TODO rename it, e.g. CalcDataProviderDecorator but nothing with Optimize....
+ */
+public class CalcDataProviderDecorater implements ISimulationDataProvider
 {
   private final ISimulationDataProvider m_calcDataProvider;
 
   private final HashMap<String, URL> m_map = new HashMap<String, URL>();
 
-  public DecoraterCalcDataProvider( ISimulationDataProvider calcDataProvider )
+  public CalcDataProviderDecorater( ISimulationDataProvider calcDataProvider )
   {
     m_calcDataProvider = calcDataProvider;
   }
@@ -67,7 +66,7 @@ public class DecoraterCalcDataProvider implements ISimulationDataProvider
     m_map.put( id, url );
   }
 
-  public Object getInputForID( String id ) throws SimulationException 
+  public Object getInputForID( String id ) throws SimulationException
   {
     if( m_map.containsKey( id ) )
     {
@@ -89,5 +88,10 @@ public class DecoraterCalcDataProvider implements ISimulationDataProvider
   public void dispose( )
   {
     m_calcDataProvider.dispose();
+  }
+
+  public ISimulationDataProvider getDecoratedDataProvider( )
+  {
+    return m_calcDataProvider;
   }
 }

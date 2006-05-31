@@ -55,7 +55,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
-import org.kalypso.convert.namodel.optimize.DecoraterCalcDataProvider;
+import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -211,7 +211,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     }
 
     // decorate original dataprovider
-    final DecoraterCalcDataProvider provider = new DecoraterCalcDataProvider( m_inputProvider );
+    final CalcDataProviderDecorater provider = new CalcDataProviderDecorater( m_inputProvider );
     provider.addURL( NaModelConstants.IN_MODELL_ID, modellFile.toURL() );
 
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
