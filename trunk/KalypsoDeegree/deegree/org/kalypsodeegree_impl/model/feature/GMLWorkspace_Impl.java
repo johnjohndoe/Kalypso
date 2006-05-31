@@ -476,7 +476,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // throw new IllegalArgumentException( "Cannot create feature from abstract type: " + type );
       System.out.println( "Creating feature from abstract type: " + type );
     }
-
+    // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType ) 
     final String newId = createFeatureId( type );
     final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, false );
     m_indexMap.put( newId, newFeature );
