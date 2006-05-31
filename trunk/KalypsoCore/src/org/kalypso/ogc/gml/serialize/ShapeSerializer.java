@@ -229,21 +229,17 @@ public class ShapeSerializer
 
   public static Feature createShapeRootFeature( final IFeatureType ft )
   {
-    // final IPropertyType nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME, String.class, true );
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1 );
+    // root feature of shapefile does not need a boundingbox!
+    // final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );
+    // final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX,
+    // envelopeTH.getTypeName(), envelopeTH, 1, 1 );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY );
 
-    final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );
-    // final IPropertyType boundingProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_BBOX,
-    // GeometryUtilities.getEnvelopeClass(), true );
-    final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX, envelopeTH.getTypeName(), envelopeTH, 1, 1 );
-    // final IPropertyType memberProp = new FeatureAssociationTypeProperty_Impl( PROPERTY_FEATURE_MEMBER, null,
-    // "FeatureAssociationType", false, ft, null );
-    // final IRelationType memberProp = FeatureFactory.createRelationType( PROPERTY_FEATURE_MEMBER, false, ft, null );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER,  ft , 0, IRelationType.UNBOUND_OCCURENCY );
-
-    final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
+    // final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
+    final IPropertyType[] ftps = new IPropertyType[] { nameProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
 
     return FeatureFactory.createFeature( null, "root", collectionFT, true );
@@ -272,13 +268,13 @@ public class ShapeSerializer
     catch( final IOException e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
     catch( final DBaseException e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
     finally
