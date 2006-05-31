@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.dss;
+package org.kalypso.dss.utils;
 
 /**
  * TODO: insert type comment here
@@ -42,17 +42,11 @@ public class MeasuresConstants
 
   public static final String NS_MEASURES_MRS = "http://schema.kalypso.wb.tu-harburg.de/measure/mrs";
 
-  public static final String MEASURE_SEALING_FE = "SealingMeasureFeature";
+  public static final String SEALING_MEASURE_FT = "SealingMeasureFeature";
 
-  public static final String MEASURE_RHB_FE = "RhbMeasureFeature";
+  public static final String MRS_MEASURE_FT = "MrsMeasureFeature";
 
-  public static final String MEASURE_MRS_FE = "MrsMeasureFeature";
-
-  public static final String RHB_MEASURE_PROP_QMAX = "qmax";
-
-  public static final String RHB_MEASURE_PROP_DEPTH = "depth";
-
-  public static final String RHB_MEASURE_PROP_SLOPE = "slopeRhb";
+  public static final String RHB_MEASURE_FT = "RhbMeasureFeature";
 
   /** Bean id's */
   public static final String IN_MEASURE_RHB_ID = "measureRHB";
@@ -60,16 +54,37 @@ public class MeasuresConstants
   public static final String IN_MEASURE_MRS_ID = "measureMRS";
 
   public static final String IN_MEASURE_SEALING_ID = "measureSealing";
+  
+  public static final String IN_DESIGN_AREA_ID = "plangebiet";
 
   /** All geometry property names in the measures.xsd are called position */
-  public static final String MRS_MEASURE_GEOMETRY_PROP = "position";
 
   public static final String RHB_MEASURE_GEOMETRY_PROP = "position";
+
+  public static final String RHB_MEASURE_PROP_QMAX = "qmax";
+
+  public static final String RHB_MEASURE_PROP_DEPTH = "depth";
+
+  public static final String RHB_MEASURE_PROP_SLOPE = "slopeRhb";
+
+  public static final String MRS_MEASURE_PROP_DIAMETER = "diameter";
+
+  public static final String MRS_MEASURE_PROP_WIDTH = "width";
+
+  public static final String MRS_MEASURE_GEOMETRY_PROP = "position";
 
   public static final String SEALING_MEASURE_GEOMETRY_PROP = "position";
 
   public static final String SEALING_MEASURE_SEALINGFACTOR_PROP = "sealingfactor";
 
   public static final String DEFAULT_ENCONDING = "UTF-8";
+
+  public static final double MRS_DEFAULT_SLOPE_PROP = 0.003d;
+
+  public static final double MRS_DEFAULT_INFLOW_GW_PROP = 1.0d;
+
+  public static final double MRS_DEFAULT_MAX_PERK_PROP = 2e-8d;
+
+  public static final double MRS_DEFAULT_ROUGHNESS_PIPE_PROP = 10.0d;
 
 }

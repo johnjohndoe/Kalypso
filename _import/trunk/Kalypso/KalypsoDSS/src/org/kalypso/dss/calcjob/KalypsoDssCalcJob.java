@@ -49,6 +49,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +63,7 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
-import org.kalypso.dss.MeasuresConstants;
+import org.kalypso.dss.utils.MeasuresConstants;
 import org.kalypso.dss.utils.MeasuresHelper;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -145,7 +146,7 @@ public class KalypsoDssCalcJob implements ISimulation
     while( iterator.hasNext() )
     {
       final CalcDataProviderDecorater rrmInputProvider = iterator.next();
-      mergeMeasures( inputProvider, rrmInputProvider, logger, tmpdir );
+      mergeMeasures( inputProvider, rrmInputProvider, logger );
       final NaModelCalcJob calcJob = new NaModelCalcJob();
       m_naCalcJobs.add( calcJob );
       final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
@@ -155,20 +156,23 @@ public class KalypsoDssCalcJob implements ISimulation
 
   }
 
-  private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger, File tmpDir ) throws SimulationException
+  private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
     final URL measuresRhbURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_RHB_ID );
     final URL measuresSealingURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_SEALING_ID );
     final URL measuresMrsURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_MRS_ID );
+    final URL designAreaURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_DESIGN_AREA_ID );
+    final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
+    final URL hydrotopURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
 
     try
     {
       if( measuresRhbURL != null )
-        insertStorageChannelMeasure( measuresRhbURL, rrmInputProvider, logger );
+        insertStorageChannelMeasure( measuresRhbURL, modelURL, rrmInputProvider, logger );
       if( measuresSealingURL != null )
-        insertSealingChangeMeasure( measuresSealingURL, rrmInputProvider, logger );
+        insertSealingChangeMeasure( measuresSealingURL, hydrotopURL, rrmInputProvider, logger );
       if( measuresMrsURL != null )
-        insertSwaleTrenchMeasure( measuresMrsURL, rrmInputProvider, logger );
+        insertSwaleTrenchMeasure( measuresMrsURL, modelURL, designAreaURL ,rrmInputProvider, logger );
     }
     catch( Exception e )
     {
@@ -198,19 +202,18 @@ public class KalypsoDssCalcJob implements ISimulation
    *          logger
    * @throws Exception
    */
-  private void insertSealingChangeMeasure( final URL sealingURL, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
+  private void insertSealingChangeMeasure( final URL sealingURL, URL hydrotopURL, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
   {
     GMLWorkspace sealingWS = GmlSerializer.createGMLWorkspace( sealingURL );
 
-    final URL hydrotopURL = (URL) result.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     final URL parameterURL = (URL) result.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     // Versiegelungsgrad Measure
     final IGMLSchema sealingSchema = sealingWS.getGMLSchema();
-    final IFeatureType sealingFT = sealingSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.MEASURE_SEALING_FE ) );
+    final IFeatureType sealingFT = sealingSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_FT ) );
     final Feature[] sealingFEs = sealingWS.getFeatures( sealingFT );
     if( sealingFEs.length == 0 )
     {
-      logger.info( "measure " + MeasuresConstants.MEASURE_SEALING_FE + " is empty, continue normal simulation without this measure" );
+      logger.info( "measure " + MeasuresConstants.SEALING_MEASURE_FT + " is empty, continue normal simulation without this measure" );
       return;
     }
     final GMLWorkspace hydroWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
@@ -232,7 +235,7 @@ public class KalypsoDssCalcJob implements ISimulation
       int c_success = 0;
       int c_error = 0;
       final Feature sealFE = sealingFEs[i];
-      double sealMeasure = FeatureHelper.getAsDouble( sealFE, MeasuresConstants.SEALING_MEASURE_SEALINGFACTOR_PROP, 1.0d );
+      double sealMeasure = FeatureHelper.getAsDouble( sealFE, new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_SEALINGFACTOR_PROP ), 1.0d );
 
       final GM_Object measureGEOM = (GM_Object) sealFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_GEOMETRY_PROP ) );
       final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
@@ -258,26 +261,23 @@ public class KalypsoDssCalcJob implements ISimulation
         }
         if( intersection == null || intersection.isEmpty() )
           continue;
-        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, 1.0d );
+        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
         final double areaIntersection = intersection.getArea();
         final double areaHydro = jtsHydroGEOM.getArea();
         // TODO check for numerical best order, and account for corrFactor from hydrotop element
         // remark: it does not matter, if in next loop the same hydrotop again is affected
 
         /**
-         * The corrSealingHydro1 is the fixed correction factor from the calibrated model. If the measure dose not
-         * affect the whole hydrotop then a new overall sealing factor as a mean value has to be calculated
+         * The corrSealingHydroOld is the fixed correction factor from the calibrated model. If the measure dose not
+         * affect the whole hydrotop then a new overall sealing factor as a mean value has to be calculated. <br>
+         * To account for the change of the old and new sealing factor we have to calculate the new correction factor,
+         * because we can not change the original sealing factor in the parameter.gml.
          */
         final double sealingAreaIntersection = areaIntersection * sealMeasure * corrSealingHydroOld;
         final double sealingAreaOld = (areaHydro - areaIntersection) * sealHydro * corrSealingHydroOld;
         final double newSealingFactor = (sealingAreaIntersection + sealingAreaOld) / areaHydro;
-        /**
-         * Now to account for the change of the old and new sealing factor we have to calculate the new correction
-         * factor.
-         */
         final double corrSealingHydroNew = newSealingFactor / (sealHydro * corrSealingHydroOld);
 
-        /** it must also be weighted according the area that is affected by the change */
         hydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( corrSealingHydroNew ) );
       }
       logger.info( "Fehler Hydrotop Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
@@ -327,14 +327,14 @@ public class KalypsoDssCalcJob implements ISimulation
     while( it.hasNext() )
     {
       landuseFE = (Feature) it.next();
-      final Object paramProperty = landuseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_PROP_NAME ) );
+      final Object paramProperty = landuseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) );
       if( paramProperty.equals( property ) )
         break;
     }
     final IFeatureType featureType = landuseFE.getFeatureType();
     final IPropertyType linkProp = featureType.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
     final Feature sealingFE = paramWorkspace.resolveLink( landuseFE, (IRelationType) linkProp );
-    return FeatureHelper.getAsDouble( sealingFE, NaModelConstants.PARA_LANDUSE_PROP_SEALING, 1.0d );
+    return FeatureHelper.getAsDouble( sealingFE, new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 1.0d );
   }
 
   /**
@@ -345,15 +345,17 @@ public class KalypsoDssCalcJob implements ISimulation
    * @throws Exception
    */
 
-  private void insertStorageChannelMeasure( final URL rhbURL, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
+  private void insertStorageChannelMeasure( final URL rhbURL, final URL modelURL, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
   {
     final GMLWorkspace measureRhbWorkspace = GmlSerializer.createGMLWorkspace( rhbURL );
-    final URL modelURL = (URL) result.getInputForID( NaModelConstants.IN_MODELL_ID );
     // *Get available Measuers*/
-    final FeatureList measureRhbFEs = (FeatureList) measureRhbWorkspace.getFeatureFromPath( MeasuresConstants.MEASURE_RHB_FE );
-    if( measureRhbFEs.size() == 0 )
+    final IGMLSchema rhbMeasureSchema = measureRhbWorkspace.getGMLSchema();
+    final IFeatureType sealingFT = rhbMeasureSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_FT ) );
+    final Feature[] measureRhbFEs = measureRhbWorkspace.getFeatures( sealingFT );
+    // final FeatureList measureRhbFEs = (FeatureList) measureRhbWorkspace.getFeatureFromPath( MeasuresConstants. );
+    if( measureRhbFEs.length == 0 )
     {
-      logger.info( "measure " + MeasuresConstants.MEASURE_RHB_FE + " is empty, continue normal simulation without this measure" );
+      logger.info( "measure " + MeasuresConstants.RHB_MEASURE_FT + " is empty, continue normal simulation without this measure" );
       return;
     }
     final GMLWorkspace modelworkspace = GmlSerializer.createGMLWorkspace( modelURL );
@@ -369,9 +371,9 @@ public class KalypsoDssCalcJob implements ISimulation
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       measureRhbWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
-    for( Iterator iterMeasureRhb = measureRhbFEs.iterator(); iterMeasureRhb.hasNext(); )
+    for( int i = 0; i < measureRhbFEs.length; i++ )
     {
-      final Feature measureRhbFE = (Feature) iterMeasureRhb.next();
+      final Feature measureRhbFE = measureRhbFEs[i];
       int c_success = 0;
       int c_error = 0;
 
@@ -384,7 +386,7 @@ public class KalypsoDssCalcJob implements ISimulation
       for( Iterator iter = catchmentInENV.iterator(); iter.hasNext(); )
       {
         Feature catchment = (Feature) iter.next();
-        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MODEL_CATCHMENT_GEOM_PROP ) );
+        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
         if( catchmentGEOM.contains( measureRhbGEOM ) )
         {
           boolean succseeded = MeasuresHelper.addRHBinCatchment( modelworkspace, catchment, rbList, measureRhbFE );
@@ -397,7 +399,7 @@ public class KalypsoDssCalcJob implements ISimulation
       logger.info( "Fehler Rückhaltebecken Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
     }
     final File calcDir = (File) result.getInputForID( NaSimulationDataProvieder.CALC_DIR );
-    final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
+    final File modelFile = File.createTempFile( "measured_model_2", ".gml", calcDir );
     final Writer writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
     try
     {
@@ -413,35 +415,98 @@ public class KalypsoDssCalcJob implements ISimulation
 
   }
 
-  private void insertSwaleTrenchMeasure( URL measuresMrsURL, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws Exception
+  private void insertSwaleTrenchMeasure( final URL measuresMrsURL, final URL modelURL, final URL designAreaURL, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws SimulationException
   {
-    final GMLWorkspace mrsMeasureWorkspace = GmlSerializer.createGMLWorkspace( measuresMrsURL );
-    final FeatureList mrsList = (FeatureList) mrsMeasureWorkspace.getFeatureFromPath( MeasuresConstants.MEASURE_MRS_FE );
-    final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
-    final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
-    final FeatureList catchementList = (FeatureList) modelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
-    for( Iterator iterMrsList = mrsList.iterator(); iterMrsList.hasNext(); )
+    HashMap<Feature,Double> catchmentCollector = new HashMap<Feature,Double>();
+    try
     {
-      final Feature mrsMeasure = (Feature) iterMrsList.next();
-      final GM_Envelope envMeasure = mrsMeasure.getEnvelope();
-      final GM_Object mrsGEOM = (GM_Object) mrsMeasure.getProperty( new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_GEOMETRY_PROP ) );
-      final List<JMSpatialIndex> list = catchementList.query( envMeasure, null );
-      for( Iterator iter = list.iterator(); iter.hasNext(); )
-      {
-        final Feature catchmentInEnv = (Feature) iter.next();
-        final GM_Object catchmentGEOM = (GM_Object) catchmentInEnv.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MODEL_CATCHMENT_GEOM_PROP ) );
-        final Geometry catchmentJTS = JTSAdapter.export( catchmentGEOM );
-        final Geometry mrsJTS = JTSAdapter.export( mrsGEOM );
-        final Geometry intersection = catchmentJTS.intersection( mrsJTS );
-        if( intersection != null && intersection instanceof LineString )
-        {
-          double mrsLength = intersection.getLength();
-          final IGMLSchema schema = modelWorkspace.getGMLSchema();
-          final IFeatureType mrsFt = schema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_FT_PROP ) );
-          final Feature parentFeMrs = (Feature) modelWorkspace.getFeatureFromPath( NaModelConstants.MRS_COLLECTION_PROP );
+      final GMLWorkspace mrsMeasureWorkspace = GmlSerializer.createGMLWorkspace( measuresMrsURL );
+      final IGMLSchema mrsMeasureSchema = mrsMeasureWorkspace.getGMLSchema();
+      final IFeatureType mrsMeasureFT = mrsMeasureSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_FT ) );
+      final Feature[] mrsMeasureFEs = mrsMeasureWorkspace.getFeatures( mrsMeasureFT );
+      if( mrsMeasureFEs.length == 0 )
+        return;
 
+      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
+      final FeatureList catchementList = (FeatureList) modelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
+      for( int i = 0; i < mrsMeasureFEs.length; i++ )
+      {
+        int c_success = 0;
+        int c_error = 0;
+        final Feature mrsMeasure = mrsMeasureFEs[i];
+        final GM_Envelope envMeasure = mrsMeasure.getEnvelope();
+        final GM_Object mrsGEOM = (GM_Object) mrsMeasure.getProperty( new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_GEOMETRY_PROP ) );
+        final List<JMSpatialIndex> list = catchementList.query( envMeasure, null );
+        for( Iterator iter = list.iterator(); iter.hasNext(); )
+        {
+          final Feature catchmentInEnv = (Feature) iter.next();
+          final GM_Object catchmentGEOM = (GM_Object) catchmentInEnv.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+          try
+          {
+            final Geometry catchmentJTS = JTSAdapter.export( catchmentGEOM );
+            final Geometry mrsJTS = JTSAdapter.export( mrsGEOM );
+            final Geometry intersection = catchmentJTS.intersection( mrsJTS );
+            if( !intersection.isEmpty() && intersection instanceof LineString )
+            {
+              final IGMLSchema schema = modelWorkspace.getGMLSchema();
+              final Feature naModelRoot = modelWorkspace.getRootFeature();
+              final IFeatureType naModelRootFt = naModelRoot.getFeatureType();
+              final GM_Object mrsLineString = JTSAdapter.wrap( intersection );
+              final Double diameter = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_DIAMETER ), 250 );
+              final Double width = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_WIDTH ), 1.50 );
+              final IFeatureType mrsFt = schema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_FT ) );
+              Feature swaleTrenchCollection = (Feature) modelWorkspace.getFeatureFromPath( NaModelConstants.MRS_COLLECTION_MEMBER_PROP );
+              if( swaleTrenchCollection == null )
+              {
+                final IFeatureType swaleTrenchColFt = schema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_FT ) );
+                swaleTrenchCollection = modelWorkspace.createFeature( naModelRoot, swaleTrenchColFt );
+                final IRelationType linkPropertyCol = (IRelationType) naModelRootFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_MEMBER_PROP ) );
+                modelWorkspace.addFeatureAsComposition( naModelRoot, linkPropertyCol, 0, swaleTrenchCollection );
+              }
+              final IRelationType linkPropertyStMemeber = (IRelationType) naModelRootFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_MEMBER_PROP ) );
+              final Feature swaleTrenchFE = modelWorkspace.createFeature( swaleTrenchCollection, mrsFt );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_DIAMETER_PIPE_PROP ), diameter );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_WIDTH_PROP ), width );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_SLOPE_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_SLOPE_PROP ) );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_KF_PIPE_PROP ), new Double( 0 ) );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_ROUGHNESS_PIPE_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_ROUGHNESS_PIPE_PROP ) );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_INFLOW_GW_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_INFLOW_GW_PROP ) );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_MAX_PERK_PROP ), new Double( MeasuresConstants.MRS_DEFAULT_MAX_PERK_PROP ) );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_LANDUSE_TYPE_PROP ), NaModelConstants.DEFAULT_MRS_LANDUSE_PROP );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_SOIL_PROFIL_TYPE_PROP ), NaModelConstants.DEFAULT_MRS_SOIL_PROFIL_PROP );
+              swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_GEOM_PROP ), mrsLineString );
+              modelWorkspace.addFeatureAsComposition( swaleTrenchCollection, linkPropertyStMemeber, 0, swaleTrenchFE );
+              c_success++;
+            }
+          }
+          catch( Exception e )
+          {
+            c_error++;
+          }
         }
+        logger.info( "Fehler Rückhaltebecken Measure: " + c_error + "/" + (c_success + c_error) + "\n" );
       }
+      // adjust hydrotop
+
+      final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+      final File modelFile = File.createTempFile( "measured_model_3", ".gml", calcDir );
+      final Writer writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+      try
+      {
+        GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( writerModel );
+      }
+      final URL newModelURL = modelFile.toURL();
+      // now overwrite the model file
+      rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, newModelURL );
+    }
+    catch( Exception e )
+    {
+      logger.warning( "Was not able to merge swale and trench measures....skipped!" );
+      return;
     }
 
   }

@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.dss.MeasuresConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -123,7 +122,8 @@ public class MeasuresHelper
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_SV_PROP ), new Double( 0 ) );
       final GM_Object measureRhbGEOM = (GM_Object) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.MRS_MEASURE_GEOMETRY_PROP ) );
       // generate values for discharge-volume relation
-      final Double slope = (Double) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_PROP_SLOPE ) );
+      final String slopeEnum = (String) measureRhbFE.getProperty( new QName(MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_PROP_SLOPE ) );
+      final Double slope = 1/Double.parseDouble((slopeEnum.split(":"))[1]);
       final Double depth = (Double) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_PROP_DEPTH ) );
       final Double min = new Double( 0 );
       final int max = 10;
