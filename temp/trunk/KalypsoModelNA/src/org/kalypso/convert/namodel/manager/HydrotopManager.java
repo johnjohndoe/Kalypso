@@ -114,7 +114,7 @@ public class HydrotopManager extends AbstractManager
     while( landuseIter.hasNext() )
     {
       Feature landuseFE = (Feature) landuseIter.next();
-      String landuseName = (String) landuseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_PROP_NAME ) );
+      String landuseName = (String) landuseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) );
 
       final IRelationType rt = (IRelationType) landuseFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
       Feature linkedSealingFE = parameterWorkspace.resolveLink( landuseFE, rt );
@@ -154,7 +154,7 @@ public class HydrotopManager extends AbstractManager
         double natFlaeche = 0.0;
         double gesFlaeche = 0.0;
         // final List hydWriteList = new ArrayList();
-        final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MODEL_CATCHMENT_GEOM_PROP ) );
+        final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
 
         // Hydrotope im TeilgebietsEnvelope
         final List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
