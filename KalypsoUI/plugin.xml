@@ -933,6 +933,7 @@
             icon="icons/util/update.gif"
             class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction2"/>
    </extension>   
+   <!--setting this activity removes the compare functionality in application
    <extension point="org.eclipse.ui.activities">
 	  <activity id="org.kalypso.ui.activity"
     	  description="Filters contributions"
@@ -941,6 +942,7 @@
           activityId="org.kalypso.ui.activity"
           pattern="org\.eclipse\.compare/.*"/>   
    </extension>
+   -->
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
