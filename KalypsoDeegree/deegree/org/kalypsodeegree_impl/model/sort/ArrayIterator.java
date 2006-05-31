@@ -81,7 +81,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.ListIterator#add(java.lang.Object)
    */
-  public void add( Object o )
+  public void add( T o )
   {
     throw new UnsupportedOperationException();
   }
@@ -89,7 +89,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.ListIterator#set(java.lang.Object)
    */
-  public void set( Object o )
+  public void set( T o )
   {
     throw new UnsupportedOperationException();
   }
