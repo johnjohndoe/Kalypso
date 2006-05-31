@@ -68,10 +68,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypsodeegree.graphics.Encoders;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendException;
@@ -89,31 +93,31 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
  * and saves them as an image. The class can be executed from the console. Details of use can be requested with
  * <tt>java LegendElementCreator --help</tt>
  * <pre>
- usage: java LegendConsole [-f sld-file -d directory
- -g format -c color -w width -h height -t title]
- [--version] [--help]
-
- mandatory arguments:
- -f file     reads the SLD inputfile.
- -d outdir   name of the directory to save the results in.
-
- optional arguments:
- -g format   graphics format of the output (default=png).
- possible values are: bmp, gif, jpg, png, tif
- -c color    background-color (default=white)
- possible values are: TRANSPARENT (if supported by the
- graphics-format '-g'), black, blue, cyan, dark_gray, gray,
- green, light_gray, magenta, orange, pink, red, white, yellow
- or the hexadecimal codes (i.e. #ffffff for white).
- -w width    width (in pixel) of the legendsymbol (default=40).
- -h height   height (in pixel) of the legendsymbol (default=40).
- -t title    optional title for the legend-element. (no default).
- If more than one word, put the title in "quotation marks".
-
- information options:
- --help      shows this help.
- --version   shows the version and exits.
- </pre>
+ *   usage: java LegendConsole [-f sld-file -d directory
+ *   -g format -c color -w width -h height -t title]
+ *   [--version] [--help]
+ *  
+ *   mandatory arguments:
+ *   -f file     reads the SLD inputfile.
+ *   -d outdir   name of the directory to save the results in.
+ *  
+ *   optional arguments:
+ *   -g format   graphics format of the output (default=png).
+ *   possible values are: bmp, gif, jpg, png, tif
+ *   -c color    background-color (default=white)
+ *   possible values are: TRANSPARENT (if supported by the
+ *   graphics-format '-g'), black, blue, cyan, dark_gray, gray,
+ *   green, light_gray, magenta, orange, pink, red, white, yellow
+ *   or the hexadecimal codes (i.e. #ffffff for white).
+ *   -w width    width (in pixel) of the legendsymbol (default=40).
+ *   -h height   height (in pixel) of the legendsymbol (default=40).
+ *   -t title    optional title for the legend-element. (no default).
+ *   If more than one word, put the title in &quot;quotation marks&quot;.
+ *  
+ *   information options:
+ *   --help      shows this help.
+ *   --version   shows the version and exits.
+ * </pre>
  * 
  * <hr>
  * 
@@ -130,8 +134,7 @@ public class LegendElementCreator
   /**
    *  
    */
-  public LegendElementCreator( String sldfile, String directory, String format, Color color, int width, int height,
-      String title, LecGUI lec ) throws LegendException
+  public LegendElementCreator( String sldfile, String directory, String format, Color color, int width, int height, String title, LecGUI lec ) throws LegendException
   {
 
     this.lecgui = lec;
@@ -150,8 +153,7 @@ public class LegendElementCreator
     }
     catch( XMLParsingException xmlpe )
     {
-      throw new LegendException( "An error (XMLParsingException) occured in parsing the SLD-File:\n" + sldfile + "\n"
-          + xmlpe.getMessage() );
+      throw new LegendException( "An error (XMLParsingException) occured in parsing the SLD-File:\n" + sldfile + "\n" + xmlpe.getMessage() );
     }
 
     // output
@@ -166,9 +168,9 @@ public class LegendElementCreator
     while( iterator.hasNext() )
     {
       i++;
-      Map.Entry entry = (Map.Entry)iterator.next();
-      filename = ( (String)entry.getKey() ).replace( ':', '_' );
-      style = (Style)entry.getValue();
+      Map.Entry entry = (Map.Entry) iterator.next();
+      filename = ((String) entry.getKey()).replace( ':', '_' );
+      style = (Style) entry.getValue();
 
       try
       {
@@ -179,25 +181,22 @@ public class LegendElementCreator
       }
       catch( LegendException lex )
       {
-        throw new LegendException( "An error (LegendException) occured during the creating\n" + "of the LegendElement "
-            + filename + ":\n" + lex );
+        throw new LegendException( "An error (LegendException) occured during the creating\n" + "of the LegendElement " + filename + ":\n" + lex );
       }
       catch( IOException ioex )
       {
-        throw new LegendException( "An error (IOException) occured during the creating/saving\n"
-            + "of the output-image " + filename + ":\n" + ioex );
+        throw new LegendException( "An error (IOException) occured during the creating/saving\n" + "of the output-image " + filename + ":\n" + ioex );
       }
       catch( Exception ex )
       {
-        throw new LegendException( "A general error (Exception) occured during the creating/saving\n"
-            + "of the output-image " + filename + ":\n" + ex );
+        throw new LegendException( "A general error (Exception) occured during the creating/saving\n" + "of the output-image " + filename + ":\n" + ex );
       }
 
     }
     setVerboseOutput( sb.toString() );
   }
 
-  public String getVerboseOutput()
+  public String getVerboseOutput( )
   {
     return this.verbose_output;
   }
@@ -221,12 +220,22 @@ public class LegendElementCreator
    * @throws XMLParsingException
    *           if an error occurs during the parsing of the sld-document
    */
-  static private HashMap loadSLD( String sldFile ) throws IOException, XMLParsingException
+  static private HashMap loadSLD( String sldFileAsString ) throws IOException, XMLParsingException
   {
     Style[] styles = null;
 
-    FileReader fr = new FileReader( sldFile );
-    StyledLayerDescriptor sld = SLDFactory.createSLD( fr );
+    final File sldFile = new File( sldFileAsString );
+    final FileReader fr = new FileReader( sldFile );
+    final IUrlResolver2 resolver = new IUrlResolver2()
+    {
+
+      public URL resolveURL( final String href ) throws MalformedURLException
+      {
+        return UrlResolverSingleton.resolveUrl( sldFile.toURL(), href );
+      }
+
+    };
+    StyledLayerDescriptor sld = SLDFactory.createSLD( resolver, fr );
     fr.close();
 
     HashMap map = new HashMap();
@@ -277,8 +286,7 @@ public class LegendElementCreator
    * @throws Exception
    *           if the graphic-encoder can't be found.
    */
-  private void saveImage( BufferedImage bi, String outdir, String filename, String graphicsformat, Color color )
-      throws LegendException, IOException, Exception
+  private void saveImage( BufferedImage bi, String outdir, String filename, String graphicsformat, Color color ) throws LegendException, IOException, Exception
   {
 
     File file = new File( outdir, filename + "." + graphicsformat );
@@ -302,9 +310,7 @@ public class LegendElementCreator
       // transparency
       if( color == null )
       {
-        this.lecgui.addDebugInformation( "BMP-NOTIFY:\n"
-            + "Requested transparency (transp.) isn't available for BMP-images.\n"
-            + "Using default background color WHITE.\n" );
+        this.lecgui.addDebugInformation( "BMP-NOTIFY:\n" + "Requested transparency (transp.) isn't available for BMP-images.\n" + "Using default background color WHITE.\n" );
         color = Color.WHITE;
       }
       g.drawImage( bi, 0, 0, color, null );
@@ -327,9 +333,7 @@ public class LegendElementCreator
       // transparency
       if( color == null )
       {
-        this.lecgui.addDebugInformation( "JPEG-NOTIFY:\n"
-            + "Requested transparency (transp.) isn't available for JPG-images.\n"
-            + "Using default background color WHITE.\n" );
+        this.lecgui.addDebugInformation( "JPEG-NOTIFY:\n" + "Requested transparency (transp.) isn't available for JPG-images.\n" + "Using default background color WHITE.\n" );
         color = Color.WHITE;
       }
 
@@ -346,8 +350,7 @@ public class LegendElementCreator
     }
     else
     {
-      throw new Exception( "Can't save output image because no graphic-encoder found for:\n" + "filetype: '"
-          + graphicsformat + "' for file: '" + file + "'" );
+      throw new Exception( "Can't save output image because no graphic-encoder found for:\n" + "filetype: '" + graphicsformat + "' for file: '" + file + "'" );
     }
     System.out.println( "-- " + file + " saved." );
   }
@@ -384,13 +387,12 @@ public class LegendElementCreator
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
- * have been up to: Revision 1.7  2005/06/30 07:52:19  belger
- * have been up to: Yellow thingis down to 250
- * have been up to:
- * have been up to: Revision 1.6  2005/06/20 14:07:45  belger
- * have been up to: Formatierung
- * have been up to: Revision 1.10 2004/04/07 10:58:29 axel_schaefer bugfix
- * 
- * 
- *  
+ * have been up to: Revision 1.8  2006/05/31 09:23:20  doemming
+ * have been up to: reanimated WFS-service-list,
+ * have been up to: change: SLD loads icons on demand, not ahead
+ * have been up to: added base catalog support (still in progress),
+ * have been up to: minor bugfixes
+ * have been up to: have been up to: Revision 1.7 2005/06/30 07:52:19 belger have
+ * been up to: Yellow thingis down to 250 have been up to: have been up to: Revision 1.6 2005/06/20 14:07:45 belger have
+ * been up to: Formatierung have been up to: Revision 1.10 2004/04/07 10:58:29 axel_schaefer bugfix
  **********************************************************************************************************************/

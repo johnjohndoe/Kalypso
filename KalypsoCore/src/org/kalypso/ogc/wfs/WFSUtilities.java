@@ -30,6 +30,8 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -44,6 +46,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -191,9 +194,9 @@ public class WFSUtilities
         // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
 
-        // Hack for testing
+        // Hack for testing, please leave this comments in the sources
         // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
-        // final File tmpFile = new File( "C:/TMP/gml.gml" );
+        // final File tmpFile = new File( "C:/TMP/xplanung.gml" );
         // final OutputStream outStream = new FileOutputStream( tmpFile );
         // StreamUtilities.streamCopy( inputStream, outStream );
         // IOUtils.closeQuietly( inputStream );
@@ -271,8 +274,8 @@ public class WFSUtilities
         }
         // TODO check for chars to escape in namespace
         return new URL( result.toString() );
-//      http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=DescribeFeatureType&version=1.1.0&service=WFS&TYPENAME=ns:gns_locationinstance&NAMESPACE=xmlns(ns=http://www.deegree.org/app)  
-//     http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=GetCapabilities&version=1.1.0&service=WFS   
+        // http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=DescribeFeatureType&version=1.1.0&service=WFS&TYPENAME=ns:gns_locationinstance&NAMESPACE=xmlns(ns=http://www.deegree.org/app)
+        // http://wfs.lat-lon.de/deegreegazetteer/ogcwebservice?REQUEST=GetCapabilities&version=1.1.0&service=WFS
       }
     }
     throw new UnsupportedOperationException();

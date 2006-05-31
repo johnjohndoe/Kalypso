@@ -67,7 +67,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
 
   private final Class m_className;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, Class clazz )
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, final Class clazz )
   {
     m_axisTypes = axisTypes;
     m_typeName = new QName( NAMESPACE, name );

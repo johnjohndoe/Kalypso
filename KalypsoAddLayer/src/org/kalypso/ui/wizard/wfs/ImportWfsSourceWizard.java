@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 
 /**
- * @author Kuepferle
+ * @author Kuepferle, doemming
  */
 public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
@@ -90,11 +90,11 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        
-        IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
+
+        final IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
         for( int i = 0; i < layers.length; i++ )
         {
-          IWFSLayer layer = layers[i];
+          final IWFSLayer layer = layers[i];
           Filter filter = m_importWFSPage.getFilter( layer );
           if( filter == null )
           {
@@ -124,10 +124,12 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
           if( xml != null )
             source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml );
-          final int maxfeatures = 5000;
-          if( maxfeatures != WfsLoader.MAXFEATURE_UNBOUNDED )
+          // if( maxfeatures != WfsLoader.MAXFEATURE_UNBOUNDED )
+          if( m_filterWFSPage.doFilterMaxFeatures() )
+          {
+            final int maxfeatures = m_filterWFSPage.getMaxFeatures();
             source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) );
-
+          }
           // final String[] featurePathes= GMLSchemaUtilities.createFeaturePathes(layer.getFeatureType());
           // final String featurePath = "featureMember[" + layer.getQName().getLocalPart() + "]";
           final String featurePath = "//*";//

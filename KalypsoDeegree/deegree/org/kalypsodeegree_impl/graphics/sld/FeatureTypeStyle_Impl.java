@@ -62,10 +62,12 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer). This element may
@@ -84,38 +86,37 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 {
-  private ArrayList rules = null;
+  private ArrayList m_rules = null;
 
   private ArrayList m_semanticTypeIdentifier = null;
 
-  private String abstract_ = null;
+  private String m_abstract = null;
 
-  private String featureTypeName = null;
+  private QName m_featureTypeName = null;
 
-  private String name = null;
+  private String m_name = null;
 
-  private String title = null;
+  private String m_title = null;
 
   /**
    * default constructor
    */
-  public FeatureTypeStyle_Impl()
+  public FeatureTypeStyle_Impl( )
   {
     m_semanticTypeIdentifier = new ArrayList();
-    rules = new ArrayList();
+    m_rules = new ArrayList();
   }
 
   /**
    * constructor initializing the class with the <FeatureTypeStyle>
    */
-  FeatureTypeStyle_Impl( String name, String title, String abstract_, String featureTypeName,
-      String[] semanticTypeIdentifier, Rule[] rules )
+  FeatureTypeStyle_Impl( String name, String title, String abstract_, QName featureTypeQName, String[] semanticTypeIdentifier, Rule[] rules )
   {
     this();
     setName( name );
     setTitle( title );
     setAbstract( abstract_ );
-    setFeatureTypeName( featureTypeName );
+    setFeatureTypeName( featureTypeQName );
     setSemanticTypeIdentifier( semanticTypeIdentifier );
     setRules( rules );
   }
@@ -126,9 +127,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return name
    */
-  public String getName()
+  public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -140,7 +141,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void setName( String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
@@ -148,9 +149,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return the title of the FeatureTypeStyle
    */
-  public String getTitle()
+  public String getTitle( )
   {
-    return title;
+    return m_title;
   }
 
   /**
@@ -161,7 +162,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void setTitle( String title )
   {
-    this.title = title;
+    this.m_title = title;
   }
 
   /**
@@ -169,9 +170,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return an abstract of the FeatureTypeStyle
    */
-  public String getAbstract()
+  public String getAbstract( )
   {
-    return abstract_;
+    return m_abstract;
   }
 
   /**
@@ -182,7 +183,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void setAbstract( String abstract_ )
   {
-    this.abstract_ = abstract_;
+    this.m_abstract = abstract_;
   }
 
   /**
@@ -190,9 +191,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return the name of the FeatureTypeStyle as String
    */
-  public String getFeatureTypeName()
+  public QName getFeatureTypeName( )
   {
-    return featureTypeName;
+    return m_featureTypeName;
   }
 
   /**
@@ -201,9 +202,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * @param featureTypeName
    *          the name of the FeatureTypeStyle
    */
-  public void setFeatureTypeName( String featureTypeName )
+  public void setFeatureTypeName( QName featureTypeQName )
   {
-    this.featureTypeName = featureTypeName;
+    m_featureTypeName = featureTypeQName;
   }
 
   /**
@@ -216,9 +217,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
-  public String[] getSemanticTypeIdentifier()
+  public String[] getSemanticTypeIdentifier( )
   {
-    return (String[])m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
+    return (String[]) m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
   }
 
   /**
@@ -268,9 +269,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return the rules of the FeatureTypeStyle as Array
    */
-  public Rule[] getRules()
+  public Rule[] getRules( )
   {
-    return (Rule[])rules.toArray( new Rule[rules.size()] );
+    return (Rule[]) m_rules.toArray( new Rule[m_rules.size()] );
   }
 
   /**
@@ -281,13 +282,13 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void setRules( Rule[] rules )
   {
-    this.rules.clear();
+    this.m_rules.clear();
 
     if( rules != null )
     {
       for( int i = 0; i < rules.length; i++ )
       {
-        this.rules.add( rules[i] );
+        this.m_rules.add( rules[i] );
       }
     }
   }
@@ -300,7 +301,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void addRule( Rule rule )
   {
-    rules.add( rule );
+    m_rules.add( rule );
   }
 
   /**
@@ -311,7 +312,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void removeRule( Rule rule )
   {
-    rules.remove( rules.indexOf( rule ) );
+    m_rules.remove( m_rules.indexOf( rule ) );
   }
 
   /**
@@ -319,40 +320,36 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * 
    * @return xml representation of the FeatureTypeStyle
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<FeatureTypeStyle>" );
-    if( name != null && !name.equals( "" ) )
+    sb.append( "<FeatureTypeStyle xmlns=\""+NS.SLD+"\" xmlns:ogc=\""+NS.OGC+"\">" );
+    if( m_name != null && !m_name.equals( "" ) )
     {
-      sb.append( "<Name>" ).append( name ).append( "</Name>" );
+      sb.append( "<Name>" ).append( m_name ).append( "</Name>" );
     }
-    if( title != null && !title.equals( "" ) )
+    if( m_title != null && !m_title.equals( "" ) )
     {
-      sb.append( "<Title>" ).append( title ).append( "</Title>" );
+      sb.append( "<Title>" ).append( m_title ).append( "</Title>" );
     }
-    if( abstract_ != null && !abstract_.equals( "" ) )
+    if( m_abstract != null && !m_abstract.equals( "" ) )
     {
-      sb.append( "<Abstract>" ).append( abstract_ ).append( "</Abstract>" );
+      sb.append( "<Abstract>" ).append( m_abstract ).append( "</Abstract>" );
     }
-    if( featureTypeName != null && !featureTypeName.equals( "" ) )
+    if( m_featureTypeName != null && !m_featureTypeName.equals( "" ) )
     {
-      sb.append( "<FeatureTypeName>" ).append( featureTypeName ).append( "</FeatureTypeName>" );
+      sb.append( "<FeatureTypeName>" ).append( m_featureTypeName ).append( "</FeatureTypeName>" );
     }
     for( int i = 0; i < m_semanticTypeIdentifier.size(); i++ )
     {
-      sb.append( "<SemanticTypeIdentifier>" ).append( m_semanticTypeIdentifier.get( i ) ).append(
-          "</SemanticTypeIdentifier>" );
+      sb.append( "<SemanticTypeIdentifier>" ).append( m_semanticTypeIdentifier.get( i ) ).append( "</SemanticTypeIdentifier>" );
     }
-    for( int i = 0; i < rules.size(); i++ )
+    for( int i = 0; i < m_rules.size(); i++ )
     {
-      sb.append( ( (Marshallable)rules.get( i ) ).exportAsXML() );
+      sb.append( ((Marshallable) m_rules.get( i )).exportAsXML() );
     }
     sb.append( "</FeatureTypeStyle>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

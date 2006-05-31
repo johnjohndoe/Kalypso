@@ -9,6 +9,9 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.core,
+ org.kalypso.core.catalog,
+ org.kalypso.core.catalog.urn,
+ org.kalypso.core.repository,
  org.kalypso.gml.util,
  org.kalypso.loader,
  org.kalypso.model.xml,

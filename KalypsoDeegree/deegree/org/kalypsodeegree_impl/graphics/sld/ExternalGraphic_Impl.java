@@ -63,15 +63,17 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
+import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.kalypsodeegree_impl.tools.NetWorker;
 
 import com.sun.media.jai.codec.MemoryCacheSeekableStream;
 
@@ -89,11 +91,13 @@ import com.sun.media.jai.codec.MemoryCacheSeekableStream;
  */
 public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
 {
-  private BufferedImage image = null;
+  private BufferedImage m_image = null;
 
-  private String format = null;
+  private String m_format = null;
 
-  private URL onlineResource = null;
+  private String m_onlineResource = null;
+
+  private final IUrlResolver2 m_resolver;
 
   /**
    * Creates a new ExternalGraphic_Impl object.
@@ -101,8 +105,9 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * @param format
    * @param onlineResource
    */
-  ExternalGraphic_Impl( String format, URL onlineResource )
+  ExternalGraphic_Impl( IUrlResolver2 resolver, String format, String onlineResource )
   {
+    m_resolver = resolver;
     setFormat( format );
     setOnlineResource( onlineResource );
   }
@@ -112,9 +117,9 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return Format of the external graphic
    */
-  public String getFormat()
+  public String getFormat( )
   {
-    return format;
+    return m_format;
   }
 
   /**
@@ -125,7 +130,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    */
   public void setFormat( String format )
   {
-    this.format = format;
+    m_format = format;
   }
 
   /**
@@ -133,9 +138,17 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return URL of the external graphic
    */
-  public URL getOnlineResource()
+  public String getOnlineResource( )
   {
-    return onlineResource;
+    return m_onlineResource;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#getOnlineResourceURL()
+   */
+  public URL getOnlineResourceURL( ) throws MalformedURLException
+  {
+    return m_resolver.resolveURL( m_onlineResource );
   }
 
   /**
@@ -144,26 +157,10 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * @param onlineResource
    *          URL of the external graphic
    */
-  public void setOnlineResource( URL onlineResource )
+  public void setOnlineResource( String onlineResource )
   {
-    Debug.debugMethodBegin( this, "setOnlineResource" );
-
-    this.onlineResource = onlineResource;
-
-    try
-    {
-      InputStream is = onlineResource.openStream();
-      MemoryCacheSeekableStream mcss = new MemoryCacheSeekableStream( is );
-      RenderedOp rop = JAI.create( "stream", mcss );
-      image = rop.getAsBufferedImage();
-      mcss.close();
-    }
-    catch( IOException e )
-    {
-      System.out.println( "Yikes: " + e );
-    }
-
-    Debug.debugMethodEnd();
+    m_image = null;
+    m_onlineResource = onlineResource;
   }
 
   /**
@@ -172,9 +169,31 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return the external graphic as BufferedImage
    */
-  public BufferedImage getAsImage()
+  public BufferedImage getAsImage( )
   {
-    return image;
+    if( m_image == null )
+    {
+      InputStream is = null;
+      try
+      {
+        final URL url = m_resolver.resolveURL( m_onlineResource );
+        is = url.openStream();
+        MemoryCacheSeekableStream mcss = new MemoryCacheSeekableStream( is );
+        RenderedOp rop = JAI.create( "stream", mcss );
+        m_image = rop.getAsBufferedImage();
+        mcss.close();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( is );
+      }
+
+    }
+    return m_image;
   }
 
   /**
@@ -185,7 +204,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    */
   public void setAsImage( BufferedImage image )
   {
-    this.image = image;
+    m_image = image;
   }
 
   /**
@@ -193,7 +212,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return xml representation of the ExternalGraphic
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -201,8 +220,9 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     sb.append( "<ExternalGraphic>" );
     sb.append( "<OnlineResource xmlns:xlink='http://www.w3.org/1999/xlink' " );
     sb.append( "xlink:type='simple' xlink:href='" );
-    sb.append( NetWorker.url2String( onlineResource ) + "'/>" );
-    sb.append( "<Format>" ).append( format ).append( "</Format>" );
+    // sb.append( NetWorker.url2String( m_onlineResource ) + "'/>" );
+    sb.append( m_onlineResource + "'/>" );
+    sb.append( "<Format>" ).append( m_format ).append( "</Format>" );
     sb.append( "</ExternalGraphic>" );
 
     Debug.debugMethodEnd();

@@ -62,6 +62,7 @@
 package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -100,7 +101,9 @@ public interface ExternalGraphic
    * 
    * @return URL of the external graphic
    */
-  URL getOnlineResource();
+  String getOnlineResource();
+
+  URL getOnlineResourceURL( ) throws MalformedURLException;
 
   /**
    * The OnlineResource gives the URL of the external graphic This method sets the OnlineRessource of an
@@ -109,7 +112,7 @@ public interface ExternalGraphic
    * @param onlineResource
    *          URL of the external graphic
    */
-  void setOnlineResource( URL onlineResource );
+  void setOnlineResource( String onlineResource );
 
   /**
    * returns the external graphic as an image. this method is not part of the sld specifications but it is added for
@@ -126,4 +129,5 @@ public interface ExternalGraphic
    *          the external graphic as BufferedImage
    */
   void setAsImage( BufferedImage image );
+
 }

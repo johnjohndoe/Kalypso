@@ -114,6 +114,12 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   String m_themeName;
 
+  boolean m_doFilterMaxFeature = true;
+
+  String m_maxFeaturesAsString = "500";
+
+  int m_maxFeaturesAsInt = 500;
+
   public ImportWfsFilterWizardPage( String pageName, String title, ImageDescriptor titleImage, GisMapOutlineViewer viewer )
   {
     super( pageName, title, titleImage );
@@ -192,6 +198,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setPageComplete( validate() );
       }
     } );
+    // TODO better set spawn (@christoph)
     // just for formating
     Label dummyLabel = new Label( topGroup, SWT.NONE );
     dummyLabel.setText( "" );
@@ -228,6 +235,42 @@ public class ImportWfsFilterWizardPage extends WizardPage
         }
       }
     } );
+    final GridData data = new GridData();
+    data.horizontalSpan=2;
+    m_BBoxButton.setLayoutData(data);
+    
+    final Button button = new Button( topGroup, SWT.CHECK );
+    button.setText( "max. Feature" );
+    button.setSelection( m_doFilterMaxFeature );
+
+    final Text maxFeatureField = new Text( topGroup, SWT.BORDER );
+    maxFeatureField.setText( m_maxFeaturesAsString );
+    final GridData data2 = new GridData(GridData.FILL_HORIZONTAL);
+    data2.grabExcessHorizontalSpace=true;
+    maxFeatureField.setLayoutData(data2);
+    maxFeatureField.addFocusListener( new FocusAdapter()
+    {
+
+      @Override
+      public void focusLost( FocusEvent e )
+      {
+        m_maxFeaturesAsString = maxFeatureField.getText();
+        setPageComplete( validate() );
+      }
+
+    } );
+    
+    button.addSelectionListener( new SelectionAdapter()
+    {
+
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        m_doFilterMaxFeature = !m_doFilterMaxFeature;
+        maxFeatureField.setEnabled(m_doFilterMaxFeature);
+      }
+    } );
+
     Group spatialOpsGroup = new Group( main, SWT.HORIZONTAL );
     spatialOpsGroup.setLayout( new GridLayout( 2, false ) );
     spatialOpsGroup.setLayoutData( new GridData() );
@@ -268,6 +311,24 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   boolean validate( )
   {
+    // validate maxFeatures
+    if( m_doFilterMaxFeature )
+    {
+      try
+      {
+        m_maxFeaturesAsInt = Integer.parseInt( m_maxFeaturesAsString );
+        if( m_maxFeaturesAsInt < 1 )
+        {
+          setErrorMessage( "maximale Anzahl Feature muss größer 0 sein" );
+          return false;
+        }
+      }
+      catch( Exception ex )
+      {
+        setErrorMessage( "maximale Anzahl Feature muss ein Zahlenwert sein" );
+        return false;
+      }
+    }
     // the text window can only hold numbers
     if( m_distance.isVisible() && m_bufferButton.getSelection() )
     {
@@ -316,6 +377,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     // the selection bbox and active selection is not valid, all other combinations are OK.
     if( m_BBoxButton.getSelection() && m_activeSelectionButton.getSelection() )
     {
+      // TODO use radio buttons (@christoph)
       setErrorMessage( "Es kann nur die BBOX-Option ODER eine die active Selektion-Option ausgewählt sein und nicht beides gleichzeitig" );
       return false;
     }
@@ -357,5 +419,15 @@ public class ImportWfsFilterWizardPage extends WizardPage
       return new ComplexFilter( operation );
     }
     return null;
+  }
+
+  public boolean doFilterMaxFeatures( )
+  {
+    return m_doFilterMaxFeature;
+  }
+
+  public int getMaxFeatures( )
+  {
+    return m_maxFeaturesAsInt;
   }
 }
