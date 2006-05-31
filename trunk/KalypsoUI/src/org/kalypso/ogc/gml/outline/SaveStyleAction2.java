@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.outline;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -65,6 +67,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -88,14 +92,14 @@ public class SaveStyleAction2 implements IActionDelegate
   {
     if( action instanceof PluginMapOutlineActionDelegate )
     {
-      GisMapOutlineViewer viewer = ( (PluginMapOutlineActionDelegate)action ).getOutlineviewer();
-      Object o = ( (IStructuredSelection)viewer.getSelection() ).getFirstElement();
+      GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof ThemeStyleTreeObject )
       {
-        final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
+        final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
         if( theme instanceof IKalypsoFeatureTheme )
         {
-          KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
+          KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
           saveUserStyle( kalypsoStyle, viewer.getControl().getShell() );
         }
       }
@@ -104,8 +108,7 @@ public class SaveStyleAction2 implements IActionDelegate
 
   public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
   {
-    String[] filterExtension =
-    { "*.sld" };
+    String[] filterExtension = { "*.sld" };
     FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
     String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
@@ -114,18 +117,31 @@ public class SaveStyleAction2 implements IActionDelegate
     StyledLayerDescriptor sld;
     try
     {
-      sld = SLDFactory.createSLD( sldContents );
+
       String filename = saveDialog.open();
       if( filename != null )
       {
-        Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
-        final Source source = new DOMSource( doc );
-        File file = null;
+        final File file;
         if( filename.indexOf( "." ) == -1 )
           file = new File( filename + ".sld" );
         else
           file = new File( filename );
         IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
+
+        final IUrlResolver2 resolver = new IUrlResolver2()
+        {
+
+          public URL resolveURL( String href ) throws MalformedURLException
+          {
+            UrlResolverSingleton.resolveUrl( file.toURL(), href );
+            return null;
+          }
+
+        };
+        sld = SLDFactory.createSLD( resolver, sldContents );
+        final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
+
+        final Source source = new DOMSource( doc );
         if( iFile != null )
         {
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
@@ -166,17 +182,17 @@ public class SaveStyleAction2 implements IActionDelegate
     }
   }
 
-  //  protected final void refresh()
-  //  {
-  //    boolean bEnable = false;
+  // protected final void refresh()
+  // {
+  // boolean bEnable = false;
   //
-  //    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+  // final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
   //
-  //    if( s.getFirstElement() instanceof ThemeStyleTreeObject )
-  //      bEnable = true;
+  // if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+  // bEnable = true;
   //
-  //    setEnabled( bEnable );
-  //  }
+  // setEnabled( bEnable );
+  // }
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
@@ -185,12 +201,12 @@ public class SaveStyleAction2 implements IActionDelegate
   public void selectionChanged( IAction action, ISelection selection )
   {
     boolean bEnable = false;
-      final IStructuredSelection s = (IStructuredSelection)selection;
+    final IStructuredSelection s = (IStructuredSelection) selection;
 
-      if( s.getFirstElement() instanceof ThemeStyleTreeObject )
-        bEnable = true;
+    if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+      bEnable = true;
 
-      action.setEnabled( bEnable );
+    action.setEnabled( bEnable );
 
   }
 }

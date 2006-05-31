@@ -374,16 +374,20 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           if( url != null )
           {
             final String query = url.getQuery();
-            final String[] requestParts = query.split( "&" );
-            for( final String requestPart : requestParts )
+            if( query != null && query.length() > 0 )
             {
-              final String[] queryParts = requestPart.split( "=" );
-              if( queryParts.length != 2 )
-                continue;
+              // @belger: is this for UMN-MapServer ?? or why are here allready parameters in the baseURL ?
+              // (doemming)
+              final String[] requestParts = query.split( "&" );
+              for( final String requestPart : requestParts )
+              {
+                final String[] queryParts = requestPart.split( "=" );
+                if( queryParts.length != 2 )
+                  continue;
 
-              wmsParameter.put( queryParts[0], queryParts[1] );
+                wmsParameter.put( queryParts[0], queryParts[1] );
+              }
             }
-
             // the first valid url is enough
             break;
           }

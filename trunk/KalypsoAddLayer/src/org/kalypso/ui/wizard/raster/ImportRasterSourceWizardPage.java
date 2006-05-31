@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -25,6 +26,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -206,15 +209,26 @@ public class ImportRasterSourceWizardPage extends WizardPage
           Path resultPath = (Path) result[0];
           styleTextField.setText( resultPath.toString() );
           stylePath = resultPath;
+          Reader reader = null;
           try
           {
-            IPath basePath = m_project.getLocation();
-            String styleUrl = basePath.toFile().toURL() + stylePath.removeFirstSegments( 1 ).toString();
-            Reader reader = new InputStreamReader( (new URL( styleUrl )).openStream() );
-            StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+            final IPath basePath = m_project.getLocation();
+            final String styleURLAsString = basePath.toFile().toURL() + stylePath.removeFirstSegments( 1 ).toString();
+            final URL styleURL = new URL( styleURLAsString );
+            reader = new InputStreamReader( (styleURL).openStream() );
+            final IUrlResolver2 resolver = new IUrlResolver2()
+            {
+
+              public URL resolveURL( String href ) throws MalformedURLException
+              {
+                return UrlResolverSingleton.resolveUrl( styleURL, href );
+              }
+
+            };
+            final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, reader );
             reader.close();
-            Layer[] layers = styledLayerDescriptor.getLayers();
-            Vector<String> styleNameVector = new Vector<String>();
+            final Layer[] layers = styledLayerDescriptor.getLayers();
+            final Vector<String> styleNameVector = new Vector<String>();
             for( int i = 0; i < layers.length; i++ )
             {
               Layer layer = layers[i];
@@ -233,17 +247,13 @@ public class ImportRasterSourceWizardPage extends WizardPage
             styleNameCombo.select( 0 );
             styleName = styleNames[0];
           }
-          catch( MalformedURLException e1 )
+          catch( Exception e1 )
           {
             e1.printStackTrace();
           }
-          catch( IOException ioEx )
+          finally
           {
-            ioEx.printStackTrace();
-          }
-          catch( XMLParsingException xmlEx )
-          {
-            xmlEx.printStackTrace();
+            IOUtils.closeQuietly( reader );
           }
         }
         validate();

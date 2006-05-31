@@ -78,6 +78,8 @@ import org.eclipse.swt.widgets.Widget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
@@ -384,10 +386,20 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
           stylePath = resultPath;
           try
           {
-            IPath basePath = m_project.getLocation();
-            String styleUrl = basePath.toFile().toURL() + stylePath.removeFirstSegments( 1 ).toString();
-            Reader reader = new InputStreamReader( (new URL( styleUrl )).openStream() );
-            StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+            final IPath basePath = m_project.getLocation();
+            final String styleURLAsString = basePath.toFile().toURL() + stylePath.removeFirstSegments( 1 ).toString();
+            final URL styleURL = new URL( styleURLAsString );
+            final Reader reader = new InputStreamReader( (styleURL).openStream() );
+            final IUrlResolver2 resolver = new IUrlResolver2()
+            {
+
+              public URL resolveURL( final String href ) throws MalformedURLException
+              {
+                return UrlResolverSingleton.resolveUrl( styleURL, href );
+              }
+
+            };
+            final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, reader );
             reader.close();
             Layer[] layers = styledLayerDescriptor.getLayers();
             Vector<String> styleNameVector = new Vector<String>();

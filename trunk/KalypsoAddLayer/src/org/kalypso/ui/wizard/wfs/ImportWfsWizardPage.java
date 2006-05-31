@@ -325,9 +325,9 @@ public class ImportWfsWizardPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-    final Composite top = new Composite(parent, SWT.NULL);
-    top.setLayout( new GridLayout());
-    top.setLayoutData( new GridData());
+    final Composite top = new Composite( parent, SWT.NULL );
+    top.setLayout( new GridLayout() );
+    top.setLayoutData( new GridData() );
     final Group composite = new Group( top, SWT.NULL );
     composite.setLayout( new GridLayout( 1, false ) );
     composite.setLayoutData( new GridData() );

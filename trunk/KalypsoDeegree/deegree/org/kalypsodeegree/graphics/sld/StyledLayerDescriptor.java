@@ -60,6 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import org.kalypsodeegree.xml.Marshallable;
+
 /**
  * StyledLayerDescriptor: This is a sequence of styled layers, represented at the first level by Layer and UserLayer
  * elements. A "version" attribute has been added to allow the formatting of static-file
@@ -70,14 +72,13 @@ package org.kalypsodeegree.graphics.sld;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface StyledLayerDescriptor
+public interface StyledLayerDescriptor extends Marshallable
 {
 
   /**
-   * 
    * @return the Layers as Array
    */
-  Layer[] getLayers();
+  Layer[] getLayers( );
 
   /**
    * Sets Layers
@@ -111,7 +112,7 @@ public interface StyledLayerDescriptor
    * 
    * @return the UserLayers as Array
    */
-  UserLayer[] getUserLayers();
+  UserLayer[] getUserLayers( );
 
   /**
    * A NamedLayer uses the "name" attribute to identify a layer known to the WMS and can contain zero or more styles,
@@ -119,7 +120,7 @@ public interface StyledLayerDescriptor
    * 
    * @return the NamedLayers as Array
    */
-  NamedLayer[] getNamedLayers();
+  NamedLayer[] getNamedLayers( );
 
   /**
    * The version attribute gives the SLD version of an SLD document, to facilitate backward compatibility with static
@@ -129,7 +130,7 @@ public interface StyledLayerDescriptor
    * 
    * @return the version of the SLD as String
    */
-  String getVersion();
+  String getVersion( );
 
   /**
    * Sets the Version.

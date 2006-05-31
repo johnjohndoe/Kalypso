@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.outline;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.transform.OutputKeys;
@@ -64,7 +65,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -111,6 +114,7 @@ public class SaveStyleAction extends AbstractOutlineAction
   public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
   {
     File knownFilename = null;
+    URL url = null;
     if( userStyle instanceof GisTemplateUserStyle )
     {
       try
@@ -120,7 +124,7 @@ public class SaveStyleAction extends AbstractOutlineAction
         final URL context = poolKey.getContext();
         String location = poolKey.getLocation();
         final UrlResolver resolver = new UrlResolver();
-        final URL url = resolver.resolveURL( context, location );
+        url = resolver.resolveURL( context, location );
         final IFile file = ResourceUtilities.findFileFromURL( url );
         knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
       }
@@ -129,7 +133,7 @@ public class SaveStyleAction extends AbstractOutlineAction
         e1.printStackTrace();
       }
     }
-
+    final URL context = url;
     final String[] filterExtension = { "*.sld" };
     FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
@@ -142,7 +146,16 @@ public class SaveStyleAction extends AbstractOutlineAction
     StyledLayerDescriptor sld;
     try
     {
-      sld = SLDFactory.createSLD( sldContents );
+      final IUrlResolver2 resolver = new IUrlResolver2()
+      {
+
+        public URL resolveURL( String href ) throws MalformedURLException
+        {
+          return UrlResolverSingleton.resolveUrl( context, href );
+        }
+
+      };
+      sld = SLDFactory.createSLD( resolver, sldContents );
       final String filename = saveDialog.open();
       if( filename != null )
       {

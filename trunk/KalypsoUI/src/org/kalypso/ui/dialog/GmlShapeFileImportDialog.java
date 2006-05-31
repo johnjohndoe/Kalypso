@@ -75,7 +75,9 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -578,7 +580,7 @@ public class GmlShapeFileImportDialog extends Dialog
     return m_workspace;
   }
 
-  protected void handleBrowseButton2Selected( )
+protected void handleBrowseButton2Selected( )
   {
     Object[] result = null;
     if( !m_fromLocalFileSys )
@@ -600,9 +602,18 @@ public class GmlShapeFileImportDialog extends Dialog
       try
       {
         IPath basePath = m_eclipseWorkspace.getLocation();
-        String styleUrl = basePath.toFile().toURL() + m_stylePath.removeFirstSegments( 1 ).toString();
-        Reader reader = new InputStreamReader( (new URL( styleUrl )).openStream() );
-        StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+        final String styleURLAsString = basePath.toFile().toURL() + m_stylePath.removeFirstSegments( 1 ).toString();
+        final URL styleURL = new URL( styleURLAsString );
+        final Reader reader = new InputStreamReader( (styleURL).openStream() );
+        IUrlResolver2 resolver = new IUrlResolver2()
+        {
+        
+          public URL resolveURL(final String href ) throws MalformedURLException
+          {
+            return UrlResolverSingleton.resolveUrl(styleURL, href);
+          }
+        };
+        StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD(resolver, reader );
         reader.close();
         Layer[] layers = styledLayerDescriptor.getLayers();
         final Vector<String> styleNameVector = new Vector<String>();
@@ -636,9 +647,7 @@ public class GmlShapeFileImportDialog extends Dialog
         xmlEx.printStackTrace();
       }
     }
-  }
-
-  protected void handleCheckDefaultStyleButtonSelected( )
+  }  protected void handleCheckDefaultStyleButtonSelected( )
   {
     if( m_checkDefaultStyleButton.getSelection() )
     {
