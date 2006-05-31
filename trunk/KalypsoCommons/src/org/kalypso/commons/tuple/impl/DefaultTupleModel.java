@@ -104,7 +104,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   }
 
   @Override
-  protected void deleteColumnIntern( final IColumnKey columnKey )
+  protected void deleteColumnIntern( final C columnKey )
   {
     m_columns.remove( columnKey );
   }
