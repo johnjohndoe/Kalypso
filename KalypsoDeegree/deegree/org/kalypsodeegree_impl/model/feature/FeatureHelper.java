@@ -69,6 +69,20 @@ public class FeatureHelper
 
   }
 
+  public static double getAsDouble( Feature feature, QName propQName, double defaultValue )
+  {
+    final Object value = feature.getProperty( propQName );
+    if( value == null )
+      return defaultValue;
+    if( value instanceof String )
+      return Double.valueOf( (String) value ).doubleValue();
+    // should be a Double
+    return ((Double) value).doubleValue();
+  }
+
+  /**
+   * @deprecated use instead of propName the QName of the property
+   */
   public static double getAsDouble( Feature feature, String propName, double defaultValue )
   {
     final Object value = feature.getProperty( propName );
