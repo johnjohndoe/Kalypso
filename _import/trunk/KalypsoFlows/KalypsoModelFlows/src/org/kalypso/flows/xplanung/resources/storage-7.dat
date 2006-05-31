@@ -1,0 +1,2163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc">
+<Name>default</Name>
+<Title>BaugebietsFlaechenTeil</Title>
+<FeatureTypeName>{http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil</FeatureTypeName>
+<Rule>
+<Name>AllgWohngebiet</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kleinsiedlungsgebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#fcb9a9</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kleinsiedlungsgebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WS</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kleinsiedlungsgebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WS</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kleinsiedlungsgebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WS</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kleinsiedlungsgebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WS</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>Reine Wohngebiete</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Reine Wohngebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#fcb9a9</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Reine Wohngebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WR</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Reine Wohngebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WR</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Reine Wohngebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WR</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Reine Wohngebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WR</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>AllgWohngebiet</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>AllgWohngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#fcb9a9</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>AllgWohngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>Wa</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>AllgWohngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WA</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>AllgWohngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WA</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>AllgWohngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>WA</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>Mischgebiete</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Mischgebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#e3cb6b</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Mischgebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Mischgebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Mischgebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Mischgebiete</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>Kerngebiete</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kerngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#e3cb6b</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kerngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MK</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kerngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MK</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kerngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MK</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Kerngebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>MK</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>Gewerbegebiet</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Gewerbegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#96979c</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Gewerbegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GE</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Gewerbegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GE</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Gewerbegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GE</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Gewerbegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GE</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<Name>Industriegebiete</Name>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Industriegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<CssParameter name="fill-opacity">1.0</CssParameter>
+<CssParameter name="fill">#96979c</CssParameter>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Industriegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Industriegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Industriegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:artDerBaulichenNutzung</ogc:PropertyName>
+<ogc:Literal>Industriegebiet</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>GI</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>GeschlosseneBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>g</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>AbweichendeBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>750.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">50</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>AbweichendeBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>GeschlosseneBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>g</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>750.0</MinScaleDenominator>
+<MaxScaleDenominator>1500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">17</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>AbweichendeBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>GeschlosseneBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>g</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>1500.0</MinScaleDenominator>
+<MaxScaleDenominator>2500.0</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">10</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:Zmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GRZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmin</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>-</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:GFZmax</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:BMZ</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>GeschlosseneBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.9999999E7</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:Literal>g</ogc:Literal>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+<CssParameter name="font-weight">bold</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:PropertyIsEqualTo>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+<ogc:Literal>AbweichendeBauweise</ogc:Literal>
+</ogc:PropertyIsEqualTo>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:bauweise</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+<Rule>
+<ogc:Filter>
+<ogc:Not>
+<ogc:PropertyIsNull>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</ogc:PropertyIsNull>
+</ogc:Not>
+</ogc:Filter>
+<MinScaleDenominator>2500.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<TextSymbolizer>
+<Label>
+<ogc:PropertyName>app:dachform</ogc:PropertyName>
+</Label>
+<Font>
+<CssParameter name="font-family">Sans-Serif</CssParameter>
+<CssParameter name="font-color">#000000</CssParameter>
+<CssParameter name="font-size">5</CssParameter>
+</Font>
+<LabelPlacement>
+<PointPlacement>
+<Displacement>
+<DisplacementX>0.0</DisplacementX>
+<DisplacementY>0.5</DisplacementY>
+</Displacement>
+</PointPlacement>
+</LabelPlacement>
+</TextSymbolizer>
+</Rule>
+</FeatureTypeStyle>

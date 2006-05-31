@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc">
+<Name>default</Name>
+<Title>VerkehrsflaecheBesondererZweckbestimmung</Title>
+<FeatureTypeName>{http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung</FeatureTypeName>
+<Rule>
+<Name>VerkehrsflaecheBesondererZweckbestimmung</Name>
+<MinScaleDenominator>0.0</MinScaleDenominator>
+<MaxScaleDenominator>9.99999999E8</MaxScaleDenominator>
+<PolygonSymbolizer>
+<Fill>
+<GraphicFill>
+<Graphic>
+<ExternalGraphic>
+<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./symbole/6_3_Verk_Flaeche.png" xlink:type="simple"/>
+<Format>image/png</Format>
+</ExternalGraphic>
+</Graphic>
+</GraphicFill>
+</Fill>
+<Stroke>
+<CssParameter name="stroke">#000000</CssParameter>
+<CssParameter name="stroke-width">1.0</CssParameter>
+<CssParameter name="stroke-opacity">1.0</CssParameter>
+<CssParameter name="stroke-dasharray">1</CssParameter>
+</Stroke>
+</PolygonSymbolizer>
+</Rule>
+</FeatureTypeStyle>

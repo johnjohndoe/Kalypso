@@ -9,5 +9,11 @@
             class="org.kalypso.flows.URLCatalogFlows"
             id="org.kalypso.catalog.flows"/>
    </extension>
+   <extension
+         id="flowsXMLCatalog"
+         name="catalogs for flows"
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution class="org.kalypso.flows.xplanung.FeatureTypeStyleCatalogContribution"/>
+   </extension>
 
 </plugin>
