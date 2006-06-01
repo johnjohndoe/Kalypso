@@ -57,7 +57,6 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -79,9 +78,15 @@ import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReachProfileSegment;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
-import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
+import org.kalypso.ui.model.wspm.abstraction.WspmProfile;
+import org.kalypso.ui.model.wspm.core.profile.ProfileFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+import serializer.prf.ProfilesSerializer;
+
+import com.bce.eind.core.profil.IProfil;
+import com.bce.eind.core.profil.ProfilDataException;
 
 /**
  * @author thuel2
@@ -180,7 +185,7 @@ public class WspWinExporter
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
    * @param context Context to resolve links inside the gml structure.
    */
-  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir, final URL context ) throws IOException
+  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir, final URL context ) throws IOException, ProfilDataException
   {
     dir.mkdirs();
 
@@ -348,7 +353,7 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final URL context ) throws IOException
+  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final URL context ) throws IOException, ProfilDataException
   {
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 
@@ -364,9 +369,9 @@ public class WspWinExporter
       for( final TuhhReachProfileSegment segment : segments )
       {
         final BigDecimal station = segment.getStation();
-        final WspmProfileReference profileMember = segment.getProfileMember();
-        
-        final String href = profileMember.getHref();
+        final WspmProfile profileMember = segment.getProfileMember();
+
+//        final String href = profileMember.getHref();
 
         final String prfName = "Profil_" + fileCount++ + ".prf";
         
@@ -374,9 +379,15 @@ public class WspWinExporter
         writer.print( " " );
         writer.println( station.doubleValue() );
 
-        final URL prfFile = new URL( context, href );
+        // TODO: write profile into prf file
+        
+        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+        profil.setProperty( IProfil.PROFIL_PROPERTY.STATION, station );
+        
+//        final URL prfFile = new URL( context, href );
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
-        FileUtils.copyURLToFile( prfFile, outPrfFile );
+        ProfilesSerializer.store( profil, outPrfFile );
+//        FileUtils.copyURLToFile( prfFile, outPrfFile );
       }
 
       writer.close();

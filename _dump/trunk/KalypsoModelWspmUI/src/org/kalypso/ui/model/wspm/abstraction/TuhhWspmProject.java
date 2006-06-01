@@ -44,10 +44,11 @@ import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This is an abstraction layer for tuhh wspm modells. It ensures, that only the right kind of data gets into the model.
@@ -70,7 +71,7 @@ public class TuhhWspmProject extends WspmProject
    * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
-  public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams )
+  public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return newWater.createNewReach();
@@ -82,22 +83,15 @@ public class TuhhWspmProject extends WspmProject
    * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
-  public WspmProfileReference createNewProfile( final String waterName, final boolean isDirectionUpstreams, final String hrefHint )
+  public WspmProfile createNewProfile( final String waterName, final boolean isDirectionUpstreams, final String hrefHint ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return newWater.createNewProfile( hrefHint );
   }
 
-  public TuhhCalculation createCalculation( )
+  public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    final GMLWorkspace workspace = getFeature().getWorkspace();
-    final IFeatureType calcTye = workspace.getGMLSchema().getFeatureType( TuhhCalculation.QNAME_TUHH_CALC );
-
-    final Feature calcFeature = workspace.createFeature( getFeature(), calcTye );
-
-    final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
-    calcList.add( calcFeature );
-
+    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC );
     return new TuhhCalculation( calcFeature );
   }
 

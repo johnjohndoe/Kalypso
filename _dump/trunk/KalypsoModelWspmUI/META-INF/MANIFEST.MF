@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.core,
  org.kalypso.ui,
  org.kalypso.simulation.core,
- org.kalypso.simulation.ui
+ org.kalypso.simulation.ui,
+ com.bce.eind.prf;visibility:=reexport
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.ui.model.wspm,
  org.kalypso.ui.model.wspm.abstraction,

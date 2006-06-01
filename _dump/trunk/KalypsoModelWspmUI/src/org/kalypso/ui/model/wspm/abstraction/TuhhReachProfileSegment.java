@@ -63,9 +63,9 @@ public class TuhhReachProfileSegment implements IWspmConstants
     m_reachSegment = reachSegment;
   }
 
-  public void setProfileMember( final WspmProfileReference profileReference )
+  public void setProfileMember( final WspmProfile profileReference )
   {
-    m_reachSegment.setProperty( new QName( NS_WSPM, "profileMember" ), profileReference.getHref() );
+    m_reachSegment.setProperty( new QName( NS_WSPM, "profileMember" ), profileReference.getFeature().getId() );
   }
 
   // Commented out, because not used by the tuhh-model
@@ -89,10 +89,10 @@ public class TuhhReachProfileSegment implements IWspmConstants
     return (BigDecimal) m_reachSegment.getProperty( new QName( NS_WSPM, "station" ) );
   }
 
-  public WspmProfileReference getProfileMember( )
+  public WspmProfile getProfileMember( )
   {
     final String href = (String) m_reachSegment.getProperty( new QName( NS_WSPM, "profileMember" ) );
-    return new WspmProfileReference( href );
+    return new WspmProfile( m_reachSegment.getWorkspace().getFeature( href ) );
   }
 
   public void setStation( final double station )

@@ -46,12 +46,11 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This is an abstraction layer over an wspmproje gml instance.
@@ -77,7 +76,7 @@ public class WspmProject implements IWspmConstants
   {
     return m_wspProject;
   }
-  
+
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_wspProject );
@@ -128,34 +127,29 @@ public class WspmProject implements IWspmConstants
     return null;
   }
 
-  /** Creates a new water body and adds it to this project.<p>If a waterBody with the same name is already present, this will be retuned instead.</p> */
-  public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams )
+  /**
+   * Creates a new water body and adds it to this project.
+   * <p>
+   * If a waterBody with the same name is already present, this will be retuned instead.
+   * </p>
+   */
+  public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody water = findWater( name );
     if( water != null )
       return water;
-    
-    final FeatureList waterBodyList = getWaterBodyList();
-    final Feature parentFeature = waterBodyList.getParentFeature();
-    final GMLWorkspace workspace = parentFeature.getWorkspace();
-    
-    final IRelationType parentFeatureTypeProperty = waterBodyList.getParentFeatureTypeProperty();
 
-    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
-    
-    final Feature feature = workspace.createFeature( parentFeature, targetFeatureType );
+    final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "waterBodyMember" ), null );
 
-    waterBodyList.add( feature );
-    
     final WspmWaterBody wspmWaterBody = new WspmWaterBody( feature );
-    
+
     // set default values
     wspmWaterBody.setName( name );
     wspmWaterBody.setDescription( "" );
     wspmWaterBody.setRefNr( "" );
     wspmWaterBody.setCenterLine( null );
     wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
-    
+
     return wspmWaterBody;
   }
 

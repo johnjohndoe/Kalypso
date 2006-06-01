@@ -44,14 +44,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
@@ -88,16 +86,9 @@ public class WspmWaterBody implements IWspmConstants
     NamedFeatureHelper.setDescription( m_water, desc );
   }
 
-  public TuhhReach createNewReach( )
+  public TuhhReach createNewReach( ) throws GMLSchemaException
   {
-    final GMLWorkspace workspace = m_water.getWorkspace();
-
-    final IFeatureType reachFT = workspace.getFeatureType( new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
-
-    final Feature newTuhhReach = workspace.createFeature( m_water, reachFT );
-
-    final FeatureList reachList = (FeatureList) m_water.getProperty( new QName( NS_WSPM, "reachMember" ) );
-    reachList.add( newTuhhReach );
+    final Feature newTuhhReach = FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "reachMember" ), new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
 
     final TuhhReach tuhhReach = new TuhhReach( newTuhhReach );
 
@@ -111,16 +102,16 @@ public class WspmWaterBody implements IWspmConstants
     return m_water;
   }
 
-  public WspmProfileReference createNewProfile( final String hrefHint )
+  public WspmProfile createNewProfile( final String hrefHint ) throws GMLSchemaException
   {
-    final FeatureList profileMembers = (FeatureList) m_water.getProperty( new QName( NS_WSPM, "profileMember" ) );
+    final Feature profile = FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "profileMember" ), new QName( NS_WSPMPROF, "Profile" ) );
 
-    final String href = "Profile/" + hrefHint;
+    // TODO: create a linked feature instead
+
+    // final String href = "Profile/" + hrefHint;
     // TODO: check if this reference is already in use
 
-    profileMembers.add( href );
-
-    return new WspmProfileReference( href );
+    return new WspmProfile( profile );
   }
 
   public void setRefNr( final String refNr )
@@ -141,29 +132,19 @@ public class WspmWaterBody implements IWspmConstants
     m_water.setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
   }
 
-  public Feature createRunOffEvent( )
+  public Feature createRunOffEvent( ) throws GMLSchemaException
   {
     return createObsFeature( "runOffEventMember" );
   }
 
-  public Feature createWspFix( )
+  public Feature createWspFix( ) throws GMLSchemaException
   {
     return createObsFeature( "waterlevelFixationMember" );
   }
 
-  private Feature createObsFeature( final String property )
+  private Feature createObsFeature( final String localName ) throws GMLSchemaException
   {
-    final FeatureList obsMembers = (FeatureList) m_water.getProperty( new QName( NS_WSPM, property ) );
-
-    final IRelationType parentFeatureTypeProperty = obsMembers.getParentFeatureTypeProperty();
-    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
-
-    final IFeatureType observationType = targetFeatureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
-
-    final Feature obsFeature = m_water.getWorkspace().createFeature( obsMembers.getParentFeature(), observationType );
-    obsMembers.add( obsFeature );
-
-    return obsFeature;
+    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, localName ), new QName( NS.OM, "Observation" ) );
   }
 
   public boolean isDirectionUpstreams( )

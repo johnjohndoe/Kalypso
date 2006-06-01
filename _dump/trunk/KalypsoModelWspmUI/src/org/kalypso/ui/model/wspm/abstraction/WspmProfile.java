@@ -40,28 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.model.wspm.abstraction;
 
-import org.kalypso.observation.IObservation;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.ui.model.wspm.IWspmConstants;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot
+ * @author Belger
  */
-public class WspmRunOffEventReference
+public class WspmProfile
 {
-  private final String m_href;
+  private final Feature m_feature;
 
-  public WspmRunOffEventReference( final String href )
+  public WspmProfile( final Feature feature )
   {
-    m_href = href;
+    if( !QNameUtilities.equals( feature.getFeatureType().getQName(), IWspmConstants.NS_WSPMPROF, "Profile" ) )
+      throw new IllegalStateException( "Feature is of wrong type: " + feature );
+
+    m_feature = feature;
   }
 
-  public String getHref( )
+  public Feature getFeature( )
   {
-    return m_href;
+    return m_feature;
   }
 
-  public void writeObservation( final IObservation runOffObs )
-  {
-    // TODO Auto-generated method stub
-    
-  }
 }

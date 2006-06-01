@@ -41,12 +41,10 @@
 package org.kalypso.ui.model.wspm.core.wspwin;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -71,7 +69,7 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -84,14 +82,20 @@ import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
-import org.kalypso.ui.model.wspm.abstraction.WspmProfileReference;
+import org.kalypso.ui.model.wspm.abstraction.WspmProfile;
 import org.kalypso.ui.model.wspm.abstraction.WspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmWaterBody;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation.START_KONDITION_KIND;
+import org.kalypso.ui.model.wspm.core.profile.ProfileFeatureFactory;
 import org.kalypso.ui.model.wspm.core.wspwin.CalculationContentBean.ART_ANFANGS_WSP;
 import org.kalypso.ui.model.wspm.core.wspwin.CalculationContentBean.FLIESSGESETZ;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+import serializer.prf.PrfSource;
+import serializer.prf.ProfilesSerializer;
+
+import com.bce.eind.core.profil.IProfil;
 
 /**
  * @author thuel2
@@ -191,7 +195,7 @@ public class WspWinImporter
       // import profiles //
       // /////////////// //
       final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
-      final Map<String, WspmProfileReference> importedProfiles = new HashMap<String, WspmProfileReference>( commonProfiles.length );
+      final Map<String, WspmProfile> importedProfiles = new HashMap<String, WspmProfile>( commonProfiles.length );
       logStatus.add( importProfiles( getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
 
       // ////////////// //
@@ -241,26 +245,22 @@ public class WspWinImporter
    * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
    * the profile is added as reference to it.
    */
-  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfileReference> addedProfiles, final boolean isDirectionUpstreams )
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfile> addedProfiles, final boolean isDirectionUpstreams )
   {
-    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import PROFPROJ.TXT", null );
-
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Fehler beim Importieren der Profile", null );
+    
     for( final ProfileBean bean : commonProfiles )
     {
       try
       {
         importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
       }
-      catch( final MalformedURLException e )
-      {
-        status.add( StatusUtilities.statusFromThrowable( e ) );
-      }
-      catch( final IOException e )
+      catch( GMLSchemaException e )
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-
+    
     return status;
   }
 
@@ -268,14 +268,14 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfileReference importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfileReference> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws IOException
+  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final String fileName = bean.getFileName();
 
     if( knownProfiles.containsKey( fileName ) )
       return knownProfiles.get( fileName );
 
-    final WspmProfileReference prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams, fileName );
+    final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams, fileName );
     knownProfiles.put( fileName, prof );
 
     // TODO: fill data into profile
@@ -283,17 +283,23 @@ public class WspWinImporter
     bean.getFileName();
 
     // HACK: we now just copy the files directly instead
-    final URL context = tuhhProject.getFeature().getWorkspace().getContext();
     Writer urlWriter = null;
     Reader fileReader = null;
     try
     {
-      final URL targetUrl = new URL( context, prof.getHref() );
-      final File file = new File( profDir, fileName );
+      final File prfFile = new File( profDir, fileName );
 
-      urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
-      fileReader = new FileReader( file );
-      IOUtils.copy( fileReader, urlWriter );
+      final PrfSource prfSource = ProfilesSerializer.load( prfFile );
+      final IProfil profile = prfSource.createProfil();
+
+      ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
+
+      // TODO: convert prfFile into Profile-Feature
+
+      // final URL targetUrl = new URL( context, prof.getHref() );
+      // urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
+      // fileReader = new FileReader( prfFile );
+      // IOUtils.copy( fileReader, urlWriter );
 
       return prof;
     }
@@ -311,14 +317,23 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfileReference> importedProfiles, final boolean isDirectionUpstreams ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams ) throws IOException, ParseException
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
 
     final String name = zustandBean.getName();
     final String waterName = zustandBean.getWaterName();
 
-    final TuhhReach reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
+    final TuhhReach reach;
+    try
+    {
+      reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
+    }
+    catch( GMLSchemaException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+    
     reach.setName( name );
 
     final StringBuffer descBuffer = new StringBuffer();
@@ -339,31 +354,23 @@ public class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
-        final WspmProfileReference fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
+        final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
-      }
-      catch( final IOException e )
-      {
-        status.add( StatusUtilities.statusFromThrowable( e ) );
-      }
 
-      if( bean == segmentBeans[segmentBeans.length - 1] )
-      {
-        try
+        if( bean == segmentBeans[segmentBeans.length - 1] )
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
-          final WspmProfileReference toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
+          final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
 
           reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
         }
-        catch( final IOException e )
-        {
-          status.add( StatusUtilities.statusFromThrowable( e ) );
-        }
       }
-
+      catch( final Exception e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     final WspmWaterBody waterBody = reach.getWaterBody();
@@ -395,7 +402,7 @@ public class WspWinImporter
     {
       status.add( StatusUtilities.statusFromThrowable( e ) );
     }
-    
+
     try
     {
       final RunOffEventBean[] wspFixesBeans = zustandBean.readWspFixes( profDir );
@@ -537,7 +544,6 @@ public class WspWinImporter
 
   private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
   {
-
     final IComponent stationComp = new ValueComponent( "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
     final TupleResult result = new TupleResult( new IComponent[] { stationComp, valueComp } );
 
@@ -552,7 +558,6 @@ public class WspWinImporter
 // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
     final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
-
   }
 
   private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )

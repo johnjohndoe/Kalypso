@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe"
+	xmlns:prof="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspmprofile"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om"
+		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.opengis.net/swe"
+		schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+	<!-- schema for WSPM Profiles  -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation"/>
+
+	<complexType name="ProfileType">
+		<annotation>
+			<documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird
+				die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent
+				benutzt um Querprofil zu bearbeiten. Wir packen deswegen diese Information als
+				Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und
+				beinhaltet also die Tupeln. Sie werden anhand von resultDefinition angegeben. Für
+				die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member
+				definiert.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="om:ObservationType">
+				<sequence>
+					<element name="station" type="swe:RelativeMeasureType" minOccurs="1"
+						maxOccurs="1">
+						<annotation>
+							<documentation>Die Profilstationierung, wichtiger Bestandteil für die
+								Bearbeitung von Querprofile.</documentation>
+						</annotation>
+					</element>
+					<element name="member" type="om:AbstractObservationPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>Die Liste der zusätzliche Observations: z.B. Durchlässe,
+								Maulprofile, Kreise und Trapezen können hiermit abgebildet
+							werden.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>

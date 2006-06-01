@@ -46,12 +46,12 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
@@ -69,17 +69,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants
   /**
    * Creates and adds a new profile segment to this reach.
    */
-  public TuhhReachProfileSegment createProfileSegment( final WspmProfileReference profileReference, final double station, final double distanceL, final double distanceM, final double distanceR )
+  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, final double distanceL, final double distanceM, final double distanceR ) throws GMLSchemaException
   {
-    final FeatureList reachSegmentList = getReachSegmentList();
-    final Feature parentFeature = reachSegmentList.getParentFeature();
-    final GMLWorkspace workspace = parentFeature.getWorkspace();
-
-    final IFeatureType tuhhProfileReachSegmentType = workspace.getGMLSchema().getFeatureType( new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
-
-    final Feature feature = workspace.createFeature( parentFeature, tuhhProfileReachSegmentType );
-
-    reachSegmentList.add( feature );
+    final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "reachSegmentMember" ), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
 
     final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
 

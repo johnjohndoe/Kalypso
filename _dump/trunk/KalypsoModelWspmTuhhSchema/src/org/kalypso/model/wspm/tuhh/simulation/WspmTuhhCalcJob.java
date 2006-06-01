@@ -275,7 +275,7 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Unable to load model", e );
+      throw new SimulationException( "Fehler bei der Berechnung", e );
     }
     finally
     {
