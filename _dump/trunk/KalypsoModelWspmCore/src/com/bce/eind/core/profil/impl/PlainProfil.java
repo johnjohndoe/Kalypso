@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
@@ -35,7 +36,7 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private final ProfilPoints m_points;
 
-  private final HashMap<Object, Object> m_profilMetaData;
+  private final Map<Object, Object> m_profilMetaData;
 
   /**
    * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im Diagramm der zuletzt
