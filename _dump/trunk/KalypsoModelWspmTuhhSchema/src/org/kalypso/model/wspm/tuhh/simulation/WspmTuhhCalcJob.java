@@ -212,7 +212,7 @@ public class WspmTuhhCalcJob implements ISimulation
         case WATERLEVEL:
         {
           // waterlevel-Mode
-          // *.wsl ignored (part of Laengsschnitt.txt)
+          // *.wsl ignored (part of laengsschnitt.txt)
           // laengsschnitt.txt
           final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
           if( lenSecFile.exists() )

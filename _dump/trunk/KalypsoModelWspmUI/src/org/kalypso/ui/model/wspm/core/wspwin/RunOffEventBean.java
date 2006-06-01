@@ -127,5 +127,4 @@ public class RunOffEventBean
       LineIterator.closeQuietly( lineIt );
     }
   }
-
 }

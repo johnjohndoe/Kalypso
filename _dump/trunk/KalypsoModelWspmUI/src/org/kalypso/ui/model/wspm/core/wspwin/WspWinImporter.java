@@ -372,24 +372,37 @@ public class WspWinImporter
     // always to a zustand.
     final String baseName = waterBody.getName() + "-" + zustandBean.getName() + " - ";
 
-    // ////////////////////////////// //
-    // add runoff events (.wsf, .qwt) //
-    // ///////////////////////////// ///
+    // ////////////////////////////////////////////////////// //
+    // add runoff events and waterlevel fixations(.wsf, .qwt) //
+    // ////////////////////////////////////////////////////// //
 
     // map is used to remember position of runoff: used later by calculation to find reference
     final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
-      // TODO: also read wsp fixierungen
-      int count = 0;
+      int countRO = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
         final Feature runOffFeature = waterBody.createRunOffEvent();
         writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), runOffFeature );
 
         // remember for reference from calculation
-        readRunOffEvents.put( count++, runOffFeature.getId() );
+        readRunOffEvents.put( countRO++, runOffFeature.getId() );
+      }
+    }
+    catch( final Exception e )
+    {
+      status.add( StatusUtilities.statusFromThrowable( e ) );
+    }
+    
+    try
+    {
+      final RunOffEventBean[] wspFixesBeans = zustandBean.readWspFixes( profDir );
+      for( final RunOffEventBean bean : wspFixesBeans )
+      {
+        final Feature wspFixFeature = waterBody.createWspFix();
+        writeWspFixBeanIntoFeature( bean, baseName + bean.getName(), wspFixFeature );
       }
     }
     catch( final Exception e )
@@ -522,11 +535,11 @@ public class WspWinImporter
     return status;
   }
 
-  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
   {
+
     final IComponent stationComp = new ValueComponent( "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
-    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
-    final TupleResult result = new TupleResult( new IComponent[] { stationComp, abflussComp } );
+    final TupleResult result = new TupleResult( new IComponent[] { stationComp, valueComp } );
 
     final Map<Double, Double> values = bean.getEntries();
     for( final Map.Entry<Double, Double> entry : values.entrySet() )
@@ -534,11 +547,25 @@ public class WspWinImporter
       final IRecord record = result.createRecord();
       result.add( record );
       record.setValue( stationComp, entry.getKey() );
-      record.setValue( abflussComp, entry.getValue() );
+      record.setValue( valueComp, entry.getValue() );
     }
-
+// TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
     final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
+
+  }
+
+  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  {
+    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
+    writeRunOffBeanIntoFeature( bean, name, runOffFeature, abflussComp );
+  }
+
+  private static void writeWspFixBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  {
+    final IComponent wspComp = new ValueComponent( "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
+    writeRunOffBeanIntoFeature( bean, name, runOffFeature, wspComp );
+
   }
 
   /** Returns the content of the prof/probez.txt file */

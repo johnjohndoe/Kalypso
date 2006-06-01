@@ -132,8 +132,8 @@ public class WspmWaterBody implements IWspmConstants
   public void setCenterLine( final GM_LineString lineString )
   {
     // does not work, because schema is bad
-//    final IPropertyType prop = m_water.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyCenterLine" ) );
-//    m_water.setProperty( prop, lineString );
+    // final IPropertyType prop = m_water.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyCenterLine" ) );
+    // m_water.setProperty( prop, lineString );
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
@@ -141,19 +141,29 @@ public class WspmWaterBody implements IWspmConstants
     m_water.setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
   }
 
-  public Feature createRunOffEvent(  )
+  public Feature createRunOffEvent( )
   {
-    final FeatureList runOffMembers = (FeatureList) m_water.getProperty( new QName( NS_WSPM, "runOffEventMember" ) );
+    return createObsFeature( "runOffEventMember" );
+  }
 
-    final IRelationType parentFeatureTypeProperty = runOffMembers.getParentFeatureTypeProperty();
+  public Feature createWspFix( )
+  {
+    return createObsFeature( "waterlevelFixationMember" );
+  }
+
+  private Feature createObsFeature( final String property )
+  {
+    final FeatureList obsMembers = (FeatureList) m_water.getProperty( new QName( NS_WSPM, property ) );
+
+    final IRelationType parentFeatureTypeProperty = obsMembers.getParentFeatureTypeProperty();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
-    
+
     final IFeatureType observationType = targetFeatureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
-    
-    final Feature runOffFeature = m_water.getWorkspace().createFeature( runOffMembers.getParentFeature(), observationType );
-    runOffMembers.add( runOffFeature );
-    
-    return runOffFeature;
+
+    final Feature obsFeature = m_water.getWorkspace().createFeature( obsMembers.getParentFeature(), observationType );
+    obsMembers.add( obsFeature );
+
+    return obsFeature;
   }
 
   public boolean isDirectionUpstreams( )

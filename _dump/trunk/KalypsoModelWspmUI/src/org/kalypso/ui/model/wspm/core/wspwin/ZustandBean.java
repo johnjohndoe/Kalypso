@@ -124,6 +124,12 @@ public class ZustandBean
     return RunOffEventBean.read( qwtFile );
   }
 
+  public RunOffEventBean[] readWspFixes( final File profDir ) throws ParseException, IOException
+  {
+    final File wsfFile = getZustandFile( profDir, "wsf" );
+    return RunOffEventBean.read( wsfFile );
+  }
+
   public CalculationBean[] readCalculations( File profDir ) throws ParseException, IOException
   {
     final File berFile = getZustandFile( profDir, "ber" );

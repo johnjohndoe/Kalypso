@@ -505,7 +505,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="waterlevelFixation" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element name="waterlevelFixationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wasserspiegelfixierung</label>
