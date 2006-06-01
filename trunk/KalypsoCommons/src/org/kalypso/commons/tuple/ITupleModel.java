@@ -54,23 +54,51 @@ public interface ITupleModel<R extends IRowKey, C extends IColumnKey>
 
   public int getColumnCount( );
 
-  public Set<C> getColumnKeySet( );
-
   public Set<R> getRowKeySet( );
 
-  public Object getValue( final R rowKey, final C columnKey );
+  public Set<C> getColumnKeySet( );
+
+  public boolean hasRowKey( R rowKey );
+
+  public boolean hasColumnKey( C columnKey );
 
   /**
-   * If there's no corresponding row or column in the model, it is automatically
-   * added to it.
+   * @return the value at the given position, can be null
    */
-  public void setValue( final Object value, final R rowKey, final C columnKey );
+  public Object getValue( R rowKey, C columnKey );
 
-  public boolean hasValue( final R rowKey, final C columnKey );
+  /**
+   * If there's no corresponding row or column in the model, it is automatically added to it.
+   */
+  public void setValue( Object value, R rowKey, C columnKey );
 
-  public void removeValue( final R rowKey, final C columnKey );
+  /**
+   * Same as <code>getValue( rowKey, columnKey ) != null</code>.
+   * 
+   * @return true if the value at given position is not null
+   */
+  public boolean isNotNull( R rowKey, C columnKey );
 
-  public void deleteColumn( final C columnKey );
+  /**
+   * Sets the value to null at the given position. Same as <code>setValue( null, rowKey, columnKey )</code>
+   */
+  public void clearValue( R rowKey, C columnKey );
 
-  public void deleteRow( final R rowKey );
+  /**
+   * Removes the column from this model. Sub-classes may decide what to do when removing a column:
+   * <ul>
+   * <li>the underlying data might be set to null or some default value</li>
+   * <li>the underlying data might be removed as well</li>
+   * </ul>
+   */
+  public void removeColumn( C columnKey );
+
+  /**
+   * Removes the row from this model. Sub-classes may decide what to do when removing a row:
+   * <ul>
+   * <li>the underlying data might be set to null or some default value</li>
+   * <li>the underlying data might be removed as well</li>
+   * </ul>
+   */
+  public void removeRow( R rowKey );
 }

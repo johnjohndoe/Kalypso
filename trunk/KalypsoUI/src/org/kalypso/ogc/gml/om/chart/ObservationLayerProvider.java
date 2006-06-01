@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.ogc.gml.om.chart;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;

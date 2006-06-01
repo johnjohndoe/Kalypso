@@ -38,47 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.observation.table;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.commons.tuple.impl.SimpleColumnKey;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author schlienger
  */
-public class ObservationTableViewer extends DefaultTableViewer
+public abstract class MTRMColumn extends SimpleColumnKey
 {
-  public ObservationTableViewer( Composite parent )
+  private final IComponent m_keyComponent;
+
+  public MTRMColumn( final String name, final IComponent keyComponent, final Class<?> valueClass )
   {
-    this( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    super( name, valueClass );
+    
+    m_keyComponent = keyComponent;
   }
 
-  public ObservationTableViewer( Composite parent, int style )
+  public IComponent getKeyComponent( )
   {
-    super( parent, style );
-    
-    final Table table = getTable();
-    table.setHeaderVisible( true );
-    table.setLinesVisible( true );
-    
-    setContentProvider( new TupleResultContentProvider() );
-    setLabelProvider( new TupleResultLabelProvider() );
+    return m_keyComponent;
   }
-
-  public void setInput( final TupleResult result )
+  
+  /**
+   * Columns/Components are said to be compatible when their valueTypeNames are equals.
+   * 
+   * @return true if both components are compatible.
+   */
+  public boolean isCompatible( final IComponent c )
   {
-    removeAllColumns();
-    
-    final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-      addColumn( components[i].getName(), components[i].getName(), 100, true );
-    
-    refreshColumnProperties();
-    
-    super.setInput( result );
+    return m_keyComponent.getValueTypeName().equals( c.getValueTypeName() );
   }
 }

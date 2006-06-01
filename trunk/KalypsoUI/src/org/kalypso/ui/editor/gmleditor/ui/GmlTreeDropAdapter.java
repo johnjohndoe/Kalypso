@@ -50,13 +50,11 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
 {
   private GmlTreeView m_viewer;
 
-  public GmlTreeDropAdapter( GmlTreeView viewer )
+  public GmlTreeDropAdapter( final GmlTreeView viewer )
   {
     super( viewer.getTreeViewer() );
 
     m_viewer = viewer;
-    setFeedbackEnabled( true );
-    setScrollExpandEnabled( true );
   }
 
   /**
@@ -65,7 +63,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   @Override
   public boolean performDrop( Object data )
   {
-    System.out.print( "performDrop - " );
+    //System.out.print( "performDrop - " );
     final Object currentTargetObject = getCurrentTarget();
     if( currentTargetObject instanceof FeatureAssociationTypeElement )
     {
@@ -90,7 +88,6 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       if( selectedSourceObject instanceof Feature && currentTargetObject instanceof Feature )
       {
         // Feature sourceFeature = (Feature)selectedSourceObject;
-
       }
     }
     return true;
@@ -106,7 +103,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     final IFeatureSelection featureSelection = (IFeatureSelection) m_viewer.getSelection();
     final Feature[] selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
 
-    System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
+    //System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
 
     Feature targetFeature = null;
     IFeatureType matchingFt = null;
@@ -243,7 +240,6 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    *          array of Features to check
    * @return true if all conditions above applay else false.
    */
-
   private boolean isValidSelection( Feature[] features )
   {
     // prüft ob alle selektierten Features vom selben typ sind und die Selection nicht leer ist

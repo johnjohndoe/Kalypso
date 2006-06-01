@@ -154,6 +154,13 @@
             category="org.kalypso.ui.kalypso"
             name="%Extension.Views.EditOptionen"
             id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
+      <view
+            allowMultiple="true"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ogc.gml.om.views.MultiTupleResultView"
+            icon="icons/kalypso_ott.gif"
+            id="org.kalypso.ogc.gml.om.views.MultiTupleResultView"
+            name="Observation-Tabelle"/>
    </extension>
    <extension
          id="editorActions"

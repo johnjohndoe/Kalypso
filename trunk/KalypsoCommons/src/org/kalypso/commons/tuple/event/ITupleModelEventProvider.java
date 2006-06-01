@@ -38,38 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.commons.tuple.event;
 
-import java.util.TimeZone;
-
-import javax.xml.namespace.QName;
+import org.kalypso.commons.tuple.IColumnKey;
+import org.kalypso.commons.tuple.IRowKey;
 
 /**
  * @author schlienger
  */
-public class DateComponent extends Component
+public interface ITupleModelEventProvider<R extends IRowKey, C extends IColumnKey>
 {
-  private final String m_timezoneName;
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName )
-  {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
-  }
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
-  {
-    this( name, description, valueTypeName, null, timezoneName );
-  }
+  public void addListener( ITupleModelListener<R, C> listener );
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
-  {
-    super( name, description, valueTypeName, defaultValue );
-    
-    m_timezoneName = timezoneName;
-  }
-  
-  public String getTimezoneName( )
-  {
-    return m_timezoneName;
-  }
+  public void removeListener( ITupleModelListener<R, C> listener );
 }

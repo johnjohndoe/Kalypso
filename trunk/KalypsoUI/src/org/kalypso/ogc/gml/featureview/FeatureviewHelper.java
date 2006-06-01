@@ -101,11 +101,12 @@ public class FeatureviewHelper
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-      // ignore 'boundedBy'
-      if( QNAME_GML_BOUNDEDBY.equals( property ) )
+      // ignore 'boundedBy' and value lists
+      if( QNAME_GML_BOUNDEDBY.equals( property ) || vpt.isList() )
         return;
 
       final QName valueQName = vpt.getValueQName();
+      
       if( GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( valueQName ) )
       {
         final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );

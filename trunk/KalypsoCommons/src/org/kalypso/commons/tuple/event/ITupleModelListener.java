@@ -38,45 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.commons.tuple.event;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.commons.tuple.IColumnKey;
+import org.kalypso.commons.tuple.IRowKey;
 
 /**
  * @author schlienger
  */
-public class TupleResultContentProvider implements IStructuredContentProvider
+public interface ITupleModelListener<R extends IRowKey, C extends IColumnKey>
 {
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
-  public void dispose( )
-  {
-    // empty
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-   */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
-  {
-    // empty
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
-  public Object[] getElements( Object inputElement )
-  {
-    if( inputElement instanceof TupleResult )
-    {
-      final TupleResult result = (TupleResult) inputElement;
-
-      return result.toArray();
-    }
-
-    return null;
-  }
+  public void onValueChanged( Object value, R rowKey, C columnKey );
+  
+  public void onRowRemoved( R rowKey );
+  
+  public void onColumnRemoved( C columnKey );
 }

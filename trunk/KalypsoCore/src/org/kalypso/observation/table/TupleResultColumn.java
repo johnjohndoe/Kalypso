@@ -38,84 +38,74 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.observation.table;
 
-import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.swt.graphics.Point;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.layer.AbstractChartLayer;
 
 /**
  * @author schlienger
  */
-public class TupleResultChartLayer //extends AbstractChartLayer
+public class TupleResultColumn extends MTRMColumn
 {
   private final TupleResult m_result;
 
-  public TupleResultChartLayer( TupleResult result, AxisRange domainRange, AxisRange valueRange )
+  private final IComponent m_value;
+
+  private final Map<MTRMRow, IRecord> m_map = new HashMap<MTRMRow, IRecord>();
+
+  public TupleResultColumn( final TupleResult result, final IComponent key, final IComponent value )
   {
-    //super( domainRange, valueRange );
+    super( value.getName(), key, XmlTypes.toJavaClass( value.getValueTypeName() ) );
+
     m_result = result;
+    m_value = value;
+  }
+
+  public IComponent getValueComponent( )
+  {
+    return m_value;
+  }
+
+  public TupleResult getTupleResult( )
+  {
+    return m_result;
   }
 
   /**
-   * @see de.belger.swtchart.layer.IChartLayer#getBounds()
+   * Sets the map association between the rowKey and the record of the underlying TupleResult
    */
-  public Rectangle2D getBounds( )
+  public void setMapping( final MTRMRow rowKey, final IRecord record )
   {
-    return null;
+    m_map.put( rowKey, record );
   }
 
   /**
-   * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
+   * @return the corresponding record for the given IRowKey
    */
-  public EditInfo getHoverInfo( Point point )
+  public IRecord getRecordFor( final MTRMRow rowKey )
   {
-    return null;
+    return m_map.get( rowKey );
   }
 
   /**
-   * @see de.belger.swtchart.layer.IChartLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Point, java.lang.Object)
+   * Removes the rowKey from the map
    */
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+  public void removeKey( final MTRMRow rowKey )
   {
-
+    m_map.remove( rowKey );
   }
 
   /**
-   * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   * Removes all rowKeys from the map
    */
-  public void paintLegend( GCWrapper gc )
+  public void clear( )
   {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
-   */
-  public void paint( GCWrapper gc )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#edit(org.eclipse.swt.graphics.Point, java.lang.Object)
-   */
-  public void edit( Point point, Object data )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(java.lang.Object)
-   */
-  public void setActivePoint( Object data )
-  {
-
+    m_map.clear();
   }
 }

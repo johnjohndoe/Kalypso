@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public final class CopyFeatureAction extends Action
 {
-
   private CommandableWorkspace m_workspace;
 
   private Feature m_originalFeature;

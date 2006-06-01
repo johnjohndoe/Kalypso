@@ -67,7 +67,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( vpt.isGeometry() )
+      if( vpt.isGeometry() || vpt.isList() )
         return new ButtonModifier( vpt, fcl );
 
       final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );

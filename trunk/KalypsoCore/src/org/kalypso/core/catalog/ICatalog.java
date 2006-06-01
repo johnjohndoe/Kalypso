@@ -47,21 +47,21 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 /**
- * Interface for a catalog<br>
+ * Interface for a catalog
+ * <p>
  * <b>definitions:</b><br>
  * systemID: anything to identify something, whatever applications use uri,urn,id,phrase<br>
  * publicID: anything to identify something, whatever applications use uri,urn,id,phrase<br>
  * uri: something that points to the resource<br>
- * <br>
- * remarks:<br>
- * 1. a catalog may have uri entries that are relative (against the catalog-location), see also resolve-methode<br>
- * 2. the only difference beetween systemID and publicID is order while resolving<br>
+ * <p>
+ * <b>remarks:</b><br>
+ * 1. a catalog may have uri entries that are relative (against the catalog-location), see also resolve-method<br>
+ * 2. the only difference between systemID and publicID is the order while resolving<br>
  * 
  * @author doemming
  */
 public interface ICatalog
 {
-
   // /**
   // * resolves catalog for baseURN<br>
   // * TODO this method is intended for categorized catalogs in kalypso and it must be checked if we can remove it from

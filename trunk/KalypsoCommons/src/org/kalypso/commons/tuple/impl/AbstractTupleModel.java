@@ -51,55 +51,76 @@ import org.kalypso.commons.tuple.ITupleModel;
  */
 public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey> implements ITupleModel<R, C>
 {
+  /**
+   * This basic implementation checks if the class of the value is compatible with the class defined in the columnKey.
+   * It then delegates the call to <code>setValueIntern</code>.
+   * 
+   * @see org.kalypso.commons.tuple.ITupleModel#setValue(java.lang.Object, R, C)
+   */
   public void setValue( final Object value, final R rowKey, final C columnKey )
   {
-    if( value != null && !((IColumnKey)columnKey).getValueClass().isAssignableFrom( value.getClass() ) )
+    if( value != null && !((IColumnKey) columnKey).getValueClass().isAssignableFrom( value.getClass() ) )
       throw new IllegalArgumentException( "Incompatible classes" );
 
     setValueIntern( value, rowKey, columnKey );
   }
 
+  /**
+   * Subclasses must implement this method
+   */
   protected abstract void setValueIntern( final Object value, final R rowKey, final C columnKey );
 
-  public boolean hasValue( final R rowKey, final C columnKey )
+  /**
+   * @see org.kalypso.commons.tuple.ITupleModel#isNotNull(R, C)
+   */
+  public boolean isNotNull( final R rowKey, final C columnKey )
   {
     return getValue( rowKey, columnKey ) != null;
   }
 
-  public void removeValue( final R rowKey, final C columnKey )
+  /**
+   * @see org.kalypso.commons.tuple.ITupleModel#clearValue(R, C)
+   */
+  public void clearValue( final R rowKey, final C columnKey )
   {
     setValue( null, rowKey, columnKey );
   }
 
-  public void deleteColumn( final C columnKey )
+  /**
+   * This basic implementation checks if this model contains the given column before delegating the call to
+   * <code>removeColumnIntern</code>. It does nothing if the column is not present.
+   */
+  public void removeColumn( final C columnKey )
   {
     final Set<C> columnKeySet = getColumnKeySet();
     if( !columnKeySet.contains( columnKey ) )
       return;
 
-    final Set<R> rowKeySet = getRowKeySet();
-    for( final R rowKey : rowKeySet )
-      setValue( null, rowKey, columnKey );
-
-    deleteColumnIntern( columnKey );
+    removeColumnIntern( columnKey );
   }
 
   /**
-   * Subclass must implement this method. They might perform additional operations when deleting a column.
+   * Subclasses must implement this method
    */
-  protected abstract void deleteColumnIntern( final C columnKey );
+  protected abstract void removeColumnIntern( final C columnKey );
 
   /**
-   * @see org.kalypso.tuple.ITupleModel#deleteRow(R)
+   * This basic implementation checks if this model contains the given row, it then delegates the call to
+   * <code>removeRowIntern</code>. It does nothing if the row is not present.
+   * 
+   * @see org.kalypso.commons.tuple.ITupleModel#removeRow(R)
    */
-  public void deleteRow( final R rowKey )
+  public void removeRow( final R rowKey )
   {
     final Set<R> rowKeySet = getRowKeySet();
     if( !rowKeySet.contains( rowKey ) )
       return;
 
-    deleteRowIntern( rowKey );
+    removeRowIntern( rowKey );
   }
 
-  protected abstract void deleteRowIntern( final R rowKey );
+  /**
+   * Subclasses must implement this method
+   */
+  protected abstract void removeRowIntern( final R rowKey );
 }
