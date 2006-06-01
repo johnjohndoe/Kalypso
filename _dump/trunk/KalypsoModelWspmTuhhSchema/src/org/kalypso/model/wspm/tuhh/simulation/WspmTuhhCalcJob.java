@@ -49,6 +49,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -210,39 +211,65 @@ public class WspmTuhhCalcJob implements ISimulation
       {
         case WATERLEVEL:
         {
-          // Wasserspiegel-Mode
-          // *.wsl ignorieren (Teil der Längsschnitt.txt)
+          // waterlevel-Mode
+          // *.wsl ignored (part of Laengsschnitt.txt)
           // laengsschnitt.txt
           final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
           if( lenSecFile.exists() )
+          {
             resultEater.addResult( "LengthSection", lenSecFile );
+            // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
+            // (without header) + new footer
+            File lengthSectionObsFile = new File( tmpDir, "lengthSectionObs.gml" );
 
-          // *.tab (-> fester Namen "Ergebnis.list")
+            final File headLenghSectionFile = new File( tmpDir, "headerLenghSection.txt" );
+            final File footLenghSectionFile = new File( tmpDir, "footerLenghSection.txt" );
+
+            final String strHeader = FileUtils.readFileToString( headLenghSectionFile, WSPMTUHH_CODEPAGE );
+            final String strFooter = FileUtils.readFileToString( footLenghSectionFile, WSPMTUHH_CODEPAGE );
+            String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
+            // remove first two rows (old header) from laengsschnitt.txt
+            int pos = strLengthSection.indexOf( "\n" );
+            pos = strLengthSection.indexOf( "\n", pos + 1 );
+            strLengthSection = org.apache.commons.lang.StringUtils.right( strLengthSection, strLengthSection.length() - pos );
+
+            FileUtils.writeStringToFile( lengthSectionObsFile, strHeader + strLengthSection + strFooter, WSPMTUHH_CODEPAGE );
+            if( lengthSectionObsFile.exists() )
+              resultEater.addResult( "LengthSectionObs", lengthSectionObsFile );
+
+            // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
+            // calculation.getReach().getReachProfileSegments();
+            // final File breaklineFile = null;
+            //
+            // if( breaklineFile.exists() )
+            // resultEater.addResult( "Bruchkanten", breaklineFile );
+          }
+
+          // *.tab (-> fixed name "Ergebnis.list")
           final FileFilter ergListFilter = FileFilterUtils.suffixFileFilter( ".tab" );
           final File[] ergListFile = dathDir.listFiles( ergListFilter );
           if( ergListFile.length > 0 )
-            // Annahme: es existiert maximal eine TAB-Datei
+            // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] );
-//TODO Längssschnitt verarbeiten mit Reaches zu Bruchkanten.gml
-          calculation.getReach().getReachProfileSegments();
+
           break;
         }
         case BF_NON_UNIFORM:
-        // TODO ggf. noch andere Ergebnisse holen
+        // TODO get additional results
         {
-          // bordvoll ungleichförmig
-          // *.qb2 = Q als Treppenfunktion, holen wir nicht
-          // *.qb1 = bordvoll-Längschnitt 
+          // bankfull nonuniform
+          // *.qb2 = Q als Treppenfunktion, we don't fetch it
+          // *.qb1 = bankfull-lengthsection
           final FileFilter qb1Filter = FileFilterUtils.suffixFileFilter( ".qb1" );
           final File[] bfLenSecFile = dathDir.listFiles( qb1Filter );
           if( bfLenSecFile.length > 0 )
-            // Annahme: es existiert maximal eine QB1-Datei
+            // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
         }
         case BF_UNIFORM:
         {
-          // bordvoll gleichförmig
-          // TODO zusätzliche Ergebnisse holen
+          // bankfull uniform
+          // TODO get additional results
         }
       }
     }
@@ -267,5 +294,4 @@ public class WspmTuhhCalcJob implements ISimulation
   {
     return getClass().getResource( CALCJOB_SPEC );
   }
-
 }

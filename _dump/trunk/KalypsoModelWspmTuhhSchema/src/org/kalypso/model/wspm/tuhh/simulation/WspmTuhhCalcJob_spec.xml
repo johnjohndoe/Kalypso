@@ -12,6 +12,7 @@
     <output id="LambdaI" optional="true" description="Output of the tuhh model (lambda_i.txt)"/>
     <!-- results for WATERLEVEL mode -->
     <output id="LengthSection" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt)"/>
+    <output id="LengthSectionObs" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt) as observation"/>
     <output id="resultList" optional="true" description="Ergebnis.list (TAB-Datei)"/>
     <output id="Bruchkanten" optional="true" description="Bruchkanten.gml"/>
     <!-- results for BANKFUL NONUNIFORM mode -->
