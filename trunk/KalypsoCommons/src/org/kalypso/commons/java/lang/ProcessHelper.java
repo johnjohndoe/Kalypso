@@ -113,6 +113,7 @@ public class ProcessHelper
    * 
    * @deprecated use {@link #startProcess(String, String[], File, ICancelable, long, OutputStream, OutputStream, InputStream)
    */
+  @Deprecated
   public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final Writer wLog, final Writer wErr ) throws IOException, ProcessTimeoutException
   {
     final Process process;

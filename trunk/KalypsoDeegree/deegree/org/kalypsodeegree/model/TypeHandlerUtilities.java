@@ -70,6 +70,7 @@ import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.swe.RepresentationTypeHandler;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -541,7 +542,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPolygonPropertyType" ), new QName( NS.GML3, "MultiPolygon" ), GM_MultiSurface.class, true ) );
     
     // TODO: the next line is wrong; GM_Envelope is no GM_Object
-//    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
 
     // other GML3 types:
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class, false ) );
