@@ -46,7 +46,6 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -58,39 +57,66 @@ public class GMLSerializerTest extends TestCase
    * @see junit.framework.TestCase#setUp()
    */
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
-    super.setUp();
     KalypsoTest.init();
   }
 
-  /*
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
+  }
+
+  /**
    * Class under test for GMLWorkspace createGMLWorkspace(URL)
    */
-  public void testCreateGMLWorkspaceURL() throws Exception
+  public void testCreateGMLWorkspaceURL( ) throws Exception
   {
-    final File testFileOrg = new File( "C:\\TMP\\testOriginal.gml" );
-    final File testFileParsed = new File( "C:\\TMP\\testParsed.gml" );
-    final File testFileParsed2 = new File( "C:\\TMP\\testParsed2.gml" );
+    final File testFileOrg = File.createTempFile( "testOriginal", ".gml" );
+    final File testFileParsed = File.createTempFile( "testParsed", ".gml" );
+    final File testFileParsed2 = File.createTempFile( "testParsed2", ".gml" );
 
-    final FileWriter writerOrg = new FileWriter( testFileOrg );
-    final URL resource = getClass().getResource( "resources/calcCase.gml" );
-    final Document documentOrg = XMLTools.parse( resource );
-    XMLHelper.writeDOM( documentOrg, "UTF-8", writerOrg );
-    IOUtils.closeQuietly( writerOrg );
-
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
-
-    final FileWriter writerParsed = new FileWriter( testFileParsed );
-    GmlSerializer.serializeWorkspace( writerParsed, workspace, "UTF-8" );
-    IOUtils.closeQuietly( writerParsed );
-
-    final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( testFileParsed.toURL());
-    final FileWriter writerParsed2 = new FileWriter( testFileParsed2 );
-    GmlSerializer.serializeWorkspace( writerParsed2, workspace2, "UTF-8" );
-    IOUtils.closeQuietly( writerParsed2 );
+    FileWriter writerOrg = null;
+    FileWriter writerParsed = null;
+    FileWriter writerParsed2 = null;
     
-    assertTrue( StreamUtilities.isEqual( new FileInputStream( testFileOrg ), new FileInputStream( testFileParsed ) ) );
+    try
+    {
+      // Remark: why write it into a separate file? Load it directyl for comparison
+      // via URL.open();
+      writerOrg = new FileWriter( testFileOrg );
+      final URL resource = getClass().getResource( "resources/calcCase.gml" );
+      final Document documentOrg = XMLTools.parse( resource );
+      XMLHelper.writeDOM( documentOrg, "UTF-8", writerOrg );
+      writerOrg.close();
+
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
+
+      writerParsed = new FileWriter( testFileParsed );
+      GmlSerializer.serializeWorkspace( writerParsed, workspace, "UTF-8" );
+      writerParsed.close();
+
+      final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( testFileParsed.toURL() );
+      writerParsed2 = new FileWriter( testFileParsed2 );
+      GmlSerializer.serializeWorkspace( writerParsed2, workspace2, "UTF-8" );
+      writerParsed.close();
+
+      assertTrue( StreamUtilities.isEqual( new FileInputStream( testFileOrg ), new FileInputStream( testFileParsed ) ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writerOrg );
+      IOUtils.closeQuietly( writerParsed );
+      IOUtils.closeQuietly( writerParsed2 );
+
+      testFileOrg.delete();
+      testFileParsed.delete();
+      testFileParsed2.delete();
+    }
   }
 
 }

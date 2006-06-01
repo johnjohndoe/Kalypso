@@ -62,16 +62,12 @@ public class KalypsoTest
       if( tmpDir != null )
         return;
 
-      System.setProperty( "proxySet", "true" );
-      System.setProperty( "proxyHost", "proxy.bce01.de" );
-      System.setProperty( "proxyPort", "8080" );
-
-      // final KalypsoGisPlugin plugin = new KalypsoGisPlugin();
+//      System.setProperty( "proxySet", "true" );
+//      System.setProperty( "proxyHost", "proxy.bce01.de" );
+//      System.setProperty( "proxyPort", "8080" );
 
       final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      // TypeHandlerUtilities.registerGeometryGML2typeHandler( registry );
-      // TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
-      // RefactorThis.registerSpecialTypeHandler(registry);
+
       KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
       final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
           , new UrlCatalogOGC()//
@@ -82,79 +78,7 @@ public class KalypsoTest
         cacheDirectory.mkdirs();
       cacheDirectory.deleteOnExit();
       GMLSchemaCatalog.init( catalog, cacheDirectory );
-      // final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      // final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-      //
-      // // TODO: read TypeHandler from property-file
-      // registry.registerTypeHandler( new ObservationLinkHandler() );
-      // // TODO: make new NA-project and move registration to it
-      // // TODO delete next
-      // registry.registerTypeHandler( new DiagramTypeHandler() );
-      //
-      // registry.registerTypeHandler( new RangeSetTypeHandler() );
-      // registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-      // registry.registerTypeHandler( new ResourceFileTypeHandler() );
-      //
-      // guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
-      // guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-      // // register gml-geometry types
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass()
-      // )
-      // );
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType",
-      // GeometryUtilities.getMultiPointClass() ) );
-      //
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType",
-      // GeometryUtilities.getLineStringClass() ) );
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType",
-      // GeometryUtilities.getMultiLineStringClass() ) );
-      //
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType",
-      // GeometryUtilities.getPolygonClass() ) );
-      // registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType",
-      // GeometryUtilities.getMultiPolygonClass() ) );
-      // // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
-      //
-      // // register inlines
-      //
-      // // final String[] wvqAxis = new String[]
-      // // {
-      // // TimeserieConstants.TYPE_NORMNULL,
-      // // TimeserieConstants.TYPE_VOLUME,
-      // // TimeserieConstants.TYPE_RUNOFF };
-      // // final String[] taAxis = new String[]
-      // // {
-      // // TimeserieConstants.TYPE_HOURS,
-      // // TimeserieConstants.TYPE_NORM, };
-      // // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
-      // // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
-      // // registry.registerTypeHandler( wvqInline );
-      // // registry.registerTypeHandler( taInline );
-      //
-      // final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType",
-      // ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
-      // final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType",
-      // ZmlInlineTypeHandler.TA.axis,
-      // ZmlInlineTypeHandler.TA.class );
-      // final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType",
-      // ZmlInlineTypeHandler.WtKcLai.axis, ZmlInlineTypeHandler.WtKcLai.class );
-      // registry.registerTypeHandler( wvqInline );
-      // registry.registerTypeHandler( taInline );
-      // registry.registerTypeHandler( wtKcLaiInline );
-      // guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
-      // guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-      //
-      // final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new
-      // UrlCatalogUpdateObservationMapping(),
-      // // new UrlCatalogUpdateObservationMapping(),
-      // new TubigUrlCatalog(), new UrlCatalogNA() } );
-      //
-      // final File tmp = File.createTempFile( "kalypsotest", ".cache" );
-      // final File cacheDir = new File( tmp.getParentFile(), "schemaCache" );
-      // cacheDir.mkdir();
-      //
-      // GMLSchemaCatalog.init( theCatalog, cacheDir );
-      //
+
       DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
 
       tmpDir = cacheDirectory;

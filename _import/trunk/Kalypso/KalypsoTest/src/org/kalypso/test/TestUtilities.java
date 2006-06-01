@@ -43,6 +43,8 @@ package org.kalypso.test;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.kalypso.commons.java.io.ReaderUtilities;
 
 /**
@@ -93,13 +95,13 @@ public class TestUtilities
         }
         reported++;
         if( reported > 5 )
-          throw new Exception( "broken test: " + description );
+          TestCase.fail( "broken test: " + description );
       }
       i++;
     }
     if( orgLine.length != testLine.length )
-      throw new Exception( "broken test: " + description );
+      TestCase.fail( "broken test: " + description );
     if( error > 0 )
-      throw new Exception( "broken test: " + description );
+      TestCase.fail( "broken test: " + description );
   }
 }

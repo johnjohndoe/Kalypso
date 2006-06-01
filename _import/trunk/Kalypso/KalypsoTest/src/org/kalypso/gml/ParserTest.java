@@ -67,8 +67,16 @@ public class ParserTest extends TestCase
   @Override
   protected void setUp( ) throws Exception
   {
-    super.setUp();
     KalypsoTest.init();
+  }
+  
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
   }
 
   public void ftestload( ) throws Exception

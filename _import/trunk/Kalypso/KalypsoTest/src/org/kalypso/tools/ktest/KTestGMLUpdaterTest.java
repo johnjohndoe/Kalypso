@@ -44,6 +44,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -82,6 +83,15 @@ public class KTestGMLUpdaterTest extends TestCase
   {
     KalypsoTest.init();
   }
+  
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
+  }
 
   public void testUpdateGML( ) throws Exception
   {
@@ -92,26 +102,37 @@ public class KTestGMLUpdaterTest extends TestCase
   private void weisseElster( ) throws Exception
   {
     final String resourceBase = "resources/weisseElster/";
-    final File outDir = new File( "C:\\TMP\\update_k_test" );
-    // Pegel Messung
-    // und Ergebnisablage
-    String fileName = "PegelMapping.gml";
-    updatePegelMapping( new File( outDir, fileName ) );
-    // ombrometer
-    fileName = "ombrometer.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "NRepository", "NRepository1", "ombrometerMember" );
-    // zufluss Messung
-    fileName = "ZuflussMessungMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
-    // zufluss Vorhersage
-    fileName = "ZuflussVorhersageMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
-    // T Messung
-    fileName = "ObsTMapping.gml";
-    updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
-    // fileName = "PegelMessungMapping.gml";
-    // updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
-    // "inObservationLink", "in1ObservationLink", "mappingMember" );
+    
+    // REMARK: please do never use system specific pathes for tests!
+    final File outDir = FileUtilities.createNewTempDir( "update_k_test" );
+
+    try
+    {
+
+      // Pegel Messung
+      // und Ergebnisablage
+      String fileName = "PegelMapping.gml";
+      updatePegelMapping( new File( outDir, fileName ) );
+      // ombrometer
+      fileName = "ombrometer.gml";
+      updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "NRepository", "NRepository1", "ombrometerMember" );
+      // zufluss Messung
+      fileName = "ZuflussMessungMapping.gml";
+      updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
+      // zufluss Vorhersage
+      fileName = "ZuflussVorhersageMapping.gml";
+      updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
+      // T Messung
+      fileName = "ObsTMapping.gml";
+      updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ), "inObservationLink", "in1ObservationLink", "mappingMember" );
+      // fileName = "PegelMessungMapping.gml";
+      // updateFeatureForKTest( getClass().getResource( resourceBase + fileName ), new File( outDir, fileName ),
+      // "inObservationLink", "in1ObservationLink", "mappingMember" );
+    }
+    finally
+    {
+      FileUtilities.deleteRecursive( outDir );
+    }
 
   }
 

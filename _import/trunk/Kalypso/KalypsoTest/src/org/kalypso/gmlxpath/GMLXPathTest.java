@@ -65,7 +65,15 @@ public class GMLXPathTest extends TestCase
   protected void setUp( ) throws Exception
   {
     KalypsoTest.init();
-    super.setUp();
+  }
+  
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
   }
 
   private String[] getXPathes( )

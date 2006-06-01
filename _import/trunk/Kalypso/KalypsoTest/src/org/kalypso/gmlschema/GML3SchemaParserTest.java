@@ -66,38 +66,25 @@ public class GML3SchemaParserTest extends TestCase
   @Override
   protected void tearDown( ) throws Exception
   {
-    KalypsoTest.release(  );
+    KalypsoTest.release();
   }
 
   public void testParseGML3Schema( ) throws Exception
   {
-    try
-    {
-      // final URL gml3SchemaArchiveURL = new URL( "http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" );
-      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/gml" );
-      // gmlSchema.getGMLVersion();
+    final URL testResourceURL = getClass().getResource( "resources/GML3_wspm/schematree.txt" );
+    final URL schemaLocationURL = getClass().getResource( "resources/GML3_wspm/wspm.xsd" );
 
-      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/swe" );
-      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "http://www.opengis.net/om" );
+    GMLSchemaTest.loadAndTestSchema( schemaLocationURL, testResourceURL, false );
 
-      final URL testResourceURL = getClass().getResource( "resources/GML3_wspm/schematree.txt" );
-      final URL schemaLocationURL = getClass().getResource( "resources/GML3_wspm/wspm.xsd" );
+    // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "org.kalypso.model.wspm" );
+    // gmlSchema.getGMLVersion();
+    //
+    // final StringBuffer buffer = new StringBuffer();
+    // final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
+    // final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
+    // provider.accept( gmlSchema, visitor, 0 );
+    // System.out.println( buffer.toString() );
 
-      GMLSchemaTest.loadAndTestSchema( schemaLocationURL, testResourceURL, false );
-
-      // final GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( "org.kalypso.model.wspm" );
-      // gmlSchema.getGMLVersion();
-      //
-      // final StringBuffer buffer = new StringBuffer();
-      // final ITreeContentProviderVisitor visitor = new GmlTreePrintVisitor( new GMLSchemaLabelProvider(), buffer );
-      // final GMLSchemaTreeContentProvider provider = new GMLSchemaTreeContentProvider( gmlSchema, true );
-      // provider.accept( gmlSchema, visitor, 0 );
-      // System.out.println( buffer.toString() );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      throw e;
-    }
+    // REMARK: do not print stack trace, the JUnit view does this for you.
   }
 }

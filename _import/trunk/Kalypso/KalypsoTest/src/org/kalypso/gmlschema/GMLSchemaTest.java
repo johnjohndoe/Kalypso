@@ -52,6 +52,7 @@ import org.kalypso.test.TestUtilities;
 public class GMLSchemaTest extends TestCase
 {
   public static final String NS_GML2 = "http://www.opengis.net/gml";
+  private File m_tmpFileCache;
 
   /*
    * @see TestCase#setUp()
@@ -63,8 +64,6 @@ public class GMLSchemaTest extends TestCase
     // final Map<String, URL> map;
     // map = new HashMap<String, URL>();
 
-    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell.xsd" ) );
-    // map.put( "http://www.w3.org/1999/xlink", getClass().getResource( "resources/xlinks.xsd" ) );
     // map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
     final IUrlCatalog defaultCatalog = GMLSchemaCatalog.getDefaultCatalog();
     final Map<String, URL> map = defaultCatalog.getCatalog();
@@ -91,9 +90,9 @@ public class GMLSchemaTest extends TestCase
 
     };
 
-    final File tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
-    tmpFileCache.deleteOnExit();
-    GMLSchemaCatalog.init( newURLCatalog, tmpFileCache );
+    m_tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
+    m_tmpFileCache.deleteOnExit();
+    GMLSchemaCatalog.init( newURLCatalog, m_tmpFileCache );
     // {
     // public Map<String, URL> getCatalog( )
     // {
@@ -117,13 +116,14 @@ public class GMLSchemaTest extends TestCase
   protected void tearDown( ) throws Exception
   {
     KalypsoTest.release();
+    
+    FileUtilities.deleteRecursive( m_tmpFileCache );
   }
 
   public void testSchemas( ) throws Exception
   {
     try
     {
-
       loadAndTestSchema( // 
           // getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
           getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
