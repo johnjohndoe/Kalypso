@@ -36,7 +36,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.KalypsoTest;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -57,6 +57,15 @@ public class DiffUtilitiesTest extends TestCase
   protected void setUp() throws Exception
   {
     KalypsoTest.init();
+  }
+  
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.release();
   }
 
   public void testZipDiff() throws Exception
@@ -83,7 +92,7 @@ public class DiffUtilitiesTest extends TestCase
       DiffUtils.diffZips( logger, zipFile1, zipFile2, new String[0] );
       final InputStream resourceAsStream = getClass().getResourceAsStream( "resources/difflog.txt" );
       final StringWriter writer = new StringWriter();
-      CopyUtils.copy( resourceAsStream, writer );
+      IOUtils.copy( resourceAsStream, writer );
       final String test = buffer.toString().replaceAll("\\s","");
       
       final String goal = writer.toString().replaceAll("\\s","");
