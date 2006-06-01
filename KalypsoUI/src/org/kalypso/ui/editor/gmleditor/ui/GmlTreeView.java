@@ -111,8 +111,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   public static final int DEFAULT_EXPATIONA_LEVEL = 3;
 
-  private GmlTreeDropAdapter m_dropAdapter;
-
   protected final IFeatureSelectionManager m_selectionManager;
 
   private Gistreeview m_gisTreeview;
@@ -222,11 +220,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     // add drag and drop support
     int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), PluginTransfer.getInstance() };
-    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener() );
-    transfers = new Transfer[] { LocalSelectionTransfer.getInstance() };
-    m_dropAdapter = new GmlTreeDropAdapter( this );
-    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
+    final Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance() };
+    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+    m_treeViewer.addDropSupport( ops, transfers, new GmlTreeDropAdapter( this ) );
 
     final GridData layoutData = new GridData();
     layoutData.grabExcessHorizontalSpace = true;

@@ -77,8 +77,6 @@ public interface IFeatureModifier extends ICellEditorValidator
 
   public CellEditor createCellEditor( final Composite parent );
 
-  public String isValid( final Object value );
-
   public IPropertyType getFeatureTypeProperty();
 
   /** Compares two object using the represantation by this modifier. Used to determine, if a feature should really be changed. */

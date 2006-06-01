@@ -168,11 +168,11 @@ public class DefaultTupleModelTest extends TestCase
   public void testHasValue( )
   {
     // value present
-    assertTrue( m_model.hasValue( m_row1, m_col1 ) );
+    assertTrue( m_model.isNotNull( m_row1, m_col1 ) );
 
     // setting value to null
     m_model.setValue( null, m_row1, m_col1 );
-    assertFalse( m_model.hasValue( m_row1, m_col1 ) );
+    assertFalse( m_model.isNotNull( m_row1, m_col1 ) );
   }
 
   /*
@@ -181,11 +181,11 @@ public class DefaultTupleModelTest extends TestCase
   public void testRemoveValue( )
   {
     // value present
-    assertTrue( m_model.hasValue( m_row1, m_col1 ) );
+    assertTrue( m_model.isNotNull( m_row1, m_col1 ) );
 
     // setting value to null
-    m_model.removeValue( m_row1, m_col1 );
-    assertFalse( m_model.hasValue( m_row1, m_col1 ) );
+    m_model.clearValue( m_row1, m_col1 );
+    assertFalse( m_model.isNotNull( m_row1, m_col1 ) );
   }
 
   /*
@@ -193,7 +193,7 @@ public class DefaultTupleModelTest extends TestCase
    */
   public void testDeleteColumn( )
   {
-    m_model.deleteColumn( m_col2 );
+    m_model.removeColumn( m_col2 );
 
     assertEquals( 2, m_model.getColumnCount() );
 
@@ -205,7 +205,7 @@ public class DefaultTupleModelTest extends TestCase
    */
   public void testDeleteRow( )
   {
-    m_model.deleteRow( m_row2 );
+    m_model.removeRow( m_row2 );
     
     assertEquals( 1, m_model.getRowCount() );
     assertNull( m_model.getValue( m_row2, m_col1 ) );

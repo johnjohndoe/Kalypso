@@ -93,6 +93,22 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
     return m_model.keySet();
   }
 
+  /**
+   * @see org.kalypso.commons.tuple.ITupleModel#hasRowKey(R)
+   */
+  public boolean hasRowKey( R rowKey )
+  {
+    return m_model.containsKey( rowKey );
+  }
+  
+  /**
+   * @see org.kalypso.commons.tuple.ITupleModel#hasColumnKey(null)
+   */
+  public boolean hasColumnKey( C columnKey )
+  {
+    return m_columns.contains( columnKey );
+  }
+  
   @SuppressWarnings("unchecked")
   public Object getValue( final R rowKey, final C columnKey )
   {
@@ -104,13 +120,17 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   }
 
   @Override
-  protected void deleteColumnIntern( final C columnKey )
+  protected void removeColumnIntern( final C columnKey )
   {
+    final Set<R> rowKeySet = getRowKeySet();
+    for( final R rowKey : rowKeySet )
+      setValue( null, rowKey, columnKey );
+    
     m_columns.remove( columnKey );
   }
 
   @Override
-  protected void deleteRowIntern( final R rowKey )
+  protected void removeRowIntern( final R rowKey )
   {
     m_model.get( rowKey ).clear();
     m_model.remove( rowKey );

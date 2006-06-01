@@ -38,38 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.ogc.gml.om.table;
 
-import java.util.TimeZone;
-
-import javax.xml.namespace.QName;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author schlienger
  */
-public class DateComponent extends Component
+public class TupleResultTableViewer extends DefaultTableViewer
 {
-  private final String m_timezoneName;
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName )
+  public TupleResultTableViewer( final Composite parent )
   {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
-  }
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
-  {
-    this( name, description, valueTypeName, null, timezoneName );
+    this( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
   }
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
+  public TupleResultTableViewer( final Composite parent, final int style )
   {
-    super( name, description, valueTypeName, defaultValue );
+    super( parent, style );
     
-    m_timezoneName = timezoneName;
+    final Table table = getTable();
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+    
+    setContentProvider( new TupleResultContentProvider() );
+    setLabelProvider( new TupleResultLabelProvider() );
   }
-  
-  public String getTimezoneName( )
+
+  public void setInput( final TupleResult result )
   {
-    return m_timezoneName;
+    removeAllColumns();
+    
+    final IComponent[] components = result.getComponents();
+    for( int i = 0; i < components.length; i++ )
+      addColumn( components[i].getName(), components[i].getName(), 100, true );
+    
+    refreshColumnProperties();
+    
+    super.setInput( result );
   }
 }

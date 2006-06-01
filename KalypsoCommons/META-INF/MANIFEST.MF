@@ -69,6 +69,7 @@ Export-Package: org.apache.commons.codec,
  org.kalypso.commons.runtime,
  org.kalypso.commons.serializer,
  org.kalypso.commons.tuple,
+ org.kalypso.commons.tuple.event,
  org.kalypso.commons.tuple.impl,
  org.kalypso.commons.xml
 Require-Bundle: org.junit,

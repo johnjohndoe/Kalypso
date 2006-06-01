@@ -38,49 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.observation.test;
 
-import ogc31.www.opengis.net.gml.GriddedSurface2;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-import org.eclipse.compare.internal.ResizableDialog;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
+import junit.framework.TestCase;
+
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.DateComponent;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.table.TupleResultTableViewer;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.observation.result.ValueComponent;
 
 /**
  * @author schlienger
  */
-public class ObservationDialog extends ResizableDialog
+public class ObservationTest extends TestCase
 {
-  private final IObservation<TupleResult> m_obs;
-
-  protected ObservationDialog( Shell parentShell, IObservation<TupleResult> obs )
+  public static IObservation<TupleResult> createTestObservation( )
   {
-    super( parentShell, KalypsoGisPlugin.getDefault().getResourceBundle() );
+    DateComponent dc = new DateComponent( "Date", "", XmlTypes.XS_DATE );
+    ValueComponent vc = new ValueComponent( "Value", "", XmlTypes.XS_DOUBLE, "m" );
+    IComponent[] comps = { dc, vc };
+    TupleResult tupleResult = new TupleResult( comps );
 
-    m_obs = obs;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected Control createDialogArea( final Composite parent )
-  {
-    final Composite panel = (Composite) super.createDialogArea( parent );
-
-    panel.getShell().setText( m_obs.getName() );
-
-    final TupleResultTableViewer viewer = new TupleResultTableViewer( panel );
-    viewer.setInput( m_obs.getResult() );
+    Calendar cal = Calendar.getInstance();
     
-    viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    for( int i = 0; i < 10; i++ )
+    {
+      IRecord record = tupleResult.createRecord();
+      record.setValue( dc, cal.getTime() );
+      record.setValue( vc, i );
+      
+      tupleResult.add( record );
+      
+      cal.add( Calendar.HOUR_OF_DAY, 1 );
+    }
 
-    return panel;
+    List<MetadataObject> mdList = new ArrayList<MetadataObject>();
+    mdList.add( new MetadataObject( "Test", "Nothing") );
+    
+    return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList );
   }
 }

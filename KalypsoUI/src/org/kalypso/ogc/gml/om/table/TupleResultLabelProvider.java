@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.ogc.gml.om.table;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -51,22 +51,6 @@ import org.kalypso.observation.result.IRecord;
  */
 public class TupleResultLabelProvider implements ITableLabelProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-   */
-  public Image getImage( Object element )
-  {
-    return getColumnImage( element, 0 );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
-  public String getText( Object element )
-  {
-    return getColumnText( element, 0 );
-  }
-
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */

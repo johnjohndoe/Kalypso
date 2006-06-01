@@ -38,38 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.ogc.gml.om.table;
 
-import java.util.TimeZone;
-
-import javax.xml.namespace.QName;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author schlienger
  */
-public class DateComponent extends Component
+public class TupleResultContentProvider implements IStructuredContentProvider
 {
-  private final String m_timezoneName;
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName )
+  /**
+   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+   */
+  public void dispose( )
   {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
-  }
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
-  {
-    this( name, description, valueTypeName, null, timezoneName );
+    // empty
   }
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
+  /**
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+   */
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    super( name, description, valueTypeName, defaultValue );
-    
-    m_timezoneName = timezoneName;
+    // empty
   }
-  
-  public String getTimezoneName( )
+
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+   */
+  public Object[] getElements( Object inputElement )
   {
-    return m_timezoneName;
+    if( inputElement instanceof TupleResult )
+    {
+      final TupleResult result = (TupleResult) inputElement;
+
+      return result.toArray();
+    }
+
+    return null;
   }
 }

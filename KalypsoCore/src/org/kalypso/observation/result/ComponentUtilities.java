@@ -40,36 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import java.util.TimeZone;
-
 import javax.xml.namespace.QName;
 
 /**
+ * Utility methods for components
+ * 
  * @author schlienger
  */
-public class DateComponent extends Component
+public final class ComponentUtilities
 {
-  private final String m_timezoneName;
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName )
+  private ComponentUtilities()
   {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
+    // utility class
   }
   
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
+  /**
+   * @return the first component of the given type if found, else null
+   */
+  public static IComponent findComponent( final IComponent[] comps, final QName typeName )
   {
-    this( name, description, valueTypeName, null, timezoneName );
+    for( int i = 0; i < comps.length; i++ )
+    {
+      if( comps[i].getValueTypeName().equals( typeName ) )
+        return comps[i];
+    }
+    
+    return null;
   }
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
+  /**
+   * @return the first component found that is not of the given type
+   */
+  public static IComponent otherComponent( final IComponent[] comps, final QName typeName )
   {
-    super( name, description, valueTypeName, defaultValue );
+    for( int i = 0; i < comps.length; i++ )
+    {
+      if( !comps[i].getValueTypeName().equals( typeName ) )
+        return comps[i];
+    }
     
-    m_timezoneName = timezoneName;
-  }
-  
-  public String getTimezoneName( )
-  {
-    return m_timezoneName;
+    return null;
   }
 }

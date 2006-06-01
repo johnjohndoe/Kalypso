@@ -38,38 +38,71 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypso.observation.table;
 
-import java.util.TimeZone;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import javax.xml.namespace.QName;
+import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.observation.result.IComponent;
 
 /**
+ * A IColumnKey for the key column of a multi TupleResult tuple model
+ * <p>
+ * This class is package protected, it should only be used within the local API
+ * 
  * @author schlienger
  */
-public class DateComponent extends Component
+class KeyColumn extends MTRMColumn
 {
-  private final String m_timezoneName;
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName )
+  private final Map<Object, MTRMRow> m_map = new HashMap<Object, MTRMRow>();
+
+  public KeyColumn( final IComponent keyComponent )
   {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
-  }
-  
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
+    super( keyComponent.getName(), keyComponent, XmlTypes.toJavaClass( keyComponent.getValueTypeName() ) );
+  }    
+
+  /**
+   * Resolves the IRowKey that is associated to the given value
+   * 
+   * @return instance of an IRowKey that uniquely identifies the key value of this column
+   */
+  public MTRMRow resolve( final Object value )
   {
-    this( name, description, valueTypeName, null, timezoneName );
+    MTRMRow key = m_map.get( value );
+    if( key == null )
+    {
+      key = new MTRMRow( value );
+      m_map.put( value, key );
+    }
+
+    return key;
   }
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
+  public int getCount( )
   {
-    super( name, description, valueTypeName, defaultValue );
-    
-    m_timezoneName = timezoneName;
+    return m_map.size();
   }
-  
-  public String getTimezoneName( )
+
+  public Set<MTRMRow> valueSet( )
   {
-    return m_timezoneName;
+    return new HashSet<MTRMRow>( m_map.values() );
+  }
+
+  public boolean hasRowKey( final MTRMRow rowKey )
+  {
+    return m_map.values().contains( rowKey );
+  }
+
+  public void removeRowKey( final MTRMRow rowKey )
+  {
+    m_map.remove( rowKey );
+  }
+
+  public void clear( )
+  {
+    m_map.clear();
   }
 }
