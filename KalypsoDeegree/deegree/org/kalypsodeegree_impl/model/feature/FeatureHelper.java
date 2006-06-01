@@ -15,6 +15,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -412,6 +414,38 @@ public class FeatureHelper
     }
     else
       feature.setProperty( pt, newValue );
+  }
+
+  /**
+   * Adds a new member to a property of the given feature. The property must be a feature list.
+   * 
+   * @param newFeatureName
+   *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
+   *          is taken.
+   * @return The new feature member
+   */
+  public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName ) throws GMLSchemaException
+  {
+    final FeatureList list = (FeatureList) feature.getProperty( listProperty );
+    final Feature parentFeature = list.getParentFeature();
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+
+    final IFeatureType targetFeatureType = list.getParentFeatureTypeProperty().getTargetFeatureType();
+    
+    final IFeatureType newFeatureType;
+    if( newFeatureName == null )
+      newFeatureType = targetFeatureType;
+    else
+      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
+
+    if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
+      throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
+
+    
+    final Feature newFeature = workspace.createFeature( parentFeature, newFeatureType );
+
+    list.add( newFeature );
+    return newFeature;
   }
 
   public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )

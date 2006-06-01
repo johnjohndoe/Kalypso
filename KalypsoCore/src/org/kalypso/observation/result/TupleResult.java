@@ -310,6 +310,7 @@ public class TupleResult implements List<IRecord>
     record.setValue( comp, value );
   }
 
+  /** This method creates, but DOES NOT adds a record. */
   public IRecord createRecord( )
   {
     return new Record( this, m_components );

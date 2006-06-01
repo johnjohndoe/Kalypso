@@ -98,7 +98,7 @@ public class ComponentDefinition
 
     if( XmlTypes.isNumber( valueTypeName ) )
     {
-      final String unit = "";
+      final String unit = m_representationType.getUnit();
       return new ValueComponent( m_name, m_desc, valueTypeName, unit );
     }
 
@@ -129,7 +129,8 @@ public class ComponentDefinition
       frame = ((DateComponent) component).getTimezoneName();
 
     final RepresentationType rt = new RepresentationType( toKind( valueTypeName ), valueTypeName, unit, frame, classification );
-    return new ComponentDefinition( component.getName(), component.getDescription(), rt );
+    final ComponentDefinition componentDefinition = new ComponentDefinition( component.getName(), component.getDescription(), rt );
+    return componentDefinition;
   }
 
   /**
