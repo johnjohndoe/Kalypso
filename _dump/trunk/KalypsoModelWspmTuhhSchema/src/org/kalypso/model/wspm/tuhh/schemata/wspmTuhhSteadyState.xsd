@@ -215,7 +215,6 @@
 		<complexContent>
 			<extension base="wspm:AbstractCalculationType">
 				<sequence>
-					<element ref="tuhh:reachWspmTuhhSteadyStateMember"/>
 					<element name="fliessgesetz" default="DARCY_WEISBACH_MIT_FORMEINFLUSS">
 						<annotation>
 							<documentation xml:lang="de">
@@ -296,6 +295,7 @@
 							</restriction>
 						</simpleType>
 					</element>
+					<element ref="tuhh:reachWspmTuhhSteadyStateMember"/>
 					<element ref="tuhh:subReachDefinitionMember"/>
 					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
