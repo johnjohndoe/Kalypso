@@ -51,7 +51,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_indexMap.get( id );
   }
-  
+
   // schema , featureTypes, rootFeature, context
   public GMLWorkspace_Impl( final GMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
   {
@@ -476,7 +476,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // throw new IllegalArgumentException( "Cannot create feature from abstract type: " + type );
       System.out.println( "Creating feature from abstract type: " + type );
     }
-    // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType ) 
+    // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
     final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, false );
     m_indexMap.put( newId, newFeature );
@@ -544,6 +544,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void addFeatureAsAggregation( Feature srcFE, IRelationType linkProp, int pos, String featureID ) throws Exception
   {
+    // test if feature exists in workspace
+    final GMLWorkspace workspace = srcFE.getWorkspace();
+    if( workspace.getFeature( featureID ) == null )
+      throw new Exception( "tried to link a feature that does not exist in the workspace" );
     if( linkProp.isList() )
     {
       int maxOccurs = linkProp.getMaxOccurs();

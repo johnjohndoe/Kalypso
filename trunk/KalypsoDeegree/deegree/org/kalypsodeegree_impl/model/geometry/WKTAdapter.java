@@ -627,7 +627,7 @@ public class WKTAdapter
       wkt = wkt.substring( pos1 + 3 );
     }
     GM_Surface[] surfaces = srfcs.toArray( new GM_Surface[srfcs.size()] );
-    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces );
+    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces,crs );
     Debug.debugMethodEnd();
     return ms;
   }

@@ -184,7 +184,7 @@ public class GML3BindingGM_ObjectAdapter
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
           final GM_Surface[] surfaces = new GM_Surface[] { surface };
-          return GeometryFactory.createGM_MultiSurface( surfaces );
+          return GeometryFactory.createGM_MultiSurface( surfaces, cs );
         }
         return surface;
       }
@@ -283,7 +283,7 @@ public class GML3BindingGM_ObjectAdapter
       surfaces[i] = createGM_Surface( polyType, co );
       i++;
     }
-    return GeometryFactory.createGM_MultiSurface( surfaces );
+    return GeometryFactory.createGM_MultiSurface( surfaces ,co);
   }
 
   private static GM_Surface createGM_Surface( PolygonType type, CS_CoordinateSystem cs ) throws GM_Exception

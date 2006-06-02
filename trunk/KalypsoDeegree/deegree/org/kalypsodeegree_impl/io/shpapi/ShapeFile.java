@@ -406,7 +406,7 @@ public class ShapeFile
       if( (polygons != null) && (polygons.length > 1) )
       {
         // create multi surface
-        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons );
+        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
         geom = ms;
       }
       else if( (polygons != null) && (polygons.length == 1) )
