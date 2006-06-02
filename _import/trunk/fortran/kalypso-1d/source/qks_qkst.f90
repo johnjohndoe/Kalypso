@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006    1:20 pm
+!     Last change:  WP    2 Jun 2006    3:33 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,93 +39,93 @@
 ! Research Associate
 !***********************************************************************
 
+
+!-----------------------------------------------------------------------
 SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot)
 
-!***********************************************************************
-!**                                                                     
-!**   SUBROUTINE QKS                                                    
-!**                                                                     
-!JK   BESCHREIBUNG: BERECHNUNG DER TEILABFLUESSE (VORLAENDER,FLUSS-     
-!JK                 SCHLAUCH) UND GESAMTABFLUSS NACH DARCY-WEISBACH     
-!**                                                                     
-!**   IN DIESER SUBROUTINE VERWENDETE VARIABLEN                         
-!**   -----------------------------------------                         
-!**                                                                     
-!**                                                                     
-!**   a_hg    --      durchstrˆmte Fl‰che des Fluﬂschlauches            
-!**   a_ks    --      durchstrˆmte Fl‰che eines Teilabschnittes         
-!**   a_li    --      durchstrˆmte Fl‰che des linken Absturzes          
-!**   a_re    --      durchstrˆmte Fl‰che des rechten Absturzes         
-!**   ak_mi   --      abgeminderte Rauheit des mittleren Abschnittes    
-!**   akges   --      Gesamtrauheit                                     
-!**   aks_li  --      Rauheit des linken Abstuzes                       
-!**   aks_re  --      Rauheit des rechten Abstuzes                      
-!**   alges   --      Gesamtwiderstandsbeiwert                          
-!**   alsum   --      Summe der Teilwiderstandsbeiwerte multipliziert   
-!**                   mit dem jeweiligen Teilumfang                     
-!**   b_hg    --      Breite des Fluﬂschlauches                         
-!**   b_ks    --      Breite eines Teilabschnittes                      
-!**   bf(1)   --      mitwirkende Breite des Fluﬂschlauches links       
-!**   bf(2)   --      mitwirkende Breite des Fluﬂschlauches rechts      
-!**   dhy1    --      hydraulischer Durchmesser                         
-!**   f(1)    --      durchstrˆmte Fl‰che des linken Vorlandes          
-!**   f(2)    --      durchstrˆmte Fl‰che des Fluﬂschlauches            
-!**   f(3)    --      durchstrˆmte Fl‰che des rechten Vorlandes         
-!**   factor1 --      Faktor zu Berechnung der Gesamtrauheit            
-!**   factor2 --      Faktor zu Berechnung der Gesamtrauheit            
-!**   fges    --      gesamte durchstrˆmte Fl‰che                       
-!**   h_ks    --      Wasserspiegelhˆhe eines Teilabschnittes           
-!**   h_li    --      Wasserspiegelhˆhe am linken Absturz               
-!**   h_re    --      Wasserspiegelhˆhe am rechten Absturz              
-!**   hr      --      Wasserspiegelhˆhe                                 
-!**   hv      --      Geschwindigkeitsverlust                           
-!**   hvor    --      mittlere Flieﬂtiefe im Vorland                    
-!**   i_typ_flg --    Art der Widerstandsbeiwertberechnung              
-!**   if_l    --      Fehlervariable der Subroutine Lindy               
-!**   if_pa   --      Fehlervariable der Subroutine Pasche              
-!**   ischl   --      linker Profilpunkt                                
-!**   isener  --      Energiegef‰lle                                    
-!**   isenk   --      Funktion des Energiegef‰lles                      
-!**   itrli   --      Profilpunkt der linken Trennfl‰che                
-!**   k_ks    --      Rauheit eines Teilabschnittes                     
-!**   l_hg    --      Widerstandsbeiwert des Fluﬂschlauches             
-!**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes          
-!**   nknot   --      Anzahl der Punkte im Profil                       
-!**   phion   --      Z‰hler des Energiestrombeiwertes                  
-!**   phiun   --      Nenner des Energiestrombeiwertes                  
-!**   q_hg    --      Abfluﬂ des Fluﬂschlauches                         
-!**   q_ks    --      Abfluﬂ eines Teilabschnittes                      
-!**   qgs     --      Gesamtabfluﬂ                                      
-!**   qt(1)   --      Teilabfluﬂ des linken Vorlandes                   
-!**   qt(2)   --      Teilabfluﬂ des Fluﬂschlauches                     
-!**   qt(3)   --      Teilabfluﬂ des rechten Vorlandes                  
-!**   r_hg    --      hydraulischer Radius des Fluﬂschlauches           
-!**   re      --      Reynoldszahl                                      
-!**   rhges   --      gesamter hydraulischer Radius                     
-!**   rk(1)   --      Widerstandsbeiwert des linken Vorlandes           
-!**   rk(2)   --      Widerstandsbeiwert des Fluﬂschlauches             
-!**   rk(3)   --      Widerstandsbeiwert des rechen Vorlandes           
-!**   u(1)    --      benetzter Umfang des linken Vorlandes             
-!**   u(2)    --      benetzter Umfang des Fluﬂschauches                
-!**   u(3)    --      benetzter Umfang des rechten Vorlandes            
-!**   u_ks    --      benetzter Umfang eines Teilabschnittes im Vorland 
-!**   uges    --      gesamter benetzter Umfang                         
-!**   v(1)    --      mittlere Flieﬂgeschwindigkeit im linken Vorland   
-!**   v(2)    --      mittlere Flieﬂgeschwindigkeit im Fluﬂschlauch     
-!**   v(3)    --      mittlere Flieﬂgeschwindigkeit im rechten Vorland  
-!**   v_hg    --      mittlere Fliﬂgeschwindigkeit des Fluﬂschlauches   
-!**   v_ks    --      mittlere Flieﬂgeschwindigkeit eines Teilabschnitte
-!**   vges    --      mittlere Fliﬂgeschwindigkeit                      
-!**   vlam    --      Verh‰ltnis der Widerstandsbeiwerte der Trennfl‰che
-!**                                                                     
-!**                                                                     
-!**                                                                     
-!**   AUFGERUFENE ROUTINEN                                              
-!**   --------------------                                              
-!JK   lindy                                                             
-!JK   pasche                                                            
-!**                                                                     
-!***********************************************************************
+! BESCHREIBUNG:
+! -------------
+! BERECHNUNG DER TEILABFLUESSE (VORLAENDER,FLUSS-
+! SCHLAUCH) UND GESAMTABFLUSS NACH DARCY-WEISBACH
+!
+!
+! IN DIESER SUBROUTINE VERWENDETE VARIABLEN
+! -----------------------------------------
+!
+! a_hg    --      durchstrˆmte Fl‰che des Fluﬂschlauches
+! a_ks    --      durchstrˆmte Fl‰che eines Teilabschnittes
+! a_li    --      durchstrˆmte Fl‰che des linken Absturzes
+! a_re    --      durchstrˆmte Fl‰che des rechten Absturzes
+! ak_mi   --      abgeminderte Rauheit des mittleren Abschnittes
+! akges   --      Gesamtrauheit
+! aks_li  --      Rauheit des linken Abstuzes
+! aks_re  --      Rauheit des rechten Abstuzes
+! alges   --      Gesamtwiderstandsbeiwert
+! alsum   --      Summe der Teilwiderstandsbeiwerte multipliziert
+!                 mit dem jeweiligen Teilumfang
+! b_hg    --      Breite des Fluﬂschlauches
+! b_ks    --      Breite eines Teilabschnittes
+! bf(1)   --      mitwirkende Breite des Fluﬂschlauches links
+! bf(2)   --      mitwirkende Breite des Fluﬂschlauches rechts
+! dhy1    --      hydraulischer Durchmesser
+! f(1)    --      durchstrˆmte Fl‰che des linken Vorlandes
+! f(2)    --      durchstrˆmte Fl‰che des Fluﬂschlauches
+! f(3)    --      durchstrˆmte Fl‰che des rechten Vorlandes
+! factor1 --      Faktor zu Berechnung der Gesamtrauheit
+! factor2 --      Faktor zu Berechnung der Gesamtrauheit
+! fges    --      gesamte durchstrˆmte Fl‰che
+! h_ks    --      Wasserspiegelhˆhe eines Teilabschnittes
+! h_li    --      Wasserspiegelhˆhe am linken Absturz
+! h_re    --      Wasserspiegelhˆhe am rechten Absturz
+! hr      --      Wasserspiegelhˆhe
+! hv      --      Geschwindigkeitsverlust
+! hvor    --      mittlere Flieﬂtiefe im Vorland
+! i_typ_flg --    Art der Widerstandsbeiwertberechnung
+! if_l    --      Fehlervariable der Subroutine Lindy
+! if_pa   --      Fehlervariable der Subroutine Pasche
+! ischl   --      linker Profilpunkt
+! isener  --      Energiegef‰lle
+! isenk   --      Funktion des Energiegef‰lles
+! itrli   --      Profilpunkt der linken Trennfl‰che
+! k_ks    --      Rauheit eines Teilabschnittes
+! l_hg    --      Widerstandsbeiwert des Fluﬂschlauches
+! l_ks    --      Widerstandsbeiwert eines Teilabschnittes
+! nknot   --      Anzahl der Punkte im Profil
+! phion   --      Z‰hler des Energiestrombeiwertes
+! phiun   --      Nenner des Energiestrombeiwertes
+! q_hg    --      Abfluﬂ des Fluﬂschlauches
+! q_ks    --      Abfluﬂ eines Teilabschnittes
+! qgs     --      Gesamtabfluﬂ
+! qt(1)   --      Teilabfluﬂ des linken Vorlandes
+! qt(2)   --      Teilabfluﬂ des Fluﬂschlauches
+! qt(3)   --      Teilabfluﬂ des rechten Vorlandes
+! r_hg    --      hydraulischer Radius des Fluﬂschlauches
+! re      --      Reynoldszahl
+! rhges   --      gesamter hydraulischer Radius
+! rk(1)   --      Widerstandsbeiwert des linken Vorlandes
+! rk(2)   --      Widerstandsbeiwert des Fluﬂschlauches
+! rk(3)   --      Widerstandsbeiwert des rechen Vorlandes
+! u(1)    --      benetzter Umfang des linken Vorlandes
+! u(2)    --      benetzter Umfang des Fluﬂschauches
+! u(3)    --      benetzter Umfang des rechten Vorlandes
+! u_ks    --      benetzter Umfang eines Teilabschnittes im Vorland
+! uges    --      gesamter benetzter Umfang
+! v(1)    --      mittlere Flieﬂgeschwindigkeit im linken Vorland
+! v(2)    --      mittlere Flieﬂgeschwindigkeit im Fluﬂschlauch
+! v(3)    --      mittlere Flieﬂgeschwindigkeit im rechten Vorland
+! v_hg    --      mittlere Fliﬂgeschwindigkeit des Fluﬂschlauches
+! v_ks    --      mittlere Flieﬂgeschwindigkeit eines Teilabschnitte
+! vges    --      mittlere Fliﬂgeschwindigkeit
+! vlam    --      Verh‰ltnis der Widerstandsbeiwerte der Trennfl‰che
+!
+!
+!
+! AUFGERUFENE ROUTINEN
+! --------------------
+! lindy
+! pasche
+!
+!-----------------------------------------------------------------------
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN

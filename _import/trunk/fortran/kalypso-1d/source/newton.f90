@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006    1:18 pm
+!     Last change:  WP    2 Jun 2006    3:31 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,11 +39,12 @@
 !***********************************************************************
 
 
+
+!-----------------------------------------------------------------------
 SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
      & psiein, psiort, froud, xi, hi, s, ifehl, istat)
 
 ! geschrieben: p. Koch      Maerz 1990
-!
 ! geaendert  : w. Ploeger   Mai 2005
 !
 ! Programmbeschreibung:
@@ -56,7 +57,7 @@ SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 ! ------------------------
 ! - verluste
 !
-!******************************************************************
+!-----------------------------------------------------------------------
 
                                                                         
 !WP 01.02.2005
@@ -238,14 +239,6 @@ DO 100 jsch = 1, itmax_newton
   else
     jen = jsch
   end if
-
-  !IF (a_m.eq.2) then
-  !  jen = jsch + 1
-  !  !JK       BERECHNUNG WSP MIT EINFACHER ITERATION
-  !ELSE
-  !  jen = jsch
-  !ENDIF
-
 
   ! ******************************************************************
   ! berechnung der wasserstands-abhaengigen geometriegroessen:
