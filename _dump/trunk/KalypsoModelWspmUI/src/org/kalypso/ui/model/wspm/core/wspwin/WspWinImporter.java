@@ -385,14 +385,14 @@ public class WspWinImporter
 
     // map is used to remember position of runoff: used later by calculation to find reference
     final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
+    int countRO = 0;
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
-      int countRO = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
         final Feature runOffFeature = waterBody.createRunOffEvent();
-        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), runOffFeature );
+        writeRunOffBeanIntoFeature( countRO, bean, baseName + bean.getName(), runOffFeature );
 
         // remember for reference from calculation
         readRunOffEvents.put( countRO++, runOffFeature.getId() );
@@ -405,11 +405,12 @@ public class WspWinImporter
 
     try
     {
+      int posWSP = countRO++;
       final RunOffEventBean[] wspFixesBeans = zustandBean.readWspFixes( profDir );
       for( final RunOffEventBean bean : wspFixesBeans )
       {
         final Feature wspFixFeature = waterBody.createWspFix();
-        writeWspFixBeanIntoFeature( bean, baseName + bean.getName(), wspFixFeature );
+        writeWspFixBeanIntoFeature( posWSP++, bean, baseName + bean.getName(), wspFixFeature );
       }
     }
     catch( final Exception e )
@@ -542,9 +543,9 @@ public class WspWinImporter
     return status;
   }
 
-  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
+  private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
   {
-    final IComponent stationComp = new ValueComponent( "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
+    final IComponent stationComp = new ValueComponent( pos, "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
     final TupleResult result = new TupleResult( new IComponent[] { stationComp, valueComp } );
 
     final Map<Double, Double> values = bean.getEntries();
@@ -560,17 +561,16 @@ public class WspWinImporter
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
 
-  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent abflussComp = new ValueComponent( "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
-    writeRunOffBeanIntoFeature( bean, name, runOffFeature, abflussComp );
+    final IComponent abflussComp = new ValueComponent( pos, "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
+    writeRunOffBeanIntoFeature( pos, bean, name, runOffFeature, abflussComp );
   }
 
-  private static void writeWspFixBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  private static void writeWspFixBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent wspComp = new ValueComponent( "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
-    writeRunOffBeanIntoFeature( bean, name, runOffFeature, wspComp );
-
+    final IComponent wspComp = new ValueComponent( pos, "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
+    writeRunOffBeanIntoFeature( pos, bean, name, runOffFeature, wspComp );
   }
 
   /** Returns the content of the prof/probez.txt file */

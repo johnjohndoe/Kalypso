@@ -106,6 +106,9 @@ public class ProfileFeatureFactory implements IWspmConstants
       final TupleResult result = new TupleResult();
       final LinkedList<POINT_PROPERTY> pointProperties = profile.getPointProperties( false );
       final Map<POINT_PROPERTY, IComponent> compMap = new HashMap<POINT_PROPERTY, IComponent>( pointProperties.size() );
+      
+      int compCount = 0;
+      
       for( final IProfilPoint point : profile.getPoints() )
       {
         final IRecord record = result.createRecord();
@@ -115,7 +118,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         {
           if( !compMap.containsKey( pp ) )
           {
-            final ValueComponent component = componentForPointProperty( profile, pp );
+            final ValueComponent component = componentForPointProperty( compCount++, profile, pp );
             compMap.put( pp, component );
             result.addComponent( component );
           }
@@ -155,7 +158,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
   }
 
-  private static ValueComponent componentForPointProperty( final IProfil profile, final POINT_PROPERTY pp )
+  private static ValueComponent componentForPointProperty( final int pos, final IProfil profile, final POINT_PROPERTY pp )
   {
     final String unit;
     if( pp == POINT_PROPERTY.RAUHEIT )
@@ -163,7 +166,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     else
       unit = "?";
 
-    return new ValueComponent( pp.name(), "", new QName( NS.XSD_SCHEMA, "double" ), 0.0, unit );
+    return new ValueComponent( pos, pp.name(), "", new QName( NS.XSD_SCHEMA, "double" ), 0.0, unit );
   }
 
   public static IProfil toProfile( final Feature profileFeature ) throws ProfilDataException
