@@ -36,6 +36,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.flows.URLCatalogFlows;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -72,6 +73,7 @@ public class KalypsoTest
       final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
           , new UrlCatalogOGC()//
           , new DeegreeUrlCatalog() //
+          , new URLCatalogFlows() //
           } );
       final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
       if( !cacheDirectory.exists() )

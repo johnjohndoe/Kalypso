@@ -30,23 +30,20 @@
 package org.kalypso.dss.utils;
 
 /**
- * TODO: insert type comment here
+ * Constance to work with measure schemas
  * 
  * @author kuepfer
  */
 public class MeasuresConstants
 {
+  /** Namespaces */
   public static final String NS_MEASURES_SEALING = "http://schema.kalypso.wb.tu-harburg.de/measure/sealing";
 
   public static final String NS_MEASURES_RHB = "http://schema.kalypso.wb.tu-harburg.de/measure/rhb";
 
   public static final String NS_MEASURES_MRS = "http://schema.kalypso.wb.tu-harburg.de/measure/mrs";
 
-  public static final String SEALING_MEASURE_FT = "SealingMeasureFeature";
-
-  public static final String MRS_MEASURE_FT = "MrsMeasureFeature";
-
-  public static final String RHB_MEASURE_FT = "RhbMeasureFeature";
+  public static final String NS_DESIGNAREA = "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd";
 
   /** Bean id's */
   public static final String IN_MEASURE_RHB_ID = "measureRHB";
@@ -54,10 +51,12 @@ public class MeasuresConstants
   public static final String IN_MEASURE_MRS_ID = "measureMRS";
 
   public static final String IN_MEASURE_SEALING_ID = "measureSealing";
-  
-  public static final String IN_DESIGN_AREA_ID = "plangebiet";
 
-  /** All geometry property names in the measures.xsd are called position */
+  public static final String IN_DESIGN_AREA_ID = "designArea";
+
+  /** properties and FeatureTypes for all measures */
+  // retension basin measure
+  public static final String RHB_MEASURE_FT = "RhbMeasureFeature";
 
   public static final String RHB_MEASURE_GEOMETRY_PROP = "position";
 
@@ -67,11 +66,27 @@ public class MeasuresConstants
 
   public static final String RHB_MEASURE_PROP_SLOPE = "slopeRhb";
 
+  public static final String RHB_MEASURE_INFLOWTYP_PROP = "inflowtype";
+
+  public static final String RHB_MEASURE_INFLOWTYP_RIVER = "Hauptschluss-Gewaesser";
+
+  public static final String RHB_MEASURE_INFLOWTYP_CATCHMENT = "Hauptschluss-Teilgebiet";
+
+  public static final String RHB_MEASURE_PROP_DIAMETER = "diameterDischarge";
+
+  // swale and trench
+  public static final String MRS_MEASURE_FT = "MrsMeasureFeature";
+
   public static final String MRS_MEASURE_PROP_DIAMETER = "diameter";
 
   public static final String MRS_MEASURE_PROP_WIDTH = "width";
 
+  public static final String MRS_MEASURE_PROP_PERCENTAGE = "percentage";
+
   public static final String MRS_MEASURE_GEOMETRY_PROP = "position";
+
+  // sealing measure
+  public static final String SEALING_MEASURE_FT = "SealingMeasureFeature";
 
   public static final String SEALING_MEASURE_GEOMETRY_PROP = "position";
 
@@ -79,6 +94,7 @@ public class MeasuresConstants
 
   public static final String DEFAULT_ENCONDING = "UTF-8";
 
+  /** default values */
   public static final double MRS_DEFAULT_SLOPE_PROP = 0.003d;
 
   public static final double MRS_DEFAULT_INFLOW_GW_PROP = 1.0d;
@@ -86,5 +102,10 @@ public class MeasuresConstants
   public static final double MRS_DEFAULT_MAX_PERK_PROP = 2e-8d;
 
   public static final double MRS_DEFAULT_ROUGHNESS_PIPE_PROP = 10.0d;
+
+  /** desing area */
+  public static final String DESIGNAREA_MEMBER_PROP = "featureMember";
+
+  public static final String DESINGAREA_GEOM_PROP = "gebiet";
 
 }
