@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    5:55 pm
+!     Last change:  WP   28 May 2006   12:34 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -171,7 +171,8 @@ horts = 0.
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
-                                                                        
+
+!write (*,*) 'In WSPANF. wsanf = ', wsanf
 
 ! Berechnung von Basisgeometriegroessen:
 ! Sehnen, Abstand zwischen den profilpunkten (horizontal und veritkal)

@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    2:20 pm
+!     Last change:  WP   27 May 2006    1:20 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -186,13 +186,6 @@ REAL 		:: f (maxkla), u (maxkla), br (maxkla), ra (maxkla), rb (maxkla)
 REAL 		:: v (maxkla), qt (maxkla), ts1 (maxkla), ts2 (maxkla)
 REAL 		:: rk (maxkla), ra1 (maxkla), formbeiwert(maxkla)
 COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /REIB/ ---------------------------------------------------------
-! Berechnungsart des Reibungsverlustes
-INTEGER 	:: rg_vst
-COMMON / reib / rg_vst
 ! -----------------------------------------------------------------------------
 
 

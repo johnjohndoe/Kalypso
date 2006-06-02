@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    2:07 pm
+!     Last change:  WP   27 May 2006    1:18 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -63,6 +63,7 @@ SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_INI
 
 implicit none
 
@@ -232,12 +233,18 @@ DO 100 jsch = 1, itmax_newton
   hborda = 0.
 
   !JK       BERECHNUNG WSP MIT EINSCHLUSSINTERVALL
-  IF (a_m.eq.2) then
+  if (ITERATIONSART=='EXACT ') then
     jen = jsch + 1
-    !JK       BERECHNUNG WSP MIT EINFACHER ITERATION
-  ELSE
+  else
     jen = jsch
-  ENDIF
+  end if
+
+  !IF (a_m.eq.2) then
+  !  jen = jsch + 1
+  !  !JK       BERECHNUNG WSP MIT EINFACHER ITERATION
+  !ELSE
+  !  jen = jsch
+  !ENDIF
 
 
   ! ******************************************************************
