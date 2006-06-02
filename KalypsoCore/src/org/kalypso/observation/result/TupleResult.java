@@ -289,6 +289,9 @@ public class TupleResult implements List<IRecord>
   {
     final TreeSet<IComponent> set = new TreeSet<IComponent>( ComponentPositionComparator.getInstance() );
     set.addAll( m_components );
+    
+    if( m_components.size() != set.size() )
+      throw new IllegalStateException("Achtung da ist noch was schief: Komponente werden ignoriert weil sie die gleiche Position haben");
 
     return set.toArray( new IComponent[m_components.size()] );
   }
