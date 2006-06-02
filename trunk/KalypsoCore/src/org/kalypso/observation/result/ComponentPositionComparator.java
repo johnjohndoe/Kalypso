@@ -38,44 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.table;
+package org.kalypso.observation.result;
 
-import org.kalypso.commons.tuple.impl.SimpleColumnKey;
-import org.kalypso.observation.result.IComponent;
+import java.util.Comparator;
 
 /**
+ * Compares two components based on their positions
+ * 
  * @author schlienger
  */
-public abstract class MTRMColumn extends SimpleColumnKey
+public class ComponentPositionComparator implements Comparator<IComponent>
 {
-  private final IComponent m_keyComponent;
-  private final int m_position;
+  private static ComponentPositionComparator m_instance = null;
 
-  public MTRMColumn( final int position, final String name, final IComponent keyComponent, final Class<?> valueClass )
+  public int compare( final IComponent o1, final IComponent o2 )
   {
-    super( name, valueClass );
-    m_position = position;
+    return o1.getPosition() - o2.getPosition();
+  }
+
+  public static Comparator<IComponent> getInstance( )
+  {
+    if( m_instance == null )
+      m_instance = new ComponentPositionComparator();
     
-    m_keyComponent = keyComponent;
-  }
-  
-  public int getPosition( )
-  {
-    return m_position;
-  }
-
-  public IComponent getKeyComponent( )
-  {
-    return m_keyComponent;
-  }
-  
-  /**
-   * Columns/Components are said to be compatible when their valueTypeNames are equals.
-   * 
-   * @return true if both components are compatible.
-   */
-  public boolean isCompatible( final IComponent c )
-  {
-    return m_keyComponent.getValueTypeName().equals( c.getValueTypeName() );
+    return m_instance;
   }
 }

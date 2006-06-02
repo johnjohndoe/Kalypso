@@ -42,27 +42,66 @@ package org.kalypso.ogc.gml.om.tableex;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.observation.table.MultiTupleResultModel;
+import org.kalypso.commons.tuple.ITupleModel;
+import org.kalypso.commons.tuple.event.ITupleModelListener;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.table.MTRMColumn;
+import org.kalypso.observation.table.MTRMRow;
 
 /**
  * @author schlienger
  */
-public class MultiTupleResultContentProvider implements IStructuredContentProvider
+public class MultiTupleResultContentProvider implements IStructuredContentProvider, ITupleModelListener<MTRMRow, MTRMColumn>
 {
+  private ITupleModel<MTRMRow, MTRMColumn> m_model;
+
+  private DefaultTableViewer m_tableViewer;
+
+  private final MultiTupleResultLabelProvider m_labelProvider;
+
+  public MultiTupleResultContentProvider( final MultiTupleResultLabelProvider labelProvider )
+  {
+    m_labelProvider = labelProvider;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
   public void dispose( )
   {
-    // TODO Auto-generated method stub
+    if( m_model != null )
+      m_model.removeListener( this );
+    m_model = null;
+    m_tableViewer = null;
+
+    m_labelProvider.setModel( null );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    // TODO Auto-generated method stub
+    if( newInput == null )
+      return;
+
+    // disconnect listener before changing model
+    if( m_model != null && m_model == oldInput )
+      m_model.removeListener( this );
+
+    m_model = (ITupleModel<MTRMRow, MTRMColumn>) newInput;
+    m_model.addListener( this );
+
+    m_labelProvider.setModel( m_model );
+
+    m_tableViewer = ((DefaultTableViewer) viewer);
+    m_tableViewer.removeAllColumns();
+
+    for( final MTRMColumn col : m_model.getColumnKeySet() )
+      m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
+
+    m_tableViewer.refreshColumnProperties();
   }
 
   /**
@@ -70,12 +109,49 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof MultiTupleResultModel )
-    {
-      final MultiTupleResultModel model = (MultiTupleResultModel) inputElement;
-      return model.getRowKeySet().toArray();
-    }
+    return m_model.getRowKeySet().toArray();
+  }
+
+  /**
+   * @see org.kalypso.commons.tuple.event.ITupleModelListener#onValueChanged(java.lang.Object, R, C)
+   */
+  public void onValueChanged( Object value, MTRMRow rowKey, MTRMColumn columnKey )
+  {
+    m_tableViewer.update( m_model, null );
+  }
+
+  /**
+   * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowAdded(R)
+   */
+  public void onRowAdded( MTRMRow rowKey )
+  {
+    m_tableViewer.refresh();
+  }
+
+  /**
+   * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowRemoved(R)
+   */
+  public void onRowRemoved( MTRMRow rowKey )
+  {
+    m_tableViewer.refresh();
+  }
+
+  /**
+   * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnAdded(C)
+   */
+  public void onColumnAdded( MTRMColumn col )
+  {
+    m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
+    //m_tableViewer.refreshColumnProperties();
     
-    return null;
+    m_tableViewer.refresh();
+  }
+
+  /**
+   * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnRemoved(C)
+   */
+  public void onColumnRemoved( MTRMColumn columnKey )
+  {
+    m_tableViewer.refresh();
   }
 }

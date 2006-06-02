@@ -44,6 +44,9 @@ import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * @author schlienger
  */
@@ -51,19 +54,19 @@ public class DateComponent extends Component
 {
   private final String m_timezoneName;
   
-  public DateComponent( final String name, final String description, final QName valueTypeName )
+  public DateComponent( final int pos, final String name, final String description, final QName valueTypeName )
   {
-    this( name, description, valueTypeName, TimeZone.getDefault().getID() );
+    this( pos, name, description, valueTypeName, TimeZone.getDefault().getID() );
   }
   
-  public DateComponent( final String name, final String description, final QName valueTypeName, final String timezoneName )
+  public DateComponent( final int pos, final String name, final String description, final QName valueTypeName, final String timezoneName )
   {
-    this( name, description, valueTypeName, null, timezoneName );
+    this( pos, name, description, valueTypeName, null, timezoneName );
   }
 
-  public DateComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
+  public DateComponent( final int pos, final String name, final String description, final QName valueTypeName, final Object defaultValue, final String timezoneName )
   {
-    super( name, description, valueTypeName, defaultValue );
+    super( pos, name, description, valueTypeName, defaultValue );
     
     m_timezoneName = timezoneName;
   }
@@ -71,5 +74,30 @@ public class DateComponent extends Component
   public String getTimezoneName( )
   {
     return m_timezoneName;
+  }
+  
+  /**
+   * @see org.kalypso.observation.result.Component#fillEqualsBilder(org.kalypso.observation.result.IComponent, org.apache.commons.lang.builder.EqualsBuilder)
+   */
+  @Override
+  protected void fillEqualsBilder( final IComponent comp, final EqualsBuilder builder )
+  {
+    super.fillEqualsBilder( comp, builder );
+    
+    // this cast is safe (see super class implementation)
+    final DateComponent dc = (DateComponent) comp;
+    
+    builder.append( dc.getTimezoneName(), m_timezoneName );
+  }
+  
+  /**
+   * @see org.kalypso.observation.result.Component#fillHashCodeBuilder(org.apache.commons.lang.builder.HashCodeBuilder)
+   */
+  @Override
+  protected void fillHashCodeBuilder( HashCodeBuilder builder )
+  {
+    super.fillHashCodeBuilder( builder );
+    
+    builder.append( m_timezoneName );
   }
 }

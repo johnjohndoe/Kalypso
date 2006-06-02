@@ -43,12 +43,14 @@ package org.kalypso.commons.tuple;
 
 import java.util.Set;
 
+import org.kalypso.commons.tuple.event.ITupleModelEventProvider;
+
 /**
  * General TupleModel interface.
  * 
  * @author schlienger
  */
-public interface ITupleModel<R extends IRowKey, C extends IColumnKey>
+public interface ITupleModel<R extends IRowKey, C extends IColumnKey> extends ITupleModelEventProvider<R, C>
 {
   public int getRowCount( );
 

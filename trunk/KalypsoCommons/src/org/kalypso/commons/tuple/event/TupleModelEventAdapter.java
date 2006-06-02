@@ -38,47 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om.table;
+package org.kalypso.commons.tuple.event;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.kalypso.commons.tuple.IColumnKey;
+import org.kalypso.commons.tuple.IRowKey;
 
 /**
  * @author schlienger
  */
-public class TupleResultTableViewer extends DefaultTableViewer
+public class TupleModelEventAdapter<R extends IRowKey, C extends IColumnKey> implements ITupleModelEventProvider<R, C>
 {
-  public TupleResultTableViewer( final Composite parent )
+  private final Set<ITupleModelListener<R, C>> m_listeners = new HashSet<ITupleModelListener<R, C>>();
+
+  public void addListener( final ITupleModelListener<R, C> listener )
   {
-    this( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    m_listeners.add( listener );
   }
 
-  public TupleResultTableViewer( final Composite parent, final int style )
+  public void removeListener( final ITupleModelListener<R, C> listener )
   {
-    super( parent, style );
-    
-    final Table table = getTable();
-    table.setHeaderVisible( true );
-    table.setLinesVisible( true );
-    
-    setContentProvider( new TupleResultContentProvider() );
-    setLabelProvider( new TupleResultLabelProvider() );
+    m_listeners.remove( listener );
   }
 
-  public void setInput( final TupleResult result )
+  public void fireValueChanged( final Object value, final R rowKey, final C columnKey )
   {
-    removeAllColumns();
-    
-    final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-      addColumn( components[i].getName(), components[i].getName(), 100, true );
-    
-    refreshColumnProperties();
-    
-    super.setInput( result );
+    for( final ITupleModelListener<R, C> l : m_listeners )
+      l.onValueChanged( value, rowKey, columnKey );
+  }
+
+  public void fireColumnAdded( final C columnKey )
+  {
+    for( final ITupleModelListener<R, C> l : m_listeners )
+      l.onColumnAdded( columnKey );
+  }
+  
+  public void fireColumnRemoved( final C columnKey )
+  {
+    for( final ITupleModelListener<R, C> l : m_listeners )
+      l.onColumnRemoved( columnKey );
+  }
+
+  public void fireRowAdded( final R rowKey )
+  {
+    for( final ITupleModelListener<R, C> l : m_listeners )
+      l.onRowAdded( rowKey );
+  }
+  
+  public void fireRowRemoved( final R rowKey )
+  {
+    for( final ITupleModelListener<R, C> l : m_listeners )
+      l.onRowRemoved( rowKey );
   }
 }

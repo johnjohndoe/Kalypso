@@ -124,7 +124,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   {
     final Set<R> rowKeySet = getRowKeySet();
     for( final R rowKey : rowKeySet )
-      setValue( null, rowKey, columnKey );
+      setValueIntern( null, rowKey, columnKey );
     
     m_columns.remove( columnKey );
   }

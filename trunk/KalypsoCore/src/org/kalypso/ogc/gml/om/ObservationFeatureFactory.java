@@ -41,10 +41,10 @@
 package org.kalypso.ogc.gml.om;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.ComponentPositionComparator;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -183,7 +184,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       final RepresentationType rep = (RepresentationType) itemDef.getProperty( SWE_REPRESENTATION );
 
-      components.add( new ComponentDefinition( name, desc, rep ) );
+      components.add( new ComponentDefinition( i, name, desc, rep ) );
     }
 
     return components.toArray( new ComponentDefinition[components.size()] );
@@ -197,7 +198,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   protected static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
   {
     final IComponent[] components = result.getComponents();
-    final Map<IComponent,ComponentDefinition> map = new HashMap<IComponent,ComponentDefinition>( components.length );
+    final Map<IComponent,ComponentDefinition> map = new TreeMap<IComponent,ComponentDefinition>( ComponentPositionComparator.getInstance() );
 
     // for each component, set a component property, create a feature: ItemDefinition
     for( int i = 0; i < components.length; i++ )
@@ -289,6 +290,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
   }
 
   /**
+   * TODO do not directly return an observation, but rather an observation provider
+   * TODO do not create an observation twice for the same feature, pooling?
+   * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   public Object getAdapter( final Object adaptableObject, final Class adapterType )

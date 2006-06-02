@@ -40,16 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
-import ogc31.www.opengis.net.gml.GriddedSurface2;
-
 import org.eclipse.compare.internal.ResizableDialog;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.table.TupleResultTableViewer;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -76,7 +78,13 @@ public class ObservationDialog extends ResizableDialog
 
     panel.getShell().setText( m_obs.getName() );
 
-    final TupleResultTableViewer viewer = new TupleResultTableViewer( panel );
+    final TableViewer viewer = new DefaultTableViewer( panel, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    viewer.getTable().setHeaderVisible( true );
+    viewer.getTable().setLinesVisible( true );
+
+    viewer.setLabelProvider( new TupleResultLabelProvider() );
+    viewer.setContentProvider( new TupleResultContentProvider() );
+    
     viewer.setInput( m_obs.getResult() );
     
     viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );

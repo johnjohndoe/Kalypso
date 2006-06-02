@@ -59,9 +59,9 @@ public class TupleResultColumn extends MTRMColumn
 
   private final Map<MTRMRow, IRecord> m_map = new HashMap<MTRMRow, IRecord>();
 
-  public TupleResultColumn( final TupleResult result, final IComponent key, final IComponent value )
+  public TupleResultColumn( final int position, final TupleResult result, final IComponent key, final IComponent value )
   {
-    super( value.getName(), key, XmlTypes.toJavaClass( value.getValueTypeName() ) );
+    super( position, value.getName(), key, XmlTypes.toJavaClass( value.getValueTypeName() ) );
 
     m_result = result;
     m_value = value;

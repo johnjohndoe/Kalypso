@@ -40,42 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.table;
 
-import org.kalypso.commons.tuple.impl.SimpleColumnKey;
-import org.kalypso.observation.result.IComponent;
+import java.util.Comparator;
 
 /**
+ * Compares two TupleResultColumn. They are equal if they have the same:
+ * <ul>
+ * <li>TupleResult
+ * <li>KeyComponent
+ * <li>ValueComponent
+ * </ul>
+ * 
  * @author schlienger
  */
-public abstract class MTRMColumn extends SimpleColumnKey
+public class TupleResultColumnComparator implements Comparator<TupleResultColumn>
 {
-  private final IComponent m_keyComponent;
-  private final int m_position;
+  private static TupleResultColumnComparator m_instance = null;
 
-  public MTRMColumn( final int position, final String name, final IComponent keyComponent, final Class<?> valueClass )
-  {
-    super( name, valueClass );
-    m_position = position;
-    
-    m_keyComponent = keyComponent;
-  }
-  
-  public int getPosition( )
-  {
-    return m_position;
-  }
-
-  public IComponent getKeyComponent( )
-  {
-    return m_keyComponent;
-  }
-  
   /**
-   * Columns/Components are said to be compatible when their valueTypeNames are equals.
-   * 
-   * @return true if both components are compatible.
+   * @see java.util.Comparator#compare(T, T)
    */
-  public boolean isCompatible( final IComponent c )
+  public int compare( TupleResultColumn o1, TupleResultColumn o2 )
   {
-    return m_keyComponent.getValueTypeName().equals( c.getValueTypeName() );
+    if( o1.getTupleResult() == o2.getTupleResult() && o1.getKeyComponent() == o2.getKeyComponent() && o1.getValueComponent() == o2.getValueComponent() )
+      return 0;
+
+    return 1;
+  }
+
+  public static TupleResultColumnComparator getInstance( )
+  {
+    if( m_instance == null )
+      m_instance = new TupleResultColumnComparator();
+    
+    return m_instance;
   }
 }
