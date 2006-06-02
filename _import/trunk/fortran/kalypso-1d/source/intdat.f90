@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    1:57 pm
+!     Last change:  WP    2 Jun 2006    1:29 pm
 !--------------------------------------------------------------------------
 ! This code, intda.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -50,16 +50,14 @@ SUBROUTINE intdat (staso, ierl)
 ! Uebergabe der Daten aus der Eingabemaske
 ! in die FORTRAN-Programmstruktur
 !
-! ipro    - Anzahl der von proein max. einlesbaren Wertebloecke
-! maxw    - Anzahl der wehrfelder
-!
 !-----------------------------------------------------------------------
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE MOD_INI
 
 REAL, INTENT(IN)     :: staso           ! Station [km]
-INTEGER, INTENT(OUT) :: ierl            ! Fehlernummer
+INTEGER, INTENT(OUT) :: ierl            ! Fehlernummer, ierl=0: Kein Fehler, ierl>0: Fehler
 
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
@@ -402,12 +400,28 @@ if (istat /= 0) then
   call stop_programm(0)
 end if
 
+
 IF (abs (staso - stat) .gt.1.e-3) then
-  ! 9002
-  PRINT * , 'falsche zuordnung der stationen!'
-  PRINT * , 'soll=', stat
-  PRINT * , 'ist =', staso, 'in ', text32
-  ierl = 2
+
+  write (*,9002) stat, staso
+  9002 format (//1X, 'ACHTUNG: Die Stationierung ist Inkonsistent!', /, &
+               & 1X, '--------------------------------------------', /, &
+               & 1X, 'Station aus Strangdatei = ', F12.4, ' [km]', /, &
+               & 1X, 'Station in Profildatei =  ', F12.4, ' [km]')
+
+  if (RUN_MODUS =='KALYPSO') then
+
+    write (*,90021)
+    90021 format (/1X, '-> Verwende Stationierung aus Strangdatei!', /)
+
+  else
+
+    write (*, 90022)
+    90022 format (/1X, '-> Falsche Zuordnung!', /)
+    ierl = 2
+
+  end if
+
 ENDIF
 
 ! Ermitteln durchstroemter bereich:

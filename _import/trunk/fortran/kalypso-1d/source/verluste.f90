@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    2:07 pm
+!     Last change:  WP   27 May 2006    1:22 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -57,8 +57,7 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 !**                                                                     
 !**   betta   --      Ungleichförmigkeitsbeiwert                        
 !**   betta1  --      Ungleichförmigkeitsbeiwert                        
-!**   bordvoll        --      Art der Bordvollberechnung                
-!**   dx      --      Schrittweite                                      
+!**   dx      --      Schrittweite
 !**   f       --      durchströmte Fläche des Teilabschnittes           
 !**   falt    --      gesamte durchströmte Fläche (alt)                 
 !**   fges    --      gesamte durchströmte Fläche                       
@@ -116,6 +115,7 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE MOD_INI
 
 REAL, INTENT(IN) 	:: str          ! Abstand (Strecke) zwischen zwei Profilen
 REAL, INTENT(INOUT) 	:: q            ! Abfluss, wird uebergeben an eb2ks oder beechnet in qks!
@@ -257,7 +257,8 @@ CALL uf (hr, hi, xi, s, indmax, nfli, nfre)
 ! ------------------------------------------------------------------
                                                                         
 
-IF (bordvoll.ne.'g') then
+
+IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ! -----------------------------------------------------------------
   ! STATIONAER UNGLEICHFOERMIGER ABFLUSS (SPIEGELLINIENBERECHNUNG)
@@ -288,7 +289,7 @@ IF (bordvoll.ne.'g') then
   ! ------------------------------------------------------------------
                                                                         
   !JK  BERECHNUNG NACH DARCY-WEISBACH
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ/='MANNING_STR') then
     nstat = nprof
     CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
   !JK  BERECHNUNG NACH GMS
@@ -354,7 +355,8 @@ IF (bordvoll.ne.'g') then
       rgm = 0.001
     ENDIF
 
-  ELSEIF (rg_vst.eq.2) then
+  !ELSEIF (rg_vst.eq.2) then
+  ELSEIF (REIBUNGSVERLUST == 'GEOMET') THEN
 
     IF (rg1.gt.1.e-06.and.rg.gt.0) then
       wurzrg = (q + q1) / (rg1 + rg)
@@ -421,7 +423,7 @@ ELSE
 
   IF (sohle.ge.1.e-05) then
 
-    IF (ifg.eq.1) then
+    IF (FLIESSGESETZ/='MANNING_STR') then
 
       CALL qks (iprof, sohle, q, itere1, hr, hv, nknot)
 

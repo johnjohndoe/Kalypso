@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    9:53 am
+!     Last change:  WP    2 Jun 2006    1:48 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -33,13 +33,14 @@
 !
 ! Wolf Ploeger, 18 August 2004
 ! Research Associate
-!***********************************************************************
+!--------------------------------------------------------------------------
 
 
 
+
+!--------------------------------------------------------------------------
 PROGRAM WSP
-!**   ------------------------------------------------------------------
-!**   Berechung von Wasserspiegellagen                                  
+!**   Berechung von Wasserspiegellagen
 !**                                                                     
 !**   geschrieben: P. Koch, Maerz 1990                                  
 !**   ------------------------------------------------------------------
@@ -102,7 +103,10 @@ USE DIM_VARIABLEN
 USE ZEIT
 USE VERSION
 USE IO_UNITS
+USE IO_NAMES
 USE MOD_ERG
+USE MOD_INI
+
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
@@ -161,6 +165,14 @@ COMMON / k_m / km, i_km
 ! Commonblock fuer Profilnummerausgabe im *.wsl -File
 CHARACTER(LEN = 1) :: nr_ausg
 COMMON / nr_aus / nr_ausg
+! -----------------------------------------------------------------------------
+
+
+! COMMON-Block /OB_ALPHA/ -----------------------------------------------------
+! Uebergabe eines Steuerparameters, ob die Datei Beiwerte.AUS
+! erzeugt und in sie geschrieben werden soll.
+INTEGER 	:: alpha_ja
+COMMON / ob_alpha / alpha_ja
 ! -----------------------------------------------------------------------------
 
 
@@ -224,6 +236,8 @@ COMMON / w_a / a_m
 INTEGER :: istat                ! Check in IOSTAT-clause while opening files
 INTEGER :: lein
 
+INTEGER :: ilen, ilen2
+
 INTEGER :: anq (merg), int (maxkla)
 INTEGER :: zint (merg)
 INTEGER :: ZAEHLOPE
@@ -239,6 +253,7 @@ CHARACTER(LEN=nch80) :: aereignis (merg), char (maxkla), dummy, unit7
 CHARACTER(LEN=nch80) :: ereign (merg)
 CHARACTER(LEN=nch80) :: dfluss, unit2
 CHARACTER(LEN=nch80) :: fall
+CHARACTER(LEN=nch80) :: pfadconfigdatei
 CHARACTER(LEN=1)     :: ibruecke, wehr
 CHARACTER(LEN=1)     :: antwort
 
@@ -258,6 +273,8 @@ CHARACTER(LEN=8)  :: DATSTART
 !HB   Uebergabe an SUB ALPHA_DRU und SUB WSP                            
 INTEGER i_alph
 !HB   *****************************************************************
+
+LOGICAL :: lexist, lopen
                                                                         
 
 ! ------------------------------------------------------------------
@@ -265,12 +282,16 @@ INTEGER i_alph
 ! ------------------------------------------------------------------
 idr1 = 'n'              ! Sollen WQ-Dateien fuer jedes Profil erstellt werden?
 idr2 = 'n'              ! Sollen Ergebnislisten erstellt werden?
-km = "n"                ! Sollen die KALININ-MILJUKOV-Parameter bestimmt werden?
+km = 'n'                ! Sollen die KALININ-MILJUKOV-Parameter bestimmt werden?
 
 imp_ber = 0             ! Berechnung nach Bernoulli-Gleichung
                                                                         
 nr = 0  		! COMMON-Block BLOED
 
+alpha_ja = 1            ! Soll Datei Beiwerte.aus erzeugt werden? (0=nein, 1=ja)
+ierr = 0
+
+DURCHFLUSS_EINHEIT = 'M'! Einheit der Ausgabe des Durchflusses ("M"=m3/s, "L"=l/s)
 
 ! ------------------------------------------------------------------
 ! AUFRUF DER SUB-ROUTINE WHEN ZUM ABFRAGEN DER AKTUELLEN UHRZEIT
@@ -336,16 +357,28 @@ write (*, 1001)
 READ ( * , '(a)') antwort
 write (*, *) antwort
 
+CALL lcase (antwort)
+if (antwort == 'n') then
+  RUN_MODUS = 'KALYPSO'
+  read (*,*) pfadconfigdatei
+  call read_config_file(ADJUSTL(pfadconfigdatei),LEN_TRIM(pfadconfigdatei))
+else
+  RUN_MODUS = 'WSPWIN '
+end if
+
 
 ! ---------------------------------------------------------------------------------
 ! 2. Zeile in BAT.001
 ! -------------------
 ! EINLESEN PFADNAME DES PROJEKTES
-write (*,1002)
-1002 format (/1X, 'Gib Pfadname des Projektes -->')
-READ ( * , '(a)') nproj
-write (*,*) nproj
-
+if (RUN_MODUS /='KALYPSO') then
+  write (*,1002)
+  1002 format (/1X, 'Gib Pfadname des Projektes -->')
+  READ ( * , '(a)') nproj
+  !write (*,*) nproj
+  !WP New configuration in MOD_INI
+  PROJEKTPFAD = nproj
+end if
 
 ! ---------------------------------------------------------------------------------
 ! 3. Zeile in BAT.001
@@ -361,125 +394,159 @@ write (*,*) nproj
 ! St000055.prf 58.5500
 ! St000004.prf 58.6000
 !
-write (*, 1003)
-1003 format (/1X, 'Gib Name der fluss.dat - Datei -->')
-READ ( * , '(a)') dfluss
-write (*,*) dfluss
+if (RUN_MODUS /='KALYPSO') then
+  write (*, 1003)
+  1003 format (/1X, 'Gib Name der fluss.dat - Datei -->')
+  READ ( * , '(a)') dfluss
+  !write (*,*) dfluss
+
+  !WP New configuration in MOD_INI
+  STRANGDATEI = dfluss
+end if
 
 
-! ---------------------------------------------------------------------------------
-! 4. Zeile in BAT.001
-! -------------------
-! EINLESEN ANFANGSSTATION
-write (*, 1004)
-1004 format (/1X, 'Anfangsstation (z.b. 1.5000) -->')
-! F6.3 reicht nicht aus: Stationen sind auf 4 Stellen genau -> F9.4!
-READ ( * , '(F10.4)') staanf
-write (* , '(F10.4)') staanf
-
-
-! ---------------------------------------------------------------------------------
-! 5. Zeile in BAT.001
-! -------------------
-! EINLESEN ANFANGSSTATION
-write (*, 1005)
-1005 format (/1X, 'Endstation -->')
-! F6.3 reicht nicht aus: Stationen sind auf 4 Stellen genau -> F9.4!
-READ ( * , '(F10.4)') staend
-write (* , '(F10.4)') staend
-
+Teilung_Name: DO i = nch80, 1, - 1
+  IF (STRANGDATEI(i:i) .eq.'.') then        	! Strangdatei z.B. "Stoer.001"
+    fall (1:) = STRANGDATEI(i + 1:nch80)    	! Berechnungsfall z.B. "001"
+    fluss (1:) = STRANGDATEI(1:i - 1)       	! Flussname z.B. "Stoer"
+    EXIT Teilung_Name
+  ENDIF
+END DO Teilung_Name
 
 
 ! ERWEITERUNG PFADNAME UM ORDNER \PROF
-Erweiterung_um_prof: DO i = nch80, 1, - 1
-  IF (dfluss (i:i) .eq.'.') then
-    fall (1:) = dfluss (i + 1:nch80)
-    fluss (1:) = dfluss (1:i - 1)
-    EXIT Erweiterung_um_prof
-  ENDIF
-END DO Erweiterung_um_prof
+ilen = LEN_TRIM (PROJEKTPFAD)
 
+NAME_PFAD_PROF = PROJEKTPFAD(1:ilen) // '\PROF\'
+NAME_PFAD_DATH = PROJEKTPFAD(1:ilen) // '\DATH\'
+!write (*,*) 'NAME_PFAD_PROF = ', NAME_PFAD_PROF
+!write (*,*) 'NAME_PFAD_DATH = ', NAME_PFAD_DATH
 
-ilen = LEN_TRIM (nproj)
-
-nproj (ilen + 1:) = '\prof\'
-
-fnam1 = nproj           ! FNAM1 ist Absoluter Projektpfad, z.B. c:\wspwin\will_pad\prof
-unit2 = fnam1
-
-ilen1 = LEN_TRIM (unit2)
-unit2 (ilen1 + 1:) = dfluss
+ilen  = LEN_TRIM(NAME_PFAD_PROF)
+ilen2 = LEN_TRIM(STRANGDATEI)
+NAME_EIN_STR = NAME_PFAD_PROF(1:ilen) // STRANGDATEI(1:ilen2)
+!write (*,*) 'NAME_EIN_STR = ', NAME_EIN_STR
 
 
 ! UNIT holen
 UNIT_EIN_STR = ju0gfu ()
 ! Oeffnen der Datei mit den Profilenamen (z.B. Stoer.001), siehe 3. Zeile in BAT.001
-OPEN (unit = UNIT_EIN_STR, file = unit2, iostat = istat, status = 'old')
+OPEN (unit = UNIT_EIN_STR, file = NAME_EIN_STR, iostat = istat, status = 'old')
 IF (istat /= 0) then
-   write (*, 9000) unit2
+   write (*, 9000) NAME_EIN_STR
    9000 format (//1X, 'Problem beim Oeffnen der Datei ', A, /, &
                &  1X, '-> PROGRAMMABBRUCH!')
    STOP
 ENDIF                                                                 
 
 
+
+
+
+
+
+
+
+
+
+! ---------------------------------------------------------------------------------
+! 4. Zeile in BAT.001
+! -------------------
+! EINLESEN ANFANGSSTATION
+if (RUN_MODUS /='KALYPSO') then
+  write (*, 1004)
+  1004 format (/1X, 'Anfangsstation (z.b. 1.5000) -->')
+  ! F6.3 reicht nicht aus: Stationen sind auf 4 Stellen genau -> F9.4!
+  READ ( * , '(F10.4)') staanf
+  write (* , '(F10.4)') staanf
+
+  ANFANGSSTATION = staanf
+end if
+
+! ---------------------------------------------------------------------------------
+! 5. Zeile in BAT.001
+! -------------------
+! EINLESEN ENDSTATION
+if (RUN_MODUS /='KALYPSO') then
+  write (*, 1005)
+  1005 format (/1X, 'Endstation -->')
+  ! F6.3 reicht nicht aus: Stationen sind auf 4 Stellen genau -> F9.4!
+  READ ( * , '(F10.4)') staend
+  !write (* , '(F10.4)') staend
+
+  ENDSTATION = staend
+end if
+
+
+
+
+
 ! Setzen und Uebergabe der Pfad-Parameter, die zur Dateioeffnung
 ! von WSPvaria.ein in "LESDATIN" benoetigt werden.
 
-! Der bereits in der if-schleife eingelesene Dateipfad 'nproj' wird
+! Der bereits in der if-schleife eingelesene Dateipfad 'PROJEKTPFAD' wird
 ! uebernommen und der neuen Variable proj_les zugewiesen.
-! In nproj ist enthalten: c:\Projekt\Projektname\prof
-proj_les = nproj
-i_les = LEN_TRIM (proj_les)
+! In PROJEKTPFAD ist enthalten: c:\Projekt\Projektname\prof
+!proj_les = PROJEKTPFAD
+!i_les = LEN_TRIM (proj_les)
 
 ! Da der uebernommene Projektpfad nach 'prof' verweist, wird dieser
 ! um 5 Stellen reduziert und um '\dath\' ergaenzt.
-proj_les (i_les - 5:) = '\dath\'
+!proj_les (i_les - 5:) = '\dath\'
 ! Der Projektpfad proj_les wird dem Pfad pfad_les zugewiesen.
 ! Fuer Eingabedatei-Pfad.
-pfad_les = proj_les
+!pfad_les = proj_les
 ! Der Projektpfad proj_les wird dem Pfad pfad_aus zugewiesen.
 ! Fuer Kontroll-Ausgabedatei-Pfad.
-pfad_aus = proj_les
+!pfad_aus = proj_les
 ! Der Projektpfad proj_les wird dem Pfad pfad_ver zugewiesen.
 ! Fuer Verlaufsdatei-Pfad.
-pfad_ver = proj_les
-i1_les = LEN_TRIM (pfad_les)
+!pfad_ver = proj_les
+!i1_les = LEN_TRIM (pfad_les)
 
 ! Der Pfad pfad_les wird um die Einlesedatei erweitert.
-pfad_les (i1_les + 1:) = 'WSPvaria.ein'
-i_aus = LEN_TRIM (pfad_aus)
+!pfad_les (i1_les + 1:) = 'WSPvaria.ein'
+!i_aus = LEN_TRIM (pfad_aus)
 
 ! Der Pfad pfad_aus wird um die Kontroll-Ausgabedatei erweitert.
-pfad_aus (i_aus + 1:) = 'variaaus.AUS'
-i_ver = LEN_TRIM (pfad_ver)
+!pfad_aus (i_aus + 1:) = 'variaaus.AUS'
+!i_ver = LEN_TRIM (pfad_ver)
 ! Der Pfad pfad_ver wird um die Ausgabedatei Verlauf1.WSP erweitert.
-pfad_ver (i_ver + 1:) = 'Verlauf1.WSP'
+!pfad_ver (i_ver + 1:) = 'Verlauf1.WSP'
                                                                         
+
 !HB   ***************************************************************** 
 !HB   26.11.2001 - H.Broeker                                            
 !HB   ----------------------                                            
 !HB   Der Projektpfad proj_les wird dem Pfad alph_aus zugewiesen.       
 !HB   Fuer Ausgabedatei-Pfad des Impuls-und Energiestrombeiwertes.      
-alph_aus = proj_les
-i_alph = LEN_TRIM (alph_aus)
-!HB   Der Pfad alph_aus wird um des Namen der Ausgabedatei erweitert.   
-alph_aus (i_alph + 1:) = 'Beiwerte.AUS'
-!HB   ***************************************************************** 
-                                                                        
-!HB   Aufruf der SUB LESDATIN und Uebergabe der Pfade, wo die
-!HB   Eingabedatei WSPvaria.ein und die Kontroll-Ausgabedatei           
-!HB   variaaus.AUS zu finden sind.                                      
-!HB   Aufruf von "lesdatin.for", welches die Steuerparameter aus        
-!HB   "WSPvaria.ein" einliesst und durch Commonbloecke an die           
-!HB   entsprechenden Subroutinen uebergibt.                             
+
+ilen  = LEN_TRIM(NAME_PFAD_DATH)
+NAME_OUT_ALPHA = NAME_PFAD_DATH(1:ilen) // 'Beiwerte.aus'
+!write (*,*) 'NAME_OUT_ALPHA = ', NAME_OUT_ALPHA
+
+
+IF (alpha_ja.eq.1) then
+  !HB     Oeffnen der Ergebnisausgabedatei fuer die Impuls- und Energie-
+  !HB     strombeiwert-Auswertung (zusaetzliche Ausgabedatei: Beiwerte.AUS
+
+  !HB     Einholen einer Dateinummer fuer Datei
+  UNIT_OUT_ALPHA = ju0gfu ()
+  !HB     Oeffnen der Datei Beiwerte.AUS
+  OPEN (UNIT = UNIT_OUT_ALPHA, FILE = NAME_OUT_ALPHA, STATUS = 'replace', IOSTAT = istat)
+  if (istat /=0) then
+    write (*,*) 'In WSP. Fehler beim Oeffnen von ', NAME_OUT_ALPHA
+    stop
+  end if
+END IF
+
 
 ! Kommentar wird immer angezeigt!
 antwort = 'n'
                                                                         
-                                                                        
-write ( * , 1100)
-1100 FORMAT (//,                                                        &
+if (RUN_MODUS /='KALYPSO') then
+  write ( * , 1100)
+  1100 FORMAT (//,                                                        &
      & 1x,'**********************************************',/,     &
      & 1x,'*       --------------------------------     *',/,     &
      & 1x,'*          BERECHNUNGSMOEGLICHKEITEN         *',/,     &
@@ -504,790 +571,908 @@ write ( * , 1100)
      & 1X,'**********************************************',//)
 
 
-! ---------------------------------------------------------------------------------
-! 6. Zeile in BAT.001
-! -------------------
-! EINLESEN ANFANGSSTATION
-write (*, 1006)
-1006 format (/1X, 'Berechnungsart -->')
-READ ( * , *) mode
-write (* , *) mode
-
-
-
-! WENN WASSERSPIEGELLAGENBERECHNUNG
-IF (mode.eq.1.or.mode.eq.2) then
-
-  ifg = 0
-  IF (mode.eq.2) ifg = 1
-
-  bordvoll = 'n'
-                                                                        
-  ! WP 24.05.2005
-  ! Von der Oberflaeche wird eine Datei QWERT.001 erzeugt, die nach Ablauf der
-  ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
-
-  ilen = LEN_TRIM (fnam1)
-  unit4 = fnam1
-  unit4 (ilen + 1:nch80) = 'qwert.'
-
-  ilen = LEN_TRIM (unit4)
-  unit4 (ilen + 1:nch80) = fall
-  UNIT_EIN_QWERT = ju0gfu ()
-  ierr = 0                          
-
-  OPEN (UNIT = UNIT_EIN_QWERT, FILE = unit4, IOSTAT = istat, STATUS = 'OLD', ACTION='READ')
-                                                                        
-  IF (istat.ne.0) then
-
-    write (*,*)
-
-    WRITE ( * , '(''qwert.dat existiert nicht auf der ebene'', a,'' !!'')') fnam1(1:ilen-1)
-    CLOSE (UNIT_EIN_QWERT)
-                                                                        
-    1901 continue
-    write (*,*) 'Gib Durchfluss [in qm/s] am 1. Profil an -->'
-    jjanz = 1
-    READ ( * , '(f10.0)', err = 1901) aqwert (1, jjanz)
-    write (*,*) aqwert (1, jjanz)
-                                                                        
-    1902 continue
-    write (*,*) 'Gib Station [in km]  des 1. Profils -->'
-    READ ( * , '(f10.0)', err = 1902) aqstat (1, jjanz)
-    write (*,*) aqstat (1, jjanz)
-                                                                        
-    write (*,*) 'Gib Bezeichnung Abfluss-Ereignis (max. 8 Z.) -->'
-    READ ( * , '(a)') aereignis (jjanz)
-    write (*,*) aereignis (jjanz)
-                                                                        
-    awsanf (jjanz) = 0.
-    anq (jjanz) = 1
-                                                                        
-  ELSE
-                                                                        
-    jjanz = 0
-    DO j = 1, merg
-      ereign (j) = ' '
-    END DO
-                                                                        
-    DO 95 j = 1, merg
-      aereignis (j) = ' '
-      anq (j) = 0
-      aqstat (1, j) = 0.
-      aqwert (1, j) = 0.
-      awsanf (j) = 0.
-
-      READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
-
-      CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
-
-      IF (ifehl.eq.1) goto 92
-
-      aereignis (j) = zchar (1)
-      anq (j) = zint (1)
-      jjanz = jjanz + 1
-
-      !**      anq = Anzahl der Stationen mit q-Wert-Wechsel
-      IF (anq (j) .eq.0) then
-         PRINT * , 'anzahl der stationen mit q-wert-wechsel=', nq, '!'
-         CLOSE (UNIT_EIN_QWERT)
-         GOTO 9999
-      ELSEIF (anq (j) .gt.merg) then
-         PRINT * , 'Fehler. Zuviele Q-Wechsel in QWERT-DATEI.'
-         PRINT * , 'Erhoehe Parameter MERG auf ', anq (j)
-         CLOSE (UNIT_EIN_QWERT)
-         GOTO 9999
-      ENDIF
-
-      DO 90 i = 1, anq (j)
-
-        READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
-        CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
-        IF (ireal.lt.2) then
-          PRINT * , 'Fehler in QWERT.DAT - Datei '
-          PRINT * , 'Kein Wertepaar selektiert in Zeile ', i
-          CLOSE (UNIT_EIN_QWERT)
-          GOTO 9999
-        ENDIF
-
-        aqstat (i, j) = zreal (1)
-        aqwert (i, j) = zreal (2)
-
-        IF (ireal.eq.3.and.i.eq.1) then
-          awsanf (j) = zreal (3)
-        ENDIF
-
-      90 END DO                                                                 
-                                                                        
-    95 END DO
-                                                                        
-    CLOSE (UNIT_EIN_QWERT)
-                                                                        
-  !**      endif(ierr.ne.0)
-  ENDIF
-                                                                        
-  92 continue
-
-  DO i = 1, jjanz
-    ereign (i) = aereignis (i)
-  END DO
-                                                                        
-  !     ------------------------------------------------------------------
-  !     Programmerweiterung vom 13.09.90 ,    E. Pasche
-  !     einlesen von oertlichen Verlustbeiwerten aus der Datei psiver.dat
-  !     bis ca. Programmzeile 650
-                                                                        
-
-! BORDVOLLBERECHNUNG, mode=3 FUER STRICKLER, mode=4 FUER DARCY
-ELSEIF (mode.eq.3.or.mode.eq.4) then
-                                                                        
-  IF (mode.eq.4) then
-    ifg = 1
-  ELSE
-    ifg = 0
-  ENDIF
-                                                                        
-  130 continue
-
-  write ( * , 1200)
-  1200 FORMAT (// &
-     & 1X, '**********************************************',/,  &
-     & 1X, '*       --------------------------------     *',/,  &
-     & 1X, '*         ART DER BORDVOLLBERECHNUNG         *',/,  &
-     & 1X, '*       --------------------------------     *',/,  &
-     & 1X, '*                                            *',/,  &
-     & 1X, '*  Bitte waehlen Sie zwischen                *',/,  &
-     & 1X, '*                                            *',/,  &
-     & 1X, '*    - mit Wasserspiegelgefaelle             *',/,  &
-     & 1X, '*      parallel Sohlgefaelle           (1)   *',/,  &
-     & 1X, '*                                            *',/,  &
-     & 1X, '*    - bei stationaer-ungleich-              *',/,  &
-     & 1X, '*      foermigem Abfluss               (2)   *',/,  &
-     & 1X, '*                                            *',/,  &
-     & 1X, '*    - Ende                            (3)   *',/,  &
-     & 1X, '*                                            *',/,  &
-     & 1X, '**********************************************',//)
-
   ! ---------------------------------------------------------------------------------
-  ! 6a. Zeile in BAT.001
-  ! --------------------
-  ! EINLESEN ART DER BORDVOLLBERECHNUNG
-  write (*, 1061)
-  1061 format (/1X, 'Bordvollberechnung -->')
+  ! 6. Zeile in BAT.001
+  ! -------------------
+  ! EINLESEN ANFANGSSTATION
+  write (*, 1006)
+  1006 format (/1X, 'Berechnungsart -->')
   READ ( * , *) mode
   write (* , *) mode
 
-  145 continue
+  ! Vorbelegung fuer alle Faelle (wird spaeter eventl. geaendert)
+  ABFLUSSEREIGNIS = 'qwert.001'
 
-  IF (mode.eq.1) then
+  IF (mode.eq.1.or.mode.eq.2) then
 
-    bordvoll = 'g'
+    ! WASSERSPIEGELLAGENBERECHNUNG
+    if (mode.eq.1) ifg = 0                ! Manning-Strickler
+    IF (mode.eq.2) ifg = 1        	! Darcy-Weisbach
 
-    write ( * , 1300)
-    1300 FORMAT (//  &
-     & 1X, '**********************************************',/, &
-     & 1X, '*   --------------------------------------   *',/, &
-     & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
-     & 1X, '*   BEI STATIONAER-GLEICHFOERMIGEM ABFLUSS   *',/, &
-     & 1X, '*   --------------------------------------   *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '**********************************************',//)
-                                                                        
-  ELSEIF (mode.eq.2) then
+    bordvoll = 'n'
 
-    bordvoll = 'u'
+    BERECHNUNGSMODUS = 'WATERLEVEL'
 
-    write ( * , 1400)
-    1400 FORMAT (// &
-     & 1X, '**********************************************',/, &
-     & 1X, '*  ----------------------------------------  *',/, &
-     & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
-     & 1X, '*  BEI STATIONAER-UNGLEICHFOERMIGEM ABFLUSS  *',/, &
-     & 1X, '*  ----------------------------------------  *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*  Bitte geben Sie fuer die Bordvollbe-      *',/, &
-     & 1X, '*  rechnung die Variationsbreite fuer die    *',/, &
-     & 1X, '*  Durchfluesse an:                          *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '**********************************************',//)
-                                                                        
-    1191 continue
-
-    ! ---------------------------------------------------------------------------------
-    ! 6b. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MAX)
-    write (*, 1062)
-    1062 format (/1X, 'Maximaler Abfluss -->')
-    READ ( * , *, err = 1191) rqmax
-    WRITE ( * , '(f10.2)') rqmax
-                                                                        
-    1192 continue
-
-    ! ---------------------------------------------------------------------------------
-    ! 6c. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MIN)
-    write (*, 1063)
-    1063 format (/1X, 'Minimaler Abfluss -->')
-    READ ( * , *, err = 1192) rqmin
-    WRITE ( * , '(f10.2)') rqmin
-
-    1193 continue
-
-    ! ---------------------------------------------------------------------------------
-    ! 6d. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (SCHRITTWEITE)
-    write (*, 1064)
-    1064 format (/1X, 'Schrittweite Abflussvariation -->')
-    READ ( * , *, err = 1193) qstep
-    WRITE ( * , '(f10.2)') qstep
+    ! WP 24.05.2005
+    ! Von der Oberflaeche wird eine Datei QWERT.001 erzeugt, die nach Ablauf der
+    ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
 
 
-    ! ---------------------------------------------------------------------------------
-    ! 6e. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN WQ-DATEIEN (j/n)
-    write (*, 1065)
-    1065 format (/1X, 'Sollen WQ-Dateien erstellt werden (j/n) ?')
-    READ ( * , *) idr1
-    WRITE (* , *) idr1
-                                                                        
+    ilen = LEN_TRIM (NAME_PFAD_PROF)
+    ilen2 = LEN_TRIM(fall)
 
-    ! ---------------------------------------------------------------------------------
-    ! 6f. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN ERGEBNISLISTEN
-    write (*, 1066)
-    1066 format (/1X, 'Sollen Ergebnislisten erstellt werden (j/n) ?')
-    READ ( * , *) idr2
-    WRITE (* , *) idr2
+    ABFLUSSEREIGNIS = 'qwert.' // fall(1:ilen2)
+    NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // 'qwert.' // fall(1:ilen2)
+    !write (*,*) 'NAME_EIN_QWERT = ', NAME_EIN_QWERT
 
+    UNIT_EIN_QWERT = ju0gfu ()
 
-    ! -----------------------
-    ! Anfangswasserspiegel
-    ! -----------------------
-    6603 CONTINUE
+    OPEN (UNIT = UNIT_EIN_QWERT, FILE = NAME_EIN_QWERT, IOSTAT = istat, STATUS = 'OLD', ACTION='READ')
 
-    write ( * , 1500)
-    1500 FORMAT (// &
-     &'**********************************************',/, &
-     &'*       --------------------------------     *',/, &
-     &'*             Anfangswasserspiegel           *',/, &
-     &'*       --------------------------------     *',/, &
-     &'*                                            *',/, &
-     &'*  Bitte waehlen Sie zwischen                *',/, &
-     &'*                                            *',/, &
-     &'* -  Berechnung des Ausgangswasserspie-      *',/, &
-     &'*    gels als Grenztiefe                (1)  *',/, &
-     &'*                                            *',/, &
-     &'* -  Berechnung des Ausgangswasserspie-      *',/, &
-     &'*    gels unter Annahme stationaer-          *',/, &
-     &'*    gleichfoermiger Abflussverhaelt-        *',/, &
-     &'*    nisse                              (2)  *',/, &
-     &'*                                            *',/, &
-     &'* -  Ende                               (3)  *',/, &
-     &'*                                            *',/, &
-     &'**********************************************',//)
-                                                                        
-    ! ---------------------------------------------------------------------------------
-    ! 6g. Zeile in BAT.001
-    ! --------------------
-    ! EINLESEN ANFANGSWASSERSPIEGEL BORDVOLLBERECHNUNG
-    write (*, 1067)
-    1067 format (/1X, 'Anfangswasserspiegel -->')
-    READ ( * , *, err = 6603) mode
-    WRITE (* , *  ) mode
+    IF (istat.ne.0) then
 
+      write (*,*)
 
-    IF (mode.eq.1) then
+      WRITE ( * , '(''qwert.dat existiert nicht auf der ebene'', a,'' !!'')') NAME_PFAD_PROF(1:ilen)
+      CLOSE (UNIT_EIN_QWERT)
 
-      wsanf = 0.0
+      1901 continue
+      write (*,*) 'Gib Durchfluss [in qm/s] am 1. Profil an -->'
+      jjanz = 1
+      READ ( * , '(f10.0)', err = 1901) aqwert (1, jjanz)
+      write (*,*) aqwert (1, jjanz)
 
-    ELSEIF (mode.eq.2) then
+      1902 continue
+      write (*,*) 'Gib Station [in km]  des 1. Profils -->'
+      READ ( * , '(f10.0)', err = 1902) aqstat (1, jjanz)
+      write (*,*) aqstat (1, jjanz)
 
-      6221 CONTINUE
+      write (*,*) 'Gib Bezeichnung Abfluss-Ereignis (max. 8 Z.) -->'
+      READ ( * , '(a)') aereignis (jjanz)
+      write (*,*) aereignis (jjanz)
 
-      ! ---------------------------------------------------------------------------------
-      ! 6g_1. Zeile in BAT.001
-      ! ----------------------
-      ! EINLESEN ANFANGSWASSERSPIEGEL BORDVOLLBERECHNUNG
-      write (*, 10671)
-      10671 format (/1X, 'Bitte geben Sie das Gefaelle ein -->')
-      READ ( * , *, err = 6221) wsanf
-      WRITE (* , *  ) wsanf
-
-      wsanf = - 1. * wsanf
-
-    ELSEIF (mode.eq.3) then
-
-      write (*, 9010)
-      9010 format (1X, 'Programmende!')
-      STOP
+      awsanf (jjanz) = 0.
+      anq (jjanz) = 1
 
     ELSE
 
-      GOTO 6603
+      jjanz = 0
+      DO j = 1, merg
+        ereign (j) = ' '
+      END DO
+
+      DO 95 j = 1, merg
+        aereignis (j) = ' '
+        anq (j) = 0
+        aqstat (1, j) = 0.
+        aqwert (1, j) = 0.
+        awsanf (j) = 0.
+
+        READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
+
+        CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
+
+        IF (ifehl.eq.1) goto 92
+
+        aereignis (j) = zchar (1)
+        anq (j) = zint (1)
+        jjanz = jjanz + 1
+
+        !**      anq = Anzahl der Stationen mit q-Wert-Wechsel
+        IF (anq (j) .eq.0) then
+           PRINT * , 'anzahl der stationen mit q-wert-wechsel=', nq, '!'
+           CLOSE (UNIT_EIN_QWERT)
+           GOTO 9999
+        ELSEIF (anq (j) .gt.merg) then
+           PRINT * , 'Fehler. Zuviele Q-Wechsel in QWERT-DATEI.'
+           PRINT * , 'Erhoehe Parameter MERG auf ', anq (j)
+           CLOSE (UNIT_EIN_QWERT)
+           GOTO 9999
+        ENDIF
+
+        DO 90 i = 1, anq (j)
+
+          READ (UNIT_EIN_QWERT, '(a)', end = 92) dummy
+          CALL ju0chr (dummy, zreal, ireal, zchar, ichara, zint, iint, ifehl)
+          IF (ireal.lt.2) then
+            PRINT * , 'Fehler in QWERT.DAT - Datei '
+            PRINT * , 'Kein Wertepaar selektiert in Zeile ', i
+            CLOSE (UNIT_EIN_QWERT)
+            GOTO 9999
+          ENDIF
+
+          aqstat (i, j) = zreal (1)
+          aqwert (i, j) = zreal (2)
+
+          IF (ireal.eq.3.and.i.eq.1) then
+            awsanf (j) = zreal (3)
+          ENDIF
+
+        90 END DO
+
+      95 END DO
+
+      CLOSE (UNIT_EIN_QWERT)
+
+    !**      endif(ierr.ne.0)
+    ENDIF
+
+    92 continue
+
+    DO i = 1, jjanz
+      ereign (i) = aereignis (i)
+    END DO
+
+
+  ! BORDVOLLBERECHNUNG, mode=3 FUER STRICKLER, mode=4 FUER DARCY
+  ELSEIF (mode.eq.3.or.mode.eq.4) then
+
+    if (mode.eq.3) ifg = 0              ! Manning-Strickler
+    IF (mode.eq.4) ifg = 1        	! Darcy-Weisbach
+
+    write ( * , 1200)
+    1200 FORMAT (// &
+       & 1X, '**********************************************',/,  &
+       & 1X, '*       --------------------------------     *',/,  &
+       & 1X, '*         ART DER BORDVOLLBERECHNUNG         *',/,  &
+       & 1X, '*       --------------------------------     *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '*  Bitte waehlen Sie zwischen                *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '*    - mit Wasserspiegelgefaelle             *',/,  &
+       & 1X, '*      parallel Sohlgefaelle           (1)   *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '*    - bei stationaer-ungleich-              *',/,  &
+       & 1X, '*      foermigem Abfluss               (2)   *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '*    - Ende                            (3)   *',/,  &
+       & 1X, '*                                            *',/,  &
+       & 1X, '**********************************************',//)
+
+    ! ---------------------------------------------------------------------------------
+    ! 6a. Zeile in BAT.001
+    ! --------------------
+    ! EINLESEN ART DER BORDVOLLBERECHNUNG
+    write (*, 1061)
+    1061 format (/1X, 'Bordvollberechnung -->')
+    READ ( * , *) mode
+    write (* , *) mode
+
+    145 continue
+
+    IF (mode.eq.1) then
+
+      bordvoll = 'g'
+
+      BERECHNUNGSMODUS = 'BF_UNIFORM'
+      ART_RANDBEDINGUNG = 'UNIFORM_BOTTOM_SLOPE'
+
+      write ( * , 1300)
+      1300 FORMAT (//  &
+       & 1X, '**********************************************',/, &
+       & 1X, '*   --------------------------------------   *',/, &
+       & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
+       & 1X, '*   BEI STATIONAER-GLEICHFOERMIGEM ABFLUSS   *',/, &
+       & 1X, '*   --------------------------------------   *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '**********************************************',//)
+
+    ELSEIF (mode.eq.2) then
+
+      bordvoll = 'u'
+
+      BERECHNUNGSMODUS = 'BF_NON_UNI'
+
+      write ( * , 1400)
+      1400 FORMAT (// &
+       & 1X, '**********************************************',/, &
+       & 1X, '*  ----------------------------------------  *',/, &
+       & 1X, '*              BORDVOLLBERECHNUNG            *',/, &
+       & 1X, '*  BEI STATIONAER-UNGLEICHFOERMIGEM ABFLUSS  *',/, &
+       & 1X, '*  ----------------------------------------  *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*  Bitte geben Sie fuer die Bordvollbe-      *',/, &
+       & 1X, '*  rechnung die Variationsbreite fuer die    *',/, &
+       & 1X, '*  Durchfluesse an:                          *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '**********************************************',//)
+
+      1191 continue
+
+      ! ---------------------------------------------------------------------------------
+      ! 6b. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MAX)
+      write (*, 1062)
+      1062 format (/1X, 'Maximaler Abfluss -->')
+      READ ( * , *, err = 1191) rqmax
+      WRITE ( * , '(f10.2)') rqmax
+
+      MAX_Q = rqmax
+
+      1192 continue
+
+      ! ---------------------------------------------------------------------------------
+      ! 6c. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MIN)
+      write (*, 1063)
+      1063 format (/1X, 'Minimaler Abfluss -->')
+      READ ( * , *, err = 1192) rqmin
+      WRITE ( * , '(f10.2)') rqmin
+
+      MIN_Q = rqmin
+
+      1193 continue
+
+      ! ---------------------------------------------------------------------------------
+      ! 6d. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (SCHRITTWEITE)
+      write (*, 1064)
+      1064 format (/1X, 'Schrittweite Abflussvariation -->')
+      READ ( * , *, err = 1193) qstep
+      WRITE ( * , '(f10.2)') qstep
+
+      DELTA_Q = qstep
+
+      ! ---------------------------------------------------------------------------------
+      ! 6e. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN WQ-DATEIEN (j/n)
+      write (*, 1065)
+      1065 format (/1X, 'Sollen WQ-Dateien erstellt werden (j/n) ?')
+      READ ( * , *) idr1
+      WRITE (* , *) idr1
+
+
+      ! ---------------------------------------------------------------------------------
+      ! 6f. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN ERGEBNISLISTEN
+      write (*, 1066)
+      1066 format (/1X, 'Sollen Ergebnislisten erstellt werden (j/n) ?')
+      READ ( * , *) idr2
+      WRITE (* , *) idr2
+
+
+      ! -----------------------
+      ! Anfangswasserspiegel
+      ! -----------------------
+      6603 CONTINUE
+
+      write ( * , 1500)
+      1500 FORMAT (// &
+       &'**********************************************',/, &
+       &'*       --------------------------------     *',/, &
+       &'*             Anfangswasserspiegel           *',/, &
+       &'*       --------------------------------     *',/, &
+       &'*                                            *',/, &
+       &'*  Bitte waehlen Sie zwischen                *',/, &
+       &'*                                            *',/, &
+       &'* -  Berechnung des Ausgangswasserspie-      *',/, &
+       &'*    gels als Grenztiefe                (1)  *',/, &
+       &'*                                            *',/, &
+       &'* -  Berechnung des Ausgangswasserspie-      *',/, &
+       &'*    gels unter Annahme stationaer-          *',/, &
+       &'*    gleichfoermiger Abflussverhaelt-        *',/, &
+       &'*    nisse                              (2)  *',/, &
+       &'*                                            *',/, &
+       &'* -  Ende                               (3)  *',/, &
+       &'*                                            *',/, &
+       &'**********************************************',//)
+
+      ! ---------------------------------------------------------------------------------
+      ! 6g. Zeile in BAT.001
+      ! --------------------
+      ! EINLESEN ANFANGSWASSERSPIEGEL BORDVOLLBERECHNUNG
+      write (*, 1067)
+      1067 format (/1X, 'Anfangswasserspiegel -->')
+      READ ( * , *, err = 6603) mode
+      WRITE (* , *  ) mode
+
+
+      IF (mode.eq.1) then
+
+        ART_RANDBEDINGUNG = 'CRITICAL_WATER_DEPTH'
+
+        wsanf = 0.0
+
+      ELSEIF (mode.eq.2) then
+
+        ART_RANDBEDINGUNG = 'UNIFORM_BOTTOM_SLOPE'
+
+        6221 CONTINUE
+
+        ! ---------------------------------------------------------------------------------
+        ! 6g_1. Zeile in BAT.001
+        ! ----------------------
+        ! EINLESEN ANFANGSWASSERSPIEGEL BORDVOLLBERECHNUNG
+        write (*, 10671)
+        10671 format (/1X, 'Bitte geben Sie das Gefaelle ein -->')
+        READ ( * , *, err = 6221) wsanf
+        WRITE (* , *  ) wsanf
+
+        GEFAELLE = wsanf
+
+        wsanf = - 1. * wsanf
+
+      ELSEIF (mode.eq.3) then
+
+        write (*, 9010)
+        9010 format (1X, 'Programmende!')
+        STOP
+
+      ELSE
+
+        GOTO 6603
+
+      ENDIF
+
+    ELSE
+
+      write (*, 9011)
+      9011 format (1X, 'Programmende!')
+      STOP
 
     ENDIF
-                                                                        
+
   ELSE
 
-    write (*, 9011)
-    9011 format (1X, 'Programmende!')
+    write (*, 9012)
+    9012 format (1X, 'Programmende!')
     STOP
 
   ENDIF
-                                                                        
-ELSE
 
-  write (*, 9012)
-  9012 format (1X, 'Programmende!')
-  STOP
-                                                                        
 ENDIF
-                                                                        
+
+! Read Discharge file (e.g. 'qwert.001')
+if (RUN_MODUS == 'KALYPSO' .and. BERECHNUNGSMODUS == 'WATERLEVEL') then
+
+  jjanz = 1                             ! Anzahl verfuegbarer Abflussereignisse
+
+  ilen = LEN_TRIM (NAME_PFAD_PROF)
+  ilen2 = LEN_TRIM(ABFLUSSEREIGNIS)
+  NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // ABFLUSSEREIGNIS(1:ilen2)
+  !write (*,*) 'NAME_EIN_QWERT = ', NAME_EIN_QWERT
+
+  UNIT_EIN_QWERT = ju0gfu ()
+
+  OPEN (UNIT = UNIT_EIN_QWERT, FILE = NAME_EIN_QWERT, IOSTAT = istat, STATUS = 'OLD', ACTION='READ')
+  if (istat /= 0) then
+    write (*,*) ' Fehler beim Oeffnen von ', NAME_EIN_QWERT
+    write (*,*) ' Programm wird beendet.'
+    stop
+  end if
+
+  read (UNIT_EIN_QWERT, *) ereignis, nq
+  do i = 1, nq
+    read (UNIT_EIN_QWERT, *) qstat(i), qwert(i)
+  end do
+
+  close (UNIT_EIN_QWERT)
+
+end if
+
+IF (RUN_MODUS == 'KALYPSO') THEN
+  if (ART_RANDBEDINGUNG == 'WATERLEVEL          ') then
+    wsanf = ANFANGSWASSERSPIEGEL
+  else if (ART_RANDBEDINGUNG == 'CRITICAL_WATER_DEPTH') then
+    wsanf = 0.0
+  else if (ART_RANDBEDINGUNG == 'UNIFORM_BOTTOM_SLOPE') then
+    wsanf = -1.0 * GEFAELLE
+  end if
+
+END IF
 
 
 
 ! -------------------------------------------------------------------------------------
 ! ABFRAGEN BEZUEGLICH KALININ-MILJUKOV BERECHNUNG
 ! -------------------------------------------------------------------------------------
+if (RUN_MODUS /='KALYPSO') then
 
-IF (bordvoll.ne.'n') then
-
-  !UT ******Berechnung ohne Kalinin-Miljukov **********
-  !UT goto 3999
-  !UT - OBIGES WAR BEREITS DEAKTIVIERT, 12.02.00, UT
-  !EP Reaktivierung von Kalinin-Miljukov     03.06.2002
-
-  ! -----------------------------------------------------------------
-  ! 6h. Zeile in BAT.001
-  ! --------------------
-  ! EINLESEN KALININ-MILJUKOV PARAMETER
-  write (*, 1068)
-  1068 format (/1X, 'Bestimmung der Kalinin-Miljukov-Parameter (j/n) ?')
-  READ ( * , *) km
-  WRITE (* , *) km
+  if (BERECHNUNGSMODUS /= 'WATERLEVEL') then
+  !IF (bordvoll.ne.'n') then
 
 
-  IF (km.eq.'j') then
-                                                                        
-    ikitg = 1
-                                                                        
-    ilen = LEN_TRIM (fnam1)
-    unit13 = fnam1
-    unit13 (ilen + 1:nch80) = 'teilg.'
+    !UT ******Berechnung ohne Kalinin-Miljukov **********
+    !UT goto 3999
+    !UT - OBIGES WAR BEREITS DEAKTIVIERT, 12.02.00, UT
+    !EP Reaktivierung von Kalinin-Miljukov     03.06.2002
 
-    ilen = LEN_TRIM (unit13)
-    unit13 (ilen + 1:nch80) = fall
-    UNIT_EIN_KM = ju0gfu ()
-    ierr = 0
+    ! -----------------------------------------------------------------
+    ! 6h. Zeile in BAT.001
+    ! --------------------
+    ! EINLESEN KALININ-MILJUKOV PARAMETER
+    write (*, 1068)
+    1068 format (/1X, 'Bestimmung der Kalinin-Miljukov-Parameter (j/n) ?')
+    READ ( * , *) km
+    WRITE (* , *) km
 
-    OPEN (UNIT=UNIT_EIN_KM, FILE=unit13, IOSTAT=istat, STATUS='OLD', ACTION='READ')
 
-    IF (istat.ne.0) then
+    IF (km.eq.'j') then
 
-      WRITE ( * , '(''teilg.dat existiert nicht auf der ebene'', A )')  fnam1 (1:ilen - 1)
-      CLOSE (UNIT_EIN_KM)
+      ikitg = 1
 
-      3901 continue
-      ! -----------------------------------------------------------------
-      ! 6i. Zeile in BAT.001
-      ! --------------------
-      ! EINLESEN TEILGEBIETSNUMMER
-      write (*, 1069)
-      1069 format (/1X, 'Bitte geben Sie die Teilgebietnummer an -->')
-      READ ( * , *, err = 3901) itg
-      write (*, *) itg
-      ikitg = 0
+      ilen = LEN_TRIM (NAME_PFAD_PROF)
+      ilen2 = LEN_TRIM(fall)
 
-    ELSE
+      NAME_EIN_KM = NAME_PFAD_PROF(1:ilen) // 'teilg.' // fall(1:ilen2)
+      UNIT_EIN_KM = ju0gfu ()
+      !write (*,*) 'NAME_EIN_KM = ', NAME_EIN_KM
 
-      ikg = 0
+      !ilen = LEN_TRIM (fnam1)
+      !unit13 = fnam1
+      !unit13 (ilen + 1:nch80) = 'teilg.'
 
-      3902 continue
+      !ilen = LEN_TRIM (unit13)
+      !unit13 (ilen + 1:nch80) = fall
+      !UNIT_EIN_KM = ju0gfu ()
+      !ierr = 0
 
-      READ (UNIT_EIN_KM, '(a)', end = 3903) dummy
-      CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
-      IF (ifehl.ne.0) then
-        GOTO 3902
-      ELSEIF (ianz.ne.1.or.iint.ne.1) then
-        GOTO 3902
-      ELSE
-        ikg = ikg + 1
-        anftg (ikg) = feldr (1)
-        numitg (ikg) = int (1)
-        GOTO 3902
-      ENDIF
+      OPEN (UNIT=UNIT_EIN_KM, FILE=NAME_EIN_KM, ACTION='READ', IOSTAT=istat)
 
-      3903 continue
-      IF (ikg.eq.0) then
+      IF (istat.ne.0) then
 
-        WRITE ( * , '(''keine Teilgebietbestimmung in '',a,'' !!'')') unit13
+        WRITE ( * , '(''teilg.dat existiert nicht auf der ebene'', A )')  NAME_PFAD_PROF
         CLOSE (UNIT_EIN_KM)
 
-        3904 continue
+        3901 continue
         ! -----------------------------------------------------------------
         ! 6i. Zeile in BAT.001
         ! --------------------
         ! EINLESEN TEILGEBIETSNUMMER
-        write (*, 1070)
-        1070 format (/1X, 'Bitte geben Sie die Teilgebietnummer an -->')
-        READ ( * , *, err = 3904) itg
+        write (*, 1069)
+        1069 format (/1X, 'Bitte geben Sie die Teilgebietnummer an -->')
+        READ ( * , *, err = 3901) itg
         write (*, *) itg
         ikitg = 0
 
+      ELSE
+
+        ikg = 0
+
+        !3902 continue
+
+        read (UNIT_EIN_KM, '(I10)', IOSTAT=istat) ikg
+        if (istat/=0) then
+          write (*,*) 'In WSP. Fehler bei KM-Datei.'
+          stop
+        end if
+        !write (*,*) 'In WSP. Anzahl Teilgebiete = ', ikg
+
+        do i = 1, ikg
+          read (UNIT_EIN_KM, *, IOSTAT=istat) anftg(i), numitg(i)
+          !write (*,*) 'ANFTG(',i,') = ', anftg(i), ' numitg(',i,') = ', numitg(i)
+        end do
+
+        !READ (UNIT_EIN_KM, '(a)', end = 3903) dummy
+        !write (*,*) 'In WSP. bei KM. dummy = ', dummy
+        !CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
+        !write (*,*) 'IFEHL = ', ifehl
+
+        !IF (ifehl.ne.0) then
+        !  GOTO 3902
+        !ELSEIF (ianz.ne.1.or.iint.ne.1) then
+        !  GOTO 3902
+        !ELSE
+        !  ikg = ikg + 1
+        !  anftg (ikg) = feldr (1)
+        !  numitg (ikg) = int (1)
+        !  GOTO 3902
+        !ENDIF
+
+        !3903 continue
+
+
+        IF (ikg.eq.0) then
+
+          WRITE ( * , '(''keine Teilgebietbestimmung in '',a,'' !!'')') NAME_EIN_KM
+          CLOSE (UNIT_EIN_KM)
+
+          3904 continue
+          ! -----------------------------------------------------------------
+          ! 6i. Zeile in BAT.001
+          ! --------------------
+          ! EINLESEN TEILGEBIETSNUMMER
+          write (*, 1070)
+          1070 format (/1X, 'Bitte geben Sie die Teilgebietnummer an -->')
+          READ ( * , *, err = 3904) itg
+          write (*, *) itg
+          ikitg = 0
+
+        ENDIF
+
       ENDIF
 
+    !**   ENDIF ZU (km.eq."j")
     ENDIF
-                                                                        
-  !**   ENDIF ZU (km.eq."j")
+
+  !**   ENDIF ZU (bordvoll.ne."n")
   ENDIF
-                                                                        
-!**   ENDIF ZU (bordvoll.ne."n")                                        
-ENDIF
-                                                                        
-                                                                        
-write (*, *)
+
+!**   ENDIF ZU (RUN_MODUS /= 'KALYPSO')
+end if
+
+
+
 
 ! -------------------------------------------------------------------------------------
 ! ABFRAGEN BEZUEGLICH OERTLICHER VERLUSTE
 ! -------------------------------------------------------------------------------------
+
+! Programmerweiterung vom 13.09.90 ,    E. Pasche
+! einlesen von oertlichen Verlustbeiwerten aus der Datei psiver.dat
 
 ! WP 24.05.2005
 ! Von der Oberflaeche wird eine Datei PSIVER.001 erzeugt, die nach Ablauf der
 ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
 ! Einlesen der oertlichen Verluste:
 
-ilen = LEN_TRIM (fnam1)
-unit6 = fnam1
-unit6 (ilen + 1:nch80) = 'psiver.'
+if (RUN_MODUS /= 'KALYPSO') then
 
-ilen = LEN_TRIM (unit6)
-unit6 (ilen + 1:nch80) = fall
-UNIT_EIN_PSI = ju0gfu ()
+  ilen  = LEN_TRIM (NAME_PFAD_PROF)
+  ilen2 = LEN_TRIM (fall)
+  NAME_EIN_PSI = NAME_PFAD_PROF(1:ilen) // 'psiver.' // fall (1:ilen2)
+  EINZELVERLUSTE = 'psiver.' // fall (1:ilen2)
 
-OPEN (UNIT=UNIT_EIN_PSI, IOSTAT=istat, FILE=unit6, STATUS='OLD', ACTION='READ')
-                                                                        
-IF (istat.ne.0.) then
-  write (*, 9020) fnam1(1:ilen-1)
+else
+
+  ilen  = LEN_TRIM (NAME_PFAD_PROF)
+  ilen2 = LEN_TRIM (EINZELVERLUSTE)
+  NAME_EIN_PSI = NAME_PFAD_PROF(1:ilen) // EINZELVERLUSTE(1:ilen2)
+
+end if
+
+!write (*,*) 'NAME_EIN_PSI = ', NAME_EIN_PSI
+
+INQUIRE (FILE=NAME_EIN_PSI, EXIST=lexist, IOSTAT=istat)
+
+if (.not. lexist) then
+
+  write (*, 9020) NAME_PFAD_PROF(1:ilen)
   9020 format (/1X, 'Datei mit oertlichen Verlusten ist nicht vorhanden in ', /, &
               & 1X, A, /, &
               & 1X, '-> Es treten keine oertliche Verluste auf!')
+  jpsi = 0
+
+else
+
+  UNIT_EIN_PSI = ju0gfu ()
+
+  OPEN (UNIT=UNIT_EIN_PSI, FILE=NAME_EIN_PSI, STATUS='OLD', ACTION='READ', IOSTAT=istat)
+  if (istat /= 0) then
+    write (*,*) 'Fehler beim Oeffnen von ', NAME_EIN_PSI
+    stop
+  end if
 
   jpsi = 0
-  GOTO 191
+
+  read_psiver: DO j = 1, maxger
+
+    !READ (UNIT_EIN_PSI, '(a)', end = 191) string
+    READ (UNIT_EIN_PSI, '(a)', IOSTAT=istat) string
+    if (istat /= 0) EXIT read_psiver
+
+    CALL ju0chr (string, feldr, ianz, char, ichar, int, iint, ifehl)
+
+    IF (ifehl.eq.0.and.ichar.eq.ianz) then
+
+      jpsi = jpsi + 1
+      psistat (jpsi) = 0.
+      psiein (jpsi) = 0.
+      psiort (jpsi) = 0.
+
+      DO i1 = 1, ianz
+
+        ilen = LEN_TRIM (char (i1) )
+
+        CALL lcase (char (i1) )
+        IF (char (i1) (1:ilen) .eq.'station') then
+          psistat (jpsi) = feldr (i1)
+        ELSEIF (char (i1) (1:ilen) .eq.'einlauf') then
+          psiein (jpsi) = feldr (i1)
+        ELSEIF (char (i1) (1:ilen) .eq.'kruemmer') then
+          psiort (jpsi) = psiort (jpsi) + feldr (i1)
+        ELSEIF (char (i1) (1:ilen) .eq.'rechen') then
+          psiort (jpsi) = psiort (jpsi) + feldr (i1)
+        ELSEIF (char (i1) (1:ilen) .eq.'zusatzverlust') then
+          psiort (jpsi) = psiort (jpsi) + feldr (i1)
+        ELSEIF (char (i1) (1:ilen) .eq.'auslauf') then
+          psiort (jpsi) = psiort (jpsi) + feldr (i1)
+        ELSE
+          write (*,9021) char(i1)(1:ilen)
+          9021 format (1X, 'Hinweis: Verlustart ',A , ' undefiniert!' )
+          psiort (jpsi) = psiort (jpsi) + feldr (i1)
+        ENDIF
+
+      END DO
+
+    !**         ELSE ZU (ifehl.eq.0.and.ichar.eq.ianz)
+    ELSE
+
+      write (*, 9022) psistat (jpsi)
+      9022 format (/1X, 'Fehlerhafte Definition der oertlichen Verluste!', /, &
+                  & 1X, 'Bitte pruefen Sie die Angabe von oertlichen Verlusten', /, &
+                  & 1X, 'bei Station: ', F10.4, '!', /, &
+                  & 1X, '-> PROGRAMMABBRUCH!' )
+      CLOSE (UNIT_EIN_PSI)
+      STOP
+
+    !**         ENDIF ZU (ifehl.eq.0.and.ichar.eq.ianz)
+    ENDIF
+
+  END DO read_psiver
+
+  CLOSE (UNIT_EIN_PSI)                                                                         
                                                                         
-ENDIF
-                                                                        
-jpsi = 0
+end if
+
+!191 continue
 
 
-DO j = 1, maxger
-                                                                        
-  READ (UNIT_EIN_PSI, '(a)', end = 191) string
-
-  CALL ju0chr (string, feldr, ianz, char, ichar, int, iint, ifehl)
-
-  IF (ifehl.eq.0.and.ichar.eq.ianz) then
-
-    jpsi = jpsi + 1
-    psistat (jpsi) = 0.
-    psiein (jpsi) = 0.
-    psiort (jpsi) = 0.
-
-    DO i1 = 1, ianz
-
-      !ilen = ju0nch (char (i1) )
-      ilen = LEN_TRIM (char (i1) )
-      CALL lcase (char (i1) )
-      IF (char (i1) (1:ilen) .eq.'station') then
-        psistat (jpsi) = feldr (i1)
-      ELSEIF (char (i1) (1:ilen) .eq.'einlauf') then
-        psiein (jpsi) = feldr (i1)
-      ELSEIF (char (i1) (1:ilen) .eq.'kruemmer') then
-        psiort (jpsi) = psiort (jpsi) + feldr (i1)
-      ELSEIF (char (i1) (1:ilen) .eq.'rechen') then
-        psiort (jpsi) = psiort (jpsi) + feldr (i1)
-      ELSEIF (char (i1) (1:ilen) .eq.'zusatzverlust') then
-        psiort (jpsi) = psiort (jpsi) + feldr (i1)
-      ELSE
-        write (*,9021) char(i1)(1:ilen)
-        9021 format (1X, 'Hinweis: Verlustart ',A , ' undefiniert!' )
-        psiort (jpsi) = psiort (jpsi) + feldr (i1)
-      ENDIF
-
-    END DO
-
-  !**         ELSE ZU (ifehl.eq.0.and.ichar.eq.ianz)
-  ELSE
-
-    write (*, 9022) psistat (jpsi)
-    9022 format (/1X, 'Fehlerhafte Definition der oertlichen Verluste!', /, &
-                & 1X, 'Bitte pruefen Sie die Angabe von oertlichen Verlusten', /, &
-                & 1X, 'bei Station: ', F10.4, '!', /, &
-                & 1X, '-> PROGRAMMABBRUCH!' )
-    CLOSE (UNIT_EIN_PSI)
-    STOP
-
-  !**         ENDIF ZU (ifehl.eq.0.and.ichar.eq.ianz)
-  ENDIF                                                                          
-                                                                        
-END DO
-
-CLOSE (UNIT_EIN_PSI)
-                                                                        
 
 
 ! -------------------------------------------------------------------------------------
 ! ABFRAGEN BEZUEGLICH NORMALER SPIEGELLINIENBERECHNUNG
 ! -------------------------------------------------------------------------------------
 
-191 continue
+if (RUN_MODUS /= 'KALYPSO') then
 
-IF (bordvoll.eq.'n') then
-                                                                        
-  ! Falls es mehr als ein Abflussereignis gibt
-  IF (jjanz.gt.1) then
-                                                                        
-    write (*, 1600)
-    1600 format (//, &
-           & 1X, '*****************************************************', /, &
-           & 1X, '*        Verfuegbare Abflussereignisse              *', /, &
-           & 1X, '*****************************************************')
+  !IF (bordvoll.eq.'n') then
+  if (BERECHNUNGSMODUS == 'WATERLEVEL') then
+
+    ! Falls es mehr als ein Abflussereignis gibt
+    IF (jjanz.gt.1) then
+
+      write (*, 1600)
+      1600 format (//, &
+             & 1X, '*****************************************************', /, &
+             & 1X, '*        Verfuegbare Abflussereignisse              *', /, &
+             & 1X, '*****************************************************')
 
 
-    DO i1 = 1, jjanz
+      DO i1 = 1, jjanz
 
-      ilen = LEN_TRIM (ereign (i1) )
+        ilen = LEN_TRIM (ereign (i1) )
 
-      WRITE (*, 1601) ereign (i1) (1:ilen) , i1
-      1601 format (1X, '*      ', A, T50, I2, T54, '*')
+        WRITE (*, 1601) ereign (i1) (1:ilen) , i1
+        1601 format (1X, '*      ', A, T50, I2, T54, '*')
+
+      END DO
+
+      write (*, 1602)
+      1602 FORMAT(1X, '*****************************************************')
+
+
+      ! ---------------------------------------------------------------------------------
+      ! 7. Zeile in BAT.001
+      ! -------------------
+      ! EINLESEN DES ABFLUSSEREIGNISSES
+      do
+
+        write (*, 1007)
+        1007 format (/1X, 'Nr. des Abflussereignisses -->')
+        READ ( * , *) nr
+        write (* , *) nr
+
+        if (nr.le.0 .or. nr.gt.jjanz) then
+          write (*, 9001)
+          9001 format (1X, 'Dies ist keine gueltige Nummer, bitte geben sie nocheinmal', /, &
+                     & 1X, 'die Nummer des Abflussereignisses an!', /)
+          CYCLE
+        end if
+
+        EXIT
+
+      end do
+      !-----------------------------------------------------------------------------------
+
+    ELSE
+
+      nr = 1
+
+    ENDIF
+
+
+    ereignis = aereignis (nr)
+
+    nq = anq (nr)
+
+    write (*, 1603)
+    1603 format (//, &
+            & 1X, '*****************************************************', /, &
+            & 1X, '*          Gewaehltes Abflussereignis               *', /, &
+            & 1X, '*****************************************************')
+
+    DO j = 1, nq
+
+      qstat (j) = aqstat (j, nr)
+      qwert (j) = aqwert (j, nr)
+
+      write (*, 1604) j, qwert(j), qstat(j)
+      1604 format (1X, '*   Q(', I2, ') = ', F10.3, '       an Station ', F10.3, '  *')
 
     END DO
-                                                                        
-    write (*, 1602)
-    1602 FORMAT(1X, '*****************************************************')
+
+    write (*, 1605)
+    1605 format (1X, '*****************************************************')
+
+
+
+
+    603 continue
+
+    write ( * , 1700)
+    1700 FORMAT (//  &
+       & 1x,'**********************************************',/,     &
+       & 1x,'*       --------------------------------     *',/,     &
+       & 1x,'*             Anfangswasserspiegel           *',/,     &
+       & 1x,'*       --------------------------------     *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1x,'*  Bitte waehlen Sie zwischen (1) und (4)    *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1x,'*  - Einlesen eines bekannten Anfangs-       *',/,     &
+       & 1x,'*    wasserspiegels aus Datei qwert.dat (1)  *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1x,'* -  Berechnung des Ausgangswasserspie-      *',/,     &
+       & 1X,'*    gels als Grenztiefe                (2)  *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1x,'* -  Berechnung des Ausgangswasserspie-      *',/,     &
+       & 1x,'*    gels unter Annahme stationaer-          *',/,     &
+       & 1x,'*    gleichfoermiger Abflussverhaelt-        *',/,     &
+       & 1x,'*    nisse                              (3)  *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1x,'* -  Ende                               (4)  *',/,     &
+       & 1x,'*                                            *',/,     &
+       & 1X,'**********************************************',/)
 
 
     ! ---------------------------------------------------------------------------------
-    ! 7. Zeile in BAT.001
+    ! 8. Zeile in BAT.001
     ! -------------------
-    ! EINLESEN DES ABFLUSSEREIGNISSES
-    do
+    ! EINLESEN ANFANGSWASSERSPIEGEL
+    write (*, 1008)
+    1008 format (/1X, 'Art des Anfangswasserspiegels -->')
+    READ ( * , *) mode
+    write (* , *) mode
 
-      write (*, 1007)
-      1007 format (/1X, 'Nr. des Abflussereignisses -->')
-      READ ( * , *) nr
-      write (* , *) nr
+    IF (mode.eq.1) then
 
-      if (nr.le.0 .or. nr.gt.jjanz) then
-        write (*, 9001)
-        9001 format (1X, 'Dies ist keine gueltige Nummer, bitte geben sie nocheinmal', /, &
-                   & 1X, 'die Nummer des Abflussereignisses an!', /)
-        CYCLE
-      end if
+      ART_RANDBEDINGUNG = 'WATERLEVEL          '
 
-      EXIT
+      wsanf = awsanf (nr)
 
-    end do
-    !-----------------------------------------------------------------------------------
+      IF (abs (wsanf) .lt. 1.e-04) then
 
-  ELSE
+        write (*,9002)
+        9002 format (/1X, 'Warnung! Kein Wasserstand in QWERT-Datei angegeben.')
 
-    nr = 1 
+        do
 
-  ENDIF 
-                                                                        
+          write (*, 1018)
+          1018 format (1X, 'Bitte geben Sie den Ausgangswasserstand ein -->')
+          read (UNIT=*, FMT=*, IOSTAT=ierr) wsanf
+          if (ierr /= 0) CYCLE
+          write (*, '(F10.4)') wsanf
+          ANFANGSWASSERSPIEGEL = wsanf
 
-  ereignis = aereignis (nr)
+          EXIT
 
-  nq = anq (nr)
-                                                                        
-  write (*, 1603)
-  1603 format (//, &
-          & 1X, '*****************************************************', /, &
-          & 1X, '*          Gewaehltes Abflussereignis               *', /, &
-          & 1X, '*****************************************************')
+        end do
 
-  DO j = 1, nq
+      ENDIF
 
-    qstat (j) = aqstat (j, nr)
-    qwert (j) = aqwert (j, nr)
-                                                                        
-    write (*, 1604) j, qwert(j), qstat(j)
-    1604 format (1X, '*   Q(', I2, ') = ', F10.3, '       an Station ', F10.3, '  *')
+    ELSEIF (mode.eq.2) then
 
-  END DO
-                                                                        
-  write (*, 1605)
-  1605 format (1X, '*****************************************************')
+      ART_RANDBEDINGUNG = 'CRITICAL_WATER_DEPTH'
 
+      wsanf = 0.0
 
+    ELSEIF (mode.eq.3) then
 
-
-  603 continue
-
-  write ( * , 1700)
-  1700 FORMAT (//  &
-     & 1x,'**********************************************',/,     &
-     & 1x,'*       --------------------------------     *',/,     &
-     & 1x,'*             Anfangswasserspiegel           *',/,     &
-     & 1x,'*       --------------------------------     *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1x,'*  Bitte waehlen Sie zwischen (1) und (4)    *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1x,'*  - Einlesen eines bekannten Anfangs-       *',/,     &
-     & 1x,'*    wasserspiegels aus Datei qwert.dat (1)  *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1x,'* -  Berechnung des Ausgangswasserspie-      *',/,     &
-     & 1X,'*    gels als Grenztiefe                (2)  *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1x,'* -  Berechnung des Ausgangswasserspie-      *',/,     &
-     & 1x,'*    gels unter Annahme stationaer-          *',/,     &
-     & 1x,'*    gleichfoermiger Abflussverhaelt-        *',/,     &
-     & 1x,'*    nisse                              (3)  *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1x,'* -  Ende                               (4)  *',/,     &
-     & 1x,'*                                            *',/,     &
-     & 1X,'**********************************************',/)
-
-
-  ! ---------------------------------------------------------------------------------
-  ! 8. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN ANFANGSWASSERSPIEGEL
-  write (*, 1008)
-  1008 format (/1X, 'Art des Anfangswasserspiegels -->')
-  READ ( * , *) mode
-  write (* , *) mode
-
-  IF (mode.eq.1) then
-    210 continue
-
-    write (*,*)
-
-    wsanf = awsanf (nr)
-
-    IF (abs (wsanf) .lt. 1.e-04) then
-
-      write (*,9002)
-      9002 format (1X, 'Warnung! Kein Wasserstand in QWERT-Datei angegeben.')
+      ART_RANDBEDINGUNG = 'UNIFORM_BOTTOM_SLOPE'
 
       do
 
-        write (*, 1018)
-        1018 format (1X, 'Bitte geben Sie den Ausgangswasserstand ein -->')
+        write (*, 1028)
+        1028 format (1X, 'Bitte geben Sie das Gefaelle ein -->')
         read (UNIT=*, FMT=*, IOSTAT=ierr) wsanf
         if (ierr /= 0) CYCLE
         write (*, '(F10.4)') wsanf
+        GEFAELLE = wsanf
+
         EXIT
-         
+
       end do
 
+      wsanf = - 1. * wsanf
+
+    ELSEIF (mode.eq.4) then
+
+      STOP 'Programmende'
+
+    ELSE
+
+      GOTO 603
+
     ENDIF
+
+  !ELSEIF (bordvoll.eq.'u'.or.bordvoll.eq.'g') then
+  !**   andere maske mit anfangswsp --> kein wsp aus qwert.dat
+
+  ENDIF                                                                                                    
                                                                         
-  ELSEIF (mode.eq.2) then
-
-    220 continue
-    wsanf = 0.0
-                                                                        
-  ELSEIF (mode.eq.3) then
-
-    221 continue
+end if
 
 
-    do
-
-      write (*, 1028)
-      1028 format (1X, 'Bitte geben Sie das Gefaelle ein -->')
-      read (UNIT=*, FMT=*, IOSTAT=ierr) wsanf
-      if (ierr /= 0) CYCLE
-      write (*, '(F10.4)') wsanf
-      EXIT
-
-    end do
-
-    wsanf = - 1. * wsanf
-                                                                        
-  ELSEIF (mode.eq.4) then
-
-    STOP 'Programmende'
-                                                                        
-  ELSE
-
-    GOTO 603 
-                                                                        
-  ENDIF
-                                                                        
-
-ELSEIF (bordvoll.eq.'u'.or.bordvoll.eq.'g') then
-!**   andere maske mit anfangswsp --> kein wsp aus qwert.dat            
-                                                                        
-ENDIF
-                                                                        
 
 
-240 continue
+! -------------------------------------------------------------------------------------
+! ABFRAGEN BEZUEGLICH ERGEBNISAUSGABE (zukuenftig obsolent)
+! -------------------------------------------------------------------------------------
+
+if (RUN_MODUS /= 'KALYPSO') then
+
+  write (*, 1800)
+  1800 format (// &
+        & 1X, '****************************************************', /, &
+        & 1X, '*               ---------------------              *', /, &
+        & 1X, '*               AUSGABEMOEGLICHKEITEN              *', /, &
+        & 1X, '*               ---------------------              *', /, &
+        & 1X, '*  Bitte waehlen Sie zwischen den folgenden        *', /, &
+        & 1X, '*  Ausgabemoeglichkeiten:                          *', /, &
+        & 1X, '*                                                  *', /, &
+        & 1X, '*  - Einfacher Ergebnisausdruck                    *', /, &
+        & 1X, '*    - Erstellung "TAB" und "WSL"-Files (1)        *', /, &
+        & 1X, '*                                                  *', /, &
+        & 1X, '*  - Erweiterter Ergebnisausdruck                  *', /, &
+        & 1X, '*    - Ausgabe eines Kontrollfiles      (2)        *', /, &
+        & 1X, '*                                                  *', /, &
+        & 1X, '*  - Berechnungsende                    (0)        *', /, &
+        & 1X, '*                                                  *', /, &
+        & 1X, '****************************************************')
+
+  ! ---------------------------------------------------------------------------------
+  ! 9. Zeile in BAT.001
+  ! -------------------
+  ! EINLESEN AUSGABEMOEGLICHKEITEN
+  write (*, 1009)
+  1009 format (/1X, 'Ausgabeart -->')
+  READ ( * , *) lein
+  write (* , *) lein
 
 
-write (*, 1800)
-1800 format (// &
-      & 1X, '****************************************************', /, &
-      & 1X, '*               ---------------------              *', /, &
-      & 1X, '*               AUSGABEMOEGLICHKEITEN              *', /, &
-      & 1X, '*               ---------------------              *', /, &
-      & 1X, '*  Bitte waehlen Sie zwischen den folgenden        *', /, &
-      & 1X, '*  Ausgabemoeglichkeiten:                          *', /, &
-      & 1X, '*                                                  *', /, &
-      & 1X, '*  - Einfacher Ergebnisausdruck                    *', /, &
-      & 1X, '*    - Erstellung "TAB" und "WSL"-Files (1)        *', /, &
-      & 1X, '*                                                  *', /, &
-      & 1X, '*  - Erweiterter Ergebnisausdruck                  *', /, &
-      & 1X, '*    - Ausgabe eines Kontrollfiles      (2)        *', /, &
-      & 1X, '*                                                  *', /, &
-      & 1X, '*  - Berechnungsende                    (0)        *', /, &
-      & 1X, '*                                                  *', /, &
-      & 1X, '****************************************************')
 
-! ---------------------------------------------------------------------------------
-! 9. Zeile in BAT.001
-! -------------------
-! EINLESEN AUSGABEMOEGLICHKEITEN
-write (*, 1009)
-1009 format (/1X, 'Ausgabeart -->')
-READ ( * , *) lein
-write (* , *) lein
+  !UT   UMBENNUNG VON lein von 2 auf 3, da 2 bei Eingabe gewaehlt wurde
+  IF (lein.eq.2) lein = 3
 
+  !**   Kennung fuer die Ausgabe des Ergebnisausdruckes:
+  IF (lein.eq.0) then
 
-                                                                        
-!UT   UMBENNUNG VON lein von 2 auf 3, da 2 bei Eingabe gewaehlt wurde
-IF (lein.eq.2) lein = 3
+    !UT LABEL 9999 = ENDE DES PROGRAMMES
+    GOTO 9999
 
-!**   Kennung fuer die Ausgabe des Ergebnisausdruckes:
-IF (lein.eq.0) then
+  ENDIF                                                                               
 
-  !UT LABEL 9999 = ENDE DES PROGRAMMES
-  GOTO 9999
-
-ENDIF
+end if
 
 
 !WP 10.03.2006 ----------------------------------------------------------------------
 ! Kontrollfile wird ab sofort  I M M E R  angelegt!
+
+ilen = LEN_TRIM (NAME_PFAD_DATH)
+NAME_OUT_LOG = NAME_PFAD_DATH(1:ilen) // 'Kontroll.log'
+
 UNIT_OUT_LOG = ju0gfu ()
 
-unit7 = fnam1
-ilen = LEN_TRIM (unit7)
+!write (*,*) 'NAME_OUT_LOG = ', NAME_OUT_LOG
 
-unit7 (ilen - 4:ilen - 1) = 'dath'
-unit7 (ilen + 1:nch80) = 'Kontroll.log'
-
-OPEN (unit = UNIT_OUT_LOG, file = unit7, status = 'REPLACE', iostat = istat)
+OPEN (unit = UNIT_OUT_LOG, file = NAME_OUT_LOG, status = 'REPLACE', iostat = istat)
 if (istat /= 0) then
-  write (*, 9003) unit7
+  write (*, 9003) NAME_OUT_LOG
   9003 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
              & 1X, 'Programm wird beendet!')
   call stop_programm(0)
@@ -1295,61 +1480,79 @@ end if
 !WP 10.03.2006 ----------------------------------------------------------------------
 
 
-                                                                        
 
 
-IF (bordvoll.ne.'g') then
-                                                                        
-  write (*, 1900)
-  1900 format (1X, // &
-       & 1X, '******************************************************', /, &
-       & 1X, '*               ____________________                 *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*               Verzoegerungsverlust                 *', /, &
-       & 1X, '*               ____________________                 *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*  Bitte waehlen Sie zwischen den folgenden          *', /, &
-       & 1X, '*  Moeglichkeiten:                                   *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*  - nach DVWK (betta=2/3)             (1)           *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*  - nach BJOERNSEN (betta=0.5)        (2)           *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*  - nach DFG (betta=2/(1+Ai-1/Ai)     (3)           *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '*  - Berechnungsende                   (0)           *', /, &
-       & 1X, '*                                                    *', /, &
-       & 1X, '******************************************************')
+! -------------------------------------------------------------------------------------
+! ABFRAGEN BEZUEGLICH VERZOEGERUNGSVERLUST
+! -------------------------------------------------------------------------------------
+
+if (RUN_MODUS /= 'KALYPSO') then
+
+  !IF (bordvoll.ne.'g') then
+  if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
+
+    write (*, 1900)
+    1900 format (1X, // &
+         & 1X, '******************************************************', /, &
+         & 1X, '*               ____________________                 *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*               Verzoegerungsverlust                 *', /, &
+         & 1X, '*               ____________________                 *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*  Bitte waehlen Sie zwischen den folgenden          *', /, &
+         & 1X, '*  Moeglichkeiten:                                   *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*  - nach DVWK (betta=2/3)             (1)           *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*  - nach BJOERNSEN (betta=0.5)        (2)           *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*  - nach DFG (betta=2/(1+Ai-1/Ai)     (3)           *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '*  - Berechnungsende                   (0)           *', /, &
+         & 1X, '*                                                    *', /, &
+         & 1X, '******************************************************')
 
 
-  ! ---------------------------------------------------------------------------------
-  ! 10. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN VERZOEGERUNGSVERLUST
-  write (*, 1010)
-  1010 format (/1X, 'Verlust -->')
-  READ ( * , *) iq
-  write (* , *) iq
+    ! ---------------------------------------------------------------------------------
+    ! 10. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN VERZOEGERUNGSVERLUST
+    write (*, 1010)
+    1010 format (/1X, 'Verlust -->')
+    READ ( * , *) iq
+    write (* , *) iq
 
-  !UT    LABEL 9999 = PROGRAMMENDE
-  IF (iq.eq.0) goto 9999
-  IF (iq.eq.1) betta = 2. / 3.
-  IF (iq.eq.2) betta = 0.5
-  IF (iq.eq.3) betta = 0.0
-                                                                        
-ENDIF
-                                                                        
+    !UT    LABEL 9999 = PROGRAMMENDE
+    IF (iq.eq.0) goto 9999
+
+    IF (iq.eq.1) VERZOEGERUNGSVERLUST = 'DVWK'
+    IF (iq.eq.2) VERZOEGERUNGSVERLUST = 'BJOE'
+    IF (iq.eq.3) VERZOEGERUNGSVERLUST = 'DFG '
+
+  else
+
+    ! Vorbelegung
+    VERZOEGERUNGSVERLUST = 'BJOE'
+
+  ENDIF                                                                                  
+
+end if
+
+
+if (VERZOEGERUNGSVERLUST == 'DVWK') then
+  betta = 2. / 3.
+else if (VERZOEGERUNGSVERLUST == 'BJOE') then
+  betta = 0.5
+else if (VERZOEGERUNGSVERLUST == 'DFG ') then
+  betta = 0.0
+end if
+
 
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades fnam1, z.B.
 !HB "C:\projektordner\flussname\prof\" und Zuweisung an ilen
-ilen = LEN_TRIM (fnam1)
-unit1 = fnam1
-!HB Anfuegen von 'dath' an den Pfad unit1
-!HB Es wird von Position 'ilen-4' bis 'ilen-1' geschrieben
-unit1 (ilen - 4:ilen - 1) = 'dath'
-!HB Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.B.
-!HB "C:\projektordner\flussname\dath\" und Zuweisung an ilen
-ilen = LEN_TRIM (unit1)
+ilen = LEN_TRIM (NAME_PFAD_DATH)
+NAME_OUT_TAB = NAME_PFAD_DATH(1:ilen)
+
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades fluss, z.B.
 !HB "flussname" und Zuweisung an ifulen
 iflulen = LEN_TRIM (fluss)
@@ -1363,27 +1566,27 @@ ENDIF
 !HB Anfuegen von den ersten 4 Buchstaben (maximal) des Flussnamens
 !HB an den Pfad unit1. Der Name wird von Position 1 bis 'iflulen'
 !HB geschrieben.
-!HB Es wird von Position 'ilen+1' bis zur 80.Position, da
-!HB'nch80'=80, fluss angehaengt.
-unit1 (ilen + 1:nch80) = fluss (1:iflulen)
+NAME_OUT_TAB (ilen+1 : ) = fluss(1:iflulen)
                                                                         
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.B.
 !HB "C:\projektordner\flussname\dath\reduzierterflussname" und
 !HB Zuweisung an ilen
-ilen = LEN_TRIM (unit1)
+ilen = LEN_TRIM (NAME_OUT_TAB)
                                                                         
 !HB Bei Wasserspiegellagenberechnung wird dieser Dateipfad angelegt
-IF (bordvoll.eq.'n') then
+IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
   !HB        Anfuegen von '_' an den Pfad unit1. Es wird von Position
   !HB        'ilen+1' bis zur 80. Position' geschrieben. (durch das Angebe
   !HB        der 80. Position werden zusaetzlich unnötige Reste geloescht)
-  unit1 (ilen + 1:nch80) = '_'
+  NAME_OUT_TAB (ilen + 1 : ) = '_'
   !HB        Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.
   !HB        "C:\projektordner\flussname\dath\reduzierterflussname_" und
   !HB        Zuweisung an ilen
-  ilen = LEN_TRIM (unit1)
+  ilen = LEN_TRIM (NAME_OUT_TAB)
   !HB        Zaehlen aller Buchstaben bzw. Positionen von ereignis, z.B.
   !HB        "AbfussereignisHQ" und Zuweisung an iqelen
+  write (*,*) 'Ereignis name = ', ereignis
+
   iqelen = LEN_TRIM (ereignis)
   !HB           Reduzierung von iqelen auf 3 Stellen
   IF (iqelen.gt.3) then
@@ -1394,186 +1597,277 @@ IF (bordvoll.eq.'n') then
   !HB        Position 1 bis 'iqelen' geschrieben.
   !HB        Es wird von Position 'ilen+1' bis zur 80. Position, da
   !HB        'nch80'=80, ereignis angehaengt.
-  unit1 (ilen + 1:nch80) = ereignis (1:iqelen)
+  NAME_OUT_TAB (ilen + 1 : ) = ereignis (1:iqelen)
   !HB        Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.
   !HB        "C:\projektordner\flussname\dath\redflussname_Abflusereignis"
   !HB        und Zuweisung an ilen.
-  ilen = LEN_TRIM (unit1)
+  ilen = LEN_TRIM (NAME_OUT_TAB)
   !HB      Ende IF-Schleife fuer Wasserspiegelberechnung
 ENDIF
                                                                         
 !HB Anfuegen der Endung '.tab' an den Pfad unit1.
 !HB Es wird von Position 'ilen+1' bis zur 80. Position, da
 !HB 'nch80'=80, '.tab' angehaengt.
-unit1 (ilen + 1:nch80) = '.tab'
+NAME_OUT_TAB (ilen+1 : ) = '.tab'
+
+!write (*,*) 'NAME_OUT_TAB = ', NAME_OUT_TAB
 
 
+
+
+
+
+! -------------------------------------------------------------------------------------
+! ABFRAGEN BEZUEGLICH BAUWERKE
+! -------------------------------------------------------------------------------------
 
 !**   GLEICHFOERMIGE BORDVOLLBERECHNUNG                                 
-IF (bordvoll.eq.'g') then
+IF (BERECHNUNGSMODUS == 'BF_UNIFORM') then
 
   ibruecke = 'n' 
-  wehr = 'n'
+  MIT_BRUECKEN = .FALSE.
 
-!**   BERECHNUNGEN DIE NICHT GLEICHFOERMIGE BORDVOLLRECHNUNGEN SIND
+  wehr = 'n'
+  MIT_WEHREN = .FALSE.
+
 ELSE
                                                                         
-  ! ---------------------------------------------------------------------------------
-  ! 11. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN BRUECKEN
-  write (*, 1011)
-  1011 format (/1X, 'Sollen die Bruecken mit berechnet werden (j/n) -->')
-  READ ( * , *) ibruecke
-  write (* , *) ibruecke
-  CALL lcase (ibruecke)         ! Konvertiert die Eingabe in Kleinbuchstaben
+  if (RUN_MODUS /= 'KALYPSO') then
 
+    ! ---------------------------------------------------------------------------------
+    ! 11. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN BRUECKEN
+    write (*, 1011)
+    1011 format (/1X, 'Sollen die Bruecken mit berechnet werden (j/n) -->')
+    READ ( * , *) ibruecke
+    write (* , *) ibruecke
+    CALL lcase (ibruecke)         ! Konvertiert die Eingabe in Kleinbuchstaben
 
-  ! ---------------------------------------------------------------------------------
-  ! 12. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN WEHRE
-  write (*, 1012)
-  1012 format (/1X, 'Sollen die Wehre mit berechnet werden (j/n) -->')
-  READ ( * , *) wehr
-  write ( *, *) wehr
-  CALL lcase (wehr)             ! Konvertiert die Eingabe in Kleinbuchstaben
+    if (ibruecke == 'j') then
+      MIT_BRUECKEN = .TRUE.
+    else
+      MIT_BRUECKEN = .FALSE.
+    end if
 
-!**   ENDIF (bordvoll.eq.'g')
+    ! ---------------------------------------------------------------------------------
+    ! 12. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN WEHRE
+    write (*, 1012)
+    1012 format (/1X, 'Sollen die Wehre mit berechnet werden (j/n) -->')
+    READ ( * , *) wehr
+    write ( *, *) wehr
+    CALL lcase (wehr)             ! Konvertiert die Eingabe in Kleinbuchstaben          
+
+    if (wehr == 'j') then
+      MIT_WEHREN = .TRUE.
+    else
+      MIT_WEHREN = .FALSE.
+    end if
+
+  end if
+
 ENDIF                                                                  
+
                                                                         
 
-! ---------------------------------------------------------------------------------
-! 13. Zeile in BAT.001
-! -------------------
-! EINLESEN WSL-FILE ERZEUGEN
-write (*, 1013)
-1013 format (/1X, 'Sollen die Profilnummern im .wsl-file dargestellt werden (j/n) -->')
-READ ( * , *) nr_ausg
-write (* , *) nr_ausg
-CALL lcase (nr_ausg)            ! Konvertiert die Eingabe in Kleinbuchstaben
-
-
-
-!**    ifg=1 bei bordvoll nach Darcy
-IF (ifg.eq.1) then
-
-  1306 continue
-
-  write ( * , 2000)
-  2000 FORMAT  (// &
-    &, 1X, '*************************************************',/, &
-    &, 1X, '*          --------------------------------     *',/, &
-    &, 1X, '*            ART DES WIDERSTANDGESETZES         *',/, &
-    &, 1X, '*          --------------------------------     *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*     Bitte waehlen Sie zwischen (1) und (2)    *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*       -  COLEBROOK-WHITE (ROHRSTROEMG.) (1)   *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*       -  COLEBROOK-WHITE MIT                  *',/, &
-    &, 1X, '*          FORMEINFLUSS                   (2)   *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*                                               *',/, &
-    &, 1X, '*************************************************')
+if (RUN_MODUS /= 'KALYPSO') then
 
   ! ---------------------------------------------------------------------------------
-  ! 14. Zeile in BAT.001
+  ! 13. Zeile in BAT.001
   ! -------------------
-  ! EINLESEN WIDERSTANDSGESETZ
-  write (*, 1014)
-  1014 format (/1X, 'Widerstandsgesetz -->')
-  READ ( * , *) mode
-  write (* , *) mode
+  ! EINLESEN WSL-FILE ERZEUGEN
+  write (*, 1013)
+  1013 format (/1X, 'Sollen die Profilnummern im .wsl-file dargestellt werden (j/n) -->')
+  READ ( * , *) nr_ausg
+  write (* , *) nr_ausg
+  CALL lcase (nr_ausg)            ! Konvertiert die Eingabe in Kleinbuchstaben            
 
-  IF (mode.eq.1) then
-    i_typ_flg = 'colebr'
-  ELSEIF (mode.eq.2) then
-    i_typ_flg = 'pasche'
+else
+
+  nr_ausg = 'n'
+
+end if
+
+
+
+
+! -------------------------------------------------------------------------------------
+! ABFRAGEN BEZUEGLICH WIDERSTANDSGESETZ
+! -------------------------------------------------------------------------------------
+
+if (RUN_MODUS /= 'KALYPSO') then
+
+  ! Wenn Darcy Weisbach, Abfrage nach Formeinfluss
+  IF (ifg.eq.1) then
+
+    1306 continue
+
+    write ( * , 2000)
+    2000 FORMAT  (// &
+      &, 1X, '*************************************************',/, &
+      &, 1X, '*          --------------------------------     *',/, &
+      &, 1X, '*            ART DES WIDERSTANDGESETZES         *',/, &
+      &, 1X, '*          --------------------------------     *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*     Bitte waehlen Sie zwischen (1) und (2)    *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*       -  COLEBROOK-WHITE (ROHRSTROEMG.) (1)   *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*       -  COLEBROOK-WHITE MIT                  *',/, &
+      &, 1X, '*          FORMEINFLUSS                   (2)   *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*                                               *',/, &
+      &, 1X, '*************************************************')
+
+    ! ---------------------------------------------------------------------------------
+    ! 14. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN WIDERSTANDSGESETZ
+    write (*, 1014)
+    1014 format (/1X, 'Widerstandsgesetz -->')
+    READ ( * , *) mode
+    write (* , *) mode
+
+    IF (mode.eq.1) then
+      i_typ_flg = 'colebr'
+      FLIESSGESETZ = 'DW_O_FORMBW'
+    ELSEIF (mode.eq.2) then
+      i_typ_flg = 'pasche'
+      FLIESSGESETZ = 'DW_M_FORMBW'
+    ELSE
+      write (*, 9004)
+      9004 format (1X, 'Falsche Eingabe! -> Es wird Methode (2) angenommen!')
+      i_typ_flg = 'pasche'
+      FLIESSGESETZ = 'DW_M_FORMBW'
+    ENDIF
+
   ELSE
-    write (*, 9004)
-    9004 format (1X, 'Falsche Eingabe! -> Es wird Methode (2) angenommen!')
+
+    FLIESSGESETZ = 'MANNING_STR'
+
+  ENDIF                                                                                   
+                                                                        
+else
+
+  if (FLIESSGESETZ == 'DW_O_FORMBW') then
+    i_typ_flg = 'colebr'
+    ifg = 1
+  else if (FLIESSGESETZ == 'DW_M_FORMBW') then
     i_typ_flg = 'pasche'
+    ifg = 1
+  else
+    ifg = 0
+  end if
+
+end if
+
+
+
+
+! -------------------------------------------------------------------------------------
+! ABFRAGEN BEZUEGLICH REIBUNGSVERLUST UND GENAUIGKEIT
+! -------------------------------------------------------------------------------------
+
+! Vorbelegung
+rg_vst = 1
+a_m = 1
+REIBUNGSVERLUST = 'TRAPEZ'
+ITERATIONSART = 'SIMPLE'
+
+if (RUN_MODUS /= 'KALYPSO') then
+
+  ! UNGLEICHFOERMIGE BORDVOLLBERECHNUNG, bordvoll.ne.g
+  !IF (bordvoll.ne.'g') then
+  if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
+
+    write ( * , 2100)
+    2100 FORMAT (// &
+       & 1X, '**********************************************',/, &
+       & 1X, '*  --------------------------------------    *',/, &
+       & 1X, '*  ART DER BERECHNUNG VON REIBUNGSVERLUST    *',/, &
+       & 1X, '*  --------------------------------------    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*  Bitte waehlen Sie zwischen                *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*  - nach Trapezformel                (1)    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*  - durch geometrische Mittelung     (2)    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '**********************************************')
+
+    ! ---------------------------------------------------------------------------------
+    ! 15. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN REIBUNGSVERLUST
+    write (*, 1015)
+    1015 format (/1X, 'Reibungsverlust -->')
+    READ ( * , *) rg_vst
+    write ( *, *) rg_vst
+
+    IF (rg_vst.ne.1 .and. rg_vst.ne.2) then
+      write (*, 9005)
+      9005 format (1X, 'Falsche Eingabe! -> Es wird Methode (1) angenommen!')
+      rg_vst = 1
+    ENDIF
+
+    if (rg_vst == 1) then
+      REIBUNGSVERLUST = 'TRAPEZ'
+    else if (rg_vst == 2) then
+      REIBUNGSVERLUST = 'GEOMET'
+    end if
+
+
+    write ( * , 2200)
+    2200 FORMAT (//  &
+       & 1X, '**********************************************',/, &
+       & 1X, '*  --------------------------------------    *',/, &
+       & 1X, '*      BERECHNUNG DES WASSERSPIEGELS         *',/, &
+       & 1X, '*  --------------------------------------    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*  Bitte waehlen Sie zwischen                *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*   - Einfache Iteration              (1)    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '*   - Genaue Berechnung durch                *',/, &
+       & 1X, '*     Einschlussintervall             (2)    *',/, &
+       & 1X, '*                                            *',/, &
+       & 1X, '**********************************************')
+
+    ! ---------------------------------------------------------------------------------
+    ! 16. Zeile in BAT.001
+    ! -------------------
+    ! EINLESEN BERECHNUG WASSERSPIEGEL
+    write (*, 1016)
+    1016 format (/1X, 'Berechnungsmethode -->')
+    READ ( * , *) a_m
+    write (* , *) a_m
+
+    IF (a_m.ne.1 .and. a_m.ne.2) then
+      write (*, 9006)
+      9006 format (1X, 'Falsche Eingabe! -> Es wird Methode (1) angenommen!')
+      a_m = 1
+    ENDIF
+
+    if (a_m == 1) then
+      ITERATIONSART = 'SIMPLE'
+    else if (a_m == 2) then
+      ITERATIONSART = 'EXACT '
+    end if
+
   ENDIF
 
-ENDIF
-                                                                        
+end if
 
 
-!**   UNGLEICHFÖRMIGE BORDVOLLBERECHNUNG, bordvoll.ne.g                 
-IF (bordvoll.ne.'g') then
-                                                                        
-  1313 CONTINUE
 
-  write ( * , 2100)
-  2100 FORMAT (// &
-     & 1X, '**********************************************',/, &
-     & 1X, '*  --------------------------------------    *',/, &
-     & 1X, '*  ART DER BERECHNUNG VON REIBUNGSVERLUST    *',/, &
-     & 1X, '*  --------------------------------------    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*  Bitte waehlen Sie zwischen                *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*  - nach Trapezformel                (1)    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*  - durch geometrische Mittelung     (2)    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '**********************************************')
 
-  ! ---------------------------------------------------------------------------------
-  ! 15. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN REIBUNGSVERLUST
-  write (*, 1015)
-  1015 format (/1X, 'Reibungsverlust -->')
-  READ ( * , *) rg_vst
-  write ( *, *) rg_vst
-                                                                        
-  IF (rg_vst.ne.1 .and. rg_vst.ne.2) then
-    write (*, 9005)
-    9005 format (1X, 'Falsche Eingabe! -> Es wird Methode (1) angenommen!')
-    rg_vst = 1
-  ENDIF
-                                                                        
-
-  2600 CONTINUE
-
-  write ( * , 2200)
-  2200 FORMAT (//  &
-     & 1X, '**********************************************',/, &
-     & 1X, '*  --------------------------------------    *',/, &
-     & 1X, '*      BERECHNUNG DES WASSERSPIEGELS         *',/, &
-     & 1X, '*  --------------------------------------    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*  Bitte waehlen Sie zwischen                *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*   - Einfache Iteration              (1)    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '*   - Genaue Berechnung durch                *',/, &
-     & 1X, '*     Einschlussintervall             (2)    *',/, &
-     & 1X, '*                                            *',/, &
-     & 1X, '**********************************************')
-                                                                        
-  ! ---------------------------------------------------------------------------------
-  ! 16. Zeile in BAT.001
-  ! -------------------
-  ! EINLESEN BERECHNUG WASSERSPIEGEL
-  write (*, 1016)
-  1016 format (/1X, 'Berechnungsmethode -->')
-  READ ( * , *) a_m
-  write (* , *) a_m
-                                                                        
-  IF (a_m.ne.1 .and. a_m.ne.2) then
-    write (*, 9006)
-    9006 format (1X, 'Falsche Eingabe! -> Es wird Methode (1) angenommen!')
-    a_m = 1
-  ENDIF
-                                                                        
-ENDIF
-                                                                        
-
+! -------------------------------------------------------------------------------------
+! ENDE DATENEINGABE
+! -------------------------------------------------------------------------------------
 
 write (*, 1017)
 1017 format (//1X, '***************************************************', /, &
@@ -1581,21 +1875,62 @@ write (*, 1017)
              & 1X, '***************************************************', ////)
 
 
+write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
+             & ANFANGSSTATION, ENDSTATION, ART_RANDBEDINGUNG, &
+             & ANFANGSWASSERSPIEGEL, GEFAELLE, &
+             & VERZOEGERUNGSVERLUST, ITERATIONSART, REIBUNGSVERLUST, &
+             & MIT_BRUECKEN, MIT_WEHREN, &
+             & ABFLUSSEREIGNIS, &
+             & EINZELVERLUSTE, &
+             & MIN_Q, MAX_Q, DELTA_Q, DURCHFLUSS_EINHEIT
+
+1020 format (//1X, 'KONFIGURATIONSDATEN', /, &
+             & 1X, '--------------------------------------------------', /, &
+             & 1X, 'PROJEKTPFAD = ', A, /, &
+             & 1X, 'STRANGDATEI = ', A, //, &
+             & 1X, 'BERECHNUNGSMODUS = ', A10, /, &
+             & 1X, 'FLIESSGESETZ     = ', A11, //, &
+             & 1X, 'ANFANGSSTATION = ', F12.4, /, &
+	     & 1X, 'ENDSTATION     = ', F12.4, //, &
+             & 1X, 'ART_RANDBEDINGUNG = ', A20, //, &
+             & 1X, 'ANFANGSWASSERSPIEGEL = ', F12.4, /, &
+             & 1X, 'GEFAELLE             = ', F12.7, //, &
+             & 1X, 'VERZOEGERUNGSVERLUST = ', A4, /, &
+             & 1X, 'ITERATIONSART        = ', A5, /, &
+             & 1X, 'REIBUNGSVERLUST      = ', A6, //, &
+             & 1X, 'MIT_BRUECKEN = ', L, /, &
+             & 1X, 'MIT_WEHREN   = ', L, //, &
+             & 1X, 'ABFLUSSEREIGNIS = ', A, /, &
+             & 1X, 'EINZELVERLUSTE  = ', A, //, &
+             & 1X, 'MIN_Q   = ', F10.4, /, &
+             & 1X, 'MAX_Q   = ', F10.4, /, &
+             & 1X, 'DELTA_Q = ', F10.4, //, &
+             & 1X, 'DURCHFLUSS_EINHEIT = ', A1, /)
+
+
+
+!WP -----------------------------------------------------------------------------------
+! Erzeuge Pfad- und Dateinamen für 'Laengsschnitt.txt'
+ilen = LEN_TRIM(NAME_PFAD_DATH)
+NAME_OUT_LAENGS = NAME_PFAD_DATH(1:ilen) // 'laengsschnitt.txt'
+!write (*,*) 'NAME_OUT_LAENGS = ', NAME_OUT_LAENGS
+!WP -----------------------------------------------------------------------------------
+
+
 !WP -----------------------------------------------------------------------------------
 !WP 11.11.2005
 !WP Es wird eine Datei zum Ausgeben der einzelnen Lambda-Werte
 !WP ueber den gesamten Querschnitt angelegt.
 
+ilen = LEN_TRIM (NAME_PFAD_DATH)
+NAME_OUT_LAMBDA_I = NAME_PFAD_DATH(1:ilen) // 'lambda_i.txt'
+!write (*,*) 'NAME_OUT_LAMBDA_I = ', NAME_OUT_LAMBDA_I
+
 UNIT_OUT_LAMBDA_I = ju0gfu ()
-lambdai = fnam1
-ilen = LEN_TRIM (lambdai)
 
-lambdai (ilen - 4:ilen - 1) = 'dath'
-lambdai (ilen + 1:nch80) = 'lambda_i.txt'
-
-OPEN (unit = UNIT_OUT_LAMBDA_I, file = lambdai, status = 'REPLACE', iostat = istat)
+OPEN (unit = UNIT_OUT_LAMBDA_I, file = NAME_OUT_LAMBDA_I, status = 'REPLACE', iostat = istat)
 if (istat /= 0) then
-  write (*, 9007) lambdai
+  write (*, 9007) NAME_OUT_LAMBDA_I
   9007 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
              & 1X, 'Programm wird beendet!')
   call stop_programm(0)
@@ -1607,24 +1942,25 @@ write (UNIT_OUT_LAMBDA_I, 9008) 'PROFIL', 'PUNKT', 'X [m]', 'H [m]', 'LAMBDA [-]
 
 
 
+
 ! --------------------------------------------------------------------------------------------
 ! Aufruf der Subroutinen WSPBER und QBORDV
 ! --------------------------------------------------------------------------------------------
 
-IF (bordvoll.ne.'n') then
-                                                                        
+if (BERECHNUNGSMODUS /= 'WATERLEVEL') then
+
   !HB wenn Bordvollberechnung mit parallelem Sohlgefälle (bordvoll=g)
   !HB gewaehlt wurde, werden die gesetzten Werte (qstep,rqmax,rqmin)
   !HB fuer die Berechnung zwar nicht benoetigt, jedoch muss fuer die
   !HB Uebergabe nach SUB qbordv eine Zuweisung erfolgt sein
-  IF (bordvoll.ne.'u') then
-    qstep = 0.0
-    rqmax = 1.e+06
-    rqmin = 1.e-06
+  IF (BERECHNUNGSMODUS == 'BF_UNIFORM') then
+    DELTA_Q = 0.0
+    MAX_Q = 1.e+06
+    MIN_Q = 1.e-06
   ENDIF
                                                                         
   !HB Aufruf der Bordvollberechnung
-  CALL qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
+  CALL qbordv (MAX_Q, MIN_Q, DELTA_Q)
 
   IF (km.eq.'j' .and. ikitg.eq.1) then
     CLOSE (UNIT_EIN_KM)
@@ -1634,12 +1970,15 @@ ELSE
 
   nr_q = 1
   anz_q = 1
-  CALL wspber (unit1, ibruecke, wehr)
+  CALL wspber ()
 
 ENDIF
                                                                         
-CLOSE (UNIT_EIN_STR, STATUS = 'DELETE')
-                                                                        
+if (RUN_MODUS /= 'KALYPSO') then
+  CLOSE (UNIT_EIN_STR, STATUS = 'DELETE')
+else
+  CLOSE (UNIT_EIN_STR)
+end if
 
 
 9999 CONTINUE

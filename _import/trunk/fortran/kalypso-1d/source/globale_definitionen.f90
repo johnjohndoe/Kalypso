@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    2:13 pm
+!     Last change:  WP    2 Jun 2006   11:31 am
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.0.18'
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 26.04.2006'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO - 1D, VERSION 1.1b  '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 24.05.2006'
 
 end module VERSION
 
@@ -105,26 +105,64 @@ implicit none
 
 save
 
-INTEGER :: UNIT_EIN_PROF        ! Profildatei (z.B. ..\PROF\st000042.prf)
-INTEGER :: UNIT_EIN_STR      	! Strangtabelle
-INTEGER :: UNIT_EIN_QWERT       ! Abflussdatei
-INTEGER :: UNIT_EIN_KM          ! Teilgebietedatei
-INTEGER :: UNIT_EIN_PSI         ! (Einzel-)Verlustbeiwerte
+INTEGER	:: UNIT_EIN_PROF        ! Profildatei (z.B. ..\PROF\st000042.prf)
+INTEGER	:: UNIT_EIN_STR      	! Strangtabelle
+INTEGER	:: UNIT_EIN_QWERT       ! Abflussdatei
+INTEGER	:: UNIT_EIN_KM          ! Teilgebietedatei
+INTEGER	:: UNIT_EIN_PSI         ! (Einzel-)Verlustbeiwerte
+INTEGER	:: UNIT_EIN_INI         ! KALYPSO-Konfigurationsdatei
 
-INTEGER :: UNIT_OUT_LOG         ! Kontroll.log
-INTEGER :: UNIT_OUT_LAMBDA_I    ! lambda_i.txt
-INTEGER :: UNIT_OUT_GER         ! Gerinnedatei für den Austausch der KM-Paramter mit NA-Modell
-INTEGER :: UNIT_OUT_LOG_KM      ! out.*, Detaillierte LOG-Datei der KM-Berechnung
-INTEGER :: UNIT_OUT_KM          ! z.B. st000042.km, WQ-Tabelle für jedes einzelne Profil bei stat-ungl. Berechnung
-INTEGER :: UNIT_OUT_TAB         ! Hauptausgabedatei, Tabelle mit Ergebnissen einer stat. Berechnung (z.B. sttb0001.001)
-INTEGER :: UNIT_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Energiestrom und Impulsstrombeiwerte
-INTEGER :: UNIT_OUT_PRO         ! WQ-Tabelle altes WspWin Format
-INTEGER :: UNIT_OUT_WSL         ! Laengschnitt im WspWin Blockformat
-INTEGER :: UNIT_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
-INTEGER :: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
-INTEGER :: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+INTEGER	:: UNIT_OUT_LOG         ! Kontroll.log
+INTEGER	:: UNIT_OUT_LAMBDA_I    ! lambda_i.txt
+INTEGER	:: UNIT_OUT_GER         ! Gerinnedatei für den Austausch der KM-Paramter mit NA-Modell
+INTEGER	:: UNIT_OUT_LOG_KM      ! out.*, Detaillierte LOG-Datei der KM-Berechnung
+INTEGER	:: UNIT_OUT_KM          ! z.B. st000042.km, WQ-Tabelle für jedes einzelne Profil bei stat-ungl. Berechnung
+INTEGER	:: UNIT_OUT_TAB         ! Hauptausgabedatei, Tabelle mit Ergebnissen einer stat. Berechnung (z.B. sttb0001.001)
+INTEGER	:: UNIT_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Energiestrom und Impulsstrombeiwerte
+INTEGER	:: UNIT_OUT_PRO         ! WQ-Tabelle altes WspWin Format
+INTEGER	:: UNIT_OUT_WSL         ! Laengschnitt im WspWin Blockformat
+INTEGER	:: UNIT_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
+INTEGER	:: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+INTEGER	:: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 
 end module IO_UNITS
+
+
+!-----------------------------------------------------------------------------
+module IO_NAMES
+
+USE DIM_VARIABLEN
+
+implicit none
+
+save
+
+CHARACTER(LEN=nch80) 			:: NAME_PFAD_PROF       ! Absoluter Pfad incl. \PROF\
+CHARACTER(LEN=nch80) 			:: NAME_PFAD_DATH       ! Absoluter Pfad incl. \DATH\
+
+CHARACTER(LEN=nch80),DIMENSION(1:maxger):: NAME_EIN_PROF        ! Profildatei (z.B. ..\PROF\st000042.prf)
+CHARACTER(LEN=nch80) 			:: NAME_EIN_STR      	! Strangtabelle
+CHARACTER(LEN=nch80) 			:: NAME_EIN_QWERT       ! Abflussdatei
+CHARACTER(LEN=nch80) 			:: NAME_EIN_KM          ! Teilgebietedatei
+CHARACTER(LEN=nch80) 			:: NAME_EIN_PSI         ! (Einzel-)Verlustbeiwerte
+CHARACTER(LEN=nch80) 			:: NAME_EIN_INI         ! KALYPSO-Konfigurationsdatei
+
+CHARACTER(LEN=nch80) 			:: NAME_OUT_LOG         ! Kontroll.log
+CHARACTER(LEN=nch80) 			:: NAME_OUT_LAMBDA_I    ! lambda_i.txt
+CHARACTER(LEN=nch80) 			:: NAME_OUT_GER         ! Gerinnedatei für den Austausch der KM-Paramter mit NA-Modell
+CHARACTER(LEN=nch80) 			:: NAME_OUT_LOG_KM      ! out.*, Detaillierte LOG-Datei der KM-Berechnung
+CHARACTER(LEN=nch80),DIMENSION(1:maxger):: NAME_OUT_KM          ! z.B. st000042.km, WQ-Tabelle für jedes einzelne Profil
+								! bei stat-ungl. Berechnung
+CHARACTER(LEN=nch80) 			:: NAME_OUT_TAB         ! Hauptausgabedatei, Tabelle mit Ergebnissen einer
+								! stat. Berechnung (z.B. sttb0001.001)
+CHARACTER(LEN=nch80) 			:: NAME_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Energiestrom und Impulsstrombeiwerte
+CHARACTER(LEN=nch80),DIMENSION(1:maxger):: NAME_OUT_PRO         ! WQ-Tabelle altes WspWin Format
+CHARACTER(LEN=nch80) 			:: NAME_OUT_WSL         ! Laengschnitt im WspWin Blockformat
+CHARACTER(LEN=nch80) 			:: NAME_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
+
+end module IO_NAMES
 
 
 
@@ -265,5 +303,69 @@ REAL, DIMENSION(maxger)         :: tau_fl = 0.0
 CHARACTER(LEN=10) :: num5 (maxger)
 
 end module AUSGABE_LAENGS
+
+
+
+! -----------------------------------------------------------
+module MOD_INI
+!
+! Description:
+! ------------
+! This module defines the general configuration data given by
+! the control file that is created from the KALYPSO-framework.
+! All variables are stored, but during calculation not all
+! of them may be neccessary.
+!                                   Wolf Ploeger, 24. May 2006
+
+USE DIM_VARIABLEN
+
+implicit none
+
+CHARACTER(LEN=7) :: RUN_MODUS           	! = "KALYPSO" oder "WSPWIN"
+
+CHARACTER(LEN=nch80) :: PROJEKTPFAD
+CHARACTER(LEN=nch80) :: STRANGDATEI
+
+CHARACTER(LEN=10) :: BERECHNUNGSMODUS           ! = WATERLEVEL
+                                                ! = BF_UNIFORM
+                                                ! = BF_NON_UNI
+
+CHARACTER(LEN=11) :: FLIESSGESETZ               ! = DW_M_FORMBW
+                                                ! = DW_O_FORMBW
+                                                ! = MANNING-STR
+REAL :: ANFANGSSTATION
+REAL :: ENDSTATION
+
+CHARACTER(LEN=20) :: ART_RANDBEDINGUNG          ! = CRITICAL_WATER_DEPTH
+                                                ! = UNIFORM_BOTTOM_SLOPE
+                                                ! = WATERLEVEL
+
+REAL :: ANFANGSWASSERSPIEGEL
+REAL :: GEFAELLE
+
+CHARACTER(LEN=4) :: VERZOEGERUNGSVERLUST        ! = DVWK
+                                                ! = BJOE
+                                                ! = DFG
+
+CHARACTER(LEN=5) :: ITERATIONSART               ! = SIMPL
+                                                ! = EXACT
+
+CHARACTER(LEN=6) :: REIBUNGSVERLUST             ! = TRAPEZ
+                                                ! = GEOMET
+
+LOGICAL :: MIT_BRUECKEN
+LOGICAL :: MIT_WEHREN
+
+CHARACTER(LEN=nch80) :: ABFLUSSEREIGNIS
+CHARACTER(LEN=nch80) :: EINZELVERLUSTE
+
+REAL :: MIN_Q
+REAL :: MAX_Q
+REAL :: DELTA_Q
+
+CHARACTER(LEN=1) :: DURCHFLUSS_EINHEIT          ! = "M" oder "L"
+
+end module MOD_INI
+
 
 

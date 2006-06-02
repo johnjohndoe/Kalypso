@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    1:57 pm
+!     Last change:  WP   24 May 2006    2:32 pm
 !--------------------------------------------------------------------------
 ! This code, impuls.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -149,9 +149,7 @@ COMMON / xr1yr1 / xr1 (mpts, max2), hr1 (mpts, max2), mr1 (max2), kr1
 COMMON / xr2yr2 / xr2 (mpts, max2), hr2 (mpts, max2), mr2 (max2), kr2
 ! ================================================                      
                                                                         
-      COMMON / iprint / id 
-      CHARACTER(2) id 
-                                                                        
+
       !WP 10.05.2004
       !WP Common-Block angepasst
       INTEGER ::isohl, iming 

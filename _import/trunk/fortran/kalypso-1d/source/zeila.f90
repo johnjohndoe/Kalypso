@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    4:40 pm
+!     Last change:  WP    2 Jun 2006    3:36 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,11 +40,9 @@
 
 
 
-
-SUBROUTINE zeila (unit5, nprof, pfad2, mark, file_laengs)
-
 ! ----------------------------------------------------------------
-!                                                                       
+SUBROUTINE zeila (unit5, nprof, pfad2, mark, NAME_OUT_LAENGS)
+!
 ! geschrieben:  p.koch     01.08.1989
 !                                                                       
 ! geaendert:    w. ploeger 10.05.2005
@@ -69,6 +67,7 @@ USE AUSGABE_LAENGS
 USE KONSTANTEN
 USE IO_UNITS
 USE MOD_ERG
+USE MOD_INI
                                                                         
 !WP -- Calling Variables -------------------------------------------------------------------------------------
 CHARACTER(LEN=nch80), INTENT(IN) :: pfad2	! Pfad- und Dateinamen für zu erstellende Dateien
@@ -79,7 +78,7 @@ INTEGER, INTENT(IN) :: mark                     ! Art der Berechnung:
 
 !ST 29.03.2005
 !Variable für Laengschnitt.txt
-CHARACTER(LEN=nch80), INTENT(IN) :: file_laengs ! Pfad- und Dateinamen fuer Ergebnisstabelle \Dath\laengsschnitt.txt
+CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_LAENGS ! Pfad- und Dateinamen fuer Ergebnisstabelle \Dath\laengsschnitt.txt
 !ST
 
 
@@ -140,7 +139,7 @@ if (mark == 1) then
   UNIT_OUT_LAENGS = ju0gfu ()
 
   ! Oeffnen der laengsschnitt.txt-Datei
-  open (unit = UNIT_OUT_LAENGS, file = file_laengs, status = 'REPLACE', ACTION='WRITE', IOSTAT = ierr)
+  open (unit = UNIT_OUT_LAENGS, file = NAME_OUT_LAENGS, status = 'REPLACE', ACTION='WRITE', IOSTAT = ierr)
   IF (ierr / = 0) then
     WRITE (*,*) 'ZEILA: Fehler beim Oeffnen von Laengsschnitt.txt'
     GOTO 9801
@@ -151,6 +150,7 @@ end if
 
 !HB   Holen einer neuen Dateinummer                                     
 UNIT_OUT_QB1 = ju0gfu ()
+!write (*,*) 'In ZEILA. unit5 = ', unit5
                                                                         
 OPEN (unit = UNIT_OUT_QB1, file = unit5, status = 'REPLACE', IOSTAT = ierr)
 IF (ierr / = 0) then
@@ -165,6 +165,7 @@ ENDIF
 IF (mark.eq.2.or.mark.eq.4) then
 
      UNIT_OUT_QB2 = ju0gfu ()
+     !write (*,*) 'In ZEILA. pfad2 = ', pfad2
      OPEN (unit = UNIT_OUT_QB2, file = pfad2, status = 'REPLACE', IOSTAT = ierr)
      IF (ierr / = 0) then
           PRINT * , 'ZEILA: Fehler beim Oeffnen von ', pfad2
@@ -207,10 +208,10 @@ IF (mark.eq.1) then
      WRITE (UNIT_OUT_QB1, '(a)') 'SPIEGELLINIEN-LAENGSSCHNITT '
      WRITE (UNIT_OUT_QB1, 5) ' '
 ELSEIF (mark.eq.2) then
-     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSZ'
+     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSS'
      WRITE (UNIT_OUT_QB1, '(a)') 'STATIONAER-UNGLEICHFOERMIG'
 ELSEIF (mark.eq.4) then
-     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSZ'
+     WRITE (UNIT_OUT_QB1, '(a)') 'BORDVOLLER ABFLUSS'
      WRITE (UNIT_OUT_QB1, '(a)') 'STATIONAER-GLEICHFOERMIG'
 ENDIF
 
@@ -373,19 +374,19 @@ IF (mark.eq.1.or.mark.eq.3) then
                     bete12 = ereignis (1:20)
                ENDIF
                DO i = 1, nprof
-                    IF (bordvoll.eq.'n') then
-                         yss (i) = wsp1 (i)
-                         !ST
-                         !WSP (i) = wsp1 (i)
+                    IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
+                      yss (i) = wsp1 (i)
+                      !ST
+                      !WSP (i) = wsp1 (i)
                     ELSE
-                         yss (i) = hwsp1 (i)
-                         !ST
-                         !WSP (i) = hwsp1 (i)
+                      yss (i) = hwsp1 (i)
+                      !ST
+                      !WSP (i) = hwsp1 (i)
                     ENDIF
                END DO
           ELSEIF (j.eq.9) then 
                bete1 = 'v-mittel  m/s    '
-               IF (bordvoll.eq.'u') then
+               IF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
                    DO i = 2, nprof
                         yss (i - 1) = vbv1 (i)
                    END DO
@@ -415,7 +416,8 @@ IF (mark.eq.1.or.mark.eq.3) then
       		    bete1 = 'K-St  '
               	    factor = 1.
                ENDIF
-               IF (bordvoll.eq.'g') then
+
+               IF (BERECHNUNGSMODUS == 'BF_UNIFORM') then
                      DO i = 2, nprof
                           IF (abs (hming1 (i) - sohl1 (i) ) .gt.1.e-06) then
                                yss (i - 1) = k_ks1 (i) * 10. * factor
@@ -465,8 +467,8 @@ IF (mark.eq.1.or.mark.eq.3) then
           IF (j.eq.5.or.j.eq.6.or.j.eq.7.or.j.eq.9.or.j.eq.10) then 
                lityp (j) = 0
                nzeist (j) = 1
-                                                                        
-               IF (bordvoll.ne.'g'.and. (j.eq.9.or.j.eq.10) ) then
+
+               IF (BERECHNUNGSMODUS /= 'BF_UNIFORM' .and. (j.eq.9.or.j.eq.10) ) then
                     w5 = 1
                     w7 = 0
                ELSE
@@ -579,18 +581,19 @@ IF (mark.eq.1.or.mark.eq.3) then
      !write (UNIT_OUT_LAENGS, *)
 
 
-     WRITE (UNIT_OUT_LAENGS, 80) 'Stat', 'Kenn', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+     WRITE (UNIT_OUT_LAENGS, 80) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
                              & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
                              & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN'
 
-     WRITE (UNIT_OUT_LAENGS, 80) 'km'  ,  '-', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+     WRITE (UNIT_OUT_LAENGS, 80) 'km'  ,  '-', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
                              & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
                              & 'mNN',    'mNN',      'mNN',      'm',       'm'
 
 
      do i = 1, anz_prof(1)
 
-       write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
+       write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
+                                & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
                                 & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
                                 & out_PROF(i,1)%vm, out_PROF(i,1)%tau, &
                                 & out_IND(i,1,1)%lambda, out_IND(i,1,2)%lambda, out_IND(i,1,3)%lambda, &
@@ -606,8 +609,8 @@ IF (mark.eq.1.or.mark.eq.3) then
      8  FORMAT (1X, 7A10,   A8,   A8,   3A8,   3A10,   3A10)
      9  FORMAT (1x, 7F10.4, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3)
 
-     80 FORMAT (1X, A10,   A5, 6A10,   A8,   A8,   3A8,   3A10,   3A10,   5A10)
-     90 format (1X, F10.4, A5, 6F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3, 5F10.3)
+     80 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A8,   3A10,   3A10,   5A10)
+     90 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3, 5F10.3)
      ! ST --------------------------------------------------------------------
                                                                         
 
@@ -618,30 +621,37 @@ ELSEIF (mark.gt.1) then
      PRINT *
      mode = 0
 
-     DO 130 WHILE(mode.le.0.or.mode.gt.2)
-          write ( * , 1601)
-          1601 FORMAT (//  &
-          & 1X, '**********************************************',/, &
-          & 1X, '*       --------------------------------     *',/, &
-          & 1X, '*          EINHEIT DES DURCHFLUSSES          *',/, &
-          & 1X, '*       --------------------------------     *',/, &
-          & 1X, '*                                            *',/, &
-          & 1X, '*  Bitte waehlen Sie zwischen (1) und (2)    *',/, &
-          & 1X, '*                                            *',/, &
-          & 1X, '*    -  Dimension in qm/s              (1)   *',/, &
-          & 1X, '*                                            *',/, &
-          & 1X, '*    -  Dimension in l/s               (2)   *',/, &
-          & 1X, '*                                            *',/, &
-          & 1X, '*                                            *',/, &
-          & 1X, '**********************************************',//)
+     if (RUN_MODUS /= 'KALYPSO') then
 
-          write (*, *) ' --> '
-          READ ( * , '(i2)', err = 130) mode
-          write (*, *) mode
-          145   PRINT *
+       DO 130 WHILE(mode.le.0.or.mode.gt.2)
+            write ( * , 1601)
+            1601 FORMAT (//  &
+            & 1X, '**********************************************',/, &
+            & 1X, '*       --------------------------------     *',/, &
+            & 1X, '*          EINHEIT DES DURCHFLUSSES          *',/, &
+            & 1X, '*       --------------------------------     *',/, &
+            & 1X, '*                                            *',/, &
+            & 1X, '*  Bitte waehlen Sie zwischen (1) und (2)    *',/, &
+            & 1X, '*                                            *',/, &
+            & 1X, '*    -  Dimension in qm/s              (1)   *',/, &
+            & 1X, '*                                            *',/, &
+            & 1X, '*    -  Dimension in l/s               (2)   *',/, &
+            & 1X, '*                                            *',/, &
+            & 1X, '*                                            *',/, &
+            & 1X, '**********************************************',//)
+
+            write (*, *) ' --> '
+            READ ( * , '(i2)', err = 130) mode
+            write (*, *) mode
+            145   PRINT *
+
+       130 CONTINUE                                                      
                                                                         
-     130 CONTINUE
-                                                                        
+     else
+
+       mode = 1
+
+     end if
                                                                         
      IF (mode.eq.2) then
           DO i1 = 1, nprof
@@ -715,7 +725,7 @@ ELSEIF (mark.gt.1) then
 
           bete12 = ' '
           IF (j.eq.1) then
-              bete1 = 'BORDVOLL ABFLUSZ  qm/s'
+              bete1 = 'BORDVOLL ABFLUSS  qm/s'
               DO i = 1, nprof
                    yss (i) = qbv1 (i)
               END DO
@@ -879,7 +889,7 @@ ELSEIF (mark.gt.1) then
                     bete1 = 'Q-bv       l/s'
                ENDIF
 
-               IF (bordvoll.eq.'u') then
+               IF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
                     DO i = 2, nprof
                          yss (i - 1) = qbv1 (i)
                     END DO
@@ -891,7 +901,8 @@ ELSEIF (mark.gt.1) then
                ENDIF
           ELSEIF (j.eq.8) then
                bete1 = 'v-bv       m/s    '
-               IF (bordvoll.eq.'u') then
+
+               IF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
                     DO i = 2, nprof
                          yss (i - 1) = vbv1 (i)
                     END DO

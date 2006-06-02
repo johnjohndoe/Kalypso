@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    4:37 pm
+!     Last change:  WP    2 Jun 2006    3:28 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 
-SUBROUTINE wspber (unit1, ibruecke, wehr)
+SUBROUTINE wspber ()
 !
 !   geschrieben: P. Koch, Maerz 1990
 !   geaendert:   W. Ploeger, Mai 2005
@@ -149,14 +149,14 @@ SUBROUTINE wspber (unit1, ibruecke, wehr)
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE VERSION
 USE IO_UNITS
+USE IO_NAMES
 USE MOD_ERG
+USE MOD_INI
 
 ! Calling variables
-CHARACTER(LEN=nch80), INTENT(IN) :: unit1               ! Pfadname des Projektes
-CHARACTER(LEN=1), INTENT(IN)     :: ibruecke            ! Schalter, ob Bruecken berechnet werden sollen
-CHARACTER(LEN=1), INTENT(IN)     :: wehr                ! Schalter, ob Wehre berechnet werden sollen
-
+!CHARACTER(LEN=nch80), INTENT(IN) :: unit1      ! Pfadname des Projektes
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
@@ -404,7 +404,7 @@ REAL :: br1                             ! Breite Nettoprofil '1' (bei Brueckenbe
 REAL :: delta
 REAL :: delta1                          ! Abstand des moeglichen Profils 'a' vom Brueckenprofil
 REAL :: str1
-
+REAL :: statles
 
 REAL :: feldr (merg)
 REAL :: xl (maxkla), hl (maxkla), raul (maxkla)
@@ -439,37 +439,16 @@ nprof = 0
 !**   Eroeffnen der Ausgabedatei 'Flussname.tab' (dateiname-unit1)
 UNIT_OUT_TAB = ju0gfu ()
 
-OPEN (unit = UNIT_OUT_TAB, file = unit1, status = 'REPLACE', ACTION='WRITE', IOSTAT = istat)
+OPEN (unit = UNIT_OUT_TAB, file = NAME_OUT_TAB, status = 'REPLACE', ACTION='WRITE', IOSTAT = istat)
 if (istat /= 0) then
-  write (*, 8900) unit1
+  write (*, 8900) NAME_OUT_TAB
   8900 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
              & 1X, 'Programm wird beendet!')
   call stop_programm(0)
 end if
 
-!HB   *****************************************************************
-!HB   26.11.2001 - H.Broeker
-!HB   ---------------------------------------------------------------
-!HB   STEUERPARAMETER
-!HB   ---------------
-!HB   Setzen des Steuerparameters, ob die Datei Beiwerte.AUS erzeugt
-!HB   und spaeter in sie geschrieben werden soll.
-!HB   Wenn alpha_ja=1, wird die Datei erzeugt und in sie geschrieben
-alpha_ja = 1
-!HB   Wenn alpha_ja=0, wird die Datei NICHT erzeugt und NICHT in sie
-!HB   geschrieben
-!      alpha_ja=0
-!HB   ---------------------------------------------------------------
-!HB   Die IF_Schleife wird durchlaufen, wenn die Datei Beiwerte.AUS
-!HB   erzeugt werden soll und in sie geschrieben werden soll.
+! Wenn BEIWERTE.AUS erzeugt wird
 IF (alpha_ja.eq.1) then
-  !HB     Oeffnen der Ergebnisausgabedatei fuer die Impuls- und Energie-
-  !HB     strombeiwert-Auswertung (zusaetzliche Ausgabedatei: Beiwerte.AUS
-
-  !HB     Einholen einer Dateinummer fuer Datei
-  UNIT_OUT_ALPHA = ju0gfu ()
-  !HB     Oeffnen der Datei Beiwerte.AUS
-  OPEN (UNIT = UNIT_OUT_ALPHA, IOSTAT = istat, FILE = alph_aus, STATUS = 'replace')
 
   !HB     Schreiben der Kopfzeile der Ausgabedatei Beiwert.AUS
   WRITE (UNIT_OUT_ALPHA, 9911)
@@ -497,18 +476,22 @@ IF (alpha_ja.eq.1) then
     &'v-m/s',5x,'Q-cbm/s',5x,'alpha_EW',5x,'alpha_IW',4x,'Gefaelle')
 ENDIF
 
-!**   /* stutze file ab pointer
+
+! -----------------------------------------------------------------------
+! Erste Zeile in Ausgabedatei (Tabelle)
+! -----------------------------------------------------------------------
 text = ' '
-!HB   Aenderung von 15 Leerzeichen in 6 (frueher: text(15:nch80)= )
+
 text (6:nch80)  = 'Ergebnis der Wasserspiegellagenberechnung fuer '
 
 ilen = LEN_TRIM (text)
 
-IF (bordvoll.eq.'n') then
+
+IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
 
   text (ilen + 2:nch80) = ereignis
 
-ELSEIF (bordvoll.eq.'u') then
+ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
   WRITE (ereignis, '(f8.3)') qvar
 
@@ -525,11 +508,13 @@ ELSE
 
 ENDIF
 
-!**   UNIT_OUT_TAB = Flussname.tab'?
+
 WRITE (UNIT_OUT_TAB, '(a)') text
 
 
-!**   Schreiben des Kopfes der Datei 'flussname.tab'
+! -----------------------------------------------------------------------
+! Kopfzeile in Ausgabedatei (Tabelle)
+! -----------------------------------------------------------------------
 nblatt = 1
 IF (idr1.ne.'j') then
   CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_TAB, idr1)
@@ -548,6 +533,7 @@ do i = 1, maxger
   out_PROF(i,nr_q)%BrueckUK 	= -999.999
   out_PROF(i,nr_q)%BrueckB 	= -999.999
   out_PROF(i,nr_q)%RohrD        = -999.999
+  out_PROF(i,nr_q)%qges         = 0.0
 end do
 
 
@@ -558,33 +544,47 @@ end do
 
 Hauptschleife: DO i = 1, maxger
 
-  ! Einlesen aus flussname.dat:
-  READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
-                                                                        
-  CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
+  if (RUN_MODUS == 'KALYPSO') then
 
-  IF (ifehl.ne.0.or.ianz.eq.0) then
-    write (*, 9000) dummy
-    9000 format (/1X, 'Fehlerhaftes Format in der Profildatei!', /, &
-                & 1X, 'Es wurde keine Station gelesen -> Abbruch!', /, &
-                &/1X, '(gelesen wurde: ', A, ')' )
-    call stop_programm(0)
-  ENDIF
+    read (UNIT_EIN_STR, *, IOSTAT=istat) nr, statles
+    ilen=LEN_TRIM(nr)
+    !write (*,*) nr(1:ilen), statles, istat
 
-  ! Station gelesen
-  statles = feldr (1)
+    if (istat/=0) EXIT Hauptschleife
 
-  ilen = LEN_TRIM (char (1) )
+  else
+    ! Einlesen aus Strangtabelle
+    READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
+    !write (*,*) 'In WSPBER. dummy = ', dummy
 
-  nr = char (1) (1:ilen)        ! NR beinhaltet den Namen der Profildatei (z.b. St000150.prf)
+    CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
+
+    IF (ifehl.ne.0.or.ianz.eq.0) then
+      write (*, 9000) dummy
+      9000 format (/1X, 'Fehlerhaftes Format in der Profildatei!', /, &
+                  & 1X, 'Es wurde keine Station gelesen -> Abbruch!', /, &
+                  &/1X, '(gelesen wurde: ', A, ')' )
+      call stop_programm(0)
+    ENDIF
+
+    ! Station gelesen
+    statles = feldr (1)
+
+    ilen = LEN_TRIM (char (1) )                                            
+
+    nr = char (1) (1:ilen)        ! NR beinhaltet den Namen der Profildatei (z.b. St000150.prf)
+
+  end if
+
 
   !WP Wenn gelesene Station kleiner als Anfangsstation, dann nochmal lesen
-  IF (statles .lt. staanf) CYCLE Hauptschleife
+  IF (statles .lt. ANFANGSSTATION) CYCLE Hauptschleife
 
   !WP Wenn gelesene Station größer als Endstation, dann Programm beenden
-  IF (statles .gt. staend) EXIT Hauptschleife
-                                                                        
-                                                                        
+  IF (statles .gt. ENDSTATION) EXIT Hauptschleife
+
+  !write (*,*) 'In WSPBER. Nach Stationsabfrage.'
+
   ! Anzahl der Profile fuer die WSP-Berechnung:
   nprof = nprof + 1
   stat (nprof) = statles
@@ -598,38 +598,37 @@ Hauptschleife: DO i = 1, maxger
   ! Einlesen der Profildatei NR (z.B. St000150.prf)
   ! ------------------------------------------------------------------
                                                                         
-  ilen = LEN_TRIM (fnam1)
+  ilen  = LEN_TRIM (NAME_PFAD_PROF)
+  ilen2 = LEN_TRIM (nr)
 
-  unit4 = fnam1
-
-  unit4 (ilen + 1:nch80) = nr           ! Kompletter Pfad zur Profildatei
-  CALL lcase (unit4)
+  NAME_EIN_PROF(i) = NAME_PFAD_PROF(1:ilen) // nr(1:ilen2)
+  CALL lcase (NAME_EIN_PROF(i))
 
   UNIT_EIN_PROF = ju0gfu ()                       ! Leere Unit holen
   istat = 0
 
 
   write (UNIT_OUT_LOG, '(///,''----------------------------------------------------------------------'')')
-  write (UNIT_OUT_LOG, '(''Oeffnen Profildatei '',a)') unit4
+  write (UNIT_OUT_LOG, '(''Oeffnen Profildatei '',a)') NAME_EIN_PROF(i)
 
   ! Zuweisung des kompletten Dateinamens der Profildatei zu einem Array
-  dateiname(i) = unit4
+  dateiname(i) = NAME_EIN_PROF(i)
 
-  OPEN (unit = UNIT_EIN_PROF, iostat = istat, file = unit4, status = 'old')
+  OPEN (unit = UNIT_EIN_PROF, file = NAME_EIN_PROF(i), status = 'old', iostat = istat)
   IF (istat.ne.0) then
-    write (*, 9001) unit4
-    write (UNIT_OUT_LOG, 9001) unit4
+    write (*, 9001) NAME_EIN_PROF(i)
+    write (UNIT_OUT_LOG, 9001) NAME_EIN_PROF(i)
     9001 format (/1X, 'Fehler: Datei existiert nicht: ', A, /, &
                 & 1X, '-> Programm wird beendet.')
     GOTO 999
   ENDIF
 
 
+
   ! ------------------------------------------------------------------
   ! Eroeffnen der Ausgabedatei *.pro bei Bordvollberechnung
   ! --> Wasserstands-Abflussbeziehung fuer jede Station
   ! ------------------------------------------------------------------
-
   IF (idr1.eq.'j') then
 
     WRITE (text, '(f11.4)') stat(nprof)
@@ -643,9 +642,8 @@ Hauptschleife: DO i = 1, maxger
 
     text = ADJUSTL (text)
 
-    unit7 = fnam1
-    ilen = LEN_TRIM (unit7)
-    unit7 (ilen - 4:ilen - 1) = 'dath'
+    unit7 = NAME_PFAD_DATH
+
     iflen = LEN_TRIM (fluss)
 
     IF (iflen.gt.2) then
@@ -658,18 +656,24 @@ Hauptschleife: DO i = 1, maxger
     ilen = LEN_TRIM (unit7)
     unit7 (ilen + 1:nch80) = '.pro'
     UNIT_OUT_PRO = ju0gfu ()
+    NAME_OUT_PRO(i) = unit7
+    !write (*,*) 'NAME_OUT_PRO(',i,') = ', NAME_OUT_PRO(i)
 
-    OPEN (unit = UNIT_OUT_PRO, file = unit7, status = 'unknown')
+    !WP OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
+    !WP OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), ACTION='WRITE', POSITION='APPEND', IOSTAT=istat)
 
+    !WP isch ist Zaehler fuer Abflussereignis bei stationaer-ungl. Berechnung
     IF (isch.eq.1) then
 
       !**  /* stutze file ab pointer
-      CALL lu0trf (UNIT_OUT_PRO)
+      !WP CALL lu0trf (UNIT_OUT_PRO)
+      OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
       CALL kopf (nblatt, nz, UNIT_OUT_PRO, ifg, UNIT_OUT_PRO, idr1)
 
     ELSE
 
-      INQUIRE (UNIT = UNIT_OUT_PRO, OPENED = is_open, IOSTAT = istat)
+      OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), ACTION='WRITE', POSITION='APPEND', IOSTAT=istat)
+      !WP INQUIRE (UNIT = UNIT_OUT_PRO, OPENED = is_open, IOSTAT = istat)
       if (istat /= 0) then
         ! 9002
         write (*,*) ' In WSPBER ist ein Fehler beim Untersuchen des Zustandes'
@@ -678,20 +682,19 @@ Hauptschleife: DO i = 1, maxger
         GOTO 999
       end if
 
-      IF (is_open) then
-        fehler_id = fseek (UNIT_OUT_PRO, 0, 2)
-        if (fehler_id /= 0) then
-          ! 9003
-          write (*,*) ' In WSPBER ist ein Fehler aufgetreten beim Platzieren eines'
-          WRITE (*,*) ' Pointers in einer Datei! (Nach FSEEK ca. Zeile 706)'
-          write (*,*) ' -> Versuche weiterzurechnen...'
-          GOTO 999
-        end if
-      end if
+      !IF (is_open) then
+      !  fehler_id = fseek (UNIT_OUT_PRO, 0, 2)
+      !  if (fehler_id /= 0) then
+      !    ! 9003
+      !    write (*,*) ' In WSPBER ist ein Fehler aufgetreten beim Platzieren eines'
+      !    WRITE (*,*) ' Pointers in einer Datei! (Nach FSEEK ca. Zeile 706)'
+      !    write (*,*) ' -> Versuche weiterzurechnen...'
+      !    GOTO 999
+      !  end if
+      !end if
 
     ENDIF
 
-  ! ENDIF OB BORDVOLL (idr1.eq.'j')
   ENDIF
 
 
@@ -771,7 +774,7 @@ Hauptschleife: DO i = 1, maxger
   !**   Abspeichern alter Q-Wert:
   IF (nprof.gt.1) q1 = q
 
-  IF (bordvoll.eq.'n'.and. nq.gt.1) then
+  IF (BERECHNUNGSMODUS == 'WATERLEVEL' .and. nq.gt.1) then
 
     IF (nprof.gt.1) then
 
@@ -849,18 +852,16 @@ Hauptschleife: DO i = 1, maxger
     !**      ENDIF ZU (nprof.gt.1)
     ENDIF
 
-  !**   ELSEIF ZU (bordvoll.eq.'n'.and.nq.gt.1)
-  ELSEIF (bordvoll.ne.'g') then
+  ELSEIF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     q = qvar
 
     IF (nq.eq.1) then
       q = qwert (1)
     ENDIF
 
-  !**   ENDIF ZU (bordvoll.eq.'n'.and.nq.gt.1)
   ENDIF
 
-
+  out_PROF(nprof,nr_q)%qges = q         ! Abspeichern des Abflusses am aktuellen Profil
 
   ! ------------------------------------------------------------------------------------------------
   ! Ergaenzung zur Beruecksichtigung oert. Verluste 13.09.90 E. Pasche
@@ -882,7 +883,7 @@ Hauptschleife: DO i = 1, maxger
   ! ------------------------------------------------------------------------------------------------
   ! Anfangswasserspiegel fuer das erste Profil
 
-  IF (bordvoll.ne.'g') then
+  IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     IF (nprof.eq.1) then
 
@@ -897,7 +898,7 @@ Hauptschleife: DO i = 1, maxger
         & nz, idr1)
 
     !**   ABFRAGE ZUR BRUECKENBERECHNUNG
-    ELSEIF (ibridge.eq.'b' .and. ibruecke.eq.'j') then
+    ELSEIF (ibridge.eq.'b' .and. MIT_BRUECKEN) then
 
 
       ! ------------------------------------------------------------------
@@ -974,7 +975,7 @@ Hauptschleife: DO i = 1, maxger
         out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
         out_PROF(nprof,nr_q)%chr_kenn = 'i'         	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
-
+        out_PROF(nprof,nr_q)%qges = q
         num (nprof) = '0'
 
 
@@ -1075,7 +1076,7 @@ Hauptschleife: DO i = 1, maxger
       out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
       out_PROF(nprof,nr_q)%chr_kenn = 'i'   	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                 !WP interpoliert wurde.
-
+      out_PROF(nprof,nr_q)%qges = q
 
       write (   *  ,      1002) stat (nprof)
       write (   0  ,      1002) stat (nprof)
@@ -1116,6 +1117,8 @@ Hauptschleife: DO i = 1, maxger
       out_PROF(nprof,nr_q)%BrueckB = breite
 
       out_PROF(nprof,nr_q)%chr_kenn = 'b'
+
+      out_PROF(nprof,nr_q)%qges = q
 
       prof_it (nprof) = 0
 
@@ -1330,7 +1333,7 @@ Hauptschleife: DO i = 1, maxger
       ENDIF
 
     !**   ELSEIF ZU (nprof.eq.1)
-    ELSEIF (iwehr.eq.'w'.and.wehr.eq.'j') then
+    ELSEIF (iwehr.eq.'w'.and. MIT_WEHREN) then
 
 
 
@@ -1364,6 +1367,8 @@ Hauptschleife: DO i = 1, maxger
 
       out_PROF(nprof,nr_q)%WehrOK   = hokwmin   !WP Speichern der Wehroberkante dieses Profils
       out_PROF(nprof,nr_q)%chr_kenn = 'w'
+
+      out_PROF(nprof,nr_q)%qges = q
 
     !UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
     ELSE
@@ -1413,7 +1418,7 @@ Hauptschleife: DO i = 1, maxger
 
     IF (nprof.gt.1) then
 
-      IF (ibridge.eq.'b'.and.ibruecke.eq.'j') then
+      IF (ibridge.eq.'b'.and. MIT_BRUECKEN) then
 
         !     Einlesen aus flussname.dat:
         READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
@@ -1459,7 +1464,7 @@ Hauptschleife: DO i = 1, maxger
           out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
           out_PROF(nprof,nr_q)%chr_kenn = 'i'       	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
-
+          out_PROF(nprof,nr_q)%qges = q
 
           write (   *  ,      1003) stat (nprof)
           write (   0  ,      1003) stat (nprof)
@@ -1577,7 +1582,7 @@ Hauptschleife: DO i = 1, maxger
               out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
               out_PROF(nprof,nr_q)%chr_kenn = 'i'   	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
-
+              out_PROF(nprof,nr_q)%qges = q
 
               write (    *       ,1000) stat(nprof)
               write (    0       ,1000) stat(nprof)
@@ -1658,10 +1663,9 @@ Hauptschleife: DO i = 1, maxger
     !**     idr=j IM FALL VON BORDVOLLBERECHNUNG
     IF (idr1.eq.'j') close (UNIT_OUT_PRO)
 
-
-  !**    ELSE FUER BORDVOLLBERECHNUNG STATIONAER GLEICHFOERMIG?
   ELSE
 
+    !write (*,*) 'In WSPBER. Stat.-gleichf. Bordvollberechnung.'
 
     !**     Bestimmung des Sohlgefaelles
     hbv (nprof) = MIN (boli, bore)
@@ -1716,12 +1720,13 @@ Hauptschleife: DO i = 1, maxger
     !**   ENDIF ZU (nprof.gt.1)
     ENDIF
 
+    !write (*,*) 'In WSPBER. isstat(',nprof,') = ', isstat(nprof)
 
     hmin2 = hmin
 
     str = 0.
 
-    IF (km.eq."j") then
+    IF (km .eq. 'j') then
 
       hdiff = hbv (nprof) - hmin
 
@@ -1793,6 +1798,7 @@ Hauptschleife: DO i = 1, maxger
 
       hbv_gl = hbv (nprof)
 
+
       CALL normber (str, q, vmbv, nprof, hbv_gl, hv, rg, hvst,    &
       & hrst, indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
       & nblatt, nz)
@@ -1805,6 +1811,7 @@ Hauptschleife: DO i = 1, maxger
     !**     ENDIF ZU (km.eq."j")
     ENDIF
 
+    !write (*,*) 'In WSPBER. Profilberechnung fertig.'
 
     !**   -------------------------------------------------------------
     !**   Abspeichern der Ergebnisse
@@ -1824,8 +1831,7 @@ Hauptschleife: DO i = 1, maxger
 
     CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
-  !**    ENDIF ZU (bordvoll.eq.g)?
-  ENDIF                                                                                    
+  ENDIF
                                                                         
 !** DO-SCHLEIFE ZUM EINLESEN DER GERINNEABSCHNITTE
 END DO Hauptschleife
@@ -1844,7 +1850,7 @@ CLOSE (UNIT_OUT_TAB)
 !HB   26.11.2001 - H.Broeker                                            
 !HB   ----------------------                                            
 !HB   Schliessen der Datei Beiwerte.AUS                                 
-CLOSE (UNIT_OUT_ALPHA)
+!CLOSE (UNIT_OUT_ALPHA)
 !HB   *****************************************************************
                                                                         
 !UT    Erzeugen des Wasserspiegellaengsschnittes (.wsl-file)            
@@ -1863,54 +1869,60 @@ anz_prof(nr_q) = nprof
 
 
 
-
-IF (bordvoll.eq.'n') then
-  !**   ------------------------------------------------------------------
-  !**   Erzeugen des Wasserspiegellaengsschnittes (.wsl-file)
-  !**   ------------------------------------------------------------------
+IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
+  ! ------------------------------------------------------------------
+  ! Erzeugen des Wasserspiegellaengsschnittes (.wsl-file)
+  ! ------------------------------------------------------------------
                                                                         
-  unit5  = fnam1
-  ilen   = LEN_TRIM (unit5)
-  unit5 (ilen - 4:ilen - 1) = 'dath'
-  iflen  = LEN_TRIM (fluss)
+  NAME_OUT_WSL = NAME_OUT_TAB
 
-  IF (iflen.gt.4) then
-    iflen = 4
-  ENDIF
+  ilen = LEN_TRIM(NAME_OUT_WSL)
+  NAME_OUT_WSL(ilen-2:ilen) = 'wsl'
 
-  unit5 (ilen + 1:nch80) = fluss (1:iflen)
-  ilen   = LEN_TRIM (unit5)
-  unit5 (ilen + 1:nch80) = '_'
-  ilen   = LEN_TRIM (unit5)
-  ierlen = LEN_TRIM (ereignis)
+  !write (*,*) 'NAME_OUT_WSL = ', NAME_OUT_WSL
 
-  IF (ierlen.gt.3) then
-    ierlen = 3
-  ENDIF
+  !unit5  = fnam1
+  !ilen   = LEN_TRIM (unit5)
+  !unit5 (ilen - 4:ilen - 1) = 'dath'
+  !iflen  = LEN_TRIM (fluss)
 
-  unit5 (ilen + 1:nch80) = ereignis (1:ierlen)
-  ilen   = LEN_TRIM (unit5)
-  unit5 (ilen + 1:nch80) = '.wsl'
+  !IF (iflen.gt.4) then
+  !  iflen = 4
+  !ENDIF
+
+  !unit5 (ilen + 1:nch80) = fluss (1:iflen)
+  !ilen   = LEN_TRIM (unit5)
+  !unit5 (ilen + 1:nch80) = '_'
+  !ilen   = LEN_TRIM (unit5)
+  !ierlen = LEN_TRIM (ereignis)
+
+  !IF (ierlen.gt.3) then
+  !  ierlen = 3
+  !ENDIF
+
+  !unit5 (ilen + 1:nch80) = ereignis (1:ierlen)
+  !ilen   = LEN_TRIM (unit5)
+  !unit5 (ilen + 1:nch80) = '.wsl'
 
   !ST------------------------------------------------
   !ST 29.03.2005
   ! Erzeuge Pfad- und Dateinamen für 'Laengsschnitt.txt'
-  file_laengs = fnam1
-  ilen = LEN_TRIM (file_laengs)
-  file_laengs (ilen - 4:ilen - 1) = 'dath'
-  file_laengs (ilen + 1:nch80) = 'laengsschnitt.txt'
+  !file_laengs = fnam1
+  !ilen = LEN_TRIM (file_laengs)
+  !file_laengs (ilen - 4:ilen - 1) = 'dath'
+  !file_laengs (ilen + 1:nch80) = 'laengsschnitt.txt'
+
   !ST------------------------------------------------
 
   mark = 1
 
   !**     Erstellung eines .wsl-files
 
-  CALL lapro1 (unit5, pfad2, nprof, mark, file_laengs)
+  CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, mark, NAME_OUT_LAENGS)
 
-!**   ENDIF ZU (bordvoll.eq.'n')
-ENDIF                                                           
+ENDIF
 
-                                                                        
+
 9999 RETURN
                                                                         
 

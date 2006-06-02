@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006   11:11 am
+!     Last change:  WP   27 May 2006   11:44 am
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 
 
-SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, file_laengs)
+SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, NAME_OUT_LAENGS)
 !
 ! geschrieben:    01.08.1989  p. koch
 !                                                                       
@@ -66,6 +66,7 @@ SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, file_laengs)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE AUSGABE_LAENGS
+USE MOD_INI
 
 implicit none
 
@@ -73,7 +74,7 @@ CHARACTER(LEN=nch80), INTENT(IN) :: unit5
 CHARACTER(LEN=nch80), INTENT(IN) :: pfad2
 INTEGER, INTENT(IN) :: nprof
 INTEGER, INTENT(IN) :: mark
-CHARACTER(LEN=nch80), INTENT(IN) :: file_laengs         ! Variable für Laengschnitt.txt
+CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_LAENGS         ! Variable für Laengschnitt.txt
 
 
 ! COMMON-Block /ERG/ ----------------------------------------------------------
@@ -153,7 +154,7 @@ DO i = 1, nprof
   br_fl (i) = brp(m,2)
   br_re (i) = brp(m,3)
 
-  IF (bordvoll.eq.'n') then
+  IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
     vbv1 (i) = vmp (m)
   ELSE
     vbv1 (i) = vbord (m)
@@ -175,7 +176,7 @@ END DO
 
 !ST 29.03.2005---------------------------------------------------
 !Erweitert um Variable für Pfadnamen von Laengsschnit.txt
-CALL zeila (unit5, nprof, pfad2, mark, file_laengs)
+CALL zeila (unit5, nprof, pfad2, mark, NAME_OUT_LAENGS)
 
 
 END SUBROUTINE lapro1                                                

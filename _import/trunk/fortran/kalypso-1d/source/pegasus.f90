@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    2:08 pm
+!     Last change:  WP   27 May 2006    1:22 pm
 !--------------------------------------------------------------------------
 ! This code, pegasus.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -84,7 +84,7 @@ SUBROUTINE pegasus (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
-
+USE MOD_INI
 
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
@@ -184,7 +184,8 @@ ifehl = 0
                                                                         
 
 !JK   WENN GENAUE BERECHNUNG MIT EINSCHLUSSINTERVALL
-IF (a_m.eq.2) then
+!IF (a_m.eq.2) then
+IF (ITERATIONSART=='EXACT ') then
 
   fak = (h2x - h1x) / (f2 - f1)
   hr = (h1x - fak * f1) / (1 - fak)
@@ -202,7 +203,8 @@ ENDIF
 DO 100 jsch = 1, 50
 
   !JK       WENN GENAUE BERECHNUNG MIT EINSCHLUSSINTERVALL
-  IF (a_m.eq.2) then
+  !IF (a_m.eq.2) then
+  IF (ITERATIONSART=='EXACT ') then
     jen = jsch + 1
   ELSE
     jen = jsch

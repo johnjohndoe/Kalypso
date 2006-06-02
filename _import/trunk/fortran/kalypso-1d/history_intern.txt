@@ -578,9 +578,9 @@ Querschnitte ausgegeben werden.
 
 Kalypso 1.0.15   Januar 2006
 ----------------------------
-Bei einer sehr komplexen Brücke ist ein Problem aufgetreten. Durch die Anhebung der 
-Dimensions-Variablen MIN2=500 und MAX2=20 in globale_definitionen.f90 konnte das 
-Problem behoben werden.
+1.)  Bei einer sehr komplexen Brücke ist ein Problem aufgetreten. Durch die Anhebung der 
+     Dimensions-Variablen MIN2=500 und MAX2=20 in globale_definitionen.f90 konnte das 
+     Problem behoben werden.
 
                                                     Wolf Plöger, 17.01.2006
 
@@ -590,12 +590,15 @@ Kalypso 1.0.16   Februar 2006
 -----------------------------
 1.)  Änderung der Variablenbezeichnung von az zu ay in LINDY (konform den anderen
      Subroutinen).
+
 2.)  Zusätzliche Prüfung der eingegebenen Bewuchsparameter. Bewuchs zwischen den
      Trennflächen wird direkt gelöscht, Inkonsistente Dateieneingabe, z.B.
      ax= 5.0,  ay = 5.0,  dp = 0.0 wird geprüft und dann Bewuchs an dieser Stelle
      entfernt. Warnhinweise werden in error2.log geschrieben.
+
 3.)  Verbesserung der Iteration zur Bestimmung von V_TR in Sub PASCHE. Einführung 
      einer semi-adaptiven Unterrelaxation.
+
 4.)  Deklarierung der Übergabevariablen in LINDY. Löschen der Variable ks_mi aus
      Übergabeliste, da nie verwendet! -> Änderungen in EB2KS und QKS_QKST.
 
@@ -707,3 +710,62 @@ Kalypso 1.0.18   April 2006
      - Durchmesser von Durchlässen
 
                                                     Wolf Plöger, 26.04.2006
+
+
+
+Kalypso 1.1b   24. Mai 2006
+---------------------------
+1.)  Erweiterung des Codes um eine neue Möglichkeit der Dateneingabe für die neue
+     KALYPSO-1D Oberfläche:
+
+     - Einführung eines neuen Moduls MOD_INI, das alle Daten der neuen 
+       Konfigurationsdatei (aus KALYPSO-Oberfläche) beinhaltet. Diese Datei
+       ist im Windows INI-Format geschrieben und kann beliebige Kommentare (#)
+       und Leerzeilen enthalten.
+
+     - Neue Subroutine "read_config_file" zum Lesen der Konfigurationsdatei.
+       Die gelesenen Werte werden in MOD_INI gespeichert.
+
+2.)  Wenn die neue Konfigurationsdatei vorhanden ist, wird sie erkannt und der
+     interne Modus (RUN_MODUS) auf Kalypso gesetzt. Die Popup Fenster bei bestimmten 
+     Fehlermeldungen werden dann unterdrückt.
+
+3.)  Komplette Umstrukturierung der IO-Operationen. Jede IO-Einheit bekommt einen 
+     festen Namen (gespeichert im Modul IO_NAMES). Die Variablen unit1 und fnam1
+     verlieren ihre Bedeutung.
+
+4.)  Änderung des IO-Handlings bei stationär-ungleichförmiger Berechnung: Die 
+     Subroutinen FSEEK und LU0TRF werden nicht mehr verwendet, dafür beim
+     Öffnen der *.PRO dateien das Attribut POSITION = 'APPEND'. 
+
+5.)  Änderung der Einleseroutine der Datei "teilg.001". 
+
+6.)  In der Längsschnitt-Datei wird zusätzlich noch der Abfluss ausgegeben.
+
+7.)  Löschen des Commonblocks /IPRINT/ da Inhalt nicht mehr verwendet.
+
+8.)  Getestet bis jetzt mit "WSPWIN"-Oberfläche: Normale Wasserspiegelberechnung,
+     Bordvollberechnung und stat-ungl. Berechnung.
+     Getestet bis jetzt mit "KALYPSO"-Eingabe: Normale Wasserspiegelberechnung.
+
+9.)  ToDo: Testen aller Berechnungsmöglichkeiten mit allen Optionen für 
+     WSPWIN-Oberfläche und Testen der Bordvoll sowie stat.-ungl. Berechnung
+     mit KALYPSO-Eingabe.
+
+10.) ToDO: Aufräumen des Codes, insbesonderer:
+     - Prüfen der CHARACTER-Variablen FLUSS und EREIGNIS, eventl auch in MOD_INI?
+     - Verwendung der neuen Variablen für die Berechnungsoperationen in allen
+       Subroutinen, insbesondere ifg =1/0, FLIESSGESETZ Pasche/Colebrook.
+     - Löschen der Subroutinen FSEEK und LU0TRF.
+     - Übergabefehler in MENGLA (siehe Visual Analyser)
+     - Prüfen der Common-Blöcke:
+       - w_a
+       - bloed
+       - nr_ausg
+       - flg_typ
+       - reib
+       - dateiname_prof
+       - ob_alpha
+       - P1
+
+                                                    Wolf Plöger, 28.05.2006

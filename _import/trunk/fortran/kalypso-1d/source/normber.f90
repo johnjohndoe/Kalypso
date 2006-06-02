@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    2:46 pm
+!     Last change:  WP    2 Jun 2006    3:29 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -113,6 +113,7 @@ SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_INI
 
 ! Calling variables
 REAL, INTENT(INOUT) :: str              ! Abstand zwischen zwei Profilen in [m]
@@ -256,7 +257,9 @@ idruck = 0
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
 
-IF (bordvoll .ne. 'g') then
+!IF (bordvoll .ne. 'g') then
+
+if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ws1 = wsp (i - 1)
   hv1 = hv
@@ -308,18 +311,22 @@ IF (bordvoll .ne. 'g') then
 
 
   !JK      WENN BERECHNUNG UEBER EINSCHLUSSINTERVALL
-  IF (a_m .eq. 2) then
-
+  if (ITERATIONSART=='EXACT ') then
     CALL anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
            & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
            & nz, istat)
-
-  !JK  WENN BERECHNUNG UEBER EINFACHE ITERATION
   ELSE
-
     hr = hgrenz + 0.2
+  end if
 
-  ENDIF
+  !IF (a_m .eq. 2) then
+  !  CALL anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
+  !         & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
+  !         & nz, istat)
+  !!JK  WENN BERECHNUNG UEBER EINFACHE ITERATION
+  !ELSE
+  !  hr = hgrenz + 0.2
+  !ENDIF
 
 
 
@@ -634,10 +641,11 @@ IF (bordvoll .ne. 'g') then
   ikenn = ikenn + ifgrnz + ifnew + ifpgs
 
 
-!**  ELSE (bordvoll.ne.'g') ALSO AB HIER STAT. GLEICHF BORDVOLL
 ELSE
 
-  !**  Bordvoll-Berechnung fuer stationaer gleichfoermig
+  !write (*,*) 'In NORMBER. stat.-gleichf. Bordvoll.'
+
+  ! Bordvoll-Berechnung fuer stationaer gleichfoermig
   str = 0.
   sgef = isstat (i)
 
@@ -648,10 +656,6 @@ ELSE
   q1 = hvst
   hvst = 0.
 
-!**  ENDIF (bordvoll.ne.'g')
 ENDIF
-
-
-RETURN
 
 END SUBROUTINE normber                                                                             

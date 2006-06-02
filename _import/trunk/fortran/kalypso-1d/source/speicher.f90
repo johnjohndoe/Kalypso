@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Jul 2005    1:25 pm
+!     Last change:  WP   26 May 2006    1:31 pm
 !--------------------------------------------------------------------------
 ! This code, speicher.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -52,8 +52,7 @@ SUBROUTINE speicher (l, hr, hv, hvst, hrst, q, station, indmax, ikenn)
 !**                                                                     
 !**   boli    --      linke Böschungshöhe                               
 !**   bolip   --      linke Böschungshöhe                               
-!**   bordvoll        --      Art der Bordvollberechnung                
-!**   bore    --      rechte Böschungshöhe                              
+!**   bore    --      rechte Böschungshöhe
 !**   borep   --      rechte Böschungshöhe                              
 !**   brg     --      Spiegelbreite                                     
 !**   brges   --      Spiegelbreite                                     
@@ -107,6 +106,7 @@ SUBROUTINE speicher (l, hr, hv, hvst, hrst, q, station, indmax, ikenn)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE MOD_INI
 
 ! Calling variables
 INTEGER, INTENT(IN) 	:: l		! = NPROF, Nummer des aktuellen Profils
@@ -334,12 +334,14 @@ ENDIF
 ! Soll-wasserspiegelhoehe bei der bordvoll-berechnung
 hbv (l) = min (boli, bore)
 ! Fuer K-M Parameter
-IF (km.eq."j") then
+IF (km.eq.'j') then
   ind (l) = indmax
   indf (l) = indfl
 ENDIF
 
-IF (bordvoll.eq.'u') then
+
+
+IF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
   ! Speicherung fuer bordvoll
   ! -------------------------------------------------------------------

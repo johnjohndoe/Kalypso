@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    2:13 pm
+!     Last change:  WP   28 May 2006    2:15 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
+SUBROUTINE qbordv (rqmax, rqmin, qstep)
 
 !***********************************************************************
 !
@@ -113,14 +113,14 @@ SUBROUTINE qbordv (rqmax, rqmin, qstep, unit1, ibruecke, wehr)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE IO_NAMES
 USE MOD_ERG
+USE MOD_INI
 
 ! Calling Variables -----------------------------------------------------------
-REAL, INTENT(INOUT) 		:: rqmax               ! Maximaler Abfluss
-REAL, INTENT(INOUT) 		:: rqmin               ! Minimaler Abfluss
-REAL, INTENT(INOUT) 		:: qstep               ! Minimaler Abfluss
-CHARACTER(LEN=1), INTENT(IN) 	:: ibruecke            ! Kennung, ob Bruecke gerechnet werden soll (= 'j' oder 'n')
-CHARACTER(LEN=1), INTENT(IN) 	:: wehr                ! Kennung, ob Wehr gerechnet werden soll (= 'j' oder 'n')
+REAL, INTENT(INOUT) 	:: rqmax               ! Maximaler Abfluss
+REAL, INTENT(INOUT) 	:: rqmin               ! Minimaler Abfluss
+REAL, INTENT(INOUT) 	:: qstep               ! Minimaler Abfluss
 
 
 ! COMMON-Block /BV/ -----------------------------------------------------------
@@ -313,29 +313,33 @@ file_laengs = ' '
 !------------------------------------------------------------------
 
 
-unit1 = fnam1
-
+unit1 = NAME_PFAD_DATH
 ilen = LEN_TRIM (unit1)
-unit1 (ilen - 4:ilen - 1) = 'dath'
+
+!unit1 (ilen - 4:ilen - 1) = 'dath'
 ifllen = LEN_TRIM (fluss)
 
 IF (ifllen.gt.4) then
   ifllen = 4
 ENDIF
 
-unit1 (ilen + 1:nch80) = fluss (1:ifllen)
+unit1(ilen+1 : ) = fluss (1:ifllen)
 
 !HB   Anfuegen der Endung '.tab' an den Pfad unit1.
 !HB   Es wird von Position 'ilen+5' bis zur 80. Position, da
 !HB   'nch80'=80, '.tab' angehaengt.
-unit1 (ilen + 5:nch80) = '.tab'
+ilen = LEN_TRIM (unit1)
+unit1(ilen+1 : ) = '.tab'
 
-unit2 = unit1
+NAME_OUT_WSL = unit1
+unit2 	     = unit1
+write (*,*) 'NAME_OUT_WSL = ', NAME_OUT_WSL
 
 
 !JK   WENN STATIONAER-UNGLEICHFOERMIGE ABFLUSSVERHAELTNISSE
 !--------------------------------------------------------------------------------------------------
-IF (bordvoll.eq.'u') then
+!IF (bordvoll.eq.'u') then
+if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
   DO i = 1, maxger
     jkenn (i) = 0
@@ -390,11 +394,13 @@ IF (bordvoll.eq.'u') then
           ereignis (i:i) = '-'
         ENDIF
       END DO
-
       ereignis = ADJUSTL (ereignis)
-      unit1 = fnam1
+
+      !unit1 = fnam1
+      !ilen = LEN_TRIM (unit1)
+      !unit1 (ilen - 4:ilen - 1) = 'dath'
+      unit1 = NAME_PFAD_DATH
       ilen = LEN_TRIM (unit1)
-      unit1 (ilen - 4:ilen - 1) = 'dath'
       ifllen = LEN_TRIM (fluss)
 
       IF (ifllen.gt.2) then
@@ -408,13 +414,19 @@ IF (bordvoll.eq.'u') then
       ilen = LEN_TRIM (unit1)
       unit1 (ilen + 1:nch80) = '.tb'
 
+      !write (*,*) 'In QBORDV. unit1 = ', unit1
+
+      NAME_OUT_TAB = unit1
+
+      !write (*,*) 'In QBORDV. unit2 = ', unit2
+
     ENDIF
 
     IF (qvar.gt.rqmax) then
       qvar = rqmax
     ENDIF
 
-    CALL wspber (unit1, ibruecke, wehr)
+    CALL wspber ()
 
     !************************************************
     !**    Ergaenzung vom 27.10.92 J. Csocsan
@@ -599,13 +611,11 @@ IF (bordvoll.eq.'u') then
   mark = 2
 
 
-!JK   ELSE ZU (bordvoll.eq.'u') -> STATIONAER-GLEICHFOERMIG
+
 !----------------------------------------------------------------------------------------------
 ELSE
+  ! Stationaer-gleichfoermige Bordvoll Berechnung
 
-  !write (*,*) 'BORDVOLL = ', bordvoll
-
-  !ilen = ju0nch (unit1)
   ilen = LEN_TRIM (unit1)
 
   DO i1 = 1, maxger
@@ -622,7 +632,7 @@ ELSE
     !write (*,*) 'In QBORDV:  ilen  = ',ilen
     !write (*,*) 'In QBORDV:  unit1 = ',unit1
 
-    CALL wspber (unit1, ibruecke, wehr)
+    CALL wspber ()
 
     mark = 4
     nbv = nprof
@@ -648,7 +658,7 @@ ELSE
         unit1 (ilen + 1:nch80) = '_6.tab'
       ENDIF
 
-      CALL wspber (unit1, ibruecke, wehr)
+      CALL wspber ()
       mark = 4
 
       IF (i_km.eq.4) then
@@ -709,7 +719,6 @@ ELSE
   ENDIF
 
 
-!JK   ENDIF ZU (bordvoll.eq.'u')
 ENDIF
 
 
@@ -718,35 +727,53 @@ ENDIF
 ! ------------------------------------------------------------------
 
 IF (km.eq.'j') then
-  unit3 = unit2
-  ilen3 = LEN_TRIM (unit3)
-  unit3 (ilen3 + 1:nch80) = '.ger'
+
+  ilen = LEN_TRIM(NAME_OUT_WSL)
+  NAME_OUT_GER = NAME_OUT_WSL(1:ilen) // '.ger'
+  write (*,*) 'NAME_OUT_GER = ', NAME_OUT_GER
+  !unit3 = unit2
+  !ilen3 = LEN_TRIM (unit3)
+  !unit3 (ilen3 + 1:nch80) = '.ger'
 
   UNIT_OUT_GER = ju0gfu ()
-  OPEN (unit = UNIT_OUT_GER, file = unit3, status = 'unknown')
+  OPEN (UNIT=UNIT_OUT_GER, FILE=NAME_OUT_GER, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
+  if (istat/=0) then
+    write (*,*) 'Fehler beim Oeffnen von ', NAME_OUT_GER
+    stop
+  end if
 
-  unit4 = fnam1
-  ilen4 = LEN_TRIM (unit4)
-  unit4 (ilen4 - 4:ilen4 - 1) = 'dath'
-  unit4 (ilen4 + 1:ilen4 + 4) = 'out.'
-  unit4 (ilen4 + 5:nch80) = fluss
+  !unit4 = fnam1
+  !ilen4 = LEN_TRIM (unit4)
+  !unit4 (ilen4 - 4:ilen4 - 1) = 'dath'
+  !unit4 (ilen4 + 1:ilen4 + 4) = 'out.'
+  !unit4 (ilen4 + 5:nch80) = fluss
+
+  ilen = LEN_TRIM(NAME_PFAD_DATH)
+  ilen2 = LEN_TRIM(fluss)
+  NAME_OUT_LOG_KM = NAME_PFAD_DATH(1:ilen) // 'out.'// fluss(1:ilen2)
+  write (*,*) 'NAME_OUT_LOG_KM = ', NAME_OUT_LOG_KM
 
   UNIT_OUT_LOG_KM = ju0gfu ()
-  OPEN (unit = UNIT_OUT_LOG_KM, file = unit4, status = 'unknown')
+  OPEN (UNIT=UNIT_OUT_LOG_KM, FILE=NAME_OUT_LOG_KM, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
+  if (istat/=0) then
+    write (*,*) 'Fehler beim Oeffnen von ', NAME_OUT_LOG_KM
+    stop
+  end if
 
-  IF (bordvoll.ne."u") then
-    qstep = 0.0
-    rqmax = 1.e+06
-    rqmin = 1.e-06
+
+  IF (BERECHNUNGSMODUS /= 'BF_NON_UNI') then
+    DELTA_Q = 0.0
+    MAX_Q = 1.e+06
+    MIN_Q = 1.e-06
   ENDIF
 
   ! WP Neue Ausgabe fuer die Berechnung der KM-Paramter --------------------
-  call schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, fnam1, stat)
+  call schreib_erg_stat_unglf(ianz, nprof, DELTA_Q, MAX_Q, MIN_Q, stat)
   ! WP ---------------------------------------------------------------------
 
   ! ---------------------------------------------------------------
   ! AUFRUF KM-VERFAHREN
-  CALL bovog1 (nbv, qstep, rqmax, rqmin)
+  CALL bovog1 (nbv, DELTA_Q, MAX_Q, MIN_Q)
   ! ---------------------------------------------------------------
 
   CLOSE (UNIT_OUT_GER)
@@ -769,12 +796,13 @@ write (*,9000)
 
 
 
-unit2 = fnam1                                   ! FNAM1 ist der Projektpfad ohne /DATH und /PROF
+!unit2 = fnam1                                   ! FNAM1 ist der Projektpfad ohne /DATH und /PROF
+!ilen = LEN_TRIM(unit2)
+!unit2 (ilen - 4:ilen - 1) = 'dath'              ! Vollstaendiger Pfad zu dem Unterordner \DATH
 
-
+unit2 = NAME_PFAD_DATH
 ilen = LEN_TRIM(unit2)
 
-unit2 (ilen - 4:ilen - 1) = 'dath'              ! Vollstaendiger Pfad zu dem Unterordner \DATH
 ifllen = LEN_TRIM(fluss)                        ! FLUSS ist Gewaessername aus Oberflaeche z.B. Stoer
 
 IF (ifllen.gt.8) then
@@ -832,7 +860,7 @@ END SUBROUTINE qbordv
 
 
 !------------------------------------------------------------------------------------
-subroutine schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, fnam1, stat)
+subroutine schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, stat)
 !
 ! Beschreibung:
 ! -------------
@@ -856,7 +884,6 @@ INTEGER, INTENT(IN) 	:: nprof                ! Anzahl der Profile
 REAL, INTENT(IN)        :: qstep                ! Schrittweite der Abfluesse
 REAL, INTENT(IN)        :: rqmax                ! Maximaler Abfluss
 REAL, INTENT(IN)        :: rqmin                ! Minimaler Abfluss
-CHARACTER(LEN=nch80), INTENT(IN) :: fnam1       ! Pfad der Projektes
 REAL, INTENT(IN)        :: stat(maxger)         ! Stationierung der Profile
 
 
@@ -967,9 +994,9 @@ alle_profile: do i = 1, anz_prof_orig
   datei_km_out(ilen-2:ilen) = 'km '
   UNIT_OUT_KM = ju0gfu()
 
-  open (UNIT=UNIT_OUT_KM, FILE=datei_km_out, STATUS='REPLACE', IOSTAT=istat)
+  open (UNIT=UNIT_OUT_KM, FILE=datei_km_out, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
   if (istat /= 0) then
-    write (*,9001) !datei_km_out
+    write (*,9001)
     9001 format (/1X, 'Problem beim Oeffnen der KM-OUT Datei')
     CYCLE
   end if

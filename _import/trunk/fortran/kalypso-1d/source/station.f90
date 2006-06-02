@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    1:56 pm
+!     Last change:  WP    2 Jun 2006    3:29 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -111,6 +111,7 @@ SUBROUTINE station (sgef, nprof, hgrenz, q, hr, hv, rg, indmax,   &
 
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE MOD_INI
 
 !EP   Die Variable idr1 wird aufgerufen, obwohl sie nicht vorher deklari
 !EP   Der Common-Block BV definiert diese Variable. Er kann aber nicht ü
@@ -278,7 +279,9 @@ CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 !     berechnung der tiefsten sohle und der boeschungskanten (s. profil)
 !     gebraucht werden - boli(i),bore(i),sohl(i)
 
-IF (bordvoll.ne.'g') then
+
+!IF (bordvoll.ne.'g') then
+if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
 
   ! *****************************************************************
@@ -854,10 +857,12 @@ IF (bordvoll.ne.'g') then
 !JK   ELSE ZU (bordvoll .ne. 'g')
 ELSE
 
+  !write (*,*) 'In STATION. stat.-gl. Bordvoll.'
+
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
-!JK   ENDIF ZU (bordvoll .ne. 'g')
+
 ENDIF
 
 RETURN

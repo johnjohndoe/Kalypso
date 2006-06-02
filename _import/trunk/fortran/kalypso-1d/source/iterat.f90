@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Mar 2006   12:57 pm
+!     Last change:  WP   24 May 2006    2:32 pm
 !--------------------------------------------------------------------------
 ! This code, iterat.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -89,8 +89,6 @@ SUBROUTINE iterat (hr, hdif, hsohl, iart, cd, a, ai, x1, h1,      &
 USE DIM_VARIABLEN
 USE IO_UNITS
 
-CHARACTER(2) id
-COMMON / iprint / id
 COMMON / flaechen / ad, aue, apl, apg, hss, hue, hpl, hpg
 
 REAL m, mi, ma, mb
@@ -142,7 +140,7 @@ REAL x1 (maxkla), h1 (maxkla)
         !           ueberpruefen der bedingung mi = m !!!                       
 
         !JK         SCHREIBEN IN KONTROLLFILE
-        WRITE (UNIT_OUT_LOG, '(i4,10f8.3,a2)') i, hr, mi, ad, aue, apl, apg, hss, hue, hpl, hpg, id
+        WRITE (UNIT_OUT_LOG, '(i4,10f8.3)') i, hr, mi, ad, aue, apl, apg, hss, hue, hpl, hpg
 
         IF (hr.le.hsohl) then 
           PRINT * , 'stop in iteration' 

@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    2:04 pm
+!     Last change:  WP   27 May 2006    1:22 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -208,6 +208,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_INI
 
 ! Calling variables
 CHARACTER(LEN=1), INTENT(IN) 	  	:: iprof        ! Art des Profils
@@ -349,7 +350,8 @@ ELSEIF (itere1.le.1.and.nstat.le.1) then
 ELSEIF (nstat.eq.1) then
   isenen = q * q / rg / rg
 ELSEIF (itere1.gt.1) then
-  IF (rg_vst.eq.2) then
+  IF (REIBUNGSVERLUST == 'GEOMET') THEN
+  !IF (rg_vst.eq.2) then
     isenen = (q + q_alt) * (q + q_alt) / (rg + rg_alt) / (rg + rg_alt)
   ELSE
     isenen = q * q / rg / rg

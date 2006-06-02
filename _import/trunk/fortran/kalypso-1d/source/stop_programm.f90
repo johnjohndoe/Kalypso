@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Jan 2006    5:19 pm
+!     Last change:  WP   28 May 2006   12:38 pm
 !--------------------------------------------------------------------------
 ! This code, stop_programm.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,6 +42,7 @@
 subroutine stop_programm(fehlnr)
 
 USE VERSION
+USE MOD_INI
 
 implicit none
 
@@ -53,16 +54,30 @@ CHARACTER(LEN=1) :: antwort
 INTEGER :: istat
 INTEGER :: selected
 
-if (fehlnr > 0) then
 
-  call Check_Dialog(fehlnr, selected)
+if (fehlnr > 0 ) then
 
-  if (selected ==0) then
-    call close_units()
+  if (RUN_MODUS /= 'KALYPSO') then
+
+    ! If WSPWIN-GUI is used, pop-up windows
+    ! may appear to show some hints.
+    call Check_Dialog(fehlnr, selected)
+
+    if (selected ==0) then
+      call close_units()
+      WRITE ( *, 1000) VERSIONNR
+      stop
+    else
+      RETURN
+    end if
+
+  else
+
+    ! if KALYPSO-Framework is used, no pop-up windows
+    ! should appear!
     WRITE ( *, 1000) VERSIONNR
     stop
-  else
-    RETURN
+
   end if
 
 else if (fehlnr == 0) then
@@ -79,7 +94,7 @@ else
 end if
 
 1000 FORMAT (//1X, 'Berechnung mit ', A29, ' wurde abgebrochen.',//     &
-             & 1X, 'BITTE PRUEFEN SIE DIE FEHLERMELDUNGEN!!!')
+             & 1X, 'BITTE PRUEFEN SIE DIE FEHLERMELDUNGEN!!!', //)
 
 
 end subroutine stop_programm
