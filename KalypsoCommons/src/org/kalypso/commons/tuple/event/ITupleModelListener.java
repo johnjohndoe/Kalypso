@@ -50,7 +50,11 @@ public interface ITupleModelListener<R extends IRowKey, C extends IColumnKey>
 {
   public void onValueChanged( Object value, R rowKey, C columnKey );
   
+  public void onRowAdded( R rowKey );
+  
   public void onRowRemoved( R rowKey );
+  
+  public void onColumnAdded( C columnKey );
   
   public void onColumnRemoved( C columnKey );
 }

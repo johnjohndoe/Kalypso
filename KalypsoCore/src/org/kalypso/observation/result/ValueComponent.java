@@ -42,6 +42,9 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * @author schlienger
  */
@@ -49,14 +52,14 @@ public class ValueComponent extends Component
 {
   private final String m_unit;
 
-  public ValueComponent( final String name, final String description, final QName valueTypeName, final String unit )
+  public ValueComponent( final int pos, final String name, final String description, final QName valueTypeName, final String unit )
   {
-    this( name, description, valueTypeName, null, unit );
+    this( pos, name, description, valueTypeName, null, unit );
   }
 
-  public ValueComponent( final String name, final String description, final QName valueTypeName, final Object defaultValue, final String unit )
+  public ValueComponent( final int pos, final String name, final String description, final QName valueTypeName, final Object defaultValue, final String unit )
   {
-    super( name, description, valueTypeName, defaultValue );
+    super( pos, name, description, valueTypeName, defaultValue );
     
     m_unit = unit;
   }
@@ -64,5 +67,31 @@ public class ValueComponent extends Component
   public String getUnit( )
   {
     return m_unit;
+  }
+  
+  
+  /**
+   * @see org.kalypso.observation.result.Component#fillEqualsBilder(org.kalypso.observation.result.IComponent, org.apache.commons.lang.builder.EqualsBuilder)
+   */
+  @Override
+  protected void fillEqualsBilder( final IComponent comp, final EqualsBuilder builder )
+  {
+    super.fillEqualsBilder( comp, builder );
+    
+    // this cast is safe (see super class implementation)
+    final ValueComponent c = (ValueComponent) comp;
+    
+    builder.append( c.getUnit(), m_unit );
+  }
+  
+  /**
+   * @see org.kalypso.observation.result.Component#fillHashCodeBuilder(org.apache.commons.lang.builder.HashCodeBuilder)
+   */
+  @Override
+  protected void fillHashCodeBuilder( HashCodeBuilder builder )
+  {
+    super.fillHashCodeBuilder( builder );
+    
+    builder.append( m_unit );
   }
 }

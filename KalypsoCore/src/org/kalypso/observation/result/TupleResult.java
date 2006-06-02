@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author schlienger
@@ -66,6 +67,15 @@ public class TupleResult implements List<IRecord>
   {
     for( int i = 0; i < comps.length; i++ )
       addComponent( comps[i] );
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return "TupleResult: " + getComponents();
   }
   
   /**
@@ -277,7 +287,10 @@ public class TupleResult implements List<IRecord>
 
   public IComponent[] getComponents( )
   {
-    return m_components.toArray( new IComponent[m_components.size()] );
+    final TreeSet<IComponent> set = new TreeSet<IComponent>( ComponentPositionComparator.getInstance() );
+    set.addAll( m_components );
+
+    return set.toArray( new IComponent[m_components.size()] );
   }
 
   public final void addComponent( final IComponent comp )

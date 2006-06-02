@@ -42,11 +42,16 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * @author schlienger
  */
 public class Component implements IComponent
 {
+  private final int m_pos;
+
   private final String m_name;
 
   private final String m_description;
@@ -55,22 +60,85 @@ public class Component implements IComponent
 
   private final Object m_defaultValue;
 
-  public Component( final String name, final String description, final QName valueTypeName )
+  public Component( final int pos, final String name, final String description, final QName valueTypeName )
   {
-    this( name, description, valueTypeName, null );
+    this( pos, name, description, valueTypeName, null );
   }
 
-  public Component( final String name, final String description, final QName valueTypeName, final Object defaultValue )
+  public Component( final int pos, final String name, final String description, final QName valueTypeName, final Object defaultValue )
   {
     if( name == null )
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
     if( valueTypeName == null )
       throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
 
+    m_pos = pos;
     m_name = name;
     m_description = description;
     m_valueTypeName = valueTypeName;
     m_defaultValue = defaultValue;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof IComponent) )
+      return false;
+
+    if( this == obj )
+      return true;
+    
+    // subclass are sure that the component they receive is of the same class
+    if( !getClass().getName().equals( obj.getClass().getName() ) )
+      return false;
+
+    final IComponent comp = (IComponent) obj;
+
+    final EqualsBuilder builder = new EqualsBuilder();
+
+    fillEqualsBilder( comp, builder );
+
+    return builder.isEquals();
+  }
+
+  protected void fillEqualsBilder( final IComponent comp, final EqualsBuilder builder )
+  {
+    builder.append( comp.getDefaultValue(), m_defaultValue );
+    builder.append( comp.getDescription(), m_description );
+    builder.append( comp.getName(), m_name );
+    builder.append( comp.getValueTypeName(), m_valueTypeName );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    
+    fillHashCodeBuilder( builder );
+    
+    return builder.toHashCode();
+  }
+
+  protected void fillHashCodeBuilder( final HashCodeBuilder builder )
+  {
+    builder.append( m_defaultValue );
+    builder.append( m_description );
+    builder.append( m_name );
+    builder.append( m_valueTypeName );
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getPosition()
+   */
+  public int getPosition( )
+  {
+    return m_pos;
   }
 
   /**
@@ -79,6 +147,15 @@ public class Component implements IComponent
   public String getName( )
   {
     return m_name;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_name + "[" + m_valueTypeName + "]";
   }
 
   /**

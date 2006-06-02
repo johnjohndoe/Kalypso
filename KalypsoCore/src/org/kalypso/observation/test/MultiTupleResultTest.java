@@ -81,14 +81,14 @@ public class MultiTupleResultTest extends TestCase
     TupleResult result1 = obs1.getResult();
     IComponent keyComp1 = ComponentUtilities.findComponent( result1.getComponents(), XmlTypes.XS_DATE );
     IComponent valueComp1 = ComponentUtilities.findComponent( result1.getComponents(), XmlTypes.XS_DOUBLE );
-    TupleResultColumn col1 = new TupleResultColumn( result1, keyComp1, valueComp1 );
+    TupleResultColumn col1 = new TupleResultColumn( 1, result1, keyComp1, valueComp1 );
     model.addColumn( col1 );
 
     IObservation<TupleResult> obs2 = ObservationTest.createTestObservation();
     TupleResult result2 = obs2.getResult();
     IComponent keyComp2 = ComponentUtilities.findComponent( result2.getComponents(), XmlTypes.XS_DATE );
     IComponent valueComp2 = ComponentUtilities.findComponent( result2.getComponents(), XmlTypes.XS_DOUBLE );
-    TupleResultColumn col2 = new TupleResultColumn( result2, keyComp2, valueComp2 );
+    TupleResultColumn col2 = new TupleResultColumn( 2, result2, keyComp2, valueComp2 );
     model.addColumn( col2 );
 
     rowCount = result1.size() + result2.size();

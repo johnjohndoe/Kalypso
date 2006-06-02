@@ -45,11 +45,12 @@ import java.util.Set;
 import org.kalypso.commons.tuple.IColumnKey;
 import org.kalypso.commons.tuple.IRowKey;
 import org.kalypso.commons.tuple.ITupleModel;
+import org.kalypso.commons.tuple.event.TupleModelEventAdapter;
 
 /**
  * @author schlienger
  */
-public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey> implements ITupleModel<R, C>
+public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey> extends TupleModelEventAdapter<R, C> implements ITupleModel<R, C>
 {
   /**
    * This basic implementation checks if the class of the value is compatible with the class defined in the columnKey.
@@ -63,6 +64,8 @@ public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey
       throw new IllegalArgumentException( "Incompatible classes" );
 
     setValueIntern( value, rowKey, columnKey );
+    
+    fireValueChanged( value, rowKey, columnKey );
   }
 
   /**
@@ -97,6 +100,8 @@ public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey
       return;
 
     removeColumnIntern( columnKey );
+    
+    fireColumnRemoved( columnKey );
   }
 
   /**
@@ -117,6 +122,8 @@ public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey
       return;
 
     removeRowIntern( rowKey );
+    
+    fireRowRemoved( rowKey );
   }
 
   /**

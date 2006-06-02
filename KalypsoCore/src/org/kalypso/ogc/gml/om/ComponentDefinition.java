@@ -62,13 +62,21 @@ public class ComponentDefinition
 
   private final String m_desc;
 
-  public ComponentDefinition( final String name, final String desc, final RepresentationType representationType )
+  private final int m_pos;
+
+  public ComponentDefinition( final int pos, final String name, final String desc, final RepresentationType representationType )
   {
+    m_pos = pos;
     m_name = name;
     m_desc = desc;
     m_representationType = representationType;
   }
 
+  public int getPosition( )
+  {
+    return m_pos;
+  }
+  
   public String getName( )
   {
     return m_name;
@@ -99,16 +107,16 @@ public class ComponentDefinition
     if( XmlTypes.isNumber( valueTypeName ) )
     {
       final String unit = m_representationType.getUnit();
-      return new ValueComponent( m_name, m_desc, valueTypeName, unit );
+      return new ValueComponent( m_pos, m_name, m_desc, valueTypeName, unit );
     }
 
     if( XmlTypes.isDate( valueTypeName ) )
     {
       final String tzName = "";
-      return new DateComponent( m_name, m_desc, valueTypeName, tzName );
+      return new DateComponent( m_pos, m_name, m_desc, valueTypeName, tzName );
     }
 
-    return new Component( m_name, m_desc, valueTypeName );
+    return new Component( m_pos, m_name, m_desc, valueTypeName );
   }
 
   /**
@@ -129,7 +137,7 @@ public class ComponentDefinition
       frame = ((DateComponent) component).getTimezoneName();
 
     final RepresentationType rt = new RepresentationType( toKind( valueTypeName ), valueTypeName, unit, frame, classification );
-    final ComponentDefinition componentDefinition = new ComponentDefinition( component.getName(), component.getDescription(), rt );
+    final ComponentDefinition componentDefinition = new ComponentDefinition( component.getPosition(), component.getName(), component.getDescription(), rt );
     return componentDefinition;
   }
 

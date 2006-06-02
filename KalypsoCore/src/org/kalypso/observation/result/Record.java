@@ -60,6 +60,15 @@ class Record implements IRecord
     for( final IComponent component : components )
       m_values.put( component, component.getDefaultValue() );
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_values.values().toString();
+  }
 
   /**
    * @see org.kalypso.om.tuple.IRecord#getValue(org.kalypso.om.tuple.IComponent)

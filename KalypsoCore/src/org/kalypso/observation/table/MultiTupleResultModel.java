@@ -42,6 +42,7 @@ package org.kalypso.observation.table;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.kalypso.commons.tuple.impl.AbstractTupleModel;
 import org.kalypso.observation.result.IComponent;
@@ -79,9 +80,16 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
   public void addColumn( final TupleResultColumn col )
   {
     if( m_keyColumn == null )
-      m_keyColumn = new KeyColumn( col.getKeyComponent() );
+    {
+      m_keyColumn = new KeyColumn( 0, col.getKeyComponent() );
+      
+      fireColumnAdded( m_keyColumn );
+    }
     else if( !m_keyColumn.isCompatible( col.getKeyComponent() ) )
       throw new IllegalArgumentException( "Key Components are not compatible" );
+    
+    if( containsColumn( col ) )
+      return;
 
     final TupleResult result = col.getTupleResult();
     for( final IRecord record : result )
@@ -94,6 +102,20 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
     }
 
     m_columns.add( col );
+
+    fireColumnAdded( col );
+  }
+
+  private boolean containsColumn( final TupleResultColumn col )
+  {
+    final TupleResultColumnComparator comp = TupleResultColumnComparator.getInstance();
+    for( final TupleResultColumn trc: m_columns )
+    {
+      if( comp.compare( trc, col ) == 0 )
+        return true;
+    }
+    
+    return false;
   }
 
   /**
@@ -167,7 +189,7 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
    */
   public Set<MTRMColumn> getColumnKeySet( )
   {
-    final Set<MTRMColumn> cols = new HashSet<MTRMColumn>();
+    final Set<MTRMColumn> cols = new TreeSet<MTRMColumn>( MTRMColumnPositionComparator.getInstance() );
 
     if( m_keyColumn == null )
       return cols;

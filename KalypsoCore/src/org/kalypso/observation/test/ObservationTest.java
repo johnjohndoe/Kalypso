@@ -63,8 +63,8 @@ public class ObservationTest extends TestCase
 {
   public static IObservation<TupleResult> createTestObservation( )
   {
-    DateComponent dc = new DateComponent( "Date", "", XmlTypes.XS_DATE );
-    ValueComponent vc = new ValueComponent( "Value", "", XmlTypes.XS_DOUBLE, "m" );
+    DateComponent dc = new DateComponent( 1, "Date", "", XmlTypes.XS_DATE );
+    ValueComponent vc = new ValueComponent( 2, "Value", "", XmlTypes.XS_DOUBLE, "m" );
     IComponent[] comps = { dc, vc };
     TupleResult tupleResult = new TupleResult( comps );
 

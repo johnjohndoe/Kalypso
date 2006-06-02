@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.tuple.event;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.commons.tuple.IColumnKey;
@@ -50,43 +49,13 @@ import org.kalypso.commons.tuple.ITupleModel;
 /**
  * @author schlienger
  */
-public class TupleModelAdapter<R extends IRowKey, C extends IColumnKey> implements ITupleModel<R, C>, ITupleModelEventProvider<R, C>
+public class TupleModelEventDelegate<R extends IRowKey, C extends IColumnKey> extends TupleModelEventAdapter<R, C> implements ITupleModel<R, C>, ITupleModelEventProvider<R, C>
 {
   private final ITupleModel<R, C> m_model;
 
-  private final Set<ITupleModelListener<R, C>> m_listeners = new HashSet<ITupleModelListener<R, C>>();
-
-  public TupleModelAdapter( final ITupleModel<R, C> model )
+  public TupleModelEventDelegate( final ITupleModel<R, C> model )
   {
     m_model = model;
-  }
-
-  public void addListener( final ITupleModelListener<R, C> listener )
-  {
-    m_listeners.add( listener );
-  }
-
-  public void removeListener( final ITupleModelListener<R, C> listener )
-  {
-    m_listeners.remove( listener );
-  }
-
-  protected void fireValueChanged( final Object value, final R rowKey, final C columnKey )
-  {
-    for( final ITupleModelListener<R, C> l : m_listeners )
-      l.onValueChanged( value, rowKey, columnKey );
-  }
-
-  protected void fireColumnRemoved( final C columnKey )
-  {
-    for( final ITupleModelListener<R, C> l : m_listeners )
-      l.onColumnRemoved( columnKey );
-  }
-
-  protected void fireRowRemoved( final R rowKey )
-  {
-    for( final ITupleModelListener<R, C> l : m_listeners )
-      l.onRowRemoved( rowKey );
   }
 
   /**
@@ -179,7 +148,7 @@ public class TupleModelAdapter<R extends IRowKey, C extends IColumnKey> implemen
   public void removeColumn( C columnKey )
   {
     m_model.removeColumn( columnKey );
-    
+
     fireColumnRemoved( columnKey );
   }
 
@@ -189,7 +158,7 @@ public class TupleModelAdapter<R extends IRowKey, C extends IColumnKey> implemen
   public void removeRow( R rowKey )
   {
     m_model.removeRow( rowKey );
-    
+
     fireRowRemoved( rowKey );
   }
 }

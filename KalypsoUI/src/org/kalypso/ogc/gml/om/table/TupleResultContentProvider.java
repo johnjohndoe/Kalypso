@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.om.table;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -58,19 +60,32 @@ public class TupleResultContentProvider implements IStructuredContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    // empty
+    if( newInput == null )
+      return;
+    
+    final DefaultTableViewer tableViewer = (DefaultTableViewer) viewer;
+    tableViewer.removeAllColumns();
+    
+    final TupleResult result = (TupleResult) newInput;
+    
+    final IComponent[] components = result.getComponents();
+    for( int i = 0; i < components.length; i++ )
+      tableViewer.addColumn( components[i].getName(), components[i].getName(), 100, true );
+
+    tableViewer.refreshColumnProperties();
   }
 
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof TupleResult )
+    if( inputElement != null && inputElement instanceof TupleResult )
     {
       final TupleResult result = (TupleResult) inputElement;
 

@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.om.tableex;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.commons.tuple.event.TupleModelAdapter;
+import org.kalypso.commons.tuple.ITupleModel;
 import org.kalypso.observation.table.MTRMColumn;
 import org.kalypso.observation.table.MTRMRow;
 
@@ -52,9 +52,9 @@ import org.kalypso.observation.table.MTRMRow;
  */
 public class MultiTupleResultLabelProvider implements ITableLabelProvider
 {
-  private TupleModelAdapter<MTRMRow, MTRMColumn> m_model;
+  private ITupleModel<MTRMRow, MTRMColumn> m_model;
   
-  public void setModel( final TupleModelAdapter<MTRMRow, MTRMColumn> model )
+  public void setModel( final ITupleModel<MTRMRow, MTRMColumn> model )
   {
     m_model = model;
   }
@@ -64,7 +64,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO Auto-generated method stub
+    // empty
   }
 
   /**
@@ -72,7 +72,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
    */
   public void dispose( )
   {
-    // TODO Auto-generated method stub
+    // empty
   }
 
   /**
@@ -80,7 +80,6 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
    */
   public boolean isLabelProperty( Object element, String property )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -89,7 +88,7 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-    // TODO Auto-generated method stub
+    // empty
   }
 
   /**
@@ -97,7 +96,6 @@ public class MultiTupleResultLabelProvider implements ITableLabelProvider
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 

@@ -81,4 +81,18 @@ public final class ComponentUtilities
     
     return null;
   }
+
+  /**
+   * @return the first component found that equals the given one
+   */
+  public static IComponent sameComponent( final IComponent[] comps, final IComponent comp )
+  {
+    for( int i = 0; i < comps.length; i++ )
+    {
+      if( comps[i].equals( comp ) )
+        return comps[i];
+    }
+    
+    return null;
+  }
 }

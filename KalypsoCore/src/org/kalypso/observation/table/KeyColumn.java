@@ -59,9 +59,9 @@ class KeyColumn extends MTRMColumn
 {
   private final Map<Object, MTRMRow> m_map = new HashMap<Object, MTRMRow>();
 
-  public KeyColumn( final IComponent keyComponent )
+  public KeyColumn( final int position, final IComponent keyComponent )
   {
-    super( keyComponent.getName(), keyComponent, XmlTypes.toJavaClass( keyComponent.getValueTypeName() ) );
+    super( position, keyComponent.getName(), keyComponent, XmlTypes.toJavaClass( keyComponent.getValueTypeName() ) );
   }    
 
   /**
