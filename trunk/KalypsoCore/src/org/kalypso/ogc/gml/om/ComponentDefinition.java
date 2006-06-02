@@ -124,6 +124,9 @@ public class ComponentDefinition
    */
   public static ComponentDefinition create( final IComponent component )
   {
+    if( component == null )
+      throw new IllegalArgumentException("component is null");
+      
     final QName valueTypeName = component.getValueTypeName();
 
     String unit = "";
