@@ -865,11 +865,22 @@ final public class GeometryFactory
   }
 
   /**
-   * creates a GM_MultiSurface from a wkb
+   * creates a GM_MultiSurface
+   * 
+   * @deprecated use createGM_MultiSurface( GM_Surface[] surfaces, CS_CoordinateSystem crs)
    */
+  @Deprecated
   public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces )
   {
     return new GM_MultiSurface_Impl( surfaces );
+  }
+
+  /**
+   * creates a GM_MultiSurface
+   */
+  public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces, CS_CoordinateSystem crs )
+  {
+    return new GM_MultiSurface_Impl( surfaces, crs );
   }
 
   /**
@@ -1075,56 +1086,56 @@ final public class GeometryFactory
    */
   public static GM_Object rebuildGeometry( final GM_Object geom ) throws GM_Exception
   {
-//    final Geometry geometry = JTSAdapter.export( geom );
-//    final GM_Object object = JTSAdapter.wrap( geometry );
-//    return object;
-     if( geom == null )
-     return geom;
-     final CS_CoordinateSystem crs = geom.getCoordinateSystem();
-     if( geom instanceof GM_Surface )
-     {
-     final GM_Surface surface = (GM_Surface) geom;
-     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
-     final GM_Position[] exteriorRing = surfaceBoundary.getExteriorRing().getPositions();
-     final GM_Ring[] rings = surfaceBoundary.getInteriorRings();
-     final GM_Position[][] interiorRings;
-     if( rings == null )
-     interiorRings = new GM_Position[0][0];
-     else
-     {
-     interiorRings = new GM_Position[rings.length][];
-     for( int i = 0; i < rings.length; i++ )
-     interiorRings[i] = rings[i].getPositions();
-     }
-     final GM_SurfacePatch surfacePatchAt = surface.getSurfacePatchAt( 0 );
-     final GM_SurfaceInterpolation interpolation = surfacePatchAt.getInterpolation();
-     return createGM_Surface( exteriorRing, interiorRings, interpolation, crs );
-     }
-     else if( geom instanceof GM_Curve )
-     {
-     final GM_Curve curve = (GM_Curve) geom;
-     final GM_Position[] positions = curve.getAsLineString().getPositions();
-     return createGM_Curve( positions, crs );
-     }
-     else if( geom instanceof GM_Point )
-     {
-     final GM_Point point = (GM_Point) geom;
-     final GM_Position position = point.getPosition();
-     return createGM_Point( position, crs );
-     }
-     else if( geom instanceof GM_MultiSurface )
-     {
-     final GM_MultiSurface multiSurface = (GM_MultiSurface) geom;
-     final int size = multiSurface.getSize();
-     final GM_Surface[] surfaces = new GM_Surface[size];
-     for( int i = 0; i < size; i++ )
-     surfaces[i] = (GM_Surface) rebuildGeometry( multiSurface.getSurfaceAt( i ) );
-     return createGM_MultiSurface( surfaces );
-     }
-     else
-     System.out.println( "geometrytype not supported: " + geom.getClass() );
-     // TODO support multi -points,-linestrings ... ! (and others ?)
-     throw new UnsupportedOperationException();
+    // final Geometry geometry = JTSAdapter.export( geom );
+    // final GM_Object object = JTSAdapter.wrap( geometry );
+    // return object;
+    if( geom == null )
+      return geom;
+    final CS_CoordinateSystem crs = geom.getCoordinateSystem();
+    if( geom instanceof GM_Surface )
+    {
+      final GM_Surface surface = (GM_Surface) geom;
+      final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
+      final GM_Position[] exteriorRing = surfaceBoundary.getExteriorRing().getPositions();
+      final GM_Ring[] rings = surfaceBoundary.getInteriorRings();
+      final GM_Position[][] interiorRings;
+      if( rings == null )
+        interiorRings = new GM_Position[0][0];
+      else
+      {
+        interiorRings = new GM_Position[rings.length][];
+        for( int i = 0; i < rings.length; i++ )
+          interiorRings[i] = rings[i].getPositions();
+      }
+      final GM_SurfacePatch surfacePatchAt = surface.getSurfacePatchAt( 0 );
+      final GM_SurfaceInterpolation interpolation = surfacePatchAt.getInterpolation();
+      return createGM_Surface( exteriorRing, interiorRings, interpolation, crs );
+    }
+    else if( geom instanceof GM_Curve )
+    {
+      final GM_Curve curve = (GM_Curve) geom;
+      final GM_Position[] positions = curve.getAsLineString().getPositions();
+      return createGM_Curve( positions, crs );
+    }
+    else if( geom instanceof GM_Point )
+    {
+      final GM_Point point = (GM_Point) geom;
+      final GM_Position position = point.getPosition();
+      return createGM_Point( position, crs );
+    }
+    else if( geom instanceof GM_MultiSurface )
+    {
+      final GM_MultiSurface multiSurface = (GM_MultiSurface) geom;
+      final int size = multiSurface.getSize();
+      final GM_Surface[] surfaces = new GM_Surface[size];
+      for( int i = 0; i < size; i++ )
+        surfaces[i] = (GM_Surface) rebuildGeometry( multiSurface.getSurfaceAt( i ) );
+      return createGM_MultiSurface( surfaces, crs );
+    }
+    else
+      System.out.println( "geometrytype not supported: " + geom.getClass() );
+    // TODO support multi -points,-linestrings ... ! (and others ?)
+    throw new UnsupportedOperationException();
   }
 
 }

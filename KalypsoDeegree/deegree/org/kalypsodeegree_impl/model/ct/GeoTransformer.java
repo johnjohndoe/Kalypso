@@ -360,12 +360,13 @@ final public class GeoTransformer
 
     GM_Surface[] surfaces = new GM_Surface[geo.getSize()];
 
+    CS_CoordinateSystem coordinateSystem =null;
     for( int i = 0; i < geo.getSize(); i++ )
     {
       surfaces[i] = (GM_Surface) transformSurface( geo.getSurfaceAt( i ), trans );
+      coordinateSystem = surfaces[i].getCoordinateSystem();
     }
-
-    geo = GeometryFactory.createGM_MultiSurface( surfaces );
+    geo = GeometryFactory.createGM_MultiSurface( surfaces ,coordinateSystem);
 
     Debug.debugMethodEnd();
     return geo;
