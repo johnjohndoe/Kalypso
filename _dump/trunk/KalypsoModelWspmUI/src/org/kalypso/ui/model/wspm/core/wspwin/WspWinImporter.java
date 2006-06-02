@@ -221,7 +221,7 @@ public class WspWinImporter
       // /////////////// //
       // write workspace //
       // ////////////// //
-      monitor.subTask( "Modell wird geschrieben..." );
+      monitor.subTask( " - Modell wird geschrieben..." );
       final SetContentHelper contentHelper = new SetContentHelper()
       {
         @Override
@@ -248,7 +248,7 @@ public class WspWinImporter
   private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfile> addedProfiles, final boolean isDirectionUpstreams )
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoUIModelWspmPlugin.getDefault() ), 0, "Fehler beim Importieren der Profile", null );
-    
+
     for( final ProfileBean bean : commonProfiles )
     {
       try
@@ -260,7 +260,7 @@ public class WspWinImporter
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-    
+
     return status;
   }
 
@@ -333,7 +333,7 @@ public class WspWinImporter
     {
       return StatusUtilities.statusFromThrowable( e );
     }
-    
+
     reach.setName( name );
 
     final StringBuffer descBuffer = new StringBuffer();
@@ -385,17 +385,17 @@ public class WspWinImporter
 
     // map is used to remember position of runoff: used later by calculation to find reference
     final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
-    int countRO = 0;
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
+      int count = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
         final Feature runOffFeature = waterBody.createRunOffEvent();
-        writeRunOffBeanIntoFeature( countRO, bean, baseName + bean.getName(), runOffFeature );
+        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), runOffFeature );
 
         // remember for reference from calculation
-        readRunOffEvents.put( countRO++, runOffFeature.getId() );
+        readRunOffEvents.put( count++, runOffFeature.getId() );
       }
     }
     catch( final Exception e )
@@ -405,12 +405,14 @@ public class WspWinImporter
 
     try
     {
-      int posWSP = countRO++;
       final RunOffEventBean[] wspFixesBeans = zustandBean.readWspFixes( profDir );
       for( final RunOffEventBean bean : wspFixesBeans )
       {
-        final Feature wspFixFeature = waterBody.createWspFix();
-        writeWspFixBeanIntoFeature( posWSP++, bean, baseName + bean.getName(), wspFixFeature );
+        if( !bean.getEntries().isEmpty() )
+        {
+          final Feature wspFixFeature = waterBody.createWspFix();
+          writeWspFixBeanIntoFeature( bean, baseName + bean.getName(), wspFixFeature );
+        }
       }
     }
     catch( final Exception e )
@@ -418,9 +420,33 @@ public class WspWinImporter
       status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    // ////////////////////////// //
-    // add einzelverluste (.psi) //
-    // ////////////////////////// //
+    // /////////////////////////////////////////// //
+    // add einzelverluste / Verlustbeiwerte (.psi) //
+    // /////////////////////////////////////////// //
+
+    // map is used to remember station of local energy loss (Einzelverlust/Verlustbeiwert)
+    final Map<Double, Integer> readLocEnergyLosses = new HashMap<Double, Integer>();
+    LocalEnergyLossBean[] locEnergyLossBeans = null;
+    try
+    {
+      locEnergyLossBeans = zustandBean.readLocalEnergyLosses( profDir );
+
+      int count = 0;
+      for( final LocalEnergyLossBean bean : locEnergyLossBeans )
+      {
+        // remember station for reference
+        readLocEnergyLosses.put( bean.getStation(), count++ );
+      }
+    }
+    catch( final Exception e )
+    {
+      status.add( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    // TODO: don't forget to add the local energy losses to profiles: handle multiple losses at one profile - mean
+    // value?
+    // each zustand can have losses defined for a station / profile. They are preserved in locEnergyLossBeans /
+    // readLocEnergyLosses
 
     // ///////////////////////////// //
     // add calculations (.ber, .001) //
@@ -556,21 +582,20 @@ public class WspWinImporter
       record.setValue( stationComp, entry.getKey() );
       record.setValue( valueComp, entry.getValue() );
     }
-// TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
     final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
 
-  private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent abflussComp = new ValueComponent( pos, "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
-    writeRunOffBeanIntoFeature( pos, bean, name, runOffFeature, abflussComp );
+    final IComponent abflussComp = new ValueComponent( 2, "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
+    writeRunOffBeanIntoFeature( 1, bean, name, runOffFeature, abflussComp );
   }
 
-  private static void writeWspFixBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  private static void writeWspFixBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent wspComp = new ValueComponent( pos, "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
-    writeRunOffBeanIntoFeature( pos, bean, name, runOffFeature, wspComp );
+    final IComponent wspComp = new ValueComponent( 2, "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
+    writeRunOffBeanIntoFeature( 1, bean, name, runOffFeature, wspComp );
   }
 
   /** Returns the content of the prof/probez.txt file */

@@ -130,6 +130,12 @@ public class ZustandBean
     return RunOffEventBean.read( wsfFile );
   }
 
+  public LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
+  {
+    final File lelFile = getZustandFile( profDir, "psi" );
+    return LocalEnergyLossBean.read( lelFile );
+  }
+
   public CalculationBean[] readCalculations( File profDir ) throws ParseException, IOException
   {
     final File berFile = getZustandFile( profDir, "ber" );

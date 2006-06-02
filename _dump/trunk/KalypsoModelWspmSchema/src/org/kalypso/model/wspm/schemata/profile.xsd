@@ -1,56 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe"
-	xmlns:prof="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspmprofile"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm"
+	xmlns:prof="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-	<import namespace="http://www.opengis.net/swe"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+	<import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
 	<!-- schema for WSPM Profiles  -->
 	<!-- TODO: KALYPSO-Header einfügen -->
-
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
 	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation"/>
-
 	<complexType name="ProfileType">
 		<annotation>
-			<documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird
-				die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent
-				benutzt um Querprofil zu bearbeiten. Wir packen deswegen diese Information als
-				Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und
-				beinhaltet also die Tupeln. Sie werden anhand von resultDefinition angegeben. Für
-				die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member
-				definiert.</documentation>
+			<documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent benutzt um
+				Querprofil zu bearbeiten. Wir packen deswegen diese Information als Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und beinhaltet also die Tupeln. Sie
+				werden anhand von resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member definiert.</documentation>
 		</annotation>
 		<complexContent>
 			<extension base="om:ObservationType">
 				<sequence>
-					<element name="station" type="swe:RelativeMeasureType" minOccurs="1"
-						maxOccurs="1">
+					<element name="station" type="swe:RelativeMeasureType" minOccurs="1" maxOccurs="1">
 						<annotation>
-							<documentation>Die Profilstationierung, wichtiger Bestandteil für die
-								Bearbeitung von Querprofile.</documentation>
+							<documentation>Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
 						</annotation>
 					</element>
-					<element name="member" type="om:AbstractObservationPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation>Die Liste der zusätzliche Observations: z.B. Durchlässe,
-								Maulprofile, Kreise und Trapezen können hiermit abgebildet
-							werden.</documentation>
+							<documentation>Die Liste der zusätzliche Observations: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden.</documentation>
+						</annotation>
+					</element>
+					<element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--  
+	-->
+	<element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Verlustbeiwerte</label>
+				<tooltip>Verlustbeiwerte</tooltip>
+				<description>Verlustbeiwerte</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Verlustbeiwerte</label>
+				<tooltip>Verlustbeiwerte</tooltip>
+				<description>Verlustbeiwerte</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<complexType name="localEnergyLossPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="prof:LocalEnergyLoss"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="LocalEnergyLossType">
+		<complexContent>
+			<extension base="wspm:EmptyFeatureBaseType">
+				<sequence>
+					<element name="kind">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art</label>
+								<tooltip>Art</tooltip>
+								<description>Art des Einzelverlusts</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="EINLAUF">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Einlauf</label>
+											<tooltip>Einlauf</tooltip>
+											<description>Einlauf</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="KRUEMMER">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Krümmer</label>
+											<tooltip>Krümmer</tooltip>
+											<description>Krümmer</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="ZUSATZVERLUST">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Zusatz-Verlust</label>
+											<tooltip>Zusatz-Verlust</tooltip>
+											<description>Zusatz-Verlust</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="RECHEN">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Rechen</label>
+											<tooltip>Rechen</tooltip>
+											<description>Rechen</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="AUSLAUF">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Auslauf</label>
+											<tooltip>Auslauf</tooltip>
+											<description>Auslauf</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="value" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wert</label>
+								<tooltip>Wert</tooltip>
+								<description>Wert des Einzelverlusts</description>
+							</documentation>
 						</annotation>
 					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
 </schema>

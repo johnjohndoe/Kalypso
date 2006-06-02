@@ -183,7 +183,9 @@ public class WspWinExporter
 
   /**
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
-   * @param context Context to resolve links inside the gml structure.
+   * 
+   * @param context
+   *          Context to resolve links inside the gml structure.
    */
   public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir, final URL context ) throws IOException, ProfilDataException
   {
@@ -193,11 +195,12 @@ public class WspWinExporter
     final File batFile = new File( profDir, "calc.properties" );
     final File zustFile = new File( profDir, "zustand.001" );
     final File qwtFile = new File( profDir, "qwert.001" );
+    final File psiFile = new File( profDir, "zustand.psi" );
 
     final boolean isDirectionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
-    write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, context );
+    write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile, context );
     write1DTuhhRunOff( calculation.getRunOffEvent(), isDirectionUpstreams, qwtFile );
   }
 
@@ -243,7 +246,7 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      pw.print( runOffEvent.getName().replaceAll(" ", "_") );
+      pw.print( runOffEvent.getName().replaceAll( " ", "_" ) );
       pw.print( " " );
       pw.println( result.size() );
 
@@ -353,17 +356,21 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final URL context ) throws IOException, ProfilDataException
+  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, File psiFile, final URL context ) throws IOException, ProfilDataException
   {
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 
     Arrays.sort( segments, new ReachSegmentStationComparator( isDirectionUpstreams ) );
 
-    PrintWriter writer = null;
+    PrintWriter zustWriter = null;
+    PrintWriter psiWriter = null;
     try
     {
       zustFile.getParentFile().mkdirs();
-      writer = new PrintWriter( new BufferedWriter( new FileWriter( zustFile ) ) );
+      zustWriter = new PrintWriter( new BufferedWriter( new FileWriter( zustFile ) ) );
+
+      psiFile.getParentFile().mkdirs();
+      psiWriter = new PrintWriter( new BufferedWriter( new FileWriter( psiFile ) ) );
 
       int fileCount = 0;
       for( final TuhhReachProfileSegment segment : segments )
@@ -371,30 +378,34 @@ public class WspWinExporter
         final BigDecimal station = segment.getStation();
         final WspmProfile profileMember = segment.getProfileMember();
 
-//        final String href = profileMember.getHref();
+        // final String href = profileMember.getHref();
 
         final String prfName = "Profil_" + fileCount++ + ".prf";
-        
-        writer.print( prfName );
-        writer.print( " " );
-        writer.println( station.doubleValue() );
+
+        zustWriter.print( prfName );
+        zustWriter.print( " " );
+        zustWriter.println( station.doubleValue() );
 
         // TODO: write profile into prf file
-        
+        // TODO: write corresponding energy losses (zeta, Velustbeiwerte) into psiFile
+//        psiWriter.print("");
+
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
         profil.setProperty( IProfil.PROFIL_PROPERTY.STATION, station );
-        
-//        final URL prfFile = new URL( context, href );
+
+        // final URL prfFile = new URL( context, href );
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
         ProfilesSerializer.store( profil, outPrfFile );
-//        FileUtils.copyURLToFile( prfFile, outPrfFile );
+        // FileUtils.copyURLToFile( prfFile, outPrfFile );
       }
 
-      writer.close();
+      zustWriter.close();
+      psiWriter.close();
     }
     finally
     {
-      IOUtils.closeQuietly( writer );
+      IOUtils.closeQuietly( zustWriter );
+      IOUtils.closeQuietly( psiWriter );
     }
   }
 }

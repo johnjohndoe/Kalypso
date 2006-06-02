@@ -137,7 +137,7 @@ public class CalculationBean
     }
   }
 
-  public CalculationContentBean readCalculationContent( final File profDir ) throws IOException, ParseException
+  public CalculationContentBean readCalculationContent( final File profDir ) throws IOException
   {
     final File file = new File( profDir, getFileName() );
     return CalculationContentBean.read( file );

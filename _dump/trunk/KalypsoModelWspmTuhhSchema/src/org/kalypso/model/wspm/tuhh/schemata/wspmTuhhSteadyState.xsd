@@ -186,26 +186,6 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!--  
-	-->
-	<element name="localEnergyLossMember" type="tuhh:localEnergyLossPropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Einzelverluste</label>
-				<tooltip>Einzelverluste</tooltip>
-				<description>Einzelverluste</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="LocalEnergyLoss" type="tuhh:LocalEnergyLossType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Einzelverluste</label>
-				<tooltip>Einzelverluste</tooltip>
-				<description>Einzelverluste</description>
-			</documentation>
-		</annotation>
-	</element>
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -654,93 +634,6 @@
 						</annotation>
 					</element>
 					-->
-					<element ref="tuhh:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<complexType name="localEnergyLossPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:LocalEnergyLoss"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="LocalEnergyLossType">
-		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence>
-					<element name="kind">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Art</label>
-								<tooltip>Art</tooltip>
-								<description>Art des Einzelverlusts</description>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="EINLAUF">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Einlauf</label>
-											<tooltip>Einlauf</tooltip>
-											<description>Einlauf</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="KRUEMMER">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Krümmer</label>
-											<tooltip>Krümmer</tooltip>
-											<description>Krümmer</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="ZUSATZVERLUST">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Zusatz-Verlust</label>
-											<tooltip>Zusatz-Verlust</tooltip>
-											<description>Zusatz-Verlust</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="RECHEN">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Rechen</label>
-											<tooltip>Rechen</tooltip>
-											<description>Rechen</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="AUSLAUF">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Auslauf</label>
-											<tooltip>Auslauf</tooltip>
-											<description>Auslauf</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="value" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Wert</label>
-								<tooltip>Wert</tooltip>
-								<description>Wert des Einzelverlusts</description>
-							</documentation>
-						</annotation>
-					</element>
 				</sequence>
 			</extension>
 		</complexContent>
