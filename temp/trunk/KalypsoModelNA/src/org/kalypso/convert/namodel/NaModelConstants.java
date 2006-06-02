@@ -126,10 +126,22 @@ public interface NaModelConstants
 
   public static final String HYDRO_PROP_HYDTYPE = "hydType";
 
-  // channels
-  public static final String CHANNEL_GEOM_PROP = "Ort";
+  public static final String HYDRO_PROP_DAINAGETYPE = "drainageType";
 
-  public static final String CATCHMENT_GEOM_PROP = "Ort";
+  public static final String HYDRO_ENUM_HYDTYPE_SWALETRENCH = "MuldenRigole";
+
+  public static final String HYDRO_ENUM_HYDTYPE_GREENROOF = "Dachbegruenung";
+
+  public static final String HYDRO_ENUM_HYDTYPE_REGULAR = "Bodenspeicher";
+
+  // channels
+  public static final String CHANNEL_COLLECTION_MEMBER_PROP = "ChannelCollectionMember";
+
+  public static final String CHANNEL_MEMBER_PROP = "channelMember";
+
+  public static final String CHANNEL_ABSTRACT_FT = "_Channel";
+
+  public static final String CHANNEL_GEOM_PROP = "Ort";
 
   public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd";
 
@@ -141,10 +153,28 @@ public interface NaModelConstants
 
   public static final String STORAGE_CHANNEL_C_PROP = "c";
 
+  public static final String STORAGE_CHANNEL_ELEMENT_FT = "StorageChannel";
+
+  public static final String KM_CHANNEL_ELEMENT_FT = "KMChannel";
+
+  public static final String V_CHANNEL_ELEMENT_FT = "VirtualChannel";
+
   // nodes
   public static final String NODE_GEOM_PROP = "Ort";
 
+  public static final String NODE_ELEMENT_FT = "Node";
+
+  public static final String NODE_MEMBER_PROP = "nodeMember";
+
+  public static final String NODE_COLLECTION_FT = "NodeCollection";
+
+  public static final String NODE_COLLECTION_MEMBER_PROP = "NodeCollectionMember";
+
   // catchments
+  public static final String CATCHMENT_ELEMENT_FT = "Catchment";
+
+  public static final String CATCHMENT_GEOM_PROP = "Ort";
+
   public static final String CATCHMENT_COLLECTION_MEMBER_PROP = "CatchmentCollectionMember";
 
   public static final String CATCHMENT_MEMBER_PROP = "catchmentMember";
@@ -203,4 +233,8 @@ public interface NaModelConstants
   public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
 
   public static final String DEFAULT_MRS_LANDUSE_PROP = "MRS_N";
+
+  // misc
+  public static final String GENERATE_RESULT_PROP = "generateResult";
+
 }

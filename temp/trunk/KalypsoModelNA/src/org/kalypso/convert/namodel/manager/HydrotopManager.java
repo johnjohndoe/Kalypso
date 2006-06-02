@@ -105,11 +105,11 @@ public class HydrotopManager extends AbstractManager
     final IDManager idManager = m_conf.getIdManager();
     // Catchment
     Feature modelRootFeature = modelWorkspace.getRootFeature();
-    Feature modelCol = (Feature) modelRootFeature.getProperty( new QName( NaModelConstants.NS_NAMODELL, "CatchmentCollectionMember" ) );
-    List catchmentList = (List) modelCol.getProperty( new QName( NaModelConstants.NS_NAMODELL, "catchmentMember" ) );
+    Feature modelCol = (Feature) modelRootFeature.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP ) );
+    List catchmentList = (List) modelCol.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_MEMBER_PROP ) );
 
     Feature parameterRootFeature = parameterWorkspace.getRootFeature();
-    List landuseList = (List) parameterRootFeature.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) );
+    List landuseList = (List) parameterRootFeature.getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_PROP_LANDUSE_MEMBER ) );
     Iterator landuseIter = landuseList.iterator();
     while( landuseIter.hasNext() )
     {
@@ -242,15 +242,20 @@ public class HydrotopManager extends AbstractManager
     b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
     b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "corrSealing" ), "*" ) );
+    final String corrFactAsString = FeatureHelper.getAsString( feature, "corrSealing" );
+    if( corrFactAsString.equals( "Infinity" ) )
+    {
+      System.out.println( corrFactAsString );
+    }
+    b.append( " " + FortranFormatHelper.printf( corrFactAsString, "*" ) );
 
     final String hydType = (String) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ) );
     int hydTypeNumber = 0;
-    if( hydType == null || hydType.equals( "Bodenspeicher" ) )
+    if( hydType == null || hydType.equals( NaModelConstants.HYDRO_ENUM_HYDTYPE_REGULAR ) )
       hydTypeNumber = 0;
-    else if( hydType.equals( "MuldenRigole" ) )
+    else if( hydType.equals( NaModelConstants.HYDRO_ENUM_HYDTYPE_SWALETRENCH ) )
       hydTypeNumber = 1;
-    else if( hydType.equals( "Dachbegruenung" ) )
+    else if( hydType.equals( NaModelConstants.HYDRO_ENUM_HYDTYPE_GREENROOF ) )
       hydTypeNumber = 2;
     else
       System.out.println( "Kein gültiger Hydrotoptyp" );

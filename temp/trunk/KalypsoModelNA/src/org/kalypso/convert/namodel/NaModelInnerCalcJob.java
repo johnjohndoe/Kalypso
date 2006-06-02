@@ -665,6 +665,10 @@ public class NaModelInnerCalcJob implements ISimulation
   }
 
   /**
+   * TODO scetch<br>
+   * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
+   * be ignored for calculation
+   * 
    * @param workspace
    * @throws Exception
    */
@@ -753,6 +757,26 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
+  /**
+   * before: <code>
+   *      
+   *     o(existing)
+   *      
+   * </code> after: <code>
+   *      
+   *  |new Channel3|                  
+   *     |                  
+   *     V                  
+   *     o(new Node2)  (return value)
+   *     |                  
+   *     V                  
+   *  |new Channel1|                  
+   *     |                  
+   *     V                  
+   *     o(existing)
+   *      
+   * </code>
+   */
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
   {
     final IFeatureType nodeColFT = workspace.getFeatureType( "NodeCollection" );
@@ -805,12 +829,19 @@ public class NaModelInnerCalcJob implements ISimulation
       final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
+      if( orgChannelFE.getId().equals( "VirtualChannel0" ) )
+      {
+        System.out.println( orgChannelFE.getId() );
+      }
       final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
+      // TODO This might be my problem because the link is set inline.
+      // should go into the channel collection and liked with href:
       final Feature newChannelFE = workspace.createFeature( catchmentFE, vChannelFT );
       // set new relation: catchment -> new V-channel
       try
       {
+        // not inline
         workspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
       }
       catch( Exception e )

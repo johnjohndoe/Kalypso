@@ -95,8 +95,9 @@ public class SwaleAndTrenchManager extends AbstractManager
 
   private Feature readNextFeature( LineNumberReader reader ) throws Exception
   {
-    // TODO: code!!! added to remove yellow things
+    // added to remove yellow things
     reader.getLineNumber();
+    // TODO: code!!!
     return null;
   }
 
