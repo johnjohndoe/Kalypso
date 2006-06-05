@@ -41,10 +41,12 @@
 package org.kalypso.ogc.gml.om;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -114,8 +116,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
 
     final String result = (String) f.getProperty( OM_RESULT );
+    final String withoutCDATA = result == null ? "" : result.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
 
-    final TupleResult tupleResult = buildTupleResult( recordDefinition, result );
+    final TupleResult tupleResult = buildTupleResult( recordDefinition, withoutCDATA );
 
     return new Observation<TupleResult>( name, desc, tupleResult, meta );
   }
@@ -198,7 +201,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
   protected static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
   {
     final IComponent[] components = result.getComponents();
-    final Map<IComponent,ComponentDefinition> map = new TreeMap<IComponent,ComponentDefinition>( ComponentPositionComparator.getInstance() );
+
+    // REMARK: we use the linked hash map to püreserve the order of the components
+    // its not really importent here, but maybe we shouldn't shuffle it too much
+    final Map<IComponent, ComponentDefinition> map = new LinkedHashMap<IComponent, ComponentDefinition>( components.length );
 
     // for each component, set a component property, create a feature: ItemDefinition
     for( int i = 0; i < components.length; i++ )
@@ -228,6 +234,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final Map<IComponent, ComponentDefinition> map = buildComponentDefinitions( result );
 
+    // REMARK + BUGFIX: the order of the records and the order of the serialized string must
+    // be the same!
+    // Policy: always use the order of the map
     final Feature rd = buildRecordDefinition( targetObsFeature, map );
     targetObsFeature.setProperty( OM_RESULTDEFINITION, rd );
 
@@ -239,6 +248,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * Helper: builds the record definition according to the components of the tuple result.
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
+   * 
+   * @param map
+   *          ATTENTION: the recordset is written in the same order as this map
    */
   protected static Feature buildRecordDefinition( final Feature targetObsFeature, final Map<IComponent, ComponentDefinition> map )
   {
@@ -248,12 +260,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_RECORDDEFINITIONTYPE ) );
 
     // for each component, set a component property, create a feature: ItemDefinition
-    for( ComponentDefinition compDef : map.values() )
+    for( final Map.Entry<IComponent, ComponentDefinition> entry : map.entrySet() )
     {
+      final ComponentDefinition compDef = entry.getValue();
+
       final Feature featureItemDef = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_ITEMDEFINITION ) );
 
       final Feature featurePhenomenon = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
-      FeatureHelper.addProperty(  featurePhenomenon, GML_NAME, compDef.getName() );
+      FeatureHelper.addProperty( featurePhenomenon, GML_NAME, compDef.getName() );
       featurePhenomenon.setProperty( GML_DESCRIPTION, compDef.getDescription() );
 
       featureItemDef.setProperty( SWE_PROPERTY, featurePhenomenon );
@@ -269,16 +283,20 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final StringBuffer buffer = new StringBuffer();
 
-    final IComponent[] components = result.getComponents();
-    for( IRecord record : result )
+    final Set<Entry<IComponent, ComponentDefinition>> entries = map.entrySet();
+    final Entry<IComponent, ComponentDefinition> firstEntry = entries.iterator().next();
+
+    for( final IRecord record : result )
     {
-      for( int i = 0; i < components.length; i++ )
+      for( final Entry<IComponent, ComponentDefinition> entry : entries )
       {
-        if( i > 0 )
+        if( entry != firstEntry )
           buffer.append( " " );
 
-        final Object value = record.getValue( components[i] );
-        final String strValue = map.get( components[i] ).getTypeHandler().convertToXMLString( value );
+        final IComponent comp = entry.getKey();
+
+        final Object value = record.getValue( comp );
+        final String strValue = map.get( comp ).getTypeHandler().convertToXMLString( value );
 
         buffer.append( strValue );
       }

@@ -268,7 +268,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public void setProperty( final IPropertyType pt, final Object value )
   {
     if( pt == null )
-      return;
+      throw new IllegalArgumentException( "pt may not null" );
 
     // Check if value fits to property
     // Example1: QName is xs:double -> value must be Double

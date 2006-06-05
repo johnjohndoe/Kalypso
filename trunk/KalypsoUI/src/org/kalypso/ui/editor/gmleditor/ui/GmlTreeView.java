@@ -30,7 +30,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
@@ -135,22 +134,22 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected void handleGlobalSelectionChanged( final IFeatureSelection selection )
   {
-    final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
-    final Feature[] selectedFeatures = filterSelectedFeatures( m_treeViewer.getSelection() );
-    final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
-    if( !isEqual )
+    final TreeViewer treeViewer = m_treeViewer;
+    treeViewer.getControl().getDisplay().syncExec( new Runnable()
     {
-      final TreeViewer treeViewer = m_treeViewer;
-      treeViewer.getControl().getDisplay().syncExec( new Runnable()
+      public void run( )
       {
-        public void run( )
+        final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
+        final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
+        final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
+        if( !isEqual )
         {
           treeViewer.setSelection( selection, true );
           for( int i = 0; i < globalFeatures.length; i++ )
             m_contentProvider.expandElement( m_contentProvider.getParent( globalFeatures[i] ) );
         }
-      } );
-    }
+      }
+    } );
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )
@@ -184,7 +183,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  private Feature[] filterSelectedFeatures( final ISelection selection )
+  protected Feature[] filterSelectedFeatures( final ISelection selection )
   {
     final Object[] selectedTreeItems = ((IStructuredSelection) selection).toArray();
     final List<Feature> selectedFeatures = new ArrayList<Feature>();

@@ -64,6 +64,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -164,6 +165,13 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( IExportableObjectFactory.class.equals( adapter ) )
       return this;
+
+    if( adapter == IFile.class )
+    {
+      final IEditorInput input = getEditorInput();
+      if( input instanceof IFileEditorInput )
+        return ((IFileEditorInput) getEditorInput()).getFile();
+    }
 
     return super.getAdapter( adapter );
   }

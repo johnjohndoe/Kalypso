@@ -233,8 +233,16 @@ public class FeaturePath
           for( int i = 0; i < associationFeatureTypes.length; i++ )
           {
             final IFeatureType type = associationFeatureTypes[i];
-            if( m_typename.equals( type.getName() ) )
-              return type;
+            
+            final IFeatureType[] substituts = type.getSubstituts( workspace.getGMLSchema(), true, true );
+            for( final IFeatureType substType : substituts )
+            {
+              if( m_typename.equals( substType.getName() ))
+                return substType;
+            }
+            
+//            if( m_typename.equals( type.getName() ) )
+//              return type;
           }
 
           return null;
