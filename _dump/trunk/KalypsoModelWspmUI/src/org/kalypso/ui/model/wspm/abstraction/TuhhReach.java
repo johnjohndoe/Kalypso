@@ -69,11 +69,11 @@ public class TuhhReach extends WspmReach implements IWspmConstants
   /**
    * Creates and adds a new profile segment to this reach.
    */
-  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, final double distanceL, final double distanceM, final double distanceR ) throws GMLSchemaException
+  public WspmReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, final double distanceL, final double distanceM, final double distanceR ) throws GMLSchemaException
   {
     final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "reachSegmentMember" ), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
 
-    final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
+    final WspmReachProfileSegment tuhhProfilesegment = new WspmReachProfileSegment( feature );
 
     // set default values
     tuhhProfilesegment.setProfileMember( profileReference );
@@ -85,17 +85,17 @@ public class TuhhReach extends WspmReach implements IWspmConstants
     return tuhhProfilesegment;
   }
 
-  public TuhhReachProfileSegment[] getReachProfileSegments( )
+  public WspmReachProfileSegment[] getReachProfileSegments( )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
-    final List<TuhhReachProfileSegment> profilesegments = new ArrayList<TuhhReachProfileSegment>();
+    final List<WspmReachProfileSegment> profilesegments = new ArrayList<WspmReachProfileSegment>();
     for( final Object object : reachSegmentList )
     {
       final Feature segment = (Feature) object;
       if( GMLSchemaUtilities.substitutes( segment.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
-        profilesegments.add( new TuhhReachProfileSegment( segment ) );
+        profilesegments.add( new WspmReachProfileSegment( segment ) );
     }
 
-    return profilesegments.toArray( new TuhhReachProfileSegment[profilesegments.size()] );
+    return profilesegments.toArray( new WspmReachProfileSegment[profilesegments.size()] );
   }
 }

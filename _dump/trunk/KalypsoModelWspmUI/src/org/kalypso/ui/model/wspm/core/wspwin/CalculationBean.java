@@ -95,6 +95,10 @@ public class CalculationBean
 
   public static CalculationBean[] readBerFile( final File berFile ) throws ParseException, IOException
   {
+    // if a zustand has no calculations, no .ber file is present.
+    if( !berFile.exists() )
+      return new CalculationBean[0];
+    
     final List<CalculationBean> beans = new ArrayList<CalculationBean>( 10 );
 
     LineIterator lineIt = null;

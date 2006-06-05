@@ -6,7 +6,6 @@
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
@@ -78,7 +77,8 @@
 	</complexType>
 	<complexType name="LocalEnergyLossType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+		<!-- Can't use wspm namespace here because we get cyclic import. -->
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="kind">
 						<annotation>

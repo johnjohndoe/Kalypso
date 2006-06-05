@@ -42,6 +42,36 @@
                style="push"
                tooltip="Startet die selektierten Berechnungen"/>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.ui.model.wspm.ui.objectContribution.showProfile"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="org.kalypso.model.wspm#ProfileReachSegment"/>
+         <action
+               class="org.kalypso.ui.model.wspm.ui.action.ShowProfileAction"
+               id="org.kalypso.ui.model.wspm.ui.action.ShowProfileAction"
+               label="Profil anzeigen"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor"
+            class="org.kalypso.ui.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="com.bce.profil.ui.view.IProfilProvider2"/>
+      </factory>
+      <factory
+            adaptableType="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
+            class="org.kalypso.ui.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="com.bce.profil.ui.view.IProfilProvider2"/>
+      </factory>
+      <factory
+            adaptableType="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
+            class="org.kalypso.ui.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="com.bce.profil.ui.view.IProfilProvider2"/>
+      </factory>
    </extension>
 
 </plugin>

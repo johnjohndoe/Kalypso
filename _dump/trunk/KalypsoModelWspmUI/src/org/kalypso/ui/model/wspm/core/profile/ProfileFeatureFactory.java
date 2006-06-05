@@ -133,11 +133,19 @@ public class ProfileFeatureFactory implements IWspmConstants
       final Observation<TupleResult> tableObs = new Observation<TupleResult>( "Profil", "", result, metadata );
       ObservationFeatureFactory.toFeature( tableObs, targetFeature );
 
+      //
+      // Buildings
+      //
+//      final IProfilBuilding building = profile.getBuilding();
+//      final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
+//      final BUILDING_TYP typ = building.getTyp();
+      
 //    final QName memberQName = new QName( NS_WSPMPROF, "member" );
 //    final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
 //    // delete existing features
 //    memberFeatures.clear();
-
+      
+      
       //
       // set station
       //

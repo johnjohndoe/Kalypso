@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -116,8 +115,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public void setRefNr( final String refNr )
   {
-    final IPropertyType prop = m_water.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyRefNr" ) );
-    m_water.setProperty( prop, refNr );
+    m_water.setProperty( new QName( NS_WSPM, "refNr" ), refNr );
   }
 
   public void setCenterLine( final GM_LineString lineString )

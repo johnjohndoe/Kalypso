@@ -76,7 +76,7 @@ import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypso.ui.model.wspm.abstraction.ReachSegmentStationComparator;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
-import org.kalypso.ui.model.wspm.abstraction.TuhhReachProfileSegment;
+import org.kalypso.ui.model.wspm.abstraction.WspmReachProfileSegment;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmProfile;
 import org.kalypso.ui.model.wspm.core.profile.ProfileFeatureFactory;
@@ -358,7 +358,7 @@ public class WspWinExporter
 
   private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, File psiFile, final URL context ) throws IOException, ProfilDataException
   {
-    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
+    final WspmReachProfileSegment[] segments = reach.getReachProfileSegments();
 
     Arrays.sort( segments, new ReachSegmentStationComparator( isDirectionUpstreams ) );
 
@@ -373,7 +373,7 @@ public class WspWinExporter
       psiWriter = new PrintWriter( new BufferedWriter( new FileWriter( psiFile ) ) );
 
       int fileCount = 0;
-      for( final TuhhReachProfileSegment segment : segments )
+      for( final WspmReachProfileSegment segment : segments )
       {
         final BigDecimal station = segment.getStation();
         final WspmProfile profileMember = segment.getProfileMember();

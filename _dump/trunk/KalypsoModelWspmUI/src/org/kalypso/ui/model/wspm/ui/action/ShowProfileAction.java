@@ -38,38 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.model.wspm.abstraction;
+package org.kalypso.ui.model.wspm.ui.action;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionDelegate;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
-public class ReachSegmentStationComparator implements Comparator<WspmReachProfileSegment>
+public class ShowProfileAction extends ActionDelegate
 {
-  private final boolean m_isDirectionUpstreams;
-
-  public ReachSegmentStationComparator( final boolean isDirectionUpstreams )
-  {
-    m_isDirectionUpstreams = isDirectionUpstreams;
-  }
-
   /**
-   * @see java.util.Comparator#compare(T, T)
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
    */
-  public int compare( final WspmReachProfileSegment o1, final WspmReachProfileSegment o2 )
+  @Override
+  public void runWithEvent( final IAction action, final Event event )
   {
-    final BigDecimal s1 = o1.getStation();
-    final BigDecimal s2 = o2.getStation();
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    try
+    {
+      activePage.showView( "com.bce.profil.eclipse.view.chart.ChartView" );
+    }
+    catch( final PartInitException e )
+    {
+      ErrorDialog.openError( event.display.getActiveShell(), "Profil anzeigen", "Profil konnte nicht angezeigt werden.", e.getStatus() );
+    }
 
-    if( s1 == null || s2 == null )
-      return 0;
-    
-    if( m_isDirectionUpstreams )
-      return s1.compareTo( s2 );
-    else
-      return s2.compareTo( s1 );
   }
 
 }

@@ -137,7 +137,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractReachSegment">
+	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>???profileReachSegmentWspmTuhhSteadyState</label>

@@ -9,6 +9,9 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+	
+	<import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd"/>
+	
 	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
@@ -398,7 +401,7 @@
 			</annotation>
 			<extension base="wspm:AbstractReachSegmentType">
 				<sequence>
-					<element name="profileGeometry" type="gml:LineStringSegmentType">
+					<element name="geometry" type="gml:LineStringPropertyType">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation and can be a line or a point</appinfo>
 							<documentation xml:lang="de">
@@ -486,7 +489,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!-- TODO hier kommt noch das neue Profil rein -->
+					<!-- TODO hier kommt noch das neue Profil rein --> 
 					<element name="profileMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -801,3 +804,4 @@
 		</restriction>
 	</simpleType>
 </schema>
+  

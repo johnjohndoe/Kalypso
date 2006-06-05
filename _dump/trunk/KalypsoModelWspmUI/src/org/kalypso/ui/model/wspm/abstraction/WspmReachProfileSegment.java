@@ -44,21 +44,22 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Belger
  */
-public class TuhhReachProfileSegment implements IWspmConstants
+public class WspmReachProfileSegment implements IWspmConstants
 {
   private final Feature m_reachSegment;
 
-  public TuhhReachProfileSegment( final Feature reachSegment )
+  public WspmReachProfileSegment( final Feature reachSegment )
   {
-    if( !QNameUtilities.equals( reachSegment.getFeatureType().getQName(), IWspmConstants.NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) )
-      throw new IllegalStateException( "reachSegment ist no reachSegment" );
+    if( !GMLSchemaUtilities.substitutes( reachSegment.getFeatureType(), new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" ) ) )
+      throw new IllegalStateException( "Feature is no ProfileReachSegment" );
 
     m_reachSegment = reachSegment;
   }
@@ -69,20 +70,20 @@ public class TuhhReachProfileSegment implements IWspmConstants
   }
 
   // Commented out, because not used by the tuhh-model
-//  public void setDistanceL( final double distanceL )
-//  {
-//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceL" ), distanceL );
-//  }
-//
-//  public void setDistanceM( final double distanceM )
-//  {
-//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceM" ), distanceM );
-//  }
-//
-//  public void setDistanceR( final double distanceR )
-//  {
-//    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
-//  }
+  // public void setDistanceL( final double distanceL )
+  // {
+  // m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceL" ), distanceL );
+  // }
+  //
+  // public void setDistanceM( final double distanceM )
+  // {
+  // m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceM" ), distanceM );
+  // }
+  //
+  // public void setDistanceR( final double distanceR )
+  // {
+  // m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
+  // }
 
   public BigDecimal getStation( )
   {
@@ -98,6 +99,11 @@ public class TuhhReachProfileSegment implements IWspmConstants
   public void setStation( final double station )
   {
     m_reachSegment.setProperty( new QName( NS_WSPM, "station" ), new BigDecimal( station, TuhhCalculation.STATION_MATH_CONTEXT ) );
+  }
+
+  public void setGeometry( final GM_Curve curve )
+  {
+    m_reachSegment.setProperty( new QName( NS_WSPM, "geometry" ), curve );
   }
 
 }

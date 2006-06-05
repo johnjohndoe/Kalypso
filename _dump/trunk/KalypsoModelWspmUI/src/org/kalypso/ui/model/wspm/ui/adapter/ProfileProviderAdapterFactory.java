@@ -38,38 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.model.wspm.abstraction;
+package org.kalypso.ui.model.wspm.ui.adapter;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.ui.IWorkbenchPart;
+
+import com.bce.profil.ui.view.IProfilProvider2;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
-public class ReachSegmentStationComparator implements Comparator<WspmReachProfileSegment>
+public class ProfileProviderAdapterFactory implements IAdapterFactory
 {
-  private final boolean m_isDirectionUpstreams;
-
-  public ReachSegmentStationComparator( final boolean isDirectionUpstreams )
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+   */
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    m_isDirectionUpstreams = isDirectionUpstreams;
+    if( adapterType == IProfilProvider2.class )
+    {
+      if( adaptableObject instanceof IWorkbenchPart )
+      {
+        final IWorkbenchPart part = (IWorkbenchPart) adaptableObject;
+
+        final IFile file = (IFile) part.getAdapter( IFile.class );
+        return new FeatureSelectionProfileProvider( file, part.getSite().getSelectionProvider() );
+      }
+    }
+
+    return null;
   }
 
   /**
-   * @see java.util.Comparator#compare(T, T)
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  public int compare( final WspmReachProfileSegment o1, final WspmReachProfileSegment o2 )
+  public Class[] getAdapterList( )
   {
-    final BigDecimal s1 = o1.getStation();
-    final BigDecimal s2 = o2.getStation();
-
-    if( s1 == null || s2 == null )
-      return 0;
-    
-    if( m_isDirectionUpstreams )
-      return s1.compareTo( s2 );
-    else
-      return s2.compareTo( s1 );
+    return new Class[] { IProfilProvider2.class };
   }
-
 }

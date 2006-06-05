@@ -52,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -81,6 +82,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
+import org.kalypso.ui.model.wspm.abstraction.WspmReachProfileSegment;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmProfile;
 import org.kalypso.ui.model.wspm.abstraction.WspmProject;
@@ -91,11 +93,18 @@ import org.kalypso.ui.model.wspm.core.wspwin.CalculationContentBean.ART_ANFANGS_
 import org.kalypso.ui.model.wspm.core.wspwin.CalculationContentBean.FLIESSGESETZ;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import serializer.prf.PrfSource;
 import serializer.prf.ProfilesSerializer;
 
 import com.bce.eind.core.profil.IProfil;
+import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
  * @author thuel2
@@ -294,8 +303,6 @@ public class WspWinImporter
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
 
-      // TODO: convert prfFile into Profile-Feature
-
       // final URL targetUrl = new URL( context, prof.getHref() );
       // urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
       // fileReader = new FileReader( prfFile );
@@ -372,6 +379,11 @@ public class WspWinImporter
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
+
+    //
+    // TEMPORARY: write geometries from profile into reach feature
+    //
+    updateReachGeometries( reach );
 
     final WspmWaterBody waterBody = reach.getWaterBody();
 
@@ -569,6 +581,50 @@ public class WspWinImporter
     return status;
   }
 
+  private static void updateReachGeometries( final TuhhReach reach )
+  {
+    final WspmReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+    for( final WspmReachProfileSegment segment : reachProfileSegments )
+    {
+      try
+      {
+        final WspmProfile profileMember = segment.getProfileMember();
+        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+
+        final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
+        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : POINT_PROPERTY.BREITE;
+        final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
+        final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
+
+        final LinkedList<IProfilPoint> points = profil.getPoints();
+        final GM_Position[] positions = new GM_Position[points.size()];
+        int count = 0;
+        for( final IProfilPoint point : points )
+        {
+          final double rw = point.getValueFor( ppRW );
+          final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
+          final double h = point.getValueFor( ppH );
+
+          positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
+        }
+
+        final GM_Curve curve = GeometryFactory.createGM_Curve( positions, null );
+        segment.setGeometry( curve );
+      }
+      catch( final ProfilDataException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
+  }
+
   private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
   {
     final IComponent stationComp = new ValueComponent( pos, "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
@@ -582,6 +638,7 @@ public class WspWinImporter
       record.setValue( stationComp, entry.getKey() );
       record.setValue( valueComp, entry.getValue() );
     }
+    // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
     final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }
