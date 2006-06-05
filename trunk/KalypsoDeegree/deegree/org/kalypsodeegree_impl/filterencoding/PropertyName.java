@@ -60,6 +60,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,10 +80,23 @@ import org.w3c.dom.Element;
 public class PropertyName extends Expression_Impl
 {
   /** The PropertyName's value (as an XPATH expression). */
-  private String m_value;
+  private QName m_value;
 
-  /** Constructs a new PropertyName. */
+  /**
+   * Constructs a new PropertyName.
+   */
   public PropertyName( String value )
+  {
+    m_id = ExpressionDefines.PROPERTYNAME;
+    if( value.startsWith( "/" ) )
+      value = value.substring( 1 );
+    final int i = value.indexOf( ":" );
+    if( i > 0 )
+      value = value.substring( i + 1 );
+    setValue( new QName( value ) );
+  }
+
+  public PropertyName( QName value )
   {
     m_id = ExpressionDefines.PROPERTYNAME;
     setValue( value );
@@ -99,7 +115,7 @@ public class PropertyName extends Expression_Impl
     {
       throw new FilterConstructionException( "Name of element does not equal 'PropertyName'!" );
     }
-
+    // XMLTools.getQNameValue("name", "namespace",element);
     return new PropertyName( XMLTools.getValue( element ) );
   }
 
@@ -108,7 +124,8 @@ public class PropertyName extends Expression_Impl
    */
   public String getSQLFieldQualifier( )
   {
-    return m_value;
+    // return m_value;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -116,20 +133,24 @@ public class PropertyName extends Expression_Impl
    */
   public String getValue( )
   {
+    return m_value.getLocalPart();
+  }
+
+  /**
+   * Returns the PropertyName's value.
+   */
+  public QName getQValue( )
+  {
     return m_value;
   }
 
   /**
    * @see org.kalypsodeegree_impl.filterencoding.PropertyName#getValue()
    */
-  public void setValue( String value )
+  public void setValue( QName value )
   {
-    this.m_value = value;
+    m_value = value;
 
-    if( value.startsWith( "/" ) )
-    {
-      this.m_value = value.substring( 1 );
-    }
   }
 
   /** Produces an indented XML representation of this object. */
@@ -137,7 +158,7 @@ public class PropertyName extends Expression_Impl
   public StringBuffer toXML( )
   {
     StringBuffer sb = new StringBuffer( 200 );
-    sb.append( "<ogc:PropertyName>" ).append( m_value ).append( "</ogc:PropertyName>" );
+    sb.append( "<ogc:PropertyName>" ).append( m_value.getLocalPart() ).append( "</ogc:PropertyName>" );
     return sb;
   }
 
@@ -156,7 +177,7 @@ public class PropertyName extends Expression_Impl
   public Object evaluate( Feature feature )
   {
     // IPropertyType[] ftp = feature.getFeatureType().getProperties();
-    final Object object = getProperty( feature, m_value );
+    final Object object = getProperty( feature, m_value.getLocalPart() );
 
     // if (feature.getFeatureType ().getProperty (value) == null) {
     // throw new FilterEvaluationException (

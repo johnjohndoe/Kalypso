@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -47,6 +48,8 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.ImageProvider;
+import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureList;
 
@@ -68,6 +71,9 @@ public class MapModellLabelProvider implements ILabelProvider
   public Image getImage( Object element )
   {
     return null;
+    // ImageDescriptor descriptor = null;
+    // descriptor = ImageProvider.IMAGE_FEATURE;
+    // return descriptor.createImage();
   }
 
   /**
@@ -95,9 +101,9 @@ public class MapModellLabelProvider implements ILabelProvider
         else
         {
           final FeatureList featureList = kft.getFeatureList();
-          if(featureList!=null)
-            sb.append( "("+featureList.size()+")" );
-            
+          if( featureList != null )
+            sb.append( "(" + featureList.size() + ")" );
+
           if( workspace.isDirty() )
             sb.append( '*' );
         }
@@ -111,7 +117,6 @@ public class MapModellLabelProvider implements ILabelProvider
 
     if( element instanceof UserStyle )
       return ((UserStyle) element).getName();
-
     return element.toString();
   }
 

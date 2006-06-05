@@ -72,7 +72,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   private Image m_Image = null;
 
-  private Color backColor = new Color( 240, 240, 240 );
+  private Color backColor = new Color( 240, 240, 240);
 
   private int m_styleWidth = 170;
 
@@ -80,9 +80,9 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
 
-  private int m_imageHeight = 0;
-
-  private int m_imageWidth = 0;
+  // private int m_imageHeight = 0;
+  //
+  // private int m_imageWidth = 0;
 
   private String m_name;
 
@@ -128,15 +128,17 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   {
     if( selected )
       return;
-
-    int w = g.getClipBounds().width;
-    int h = g.getClipBounds().height;
+    final int wMax = g.getClipBounds().width;
+    final int hMax = g.getClipBounds().height;
+    System.out.println( "w:" + wMax + "\nh:" + hMax );
     if( m_Image == null )
-      updateLegend();
+      updateLegend( wMax, hMax );
     if( m_Image != null )
     {
       g.setPaintMode();
-      g.drawImage( m_Image, w - m_imageWidth, h - m_imageHeight, m_imageWidth, m_imageHeight, null );
+      final int widthIamge = m_Image.getWidth( null );
+      final int heightImage = m_Image.getHeight( null );
+      g.drawImage( m_Image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
     }
   }
 
@@ -166,41 +168,51 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     // updateLegend();
   }
 
-  private void updateLegend( )
+  private void updateLegend( int widthPerLegend, final int hMax )
   {
     final List<Image> stylesCol = new ArrayList<Image>();
 
-    int max = m_mapModell.getThemeSize();
-    for( int i = 0; i < max; i++ )
+    final int maxThems = m_mapModell.getThemeSize();
+    final List<IKalypsoFeatureTheme> visibleThemes = new ArrayList<IKalypsoFeatureTheme>();
+    for( int i = 0; i < maxThems; i++ )
     {
       final IKalypsoTheme theme = m_mapModell.getTheme( i );
 
       if( m_mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
+        visibleThemes.add( (IKalypsoFeatureTheme) theme );
+    }
+    final int legendSize = visibleThemes.size();
+    int heightPerLegend = hMax / legendSize;
+    if( heightPerLegend > 40 )
+      heightPerLegend = 40;
+    if( heightPerLegend < 30 )
+      heightPerLegend = 30;
+    if( widthPerLegend > heightPerLegend * 4 )
+      widthPerLegend = (heightPerLegend * 4);
+    // widthPerLegend = 100;
+    // heightPerLegend = 50;
+    for( final IKalypsoFeatureTheme featureTheme : visibleThemes )
+    {
+      final UserStyle[] styles = featureTheme.getStyles();
+      final IFeatureType ft = featureTheme.getFeatureType();
+      final int width = widthPerLegend / styles.length;
+      for( int n = 0; n < styles.length; n++ )
       {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+        final UserStyle style = styles[n];
+        final Image styleImage = getLegend( ft, style, width, heightPerLegend );
 
-        final UserStyle[] styles = featureTheme.getStyles();
-        final IFeatureType ft = featureTheme.getFeatureType();
-
-        for( int n = 0; n < styles.length; n++ )
+        final Graphics g = styleImage.getGraphics();
+        g.setPaintMode();
+        g.setColor( backColor );
+        g.setColor( Color.black );
+        if( n == 0 )
         {
-          final UserStyle style = styles[n];
-          final Image styleImage = getLegend( ft, style, m_styleWidth, m_styleHeight );
-          final Graphics g = styleImage.getGraphics();
-          g.setPaintMode();
-          g.setColor( backColor );
+          g.setFont( m_font );
           g.setColor( Color.black );
-
-          if( n == 0 )
-          {
-            g.setFont( m_font );
-            g.setColor( Color.black );
-            final String title = theme.getName();
-            g.drawString( title, 2, m_font.getSize() );
-
-          }
-          stylesCol.add( styleImage );
+          final String title = featureTheme.getName();
+          g.drawString( title, 2, m_font.getSize() );
         }
+        stylesCol.add( styleImage );
       }
     }
 
@@ -208,25 +220,36 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
       return;
 
     // draw bufferedImage...
-    final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(), BufferedImage.TYPE_INT_RGB );
+
+    int xMax = (legendSize * heightPerLegend) / hMax + 1;
+    int yMax = hMax / heightPerLegend;
+    if( yMax > legendSize )
+      yMax = legendSize;
+    System.out.println( "Image: " + xMax * widthPerLegend + "x" + hMax );
+    final Image tmpImage = new BufferedImage( xMax * widthPerLegend, yMax * heightPerLegend, BufferedImage.TYPE_INT_RGB );
     final Graphics g = tmpImage.getGraphics();
     g.setPaintMode();
     g.setColor( backColor );
-    g.fillRect( 0, 0, m_styleWidth, m_styleHeight * stylesCol.size() );
-
-    for( int i = 0; i < stylesCol.size(); i++ )
+    // g.setColor( new Color( 1, 240, 240, 0 ) );
+    g.fillRect( 0, 0, xMax * widthPerLegend, yMax * heightPerLegend );
+    for( int x = 0; x < xMax; x++ )
     {
-      final Image styleImage = stylesCol.get( i );
-      int pos = i;
-      g.drawImage( styleImage, 0, m_styleHeight * pos, m_styleWidth - 1, m_styleHeight - 1, null );
-      g.setColor( Color.black );
-      g.drawRect( 0, m_styleHeight * pos, m_styleWidth - 1, m_styleWidth - 2 );
+      for( int y = 0; y < yMax; y++ )
+      {
+        System.out.println( "x" + x + " y" + y );
+        int legendIndex = x * yMax + y;
+        if( legendIndex < stylesCol.size() )
+        {
+          final Image styleImage = stylesCol.get( legendSize - legendIndex -1);
+          g.drawImage( styleImage, x * widthPerLegend, heightPerLegend * y, widthPerLegend - 1, heightPerLegend - 1, null );
+          g.setColor( Color.black );
+          g.drawRect( x * widthPerLegend, heightPerLegend * y, widthPerLegend - 1, hMax - 2 );
+        }
+      }
     }
-    // rahmen
+    // border
     g.setColor( Color.DARK_GRAY );
-    m_imageHeight = m_styleHeight * stylesCol.size();
-    m_imageWidth = m_styleWidth;
-    g.drawRect( 0, 0, m_imageWidth - 1, m_imageHeight - 1 );
+    g.drawRect( 0, 0, xMax * widthPerLegend - 1, yMax * heightPerLegend - 1 );
     m_Image = tmpImage;
     fireModellEvent( new ModellEvent( null, ModellEvent.LEGEND_UPDATED ) );
   }
@@ -244,6 +267,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
+    // test
+    g.clipRect( 0, 0, width, height );
     final Feature feature = FeatureFactory.createFeature( null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
     DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );

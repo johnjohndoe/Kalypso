@@ -95,7 +95,7 @@ public abstract class ObjectCatalog<O> extends Storage
     }
     catch( Exception e )
     {
-      e.printStackTrace();
+//      e.printStackTrace();
       return null;
       // TODO make new exceptionType CatalogException
 //      throw new UnsupportedOperationException();

@@ -145,7 +145,6 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void paint( Graphics g, GeoTransform projection )
   {
-
     if( m_label == null )
       return;
     Graphics2D g2D = (Graphics2D)g;

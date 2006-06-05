@@ -301,7 +301,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private void paintWidget( Graphics g )
   {
-    g.setColor( Color.red );
+    // final Color color = Color.red;
+    final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
+    g.setColor( color );
+
     g.setClip( 0, 0, getWidth(), getHeight() );
     m_widgetManager.paintWidget( g );
   }

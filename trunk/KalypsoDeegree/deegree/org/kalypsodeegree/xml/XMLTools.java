@@ -78,6 +78,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -325,6 +326,11 @@ public class XMLTools
     return value;
   }
 
+  /**
+   * @param name
+   * @param namespace
+   * @param node
+   */
   public static QName getQNameValue( String name, String namespace, Node node )
   {
     final Element element = getChildByName( name, namespace, node );
@@ -337,7 +343,7 @@ public class XMLTools
     int pos = value.indexOf( '}' );
     if( value.startsWith( "{" ) && pos > 0 )
     {
-      final String namespaceURI = value.substring( 1, pos  );
+      final String namespaceURI = value.substring( 1, pos );
       final String localName = value.substring( pos + 1 );
       return new QName( namespaceURI, localName );
     }
