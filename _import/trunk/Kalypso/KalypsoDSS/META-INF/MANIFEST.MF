@@ -7,7 +7,8 @@ Bundle-ClassPath: KalypsoDSS.jar
 Bundle-Activator: org.kalypso.dss.KalypsoDSSPlugin
 Bundle-Vendor: University of Technology Hamburg-Harburg
 Bundle-Localization: plugin
-Export-Package: org.kalypso.dss
+Export-Package: org.kalypso.dss,
+ org.kalypso.dss.calcjob
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
