@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -54,7 +55,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureTypeActionFilter implements IActionFilterEx
 {
   public final static String ATTR_FEATURE_TYPE = "featureType";
-  
+
   /**
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
@@ -62,15 +63,18 @@ public class FeatureTypeActionFilter implements IActionFilterEx
   {
     if( !(target instanceof Feature) )
       return false;
-    
+
     final Feature f = (Feature) target;
-    
+
     if( ATTR_FEATURE_TYPE.equals( name ) )
     {
       final QName qName = QNameUtilities.createQName( value );
-      return f.getFeatureType().getQName().equals( qName );
+
+      return GMLSchemaUtilities.substitutes( f.getFeatureType(), qName );
+
+      // return f.getFeatureType().getQName().equals( qName );
     }
-    
+
     return false;
   }
 

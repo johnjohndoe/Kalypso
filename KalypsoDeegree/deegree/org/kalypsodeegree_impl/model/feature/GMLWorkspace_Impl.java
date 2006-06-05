@@ -390,6 +390,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @deprecated
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
+  @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
   {
     for( int i = 0; i < m_featureTypes.length; i++ )
