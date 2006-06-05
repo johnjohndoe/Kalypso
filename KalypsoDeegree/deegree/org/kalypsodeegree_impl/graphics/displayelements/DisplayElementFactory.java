@@ -120,9 +120,7 @@ public class DisplayElementFactory
    */
   public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles, GMLWorkspace workspace )
   {
-    Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
-
-    ArrayList list = new ArrayList( 20 );
+    final ArrayList list = new ArrayList( 20 );
 
     if( o instanceof Feature )
     {
@@ -162,9 +160,9 @@ public class DisplayElementFactory
 
                   // does the filter rule apply?
                   Filter filter = rules[n].getFilter();
-
+                  
                   if( filter != null )
-                  {
+                  {                   
                     try
                     {
                       if( !filter.evaluate( feature ) )

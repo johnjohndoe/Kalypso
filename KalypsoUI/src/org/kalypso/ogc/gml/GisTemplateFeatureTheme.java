@@ -314,15 +314,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               };
               final FeatureTypeStyle fts = styleCatalog.getDefault( resolver, featureType );
               final UserStyle userStyle;
-              if( fts != null )
+              if( fts == null )
               {
-                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts );
-                // final GisTemplateUserStyle kus = new GisTemplateUserStyle( fts, "default" );
+                System.out.println( "no default style found for " + featureType.getQName() );
+                userStyle = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
               }
               else
               {
-                userStyle = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
-                // DO not use xml-tags in this names please
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts );
               }
               final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, "default" );
               addStyle( kus );

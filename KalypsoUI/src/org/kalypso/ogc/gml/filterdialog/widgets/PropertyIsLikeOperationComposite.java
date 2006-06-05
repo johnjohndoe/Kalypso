@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -141,7 +143,7 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
         Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          String item = ((IValuePropertyType) firstElement).getQName().getLocalPart();
+          final QName item = ((IValuePropertyType) firstElement).getQName();
           PropertyName propertyName = m_operation.getPropertyName();
           if( propertyName == null )
             propertyName = new PropertyName( item );

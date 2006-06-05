@@ -101,6 +101,6 @@ public class RuleTreeObject
     else if( m_rule.getName() != null )
       return m_rule.getName();
     else
-      return m_rule.toString();
+      return "rule";
   }
 }

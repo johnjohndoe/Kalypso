@@ -192,7 +192,8 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     {
       try
       {
-        Image image = stroke.getGraphicStroke().getGraphic().getAsImage( feature );
+        final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( feature );
+        
         CurveWalker walker = new CurveWalker( g.getClipBounds() );
 
         if( geometry instanceof GM_Curve )

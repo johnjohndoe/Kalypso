@@ -210,32 +210,32 @@ public class EditGeometryWidget extends AbstractWidget
         final double[] undoTranslation = new double[] { -translation[0], -translation[1] };
 
         // test for validity
-        for( final Handle handle : m_editHandles )
-        {
-          final Feature feature = handle.getFeature();
-          final IValuePropertyType propertyType = handle.getPropertyType();
-          final GM_Position position = handle.getPosition();
-          position.translate( translation );
-          final GM_Object geom = (GM_Object) feature.getProperty( propertyType );
-          final Geometry geometry;
-          boolean valid = false;
-          try
-          {
-            geometry = JTSAdapter.export( geom );
-            valid = geometry.isValid()&& geometry.isSimple();
-          }
-          catch( Exception e )
-          {
-            // invalid geometry do not perform
-            return;
-          }
-          finally
-          {
-            position.translate( undoTranslation );
-          }
-          if( !valid )
-            return;// invalid geometry do not perform
-        }
+//        for( final Handle handle : m_editHandles )
+//        {
+//          final Feature feature = handle.getFeature();
+//          final IValuePropertyType propertyType = handle.getPropertyType();
+//          final GM_Position position = handle.getPosition();
+//          position.translate( translation );
+//          final GM_Object geom = (GM_Object) feature.getProperty( propertyType );
+//          final Geometry geometry;
+//          boolean valid = false;
+//          try
+//          {
+//            geometry = JTSAdapter.export( geom );
+//            valid = geometry.isValid()&& geometry.isSimple();
+//          }
+//          catch( Exception e )
+//          {
+//            // invalid geometry do not perform
+//            return;
+//          }
+//          finally
+//          {
+//            position.translate( undoTranslation );
+//          }
+//          if( !valid )
+//            return;// invalid geometry do not perform
+//        }
 
         final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
         final CommandableWorkspace workspace = fTheme.getWorkspace();
