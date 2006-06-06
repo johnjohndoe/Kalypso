@@ -49,7 +49,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -107,13 +106,12 @@ public class KalypsoDssCalcJob implements ISimulation
 
     public void addResult( String id, File file ) throws SimulationException
     {
-      if( id.equals( NaModelConstants.OUTPUT_DIR_NAME ) )
+      if( id.equals( NaModelConstants.OUT_ZML ) )
       {
         // bin jetzt im ergbinss folder
         // hole nur die ergebinse die ich am client weiter geben will
         // File res = new File("");
-        // resultEater.addResult( res)
-        System.out.println();
+        m_resultEater.addResult( id, file );
       }
 
     }
@@ -133,12 +131,15 @@ public class KalypsoDssCalcJob implements ISimulation
     }
   };
 
+  ISimulationResultEater m_resultEater;
+
   /**
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    m_resultEater = resultEater;
     final Logger logger = Logger.getAnonymousLogger();
     final URL calcCases = getClass().getResource( "../resources/hq1_bis_hq100.zip" );
     ArrayList<CalcDataProviderDecorater> dataProvieder = null;
@@ -263,7 +264,7 @@ public class KalypsoDssCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/dsscalcjob_spec.xml" );
+    return getClass().getResource( "../resources/dsscalcjob_spec.xml" );
   }
 
   /**
@@ -575,15 +576,20 @@ public class KalypsoDssCalcJob implements ISimulation
   {
     /** calculate puffer area for hydTyps */
     final FeatureList designAreaList = (FeatureList) designAreaWorkspace.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
+    if( designAreaList.size() == 0 )
+    {
+//      logger.info( "no design area defined can not insert swale and trench meausre!..skipped" );
+      return;
+    }
     // just get first area of planning (there should only be one element in the List)
     final Feature designAreaFe = (Feature) designAreaList.iterator().next();
     final GM_Object designAreaGEOM = (GM_Object) designAreaFe.getProperty( new QName( MeasuresConstants.NS_DESIGNAREA, MeasuresConstants.DESINGAREA_GEOM_PROP ) );
     final Geometry designAreaJTS = JTSAdapter.export( designAreaGEOM );
-    int points = mrsJTS.getNumPoints();
-    Point point1 = mrsJTS.getStartPoint();
-    Point point2 = mrsJTS.getPointN( 2 );
-    Point pointN = mrsJTS.getEndPoint();
-    Point pointNminus1 = mrsJTS.getPointN( points - 1 );
+    // int points = mrsJTS.getNumPoints();
+    // Point point1 = mrsJTS.getStartPoint();
+    // Point point2 = mrsJTS.getPointN( 2 );
+    // Point pointN = mrsJTS.getEndPoint();
+    // Point pointNminus1 = mrsJTS.getPointN( points - 1 );
 
     // calculate buffer width
     final double totalLength = mrsJTS.getLength();

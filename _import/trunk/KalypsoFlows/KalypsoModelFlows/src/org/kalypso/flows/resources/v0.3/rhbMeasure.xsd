@@ -141,6 +141,7 @@
 	</complexType>
 	<simpleType name="slopeEnumerationType">
 		<restriction base="string">
+			<enumeration value="1:1" />
 			<enumeration value="1:2" />
 			<enumeration value="1:3" />
 			<enumeration value="1:4" />

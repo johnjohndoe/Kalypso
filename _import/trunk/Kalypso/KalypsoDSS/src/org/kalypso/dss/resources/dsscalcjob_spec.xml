@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
+<modelspec xmlns="simspec.core.simulation.kalypso.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	typeID="KalypsoDSS">
 
-	
-	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="true"/>
-	<input id="Parameter" description="Modelldaten - Parameter" optional="true"/>
-	<input id="Control" description="Steuerdaten - Ausgabe" />
-	<input id="Template" description="Berechnungsverzeichnis"/>
-	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
-	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="true"/>	
 
-	<!-- fuer flows -->
-    <input id="Measure" description="Massnahmen" optional="true"/>
+	<input id="measureRHB"
+		description="Modelldaten - Massnahme Rueckhaltebecken"
+		optional="true" />
+	<input id="measureMRS"
+		description="Modelldaten - Massnahme Mulden-Rigolen" optional="true" />
+	<input id="measureSealing"
+		description="Modelldaten - Massnahme Entsiegelung" />
+	<input id="designArea" description="Modelldaten - Plangebiet" />
+	<input id="SceConf" description="Modelldaten - Optimierung"
+		optional="true" />
+	<!-- <input id="ErgebnisDir" description="??" optional="true"/>	-->
+
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
-	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
-	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
-	<output id="LOG_EXE_STDOUT" description="Standard Ergebnisausgabe des Fortran Programmes (Bildschirmausgabe)"/>
-	<output id="LOG_EXE_ERROUT" description="Fehlerausgabe Fortran"/>
-	<output id="LOG_OUTRES" description="Ergebnisausgabe des Fortran Programmes"/>
-	<output id="LOG_OUTERR" description="Fehlerausgabe des Fortran Programmes"/>
-	<output id="LOG_INFO" description="bisher noch nicht identifizierter Output"/>
-	<output id="LZSIM_OUT" description="Produzierte Anfangswerte für fortsetzende Berechnung" optional="true"/>	
-	
+	<output id="OUT_ZML"
+		description="Verzeichnis der Berechnungsergebnisse" />
 </modelspec>

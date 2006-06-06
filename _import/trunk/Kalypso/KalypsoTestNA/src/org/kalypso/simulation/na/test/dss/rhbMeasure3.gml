@@ -11,7 +11,7 @@
      </ns1:exterior>
     </ns1:Polygon>
    </ns12:position>
-   <ns12:slopeRhb>1:3</ns12:slopeRhb>
+   <ns12:slopeRhb>1:1</ns12:slopeRhb>
    <ns12:depth>1.6</ns12:depth>
    <ns12:qmax/>
   </ns12:RhbMeasureFeature>

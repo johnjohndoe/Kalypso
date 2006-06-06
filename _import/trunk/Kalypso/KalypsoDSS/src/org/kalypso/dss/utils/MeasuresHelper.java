@@ -44,7 +44,9 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.kalypso.contribs.java.util.ValueIterator;
+import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -72,9 +74,11 @@ public class MeasuresHelper
 {
   private static final double m_energyLosses = 0.65d;
 
-  private static final double m_factorHecto = 1 / 100d;
-
   private static final double m_g = 9.91d;
+
+  final static int m_intervals = 10;
+
+  private static Double m_lowestPointInBasin = new Double( 0 );
 
   /**
    * This method adds a storage channel into an existing net structure. There are two possibilties to insert a new
@@ -129,6 +133,7 @@ public class MeasuresHelper
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_VMIN_PROP ), new Double( 0 ) );
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_C_PROP ), new Double( 0 ) );
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_SV_PROP ), new Double( 0 ) );
+      newRhbFe.setProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ), new String( "Rhb-Measure" ) );
       // get property of inflowTyp to distingish between option one and two
       final String inflowType = (String) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_INFLOWTYP_PROP ) );
       // get common FeatureTyp's and RelationType's to do the inserting business
@@ -136,8 +141,8 @@ public class MeasuresHelper
       final IRelationType catchmentChannelLink = (IRelationType) catchmentFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CATCHMENT_CHANNEL ) );
       final IFeatureType nodeFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
       final IFeatureType channelFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CHANNEL_ABSTRACT_FT ) );
-      final IRelationType channelDownStreamNodeLink = (IRelationType) channelFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE ) );
-      final IRelationType nodeToDownstreamChannelLinkProp = (IRelationType) nodeFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL ) );
+      final IRelationType channelLinkdownStreamNodeMember = (IRelationType) channelFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE ) );
+      final IRelationType nodeLinkDownStreamChannelMember = (IRelationType) nodeFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL ) );
       /**
        * insert new storage channel following option one
        */
@@ -154,12 +159,12 @@ public class MeasuresHelper
         modelworkspace.addFeatureAsAggregation( catchment, catchmentChannelLink, 0, vChannelFE.getId() );
         // newVChannel -> newNode ( add new link )
         final Feature newNodeFe = createNewNode( modelworkspace, true );
-        modelworkspace.addFeatureAsAggregation( vChannelFE, channelDownStreamNodeLink, 0, newNodeFe.getId() );
+        modelworkspace.addFeatureAsAggregation( vChannelFE, channelLinkdownStreamNodeMember, 0, newNodeFe.getId() );
         // newNode -> newRhbChannel (add new link)
-        modelworkspace.addFeatureAsAggregation( newNodeFe, nodeToDownstreamChannelLinkProp, 0, newRhbFe.getId() );
+        modelworkspace.addFeatureAsAggregation( newNodeFe, nodeLinkDownStreamChannelMember, 0, newRhbFe.getId() );
         // newRhbChannel -> downStreamNodeFromOriginalDischargChannel (add new link)
-        final Feature downStreamOriginalNode = modelworkspace.resolveLink( originalDischargChannel, channelDownStreamNodeLink );
-        modelworkspace.addFeatureAsAggregation( newRhbFe, channelDownStreamNodeLink, 0, downStreamOriginalNode.getId() );
+        final Feature downStreamOriginalNode = modelworkspace.resolveLink( originalDischargChannel, channelLinkdownStreamNodeMember );
+        modelworkspace.addFeatureAsAggregation( newRhbFe, channelLinkdownStreamNodeMember, 0, downStreamOriginalNode.getId() );
 
       }
       /**
@@ -169,15 +174,15 @@ public class MeasuresHelper
       {
         // originalChannel -> downstreamNode ( remove link )
         final Feature originalDischargChannel = modelworkspace.resolveLink( catchment, catchmentChannelLink );
-        final Feature downstreamNode = modelworkspace.resolveLink( originalDischargChannel, channelDownStreamNodeLink );
-        modelworkspace.removeLinkedAsAggregationFeature( originalDischargChannel, channelDownStreamNodeLink, downstreamNode.getId() );
+        final Feature downstreamNode = modelworkspace.resolveLink( originalDischargChannel, channelLinkdownStreamNodeMember );
+        modelworkspace.removeLinkedAsAggregationFeature( originalDischargChannel, channelLinkdownStreamNodeMember, downstreamNode.getId() );
         // originalChannel -> newNode (add new link)
         final Feature newNodeFe = createNewNode( modelworkspace, true );
-        modelworkspace.addFeatureAsAggregation( originalDischargChannel, channelDownStreamNodeLink, 0, newNodeFe.getId() );
+        modelworkspace.addFeatureAsAggregation( originalDischargChannel, channelLinkdownStreamNodeMember, 0, newNodeFe.getId() );
         // newNode -> newRhb ( add new link )
-        modelworkspace.addFeatureAsAggregation( newNodeFe, nodeToDownstreamChannelLinkProp, 0, newRhbFe.getId() );
+        modelworkspace.addFeatureAsAggregation( newNodeFe, nodeLinkDownStreamChannelMember, 0, newRhbFe.getId() );
         // newRhb -> downstreamNode ( add new link )
-        modelworkspace.addFeatureAsAggregation( newRhbFe, channelDownStreamNodeLink, 0, downstreamNode.getId() );
+        modelworkspace.addFeatureAsAggregation( newRhbFe, channelLinkdownStreamNodeMember, 0, downstreamNode.getId() );
       }
 
     }
@@ -199,23 +204,20 @@ public class MeasuresHelper
     final Double slope = 1 / Double.parseDouble( (slopeEnum.split( ":" ))[1] );
     final Double depth = (Double) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_PROP_DEPTH ) );
     final Double diameter = FeatureHelper.getAsDouble( measureRhbFE, new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_PROP_DIAMETER ), new Double( 0.5 ) );
-    final Double min = new Double( 0 );
-    final int max = 10;
-    final Double intervall = new Double( depth.doubleValue() / max );
+    final Double intervall = new Double( depth.doubleValue() / m_intervals );
     final Geometry geometry = JTSAdapter.export( measureRhbGEOM );
     final double area = geometry.getArea();
     final double lo = Math.sqrt( area );
     final double lu = lo - 2 * slope.doubleValue() * depth.doubleValue();
-    // Das Volumen muss immer in hm^3 sein, deshalb wird hier durch hundert geteilt !!!!
-    final double maxVol = depth.doubleValue() / 3 * m_factorHecto * (Math.pow( lo, 2d ) + Math.pow( lu, 2d ) + Math.sqrt( Math.pow( lo, 2d ) * Math.pow( lu, 2d ) ));
+    final double maxVol = depth.doubleValue() / 3 * (Math.pow( lo, 2d ) + Math.pow( lu, 2d ) + Math.sqrt( Math.pow( lo, 2d ) * Math.pow( lu, 2d ) ));
     // set max volume of retension basion
     newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_VMAX_PROP ), new Double( maxVol ) );
     // generate observation with the discharge-volume-waterstage function for the new storage channel
     final ZmlInlineTypeHandler typeHandler = (ZmlInlineTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( "inline.zml.kalypso.org", "ZmlInlineWVQType" ) );
     final IAxis[] axis = TimeserieUtils.createDefaultAxes( typeHandler.getAxisTypes(), true );
-    final Object[][] values = new Object[10][axis.length];
-    final Iterator iterator = new ValueIterator( min, intervall, max );
-    for( int row = 0; row < max; row++ )
+    final Object[][] values = new Object[m_intervals][axis.length];
+    final Iterator iterator = new ValueIterator( m_lowestPointInBasin, intervall, m_intervals );
+    for( int row = 0; row < m_intervals; row++ )
     {
       values[row][0] = iterator.next();
       final double sumHeigth = ((Double) values[row][0]).doubleValue();
@@ -233,22 +235,20 @@ public class MeasuresHelper
    * @param sumHeigth
    * @param mu
    * @param diameter
-   * @param factorHecto
    * @return
    */
   private static Double getDischarge( double sumHeigth, double diameter )
   {
     final double area = Math.pow( diameter, 2d ) * Math.PI / 4;
-    final double q = m_energyLosses * area * Math.pow( 2 * m_g * sumHeigth, 2d ) * m_factorHecto;
+    final double q = m_energyLosses * area * Math.pow( 2 * m_g * sumHeigth, 2d );
     return new Double( q );
   }
 
   private static Double getVolume( double waterlevel, double lenght, double slope, double depth )
   {
     double value = (4 / 3 * Math.pow( slope, 2d ) * (Math.pow( waterlevel, 2d ) - 3 * depth * Math.pow( waterlevel, 2d ) + 3 * Math.pow( depth, 2d ) * waterlevel) + 2 * slope * lenght
-        * (Math.pow( waterlevel, 2d ) - 2 * depth * waterlevel) + Math.pow( lenght, 2d ) * waterlevel)
-        * m_factorHecto;
-    return new Double( value * m_factorHecto );
+        * (Math.pow( waterlevel, 2d ) - 2 * depth * waterlevel) + Math.pow( lenght, 2d ) * waterlevel);
+    return new Double( value );
   }
 
   private static Feature createNewNode( final GMLWorkspace modelworkspace, final boolean generateResults ) throws Exception
