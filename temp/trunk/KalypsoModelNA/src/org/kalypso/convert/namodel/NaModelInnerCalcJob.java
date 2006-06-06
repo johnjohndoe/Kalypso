@@ -829,19 +829,12 @@ public class NaModelInnerCalcJob implements ISimulation
       final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
-      if( orgChannelFE.getId().equals( "VirtualChannel0" ) )
-      {
-        System.out.println( orgChannelFE.getId() );
-      }
       final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
-      // TODO This might be my problem because the link is set inline.
-      // should go into the channel collection and liked with href:
       final Feature newChannelFE = workspace.createFeature( catchmentFE, vChannelFT );
       // set new relation: catchment -> new V-channel
       try
       {
-        // not inline
         workspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
       }
       catch( Exception e )
