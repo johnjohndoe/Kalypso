@@ -8,15 +8,19 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -67,10 +71,10 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
     selectionWizard.init( workbench, StructuredSelection.EMPTY );
     selectionWizard.setCategoryId( "org.kalypso.portal.loadProject.wizard" );
 
-    IDialogSettings dialogSettings = KalypsoPortalPlugin.getDefault().getDialogSettings();
+    final IDialogSettings dialogSettings = KalypsoPortalPlugin.getDefault().getDialogSettings();
     selectionWizard.setDialogSettings( dialogSettings );
-
-    final WizardDialog dialog = new WizardDialog( workbench.getActiveWorkbenchWindow().getShell(), selectionWizard );
+    final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
+    final WizardDialog dialog = new WizardDialog( shell, selectionWizard );
 
     int open = dialog.open();
     if( open == Window.OK )
@@ -84,6 +88,22 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
         if( wizard instanceof BasicNewProjectResourceWizard )
         {
           newProject = ((BasicNewProjectResourceWizard) wizard).getNewProject();
+          // set modelnature
+          try
+          {
+            IProjectDescription description = newProject.getDescription();
+            String[] natures = description.getNatureIds();
+            String[] newNatures = new String[natures.length + 1];
+            System.arraycopy( natures, 0, newNatures, 0, natures.length );
+            // TODO how do I get the the rrm modelnature from a central place
+            newNatures[natures.length] = "org.kalypso.simulation.ui.calccase.ModelNature";
+            description.setNatureIds( newNatures );
+            newProject.setDescription( description, null );
+          }
+          catch( CoreException e )
+          {
+            MessageDialog.openWarning( shell, "Flows Portal Warning", "Aus dem neuen Projekt können sie keine Berechnungen durchführen, initzialisierungs Fehler der Projekt Nature" );
+          }
           final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
           wfContext.setContextProject( newProject );
           InputStream resourceAsStream = null;
@@ -114,6 +134,7 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
           wfContext.setContextProject( newProject );
         }
       }
+
       return newProject;
     }
     return null;

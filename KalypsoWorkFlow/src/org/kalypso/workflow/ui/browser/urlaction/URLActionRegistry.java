@@ -78,6 +78,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionSaveActiveGMT() );
       m_defaultInstance.register( new URLActionAddThemeGMT() );
       m_defaultInstance.register( new URLActionOpenWorkflowBrowser() );
+      m_defaultInstance.register( new URLActionStartCalculation() );
     }
     catch( URLActionRegistryException e )
     {
