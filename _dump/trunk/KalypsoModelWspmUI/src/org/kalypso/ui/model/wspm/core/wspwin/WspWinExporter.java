@@ -193,7 +193,7 @@ public class WspWinExporter
     dir.mkdirs();
 
     final File profDir = WspWinImporter.getProfDir( dir );
-    final File batFile = new File( profDir, "calc.properties" );
+    final File batFile = new File( profDir, "kalypso-1D.ini" );
     final File zustFile = new File( profDir, "zustand.001" );
     final File qwtFile = new File( profDir, "qwert.001" );
     final File psiFile = new File( profDir, "zustand.psi" );
@@ -348,6 +348,13 @@ public class WspWinExporter
       pw.println( "MAX_Q=" + Double.toString( calculation.getMaxQ() ) );
       pw.println( "DELTA_Q=" + Double.toString( calculation.getQStep() ) );
 
+      pw.println();
+      // Einheit des Durchflusses wird standardmäßig festgelegt
+      pw.println( "# mögliche Werte" );
+      pw.println( "# QM_S" );
+      pw.println( "# L_S" );
+      pw.println( "DURCHFLUSS_EINHEIT=QM_S" );
+
       pw.close();
     }
     finally
@@ -357,7 +364,7 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, File psiFile, final URL context ) throws IOException, ProfilDataException
+  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile, final URL context ) throws IOException, ProfilDataException
   {
     final WspmReachProfileSegment[] segments = reach.getReachProfileSegments();
 
@@ -385,6 +392,7 @@ public class WspWinExporter
 
         zustWriter.print( prfName );
         zustWriter.print( " " );
+        // TODO mindestens 4, besser 5 Nachkommastellen?
         zustWriter.println( station.doubleValue() );
 
         // TODO: write profile into prf file

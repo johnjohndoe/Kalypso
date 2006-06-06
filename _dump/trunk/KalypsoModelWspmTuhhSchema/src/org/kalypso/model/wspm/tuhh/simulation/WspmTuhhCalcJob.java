@@ -157,21 +157,23 @@ public class WspmTuhhCalcJob implements ISimulation
       resultEater.addResult( "KernelErr", fleKernelErr );
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
-      // input.txt: n, prof/calc.properties
-      final File fleInParams = new File( tmpDir, "input.txt" );
-      pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
-      pwInParams.println( "n" );
-      pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "prof" + File.separator + "calc.properties" );
-      // TODO remove 1
-      pwInParams.println( "1" ); // 1 für die Einheit des Durchflusses
-      pwInParams.close();
+      // // input.txt: n, prof/calc.properties
+      // final File fleInParams = new File( tmpDir, "input.txt" );
+      // pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
+      // pwInParams.println( "n" );
+      // pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "prof" + File.separator + "calc.properties" );
+      //
+      // pwInParams.close();
 
-      // generate start.bat
-      final File fleBat = new File( tmpDir, "start.bat" );
-      PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
-      pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath() );
-      pwBat.close();
-      String sCmd = fleBat.getAbsolutePath();
+      // // generate start.bat
+      // final File fleBat = new File( tmpDir, "start.bat" );
+      // PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
+      // pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath()
+      // );
+      // pwBat.close();
+      // String sCmd = fleBat.getAbsolutePath();
+
+      String sCmd = "Kalypso-1D.exe";
 
       monitor.setProgress( 20 );
       monitor.setMessage( "Executing model" );
@@ -254,6 +256,27 @@ public class WspmTuhhCalcJob implements ISimulation
 
           break;
         }
+        case BF_UNIFORM:
+        {
+          // bankfull uniform
+          // TODO get additional results
+          // *.qb2 = Q als Treppenfunktion, we don't fetch it
+          // *.qb1 = bankfull-lengthsection
+          final FileFilter qb1Filter = FileFilterUtils.suffixFileFilter( ".qb1" );
+          final File[] bfLenSecFile = dathDir.listFiles( qb1Filter );
+          if( bfLenSecFile.length > 0 )
+            // assumption: max. one QB1
+            resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
+
+          // *.tab (-> fixed name "Ergebnis.list")
+          final FileFilter ergListFilter = FileFilterUtils.suffixFileFilter( ".tab" );
+          final File[] ergListFile = dathDir.listFiles( ergListFilter );
+          if( ergListFile.length > 0 )
+            // assumption: max. one TAB-file
+            resultEater.addResult( "resultList", ergListFile[0] );
+          
+          break;
+        }
         case BF_NON_UNIFORM:
         // TODO get additional results
         {
@@ -265,11 +288,8 @@ public class WspmTuhhCalcJob implements ISimulation
           if( bfLenSecFile.length > 0 )
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-        }
-        case BF_UNIFORM:
-        {
-          // bankfull uniform
-          // TODO get additional results
+
+          break;
         }
       }
     }
