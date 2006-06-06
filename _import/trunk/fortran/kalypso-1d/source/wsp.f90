@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    1:48 pm
+!     Last change:  WP    6 Jun 2006   12:14 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,58 +40,47 @@
 
 !--------------------------------------------------------------------------
 PROGRAM WSP
-!**   Berechung von Wasserspiegellagen
-!**                                                                     
-!**   geschrieben: P. Koch, Maerz 1990                                  
-!**   ------------------------------------------------------------------
-!**   Progarammbeschreibung:                                            
-!**                                                                     
-!**   Dieses Programm steuert die Bildschirmeingabe der fuer die Wasser-
-!**   spiegellagenberechnung notwendigen Angaben. Im einzelnen werden   
-!**   angegeben:                                                        
-!**   - Art der Berechnung : bordvoll oder normale Wsp-Berechnung       
-!**   - Auswahl des zu berechnenden Abflussereignisses                  
-!**   - Auswahl des Berechnungsabschnittes                              
-!**   - Art der Berechnung des Anfangswasserspiegels                    
-!**   - Auswahl des Ausgabeumfangs                                      
-!**   - Auswahl des 'Verzoegerungsbeiwertes'                            
-!**                                                                     
-!**   Das Steuerprogramm ruft dann das Hauptprogramm WSPBER auf.        
-!**   ------------------------------------------------------------------
-!**   Parameter: merg   - max. Anzahl der HW-Ergeignisse in qwert.dat   
-!**              maxkla - max. Anzahl der Wertepaare(x,h) im Profil     
-!**              maxger - Anzahl der Gerinneabschn. im qfr-Datensatz?   
-!**   ------------------------------------------------------------------
-!**                                                                     
-!**   VERWENDETE PARAMETER                                              
-!**   --------------------                                              
-!**   ipro     - MAXIMALE ANZAHL DATENSAETZE IM PROFIL                  
-!**   i_les    - Funktionswert fuer WSPvaria.EIN                        
-!**   i1_les   - Funktionswert fuer WSPvaria.EIN                        
-!**   i_aus    - Funktionswert fuer variaaus.AUS                        
-!**   i_ver    - Funktionswert fuer verlauf1.WSP                        
-!**   pfad_aus - Pfad ?:\Projekt\Projektname\dath\variaaus.AUS          
-!**   pfad_les - Pfad ?:\Projekt\Projektname\dath\WSPvaria.EIN          
-!**   pfad_ver - Pfad ?:\Projekt\Projektname\dath\verlauf1.WSP          
-!**   proj_les - Pfad ?:\Projekt\Projektname\dath\                      
-!**                                                                     
-!HB   ***************************************************************** 
-!HB   26.11.2001 - H.Broeker                                            
-!HB   ----------------------                                            
-!HB   alph_aus - Pfad ?:\Projekt\Projektname\dath\Beiwerte.AUS          
-!HB   i_alph   - Funktionswert                                          
-!HB   *****************************************************************
-!**                                                                     
-!**   AUFGERUFENE UNTERPROGRAMME                                        
-!**   --------------------------                                        
-!**   ju0chr(dummy,zreal,ireal,zchar,ichara,zint,iint,ifehl)
-!**   ju0gfu ()                                                         
-!**   lcase (antwort)
-!**   wspber (unit1,ibruecke,wehr,imeth,antwort)
-!JK   qbordv ()                                                         
-!UT   XVERSWSP - VERSIONSABFRAGE
-!**                                                                     
-!***********************************************************************
+!
+! geschrieben: P. Koch, Maerz 1990
+! geaendert: W. Ploeger, 2004-2006
+!
+! Programmbeschreibung:
+! ---------------------
+! Dieses Programm steuert die Bildschirmeingabe der fuer die Wasser-
+! spiegellagenberechnung notwendigen Angaben. Im einzelnen werden
+! angegeben:
+! - Art der Berechnung : bordvoll oder normale Wsp-Berechnung
+! - Auswahl des zu berechnenden Abflussereignisses
+! - Auswahl des Berechnungsabschnittes
+! - Art der Berechnung des Anfangswasserspiegels
+! - Auswahl des Ausgabeumfangs
+! - Auswahl des 'Verzoegerungsbeiwertes'
+!
+! Das Steuerprogramm ruft dann das Hauptprogramm WSPBER auf.
+!
+! VERWENDETE PARAMETER
+! --------------------
+! ipro     - MAXIMALE ANZAHL DATENSAETZE IM PROFIL
+! pfad_aus - Pfad ?:\Projekt\Projektname\dath\variaaus.AUS
+! pfad_les - Pfad ?:\Projekt\Projektname\dath\WSPvaria.EIN
+! pfad_ver - Pfad ?:\Projekt\Projektname\dath\verlauf1.WSP
+! proj_les - Pfad ?:\Projekt\Projektname\dath\
+!
+! *****************************************************************
+! 26.11.2001 - H.Broeker
+! ----------------------
+! alph_aus - Pfad ?:\Projekt\Projektname\dath\Beiwerte.AUS
+! i_alph   - Funktionswert
+! *****************************************************************
+!
+! AUFGERUFENE UNTERPROGRAMME
+! --------------------------
+! ju0gfu ()
+! lcase (antwort)
+! wspber (unit1,ibruecke,wehr,imeth,antwort)
+! qbordv ()
+!
+!--------------------------------------------------------------------------
                                                                         
 
 ! ------------------------------------------------------------------
@@ -107,6 +96,7 @@ USE IO_NAMES
 USE MOD_ERG
 USE MOD_INI
 
+implicit none
 
 ! COMMON-Block /ALPH_PF/ -----------------------------------------------------------
 INTEGER 		:: nr_alph
@@ -122,12 +112,6 @@ COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! ----------------------------------------------------------------------------------
 
 
-! COMMON-Block /BLOED/ -------------------------------------------------------------
-INTEGER 	:: nr
-COMMON / bloed / nr
-! ----------------------------------------------------------------------------------
-
-
 ! COMMON-Block /BV/ ----------------------------------------------------------------
 CHARACTER(LEN=1):: idr1, idr2
 INTEGER         :: nprof, isch
@@ -140,12 +124,6 @@ COMMON / bv / idr1, idr2, nprof, qvar, isch
 REAL 		:: x (idim, ipro), y (idim, ipro)
 INTEGER 	:: noprxw (idim, ipro), nopryw (idim, ipro), npr, np (ipro)
 COMMON / datlin2 / x, y, noprxw, nopryw, npr, np
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /FLG_TYP/ -----------------------------------------------------------
-CHARACTER(LEN=6):: i_typ_flg
-COMMON / flg_typ / i_typ_flg
 ! ----------------------------------------------------------------------------------
 
 
@@ -176,20 +154,6 @@ COMMON / ob_alpha / alpha_ja
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER :: ifg
-REAL 	:: betta
-COMMON / p4 / ifg, betta
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /P11/ ----------------------------------------------------------
 REAL 		:: wsanf, qstat (merg), qwert (merg), staanf, staend
 INTEGER 	:: nq
@@ -202,13 +166,6 @@ COMMON / p11 / wsanf, nq, qstat, qwert, staanf, staend
 REAL 		:: psistat (merg), psiein (merg), psiort (merg)
 INTEGER 	:: jpsi
 COMMON / psiwert / psistat, psiein, psiort, jpsi
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /REIB/ ---------------------------------------------------------
-! Berechnungsart des Reibungsverlustes
-INTEGER 	:: rg_vst
-COMMON / reib / rg_vst
 ! -----------------------------------------------------------------------------
 
 
@@ -225,14 +182,10 @@ COMMON / teilgebiet / ikitg, itg
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /W_A/ ----------------------------------------------------------
-INTEGER 	:: a_m
-COMMON / w_a / a_m
-! -----------------------------------------------------------------------------
+! Local variables -------------------------------------------------------------
+INTEGER :: i, j, i1, ianz, jjanz, ifehl, iint, mode, ireal, ichara
+INTEGER :: iq, iqelen, iflulen
 
-
-
-! Local variables
 INTEGER :: istat                ! Check in IOSTAT-clause while opening files
 INTEGER :: lein
 
@@ -240,11 +193,17 @@ INTEGER :: ilen, ilen2
 
 INTEGER :: anq (merg), int (maxkla)
 INTEGER :: zint (merg)
-INTEGER :: ZAEHLOPE
 INTEGER :: imp_ber
-!**   imp_ber = 0 Bernoulli - Gleichung
-!**   imp_ber = 1 Berechnung mit Impulsbilanz                           
+! imp_ber = 0 Bernoulli - Gleichung
+! imp_ber = 1 Berechnung mit Impulsbilanz
+INTEGER :: ifg
+! ifg = 0  Manning-Strickler
+! ifg = 1  Darcy-Weisbach
+INTEGER :: a_m
+INTEGER :: nr
+INTEGER :: rg_vst
 
+INTEGER :: ju0gfu
 
 !HB   Projektpfade fuer WSPvaria.ein und variaaus.AUS, Verlauf1.WSP     
 CHARACTER(LEN=nch80) :: proj_les, pfad_les, pfad_aus, pfad_ver, zchar (merg)
@@ -252,7 +211,7 @@ CHARACTER(LEN=nch80) :: unit6, unit4, unit1, unit13, string, nproj
 CHARACTER(LEN=nch80) :: aereignis (merg), char (maxkla), dummy, unit7
 CHARACTER(LEN=nch80) :: ereign (merg)
 CHARACTER(LEN=nch80) :: dfluss, unit2
-CHARACTER(LEN=nch80) :: fall
+CHARACTER(LEN=nch80) :: FALLNAME
 CHARACTER(LEN=nch80) :: pfadconfigdatei
 CHARACTER(LEN=1)     :: ibruecke, wehr
 CHARACTER(LEN=1)     :: antwort
@@ -271,7 +230,7 @@ CHARACTER(LEN=8)  :: DATSTART
 !HB   ----------------------                                            
 !HB   Projektpfad und Nr. fuer Beiwerte.AUS,                            
 !HB   Uebergabe an SUB ALPHA_DRU und SUB WSP                            
-INTEGER i_alph
+INTEGER :: i_alph
 !HB   *****************************************************************
 
 LOGICAL :: lexist, lopen
@@ -286,10 +245,9 @@ km = 'n'                ! Sollen die KALININ-MILJUKOV-Parameter bestimmt werden?
 
 imp_ber = 0             ! Berechnung nach Bernoulli-Gleichung
                                                                         
-nr = 0  		! COMMON-Block BLOED
+nr = 0
 
 alpha_ja = 1            ! Soll Datei Beiwerte.aus erzeugt werden? (0=nein, 1=ja)
-ierr = 0
 
 DURCHFLUSS_EINHEIT = 'M'! Einheit der Ausgabe des Durchflusses ("M"=m3/s, "L"=l/s)
 
@@ -407,8 +365,8 @@ end if
 
 Teilung_Name: DO i = nch80, 1, - 1
   IF (STRANGDATEI(i:i) .eq.'.') then        	! Strangdatei z.B. "Stoer.001"
-    fall (1:) = STRANGDATEI(i + 1:nch80)    	! Berechnungsfall z.B. "001"
-    fluss (1:) = STRANGDATEI(1:i - 1)       	! Flussname z.B. "Stoer"
+    FALLNAME (1:) = STRANGDATEI(i + 1:nch80)    ! Berechnungsfall z.B. "001"
+    FLUSSNAME (1:) = STRANGDATEI(1:i - 1)       ! Flussname z.B. "Stoer"
     EXIT Teilung_Name
   ENDIF
 END DO Teilung_Name
@@ -589,7 +547,7 @@ if (RUN_MODUS /='KALYPSO') then
     if (mode.eq.1) ifg = 0                ! Manning-Strickler
     IF (mode.eq.2) ifg = 1        	! Darcy-Weisbach
 
-    bordvoll = 'n'
+    !bordvoll = 'n'
 
     BERECHNUNGSMODUS = 'WATERLEVEL'
 
@@ -599,10 +557,10 @@ if (RUN_MODUS /='KALYPSO') then
 
 
     ilen = LEN_TRIM (NAME_PFAD_PROF)
-    ilen2 = LEN_TRIM(fall)
+    ilen2 = LEN_TRIM(FALLNAME)
 
-    ABFLUSSEREIGNIS = 'qwert.' // fall(1:ilen2)
-    NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // 'qwert.' // fall(1:ilen2)
+    ABFLUSSEREIGNIS = 'qwert.' // FALLNAME(1:ilen2)
+    NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // 'qwert.' // FALLNAME(1:ilen2)
     !write (*,*) 'NAME_EIN_QWERT = ', NAME_EIN_QWERT
 
     UNIT_EIN_QWERT = ju0gfu ()
@@ -742,7 +700,7 @@ if (RUN_MODUS /='KALYPSO') then
 
     IF (mode.eq.1) then
 
-      bordvoll = 'g'
+      !bordvoll = 'g'
 
       BERECHNUNGSMODUS = 'BF_UNIFORM'
       ART_RANDBEDINGUNG = 'UNIFORM_BOTTOM_SLOPE'
@@ -759,7 +717,7 @@ if (RUN_MODUS /='KALYPSO') then
 
     ELSEIF (mode.eq.2) then
 
-      bordvoll = 'u'
+      !bordvoll = 'u'
 
       BERECHNUNGSMODUS = 'BF_NON_UNI'
 
@@ -785,10 +743,8 @@ if (RUN_MODUS /='KALYPSO') then
       ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MAX)
       write (*, 1062)
       1062 format (/1X, 'Maximaler Abfluss -->')
-      READ ( * , *, err = 1191) rqmax
-      WRITE ( * , '(f10.2)') rqmax
-
-      MAX_Q = rqmax
+      READ ( * , *, err = 1191) MAX_Q
+      WRITE ( * , '(f10.2)') MAX_Q
 
       1192 continue
 
@@ -798,10 +754,8 @@ if (RUN_MODUS /='KALYPSO') then
       ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (MIN)
       write (*, 1063)
       1063 format (/1X, 'Minimaler Abfluss -->')
-      READ ( * , *, err = 1192) rqmin
-      WRITE ( * , '(f10.2)') rqmin
-
-      MIN_Q = rqmin
+      READ ( * , *, err = 1192) MIN_Q
+      WRITE ( * , '(f10.2)') MIN_Q
 
       1193 continue
 
@@ -811,10 +765,8 @@ if (RUN_MODUS /='KALYPSO') then
       ! EINLESEN DER VARIATIONSBREITE FUER DIE BORDVOLLBERECHNUNG (SCHRITTWEITE)
       write (*, 1064)
       1064 format (/1X, 'Schrittweite Abflussvariation -->')
-      READ ( * , *, err = 1193) qstep
-      WRITE ( * , '(f10.2)') qstep
-
-      DELTA_Q = qstep
+      READ ( * , *, err = 1193) DELTA_Q
+      WRITE ( * , '(f10.2)') DELTA_Q
 
       ! ---------------------------------------------------------------------------------
       ! 6e. Zeile in BAT.001
@@ -946,7 +898,7 @@ if (RUN_MODUS == 'KALYPSO' .and. BERECHNUNGSMODUS == 'WATERLEVEL') then
     stop
   end if
 
-  read (UNIT_EIN_QWERT, *) ereignis, nq
+  read (UNIT_EIN_QWERT, *) EREIGNISNAME, nq
   do i = 1, nq
     read (UNIT_EIN_QWERT, *) qstat(i), qwert(i)
   end do
@@ -997,9 +949,9 @@ if (RUN_MODUS /='KALYPSO') then
       ikitg = 1
 
       ilen = LEN_TRIM (NAME_PFAD_PROF)
-      ilen2 = LEN_TRIM(fall)
+      ilen2 = LEN_TRIM(FALLNAME)
 
-      NAME_EIN_KM = NAME_PFAD_PROF(1:ilen) // 'teilg.' // fall(1:ilen2)
+      NAME_EIN_KM = NAME_PFAD_PROF(1:ilen) // 'teilg.' // FALLNAME(1:ilen2)
       UNIT_EIN_KM = ju0gfu ()
       !write (*,*) 'NAME_EIN_KM = ', NAME_EIN_KM
 
@@ -1050,7 +1002,7 @@ if (RUN_MODUS /='KALYPSO') then
 
         !READ (UNIT_EIN_KM, '(a)', end = 3903) dummy
         !write (*,*) 'In WSP. bei KM. dummy = ', dummy
-        !CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
+        !CALL ju0chr (dummy, feldr, ianz, char, ichara, int, iint, ifehl)
         !write (*,*) 'IFEHL = ', ifehl
 
         !IF (ifehl.ne.0) then
@@ -1114,9 +1066,9 @@ end if
 if (RUN_MODUS /= 'KALYPSO') then
 
   ilen  = LEN_TRIM (NAME_PFAD_PROF)
-  ilen2 = LEN_TRIM (fall)
-  NAME_EIN_PSI = NAME_PFAD_PROF(1:ilen) // 'psiver.' // fall (1:ilen2)
-  EINZELVERLUSTE = 'psiver.' // fall (1:ilen2)
+  ilen2 = LEN_TRIM (FALLNAME)
+  NAME_EIN_PSI = NAME_PFAD_PROF(1:ilen) // 'psiver.' // FALLNAME(1:ilen2)
+  EINZELVERLUSTE = 'psiver.' // FALLNAME(1:ilen2)
 
 else
 
@@ -1156,9 +1108,9 @@ else
     READ (UNIT_EIN_PSI, '(a)', IOSTAT=istat) string
     if (istat /= 0) EXIT read_psiver
 
-    CALL ju0chr (string, feldr, ianz, char, ichar, int, iint, ifehl)
+    CALL ju0chr (string, feldr, ianz, char, ichara, int, iint, ifehl)
 
-    IF (ifehl.eq.0.and.ichar.eq.ianz) then
+    IF (ifehl.eq.0 .and. ichara.eq.ianz) then
 
       jpsi = jpsi + 1
       psistat (jpsi) = 0.
@@ -1190,7 +1142,7 @@ else
 
       END DO
 
-    !**         ELSE ZU (ifehl.eq.0.and.ichar.eq.ianz)
+    !**         ELSE ZU (ifehl.eq.0.and.ichara.eq.ianz)
     ELSE
 
       write (*, 9022) psistat (jpsi)
@@ -1201,7 +1153,7 @@ else
       CLOSE (UNIT_EIN_PSI)
       STOP
 
-    !**         ENDIF ZU (ifehl.eq.0.and.ichar.eq.ianz)
+    !**         ENDIF ZU (ifehl.eq.0.and.ichara.eq.ianz)
     ENDIF
 
   END DO read_psiver
@@ -1277,7 +1229,7 @@ if (RUN_MODUS /= 'KALYPSO') then
     ENDIF
 
 
-    ereignis = aereignis (nr)
+    EREIGNISNAME = aereignis (nr)
 
     nq = anq (nr)
 
@@ -1354,8 +1306,8 @@ if (RUN_MODUS /= 'KALYPSO') then
 
           write (*, 1018)
           1018 format (1X, 'Bitte geben Sie den Ausgangswasserstand ein -->')
-          read (UNIT=*, FMT=*, IOSTAT=ierr) wsanf
-          if (ierr /= 0) CYCLE
+          read (UNIT=*, FMT=*, IOSTAT=istat) wsanf
+          if (istat /= 0) CYCLE
           write (*, '(F10.4)') wsanf
           ANFANGSWASSERSPIEGEL = wsanf
 
@@ -1379,8 +1331,8 @@ if (RUN_MODUS /= 'KALYPSO') then
 
         write (*, 1028)
         1028 format (1X, 'Bitte geben Sie das Gefaelle ein -->')
-        read (UNIT=*, FMT=*, IOSTAT=ierr) wsanf
-        if (ierr /= 0) CYCLE
+        read (UNIT=*, FMT=*, IOSTAT=istat) wsanf
+        if (istat /= 0) CYCLE
         write (*, '(F10.4)') wsanf
         GEFAELLE = wsanf
 
@@ -1444,12 +1396,7 @@ if (RUN_MODUS /= 'KALYPSO') then
   READ ( * , *) lein
   write (* , *) lein
 
-
-
-  !UT   UMBENNUNG VON lein von 2 auf 3, da 2 bei Eingabe gewaehlt wurde
-  IF (lein.eq.2) lein = 3
-
-  !**   Kennung fuer die Ausgabe des Ergebnisausdruckes:
+  ! Kennung fuer die Ausgabe des Ergebnisausdruckes:
   IF (lein.eq.0) then
 
     !UT LABEL 9999 = ENDE DES PROGRAMMES
@@ -1467,8 +1414,6 @@ ilen = LEN_TRIM (NAME_PFAD_DATH)
 NAME_OUT_LOG = NAME_PFAD_DATH(1:ilen) // 'Kontroll.log'
 
 UNIT_OUT_LOG = ju0gfu ()
-
-!write (*,*) 'NAME_OUT_LOG = ', NAME_OUT_LOG
 
 OPEN (unit = UNIT_OUT_LOG, file = NAME_OUT_LOG, status = 'REPLACE', iostat = istat)
 if (istat /= 0) then
@@ -1539,15 +1484,6 @@ if (RUN_MODUS /= 'KALYPSO') then
 end if
 
 
-if (VERZOEGERUNGSVERLUST == 'DVWK') then
-  betta = 2. / 3.
-else if (VERZOEGERUNGSVERLUST == 'BJOE') then
-  betta = 0.5
-else if (VERZOEGERUNGSVERLUST == 'DFG ') then
-  betta = 0.0
-end if
-
-
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades fnam1, z.B.
 !HB "C:\projektordner\flussname\prof\" und Zuweisung an ilen
 ilen = LEN_TRIM (NAME_PFAD_DATH)
@@ -1555,7 +1491,7 @@ NAME_OUT_TAB = NAME_PFAD_DATH(1:ilen)
 
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades fluss, z.B.
 !HB "flussname" und Zuweisung an ifulen
-iflulen = LEN_TRIM (fluss)
+iflulen = LEN_TRIM (FLUSSNAME)
                                                                         
 !HB Wenn der Flussname mehr als 4 Stellen besitzt, wird dieser auf
 !HB 4 Stellen begrenzt
@@ -1566,7 +1502,7 @@ ENDIF
 !HB Anfuegen von den ersten 4 Buchstaben (maximal) des Flussnamens
 !HB an den Pfad unit1. Der Name wird von Position 1 bis 'iflulen'
 !HB geschrieben.
-NAME_OUT_TAB (ilen+1 : ) = fluss(1:iflulen)
+NAME_OUT_TAB (ilen+1 : ) = FLUSSNAME(1:iflulen)
                                                                         
 !HB Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.B.
 !HB "C:\projektordner\flussname\dath\reduzierterflussname" und
@@ -1585,9 +1521,9 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
   ilen = LEN_TRIM (NAME_OUT_TAB)
   !HB        Zaehlen aller Buchstaben bzw. Positionen von ereignis, z.B.
   !HB        "AbfussereignisHQ" und Zuweisung an iqelen
-  write (*,*) 'Ereignis name = ', ereignis
+  write (*,*) 'Ereignis name = ', EREIGNISNAME
 
-  iqelen = LEN_TRIM (ereignis)
+  iqelen = LEN_TRIM (EREIGNISNAME)
   !HB           Reduzierung von iqelen auf 3 Stellen
   IF (iqelen.gt.3) then
     iqelen = 3
@@ -1597,7 +1533,7 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
   !HB        Position 1 bis 'iqelen' geschrieben.
   !HB        Es wird von Position 'ilen+1' bis zur 80. Position, da
   !HB        'nch80'=80, ereignis angehaengt.
-  NAME_OUT_TAB (ilen + 1 : ) = ereignis (1:iqelen)
+  NAME_OUT_TAB (ilen + 1 : ) = EREIGNISNAME (1:iqelen)
   !HB        Zaehlen aller Buchstaben bzw. Positionen des Pfades unit1, z.
   !HB        "C:\projektordner\flussname\dath\redflussname_Abflusereignis"
   !HB        und Zuweisung an ilen.
@@ -1732,15 +1668,12 @@ if (RUN_MODUS /= 'KALYPSO') then
     write (* , *) mode
 
     IF (mode.eq.1) then
-      i_typ_flg = 'colebr'
       FLIESSGESETZ = 'DW_O_FORMBW'
     ELSEIF (mode.eq.2) then
-      i_typ_flg = 'pasche'
       FLIESSGESETZ = 'DW_M_FORMBW'
     ELSE
       write (*, 9004)
       9004 format (1X, 'Falsche Eingabe! -> Es wird Methode (2) angenommen!')
-      i_typ_flg = 'pasche'
       FLIESSGESETZ = 'DW_M_FORMBW'
     ENDIF
 
@@ -1749,18 +1682,6 @@ if (RUN_MODUS /= 'KALYPSO') then
     FLIESSGESETZ = 'MANNING_STR'
 
   ENDIF                                                                                   
-                                                                        
-else
-
-  if (FLIESSGESETZ == 'DW_O_FORMBW') then
-    i_typ_flg = 'colebr'
-    ifg = 1
-  else if (FLIESSGESETZ == 'DW_M_FORMBW') then
-    i_typ_flg = 'pasche'
-    ifg = 1
-  else
-    ifg = 0
-  end if
 
 end if
 
@@ -1773,7 +1694,6 @@ end if
 
 ! Vorbelegung
 rg_vst = 1
-a_m = 1
 REIBUNGSVERLUST = 'TRAPEZ'
 ITERATIONSART = 'SIMPLE'
 

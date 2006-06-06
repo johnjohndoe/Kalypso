@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006   11:44 am
+!     Last change:  WP    2 Jun 2006    4:46 pm
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -94,13 +94,6 @@ COMMON / erg / wsp, hen, qs, fgesp, froudp, hvs, hrs, hs, fp, up, &
 REAL 	:: bolip (maxger), borep (maxger), sohlp (maxger), stat (maxger)
 REAL 	:: hbv (maxger), isstat (maxger), hmingp (maxger), k_kp (maxger)
 COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
 ! -----------------------------------------------------------------------------
 
 

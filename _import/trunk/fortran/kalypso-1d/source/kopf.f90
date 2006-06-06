@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Aug 2005   10:49 am
+!     Last change:  WP    2 Jun 2006   10:42 pm
 !--------------------------------------------------------------------------
 ! This code, kopf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,15 +38,15 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE kopf (nblat, nz, iw1, ifg, jw7, idr1)
+SUBROUTINE kopf (nblat, nz, iw1, jw7, idr1)
 
 USE ZEIT
 USE VERSION
+USE MOD_INI
 
 INTEGER, INTENT(IN)  :: nblat           ! Blattnummer
 INTEGER, INTENT(OUT) :: nz              ! Anzahl der Zeilen auf Blatt, wird auf 1 zurueckgesetzt.
 INTEGER, INTENT(IN)  :: iw1             ! UNIT fuer die Ausgabe
-INTEGER, INTENT(IN)  :: ifg             ! Art der Widerstandsberechnung (1=Darcy, 0=Strickler)
 INTEGER, INTENT(IN)  :: jw7             ! UNIT fuer die Ausgabe
 CHARACTER(LEN=1), INTENT(IN) :: idr1    ! Genauigkeitsparameter
                                                                         
@@ -66,7 +66,7 @@ end if
 
                                                                         
 ! Widerstandsberechnung nach DARCY-WEISBACH
-IF (ifg.eq.1) then
+if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
 
   WRITE (iw1, 61) nblat
 

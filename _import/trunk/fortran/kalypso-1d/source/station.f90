@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:29 pm
+!     Last change:  WP    2 Jun 2006   10:56 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -54,8 +54,7 @@ SUBROUTINE station (sgef, nprof, hgrenz, q, hr, hv, rg, indmax,   &
 !**   IN DIESER SUBROUTINE VERWENDETE VARIABLEN                         
 !**   -----------------------------------------                         
 !**                                                                     
-!**   bordvoll --      Art der Bordvollberechnung                       
-!**   del     --      Grenzkriterium                                    
+!**   del     --      Grenzkriterium
 !**   dela    --      Grenzkriterium                                    
 !**   dfh     --      Höhendifferenz                                    
 !**   dfh     --      Höhendifferenz                                    
@@ -169,9 +168,9 @@ COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
 
 
 ! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
+!CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
+!CHARACTER(LEN=1) :: bordvoll
+!COMMON / p1 / ereignis, fnam1, bordvoll, fluss
 ! -----------------------------------------------------------------------------
 
 
@@ -182,13 +181,6 @@ REAL 		 :: durchm, hd, sohlg, steig, boli, bore, hmin, hmax, hrbv
 INTEGER 	 :: nknot, ianf, iend
 COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
             & boli, bore, hmin, hmax, ianf, iend, hrbv
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -280,7 +272,6 @@ CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 !     gebraucht werden - boli(i),bore(i),sohl(i)
 
 
-!IF (bordvoll.ne.'g') then
 if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
 
@@ -296,7 +287,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     nz = nz + 3
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     WRITE (UNIT_OUT_TAB, '(/,t10,''der Anfangswasserspiegel wird unter Annahme'',/, &
@@ -854,7 +845,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   PRINT * , ' Beim Entwickler melden !!!'
   STOP 'stationaer nach 9001'
 
-!JK   ELSE ZU (bordvoll .ne. 'g')
+
 ELSE
 
   !write (*,*) 'In STATION. stat.-gl. Bordvoll.'

@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:33 pm
+!     Last change:  WP    2 Jun 2006   10:25 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -80,7 +80,6 @@ SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot)
 ! hr      --      Wasserspiegelhöhe
 ! hv      --      Geschwindigkeitsverlust
 ! hvor    --      mittlere Fließtiefe im Vorland
-! i_typ_flg --    Art der Widerstandsbeiwertberechnung
 ! if_l    --      Fehlervariable der Subroutine Lindy
 ! if_pa   --      Fehlervariable der Subroutine Pasche
 ! ischl   --      linker Profilpunkt
@@ -131,6 +130,7 @@ SUBROUTINE qks (iprof, isener, qgs, itere1, hr, hv, nknot)
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_INI
 
 ! ------------------------------------------------------------------
 ! VEREINBARUNGSTEIL
@@ -149,12 +149,6 @@ REAL 		:: ax (maxkla), ay (maxkla), dp (maxkla), htrre, htrli
 INTEGER 	:: itrre, itrli
 CHARACTER(LEN=2):: itr_typ_re, itr_typ_li
 COMMON / darcy / ax, ay, dp, htrre, htrli, itrre, itrli, itr_typ_re, itr_typ_li
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /FLG_TYP/ -----------------------------------------------------------
-CHARACTER(LEN=6):: i_typ_flg
-COMMON / flg_typ / i_typ_flg
 ! ----------------------------------------------------------------------------------
 
 
@@ -515,11 +509,13 @@ ENDIF
 uges = u (1) + u (2) + u (3)
 
 IF (uges.gt.0) then
+
   rhges = fges / uges
   vges = qgs / fges
   alges = 8 * 9.81 * rhges * isener / vges / vges
+
   !JK   WENN WIDERSTANDSGESETZ NACH PASCHE
-  IF (i_typ_flg.eq.'pasche') then
+  IF (FLIESSGESETZ == 'DW_M_FORMBW') THEN
     factor1 = - 1. / 2.03 / alges**0.5
     re = vges * 4. * rhges / 1.e-06
     factor2 = 4.4 / alges**0.5 / re
@@ -530,7 +526,9 @@ IF (uges.gt.0) then
     dhy1 = 4. * rhges
     factor2 = 1.31e-06 * 2.51 / (dhy1 * (2. * 9.81 * dhy1 * isenk) **0.5)
   ENDIF
+
   akges = 3.71 * 4. * rhges * (10** (factor1) - factor2)
+
 ENDIF
 
 !JK   BERECHNUNG DES WIRKSAMEN GESCHWINDIGKEITSVERLUSTES

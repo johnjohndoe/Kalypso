@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006    1:22 pm
+!     Last change:  WP    2 Jun 2006   11:14 pm
 !--------------------------------------------------------------------------
 ! This code, pegasus.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -54,7 +54,6 @@ SUBROUTINE pegasus (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
 !**   IN DIESER SUBROUTINE VERWENDETE VARIABLEN                         
 !**   -----------------------------------------                         
 !**                                                                     
-!**   a_m     --                                                        
 !     err     --      genauigkeitsschranke fuer wsp-ermittlung bei iteration
 !**   f1      --      Variablen der Einschluﬂintervallberechnung        
 !**   f2      --      Variablen der Einschluﬂintervallberechnung        
@@ -123,13 +122,6 @@ COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /GES/ ----------------------------------------------------------
 REAL 		:: fges, brges, uges, akges, vges, rhges, alges
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
@@ -162,12 +154,6 @@ COMMON / rohr / idruck
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /W_A/ ----------------------------------------------------------
-INTEGER 	:: a_m
-COMMON / w_a / a_m
-! -----------------------------------------------------------------------------
-
-
 ! Local variables
 REAL xi (maxkla), hi (maxkla), s (maxkla)
 
@@ -184,7 +170,6 @@ ifehl = 0
                                                                         
 
 !JK   WENN GENAUE BERECHNUNG MIT EINSCHLUSSINTERVALL
-!IF (a_m.eq.2) then
 IF (ITERATIONSART=='EXACT ') then
 
   fak = (h2x - h1x) / (f2 - f1)
@@ -203,7 +188,6 @@ ENDIF
 DO 100 jsch = 1, 50
 
   !JK       WENN GENAUE BERECHNUNG MIT EINSCHLUSSINTERVALL
-  !IF (a_m.eq.2) then
   IF (ITERATIONSART=='EXACT ') then
     jen = jsch + 1
   ELSE

@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    1:50 pm
+!     Last change:  WP    2 Jun 2006   11:00 pm
 !--------------------------------------------------------------------------
 ! This code, anf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -89,7 +89,7 @@ SUBROUTINE anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,    &
 !**                                                                     
 !**   AUFGERUFENEN ROUTINEN                                             
 !**   ---------------------                                             
-!**   kopf(nblatt,nz,jw5,ifg,jw7,idr1)                                  
+!**   kopf(nblatt,nz,jw5,jw7,idr1)
 !**   verluste(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                    
 !**            psiein,psiort,jw5,hi,xi,s,istat,froud,ifehlg,jsch)       
 !**                                                                     
@@ -149,8 +149,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig,&
 boli, bore, hmin, hmax, ianf, iend, hrbv
 
 COMMON / vort / hborda, heins, horts
-
-COMMON / p4 / ifg, betta
 
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
 
@@ -503,7 +501,7 @@ COMMON / rohr / idruck
         nz = nz + 2 
         IF (nz.gt.50) then 
           nblatt = nblatt + 1 
-          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
         ENDIF
 
         !**      SCHREIBEN IN KONTROLLFILE

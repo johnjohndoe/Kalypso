@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:28 pm
+!     Last change:  WP    2 Jun 2006   10:53 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -134,7 +134,7 @@ SUBROUTINE wspber ()
 !   --------------------
 !   drucktab (nprof,indmax,nz,jw5,nblatt,stat,jw7,idr1)
 !   intdat (staso,ifehl)
-!   kopf (nblatt,nz,jw5,ifg,jw7,idr1)
+!   kopf (nblatt,nz,jw5,jw7,idr1)
 !   lcase (unit4)
 !   lu0trf (jw5)
 !   proe_pro (jw4,text33,filename)
@@ -276,9 +276,9 @@ COMMON / ob_alpha / alpha_ja
 
 
 ! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
+!CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
+!CHARACTER(LEN=1) :: bordvoll
+!COMMON / p1 / ereignis, fnam1, bordvoll, fluss
 ! -----------------------------------------------------------------------------
 
 
@@ -296,13 +296,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 INTEGER 	:: isohl, iming
 REAL            :: hming
 COMMON / p3 / isohl, hming, iming
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -489,15 +482,15 @@ ilen = LEN_TRIM (text)
 
 IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
 
-  text (ilen + 2:nch80) = ereignis
+  text (ilen + 2:nch80) = EREIGNISNAME
 
 ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
-  WRITE (ereignis, '(f8.3)') qvar
+  WRITE (EREIGNISNAME, '(f8.3)') qvar
 
-  ereignis = ADJUSTL (ereignis)
+  EREIGNISNAME = ADJUSTL (EREIGNISNAME)
 
-  text (ilen + 2:nch80) = ereignis
+  text (ilen + 2:nch80) = EREIGNISNAME
 
   ilen = LEN_TRIM (text)
   text (ilen + 1:nch80) = ' m**3/s'
@@ -517,7 +510,7 @@ WRITE (UNIT_OUT_TAB, '(a)') text
 ! -----------------------------------------------------------------------
 nblatt = 1
 IF (idr1.ne.'j') then
-  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_TAB, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_TAB, idr1)
 ENDIF
 
 !**   nz wird in kopf zu 1 gesetzt, maxger ist Anzahl der
@@ -644,13 +637,13 @@ Hauptschleife: DO i = 1, maxger
 
     unit7 = NAME_PFAD_DATH
 
-    iflen = LEN_TRIM (fluss)
+    iflen = LEN_TRIM (FLUSSNAME)
 
     IF (iflen.gt.2) then
       iflen = 2
     ENDIF
 
-    unit7 (ilen + 1:nch80) = fluss (1:iflen)
+    unit7 (ilen + 1:nch80) = FLUSSNAME (1:iflen)
     ilen = LEN_TRIM (unit7)
     unit7 (ilen + 1:nch80) = text
     ilen = LEN_TRIM (unit7)
@@ -668,7 +661,7 @@ Hauptschleife: DO i = 1, maxger
       !**  /* stutze file ab pointer
       !WP CALL lu0trf (UNIT_OUT_PRO)
       OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
-      CALL kopf (nblatt, nz, UNIT_OUT_PRO, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_PRO, UNIT_OUT_PRO, idr1)
 
     ELSE
 
@@ -1029,7 +1022,7 @@ Hauptschleife: DO i = 1, maxger
 
         IF (nz .gt. 50) then
           nblatt = nblatt + 1
-          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
         ENDIF
 
         CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
@@ -1037,7 +1030,7 @@ Hauptschleife: DO i = 1, maxger
         CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
         !**  Original Profilwerte herstellen:
-        IF (ifg.eq.1) then
+        if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
           DO i1 = 1, nknot
             ax (i1) = 0.0
             ay (i1) = 0.0
@@ -1097,7 +1090,7 @@ Hauptschleife: DO i = 1, maxger
       ! mit vorgebenem wsp hr3 in wspanf --> berechnen wsp unverbautes
 
       staso = stat (nprof)
-      IF (ifg.eq.1) then
+      if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
         DO i1 = 1, nknot
           ax (i1) = 0.0
           ay (i1) = 0.0
@@ -1164,7 +1157,7 @@ Hauptschleife: DO i = 1, maxger
       i1 = iokl
       i2 = iokl + npl
 
-      IF (ifg .eq. 1) then
+      if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
         DO j = i1, i2
           ax (j) = 0.0
           ay (j) = 0.0
@@ -1193,7 +1186,7 @@ Hauptschleife: DO i = 1, maxger
           rau1 (j) = rau (j)
 
           !**      dp1 WIRD NICHT WEITER BENUTZT, 12.01.00, UT
-          IF (ifg.eq.1) then
+          if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
             ax1 (j) = ax (j)
             ay1 (j) = ay (j)
             dp1 (j) = dp (j)
@@ -1208,7 +1201,7 @@ Hauptschleife: DO i = 1, maxger
           h1 (i2) = h11 (j)
           rau (i2) = rau1 (j)
 
-          IF (ifg.eq.1) then
+          if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
             ax (i2) = ax1 (j)
             ay (i2) = ay1 (j)
             dp (i2) = dp (j)
@@ -1288,8 +1281,7 @@ Hauptschleife: DO i = 1, maxger
       !**   SCHREIBEN IN KONTROLLFILE UNIT_OUT_LOG
       DO j = 1, nknot
 
-        IF (ifg.eq.1) then
-
+        if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
           WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
            & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
            & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
@@ -1350,7 +1342,7 @@ Hauptschleife: DO i = 1, maxger
 
       num (nprof) = prof_nr (1:10)
 
-      CALL w_ber (henw, q, nprof, nz, ifg, idr1, nblatt)
+      CALL w_ber (henw, q, nprof, nz, idr1, nblatt)
 
 
       WRITE (UNIT_OUT_TAB, 324)
@@ -1404,7 +1396,7 @@ Hauptschleife: DO i = 1, maxger
 
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
@@ -1514,7 +1506,7 @@ Hauptschleife: DO i = 1, maxger
 
           if (nz.gt.50) then
             blatt = nblatt + 1
-            call kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            call kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           endif
 
           CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
@@ -1633,7 +1625,7 @@ Hauptschleife: DO i = 1, maxger
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
               ENDIF
 
               CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
@@ -1819,7 +1811,7 @@ Hauptschleife: DO i = 1, maxger
 
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     CALL speicher (nprof, hbv_gl, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)

@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:31 pm
+!     Last change:  WP    2 Jun 2006   11:13 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -134,13 +134,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /PROF_HR/ ------------------------------------------------------
 REAL 		:: f (maxkla), u (maxkla), br (maxkla), ra (maxkla), rb (maxkla)
 REAL 		:: v (maxkla), qt (maxkla), ts1 (maxkla), ts2 (maxkla)
@@ -158,12 +151,6 @@ COMMON / rohr / idruck
 ! COMMON-Block /VORT/ ---------------------------------------------------------
 REAL 		:: hborda, heins, horts
 COMMON / vort / hborda, heins, horts
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /W_A/ ----------------------------------------------------------
-INTEGER 	:: a_m
-COMMON / w_a / a_m
 ! -----------------------------------------------------------------------------
 
 

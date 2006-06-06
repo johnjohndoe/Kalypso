@@ -1,4 +1,4 @@
-!     Last change:  WP   28 May 2006    2:15 pm
+!     Last change:  WP    2 Jun 2006    4:44 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -317,13 +317,13 @@ unit1 = NAME_PFAD_DATH
 ilen = LEN_TRIM (unit1)
 
 !unit1 (ilen - 4:ilen - 1) = 'dath'
-ifllen = LEN_TRIM (fluss)
+ifllen = LEN_TRIM (FLUSSNAME)
 
 IF (ifllen.gt.4) then
   ifllen = 4
 ENDIF
 
-unit1(ilen+1 : ) = fluss (1:ifllen)
+unit1(ilen+1 : ) = FLUSSNAME(1:ifllen)
 
 !HB   Anfuegen der Endung '.tab' an den Pfad unit1.
 !HB   Es wird von Position 'ilen+5' bis zur 80. Position, da
@@ -338,7 +338,6 @@ write (*,*) 'NAME_OUT_WSL = ', NAME_OUT_WSL
 
 !JK   WENN STATIONAER-UNGLEICHFOERMIGE ABFLUSSVERHAELTNISSE
 !--------------------------------------------------------------------------------------------------
-!IF (bordvoll.eq.'u') then
 if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
   DO i = 1, maxger
@@ -385,32 +384,32 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
     IF (idr2.eq.'j') then
 
       ! dateiname fuer ausgabedatei flussname..q..tab:
-      WRITE (ereignis, '(f9.3)') qvar
+      WRITE (EREIGNISNAME, '(f9.3)') qvar
 
-      erlen = LEN_TRIM (ereignis)
+      erlen = LEN_TRIM (EREIGNISNAME)
 
       DO i = 1, erlen
-        IF (ereignis (i:i) .eq.'.') then
-          ereignis (i:i) = '-'
+        IF (EREIGNISNAME (i:i) .eq.'.') then
+          EREIGNISNAME (i:i) = '-'
         ENDIF
       END DO
-      ereignis = ADJUSTL (ereignis)
+      EREIGNISNAME = ADJUSTL (EREIGNISNAME)
 
       !unit1 = fnam1
       !ilen = LEN_TRIM (unit1)
       !unit1 (ilen - 4:ilen - 1) = 'dath'
       unit1 = NAME_PFAD_DATH
       ilen = LEN_TRIM (unit1)
-      ifllen = LEN_TRIM (fluss)
+      ifllen = LEN_TRIM (FLUSSNAME)
 
       IF (ifllen.gt.2) then
         ifllen = 2
       ENDIF
 
-      unit1 (ilen + 1:nch80) = fluss (1:ifllen)
+      unit1 (ilen + 1:nch80) = FLUSSNAME(1:ifllen)
       unit2 = unit1
       ilen = LEN_TRIM (unit1)
-      unit1 (ilen + 1:nch80) = ereignis
+      unit1 (ilen + 1:nch80) = EREIGNISNAME
       ilen = LEN_TRIM (unit1)
       unit1 (ilen + 1:nch80) = '.tb'
 
@@ -749,8 +748,8 @@ IF (km.eq.'j') then
   !unit4 (ilen4 + 5:nch80) = fluss
 
   ilen = LEN_TRIM(NAME_PFAD_DATH)
-  ilen2 = LEN_TRIM(fluss)
-  NAME_OUT_LOG_KM = NAME_PFAD_DATH(1:ilen) // 'out.'// fluss(1:ilen2)
+  ilen2 = LEN_TRIM(FLUSSNAME)
+  NAME_OUT_LOG_KM = NAME_PFAD_DATH(1:ilen) // 'out.'// FLUSSNAME(1:ilen2)
   write (*,*) 'NAME_OUT_LOG_KM = ', NAME_OUT_LOG_KM
 
   UNIT_OUT_LOG_KM = ju0gfu ()
@@ -803,13 +802,13 @@ write (*,9000)
 unit2 = NAME_PFAD_DATH
 ilen = LEN_TRIM(unit2)
 
-ifllen = LEN_TRIM(fluss)                        ! FLUSS ist Gewaessername aus Oberflaeche z.B. Stoer
+ifllen = LEN_TRIM(FLUSSNAME)                     ! FLUSS ist Gewaessername aus Oberflaeche z.B. Stoer
 
 IF (ifllen.gt.8) then
   ifllen = 8
 ENDIF
 
-unit2 (ilen + 1:nch80) = fluss (1:ifllen)       ! Es soll der vollstaendige Dateiname *.qb1 und *.qb2
+unit2 (ilen + 1:nch80) = FLUSSNAME(1:ifllen)    ! Es soll der vollstaendige Dateiname *.qb1 und *.qb2
 						! in dem Unterordner \DATH erzeugt werden.
 ilen = LEN_TRIM(unit2)                          ! Neue Laenge des Dateinamens
 unit2 (ilen + 1:nch80) = '.qb1'                 ! Datei wird mit der Endung .qb1 versehen

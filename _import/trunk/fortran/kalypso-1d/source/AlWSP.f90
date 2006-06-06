@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    8:16 pm
+!     Last change:  WP    6 Jun 2006   12:14 pm
 !--------------------------------------------------------------------------
 ! This code, AlWSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -103,10 +103,16 @@ COMMON / xr2yr2 / xr2 (mpts, max2), yr2 (mpts, max2), mr2 (max2), kr2
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
+! Calling variables
+INTEGER :: ifehl, igraf
+
+! Local variables
+INTEGER :: i, j, k
 
 ! Uebergabe :
 n (0, 1) = na1
 n (0, 2) = na2
+
 DO k = 1, 2
   DO i = 1, n (0, k)
     x (i, 0, k) = xko (i, k)
@@ -121,13 +127,14 @@ info = 0
 ipru = 1
 korr = 1
 iboo = 0
+
 CALL mengen (ifehl, medu, info, ipru, korr, iboo)
 
 IF (ifehl.gt.0) then
 
   WRITE (UNIT_OUT_LOG, '(a)') 'Es gibt Fehler in MENGEN'
-
   RETURN
+
 ENDIF
 
 !     Zurueckgabe :
@@ -190,6 +197,12 @@ USE DIM_VARIABLEN
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
+! Calling variables
+INTEGER :: ifehl, info
+
+! Local variables
+INTEGER :: j, k
+
 CALL konve (1, ib, ifehl, medu, info)
 
 IF (info.eq.1) then
@@ -241,17 +254,25 @@ SUBROUTINE mengf (jj, medu, info, ifehl)
 !                           j=1        : Schnittmengen                  
 !                           j=2 oder 3 : Ergenzungsmengen               
 USE DIM_VARIABLEN
+USE IO_UNITS
+
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
+! Calling variables
+INTEGER :: jj, info, ifehl
+
+! Local variables
+INTEGER :: i, i1, i2, k
 CHARACTER(LEN=3) :: typ
+REAL, DIMENSION(0:mpts) :: xpa, ypa, xpb, ypb
 
 !WP 25.05.2005
-!write (*,1000) jj, medu, info
+!write (unit_bruecken_temp,1000) jj, medu, info
 !1000 format (1X, 'In MENGF!', /, &
 !           & 1X, 'jj   = ', I5, /, &
 !           & 1X, 'medu = ', I5, /, &
-!           & 1X, 'info = ', I5)
+!           & 1X, 'info = ', I5, /)
                                                                         
 !info = 1
 !WP 25.05.2005
@@ -285,6 +306,7 @@ IF (info.eq.1) print  * , 'Layer :', lay, ' Linientyp :  ', typ
 n3 (j) = 0
 ii = 0
 fff = 0.0
+
 DO 1 i1 = 1, m (1)
   DO 2 i2 = 1, m (2)
     n3 (j) = n3 (j) + 1
@@ -293,8 +315,25 @@ DO 1 i1 = 1, m (1)
       ifehl = 1
       RETURN
     ENDIF
-    CALL ovrla ( n(i1,1)-1, x(0,i1,1), y(0,i1,1), n(i2,2)-1, x(0,i2,2), y(0,i2,2), isec, j, 1  , fpc)
-    !SUBROUTINE ovrla ( na, xpa,       ypa,       nb,        xpb,       ypb,       isec, k, ior, fpc)
+
+    do i = 0, mpts
+      xpa(i) = x(i,i1,1)
+      ypa(i) = y(i,i1,1)
+      xpb(i) = x(i,i2,2)
+      ypb(i) = y(i,i2,2)
+    end do
+
+    !write (unit_bruecken_temp, 1001) i1, n(i1,1)-1, i1, xpa(0),    i1, ypa(0),    i2, n(i2,2)-1, i2, xpb(0),    i2, ypb(0)
+    !1001 format (/1X, 'In MENGF. Vor Aufruf von OVRLA.', /, &
+    !            & 1X, 'n(',I3,',1)-1 = ', I10, /, &
+    !            & 1X, 'x(0,',I3,',1) = ', F12.5, /, &
+    !            & 1X, 'y(0,',I3,',1) = ', F12.5, /, &
+    !            & 1X, 'n(',I3,',2)-1 = ', I10, /, &
+    !            & 1X, 'x(0,',I3,',2) = ', F12.5, /, &
+    !            & 1X, 'y(0,',I3,',2) = ', F12.5)
+
+    CALL ovrla ( n(i1,1)-1, xpa,       ypa,       n(i2,2)-1, xpb,       ypb,       isec, j, 1  , fpc)
+   !CALL ovrla ( n(i1,1)-1, x(0,i1,1), y(0,i1,1), n(i2,2)-1, x(0,i2,2), y(0,i2,2), isec, j, 1  , fpc)
 
     IF (isec.eq.0) then
       ii = ii + 1
@@ -307,6 +346,7 @@ DO 1 i1 = 1, m (1)
 
 CALL epunk (j, ifehl)
 IF (ifehl.eq.1) return
+
 CALL unkon (j, ifehl)
 IF (ifehl.eq.1) return
 
@@ -330,6 +370,12 @@ SUBROUTINE inpuf (k)
 
 USE DIM_VARIABLEN
 
+! Calling variables
+INTEGER :: k
+
+! Local variables
+INTEGER :: i
+
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
 m (k) = 1
@@ -351,6 +397,9 @@ END SUBROUTINE inpuf
 
 !----------------------------------------------------------------------------------------
 SUBROUTINE ovrla (na, xpa, ypa, nb, xpb, ypb, isec, k, ior, fpc)
+!
+! Beschreibung
+! ------------
 ! Das Programm findet Schnittmenge C zwischen zwei konvexen Polygonen   
 ! A, B und C :  [xpa(1),ypa(1)...xpa(na),ypa(na)]                       
 !               [xpb(1),ypb(1)...xpb(nb),ypb(nb)]                       
@@ -359,19 +408,32 @@ SUBROUTINE ovrla (na, xpa, ypa, nb, xpb, ypb, isec, k, ior, fpc)
 !                              [ ior=-1, im Uhrzeigersinn]              
 ! isec = 1, dann existiert eine Schnittmenge                            
 ! isec = 0, dann existiert keine Schnittmenge                           
-! max2 : max2imale Vektorlaenge                                           
+! max2 : maximale Vektorlaenge
 USE DIM_VARIABLEN
-DIMENSION xpa (mpts), ypa (mpts), xpb (mpts), ypb (mpts)
-DIMENSION xf (2, mpts), yf (2, mpts)
+USE IO_UNITS
+
+! Calling variables
+INTEGER, INTENT(IN) 	:: na, nb
+REAL, DIMENSION(mpts) 	:: xpa, ypa, xpb, ypb
+
+! Local variables
+REAL, DIMENSION(2,mpts) :: xf, yf
 
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
 l1 = 1
 nc = na
 
+!write (unit_bruecken_temp,1000) na, nb
+!1000 format (/1X, 'In OVRLA. Anfang der Subroutine.', /, &
+!            & 1X, 'NA = ', I3, /, &
+!            & 1X, 'NB = ', I3)
+
 DO i = 1, nc
   xf (l1, i) = xpa (i)
   yf (l1, i) = ypa (i)
+  !write (unit_bruecken_temp, 1001) i, xpa(i), i, ypa(i)
+  !1001 format (1X, 'XPA(',I2,') = ', F10.4, '  YPA(',I2,') = ', F10.4)
 END DO
 
 x1 = xpb (nb)
@@ -1251,241 +1313,287 @@ SUBROUTINE kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, gen, info)
 
 !----------------------------------------------------------------------------------------
 SUBROUTINE mengl (ifehl, medu, info)
-                                                                        
-!   Das Programm konstruiert Linienstuecke :                            
-!    n3 : Anzahl der Linienstuecke                                      
-!    ns : Anzahl der Punkte in jedem Linienstueck                       
-                                                                        
-!   1) n3(1),ns(min,1),xs(0:mpts,min,1),ys(0:mpts,min,1) - innerhalb des  
+!
+! Beschreibung
+! ------------
+! Das Programm konstruiert Linienstuecke :
+!  n3 : Anzahl der Linienstuecke
+!  ns : Anzahl der Punkte in jedem Linienstueck
+!
+! 1) n3(1),ns(min,1),xs(0:mpts,min,1),ys(0:mpts,min,1) - innerhalb des
 !                                                        Gebietes
-!   2) n3(2),ns(min,2),xs(0:mpts,min,2),ys(0:mpts,min,2) - ausserhalb des 
+! 2) n3(2),ns(min,2),xs(0:mpts,min,2),ys(0:mpts,min,2) - ausserhalb des
 !                                                        Gebietes
-!   3) n3(3),ns(min,3),xs(0:mpts,min,3),ys(0:mpts,min,3) - auf der Grenze 
+! 3) n3(3),ns(min,3),xs(0:mpts,min,3),ys(0:mpts,min,3) - auf der Grenze
 !                                                        Gebietes
+
 USE DIM_VARIABLEN
+
+! Calling variables
+INTEGER :: ifehl
+INTEGER :: medu
+INTEGER :: info
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
-DIMENSION ni (mpts)
-CHARACTER(3) typ
+! Local variables
+REAL, DIMENSION(mpts) 	:: x_temp, y_temp
+REAL, DIMENSION(mpts) 	:: ni
+CHARACTER(LEN=3) 	:: typ
+INTEGER                 :: i, j, l
 
-      ifehl = 0 
-      l = 0 
-    4 CONTINUE 
-      l = l + 1 
-      IF (l.ge.1000) then 
-        PRINT * , 'Mehr als 999 Schnittpunkte <-- Fehler' 
-        ifehl = 1 
-        RETURN 
-      ENDIF 
-      IF (n (1, 1) .gt.mpts) then 
-        PRINT * , 'Im MANGL ist Parameter mpts zu klein'
+ifehl = 0
+l = 0
+
+4 CONTINUE
+
+l = l + 1
+IF (l.ge.1000) then
+  PRINT * , 'Mehr als 999 Schnittpunkte <-- Fehler'
+  ifehl = 1
+  RETURN
+ENDIF
+IF (n (1, 1) .gt.mpts) then
+  PRINT * , 'Im MANGL ist Parameter mpts zu klein'
+  ifehl = 1
+  RETURN
+ENDIF
+DO 1 i = 1, n (1, 1) - 1
+
+  x1 = x (i, 1, 1)
+  y1 = y (i, 1, 1)
+  x2 = x (i + 1, 1, 1)
+  y2 = y (i + 1, 1, 1)
+
+
+  DO 2 j = 1, n (1, 2) - 1
+
+    x3 = x (j, 1, 2)
+    y3 = y (j, 1, 2)
+    x4 = x (j + 1, 1, 2)
+    y4 = y (j + 1, 1, 2)
+    CALL kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, 1.0e-06, info)
+    IF (in.eq.5) then
+
+      DO 3 k = n (1, 1), i + 1, - 1
+        x (k + 1, 1, 1) = x (k, 1, 1)
+        y (k + 1, 1, 1) = y (k, 1, 1)
+      3 END DO
+
+      x (i + 1, 1, 1) = u
+      y (i + 1, 1, 1) = v
+
+
+      n (1, 1) = n (1, 1) + 1
+      GOTO 4
+    ENDIF
+
+  2 END DO
+
+1 END DO
+
+
+DO 5 i = 1, n (1, 1) - 1
+
+  x0 = (x (i, 1, 1) + x (i + 1, 1, 1) ) / 2.
+  y0 = (y (i, 1, 1) + y (i + 1, 1, 1) ) / 2.
+
+  !WP 06.06.2006 Neuer Array fuer Uebergabe an PUNLA
+  do j = 0, mpts
+    x_temp(j) = x(j,1,2)
+    y_temp(j) = y(j,1,2)
+  end do
+
+  CALL punla (1, n (1, 2), x_temp     , y_temp,      x0, y0, in, 1.0e-06, ifehl)
+ !CALL punla (1, n (1, 2), x (1, 1, 2), y (1, 1, 2), x0, y0, in, 1.0e-06, ifehl)
+  !WP 06.06.2006 Ende
+
+  IF (in.eq.0) ni (i) = 2
+  IF (in.eq.1) ni (i) = 1
+  IF (in.eq.2) ni (i) = 3
+
+5 END DO
+
+
+DO 7 j = 1, 3
+  k = 0
+  l = 0
+  DO 6 i = 1, n (1, 1) - 1
+    IF (ni (i) .eq.j) then
+      k = k + 1
+      IF (k.gt.mpts) then
         ifehl = 1
-        RETURN 
-      ENDIF 
-      DO 1 i = 1, n (1, 1) - 1 
+        PRINT * , 'Im MENGL ist der Parameter mpts zu klein'
+        RETURN
+      ENDIF
+      IF (k.eq.1) l = l + 1
+      xs (k, l, j) = x (i, 1, 1)
+      ys (k, l, j) = y (i, 1, 1)
+
+      xs (k + 1, l, j) = x (i + 1, 1, 1)
+      ys (k + 1, l, j) = y (i + 1, 1, 1)
+      ns (l, j) = k + 1
+      GOTO 6
+    ENDIF
+    k = 0
+  6 END DO
+  n3 (j) = l
+
+  IF (j.eq.1) then
+    IF (info.eq.1) print * , ' '
+    IF (info.eq.1) print  * , 'Linienstuecke innerhalb des Gebietes'
+    typ = 's81'
+    lay = 301
+  ENDIF
+  IF (j.eq.2) then
+    IF (info.eq.1) print * , ' '
+    IF (info.eq.1) print  * , 'Linienstuecke ausserhalb des Gebietes'
+    typ = 's51'
+    lay = 302
+  ENDIF
+  IF (j.eq.3) then
+    IF (info.eq.1) print * , ' '
+    IF (info.eq.1) print  * , 'Linienstuecke auf der Grenze des Gebietes'
+    typ = 's77'
+    lay = 303
+  ENDIF
+
+  IF (info.eq.1) print * , 'Layer :', lay, ' Typ : ', typ
+  DO 8 j1 = 1, n3 (j)
+    CALL imron (j1, j)
+    IF (info.eq.1) print * , ' '
+    IF (info.eq.1) write ( * , '(i5,2f10.3)') (i, xs (i, j1, j) , &
+    ys (i, j1, j) , i = 0, ns (j1, j) )
+
+    fs (j1, j) = 0.
+    DO 9 i1 = 1, ns (j1, j) - 1
+      x1 = xs (i1, j1, j)
+      y1 = ys (i1, j1, j)
+      x2 = xs (i1 + 1, j1, j)
+      y2 = ys (i1 + 1, j1, j)
+      a = sqrt ( (x2 - x1) **2 + (y2 - y1) **2)
+      fs (j1, j) = fs (j1, j) + a
+    9 END DO
+
+  8 END DO
+7 END DO
+
+RETURN
+END SUBROUTINE mengl                                                                    
                                                                         
-        x1 = x (i, 1, 1) 
-        y1 = y (i, 1, 1) 
-        x2 = x (i + 1, 1, 1) 
-        y2 = y (i + 1, 1, 1) 
-                                                                        
-                                                                        
-        DO 2 j = 1, n (1, 2) - 1 
-          x3 = x (j, 1, 2) 
-          y3 = y (j, 1, 2) 
-          x4 = x (j + 1, 1, 2) 
-          y4 = y (j + 1, 1, 2) 
-          CALL kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, 1.0e-06, info)
-          IF (in.eq.5) then 
-            DO 3 k = n (1, 1), i + 1, - 1 
-              x (k + 1, 1, 1) = x (k, 1, 1) 
-              y (k + 1, 1, 1) = y (k, 1, 1) 
-    3       END DO 
-            x (i + 1, 1, 1) = u 
-            y (i + 1, 1, 1) = v 
-                                                                        
-                                                                        
-            n (1, 1) = n (1, 1) + 1 
-            GOTO 4 
-          ENDIF 
-    2   END DO 
-    1 END DO 
-                                                                        
-                                                                        
-      DO 5 i = 1, n (1, 1) - 1 
-                                                                        
-        x0 = (x (i, 1, 1) + x (i + 1, 1, 1) ) / 2. 
-        y0 = (y (i, 1, 1) + y (i + 1, 1, 1) ) / 2. 
-        CALL punla (1, n (1, 2), x (1, 1, 2), y (1, 1, 2), x0, y0, in,  &
-        1.0e-06, ifehl)                                                 
-        IF (in.eq.0) ni (i) = 2 
-        IF (in.eq.1) ni (i) = 1 
-        IF (in.eq.2) ni (i) = 3 
-                                                                        
-    5 END DO 
-                                                                        
-!      write(*,'(14i5)') (ni(i),i=1,n(1,1)-1)                           
-                                                                        
-                                                                        
-      DO 7 j = 1, 3 
-        k = 0 
-        l = 0 
-        DO 6 i = 1, n (1, 1) - 1 
-          IF (ni (i) .eq.j) then 
-            k = k + 1 
-            IF (k.gt.mpts) then 
-              ifehl = 1
-              PRINT * , 'Im MENGL ist der Parameter mpts zu klein' 
-              RETURN
-            ENDIF 
-            IF (k.eq.1) l = l + 1 
-            xs (k, l, j) = x (i, 1, 1) 
-            ys (k, l, j) = y (i, 1, 1) 
-                                                                        
-            xs (k + 1, l, j) = x (i + 1, 1, 1) 
-            ys (k + 1, l, j) = y (i + 1, 1, 1) 
-            ns (l, j) = k + 1 
-            GOTO 6 
-          ENDIF 
-          k = 0 
-    6   END DO 
-        n3 (j) = l 
-                                                                        
-        IF (j.eq.1) then 
-          IF (info.eq.1) print * , ' ' 
-          IF (info.eq.1) print  * , 'Linienstuecke innerhalb des Gebietes'
-          typ = 's81' 
-          lay = 301 
-        ENDIF 
-        IF (j.eq.2) then 
-          IF (info.eq.1) print * , ' ' 
-          IF (info.eq.1) print  * , 'Linienstuecke ausserhalb des Gebietes'
-          typ = 's51' 
-          lay = 302 
-        ENDIF 
-        IF (j.eq.3) then 
-          IF (info.eq.1) print * , ' ' 
-          IF (info.eq.1) print  * , 'Linienstuecke auf der Grenze des Gebietes'
-          typ = 's77' 
-          lay = 303 
-        ENDIF 
-                                                                        
-        IF (info.eq.1) print * , 'Layer :', lay, ' Typ : ', typ 
-        DO 8 j1 = 1, n3 (j) 
-          CALL imron (j1, j) 
-          IF (info.eq.1) print * , ' ' 
-          IF (info.eq.1) write ( * , '(i5,2f10.3)') (i, xs (i, j1, j) , &
-          ys (i, j1, j) , i = 0, ns (j1, j) )                           
-                                                                        
-          fs (j1, j) = 0. 
-          DO 9 i1 = 1, ns (j1, j) - 1 
-            x1 = xs (i1, j1, j) 
-            y1 = ys (i1, j1, j) 
-            x2 = xs (i1 + 1, j1, j) 
-            y2 = ys (i1 + 1, j1, j) 
-            a = sqrt ( (x2 - x1) **2 + (y2 - y1) **2) 
-            fs (j1, j) = fs (j1, j) + a 
-    9     END DO 
-                                                                        
-    8   END DO 
-    7 END DO 
-                                                                        
-      RETURN
-      END SUBROUTINE mengl                          
-                                                                        
+
 
 
 !----------------------------------------------------------------------------------------
 SUBROUTINE punla (n1, n2, x, y, x0, y0, in, gen, ifehl)
-!***************************************************************        
-!  die subroutine ueberprueft, ob der punkt (x0,y0) auf der    *        
-!  Grenze (in=2) des gebietes (x,y). wenn nicht, dann wird     *        
-!  ueberprueft, ob der punkt innerhalb (in=1) oder ausser-     *        
-!  halb des gebietes (x,y) liegt                               *        
-!***************************************************************        
+!
+!  Beschreibung
+!  ------------
+!  die subroutine ueberprueft, ob der punkt (x0,y0) auf der
+!  Grenze (in=2) des gebietes (x,y). wenn nicht, dann wird
+!  ueberprueft, ob der punkt innerhalb (in=1) oder ausser-
+!  halb des gebietes (x,y) liegt.
+
 USE DIM_VARIABLEN
 
-DIMENSION x (mpts), y (mpts)
+! Calling variables
+INTEGER, INTENT(IN) 	:: n1, n2
+REAL, DIMENSION(mpts) 	:: x, y
+REAL 			:: x0, y0
+INTEGER, INTENT(OUT) 	:: in
+REAL, INTENT(IN) 	:: gen
+INTEGER 		:: ifehl
 
-      IF (n1.ge.n2) stop 'n1 > n2' 
-      IF (n2.gt.mpts) stop 'parameter mpts in ing ist zu klein' 
-      ifehl = 0
-      in = 0 
-      DO 1 k = n1, n2 - 1 
-        x1 = x (k) 
-        y1 = y (k) 
-        x2 = x (k + 1) 
-        y2 = y (k + 1) 
-        cc = (x2 - x1) **2 + (y2 - y1) **2 
-        c = sqrt (cc) 
-        aa = (x0 - x1) **2 + (y0 - y1) **2 
-        bb = (x0 - x2) **2 + (y0 - y2) **2 
-        p = (aa + cc - bb) / c / 2. 
-        hh = abs (aa - p * p) 
-        IF (hh.ge.gen) goto 1 
-        u = x1 + p * (x2 - x1) / c 
-        v = y1 + p * (y2 - y1) / c 
-        ee = (u - x1) **2 + (v - y1) **2 
-        ff = (u - x2) **2 + (v - y2) **2 
-                                                                        
-        IF (ee.lt.gen.or.ff.lt.gen) then 
-          in = 2 
-          RETURN 
-        ENDIF 
-                                                                        
-        IF (ee.lt.cc.and.ff.lt.cc) then 
-          in = 2 
-          RETURN 
-        ENDIF 
-    1 END DO 
-      DO 2 k = n1, n2 - 1 
-        xs = (x (k) + x (k + 1) ) / 2. 
-        ys = (y (k) + y (k + 1) ) / 2. 
-        CALL verle (x0, y0, xs, ys, 0., gen / 3., gen, ifehl) 
-        IF (ifehl.eq.1) then 
-          ifehl = 1 
-          RETURN 
-        ENDIF 
-        DO 3 l = n1, n2 - 1 
-          IF (k.eq.l) goto 3 
-          x1 = x (l) 
-          y1 = y (l) 
-          x2 = x (l + 1) 
-          y2 = y (l + 1) 
-                                                                        
-                                                                        
-          in = 0 
-          aoben = (x0 - xs) * (y1 - ys) - (y0 - ys) * (x1 - xs) 
-          boben = (y1 - ys) * (x2 - x1) - (x1 - xs) * (y2 - y1) 
-          unten = (x2 - x1) * (y0 - ys) - (y2 - y1) * (x0 - xs) 
-          IF (abs (unten) .le.gen) goto 3 
-          ak = aoben / unten 
-          bk = boben / unten 
-          IF (ak.ge.0..and.bk.ge.0..and.ak.le.1..and.bk.le.1.) then 
-            in = 1 
-          ENDIF 
-                                                                        
-          IF (in.eq.1) goto 2 
-    3   END DO 
-        x1 = x (k) 
-        y1 = y (k) 
-        x2 = x (k + 1) 
-        y2 = y (k + 1) 
-                                                                        
-        flaech = ( (x1 - x2) * (y1 + y2) + (x2 - x0) * (y2 + y0)        &
-        + (x0 - x1) * (y0 + y1) ) / 2.                                  
-        IF (flaech.gt.0.) then 
-          in = 1 
-        ELSE 
-          in = 0 
-        ENDIF 
-        RETURN 
-    2 END DO 
-      IF (in.eq.0) stop 'parameter in ist nicht definiert' 
-      RETURN 
-      END SUBROUTINE punla                          
+! Local variables
+INTEGER :: k, l
+
+IF (n1.ge.n2) stop 'n1 > n2'
+IF (n2.gt.mpts) stop 'parameter mpts in ing ist zu klein'
+ifehl = 0
+in = 0
+
+DO 1 k = n1, n2 - 1
+  x1 = x (k)
+  y1 = y (k)
+  x2 = x (k + 1)
+  y2 = y (k + 1)
+  cc = (x2 - x1) **2 + (y2 - y1) **2
+  c = sqrt (cc)
+  aa = (x0 - x1) **2 + (y0 - y1) **2
+  bb = (x0 - x2) **2 + (y0 - y2) **2
+  p = (aa + cc - bb) / c / 2.
+  hh = abs (aa - p * p)
+  IF (hh.ge.gen) goto 1
+  u = x1 + p * (x2 - x1) / c
+  v = y1 + p * (y2 - y1) / c
+  ee = (u - x1) **2 + (v - y1) **2
+  ff = (u - x2) **2 + (v - y2) **2
+
+  IF (ee.lt.gen.or.ff.lt.gen) then
+    in = 2
+    RETURN
+  ENDIF
+
+  IF (ee.lt.cc.and.ff.lt.cc) then
+    in = 2
+    RETURN
+  ENDIF
+
+1 END DO
+
+DO 2 k = n1, n2 - 1
+  xs = (x (k) + x (k + 1) ) / 2.
+  ys = (y (k) + y (k + 1) ) / 2.
+  CALL verle (x0, y0, xs, ys, 0., gen / 3., gen, ifehl)
+  IF (ifehl.eq.1) then
+    ifehl = 1
+    RETURN
+  ENDIF
+
+  DO 3 l = n1, n2 - 1
+    IF (k.eq.l) goto 3
+    x1 = x (l)
+    y1 = y (l)
+    x2 = x (l + 1)
+    y2 = y (l + 1)
+
+
+    in = 0
+    aoben = (x0 - xs) * (y1 - ys) - (y0 - ys) * (x1 - xs)
+    boben = (y1 - ys) * (x2 - x1) - (x1 - xs) * (y2 - y1)
+    unten = (x2 - x1) * (y0 - ys) - (y2 - y1) * (x0 - xs)
+    IF (abs (unten) .le.gen) goto 3
+    ak = aoben / unten
+    bk = boben / unten
+    IF (ak.ge.0..and.bk.ge.0..and.ak.le.1..and.bk.le.1.) then
+      in = 1
+    ENDIF
+
+    IF (in.eq.1) goto 2
+
+  3 END DO
+
+  x1 = x (k)
+  y1 = y (k)
+  x2 = x (k + 1)
+  y2 = y (k + 1)
+
+  flaech = ( (x1 - x2) * (y1 + y2) + (x2 - x0) * (y2 + y0) + (x0 - x1) * (y0 + y1) ) / 2.
+  IF (flaech.gt.0.) then
+    in = 1
+  ELSE
+    in = 0
+  ENDIF
+  RETURN
+
+2 END DO
+
+IF (in.eq.0) stop 'parameter in ist nicht definiert'
+
+RETURN
+
+END SUBROUTINE punla                                                                          
                                                                         
 
 

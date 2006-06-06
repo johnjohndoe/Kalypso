@@ -1,4 +1,4 @@
-!     Last change:  WP   26 May 2006    1:31 pm
+!     Last change:  WP    2 Jun 2006   10:55 pm
 !--------------------------------------------------------------------------
 ! This code, speicher.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -180,13 +180,6 @@ COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
 CHARACTER(LEN=1) :: iprof
@@ -201,13 +194,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 INTEGER 	:: isohl, iming
 REAL            :: hming
 COMMON / p3 / isohl, hming, iming
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 

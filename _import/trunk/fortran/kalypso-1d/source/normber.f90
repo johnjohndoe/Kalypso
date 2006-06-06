@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:29 pm
+!     Last change:  WP    2 Jun 2006   11:19 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -85,7 +85,6 @@ SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 !**                                                                     
 !**   PARAMETER                                                        *
 !**   ---------                                                        *
-!**   a_m    - ?                                                        
 !**   itmax  - max. Anzahl der Iterationsschritte                      *
 !**   err    - Genauigkeitsschranke fuer wsp-ermittlung bei Iteration  *
 !**                                                                    *
@@ -95,7 +94,7 @@ SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
 !**   anf(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                        *
 !**       psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl,nblatt,nz)       *
 !**   grnzh(q,indmax,hgrenz,xi,hi,s,ifgrnz)                            *
-!**   kopf(nblatt,nz,jw5,ifg,jw7,idr1)                                 *
+!**   kopf(nblatt,nz,jw5,jw7,idr1)                                     *
 !**   newton(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                     *
 !**          psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl)              *
 !**   pegasus(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                    *
@@ -142,12 +141,6 @@ COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
 ! ----------------------------------------------------------------------------------
 
 
-! COMMON-Block /BLOED/ -------------------------------------------------------------
-INTEGER 	:: nr
-COMMON / bloed / nr
-! ----------------------------------------------------------------------------------
-
-
 ! COMMON-Block /BV/ ----------------------------------------------------------------
 CHARACTER(LEN=1):: idr1, idr2
 INTEGER         :: nprof, isch
@@ -182,13 +175,6 @@ COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
 CHARACTER(LEN=1) :: iprof
@@ -196,13 +182,6 @@ REAL 		 :: durchm, hd, sohlg, steig, boli, bore, hmin, hmax, hrbv
 INTEGER 	 :: nknot, ianf, iend
 COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
             & boli, bore, hmin, hmax, ianf, iend, hrbv
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -232,12 +211,6 @@ COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /W_A/ ----------------------------------------------------------
-INTEGER 	:: a_m
-COMMON / w_a / a_m
-! -----------------------------------------------------------------------------
-
-
 ! Local variables
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
 
@@ -256,8 +229,6 @@ idruck = 0
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
-
-!IF (bordvoll .ne. 'g') then
 
 if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
@@ -500,7 +471,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   nz = nz + 5
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, 1002)

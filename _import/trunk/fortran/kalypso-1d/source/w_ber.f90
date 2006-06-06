@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006   10:55 pm
+!     Last change:  WP    2 Jun 2006   10:53 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !**********************************************************************
 
-SUBROUTINE w_ber (he, qw, np, nz, ifg, idr1, nblatt)
+SUBROUTINE w_ber (he, qw, np, nz, idr1, nblatt)
 
 !***********************************************************************
 !**                                                                     
@@ -53,7 +53,7 @@ SUBROUTINE w_ber (he, qw, np, nz, ifg, idr1, nblatt)
 !**                                                                     
 !**   AUFGERUFENE ROUTINEN                                              
 !**   --------------------                                              
-!**   kopf      (nblatt,nz,jw5,ifg,jw7,idr1)                            
+!**   kopf      (nblatt,nz,jw5,jw7,idr1)
 !**   wspow     Berechnet den Wasserspiegel im Oberwasser aus der Energi
 !**   g_wehr    Berechnet die Wehrgeometrie                             
 !**   beiwert   Berechnet den Ueberfallbeiwert des Wehres               
@@ -131,7 +131,7 @@ SUBROUTINE w_ber (he, qw, np, nz, ifg, idr1, nblatt)
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE IO_UNITS
-
+USE MOD_INI
 
 ! COMMON-Block /ERG/ ----------------------------------------------------------
 REAL 		:: wsp (maxger), hen (maxger), qs (maxger), fgesp (maxger)
@@ -372,7 +372,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
                                                                         
       !JK        BERECHNUNG NACH DARCY-WEISBACH
-      IF (ifg.eq.1) then 
+      if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
         q_wehr = qt (2) 
         v_ow = v (2) 
       !JK        BERECHNUNG NACH GMS
@@ -1315,7 +1315,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
       IF (nz.gt.50) then 
         nblatt = nblatt + 1 
-        CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1) 
+        CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
       ENDIF
                                                                         
       RETURN 

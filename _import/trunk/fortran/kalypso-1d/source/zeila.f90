@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:36 pm
+!     Last change:  WP    2 Jun 2006   10:54 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -88,19 +88,6 @@ CHARACTER(LEN = 1) :: nr_ausg
 COMMON / nr_aus / nr_ausg
 ! -----------------------------------------------------------------------------
 
-
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER :: ifg
-REAL 	:: betta
-COMMON / p4 / ifg, betta
-! -----------------------------------------------------------------------------
 
 
 !WP -- Local variables -------------------------------------------------------------------------------------
@@ -367,11 +354,11 @@ IF (mark.eq.1.or.mark.eq.3) then
           ELSEIF (j.eq.8) then
                IF (nschacht.gt.0) then
                     bete1 = 'Wasserspiegel mNN'
-                    bete12 = ereignis (1:20)
+                    bete12 = EREIGNISNAME(1:20)
                     bete12 = 'Druckhoehe'
                ELSE
                     bete1 = 'Wasserspiegel mNN    '
-                    bete12 = ereignis (1:20)
+                    bete12 = EREIGNISNAME (1:20)
                ENDIF
                DO i = 1, nprof
                     IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
@@ -409,7 +396,7 @@ IF (mark.eq.1.or.mark.eq.3) then
                GOTO 204
           ELSEIF (j.eq.10) then 
                IF (nschacht.eq.0) goto 204
-               IF (ifg.eq.1) then
+               if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
       		    bete1 = 'k-b    mm'
               	    factor = 1000.
                ELSE
@@ -925,7 +912,7 @@ ELSEIF (mark.gt.1) then
                GOTO 301
           ELSEIF (j.eq.9) then
                IF (nschacht.eq.0) goto 301
-               IF (ifg.eq.1) then
+               if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
                     bete1 = 'k-b    mm'
                     factor = 1000.
                ELSE

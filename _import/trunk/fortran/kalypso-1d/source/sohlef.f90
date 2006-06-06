@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    3:29 pm
+!     Last change:  WP    2 Jun 2006   11:36 pm
 !--------------------------------------------------------------------------
 ! This code, sohlef.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -59,8 +59,7 @@ SUBROUTINE sohlef (u_hg, r_hg, a_ks, l_ks, u_ks, k_ks, r_ks, u_tr, &
 !**   dhy1    --      hydraulischer Durchmesser                         
 !**   dm      --                                                        
 !**   factor  --      Faktor zur Berechnung des Widerstandsbeiwertes
-!**   i_typ_flg       --      Art der Widerstandsbeiwertberechnung
-!**   ln_ks   --      Widerstandsbeiwert eines Teilabschnittes          
+!**   ln_ks   --      Widerstandsbeiwert eines Teilabschnittes
 !**   r_ks    --      hydraulischer Radius eines Teilabschnittes
 !**   resof   --      Reynoldszahl                                      
 !**   rhynn   --      hydraulischer Radius eines Teilabschnittes        
@@ -85,6 +84,7 @@ USE DIM_VARIABLEN
 USE KONSTANTEN
 USE BEWUCHS
 USE IO_UNITS
+USE MOD_INI
 
 !---------------------
 ! ST 23.03.2005
@@ -137,13 +137,6 @@ COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! DK, 21/06/01 - The user-defined value of MEI (for Kouwen procedure)
 REAL 		:: mei (maxkla)
 COMMON / flexi / mei
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /FLG_TYP/ -----------------------------------------------------------
-! Unterscheidung offenes Gerinne (=pasche) oder Rohrströmung (= colebr)
-CHARACTER(LEN=6):: i_typ_flg
-COMMON / flg_typ / i_typ_flg
 ! ----------------------------------------------------------------------------------
 
 
@@ -476,9 +469,7 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
         !             ln_ks(i)=(1./(-2.03*alog10(ks_iter/(4.*rhynn(i)*3.71))))**
                                                                         
         !JK           WENN BERECHNUNG NACH PASCHE
-        !ST    OFFENES GERINNE
-        IF (i_typ_flg.eq.'pasche') then
-
+        IF (FLIESSGESETZ == 'DW_M_FORMBW') THEN
            !***********************************************************************
            !             DK 31/05/01 - deactivated and "call fuent_s" moved below!
 
@@ -636,11 +627,10 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
 
 
 
-        !JK           BERECHNUNG NACH COLEBROOK von if (i_typ_flg.eq.'pasche')
+        !JK           BERECHNUNG NACH COLEBROOK
         ELSE
-
-           ! i_typ_flg /= 'pasche'
-           ! ---------------------
+           ! FLIESSGESETZ /= 'DW_M_FORMBW'
+           ! -----------------------------
 
            !write (*,*) 'In SOHLEF, bevor LAMBDA-Berechnung!'
 
@@ -652,25 +642,14 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
            !UT              BERECHNUNG HILFSFAKTOR
            factor = nue * 2.51 / (dhy1 * (2. * g * dhy1 * isenk) **0.5)
 
-           !DK   16/05/01 - "nue" put for 1.31e-06 and "g" put for 9.81!
-
            !UT              BERECHNUNG REYNOLDSZAHL resof
            resof (i) = v_hg * 4 * rhynn (i) / nue
 
-           !DK   16/05/01 - "nue" put for 1.31e-06!
-
            !UT              BERECHNUNG LAMBDA
-
-
            ln_ks(i) = (1. / (-2.0 * alog10(factor+k_ks(i) / (4. * rhynn(i)*3.71) ) ) ) ** 2
 
            !ln_ks(i)  = GET_LAMBDA(v_hg, rhynn(i), ks_iter, fbw)
 
-
-           !                 ln_ks(i)=(1./(-2.03*alog10(2.51/resof(i)/
-           !     1             (l_ks(i)**0.5)+k_ks(i)/(2.*rhynn(i)*3.71))))**2
-
-           !UT           ENDIF VON if (i_typ_flg.eq.'pasche')
         ENDIF
                                                                         
                                                                         

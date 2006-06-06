@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    3:01 pm
+!     Last change:  WP    2 Jun 2006   11:08 pm
 !--------------------------------------------------------------------------
 ! This code, grnzh.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -79,9 +79,7 @@ SUBROUTINE grnzh (q, indmax, hgrenz, xi, hi, s)
 !**   hrn     --      Wasserspiegelhöhe                                 
 !**   i       --      ZAEHLPARAMETER DER SCHLEIFE [-]                   
 !**   idruck  --      Charakterisierung des Druckabflusses              
-!**   ifg     --      Art der Widerstandsberechnung nach Darcy-Weisbach 
-!**                   oder Gauckler-Manning-Strickler                   
-!**   izz     --                                                        
+!**   izz     --
 !**   izzz    --      Laufparameter SCHLEIFE 7002                       
 !**   nstat   --      Anzahl der Stationen
 !**   nsch    --      Schleifenzaehler fuer Grenztiefenteration         
@@ -105,6 +103,7 @@ SUBROUTINE grnzh (q, indmax, hgrenz, xi, hi, s)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE MOD_INI
 
 ! Calling variables
 REAL :: q                       ! Abfluss
@@ -140,13 +139,6 @@ REAL 		 :: durchm, hd, sohlg, steig, boli, bore, hmin, hmax, hrbv
 INTEGER 	 :: nknot, ianf, iend
 COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
             & boli, bore, hmin, hmax, ianf, iend, hrbv
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -296,8 +288,7 @@ grenztiefe: do
                                                                         
     !write (UNIT_OUT_LOG,*) 'In GRNZH. Zeile 310, vor call eb2ks.'
 
-    !** ifg=1 bei Berechnung bordvoll nach Darcy
-    IF (ifg.eq.1) then
+    if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
       nstat = 1
       itere1 = i
       !** BERECHNUNG NACH DARCY
@@ -341,7 +332,7 @@ grenztiefe: do
                                                                         
       !write (UNIT_OUT_LOG,*) 'In GRNZH. Zeile 353, vor call eb2ks.'
       !**  BERECHNUNG NACH STRICKLER eb2kst ODER DARCY eb2ks
-      IF (ifg.eq.1) then
+      if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
         nstat = 1
         itere1 = i
                                                                         
@@ -370,7 +361,7 @@ grenztiefe: do
       ENDIF
                                                                         
       !write (UNIT_OUT_LOG,*) 'In GRNZH. Zeile 383, vor call eb2ks.'
-      IF (ifg.eq.1) then
+      if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
         nstat = 1
         itere1 = i
                                                                         
@@ -556,7 +547,7 @@ grenztiefe: do
 
   CALL uf (hr, hi, xi, s, indmax, nfli, nfre)
 
-  IF (ifg.eq.1) then
+  if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
     nstat = 1
     itere1 = ieb
 
@@ -716,7 +707,7 @@ grenztiefe: do
     ENDIF
                                                                         
                                                                         
-    IF (ifg.eq.1) then
+    if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
       nstat = 1
       itere1 = i
 
@@ -818,8 +809,7 @@ DO i = 1, 100
     ENDIF
   ENDIF
                                                                         
-  !**        BERECHNUNG NACH DARCY ODER STRICKLER, ifg=1 --> DARCY
-  IF (ifg.eq.1) then
+  if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
     nstat = 1
     itere1 = i
 

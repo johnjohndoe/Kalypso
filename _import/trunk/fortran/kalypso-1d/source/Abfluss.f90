@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006    9:53 pm
+!     Last change:  WP    2 Jun 2006   11:03 pm
 !--------------------------------------------------------------------------
 ! This code, Abfluss.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
-                  & qd, qw, qges, aue3, wl3, iart, ifg)
+                  & qd, qw, qges, aue3, wl3, iart)
 
 !**
 !JK   BESCHREIBUNG: BERECHNUNG DES GESAMTABFLUSSES AN EINEM             
@@ -70,8 +70,6 @@ SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
 !**   hmit    --      mittlere Fließtiefe                               
 !**   hr3     --      Wasserspiegelhöhe an Brückenprofil 3              
 !**   iart    --      Art des Überfalls an der Brücke                   
-!**   ifg     --      Art der Widerstandsbeiwertberechnung nach Darcy-  
-!**                   Weisbauch oder Gauckler-Manning-Strickler         
 !**   lam     --      Widerstandsbeiwert für die Iteration
 !**   lam_neu --      Widerstandsbeiwert                                
 !**   qd      --      Druckabfluß an der Brücke
@@ -114,6 +112,7 @@ SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
 !WP 01.02.2005
 USE KONSTANTEN
 USE IO_UNITS
+USE MOD_INI
 
 implicit none
 
@@ -121,7 +120,6 @@ implicit none
 REAL, INTENT(IN)  	:: ad, aue, apg, wl, rhy, raub, breite
 REAL, INTENT(IN)  	:: he1, hr3, aue3, wl3
 REAL, INTENT(OUT) 	:: qd, qw, qges
-INTEGER, INTENT(IN) 	:: ifg
 INTEGER, INTENT(OUT)    :: iart
 
 ! Lokale Variablen
@@ -137,14 +135,14 @@ REAL :: GET_LAMBDA, f
 !**   BERECHNUNGEN
 !**   ------------------------------------------------------------------
 
-write (UNIT_OUT_LOG, 1000) ad, aue, wl, apg, aue3, wl3, rhy, raub, breite, he1, hr3, ifg
+write (UNIT_OUT_LOG, 1000) ad, aue, wl, apg, aue3, wl3, rhy, raub, breite, he1, hr3
 1000 format (/1X, 'SUB ABFLUSS, uebergebene Variablen:', /, &
            &  1X, '-----------------------------------', /, &
            &  1X, 'AD  = ', F12.5, '  AUE  = ', F12.5, '  WL     = ', F12.5, /, &
            &  1X, 'APG = ', F12.5, '  AUE3 = ', F12.5, '  WL3    = ', F12.5, /, &
            &  1X, 'RHY = ', F12.5, '  RAUB = ', F12.5, '  BREITE = ', F12.5, /, &
-           &  1X, 'HE1 = ', F12.5, '  HR3  = ', F12.5, /, &
-           &  1X, 'IFG = ', I12)
+           &  1X, 'HE1 = ', F12.5, '  HR3  = ', F12.5)
+
 
 qw   = 0.
 qd   = 0.
@@ -168,7 +166,7 @@ ELSE
 ENDIF
 
 !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
-IF (ifg.eq.1) then
+if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
 
   !WP 02.05.2005, auch LAM wird initialisiert, um es weiter unten schon
   !WP in erster Schleife zur Relaxierung verwenden zu koennen.
@@ -227,7 +225,6 @@ IF (ifg.eq.1) then
   qd = ad * vd
 
 
-!JK   ELSE ZU (ifg.eq.1)
 !JK   WENN BERECHNUNG NACH GMS
 ELSE
 
@@ -239,7 +236,6 @@ ELSE
 
   qd = ad * sqrt (2. * g * h0 / beiw)
 
-!JK   ENDIF ZU(ifg.eq.1)
 ENDIF
 
 

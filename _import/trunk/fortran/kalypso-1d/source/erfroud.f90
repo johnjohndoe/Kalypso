@@ -1,4 +1,4 @@
-!     Last change:  WP   26 May 2005   10:11 am
+!     Last change:  WP    2 Jun 2006   11:06 pm
 !--------------------------------------------------------------------------
 ! This code, erfro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -62,9 +62,7 @@ SUBROUTINE erfroud (br, f, Q_teil, lu, iprof, indfl, indmax, froud)
 !**   WEITERE PARAMETER                                                 
 !**   -----------------                                                 
 !**   froudi(maxkla) -                                                  
-!**   ifg            - 1=Darcy, 0=Strickler, bei bordvoll,              
-!**                    aus Commonblock/p4/                              
-!**   ii             - ZAEHLPARAMETER                                   
+!**   ii             - ZAEHLPARAMETER
 !**   indfl          - siehe oben                                       
 !**   tm             - max. Rhydr im Profil?, ERGEBNIS IN common/dd/    
 !**   tmi(maxkla)    - Rhydr im Profilabschnitt?                        
@@ -79,9 +77,7 @@ SUBROUTINE erfroud (br, f, Q_teil, lu, iprof, indfl, indmax, froud)
 !**   f       --      durchströmte Fläche                               
 !**   froud   --      Froud-Zahl                                        
 !**   froudi  --      Teilfroud-Zahl                                    
-!**   ifg     --      Art der Widerstandsbeiwertberechnung nach         
-!**                   Darcy-Weisbach oder Gauckler-Manning-Strickler    
-!**   indfl   --      Abschnitte nach Darcy-Weisbach                    
+!**   indfl   --      Abschnitte nach Darcy-Weisbach
 !**   indmax  --      Rauheitsabschnitte                                
 !**   iprof   --      Art des Profils                                   
 !**   Q_teil      --      Teilabfluß
@@ -96,6 +92,7 @@ SUBROUTINE erfroud (br, f, Q_teil, lu, iprof, indfl, indmax, froud)
                                                                         
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE MOD_INI
 
 !Calling variables
 CHARACTER(LEN=1), INTENT(IN) :: iprof
@@ -108,8 +105,7 @@ REAL :: tmi (maxkla), froudi (maxkla)
 REAL :: vmi (maxkla)
 
 COMMON / dd / tm, vm
-COMMON / p4 / ifg, betta
-                                                                        
+
 !ep     Erweiterung auf Grenztiefenberechnung für Rohre mit Teilabfluß g
 !       Schneider, Bautabellen, S. 13.29                                
 COMMON / ro_fr / term1, term2, winkel, durchm_fr
@@ -191,9 +187,9 @@ END DO Hauptschleife
 
                                                                         
                                                                         
-!**   ifg=1, bei bordvoll nach Darcy, dann froud=froudi(2)???           
-IF (iprof.eq.' '.and.ifg.eq.1) then
-!JK      FLUSSSCHLAUCH => indfl = 2?                                    
+! nach Darcy, dann froud=froudi(2)???
+IF (iprof.eq.' '.and. FLIESSGESETZ /= 'MANNING_STR') then
+    !JK      FLUSSSCHLAUCH => indfl = 2?
     indfl = 2
     froud = froudi (indfl)
 ENDIF

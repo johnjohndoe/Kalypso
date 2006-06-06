@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006    1:22 pm
+!     Last change:  WP    2 Jun 2006   11:25 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -97,9 +97,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 !**   hr      --      Wasserspiegelhöhe                                 
 !**   hv      --      Geschwindigkeitsverlusthöhe
 !**   hvor    --      mittlere Wasserspiegelhöhe im Vorland             
-!**   i_typ_flg --    Art der Widerstandsbeiwertberechnung nach         
-!**                   Darcy-Weisbach oder Gauckler-Manning-Strickler    
-!**   if_l    --      Fehlervariable für die Subroutine lindy           
+!**   if_l    --      Fehlervariable für die Subroutine lindy
 !**   if_pa   --      Fehlervariable für die Subroutine pasche          
 !**   ii      --      LAUFPARAMETER ANZAHL KNOTEN                       
 !**   ischl   --      linker Punkt des linken Vorlandes                 
@@ -139,8 +137,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 !**   re      --      Reynoldszahl                                      
 !**   rg      --      Reibungsverlusthöhe                               
 !**   rg_alt  --      Reibungsverlusthöhe (alt)                         
-!**   rg_vst  --      Reibungsverlusthöhe                               
-!**   rk(1)   --      Widerstandsbeiwert linkes Vorland                 
+!**   rk(1)   --      Widerstandsbeiwert linkes Vorland
 !**   rk(2)   --      Widerstandsbeiwert Flußschlauch                   
 !**   rk(3)   --      Widerstandsbeiwert rechtes Vorland                
 !**   u(1)    --      benetzter Umfang des linken Vorlandes             
@@ -244,12 +241,6 @@ COMMON / flexi / mei
 ! ----------------------------------------------------------------------------------
 
 
-! COMMON-Block /FLG_TYP/ -----------------------------------------------------------
-CHARACTER(LEN=6):: i_typ_flg
-COMMON / flg_typ / i_typ_flg
-! ----------------------------------------------------------------------------------
-
-
 ! COMMON-Block /GES/ ----------------------------------------------------------
 REAL 		:: fges, brges, uges, akges, vges, rhges, alges
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
@@ -287,13 +278,6 @@ REAL 		:: f (maxkla), u (maxkla), br (maxkla), ra (maxkla), rb (maxkla)
 REAL 		:: v (maxkla), qt (maxkla), ts1 (maxkla), ts2 (maxkla)
 REAL 		:: rk (maxkla), ra1 (maxkla), formbeiwert(maxkla)
 COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /REIB/ ---------------------------------------------------------
-! Berechnungsart des Reibungsverlustes
-INTEGER 	:: rg_vst
-COMMON / reib / rg_vst
 ! -----------------------------------------------------------------------------
 
 
@@ -339,9 +323,6 @@ it2max = 4
 !UT   STARTPARAMETER SCHLEIFE 15, ANZAHL DER ITERATIONEN
 itere2 = 0
 
-!UT   VORGABE ENERGIEGEFAELLE
-!UT   WOZU STEHT LABEL 10???, UT, 29.08.2000???
-10 CONTINUE
 
 IF (itere1.le.1 .and. nstat.gt.1) then
   isenen = q_alt * q_alt / rg_alt / rg_alt
@@ -351,7 +332,6 @@ ELSEIF (nstat.eq.1) then
   isenen = q * q / rg / rg
 ELSEIF (itere1.gt.1) then
   IF (REIBUNGSVERLUST == 'GEOMET') THEN
-  !IF (rg_vst.eq.2) then
     isenen = (q + q_alt) * (q + q_alt) / (rg + rg_alt) / (rg + rg_alt)
   ELSE
     isenen = q * q / rg / rg
@@ -1423,20 +1403,29 @@ ENDIF
 uges = u (1) + u (2) + u (3)
 
 IF (uges.gt.0) then
+
   rhges = fges / uges
   vges = q / fges
   alges = 8 * g * rhges * isenen / vges / vges
-  IF (i_typ_flg.eq.'pasche') then
+
+  !IF (i_typ_flg.eq.'pasche') then
+  IF (FLIESSGESETZ == 'DW_M_FORMBW') THEN
+
     factor1 = - 1. / 2.03 / sqrt (alges)
     re = vges * 4. * rhges / nue
     factor2 = 4.4 / sqrt (alges) / re
+
   ELSE
+
     factor1 = - 1. / 2. / sqrt (alges)
     isenk = isenen * (1. + isenen**2.) **0.5
     dhy1 = 4. * rhges
     factor2 = nue * 2.51 / (dhy1 * (2. * g * dhy1 * isenk) **0.5)
+
   ENDIF
+
   akges = 3.71 * 4. * rhges * (10.** (factor1) - factor2)
+
 ENDIF
 
 !UT   SETZEN VON ZAEHLER(on) UND NENNER(un) ENERGIESTROMBEIWERT

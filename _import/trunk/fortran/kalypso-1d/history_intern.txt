@@ -712,7 +712,6 @@ Kalypso 1.0.18   April 2006
                                                     Wolf Plöger, 26.04.2006
 
 
-
 Kalypso 1.1b   24. Mai 2006
 ---------------------------
 1.)  Erweiterung des Codes um eine neue Möglichkeit der Dateneingabe für die neue
@@ -769,3 +768,38 @@ Kalypso 1.1b   24. Mai 2006
        - P1
 
                                                     Wolf Plöger, 28.05.2006
+
+
+Kalypso 1.1b   02. Juni 2006
+---------------------------
+1.)  Löschen des COMMON-Blocks P1. Alle variablen stehen nun über
+     MOD_INI zur Verfügung.
+
+2.)  Löschen des COMMON-Blocks FLG_TYP. Fliessgesetz wird nun
+     in MOD_INI durch die Variable FLIESSGESETZ definiert.
+
+3.)  Löschen des COMMON-Blocks P4. ifg wurde komplett durch
+     Fliessgesetzdefinition in MOD_INI ersetzt. BETTA wird nur
+     in VERLUSTE verwendet und dort lokal definiert.
+
+4.)  Löschen des COMMON-Blocks W_A. Iterationsart wird nun in
+     MOD_INI gespeichert.
+
+5.)  Löschen des COMMON-Blocks REIB. Art des Reibungsverlustes
+     wird nun in MOD_INI gespeichert.
+
+6.)  Löschen des COMMON-Blocks BLOED. Wurde nur in WSP verwendet.
+
+                                                    Wolf Plöger, 02.06.2006
+
+Kalypso 1.1c   03. Juni 2006
+---------------------------
+1.)  Analysieren des Übergabefehlers von MENGF-OVRLA und MENGL-PUNLA.
+
+                                                    Wolf Plöger, 03.06.2006
+
+Kalypso 1.1d   06. Juni 2006
+---------------------------
+1.)  Behebung des Übergabefehlers von MENGF-OVRLA und MENGL-PUNLA.
+
+                                                    Wolf Plöger, 03.06.2006

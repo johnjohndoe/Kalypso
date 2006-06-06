@@ -1,4 +1,4 @@
-!     Last change:  WP   27 May 2006    1:22 pm
+!     Last change:  WP    2 Jun 2006   11:26 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -83,8 +83,7 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 !**   q1      --      Abfluß                                            
 !**   qt      --      Teilabfluß                                        
 !**   rg      --      Reibungsverlust                                   
-!**   rg_vst  --      Reibungsverlust                                   
-!**   rg1     --      Reibungsverlust                                   
+!**   rg1     --      Reibungsverlust
 !**   rgm     --      Reibungsverlust                                   
 !**   rk      --      Rauheit des Teilabschnitte                        
 !**   sohle   --      Sohlgefälle                                       
@@ -117,6 +116,7 @@ USE DIM_VARIABLEN
 USE KONSTANTEN
 USE MOD_INI
 
+! Calling variables -----------------------------------------------------------
 REAL, INTENT(IN) 	:: str          ! Abstand (Strecke) zwischen zwei Profilen
 REAL, INTENT(INOUT) 	:: q            ! Abfluss, wird uebergeben an eb2ks oder beechnet in qks!
 REAL, INTENT(IN)	:: q1           ! Abfluss
@@ -180,13 +180,6 @@ COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P1/ -----------------------------------------------------------
-CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-CHARACTER(LEN=1) :: bordvoll
-COMMON / p1 / ereignis, fnam1, bordvoll, fluss
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
 CHARACTER(LEN=1) :: iprof
@@ -197,25 +190,11 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 ! -----------------------------------------------------------------------------
 
 
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
-! -----------------------------------------------------------------------------
-
-
 ! COMMON-Block /PROF_HR/ ------------------------------------------------------
 REAL 		:: f (maxkla), u (maxkla), br (maxkla), ra (maxkla), rb (maxkla)
 REAL 		:: v (maxkla), qt (maxkla), ts1 (maxkla), ts2 (maxkla)
 REAL 		:: rk (maxkla), ra1 (maxkla), formbeiwert(maxkla)
 COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /REIB/ ---------------------------------------------------------
-! Berechnungsart des Reibungsverlustes
-INTEGER 	:: rg_vst
-COMMON / reib / rg_vst
 ! -----------------------------------------------------------------------------
 
 
@@ -231,7 +210,9 @@ COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
 
+! Local variables -------------------------------------------------------------
 REAL :: GET_BORDA
+REAL :: betta
 
 ! istat=0      --> stationaer ungleichfoermig
 ! istat=1      --> stationaer gleichfoermig
@@ -314,22 +295,32 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       ! betta(dvwk)=2./3.
       ! betta(bjoernsen)=0.5
       ! betta(DFG)=2./(1.+Ai/Ai-1)
+
       IF (fges.lt. (fges1 - 2. * str / 7.) ) then
         ! Aufweitung > 1:7 --> Borda'scher Stossdruck
         ht = MIN (hr, hmax) - hmin
         vo = sqrt (hv * 2 * 9.81)
         vu = sqrt (hv1 * 2 * 9.81)
         hborda = GET_BORDA (vo, vu, ht)
-        !                  /* output: hborda
+
       ELSE
 
-        IF (betta.lt.1.e-04) then
-          betta1 = 2. / (1. + fges1 / fges)
-          hvst = betta1 * hvst
-        ELSE
+        if (VERZOEGERUNGSVERLUST == 'DVWK') then
+          betta = 2. / 3.
+        else if (VERZOEGERUNGSVERLUST == 'BJOE') then
+          betta = 0.5
+        else if (VERZOEGERUNGSVERLUST == 'DFG ') then
+          betta = 2. / (1. + fges1 / fges)
+        end if                                          
 
-          hvst = betta * hvst
-        ENDIF
+        hvst = betta * hvst
+
+        !IF (betta.lt.1.e-04) then
+        !  betta1 = 2. / (1. + fges1 / fges)
+        !  hvst = betta1 * hvst
+        !ELSE
+        !  hvst = betta * hvst
+        !ENDIF
 
       ENDIF
 
@@ -355,7 +346,6 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       rgm = 0.001
     ENDIF
 
-  !ELSEIF (rg_vst.eq.2) then
   ELSEIF (REIBUNGSVERLUST == 'GEOMET') THEN
 
     IF (rg1.gt.1.e-06.and.rg.gt.0) then

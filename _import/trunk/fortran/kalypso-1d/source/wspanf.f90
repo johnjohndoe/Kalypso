@@ -1,4 +1,4 @@
-!     Last change:  WP   28 May 2006   12:34 pm
+!     Last change:  WP    2 Jun 2006   10:40 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -66,7 +66,7 @@ SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
 ! AUFGERUFENE ROUTINEN
 ! --------------------
 ! - grnzh (q,indmax,hgrenz,xi,hi,s,igrnz)
-! - kopf(nblatt,nz,jw5,ifg,jw7,idr1)
+! - kopf(nblatt,nz,jw5,jw7,idr1)
 ! - abskst
 ! - station
 ! - verluste
@@ -136,13 +136,6 @@ REAL 		 :: durchm, hd, sohlg, steig, boli, bore, hmin, hmax, hrbv
 INTEGER 	 :: nknot, ianf, iend
 COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
             & boli, bore, hmin, hmax, ianf, iend, hrbv
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -248,7 +241,7 @@ ELSEIF (wsanf.eq.0.) then
                                                                         
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
                                                                         
     WRITE (UNIT_OUT_TAB, 1002)
@@ -286,7 +279,7 @@ ELSE
                                                                         
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
                                                                         
     WRITE (UNIT_OUT_TAB, 1003) hr

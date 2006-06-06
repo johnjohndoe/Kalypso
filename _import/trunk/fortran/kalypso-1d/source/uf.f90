@@ -1,4 +1,4 @@
-!     Last change:  WP    7 Nov 2005    1:18 pm
+!     Last change:  WP    2 Jun 2006   10:22 pm
 !--------------------------------------------------------------------------
 ! This code, U_WSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -114,9 +114,7 @@ SUBROUTINE uf (hr, hi, xi, s, indmax, nfli, nfre)
 !**   idruck  --      Charakterisierung des Druckabflusses              
 !**   idruck  --      Charakterisierung des Druckabflusses              
 !**   iend    --      Endprofilpunkt                                    
-!**   ifg     --      Art der Widerstandsbeiwertberechnung nach         
-!**                   Darcy-Weisbach oder Gauckler-Manning-Strickler    
-!**   indfl   --      Gerinneabschnitt                                  
+!**   indfl   --      Gerinneabschnitt
 !**   indmax  --      Anzahl der Rauheitsabschnitte                     
 !**   inside  --      Abfrage Schnittpunkt gefunden                     
 !**   iprof   --      Art des Profils                                   
@@ -172,6 +170,7 @@ SUBROUTINE uf (hr, hi, xi, s, indmax, nfli, nfre)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE KONSTANTEN
+USE MOD_INI
 
 ! Calling variables
 REAL, INTENT(INOUT) 	:: hr		! Wasserspiegelhoehe [m +NN]
@@ -192,12 +191,6 @@ REAL 		:: ax (maxkla), ay (maxkla), dp (maxkla), htrre, htrli
 INTEGER 	:: itrre, itrli
 CHARACTER(LEN=2):: itr_typ_re, itr_typ_li
 COMMON / darcy / ax, ay, dp, htrre, htrli, itrre, itrli, itr_typ_re, itr_typ_li
-! ----------------------------------------------------------------------------------
-
-
-! COMMON-Block /FLG_TYP/ -----------------------------------------------------------
-CHARACTER(LEN=6):: i_typ_flg
-COMMON / flg_typ / i_typ_flg
 ! ----------------------------------------------------------------------------------
 
 
@@ -228,13 +221,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 INTEGER 	:: isohl, iming
 REAL            :: hming
 COMMON / p3 / isohl, hming, iming
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -466,8 +452,8 @@ IF (iprof (1:1) .eq.' ') then
 
   IF (ns.gt.1) nsr = ns
                                                                         
-  ! ifg=0 bei Berechnung nach Strickler
-  IF (ifg.eq.0) then
+
+  IF (FLIESSGESETZ == 'MANNING_STR') then
     ! Ermitteln mittlere Rauhigkeiten im Flusschlauch
     ssfak = 0.
     ss = 0.
@@ -552,8 +538,8 @@ IF (iprof (1:1) .eq.' ') then
 
 
     !JK           BERECHNUNG NACH MANNING-STRICKLER
-    IF (ifg.eq.0) then
-                                                                        
+    IF (FLIESSGESETZ == 'MANNING_STR') then
+
       IF (n.gt.1) then
                                                                         
         IF (n.eq.ianf) then
@@ -680,7 +666,7 @@ IF (iprof (1:1) .eq.' ') then
   210 END DO
                                                                         
   !JK       BERECHNUNG NACH DARCY-WEISBACH
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ /= 'MANNING_STR') then
 
     IF (nknot.gt.0) then
       k_ks (nknot) = rau (nknot)
@@ -729,8 +715,8 @@ ELSEIF (iprof.eq.'t') then
   akges = rk (2)
   indfl = 1
 
-  !**       ifg=1 bei bordvoll nach Darcy
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ /= 'MANNING_STR') then
+
     a_ks (1) = f (2)
     u_ks (1) = u (2)
     b_ks (1) = br (2)
@@ -796,7 +782,7 @@ ELSEIF (iprof.eq.'k') then
 
   indfl = 1
 
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ /= 'MANNING_STR') then
     a_ks (1) = f (2)
     u_ks (1) = u (2)
     b_ks (1) = br (2)
@@ -848,7 +834,7 @@ ELSEIF (iprof.eq.'m') then
   akges = rk (2)
   indfl = 1
 
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ /= 'MANNING_STR') then
     a_ks (1) = f (2)
     u_ks (1) = u (2)
     b_ks (1) = br (2)
@@ -898,8 +884,8 @@ ELSEIF (iprof.eq.'e') then
   akges = rk (2)
   indfl = 1
 
-  !**        ifg=1 bei bordvoll nach Darcy
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ /= 'MANNING_STR') then
+
     a_ks (1) = f (2)
     u_ks (1) = u (2)
     b_ks (1) = br (2)
@@ -929,11 +915,9 @@ ENDIF
 3000 CONTINUE
 
 do i = 1, indmax
-  if (ifg == 1 .and. i_typ_flg == 'pasche' .and. iprof(1:1) == ' ') then
-    ! DARCY-WEISBACH mit Formbeiwert
+  if (FLIESSGESETZ == 'DW_M_FORMBW' .and. iprof(1:1) == ' ') then
     formbeiwert(i) = GET_FORM( f(i), br(i) )
   else
-    ! MANNING-STRICKLER oder DARCY ohne Formbeiwert
     formbeiwert(i) = 1.0
   end if
 end do
@@ -958,11 +942,10 @@ brges 	= 0.
 uges 	= 0.
                                                                         
 ! indmax = Anzahl Rauhigkeitszonen im Profil
-! ifg=1, bei BORDVOLL NACH DARCY?
 
 DO i = 1, indmax
 
-  IF (ifg.eq.1) then
+  IF (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
     fges = fges + f (i)
     brges = brges + br (i)
     uges = uges + u (i)

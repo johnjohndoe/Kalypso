@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    1:58 pm
+!     Last change:  WP    2 Jun 2006   11:08 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -55,7 +55,7 @@ SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
 ! intdat (staso,ifehl)
 ! linier (hokmax,x1,h1,rau,nknot,iwl,iwr,npl,xl,hl,raul)
 ! speicher (nprof,hr,hv,hvst,hrst,q,stat(nprof),indmax,ikenn)
-! kopf (nblatt,nz,jw5,ifg,jw7,idr1)
+! kopf (nblatt,nz,jw5,jw7,idr1)
 ! drucktab (nprof,indmax,nz,jw5,nblatt,stat,jw7,idr1)
 ! yarnell (hpf,f,q,xk)
 !-----------------------------------------------------------------------
@@ -68,6 +68,7 @@ SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE MOD_INI
 
 REAL, INTENT(IN)     	:: staso        ! Station [km]
 REAL                    :: str1         ! Abstand zum naechsten Profil [m]
@@ -183,13 +184,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 INTEGER 	:: isohl, iming
 REAL            :: hming
 COMMON / p3 / isohl, hming, iming
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P4/ -----------------------------------------------------------
-INTEGER         :: ifg
-REAL            :: betta
-COMMON / p4 / ifg, betta
 ! -----------------------------------------------------------------------------
 
 
@@ -323,7 +317,7 @@ i1 = iokl
 i2 = iokl + npl
 
 !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
-IF (ifg.eq.1) then
+if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
   DO i = i1, i2
     ax (i) = 0.0
     ay (i) = 0.0
@@ -348,7 +342,7 @@ IF (iokr.lt.nknot) then
     h11 (i) = h1 (i)
 
     !JK  WENN BERECHNUNG NACH DARCY-WEISBACH
-    IF (ifg.eq.1) then
+    if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
       ax1 (i) = ax (i)
       ay1 (i) = ay (i)
       dp1 (i) = dp (i)
@@ -364,7 +358,7 @@ IF (iokr.lt.nknot) then
     raul (i2) = rau (i)
 
     !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
-    IF (ifg.eq.1) then
+    if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
       ax (i2) = ax1 (i)
       ay (i2) = ay1 (i)
       dp (i2) = dp1 (i)
@@ -422,7 +416,7 @@ DO i = 1, nknot
 
   !JK   SCHREIBEN IN KONTROLLFILE
   !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
-  IF (ifg.eq.1) then
+  if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
     WRITE (UNIT_OUT_LOG, 30) i, x1 (i) , h1 (i) , rau (i) , ax (i) , ay (i) , dp (i)
   ELSE
     WRITE (UNIT_OUT_LOG, 31) i, x1 (i) , h1 (i) , rau (i)
@@ -503,13 +497,13 @@ WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "3":'')')
 nz = nz + 2
 IF (nz.gt.50) then
   nblatt = nblatt + 1
-  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
 ENDIF
 CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
 IF (nz.gt.50) then
   nblatt = nblatt + 1
-  CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+  CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
 ENDIF
 
 he3 = hen (nprof)
@@ -564,7 +558,7 @@ CALL intdat (staso, ifehl)
 !** schiessen         nz = nz+4
 !** schiessen         if (nz.gt.50)  then
 !** schiessen            nblatt=nblatt+1
-!** schiessen            call kopf(nblatt,nz,jw5,ifg,jw7,idr1)
+!** schiessen            call kopf(nblatt,nz,jw5,jw7,idr1)
 !** schiessen          endif
 
 
@@ -683,7 +677,7 @@ ENDIF
 isch = isch + 1
 
 CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
-            & qw, qgesb, aue3, wl3, iartb, ifg)
+            & qw, qgesb, aue3, wl3, iartb)
 
 !JK      SCHREIBEN IN KONTROLLFILE
 WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
@@ -723,7 +717,7 @@ ENDIF
 isch = isch + 1
 
 CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, qd,  &
-            & qw, qgesa, aue3, wl3, iartt, ifg)
+            & qw, qgesa, aue3, wl3, iartt)
 
 !JK  SCHREIBEN IN KONTROLLFILE
 WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
@@ -777,7 +771,7 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 40) qw, qd, q
@@ -793,7 +787,7 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 41) qd, q
@@ -860,7 +854,7 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 43) qw, qd, q
@@ -877,7 +871,7 @@ DO 100 i = 1, itmax_brkon
 
           IF (nz .gt. 50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 44) qd, q
@@ -978,7 +972,7 @@ DO 100 i = 1, itmax_brkon
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
               ENDIF
 
               WRITE (UNIT_OUT_TAB, '(//t10,'' Druckabfluss '',//  &
@@ -995,7 +989,7 @@ DO 100 i = 1, itmax_brkon
 
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
-                CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+                CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
               ENDIF
 
               WRITE (UNIT_OUT_TAB, '(//t10,'' Druckabfluss '',//   &
@@ -1034,7 +1028,7 @@ DO 100 i = 1, itmax_brkon
       isch = isch + 1
 
       CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, &
-             & qd, qw, qgesa, aue3, wl3, iartt, ifg)
+             & qd, qw, qgesa, aue3, wl3, iartt)
 
       !JK   SCHREIBEN IN KONTROLLFILE
       WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
@@ -1080,7 +1074,7 @@ DO 100 i = 1, itmax_brkon
 
     isch = isch + 1
     CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3,  &
-     & qd, qw, qgesa, aue3, wl3, iartt, ifg)
+     & qd, qw, qgesa, aue3, wl3, iartt)
 
     !JK  SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
@@ -1158,7 +1152,7 @@ IF ( (hr3 - hsohl) .le.0.0001) then
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, 11) (staso - str1 / 1000.), hr1
@@ -1184,7 +1178,7 @@ ELSE
   nz = nz + 8
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "3": hr  m  a'',/,t10,3f10.3)') &
@@ -1202,7 +1196,7 @@ ELSE
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     WRITE (UNIT_OUT_TAB, 23)
@@ -1248,7 +1242,7 @@ ELSE
   nz = nz + 8
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "2": hr  m  a'',/,t10,3f10.3)') &
@@ -1266,7 +1260,7 @@ ELSE
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     WRITE (UNIT_OUT_TAB, 24)
@@ -1309,7 +1303,7 @@ ELSE
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "1": hr  m  a'',/,t10,3f10.3)') &
@@ -1331,7 +1325,7 @@ ELSE
     nz = nz + 2
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
 
     WRITE (UNIT_OUT_TAB, 17)
@@ -1339,7 +1333,7 @@ ELSE
               &  t10, '--> wsp im ow (profil "1") ermittelt aus Impulsbilanz')
     IF (nz.gt.50) then
       nblatt = nblatt + 1
-      CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+      CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
     ENDIF
     nz = nz + 2
 
@@ -1369,7 +1363,7 @@ ELSE
 
       IF (nz.gt.50) then
         nblatt = nblatt + 1
-        CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+        CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
       ENDIF
 
       nz = nz + 2
@@ -1412,7 +1406,7 @@ ELSE
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 14) hpf
@@ -1427,7 +1421,7 @@ ELSE
 
           IF (nz.gt.50) then
             nblatt = nblatt + 1
-            CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+            CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
           ENDIF
 
           WRITE (UNIT_OUT_TAB, 13)
@@ -1444,7 +1438,7 @@ ELSE
 
         IF (nz.gt.50) then
           nblatt = nblatt + 1
-          CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+          CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
         ENDIF
 
         WRITE (UNIT_OUT_TAB, 13)
@@ -1477,7 +1471,7 @@ IF (iartt.eq.2) then
   nz = nz + 1
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(t10,''unvollkommener ueberfall '')')
@@ -1527,7 +1521,7 @@ IF (iartt.eq.2) then
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(/,t10,'' profil "2":'')')
@@ -1536,7 +1530,7 @@ IF (iartt.eq.2) then
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1
-    CALL kopf (nblatt, nz, UNIT_OUT_TAB, ifg, UNIT_OUT_PRO, idr1)
+    CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
   ! Wiederherstellen der urspruenglichen profilwerte:
