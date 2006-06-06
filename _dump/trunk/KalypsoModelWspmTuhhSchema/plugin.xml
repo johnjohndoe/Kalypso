@@ -4,13 +4,13 @@
    <extension
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
-            class="org.kalypso.model.wspm.tuhh.schemata.WspmTuhhUrlCatalog"
+            class="org.kalypso.model.wspm.tuhh.schema.schemata.WspmTuhhUrlCatalog"
             id="org.kalypso.model.wspm.tuhh.urlcatalog"/>
    </extension>
    <extension
       point="org.kalypso.simulation.core.simulation">
       <simulation
-         simulationClass="org.kalypso.model.wspm.tuhh.simulation.WspmTuhhCalcJob"
+         simulationClass="org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob"
          typeID="WspmTuhhV1.0"/>
    </extension>
    

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoUIModelWspm Plug-in
-Bundle-SymbolicName: org.kalypso.ui.model.wspm; singleton:=true
+Bundle-SymbolicName: org.kalypso.model.wspm.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: org.kalypso.ui.model.wspm/
 Bundle-Activator: org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin
@@ -11,9 +11,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.core.resources,
- org.kalypso.contribs.eclipseplatform,
- org.kalypso.commons,
- org.kalypso.core,
+ org.kalypso.contribs.eclipseplatform;visibility:=reexport,
+ org.kalypso.commons;visibility:=reexport,
+ org.kalypso.core;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
@@ -21,9 +21,6 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.ui.profil
 Eclipse-AutoStart: true
-Export-Package: org.kalypso.ui.model.wspm,
- org.kalypso.ui.model.wspm.abstraction,
- org.kalypso.ui.model.wspm.core.wspwin,
- org.kalypso.ui.model.wspm.exportwizard,
- org.kalypso.ui.model.wspm.importwizard,
- org.kalypso.ui.model.wspm.tuhh
+Export-Package: org.kalypso.model.wspm.ui,
+ org.kalypso.model.wspm.ui.action,
+ org.kalypso.model.wspm.ui.adapter

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoModelWspmTuhh Plug-in
-Bundle-SymbolicName: org.kalypso.model.wspm.tuhh; singleton:=true
+Bundle-Name: KalypsoModelWspmTuhhSchema Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.schema; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: org.kalypso.model.wspm.tuhh/
 Bundle-Activator: org.kalypso.model.wspm.tuhh.KalypsoModelWspmTuhhPlugin
@@ -9,12 +9,12 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.contribs.java,
- org.kalypso.ui.model.wspm,
+ org.kalypso.model.wspm.tuhh.core,
  org.kalypso.simulation.core,
  org.kalypso.deegree,
  org.kalypso.core,
  org.kalypso.model.wspm.core
 Eclipse-AutoStart: true
-Export-Package: org.kalypso.model.wspm.tuhh,
- org.kalypso.model.wspm.tuhh.schemata,
- org.kalypso.model.wspm.tuhh.simulation
+Export-Package: org.kalypso.model.wspm.tuhh.schema,
+ org.kalypso.model.wspm.tuhh.schema.schemata,
+ org.kalypso.model.wspm.tuhh.schema.simulation

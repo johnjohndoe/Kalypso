@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
+	xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+	<import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd"/>
+	<!-- schema for WSPM = 'water surface profile model' -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<element name="calculationMember" type="wspm:CalculationPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>WSPM Berechnung</label>
+				<tooltip>WSPM Berechnung</tooltip>
+				<description>WSPM Berechnung</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature"/>
+	<!-- 
+	-->
+	<!-- Result (vorübergehend?) auskommentiert. Hätte wahrscheinlich sowieso nur Verweis auf Verzeichnisse enthalten
+	<element name="resultMember" type="wspm:ResultPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Referenz auf Ergebnis</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>-->
+	<!--<element name="Result" type="wspm:ResultType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Ergebnis</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>-->
+	<!-- 
+	-->
+	<!--	<element name="documentMember" type="wspm:DocumentPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???resultDocumentMember</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="Document" type="wspm:DocumentType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???resultDocument</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+-->
+	<!-- 
+	-->
+	<element name="waterBodyMember" type="wspm:WaterBodyPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässer</label>
+				<tooltip>Gewässer</tooltip>
+				<description>Gewässer</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässer</label>
+				<tooltip>Gewässer</tooltip>
+				<description>Gewässer</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="reachMember" type="wspm:ReachPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässerstrang</label>
+				<tooltip>Gewässerstrang</tooltip>
+				<description>Gewässerstrang</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="Reach" type="wspm:ReachType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässerstrang</label>
+				<tooltip>Gewässerstrang</tooltip>
+				<description>Gewässerstrang</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="reachSegmentMember" type="wspm:ReachSegmentPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Strangsegment</label>
+				<tooltip>Strangsegment</tooltip>
+				<description>Gewässerstrangsegment</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="AbstractReachSegment" type="wspm:AbstractReachSegmentType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<element name="InfluentReachSegment" type="wspm:InfluentReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zufluss-Strangsegment</label>
+				<tooltip>Zufluss-Strangsegment</tooltip>
+				<description>Zufluss-Strangsegment</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="ProfileReachSegment" type="wspm:ProfileReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Profil-Strangsegment</label>
+				<tooltip>Profil-Strangsegment</tooltip>
+				<description>Profil-Strangsegment</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="roughnessDefinitionCollectionMember" type="wspm:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Rauheiten</label>
+				<tooltip>???Rauheiten</tooltip>
+				<description>???Rauheiten</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="RoughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Rauheiten</label>
+				<tooltip>???Rauheiten</tooltip>
+				<description>???Rauheiten</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="roughnessDefinitionMember" type="wspm:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Rauheit</label>
+				<tooltip>???Rauheit</tooltip>
+				<description>???Rauheit</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="RoughnessDefinition" type="wspm:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Rauheit</label>
+				<tooltip>???Rauheit</tooltip>
+				<description>???Rauheit</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="vegetationDefinitionCollectionMember" type="wspm:VegetationDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bewuchs</label>
+				<tooltip>???Bewuchs</tooltip>
+				<description>???Bewuchs</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="VegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bewuchs</label>
+				<tooltip>???Bewuchs</tooltip>
+				<description>???Bewuchs</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="vegetationDefinitionMember" type="wspm:VegetationDefinitionPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bewuchs</label>
+				<tooltip>???Bewuchs</tooltip>
+				<description>???Bewuchs</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="VegetationDefinition" type="wspm:VegetationDefinitionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>???Bewuchs</label>
+				<tooltip>???Bewuchs</tooltip>
+				<description>???Bewuchs</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="calcCreationMember" type="wspm:calcCreationPropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Erstellung</label>
+				<tooltip>Erstellung der Berechnung</tooltip>
+				<description>Erstellung der Berechnung</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Erstellung</label>
+				<tooltip>Erstellung der Berechnung</tooltip>
+				<description>Erstellung der Berechnung</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	-->
+	<complexType name="CalculationPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:AbstractCalculation"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="AbstractCalculationType" abstract="true">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element ref="wspm:calcCreationMember"/>
+					<!--					<element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/>
+-->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="ReachPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:Reach"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ReachType" abstract="false">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element ref="wspm:waterBodyMember"/>
+					<element ref="gml:lineStringMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässerachse</label>
+								<tooltip>(generierte) Gewässerachse</tooltip>
+								<description>(generierte) Gewässerachse</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="ReachSegmentPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:AbstractReachSegment"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="AbstractReachSegmentType" abstract="true">
+		<complexContent>
+			<annotation>
+				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="station" type="wspmcommon:stationDouble">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>Station</label>
+								<tooltip>Station</tooltip>
+								<description>Station</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InfluentReachSegmentType">
+		<complexContent>
+			<annotation>
+				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="wspm:AbstractReachSegmentType">
+				<sequence>
+					<element name="location" type="gml:PointType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Position des Zulaufs</label>
+								<tooltip>Position des Zulaufs</tooltip>
+								<description>Position des Zulaufs</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileReachSegmentType">
+		<complexContent>
+			<annotation>
+				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
+			</annotation>
+			<extension base="wspm:AbstractReachSegmentType">
+				<sequence>
+					<element name="geometry" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation and can be a line or a point</appinfo>
+							<documentation xml:lang="de">
+								<label>Profillinie</label>
+								<tooltip>Profillinie</tooltip>
+								<description>Profillinie</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the referenced profile-observation. This is more difficult than the line property bceause, it depends on
+								the profile, how many points we have.</appinfo>
+							<documentation xml:lang="de">
+								<label>???marker</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="cacheDate" type="dateTime">
+						<annotation>
+							<appinfo>This property represent the lastTime, when the cached proeprties (line, markers) have been synchronized against the profileMember</appinfo>
+							<documentation xml:lang="de">
+								<label>???cacheDate</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO hier kommt noch das neue Profil rein -->
+					<element name="profileMember" type="om:AbstractObservationPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???profileMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="WaterBodyPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence minOccurs="0">
+					<element ref="wspm:WaterBody"/>
+				</sequence>
+				<attributeGroup ref="gml:AssociationAttributeGroup"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="WaterBodyType">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element name="refNr" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässerkennziffer</label>
+								<tooltip>Gewässerkennziffer</tooltip>
+								<description>Gewässerkennziffer</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässerachse</label>
+								<tooltip>Gewässerachse</tooltip>
+								<description>Gewässerachse</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="isDirectionUpstream" type="boolean" default="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Stationierung beginnt an der Mündung</label>
+								<tooltip>Gewässerstationierung beginnt an der Mündung</tooltip>
+								<description>Beginnt die Gewässerstationierung an der Mündung?</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO hier kommt noch das neue Profil rein -->
+					<element name="profileMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???profileMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="wspm:reachMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="runOffEventMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussereignis</label>
+								<tooltip>Abflussereignis</tooltip>
+								<description>Abflussereignis</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="waterlevelFixationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wasserspiegelfixierung</label>
+								<tooltip>Wasserspiegelfixierung</tooltip>
+								<description>Wasserspiegelfixierung</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<!--	<complexType name="ResultPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:Result"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ResultType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="wspm:calculationMember"/>
+					<element name="calculationTime" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Zeitpunkt der Berechnung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="wspm:documentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="observationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???resultObservationMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>-->
+	<!-- 
+	-->
+	<!--	<complexType name="DocumentPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:Document"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="DocumentType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="label" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="filePath" type="string">
+						<annotation>
+							<documentation xml:lang="de"><![CDATA[
+								TODO: eigenen Typ definieren + 
+								type handler (z.B. datei öffnen beim klick)]]>
+								<label>???filePath</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>-->
+	<!-- 
+	-->
+	<complexType name="RoughnessDefinitionCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:RoughnessDefinitionCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="RoughnessDefinitionCollectionType">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="RoughnessDefinitionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:RoughnessDefinition"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="RoughnessDefinitionType">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element name="label" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="category" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???category</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="valueKS" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???valueKS</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="valueKST" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???valueKST</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="VegetationDefinitionCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:VegetationDefinitionCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="VegetationDefinitionCollectionType">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element ref="wspm:vegetationDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="VegetationDefinitionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:VegetationDefinition"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="VegetationDefinitionType">
+		<complexContent>
+			<extension base="wspmcommon:NamedFeatureBaseType">
+				<sequence>
+					<element name="label" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="category" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???category</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="valueAX" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???valueAX</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="valueAY" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???valueAY</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="valueDP" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???valueDP</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="calcCreationPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:CalcCreation"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="calcCreationType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="user" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellt von</label>
+								<tooltip>Ersteller</tooltip>
+								<description>Ersteller</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="date" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellt am</label>
+								<tooltip>Erstelldatum</tooltip>
+								<description>Erstelldatum</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
