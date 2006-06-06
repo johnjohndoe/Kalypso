@@ -49,6 +49,16 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.model.wspm.ui.profil.view.AbstractProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.model.wspm.IWspmConstants;
@@ -61,17 +71,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-
-import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.IProfilChange;
-import com.bce.eind.core.profil.IProfilEventManager;
-import com.bce.eind.core.profil.IProfilListener;
-import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.changes.ProfilChangeHint;
-import com.bce.eind.core.profil.impl.ProfilEventManager;
-import com.bce.profil.ui.view.AbstractProfilProvider2;
-import com.bce.profil.ui.view.IProfilProvider2;
-import com.bce.profil.ui.view.ProfilViewData;
 
 /**
  * @author Gernot Belger

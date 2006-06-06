@@ -43,8 +43,7 @@ package org.kalypso.ui.model.wspm.ui.adapter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IWorkbenchPart;
-
-import com.bce.profil.ui.view.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
 
 /**
  * @author Gernot Belger

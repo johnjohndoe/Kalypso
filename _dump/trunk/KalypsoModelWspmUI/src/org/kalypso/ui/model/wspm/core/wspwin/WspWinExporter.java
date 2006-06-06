@@ -67,6 +67,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -85,8 +87,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import serializer.prf.ProfilesSerializer;
 
-import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.ProfilDataException;
+
 
 /**
  * @author thuel2

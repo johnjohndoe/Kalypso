@@ -52,6 +52,13 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -62,13 +69,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ui.model.wspm.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
-import com.bce.eind.ProfilFactory;
-import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfil.PROFIL_PROPERTY;
-import com.bce.eind.core.profil.IProfil.RAUHEIT_TYP;
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
  * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile

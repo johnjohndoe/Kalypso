@@ -57,6 +57,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.bce.wspm.core.prf.PrfSource;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,6 +72,10 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -82,10 +87,10 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation;
 import org.kalypso.ui.model.wspm.abstraction.TuhhReach;
-import org.kalypso.ui.model.wspm.abstraction.WspmReachProfileSegment;
 import org.kalypso.ui.model.wspm.abstraction.TuhhWspmProject;
 import org.kalypso.ui.model.wspm.abstraction.WspmProfile;
 import org.kalypso.ui.model.wspm.abstraction.WspmProject;
+import org.kalypso.ui.model.wspm.abstraction.WspmReachProfileSegment;
 import org.kalypso.ui.model.wspm.abstraction.WspmWaterBody;
 import org.kalypso.ui.model.wspm.abstraction.TuhhCalculation.START_KONDITION_KIND;
 import org.kalypso.ui.model.wspm.core.profile.ProfileFeatureFactory;
@@ -98,13 +103,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import serializer.prf.PrfSource;
 import serializer.prf.ProfilesSerializer;
 
-import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+
 
 /**
  * @author thuel2
