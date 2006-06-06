@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Jul 2005    5:12 pm
+!     Last change:  WP    6 Jun 2006    3:22 pm
 !--------------------------------------------------------------------------
 ! This code, globale_funktionen.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -13,8 +13,9 @@
 ! - GET_CT
 ! - GET_REL_V_AN
 ! - GET_BORDA
+! - GET_MITVOR
 !
-! Copyright (C) 2005  WOLF PLOEGER.
+! Copyright (C) 2005-2006  WOLF PLOEGER.
 !
 ! This library is free software; you can redistribute it and/or
 ! modify it under the terms of the GNU Lesser General Public License
@@ -425,5 +426,37 @@ else
 end if
 
 end function GET_FORM
+
+
+
+!---------------------------------------------------------------------------------------
+REAL FUNCTION GET_MITVOR (ct, dp, ax, hvor, lamvog)
+!
+! Beschreibung:
+! -------------
+! Berechnung der mitwirkenden Vorlandbreite nach PASCHE,
+! siehe BWK Merkblatt 1, 1999, S. 36
+
+! Calling variables
+REAL, INTENT(IN)  :: ct         ! Faktor zur Berechnung der Trennflaechengeschw.
+REAL, INTENT(IN)  :: dp         ! Bewuchsparameter
+REAL, INTENT(IN)  :: ax         ! Bewuchsparameter
+REAL, INTENT(IN)  :: hvor       ! mittlere Wasserspiegelhoehe des Vorlandes
+REAL, INTENT(IN)  :: lamvog     ! Widerstandsbeiwert des Vorlandes
+
+! Local variables
+REAL :: bmv
+
+IF (dp / ax .gt. 0.5) then
+  bmv = dp
+else
+  ! naeherungsweise bestimmung von bmv als anfangswert nach
+  ! dissertation pasche diagramm 5.39 bzw.angenaeherter parabel :
+  bmv = hvor / (lamvog * (0.068 * exp (0.564 * ct) - 0.0558) )
+END if
+
+GET_MITVOR = bmv
+
+END FUNCTION GET_MITVOR
 
 

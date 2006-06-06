@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    2:24 pm
+!     Last change:  WP    6 Jun 2006    3:21 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -712,7 +712,8 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
             !UT  BER. DER MITWIR. VORLANDBREITE, FORMEL 41, BWK, S.36
             !UT  DURCH AUFRUF SUB MITVOR, DORT NUR DIESE FORMEL
-            CALL mitvor (ct, dp (ik), ax (ik), bmwvor (i1), u_tr (i1), l_ks (ik) )
+            !CALL mitvor (ct, dp (ik), ax (ik), bmwvor (i1), u_tr (i1), l_ks (ik) )
+            bmwvor(i1) = GET_MITVOR(ct, dp(ik), ax(ik), u_tr(i1), l_ks(ik))
 
             !UT  WENN MITWIRK. BREITE DES VORL. > BREITE VORLAND
             !UT  DANN MITWIRK. BREITE DES VORL. = BREITE VORLAND

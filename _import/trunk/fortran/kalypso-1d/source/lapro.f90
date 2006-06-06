@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    4:46 pm
+!     Last change:  WP    6 Jun 2006    2:33 pm
 !--------------------------------------------------------------------------
 ! This code, lapro.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,16 +39,16 @@
 !***********************************************************************
 
 
+
+!---------------------------------------------------------------------------
 SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, NAME_OUT_LAENGS)
 !
 ! geschrieben:    01.08.1989  p. koch
-!                                                                       
 ! geaendert:      10.05.2005  w. ploeger (um variable file_laengs erweitert)
 !
 !                                                                       
-! -----------------------------------------------------------------
-! programmbeschreibung:
-!                                                                       
+! Programmbeschreibung:
+! ---------------------
 ! dieses programm bereitet die daten auf zur erstellung von plotge-
 ! rechten laengsschnittdateien. die dateien selbst werden dann in
 ! der subroutine zeila erstellt.
@@ -61,7 +61,7 @@ SUBROUTINE lapro1 (unit5, pfad2, nprof, mark, NAME_OUT_LAENGS)
 !                                                                       
 ! laengsschnitt bei der normalen wasserspiegellagenberechnung:
 ! mark=3  - erstellung eines .wsl-files
-! -----------------------------------------------------------------
+! --------------------------------------------------------------------------
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
@@ -159,10 +159,8 @@ DO i = 1, nprof
   k_ks1 (i) = k_kp (m)
 
   !write (*,1001) i, gef1(i)
-  1001 format (1X, 'Profil ', I3, ' Gefaelle = ', F12.9)
+  !1001 format (1X, 'Profil ', I3, ' Gefaelle = ', F12.9)
 
-  !write (*,1000) i, m, num5(i), xss(i)
-  !1000 format (1X, 'I = ', I5, '  M = ', I5, '  NUM5 = ', A10, '  XSS = ', F10.3)
 
 END DO
 

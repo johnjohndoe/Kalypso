@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    4:44 pm
+!     Last change:  WP    6 Jun 2006    2:32 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,31 +38,33 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE qbordv (rqmax, rqmin, qstep)
 
-!***********************************************************************
+
+!------------------------------------------------------------------------------
+SUBROUTINE qbordv ()
 !
-!     geschrieben: p.koch    juli'90                                    
-!     ------------------------------
-!     programmbeschreibung:                                             
-!                                                                       
-!     Dieses Programm steuert die Bordvoll-Berechnung, d.h. von hier
-!     aus wird das Berechnungsprogramm WSPBER fuer das jeweilige q neu
-!     gestartet.                                                        
+!  geschrieben: P. Koch     Juli 1990
+!  gaendert: 	W. Ploeger  Juni 2006
 !
-!     Ergebnis-files der Bordvoll-Berechnung:
-!                                                                       
-!     plot-files:                                                       
-!     -  abflusslaengsschnitt            flussname.qbv                  
-!     -  wasserspiegellaengsschnitt jeweils mit eintrag des bordvollen  
-!        wasserspiegels (nur zu kontrollzwecken                         
-!                        hwsp(bordvoll)=min h(boeschungskante))         
-!                                        flussname.wsp                  
-!                                                                       
-!     daten-files:                                                      
-!     - wasserstands-abflussbeziehung    flussname(station).pro         
-!     - wasserspiegellage fuer jedes q   flussname(q).tab               
-!                                                                       
+!  Programmbeschreibung:
+!  ---------------------
+!  Dieses Programm steuert die Bordvoll-Berechnung, d.h. von hier
+!  aus wird das Berechnungsprogramm WSPBER fuer das jeweilige q neu
+!  gestartet.
+!
+!  Ergebnis-files der Bordvoll-Berechnung:
+!
+!  plot-files:
+!  -  abflusslaengsschnitt            flussname.qbv
+!  -  wasserspiegellaengsschnitt jeweils mit eintrag des bordvollen
+!     wasserspiegels (nur zu kontrollzwecken
+!                     hwsp(bordvoll)=min h(boeschungskante))
+!                                     flussname.wsp
+!
+!  daten-files:
+!  - wasserstands-abflussbeziehung    flussname(station).pro
+!  - wasserspiegellage fuer jedes q   flussname(q).tab
+!
 !
 !   IN DIESER SUBROUTINE VERWENDETE VARIABLEN
 !   -----------------------------------------
@@ -86,10 +88,7 @@ SUBROUTINE qbordv (rqmax, rqmin, qstep)
 !   q       --      jeweiliger Abfluﬂ
 !   qbord   --      Abfluﬂ bei Bordvoll
 !   qschritt--      jeweiliger Abfluﬂ
-!   qstep   --      Schrittweite des Abflusses
 !   qvar    --      jeweiliger Abfluﬂ
-!   rqmax   --      maximaler Abfluﬂ
-!   rqmin   --      minimaler Abfluﬂ
 !   sohlp   --      Hˆhe Sohle
 !   stat    --
 !   vbord   --      mittlere Geschwindigkeit bei Bordvoll
@@ -100,8 +99,6 @@ SUBROUTINE qbordv (rqmax, rqmin, qstep)
 !JK     bovog1                                                          
 !JK     wspber                                                          
 !JK     lapro1                                                          
-!JK     lu0trf                                                          
-!JK     u0ljst                                                          
 !     ******************************************************************
 
 
@@ -116,11 +113,6 @@ USE IO_UNITS
 USE IO_NAMES
 USE MOD_ERG
 USE MOD_INI
-
-! Calling Variables -----------------------------------------------------------
-REAL, INTENT(INOUT) 	:: rqmax               ! Maximaler Abfluss
-REAL, INTENT(INOUT) 	:: rqmin               ! Minimaler Abfluss
-REAL, INTENT(INOUT) 	:: qstep               ! Minimaler Abfluss
 
 
 ! COMMON-Block /BV/ -----------------------------------------------------------
@@ -297,15 +289,11 @@ CHARACTER(LEN=nch80) :: pfad_qb1, pfad_qb2
 CHARACTER(LEN=nch80) :: nr
 REAL :: dif (maxger)
 
-!ST 29.03.2005
-!Variable f¸r Laengschnitt.txt
-CHARACTER(LEN=nch80) :: file_laengs
 
 REAL :: qschritt (maxger)
 !     wird nur zum ausdruck des kontrollfiles bei q-bordvoll genutzt
 REAL :: vbv (100, maxger)
 
-file_laengs = ' '
 
 
 !------------------------------------------------------------------
@@ -313,11 +301,9 @@ file_laengs = ' '
 !------------------------------------------------------------------
 
 
-unit1 = NAME_PFAD_DATH
-ilen = LEN_TRIM (unit1)
-
-!unit1 (ilen - 4:ilen - 1) = 'dath'
-ifllen = LEN_TRIM (FLUSSNAME)
+unit1 	= NAME_PFAD_DATH
+ilen 	= LEN_TRIM (unit1)
+ifllen 	= LEN_TRIM (FLUSSNAME)
 
 IF (ifllen.gt.4) then
   ifllen = 4
@@ -348,14 +334,14 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
   ! Berechnung der schrittanzahl fuer die bordvollberechnung
   ! ******************************************************************
 
-  ianz = ifix ( (rqmax - rqmin) / qstep + 0.1)
+  ianz = ifix ( (MAX_Q - MIN_Q) / DELTA_Q + 0.1)
   ianz = ianz + 1
 
   ! Zuweisung der Anzahl der Abfluesse zu dem globalen Modul MOD_ERG
   anz_q = ianz
 
   ! anfangswert fuer q:
-  qvar = rqmin
+  qvar = MIN_Q
   qschritt (1) = qvar
 
 
@@ -395,9 +381,6 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
       END DO
       EREIGNISNAME = ADJUSTL (EREIGNISNAME)
 
-      !unit1 = fnam1
-      !ilen = LEN_TRIM (unit1)
-      !unit1 (ilen - 4:ilen - 1) = 'dath'
       unit1 = NAME_PFAD_DATH
       ilen = LEN_TRIM (unit1)
       ifllen = LEN_TRIM (FLUSSNAME)
@@ -421,8 +404,8 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
     ENDIF
 
-    IF (qvar.gt.rqmax) then
-      qvar = rqmax
+    IF (qvar.gt.MAX_Q) then
+      qvar = MAX_Q
     ENDIF
 
     CALL wspber ()
@@ -502,7 +485,7 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
     !************************************************
     !**    Ergaenzung vom 27.10.92 Ende
     !************************************************
-    qvar = qvar + qstep
+    qvar = qvar + DELTA_Q
 
     IF (isch.ne.ianz) qschritt (isch + 1) = qvar
 
@@ -730,9 +713,6 @@ IF (km.eq.'j') then
   ilen = LEN_TRIM(NAME_OUT_WSL)
   NAME_OUT_GER = NAME_OUT_WSL(1:ilen) // '.ger'
   write (*,*) 'NAME_OUT_GER = ', NAME_OUT_GER
-  !unit3 = unit2
-  !ilen3 = LEN_TRIM (unit3)
-  !unit3 (ilen3 + 1:nch80) = '.ger'
 
   UNIT_OUT_GER = ju0gfu ()
   OPEN (UNIT=UNIT_OUT_GER, FILE=NAME_OUT_GER, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
@@ -741,11 +721,6 @@ IF (km.eq.'j') then
     stop
   end if
 
-  !unit4 = fnam1
-  !ilen4 = LEN_TRIM (unit4)
-  !unit4 (ilen4 - 4:ilen4 - 1) = 'dath'
-  !unit4 (ilen4 + 1:ilen4 + 4) = 'out.'
-  !unit4 (ilen4 + 5:nch80) = fluss
 
   ilen = LEN_TRIM(NAME_PFAD_DATH)
   ilen2 = LEN_TRIM(FLUSSNAME)
@@ -794,11 +769,6 @@ write (*,9000)
              &  1X, '   2. Datei (*.qb2):  Hydraulischer Laengsschnitt ', /)
 
 
-
-!unit2 = fnam1                                   ! FNAM1 ist der Projektpfad ohne /DATH und /PROF
-!ilen = LEN_TRIM(unit2)
-!unit2 (ilen - 4:ilen - 1) = 'dath'              ! Vollstaendiger Pfad zu dem Unterordner \DATH
-
 unit2 = NAME_PFAD_DATH
 ilen = LEN_TRIM(unit2)
 
@@ -837,23 +807,12 @@ WRITE ( * , '('' Name 2.Datei: '',a)') unit2 (1:ilen + 5)
 pfad_qb2 = unit2
 !write (*,*) 'In QBORDV. pfad_qb2 = ', pfad_qb2
 
-!write (*,*) 'In QBORDV. file_laengs = ', file_laengs
 
+CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, NAME_OUT_LAENGS)
 
-!HB   alt:   call lapro1(iw1,iw2,nbv,mark,antwort)
-!HB   Aenderung von iw1 in pfad_qb1, da lapro einen Dateipfad und
-!HB   keine Dateinummer erwartet. So wird der Dateipfad der
-!HB   Datei *.qb1 durch pfad_qb1 an lapro uebergeben.
-!HB   Aenderung von iw2 in pfad_qb2, da lapro einen Dateipfad und
-!HB   keine Dateinummer erwartet. So wird der Dateipfad der
-!HB   Datei *.qb2 durch pfad_qb2 an lapro uebergeben.
-
-!ST 29.03.2005--------------------------------------
-!CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, antwort)
-CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, file_laengs)
-!ST ------------------------------------------------
 
 END SUBROUTINE qbordv
+
 
 
 
@@ -944,11 +903,6 @@ do i = 1, anz_prof(1)
 end do
 
 !write (*,*) ' Anzahl der original Profile = ', anz_prof_orig, ' Anzahl Abfluesse = ', anz_q
-
-!do i = 1, anz_prof_orig
-!  write (*,*) dateiname(i)
-!end do
-
 
 Schieben: do j = 1, anz_q
 

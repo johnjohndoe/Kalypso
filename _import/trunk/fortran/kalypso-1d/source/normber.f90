@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:19 pm
+!     Last change:  WP    6 Jun 2006    3:11 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,74 +39,72 @@
 !***********************************************************************
 
 
+
+!-----------------------------------------------------------------------
 SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
                  & psiein, psiort, hgrenz, ikenn, froud, nblatt, nz)
 
-!***********************************************************************
-!**                                                                    *
-!**   SUBROUTINE NORMBER ZUGEHOERIG ZU WSPWIN                          *
-!**                                                                    *
-!**   geschrieben: P. Koch, Maerz 1990                                 *
-!**                                                                    *
-!**   Programmbeschreibung:                                            *
-!**   Dieses Programm ermittelt den Wasserspiegel an einem Profil.     *
-!**                                                                    *
-!**   BERECHNUNG                                                       *
-!**   ----------                                                       *
-!**   ALS ERSTES WERDEN DIE BASISGEOMETRIEGROESSEN BERECHNET (SUB      *
-!**   ABSKT), DANN BERECHNUNG DER GRENZTIEFE (SUB GRNZH). ES FOLGT DIE *
-!**   SCHAETZUNG DES ANFANGSWASSERSPIEGELS (SUB ANF), ANSCHLIESSEND    *
-!**   WERDEN VERLUSTE (SUB VERLUSTE) BERECHNET, DER ANFANGS-           *
-!**   ITERATIONSWERT hranf WIRD FESTGELEGT, ES WIRD NACH NEWTON (SUB   *
-!**   NEWTON) ODER PEGASUS (SUB PEGASUS) ITERIERT, BERECHNUNG DER      *
-!**   VERLUSTE, ERMITTELN EINZUSETZENDES GEFAELLE, AUFRUF VON SUB      *
-!**   STATION, JE NACH GEFAELLEFALL UND OB STATIONAER-GLEICHFOERMIG.   *
-!**                                                                    *
-!**                                                                    *
-!**   DIREKT UEBERGEBENE VARIABLEN                                     *
-!**   ----------------------------                                     *
-!**   str    - Abstand zwischen 2 Profilen                             *
-!**   q      - Durchfluss in bestimmten Faellen [m**3/s]               *
-!**   q1     - alter Q-Wert in WSPBER [m**3/s]                         *
-!**   i      - ?                                                       *
-!**   hr     -                                                          
-!**   hv     -                                                          
-!**   rg     -                                                          
-!**   hvst   -                                                          
-!**   hrst   -                                                          
-!**   indmax -                                                          
-!**   psiein - VERLUSTE?                                                
-!**   psiort - OERTLICHE VERLUSTE?                                      
-!**   hgrenz -
-!**   ikenn  -                                                          
-!**   froud  -                                                          
-!**   nblatt -                                                          
-!**   nz     -                                                         *
-!**                                                                     
-!**   PARAMETER                                                        *
-!**   ---------                                                        *
-!**   itmax  - max. Anzahl der Iterationsschritte                      *
-!**   err    - Genauigkeitsschranke fuer wsp-ermittlung bei Iteration  *
-!**                                                                    *
-!**   AUFGERUFENE SUBROUTINEN                                          *
-!**   -----------------------                                          *
-!**   abskst(nknot,x1,xi,h1,hi,s)                                      *
-!**   anf(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                        *
-!**       psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl,nblatt,nz)       *
-!**   grnzh(q,indmax,hgrenz,xi,hi,s,ifgrnz)                            *
-!**   kopf(nblatt,nz,jw5,jw7,idr1)                                     *
-!**   newton(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                     *
-!**          psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl)              *
-!**   pegasus(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,                    *
-!**           psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl)             *
-!**   station(sgef,i,hr,q,hr,hv,rg,indmax,hvst,                        *
-!**           hrst,psiein,psiort,jw5,                                  *
-!**           hi,xi,s,ikenn,froud,str,ifehl,nblatt,nz)                 *
-!**   verluste(str,q,q1,i,hr,hv,rg,hvst,                               *
-!**            hrst,indmax,psiein,psiort,                              *
-!**            jw5,hi,xi,s,istat,froud,ifehlg,1)                       *
-!**                                                                    *
-!***********************************************************************
+! geschrieben: P. Koch, 	Maerz 1990
+! geaendert:   W. Ploeger, 	Juni 2006
+!
+! Programmbeschreibung:
+! ---------------------
+! Dieses Programm ermittelt den Wasserspiegel an einem Profil.
+!
+! ALS ERSTES WERDEN DIE BASISGEOMETRIEGROESSEN BERECHNET (SUB
+! ABSKT), DANN BERECHNUNG DER GRENZTIEFE (SUB GRNZH). ES FOLGT DIE
+! SCHAETZUNG DES ANFANGSWASSERSPIEGELS (SUB ANF), ANSCHLIESSEND
+! WERDEN VERLUSTE (SUB VERLUSTE) BERECHNET, DER ANFANGS-
+! ITERATIONSWERT hranf WIRD FESTGELEGT, ES WIRD NACH NEWTON (SUB
+! NEWTON) ODER PEGASUS (SUB PEGASUS) ITERIERT, BERECHNUNG DER
+! VERLUSTE, ERMITTELN EINZUSETZENDES GEFAELLE, AUFRUF VON SUB
+! STATION, JE NACH GEFAELLEFALL UND OB STATIONAER-GLEICHFOERMIG.
+!
+!
+! DIREKT UEBERGEBENE VARIABLEN
+! ----------------------------
+! str    - Abstand zwischen 2 Profilen
+! q      - Durchfluss in bestimmten Faellen [m**3/s]
+! q1     - alter Q-Wert in WSPBER [m**3/s]
+! i      - ?
+! hr     -
+! hv     -
+! rg     -
+! hvst   -
+! hrst   -
+! indmax -
+! psiein - VERLUSTE?
+! psiort - OERTLICHE VERLUSTE?
+! hgrenz -
+! ikenn  -
+! froud  -
+! nblatt -
+! nz     -
+!
+! PARAMETER
+! ---------
+! itmax  - max. Anzahl der Iterationsschritte
+! err    - Genauigkeitsschranke fuer wsp-ermittlung bei Iteration
+!
+! AUFGERUFENE SUBROUTINEN
+! -----------------------
+! abskst(nknot,x1,xi,h1,hi,s)
+! anf(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,
+!     psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl,nblatt,nz)
+! grnzh(q,indmax,hgrenz,xi,hi,s,ifgrnz)
+! kopf(nblatt,nz,jw5,jw7,idr1)
+! newton(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,
+!        psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl)
+! pegasus(str,q,q1,i,hr,hv,rg,hvst,hrst,indmax,
+!         psiein,psiort,jw5,ikenn,froud,xi,hi,s,ifehl)
+! station(sgef,i,hr,q,hr,hv,rg,indmax,hvst,
+!         hrst,psiein,psiort,jw5,
+!         hi,xi,s,ikenn,froud,str,ifehl,nblatt,nz)
+! verluste(str,q,q1,i,hr,hv,rg,hvst,
+!          hrst,indmax,psiein,psiort,
+!          jw5,hi,xi,s,istat,froud,ifehlg,1)
+!
+!********************************************************************
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
@@ -289,16 +287,6 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ELSE
     hr = hgrenz + 0.2
   end if
-
-  !IF (a_m .eq. 2) then
-  !  CALL anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-  !         & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
-  !         & nz, istat)
-  !!JK  WENN BERECHNUNG UEBER EINFACHE ITERATION
-  !ELSE
-  !  hr = hgrenz + 0.2
-  !ENDIF
-
 
 
   !**    ifehl=1 --> Einschlussintervall in schiessendem bereich gefunden

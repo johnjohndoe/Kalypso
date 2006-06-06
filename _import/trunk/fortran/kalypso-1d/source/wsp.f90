@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006   12:14 pm
+!     Last change:  WP    6 Jun 2006    2:29 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -320,6 +320,13 @@ if (antwort == 'n') then
   RUN_MODUS = 'KALYPSO'
   read (*,*) pfadconfigdatei
   call read_config_file(ADJUSTL(pfadconfigdatei),LEN_TRIM(pfadconfigdatei))
+
+  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
+    km   = 'j'
+    idr1 = 'j'
+    idr2 = 'j'
+  end if
+
 else
   RUN_MODUS = 'WSPWIN '
 end if
@@ -351,15 +358,15 @@ end if
 ! St000054.prf 58.4930
 ! St000055.prf 58.5500
 ! St000004.prf 58.6000
-!
+
 if (RUN_MODUS /='KALYPSO') then
+
   write (*, 1003)
   1003 format (/1X, 'Gib Name der fluss.dat - Datei -->')
   READ ( * , '(a)') dfluss
-  !write (*,*) dfluss
 
-  !WP New configuration in MOD_INI
   STRANGDATEI = dfluss
+
 end if
 
 
@@ -377,13 +384,10 @@ ilen = LEN_TRIM (PROJEKTPFAD)
 
 NAME_PFAD_PROF = PROJEKTPFAD(1:ilen) // '\PROF\'
 NAME_PFAD_DATH = PROJEKTPFAD(1:ilen) // '\DATH\'
-!write (*,*) 'NAME_PFAD_PROF = ', NAME_PFAD_PROF
-!write (*,*) 'NAME_PFAD_DATH = ', NAME_PFAD_DATH
 
 ilen  = LEN_TRIM(NAME_PFAD_PROF)
 ilen2 = LEN_TRIM(STRANGDATEI)
 NAME_EIN_STR = NAME_PFAD_PROF(1:ilen) // STRANGDATEI(1:ilen2)
-!write (*,*) 'NAME_EIN_STR = ', NAME_EIN_STR
 
 
 ! UNIT holen
@@ -428,67 +432,21 @@ end if
 if (RUN_MODUS /='KALYPSO') then
   write (*, 1005)
   1005 format (/1X, 'Endstation -->')
-  ! F6.3 reicht nicht aus: Stationen sind auf 4 Stellen genau -> F9.4!
   READ ( * , '(F10.4)') staend
-  !write (* , '(F10.4)') staend
 
   ENDSTATION = staend
 end if
 
 
 
-
-
-! Setzen und Uebergabe der Pfad-Parameter, die zur Dateioeffnung
-! von WSPvaria.ein in "LESDATIN" benoetigt werden.
-
-! Der bereits in der if-schleife eingelesene Dateipfad 'PROJEKTPFAD' wird
-! uebernommen und der neuen Variable proj_les zugewiesen.
-! In PROJEKTPFAD ist enthalten: c:\Projekt\Projektname\prof
-!proj_les = PROJEKTPFAD
-!i_les = LEN_TRIM (proj_les)
-
-! Da der uebernommene Projektpfad nach 'prof' verweist, wird dieser
-! um 5 Stellen reduziert und um '\dath\' ergaenzt.
-!proj_les (i_les - 5:) = '\dath\'
-! Der Projektpfad proj_les wird dem Pfad pfad_les zugewiesen.
-! Fuer Eingabedatei-Pfad.
-!pfad_les = proj_les
-! Der Projektpfad proj_les wird dem Pfad pfad_aus zugewiesen.
-! Fuer Kontroll-Ausgabedatei-Pfad.
-!pfad_aus = proj_les
-! Der Projektpfad proj_les wird dem Pfad pfad_ver zugewiesen.
-! Fuer Verlaufsdatei-Pfad.
-!pfad_ver = proj_les
-!i1_les = LEN_TRIM (pfad_les)
-
-! Der Pfad pfad_les wird um die Einlesedatei erweitert.
-!pfad_les (i1_les + 1:) = 'WSPvaria.ein'
-!i_aus = LEN_TRIM (pfad_aus)
-
-! Der Pfad pfad_aus wird um die Kontroll-Ausgabedatei erweitert.
-!pfad_aus (i_aus + 1:) = 'variaaus.AUS'
-!i_ver = LEN_TRIM (pfad_ver)
-! Der Pfad pfad_ver wird um die Ausgabedatei Verlauf1.WSP erweitert.
-!pfad_ver (i_ver + 1:) = 'Verlauf1.WSP'
-                                                                        
-
-!HB   ***************************************************************** 
-!HB   26.11.2001 - H.Broeker                                            
-!HB   ----------------------                                            
-!HB   Der Projektpfad proj_les wird dem Pfad alph_aus zugewiesen.       
-!HB   Fuer Ausgabedatei-Pfad des Impuls-und Energiestrombeiwertes.      
-
 ilen  = LEN_TRIM(NAME_PFAD_DATH)
 NAME_OUT_ALPHA = NAME_PFAD_DATH(1:ilen) // 'Beiwerte.aus'
-!write (*,*) 'NAME_OUT_ALPHA = ', NAME_OUT_ALPHA
 
 
 IF (alpha_ja.eq.1) then
   !HB     Oeffnen der Ergebnisausgabedatei fuer die Impuls- und Energie-
   !HB     strombeiwert-Auswertung (zusaetzliche Ausgabedatei: Beiwerte.AUS
 
-  !HB     Einholen einer Dateinummer fuer Datei
   UNIT_OUT_ALPHA = ju0gfu ()
   !HB     Oeffnen der Datei Beiwerte.AUS
   OPEN (UNIT = UNIT_OUT_ALPHA, FILE = NAME_OUT_ALPHA, STATUS = 'replace', IOSTAT = istat)
@@ -555,13 +513,11 @@ if (RUN_MODUS /='KALYPSO') then
     ! Von der Oberflaeche wird eine Datei QWERT.001 erzeugt, die nach Ablauf der
     ! Berechnung wieder geloescht wird! Diese wird jetzt eingelesen!
 
-
     ilen = LEN_TRIM (NAME_PFAD_PROF)
     ilen2 = LEN_TRIM(FALLNAME)
 
     ABFLUSSEREIGNIS = 'qwert.' // FALLNAME(1:ilen2)
     NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // 'qwert.' // FALLNAME(1:ilen2)
-    !write (*,*) 'NAME_EIN_QWERT = ', NAME_EIN_QWERT
 
     UNIT_EIN_QWERT = ju0gfu ()
 
@@ -700,8 +656,6 @@ if (RUN_MODUS /='KALYPSO') then
 
     IF (mode.eq.1) then
 
-      !bordvoll = 'g'
-
       BERECHNUNGSMODUS = 'BF_UNIFORM'
       ART_RANDBEDINGUNG = 'UNIFORM_BOTTOM_SLOPE'
 
@@ -716,8 +670,6 @@ if (RUN_MODUS /='KALYPSO') then
        & 1X, '**********************************************',//)
 
     ELSEIF (mode.eq.2) then
-
-      !bordvoll = 'u'
 
       BERECHNUNGSMODUS = 'BF_NON_UNI'
 
@@ -887,7 +839,6 @@ if (RUN_MODUS == 'KALYPSO' .and. BERECHNUNGSMODUS == 'WATERLEVEL') then
   ilen = LEN_TRIM (NAME_PFAD_PROF)
   ilen2 = LEN_TRIM(ABFLUSSEREIGNIS)
   NAME_EIN_QWERT = NAME_PFAD_PROF(1:ilen) // ABFLUSSEREIGNIS(1:ilen2)
-  !write (*,*) 'NAME_EIN_QWERT = ', NAME_EIN_QWERT
 
   UNIT_EIN_QWERT = ju0gfu ()
 
@@ -926,12 +877,7 @@ END IF
 if (RUN_MODUS /='KALYPSO') then
 
   if (BERECHNUNGSMODUS /= 'WATERLEVEL') then
-  !IF (bordvoll.ne.'n') then
 
-
-    !UT ******Berechnung ohne Kalinin-Miljukov **********
-    !UT goto 3999
-    !UT - OBIGES WAR BEREITS DEAKTIVIERT, 12.02.00, UT
     !EP Reaktivierung von Kalinin-Miljukov     03.06.2002
 
     ! -----------------------------------------------------------------
@@ -953,16 +899,6 @@ if (RUN_MODUS /='KALYPSO') then
 
       NAME_EIN_KM = NAME_PFAD_PROF(1:ilen) // 'teilg.' // FALLNAME(1:ilen2)
       UNIT_EIN_KM = ju0gfu ()
-      !write (*,*) 'NAME_EIN_KM = ', NAME_EIN_KM
-
-      !ilen = LEN_TRIM (fnam1)
-      !unit13 = fnam1
-      !unit13 (ilen + 1:nch80) = 'teilg.'
-
-      !ilen = LEN_TRIM (unit13)
-      !unit13 (ilen + 1:nch80) = fall
-      !UNIT_EIN_KM = ju0gfu ()
-      !ierr = 0
 
       OPEN (UNIT=UNIT_EIN_KM, FILE=NAME_EIN_KM, ACTION='READ', IOSTAT=istat)
 
@@ -986,8 +922,6 @@ if (RUN_MODUS /='KALYPSO') then
 
         ikg = 0
 
-        !3902 continue
-
         read (UNIT_EIN_KM, '(I10)', IOSTAT=istat) ikg
         if (istat/=0) then
           write (*,*) 'In WSP. Fehler bei KM-Datei.'
@@ -999,24 +933,6 @@ if (RUN_MODUS /='KALYPSO') then
           read (UNIT_EIN_KM, *, IOSTAT=istat) anftg(i), numitg(i)
           !write (*,*) 'ANFTG(',i,') = ', anftg(i), ' numitg(',i,') = ', numitg(i)
         end do
-
-        !READ (UNIT_EIN_KM, '(a)', end = 3903) dummy
-        !write (*,*) 'In WSP. bei KM. dummy = ', dummy
-        !CALL ju0chr (dummy, feldr, ianz, char, ichara, int, iint, ifehl)
-        !write (*,*) 'IFEHL = ', ifehl
-
-        !IF (ifehl.ne.0) then
-        !  GOTO 3902
-        !ELSEIF (ianz.ne.1.or.iint.ne.1) then
-        !  GOTO 3902
-        !ELSE
-        !  ikg = ikg + 1
-        !  anftg (ikg) = feldr (1)
-        !  numitg (ikg) = int (1)
-        !  GOTO 3902
-        !ENDIF
-
-        !3903 continue
 
 
         IF (ikg.eq.0) then
@@ -1078,7 +994,6 @@ else
 
 end if
 
-!write (*,*) 'NAME_EIN_PSI = ', NAME_EIN_PSI
 
 INQUIRE (FILE=NAME_EIN_PSI, EXIST=lexist, IOSTAT=istat)
 
@@ -1104,7 +1019,6 @@ else
 
   read_psiver: DO j = 1, maxger
 
-    !READ (UNIT_EIN_PSI, '(a)', end = 191) string
     READ (UNIT_EIN_PSI, '(a)', IOSTAT=istat) string
     if (istat /= 0) EXIT read_psiver
 
@@ -1352,10 +1266,7 @@ if (RUN_MODUS /= 'KALYPSO') then
 
     ENDIF
 
-  !ELSEIF (bordvoll.eq.'u'.or.bordvoll.eq.'g') then
-  !**   andere maske mit anfangswsp --> kein wsp aus qwert.dat
-
-  ENDIF                                                                                                    
+  ENDIF
                                                                         
 end if
 
@@ -1433,7 +1344,6 @@ end if
 
 if (RUN_MODUS /= 'KALYPSO') then
 
-  !IF (bordvoll.ne.'g') then
   if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     write (*, 1900)
@@ -1521,7 +1431,7 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
   ilen = LEN_TRIM (NAME_OUT_TAB)
   !HB        Zaehlen aller Buchstaben bzw. Positionen von ereignis, z.B.
   !HB        "AbfussereignisHQ" und Zuweisung an iqelen
-  write (*,*) 'Ereignis name = ', EREIGNISNAME
+  !write (*,*) 'Ereignis name = ', EREIGNISNAME
 
   iqelen = LEN_TRIM (EREIGNISNAME)
   !HB           Reduzierung von iqelen auf 3 Stellen
@@ -1560,11 +1470,8 @@ NAME_OUT_TAB (ilen+1 : ) = '.tab'
 !**   GLEICHFOERMIGE BORDVOLLBERECHNUNG                                 
 IF (BERECHNUNGSMODUS == 'BF_UNIFORM') then
 
-  ibruecke = 'n' 
-  MIT_BRUECKEN = .FALSE.
-
-  wehr = 'n'
-  MIT_WEHREN = .FALSE.
+  MIT_BRUECKEN 	= .FALSE.
+  MIT_WEHREN 	= .FALSE.
 
 ELSE
                                                                         
@@ -1699,8 +1606,6 @@ ITERATIONSART = 'SIMPLE'
 
 if (RUN_MODUS /= 'KALYPSO') then
 
-  ! UNGLEICHFOERMIGE BORDVOLLBERECHNUNG, bordvoll.ne.g
-  !IF (bordvoll.ne.'g') then
   if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     write ( * , 2100)
@@ -1833,7 +1738,6 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
 ! Erzeuge Pfad- und Dateinamen für 'Laengsschnitt.txt'
 ilen = LEN_TRIM(NAME_PFAD_DATH)
 NAME_OUT_LAENGS = NAME_PFAD_DATH(1:ilen) // 'laengsschnitt.txt'
-!write (*,*) 'NAME_OUT_LAENGS = ', NAME_OUT_LAENGS
 !WP -----------------------------------------------------------------------------------
 
 
@@ -1844,7 +1748,6 @@ NAME_OUT_LAENGS = NAME_PFAD_DATH(1:ilen) // 'laengsschnitt.txt'
 
 ilen = LEN_TRIM (NAME_PFAD_DATH)
 NAME_OUT_LAMBDA_I = NAME_PFAD_DATH(1:ilen) // 'lambda_i.txt'
-!write (*,*) 'NAME_OUT_LAMBDA_I = ', NAME_OUT_LAMBDA_I
 
 UNIT_OUT_LAMBDA_I = ju0gfu ()
 
@@ -1880,7 +1783,7 @@ if (BERECHNUNGSMODUS /= 'WATERLEVEL') then
   ENDIF
                                                                         
   !HB Aufruf der Bordvollberechnung
-  CALL qbordv (MAX_Q, MIN_Q, DELTA_Q)
+  CALL qbordv ()
 
   IF (km.eq.'j' .and. ikitg.eq.1) then
     CLOSE (UNIT_EIN_KM)

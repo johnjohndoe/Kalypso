@@ -802,4 +802,19 @@ Kalypso 1.1d   06. Juni 2006
 ---------------------------
 1.)  Behebung des Übergabefehlers von MENGF-OVRLA und MENGL-PUNLA.
 
-                                                    Wolf Plöger, 03.06.2006
+                                                    Wolf Plöger, 06.06.2006
+
+Kalypso 1.1e   06. Juni 2006
+---------------------------
+1.)  Explizite Definition aller Variablen in WSPBER, dabei Behebung eines
+     Fehlers beim Hochzaehlen der Blattnummer (NBLATT). Trotzdem immer
+     BUG bei der Blattzahl bei WQ-Tabellen.
+
+2.)  Bei Berechnung mit KALYPSO-Oberfläche wird die Ausgabe der 
+     WQ-Tabellen und Ergebnislisten immer aktiviert.
+
+3.)  Löschen der Datei "mitvor.f90" und Definition einer neuen REAL FUNCTION
+     zur Berechnung der mitwirkenden Vorlandbreite GET_MITVOR in
+     "globale_funktionen.f90". Aenderung beim Aufruf in PASCHE.
+
+                                                    Wolf Plöger, 06.06.2006
