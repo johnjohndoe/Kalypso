@@ -100,7 +100,10 @@ public class FeaturePath
       return getFeatureForSegment( workspace, workspace.getFeature( (String) value ), segmentIndex + 1 );
     else if( value instanceof FeatureList && segmentIndex == m_segments.length - 1 )
       return value;
-
+    else if( value instanceof FeatureList && segmentIndex < m_segments.length - 1 )
+    {
+      return getFeatureForSegment( workspace,  (Feature) ((FeatureList ) value).get(0), segmentIndex + 1 );
+    }
     // alles andere ist ein Fehler
     return null;
   }
