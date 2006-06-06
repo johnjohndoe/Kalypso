@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.ui.model.wspm,
  org.kalypso.simulation.core,
  org.kalypso.deegree,
- org.kalypso.core
+ org.kalypso.core,
+ org.kalypso.model.wspm.core
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.model.wspm.tuhh,
  org.kalypso.model.wspm.tuhh.schemata,
