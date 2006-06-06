@@ -1,4 +1,4 @@
-package org.kalypso.wspm.tuhh.ui;
+package org.kalypso.model.wspm.tuhh.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -7,14 +7,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class Kalypso1DTUHHPlugin extends AbstractUIPlugin {
+public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin {
 	//The shared instance.
-	private static Kalypso1DTUHHPlugin plugin;
+	private static KalypsoModelWspmTuhhUIPlugin plugin;
 	
 	/**
 	 * The constructor.
 	 */
-	public Kalypso1DTUHHPlugin() {
+	public KalypsoModelWspmTuhhUIPlugin() {
 		super();
 		plugin = this;
 	}
@@ -39,7 +39,7 @@ public class Kalypso1DTUHHPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static Kalypso1DTUHHPlugin getDefault() {
+	public static KalypsoModelWspmTuhhUIPlugin getDefault() {
 		return plugin;
 	}
 
@@ -51,6 +51,6 @@ public class Kalypso1DTUHHPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.kalypso.wspm.tuhh.ui", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.kalypso.model.wspm.tuhh.ui", path);
 	}
 }

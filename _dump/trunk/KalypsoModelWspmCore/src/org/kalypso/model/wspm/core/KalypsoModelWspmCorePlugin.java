@@ -9,12 +9,12 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.osgi.framework.BundleContext;
 
 
-public class ProfilCorePlugin extends Plugin
+public class KalypsoModelWspmCorePlugin extends Plugin
 {
   /** The shared instance. */
-  private static ProfilCorePlugin plugin;
+  private static KalypsoModelWspmCorePlugin plugin;
 
-  public static ProfilCorePlugin getDefault( )
+  public static KalypsoModelWspmCorePlugin getDefault( )
   {
     return plugin;
   }
@@ -64,7 +64,7 @@ public class ProfilCorePlugin extends Plugin
   public final ReparatorRuleSet createReparatorRuleSet( )
   {
     if( m_reparatorRules == null )
-      m_reparatorRules = ProfilCoreExtensions.createReaparatorRules();
+      m_reparatorRules = KalypsoModelWspmCoreExtensions.createReaparatorRules();
 
     return new ReparatorRuleSet( m_reparatorRules );
   }

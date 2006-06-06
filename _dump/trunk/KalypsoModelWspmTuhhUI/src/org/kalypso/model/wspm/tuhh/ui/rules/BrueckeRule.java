@@ -1,4 +1,4 @@
-package org.kalypso.wspm.tuhh.ui.rules;
+package org.kalypso.model.wspm.tuhh.ui.rules;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.ProfilCorePlugin;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
@@ -43,7 +43,7 @@ public class BrueckeRule extends AbstractValidatorRule
     catch( Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, ProfilCorePlugin
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin
           .getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
     }
   }

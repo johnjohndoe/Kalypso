@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.wspm.core.ProfilCorePlugin;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -60,7 +60,7 @@ public class ProfilEventManager implements IProfilEventManager
       catch( final Throwable e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ProfilCorePlugin.getDefault().getLog().log( status );
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
       }
     }
   }

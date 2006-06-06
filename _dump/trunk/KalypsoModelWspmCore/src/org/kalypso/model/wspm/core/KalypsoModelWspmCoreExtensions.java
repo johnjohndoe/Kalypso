@@ -13,7 +13,7 @@ import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 
 
 /** Helper class to read extension points of this plugin. */
-public class ProfilCoreExtensions
+public class KalypsoModelWspmCoreExtensions
 {
   public static IProfilReparator[] createReaparatorRules( )
   {
@@ -43,7 +43,7 @@ public class ProfilCoreExtensions
     if( stati.size() > 0 )
     {
       final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-      final IStatus status = new MultiStatus( ProfilCorePlugin.getID(), 0, childrens, "Ein oder mehrere Reparatoren konnten nicht initialisiert werden.", null );
+      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, "Ein oder mehrere Reparatoren konnten nicht initialisiert werden.", null );
       if ( status != null )
       {
         // TODO: what to do whith this status?

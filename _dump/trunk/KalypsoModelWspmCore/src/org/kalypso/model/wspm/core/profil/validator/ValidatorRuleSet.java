@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.ProfilCorePlugin;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
 
@@ -53,7 +53,7 @@ public class ValidatorRuleSet
     if( stati.size() == 0 )
       return Status.OK_STATUS;
 
-    return new MultiStatus( ProfilCorePlugin.getID(), 0,
+    return new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0,
         stati.toArray( new IStatus[stati.size()] ),
         "Ein oder mehr Fehler sind bei der Validierung des Profils aufgetreten.", null );
   }

@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.model.wspm.core.ProfilCorePlugin;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
 
 public class ValidatorFactory
@@ -46,7 +46,7 @@ public class ValidatorFactory
         }
         catch( final CoreException e )
         {
-          ProfilCorePlugin.getDefault().getLog().log( e.getStatus() );
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
         }
     }
     
