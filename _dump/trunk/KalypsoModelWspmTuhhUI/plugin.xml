@@ -5,7 +5,7 @@
    name="Profil Kalypso 1d"
    version="1.0.0"
    provider-name="kalypso.org"
-   class="org.kalypso.eind.tuhh.stationaer.Kalypso1DTUHHPlugin">
+   class="org.kalypso.wspm.tuhh.ui.Kalypso1DTUHHPlugin">
    <runtime>
       <library name="kalypso1d.jar">
          <export name="*"/>
@@ -14,44 +14,44 @@
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="com.bce.eind.core"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.kalypso.model.wspm.core"/>
    </requires>
      <extension
-           point="com.bce.eind.core.validatortype">
+           point="org.kalypso.model.wspm.core.validatortype">
         <validatortype
               description="Pasche"
               id="pasche"/>
      </extension>
    <extension
-         point="com.bce.eind.core.validatorrule">
+         point="org.kalypso.model.wspm.core.validatorrule">
       <rule
-            class="org.kalypso.eind.tuhh.stationaer.rules.RuecksprungRule"
+            class="org.kalypso.wspm.tuhh.ui.rules.RuecksprungRule"
             description="Rücksprung"
             id="pasche.ruecksprung"
             type="Pasche"/>
         <rule
-              class="org.kalypso.eind.tuhh.stationaer.rules.TrennerRule"
+              class="org.kalypso.wspm.tuhh.ui.rules.TrennerRule"
               description="Trennflächen"
               id="pasche.trenner"
               type="Pasche"/>
         <rule
-              class="org.kalypso.eind.tuhh.stationaer.rules.BrueckeRule"
+              class="org.kalypso.wspm.tuhh.ui.rules.BrueckeRule"
               description="Brücke"
               id="pasche.bruecke"
               type="Pasche"/>
         <rule
-              class="org.kalypso.eind.tuhh.stationaer.rules.WehrRule"
+              class="org.kalypso.wspm.tuhh.ui.rules.WehrRule"
               description="Wehr"
               id="pasche.wehr"
               type="Pasche"/>
         <rule
-              class="org.kalypso.eind.tuhh.stationaer.rules.DoppelterPunktRule"
+              class="org.kalypso.wspm.tuhh.ui.rules.DoppelterPunktRule"
               description="DoppelterPunkt"
               id="pasche.doppelterpunkt"
               type="Pasche"/>
         <rule
-              class="org.kalypso.eind.tuhh.stationaer.rules.BewuchsRule"
+              class="org.kalypso.wspm.tuhh.ui.rules.BewuchsRule"
               description="Bewuchs"
               id="pasche.bewuchs"
               type="Pasche"/>

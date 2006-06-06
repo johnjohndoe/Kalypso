@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="com.bce.eind.core"
+   id="org.kalypso.model.wspm.core"
    name="Profil Core Plugin"
    version="1.0.0"
    provider-name="bce.com"
-   class="com.bce.eind.core.ProfilCorePlugin">
+   class="org.kalypso.model.wspm.core.ProfilCorePlugin">
    <runtime>
       <library name="wspprofilcore.jar">
-         <export name="*"/>
-      </library>
-      <library name="libs/commons-io-1.0.jar">
          <export name="*"/>
       </library>
    </runtime>
@@ -18,6 +15,7 @@
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.kalypso.contribs.java" export="true"/>
+      <import plugin="org.kalypso.commons"/>
       <import plugin="org.kalypso.contribs.eclipsercp"/>
    </requires>
    
