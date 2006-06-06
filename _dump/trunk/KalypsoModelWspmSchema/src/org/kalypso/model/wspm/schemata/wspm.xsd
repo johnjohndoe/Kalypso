@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
-	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
+	xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
-	
 	<import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd"/>
-	
 	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
@@ -241,57 +240,6 @@
 	</element>
 	<!-- 
 	_________________________________________________________________________________________
-	TYPES
-	_________________________________________________________________________________________	
-	-->
-	<complexType name="EmptyFeatureBaseType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureType">
-				<!-- Force id attribute, because Kalypso needs it -->
-				<attribute ref="gml:id" use="required"/>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<complexType name="NamedFeatureBaseType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureType">
-				<sequence>
-					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Metadaten</label>
-								<tooltip>Metadaten</tooltip>
-								<description>Metadaten</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="gml:description">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Beschreibung</label>
-								<tooltip>Beschreibung</tooltip>
-								<description>Beschreibung</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="gml:name" minOccurs="1" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Bezeichnung</label>
-								<tooltip>Bezeichnung</tooltip>
-								<description>Bezeichnung</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-				<!-- Force id attribute, because KALYPSO needs it -->
-				<attribute ref="gml:id" use="required"/>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<!-- 
 	-->
 	<complexType name="CalculationPropertyType">
 		<complexContent>
@@ -304,7 +252,7 @@
 	</complexType>
 	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calcCreationMember"/>
 					<element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/>
@@ -325,7 +273,7 @@
 	</complexType>
 	<complexType name="ReachType" abstract="false">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:waterBodyMember"/>
 					<element ref="gml:lineStringMember">
@@ -358,9 +306,9 @@
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another property (profileMember). The time of last synchronization is stored in 'cacheDate'</appinfo>
 			</annotation>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="station" type="wspm:stationDouble">
+					<element name="station" type="wspmcommon:stationDouble">
 						<annotation>
 							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
 							<documentation xml:lang="de">
@@ -460,7 +408,7 @@
 	</complexType>
 	<complexType name="WaterBodyType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element name="refNr" type="string">
 						<annotation>
@@ -489,7 +437,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!-- TODO hier kommt noch das neue Profil rein --> 
+					<!-- TODO hier kommt noch das neue Profil rein -->
 					<element name="profileMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -535,7 +483,7 @@
 	</complexType>
 	<complexType name="ResultType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calculationMember"/>
 					<element name="calculationTime" type="dateTime">
@@ -574,7 +522,7 @@
 	</complexType>
 	<complexType name="DocumentType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -613,7 +561,7 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
@@ -633,7 +581,7 @@
 	</complexType>
 	<complexType name="RoughnessDefinitionType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -688,7 +636,7 @@
 	</complexType>
 	<complexType name="VegetationDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:vegetationDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
@@ -708,7 +656,7 @@
 	</complexType>
 	<complexType name="VegetationDefinitionType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -772,7 +720,7 @@
 	</complexType>
 	<complexType name="calcCreationType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="user" type="string">
 						<annotation>
@@ -796,12 +744,4 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
-	-->
-	<simpleType name="stationDouble">
-		<restriction base="decimal">
-			<fractionDigits value="4"/>
-		</restriction>
-	</simpleType>
 </schema>
-  

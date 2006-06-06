@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml"
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -7,6 +7,7 @@
 		</appinfo>
 	</annotation>
 	<import namespace="org.kalypso.model.wspm" schemaLocation="../../../../../../../../KalypsoModelWspm/src/org/kalypso/model/wspm/schemata/wspm.xsd"/>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="../../../../../../../../KalypsoModelWspm/src/org/kalypso/model/wspm/schemata/wspmCommons.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
@@ -309,7 +310,7 @@
 	</complexType>
 	<complexType name="StartConditionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="kind" default="CRITICAL_WATER_DEPTH">
 						<annotation>
@@ -386,7 +387,7 @@
 	</complexType>
 	<complexType name="RunOffIntervalType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<!-- TODO: Element Abflussintervall machen -->
 					<element name="minimalRunOff" type="double">
@@ -433,7 +434,7 @@
 	</complexType>
 	<complexType name="WaterlevelParameterType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="wspIteration" default="SIMPLE">
 						<annotation>
@@ -651,9 +652,9 @@
 	</complexType>
 	<complexType name="subReachDefinitionType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="startStation" type="wspm:stationDouble">
+					<element name="startStation" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangsstation</label>
@@ -662,7 +663,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="endStation" type="wspm:stationDouble">
+					<element name="endStation" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Endstation</label>
@@ -688,7 +689,7 @@
 	</complexType>
 	<complexType name="specialOptionsType">
 		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="doCalcBridges" type="boolean">
 						<annotation>

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:wspmproj="org.kalypso.model.wspmproj" targetNamespace="org.kalypso.model.wspmproj"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
+	xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmproj="org.kalypso.model.wspmproj" targetNamespace="org.kalypso.model.wspmproj" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-
 	<import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM projects -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
@@ -21,8 +17,7 @@
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
-	<element name="wspmProjectMember" type="wspmproj:WspmProjectPropertyType"
-		substitutionGroup="gml:featureMember">
+	<element name="wspmProjectMember" type="wspmproj:WspmProjectPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>WSPM-Projekt</label>
@@ -56,14 +51,12 @@
 	</complexType>
 	<complexType name="WspmProjectType">
 		<complexContent>
-			<extension base="wspm:NamedFeatureBaseType">
+			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calculationMember" minOccurs="0" maxOccurs="unbounded"/>
 					<element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"
-						maxOccurs="unbounded"/>
-					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"
-						maxOccurs="unbounded"/>
+					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
