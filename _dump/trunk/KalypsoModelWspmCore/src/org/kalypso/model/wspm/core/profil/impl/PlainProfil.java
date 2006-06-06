@@ -23,7 +23,6 @@ import org.kalypso.model.wspm.core.profil.impl.buildings.building.AbstractProfil
 import org.kalypso.model.wspm.core.profil.impl.devider.DeviderComparator;
 import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoints;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
 
@@ -50,7 +49,7 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
-  public PlainProfil(final IProfilSource src )
+  public PlainProfil()
   {
     m_profilMetaData = new HashMap<Object, Object>();
     m_points = new ProfilPoints();

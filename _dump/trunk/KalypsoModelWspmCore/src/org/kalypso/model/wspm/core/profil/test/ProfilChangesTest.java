@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -11,7 +13,6 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
@@ -29,8 +30,6 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-
-import junit.framework.TestCase;
 
 
 /**
