@@ -30,7 +30,6 @@
 			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
 			<input id="CALC_PATH" path="${calc.xpath}" />
-			<input id="PROFILES" path="Profile" relativeToCalcCase="true" />
 
 			<output id="SimulationLog" path="${result.path.aktuell.logs}/simulation.log" relativeToCalcCase="true" />
 			<output id="KernelLog" path="${result.path.aktuell.logs}/kernel.log" relativeToCalcCase="true" />
