@@ -4,7 +4,7 @@ Bundle-Name: KalypsoUIModelWspm Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: org.kalypso.ui.model.wspm/
-Bundle-Activator: org.kalypso.ui.model.wspm.KalypsoUIModelWspmPlugin
+Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,

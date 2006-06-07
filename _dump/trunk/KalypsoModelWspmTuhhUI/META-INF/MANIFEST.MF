@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModelWspmTuhhUI Plugin
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: kalypso1d.jar
-Bundle-Activator: org.kalypso.wspm.tuhh.ui.Kalypso1DTUHHPlugin
+Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,

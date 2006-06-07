@@ -4,7 +4,7 @@
    <extension
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
-            class="org.kalypso.model.wspm.schema.schemata.WspmUrlCatalog"
+            class="org.kalypso.model.wspm.schema.WspmUrlCatalog"
             id="org.kalypso.model.wspm.schema.urlcatalog"/>
    </extension>
 
