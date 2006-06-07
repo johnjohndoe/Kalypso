@@ -60,7 +60,6 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.ComponentPositionComparator;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;

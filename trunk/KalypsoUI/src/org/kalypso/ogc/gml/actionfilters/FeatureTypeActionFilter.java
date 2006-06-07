@@ -48,7 +48,15 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO register within plugin.xml
+ * A filter on {@link org.kalypsodeegree.model.feature.Feature} objects.
+ * <p>
+ * Tests the if the feature has a certain feature type.
+ * </p>
+ * <p>
+ * the value argument is one or more qnames (separated by semicolons ';' of the following for: namespace#localPart.
+ * <p>
+ * Example: org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprof#Profile
+ * </p>
  * 
  * @author schlienger
  */
@@ -59,7 +67,7 @@ public class FeatureTypeActionFilter implements IActionFilterEx
   /**
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
-  public boolean testAttribute( Object target, String name, String value )
+  public boolean testAttribute( final Object target, final String name, final String value )
   {
     if( !(target instanceof Feature) )
       return false;
@@ -68,11 +76,13 @@ public class FeatureTypeActionFilter implements IActionFilterEx
 
     if( ATTR_FEATURE_TYPE.equals( name ) )
     {
-      final QName qName = QNameUtilities.createQName( value );
-
-      return GMLSchemaUtilities.substitutes( f.getFeatureType(), qName );
-
-      // return f.getFeatureType().getQName().equals( qName );
+      final String[] strings = value.split( ";" );
+      for( final String string : strings )
+      {
+        final QName qName = QNameUtilities.createQName( string );
+        if( GMLSchemaUtilities.substitutes( f.getFeatureType(), qName ) )
+          return true;
+      }
     }
 
     return false;
