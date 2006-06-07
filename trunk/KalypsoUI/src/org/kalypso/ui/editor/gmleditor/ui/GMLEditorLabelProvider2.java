@@ -43,6 +43,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -119,11 +120,10 @@ public class GMLEditorLabelProvider2 extends LabelProvider
       return "GML";
     if( element instanceof Feature )
     {
-      final Feature feature = (Feature) element;
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-      if( annotation != null )
-        return annotation.getLabel() + " #" + feature.getId();
-      return "NO_LABEL #" + feature.getId();
+      return FeatureHelper.getLabel( (Feature) element );
+//      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
+//      if( annotation != null )
+//        return annotation.getLabel() + " #" + feature.getId();
     }
     if( element instanceof FeatureAssociationTypeElement )
     {
