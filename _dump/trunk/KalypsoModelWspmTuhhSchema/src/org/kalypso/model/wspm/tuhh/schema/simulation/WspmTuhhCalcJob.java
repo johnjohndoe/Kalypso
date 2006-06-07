@@ -53,7 +53,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
@@ -99,6 +98,7 @@ public class WspmTuhhCalcJob implements ISimulation
     long lTimeout = PROCESS_TIMEOUT;
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
+   
 
     final File simulogFile = new File( tmpDir, "simulation.log" );
     resultEater.addResult( "SimulationLog", simulogFile );
@@ -159,23 +159,23 @@ public class WspmTuhhCalcJob implements ISimulation
       resultEater.addResult( "KernelErr", fleKernelErr );
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
-      // // input.txt: n, prof/calc.properties
-      // final File fleInParams = new File( tmpDir, "input.txt" );
-      // pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
-      // pwInParams.println( "n" );
-      // pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "prof" + File.separator + "calc.properties" );
-      //
-      // pwInParams.close();
+      // TODO input.txt und start.bat sollen noch raus (Umstellung Rechenkern durch Wolf)
+      // input.txt: n, prof/calc.properties
+      final File fleInParams = new File( tmpDir, "input.txt" );
+      pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
+      pwInParams.println( "n" );
+      pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "kalypso-1D.ini" );
 
-      // // generate start.bat
-      // final File fleBat = new File( tmpDir, "start.bat" );
-      // PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
-      // pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath()
-      // );
-      // pwBat.close();
-      // String sCmd = fleBat.getAbsolutePath();
+      pwInParams.close();
 
-      String sCmd = "Kalypso-1D.exe";
+      // generate start.bat
+      final File fleBat = new File( tmpDir, "start.bat" );
+      PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
+      pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath() );
+      pwBat.close();
+      String sCmd = fleBat.getAbsolutePath();
+
+      // String sCmd = "Kalypso-1D.exe";
 
       monitor.setProgress( 20 );
       monitor.setMessage( "Executing model" );
@@ -239,20 +239,25 @@ public class WspmTuhhCalcJob implements ISimulation
 
             FileUtils.writeStringToFile( lengthSectionObsFile, strHeader + strLengthSection + strFooter, WSPMTUHH_CODEPAGE );
             if( lengthSectionObsFile.exists() )
+            {
               resultEater.addResult( "LengthSectionObs", lengthSectionObsFile );
 
-            // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
+              // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
+              // Geometrie ausdünnen, (welche) Parameter aus ANT?
+              // WST an Punkte dranhängen und neue Geometrie machen
+              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( new URL( lengthSectionObsFile.getAbsolutePath() ) );
+              final Feature rootFeature = obsWks.getRootFeature();
+              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+              for( final WspmReachProfileSegment reach : reachProfileSegments )
+              {
+                reach.getGeometry().getAsLineString();
+              }
 
-            WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
-            for( final WspmReachProfileSegment reach : reachProfileSegments )
-            {
-              reach.getDefaultGeometry();
+              // final File breaklineFile = null;
+              //
+              // if( breaklineFile.exists() )
+              // resultEater.addResult( "Bruchkanten", breaklineFile );
             }
-
-            // final File breaklineFile = null;
-            //
-            // if( breaklineFile.exists() )
-            // resultEater.addResult( "Bruchkanten", breaklineFile );
           }
 
           // *.tab (-> fixed name "Ergebnis.list")

@@ -194,7 +194,7 @@ public class WspWinExporter
     dir.mkdirs();
 
     final File profDir = WspWinHelper.getProfDir( dir );
-    final File batFile = new File( profDir, "kalypso-1D.ini" );
+    final File batFile = new File( dir, "kalypso-1D.ini" );
     final File zustFile = new File( profDir, "zustand.001" );
     final File qwtFile = new File( profDir, "qwert.001" );
     final File psiFile = new File( profDir, "zustand.psi" );
@@ -282,7 +282,7 @@ public class WspWinExporter
       pw.println( "# " + SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) );
 
       pw.println();
-      pw.println( "PROJEKTPFAD=" + batFile.getParentFile().getParent() );
+      pw.println( "PROJEKTPFAD=" + zustFile.getParentFile().getParent() );
       pw.println( "STRANGDATEI=" + zustFile.getName() );
 
       // TODO: passt das zum RK?

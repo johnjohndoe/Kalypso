@@ -107,6 +107,19 @@ public class WspmReachProfileSegment implements IWspmConstants
     m_reachSegment.setProperty( new QName( NS_WSPM, "geometry" ), curve );
   }
 
+  public GM_Curve getGeometry( )
+  {
+    final Object geomProp = m_reachSegment.getProperty( new QName( NS_WSPM, "geometry" ) );
+    if( geomProp instanceof GM_Curve )
+    {
+      return (GM_Curve) geomProp;
+    }
+    else
+    {
+      return null;
+    }
+  }
+
   public GM_Object getDefaultGeometry( )
   {
     return m_reachSegment.getDefaultGeometryProperty();
