@@ -276,7 +276,15 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element ref="tuhh:reachWspmTuhhSteadyStateMember"/>
+					<element ref="tuhh:reachWspmTuhhSteadyStateMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Strang, siehe Tooltip</label>
+								<tooltip>Beispiel für eine Annotation an einem referenzierenden Element.</tooltip>
+								<description>Gewässerstrang</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="tuhh:subReachDefinitionMember"/>
 					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
