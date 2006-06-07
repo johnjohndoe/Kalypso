@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.model.wspm.core,
  org.eclipse.core.resources,
  org.kalypso.wspwin.core;visibility:=reexport,
- com.bce.eind.prf
+ com.bce.eind.prf,
+ org.kalypso.ui
 Eclipse-AutoStart: true
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,

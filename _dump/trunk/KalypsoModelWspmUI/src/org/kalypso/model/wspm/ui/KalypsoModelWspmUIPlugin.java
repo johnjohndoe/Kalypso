@@ -2,17 +2,19 @@ package org.kalypso.model.wspm.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoModelWspmUIPlugin extends AbstractUIPlugin
+public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
 {
-
   // The shared instance.
   private static KalypsoModelWspmUIPlugin plugin;
+
+  public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker";
 
   /**
    * The constructor.
@@ -29,7 +31,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    
+
     // HACK: initialize KalypsoUI
     KalypsoGisPlugin.getDefault();
   }

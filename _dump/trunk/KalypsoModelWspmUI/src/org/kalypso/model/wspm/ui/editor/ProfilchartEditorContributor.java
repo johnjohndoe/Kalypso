@@ -1,0 +1,199 @@
+package org.kalypso.model.wspm.ui.editor;
+
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
+import org.kalypso.contribs.eclipse.ui.actions.RetargetInfoComparator;
+import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInfo;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.editor.actions.ChartActionHandler;
+import org.kalypso.model.wspm.ui.editor.actions.ShowTableAction;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.profil.view.chart.action.StatusPosContributionItem;
+
+/**
+ * @author Belger
+ */
+public class ProfilchartEditorContributor extends EditorActionBarContributor
+{
+  public static final String RETARGET_INSERT = "com.bce.profil.eclipse.editor.globalAction.insert";
+
+  public static final String RETARGET_OPEN_TABLE = "com.bce.profil.eclipse.editor.globalAction.openTable";
+
+  public static final String RETARGET_MAXIMIZE = "com.bce.profil.eclipse.editor.globalAction.maximizeChart";
+
+  private final ProfilPartListener m_profilPartListener = new ProfilPartListener();
+
+  private final StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" );
+
+  private final RetargetActionManager m_retargetManager = new RetargetActionManager();
+
+  private static final String MENU_ID_PROFIL = "com.bce.profil.wspprofilapp.profileditor";
+
+  public ProfilchartEditorContributor( )
+  {
+    final RetargetInfo insertPointInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_INSERT, "Punkt Einfügen", IAction.AS_PUSH_BUTTON ) );
+    insertPointInfo.getRetargetAction().setToolTipText( "Fügt einen neuen Punkt hinter dem aktiven Punkt ein." );
+    insertPointInfo.setMenuPath( IWorkbenchActionConstants.M_EDIT + IWorkbenchActionConstants.SEP + IWorkbenchActionConstants.CUT_EXT );
+
+    final RetargetInfo showTableInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_OPEN_TABLE, "Tabelle anzeigen", IAction.AS_PUSH_BUTTON ) );
+    showTableInfo.setActionHandler( new ShowTableAction() );
+    showTableInfo.getRetargetAction().setToolTipText( "Öffnet die Tabelle für den aktiven Profileditor" );
+    showTableInfo.getRetargetAction().setImageDescriptor( KalypsoModelWspmUIImages.ID_ENABLED_OPEN_TABLE );
+    showTableInfo.setMenuPath( MENU_ID_PROFIL + IWorkbenchActionConstants.SEP + IWorkbenchActionConstants.MB_ADDITIONS );
+    showTableInfo.setToolbarGroup( IWorkbenchActionConstants.MB_ADDITIONS );
+
+    final ProfilChartActionsEnum[] enums = ProfilChartActionsEnum.values();
+    for( final ProfilChartActionsEnum chartAction : enums )
+    {
+      final int style = chartAction.getStyle();
+      final RetargetInfo chartActionInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( chartAction.name(), chartAction.toString(), style ) );
+      chartActionInfo.setActionHandler( new ChartActionHandler( chartAction ) );
+      chartActionInfo.getRetargetAction().setToolTipText( chartAction.getTooltip() );
+      chartActionInfo.getRetargetAction().setImageDescriptor( chartAction.getEnabledImage() );
+      chartActionInfo.getRetargetAction().setDisabledImageDescriptor( chartAction.getDisabledImage() );
+      
+          
+      chartActionInfo.setMenuPath( chartAction.getMenuPath() );
+      final String menuStyleGroup = RetargetActionManager.menuGroupForStyle( style );
+      if( chartAction.getMenuPath() != null )
+      {
+        chartActionInfo.setMenuGroup( MENU_ID_PROFIL + IWorkbenchActionConstants.SEP + chartAction.getMenuPath() );
+        chartActionInfo.setToolbarGroup( chartAction.getMenuPath() );
+       
+      }
+      else
+      {
+        chartActionInfo.setMenuGroup( MENU_ID_PROFIL + IWorkbenchActionConstants.SEP + menuStyleGroup );
+        chartActionInfo.setToolbarGroup( menuStyleGroup );
+      }
+    }
+    m_retargetManager.sortRetargetInfos( new RetargetInfoComparator() );
+  }
+
+  @Override
+  public void init( final IActionBars bars, final IWorkbenchPage page )
+  {
+    super.init( bars, page );
+
+    m_retargetManager.registerGlobalActionHandlers( bars );
+
+    bars.updateActionBars();
+
+    m_retargetManager.addPartListeners( page );
+
+    final IWorkbenchPart activePart = page.getActivePart();
+    if( activePart != null )
+      m_retargetManager.partActivated( activePart );
+
+    page.addPartListener( m_profilPartListener );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_profilPartListener.dispose();
+
+    final IWorkbenchPage page = getPage();
+    final IActionBars bars = getActionBars();
+    if( page != null )
+    {
+      page.removePartListener( m_profilPartListener );
+      m_retargetManager.disposeActions( bars, page );
+    }
+
+    bars.updateActionBars();
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
+   */
+  @Override
+  public void setActiveEditor( final IEditorPart targetEditor )
+  {
+    super.setActiveEditor( targetEditor );
+
+    if( targetEditor instanceof ProfilchartEditor )
+    {
+//      final ProfilchartEditor profilchartEditor = (ProfilchartEditor) targetEditor;
+//      m_statusLineItem.setEditor( profilchartEditor );
+    }
+
+    m_retargetManager.setActiveEditor( targetEditor );
+
+    m_profilPartListener.onPartActivated( targetEditor );
+  }
+
+  @Override
+  public void contributeToToolBar( final IToolBarManager toolBarManager )
+  {
+    super.contributeToToolBar( toolBarManager );
+    toolBarManager.add( new Separator( RetargetActionManager.MENU_GROUP_CHECK ) );
+    toolBarManager.add( new Separator( RetargetActionManager.MENU_GROUP_PUSH ) );
+    toolBarManager.add( new Separator( RetargetActionManager.MENU_GROUP_RADIO ) );
+    toolBarManager.add( new Separator( RetargetActionManager.MENU_GROUP_MENU ) );
+    toolBarManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+
+    m_retargetManager.contributeToToolBar( toolBarManager );
+  }
+
+  @Override
+  public void contributeToMenu( final IMenuManager menuManager )
+  {
+    super.contributeToMenu( menuManager );
+    final MenuManager profilMenu = new MenuManager( "Profil", MENU_ID_PROFIL );
+    menuManager.insertAfter( IWorkbenchActionConstants.MB_ADDITIONS, profilMenu );
+
+    profilMenu.add( new Separator( RetargetActionManager.MENU_GROUP_PUSH ) );
+    profilMenu.add( new Separator( RetargetActionManager.MENU_GROUP_RADIO ) );
+    profilMenu.add( new Separator( RetargetActionManager.MENU_GROUP_CHECK ) );
+    final Separator menuSep = new Separator( RetargetActionManager.MENU_GROUP_MENU );
+    profilMenu.add( menuSep );
+    profilMenu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+
+    
+    m_retargetManager.contributeToMenu( menuManager );
+
+    
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToStatusLine(org.eclipse.jface.action.IStatusLineManager)
+   */
+  @Override
+  public void contributeToStatusLine( final IStatusLineManager statusLineManager )
+  {
+    statusLineManager.add( m_statusLineItem );
+  }
+
+  public void fillContextMenu( final IMenuManager manager )
+  {
+    manager.add( new Separator( RetargetActionManager.MENU_GROUP_CHECK ) );
+    manager.add( new Separator( RetargetActionManager.MENU_GROUP_RADIO ) );
+    manager.add( new Separator( RetargetActionManager.MENU_GROUP_PUSH ) );
+    manager.add( new Separator( RetargetActionManager.MENU_GROUP_MENU ) );
+    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    
+    
+    
+    m_retargetManager.fillContextMenu( manager );
+
+  }
+
+  public RetargetActionManager getRetargetManager( )
+  {
+    return m_retargetManager;
+  }
+}

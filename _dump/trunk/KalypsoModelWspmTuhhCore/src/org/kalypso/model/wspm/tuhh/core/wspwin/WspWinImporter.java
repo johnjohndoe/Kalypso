@@ -93,6 +93,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.CalculationContentBean;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
@@ -114,8 +115,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import serializer.prf.PrfSource;
 import serializer.prf.ProfilesSerializer;
-
-
 
 /**
  * @author thuel2
@@ -139,11 +138,14 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
+
     final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import-Log", null );
 
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
 
     monitor.subTask( " - Initialisiere KALYPSO..." );
+    // HACK: initialize KalypsoUI
+    KalypsoGisPlugin.getDefault();
 
     try
     {
@@ -197,7 +199,8 @@ public class WspWinImporter
       // Load WspWin Project //
       // /////////////////// //
       final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
-      if( wspCfgBean.getType() != 'b' )
+      final boolean isTuhhProject = wspCfgBean.getType() != 'b';
+      if( isTuhhProject )
       {
         PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, "Es wird ein WspWin-Knauf Projekt als TUHH-Pasche-Projekt importiert.", null );
         wspCfgBean.setType( 'b' );
@@ -224,7 +227,7 @@ public class WspWinImporter
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams, isTuhhProject ) );
         }
         catch( final Exception e )
         {
@@ -333,7 +336,7 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams, boolean isTuhhProject ) throws IOException, ParseException
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
 
@@ -474,113 +477,8 @@ public class WspWinImporter
     // ///////////////////////////// //
     try
     {
-      final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
-      for( final CalculationBean bean : calcBeans )
-      {
-        try
-        {
-          final CalculationContentBean contentBean = bean.readCalculationContent( profDir );
-
-          // create calculation
-          final TuhhCalculation calc = tuhhProject.createCalculation();
-
-          calc.setName( baseName + bean.getName() );
-          calc.setDescription( "Imported from WspWin" );
-          calc.setCalcCreation( "WspWin Import", new Date() );
-          calc.setReachRef( reach );
-
-          final FLIESSGESETZ fliessgesetz = contentBean.getFliessgesetz();
-          switch( fliessgesetz )
-          {
-            case MANNING_STRICKLER:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.MANNING_STRICKLER );
-              break;
-            case DARCY_WEISBACH_OHNE_FORMEINFLUSS:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS );
-              break;
-            case DARCY_WEISBACH_MIT_FORMEINFLUSS:
-              calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS );
-              break;
-          }
-
-          calc.setSubReachDef( contentBean.getAnfang(), contentBean.getEnde() );
-
-          final ART_ANFANGS_WSP artAnfangswasserspiegel = contentBean.getArtAnfangswasserspiegel();
-          final START_KONDITION_KIND type;
-          switch( artAnfangswasserspiegel )
-          {
-            case DIREKTEINGABE:
-              type = TuhhCalculation.START_KONDITION_KIND.WATERLEVEL;
-              break;
-
-            default:
-            case GRENZTIEFE:
-              type = TuhhCalculation.START_KONDITION_KIND.CRITICAL_WATER_DEPTH;
-              break;
-
-            case STATIONAER_GLEICHFOERMIGES_GEFAELLE:
-              type = TuhhCalculation.START_KONDITION_KIND.UNIFORM_BOTTOM_SLOPE;
-              break;
-          }
-          final double startSlope = contentBean.getGefaelle();
-          final double startWsp = contentBean.getHoehe();
-          calc.setStartCondition( type, startWsp, startSlope );
-
-          final TuhhCalculation.WSP_ITERATION_TYPE iterationType;
-          if( contentBean.isSimpleBerechnungWSPInt() )
-            iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
-          else
-            iterationType = TuhhCalculation.WSP_ITERATION_TYPE.EXACT;
-
-          final TuhhCalculation.VERZOEGERUNSVERLUST_TYPE verzType;
-          switch( contentBean.getVerzoegerungsVerlust() )
-          {
-            default:
-            case BJOERNSEN:
-              verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.BJOERNSEN;
-              break;
-            case DFG:
-              verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DFG;
-              break;
-            case DVWK:
-              verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DVWK;
-              break;
-          }
-
-          final TuhhCalculation.REIBUNGSVERLUST_TYPE reibType;
-          if( contentBean.isReibungsverlustNachTrapezformel() )
-            reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.TRAPEZ_FORMULA;
-          else
-            reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.GEOMETRIC_FORMULA;
-
-          calc.setWaterlevelParameters( iterationType, verzType, reibType, contentBean.isBerechneBruecken(), contentBean.isBerechneWehre() );
-
-          switch( contentBean.getCalcKind() )
-          {
-            case WATERLEVEL:
-              calc.setCalcMode( TuhhCalculation.MODE.WATERLEVEL );
-              break;
-
-            case BF_UNIFORM:
-              calc.setCalcMode( TuhhCalculation.MODE.BF_UNIFORM );
-              break;
-
-            case BF_NON_UNIFORM:
-              calc.setCalcMode( TuhhCalculation.MODE.BF_NON_UNIFORM );
-              break;
-          }
-
-          final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
-          calc.setRunOffRef( runOffRef );
-
-          // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
-          calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
-        }
-        catch( final Exception e )
-        {
-          status.add( StatusUtilities.statusFromThrowable( e ) );
-        }
-      }
+      if( isTuhhProject )
+        importCalculations( tuhhProject, zustandBean, status, reach, profDir, baseName, readRunOffEvents );
     }
     catch( final Exception e )
     {
@@ -588,6 +486,117 @@ public class WspWinImporter
     }
 
     return status;
+  }
+
+  private static void importCalculations( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final MultiStatus status, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents ) throws ParseException, IOException
+  {
+    final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
+    for( final CalculationBean bean : calcBeans )
+    {
+      try
+      {
+        final CalculationContentBean contentBean = bean.readCalculationContent( profDir );
+
+        // create calculation
+        final TuhhCalculation calc = tuhhProject.createCalculation();
+
+        calc.setName( baseName + bean.getName() );
+        calc.setDescription( "Imported from WspWin" );
+        calc.setCalcCreation( "WspWin Import", new Date() );
+        calc.setReachRef( reach );
+
+        final FLIESSGESETZ fliessgesetz = contentBean.getFliessgesetz();
+        switch( fliessgesetz )
+        {
+          case MANNING_STRICKLER:
+            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.MANNING_STRICKLER );
+            break;
+          case DARCY_WEISBACH_OHNE_FORMEINFLUSS:
+            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS );
+            break;
+          case DARCY_WEISBACH_MIT_FORMEINFLUSS:
+            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS );
+            break;
+        }
+
+        calc.setSubReachDef( contentBean.getAnfang(), contentBean.getEnde() );
+
+        final ART_ANFANGS_WSP artAnfangswasserspiegel = contentBean.getArtAnfangswasserspiegel();
+        final START_KONDITION_KIND type;
+        switch( artAnfangswasserspiegel )
+        {
+          case DIREKTEINGABE:
+            type = TuhhCalculation.START_KONDITION_KIND.WATERLEVEL;
+            break;
+
+          default:
+          case GRENZTIEFE:
+            type = TuhhCalculation.START_KONDITION_KIND.CRITICAL_WATER_DEPTH;
+            break;
+
+          case STATIONAER_GLEICHFOERMIGES_GEFAELLE:
+            type = TuhhCalculation.START_KONDITION_KIND.UNIFORM_BOTTOM_SLOPE;
+            break;
+        }
+        final double startSlope = contentBean.getGefaelle();
+        final double startWsp = contentBean.getHoehe();
+        calc.setStartCondition( type, startWsp, startSlope );
+
+        final TuhhCalculation.WSP_ITERATION_TYPE iterationType;
+        if( contentBean.isSimpleBerechnungWSPInt() )
+          iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
+        else
+          iterationType = TuhhCalculation.WSP_ITERATION_TYPE.EXACT;
+
+        final TuhhCalculation.VERZOEGERUNSVERLUST_TYPE verzType;
+        switch( contentBean.getVerzoegerungsVerlust() )
+        {
+          default:
+          case BJOERNSEN:
+            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.BJOERNSEN;
+            break;
+          case DFG:
+            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DFG;
+            break;
+          case DVWK:
+            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DVWK;
+            break;
+        }
+
+        final TuhhCalculation.REIBUNGSVERLUST_TYPE reibType;
+        if( contentBean.isReibungsverlustNachTrapezformel() )
+          reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.TRAPEZ_FORMULA;
+        else
+          reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.GEOMETRIC_FORMULA;
+
+        calc.setWaterlevelParameters( iterationType, verzType, reibType, contentBean.isBerechneBruecken(), contentBean.isBerechneWehre() );
+
+        switch( contentBean.getCalcKind() )
+        {
+          case WATERLEVEL:
+            calc.setCalcMode( TuhhCalculation.MODE.WATERLEVEL );
+            break;
+
+          case BF_UNIFORM:
+            calc.setCalcMode( TuhhCalculation.MODE.BF_UNIFORM );
+            break;
+
+          case BF_NON_UNIFORM:
+            calc.setCalcMode( TuhhCalculation.MODE.BF_NON_UNIFORM );
+            break;
+        }
+
+        final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
+        calc.setRunOffRef( runOffRef );
+
+        // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
+        calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
+      }
+      catch( final Exception e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
   }
 
   private static void updateReachGeometries( final TuhhReach reach )

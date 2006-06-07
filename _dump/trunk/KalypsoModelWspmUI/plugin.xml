@@ -1,7 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+     <extension-point id="profilPointsSource" name="profilPointsSource" schema="schema/profilPointsSource.exsd"/>
+   <extension-point id="profilPointsTarget" name="profilPointsTarget" schema="schema/profilPointsTarget.exsd"/>
+   
    <extension
+         id="profilemarker"
+         name="Profil Validierung"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <persistent value="false"/>
+   </extension>
+   <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              class="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"
+              name="Profileditor"
+              id="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"/>
+        <page
+              category="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"
+              class="org.kalypso.model.wspm.ui.profil.preferences.ValidatorPreferencePage"
+              id="org.kalypso.model.wspm.ui.profil.preferences.ValidatorPreferencePage"
+              name="Validator"/>
+     </extension>
+     <extension
+           point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.kalypso.model.wspm.ui.profil.preferences.PreferenceInitializer"/>
+     </extension>
+     <extension
+           point="org.kalypso.model.wspm.ui.profilPointsSource">
+        <profilPointsSource
+              class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource"
+              description="Alle Profilpunkte aus einer Datei"
+              id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource"
+              label="Datei"/>
+        <profilPointsSource
+              class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.SinglePointsSource"
+              description="Ein einzelner Punkt"
+              id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.SinglePointsSource"
+              label="interpolierter Punkt"/>
+     </extension>
+     <extension
+           point="org.kalypso.model.wspm.ui.profilPointsTarget">
+        <profilPointTarget
+              class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget"
+              description="Fügt die neuen Punkte am Anfang des Profils ein."
+              id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget"
+              label="Am Profilanfang"/>
+        <profilPointTarget
+              class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilMidTarget"
+              description="Fügt die neuen Punkte hinter dem markierten Punkt ein."
+              id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilMidTarget"
+              label="am markierten Punkt"/>
+        <profilPointTarget
+              class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget"
+              description="Fügt die neuen Punkte am Anfang des Profils ein."
+              id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget"
+              label="am Profilende"/>
+     </extension>
+      <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"

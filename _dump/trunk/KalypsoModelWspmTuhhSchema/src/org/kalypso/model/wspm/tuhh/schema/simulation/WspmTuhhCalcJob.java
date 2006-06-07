@@ -266,7 +266,6 @@ public class WspmTuhhCalcJob implements ISimulation
         case BF_UNIFORM:
         {
           // bankfull uniform
-          // TODO get additional results
           // *.qb2 = Q als Treppenfunktion, we don't fetch it
           // *.qb1 = bankfull-lengthsection
           final FileFilter qb1Filter = FileFilterUtils.suffixFileFilter( ".qb1" );
@@ -285,7 +284,6 @@ public class WspmTuhhCalcJob implements ISimulation
           break;
         }
         case BF_NON_UNIFORM:
-        // TODO get additional results
         {
           // bankfull nonuniform
           // *.qb2 = Q als Treppenfunktion, we don't fetch it
@@ -295,7 +293,21 @@ public class WspmTuhhCalcJob implements ISimulation
           if( bfLenSecFile.length > 0 )
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-
+          
+          // TODO: fertig machen
+          // *.km (W/Q-Tabelle für Kalinin-Miljukow)
+          final FileFilter kmFilter = FileFilterUtils.suffixFileFilter( ".km" );
+          final File[] kmFile = dathDir.listFiles( kmFilter );
+          if( kmFile.length > 0 )
+            // assumption: max. one KM
+            resultEater.addResult( "wqKalMil", kmFile[0] );
+          
+          
+          // *.pro (W/Q-Tabellen für jedes Profil -> Verzeichnis)
+//          wqProProfil
+          
+          // *.tab (Ergebnislisten für jeden Abfluss -> Verzeichnis)
+//          resultListsNonUni
           break;
         }
       }

@@ -63,7 +63,7 @@ public class ShowProfileAction extends ActionDelegate
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     try
     {
-      activePage.showView( "com.bce.profil.eclipse.view.chart.ChartView" );
+      activePage.showView( "org.kalypso.model.wspm.ui.view.chart.ChartView" );
     }
     catch( final PartInitException e )
     {
