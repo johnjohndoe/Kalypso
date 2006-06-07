@@ -14,9 +14,13 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.tokenreplace.ITokenReplacer;
+import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -24,6 +28,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -38,6 +43,63 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class FeatureHelper
 {
+  private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
+  {
+    public String replaceToken( final Object value, final String argument )
+    {
+      return ((Feature) value).getId();
+    }
+
+    public String getToken( )
+    {
+      return "id";
+    }
+  };
+
+  private static ITokenReplacer TR_PROPERTYVALUE = new ITokenReplacer()
+  {
+    public String replaceToken( final Object value, final String argument )
+    {
+      final Feature feature = (Feature) value;
+
+      final QName qname = QNameUtilities.createQName( argument );
+      final Object property = feature.getProperty( qname );
+
+      return "" + property;
+    }
+
+    public String getToken( )
+    {
+      return "property";
+    }
+  };
+
+  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ITokenReplacer()
+  {
+    public String replaceToken( final Object value, final String argument )
+    {
+      final Feature feature = (Feature) value;
+
+      final String[] strings = argument.split( ";" );
+      if( strings.length != 2 )
+        return "Wrong argument for listProperty. Must be _qname_;listindex";
+
+      final QName qname = QNameUtilities.createQName( strings[0] );
+      final int listindex = Integer.parseInt( strings[1] );
+
+      final List property = (List) feature.getProperty( qname );
+
+      return "" + property.get( listindex );
+    }
+
+    public String getToken( )
+    {
+      return "listProperty";
+    }
+  };
+
+  private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { TR_FEATUREID, TR_PROPERTYVALUE, TR_LISTPROPERTYVALUE } );
+
   public static IPropertyType getPT( Feature feature, String propName )
   {
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
@@ -431,7 +493,7 @@ public class FeatureHelper
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
     final IFeatureType targetFeatureType = list.getParentFeatureTypeProperty().getTargetFeatureType();
-    
+
     final IFeatureType newFeatureType;
     if( newFeatureName == null )
       newFeatureType = targetFeatureType;
@@ -441,7 +503,6 @@ public class FeatureHelper
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
-    
     final Feature newFeature = workspace.createFeature( parentFeature, newFeatureType );
 
     list.add( newFeature );
@@ -611,4 +672,40 @@ public class FeatureHelper
 
     return null;
   }
+
+  /**
+   * Returns the label of a feature.
+   * <p>
+   * The label is taken from the annotation on the feature type
+   * </p>
+   * <p>
+   * Additionally, token replace will be performed on the annotation string.
+   * </p>
+   * <p>
+   * The following tokens are supported:
+   * <ul>
+   * <li>${id}: the gml:id of the feature</li>
+   * <li>${property:_qname_}: the value of the property _qname_ parsed as string (via its marshalling handler). _qname_
+   * <li>${listProperty:_qname_;listindex}: Similar to ${property}, but the value is interpretated as List, and then
+   * the list item with index listindex is returned. Syntax: namespace#localPart</li>
+   * </ul>
+   * </p>
+   */
+  public static String getLabel( final Feature feature )
+  {
+    final IFeatureType featureType = feature.getFeatureType();
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
+
+    final String label = annotation.getLabel();
+    return tokenReplace( feature, label );
+
+    // return annotation.getLabel() + " #" + feature.getId();
+  }
+
+  /** Performs the token replace for the methods {@link #getLabel(Feature)}, ... */
+  private static String tokenReplace( final Feature feature, final String tokenString )
+  {
+    return FEATURE_TOKEN_REPLACE.replaceTokens( feature, tokenString );
+  }
+
 }
