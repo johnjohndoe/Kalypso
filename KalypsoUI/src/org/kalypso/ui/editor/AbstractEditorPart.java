@@ -335,6 +335,9 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       final IResourceDelta delta = event.getDelta().findMember( input.getFile().getFullPath() );
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
+        // if its only a marker change, do not reload
+        if( delta.getFlags() != IResourceDelta.MARKERS  )
+        
         // TODO: ask user?
         // if( !m_isSaving
         // && MessageDialog.openQuestion( getSite().getShell(),

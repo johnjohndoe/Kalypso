@@ -656,6 +656,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // remove all selected features from this theme
     // TODO: maybe only visible??
     final FeatureList featureList = theme.getFeatureList();
+    if( featureList == null )
+      return;
+    
     final Feature parentFeature = featureList.getParentFeature();
     final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
 
