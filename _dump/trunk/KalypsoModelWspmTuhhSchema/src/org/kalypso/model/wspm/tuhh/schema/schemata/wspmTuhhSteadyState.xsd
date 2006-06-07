@@ -20,7 +20,7 @@
 	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???Berechnung 1D-TUHH</label>
+				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
