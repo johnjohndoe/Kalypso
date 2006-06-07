@@ -53,6 +53,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
@@ -293,21 +294,32 @@ public class WspmTuhhCalcJob implements ISimulation
           if( bfLenSecFile.length > 0 )
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-          
-          // TODO: fertig machen
+
           // *.km (W/Q-Tabelle für Kalinin-Miljukow)
           final FileFilter kmFilter = FileFilterUtils.suffixFileFilter( ".km" );
-          final File[] kmFile = dathDir.listFiles( kmFilter );
-          if( kmFile.length > 0 )
+          final File[] kmFiles = dathDir.listFiles( kmFilter );
+          if( kmFiles.length > 0 )
             // assumption: max. one KM
-            resultEater.addResult( "wqKalMil", kmFile[0] );
-          
-          
+            resultEater.addResult( "wqKalMil", kmFiles[0] );
+
           // *.pro (W/Q-Tabellen für jedes Profil -> Verzeichnis)
-//          wqProProfil
-          
+          final FileFilter wqProProfilFilter = FileFilterUtils.suffixFileFilter( ".pro" );
+          final File[] proFiles = dathDir.listFiles( wqProProfilFilter );
+          final File wqProProfilDir = new File( dathDir, "WQTabs" );
+          wqProProfilDir.mkdirs();
+          for( final File file : proFiles )
+            FileUtils.copyFileToDirectory( file, wqProProfilDir );
+          resultEater.addResult( "wqProProfil", wqProProfilDir );
+
           // *.tab (Ergebnislisten für jeden Abfluss -> Verzeichnis)
-//          resultListsNonUni
+          final FileFilter resNonUniFilter = FileFilterUtils.suffixFileFilter( ".tb" );
+          final File[] resNonUniFiles = dathDir.listFiles( resNonUniFilter );
+          final File resNonUniDir = new File( dathDir, "ResultLists" );
+          resNonUniDir.mkdirs();
+          for( final File file : resNonUniFiles )
+            FileUtils.copyFileToDirectory( file, resNonUniDir );
+          resultEater.addResult( "resultListsNonUni", resNonUniDir );
+
           break;
         }
       }

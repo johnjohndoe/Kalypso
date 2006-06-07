@@ -199,8 +199,9 @@ public class WspWinImporter
       // Load WspWin Project //
       // /////////////////// //
       final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
-      final boolean isTuhhProject = wspCfgBean.getType() != 'b';
-      if( isTuhhProject )
+      
+      final boolean isNotTuhhProject = wspCfgBean.getType() != 'b';
+      if( isNotTuhhProject )
       {
         PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, "Es wird ein WspWin-Knauf Projekt als TUHH-Pasche-Projekt importiert.", null );
         wspCfgBean.setType( 'b' );
@@ -227,7 +228,7 @@ public class WspWinImporter
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams, isTuhhProject ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
         }
         catch( final Exception e )
         {
@@ -241,7 +242,7 @@ public class WspWinImporter
 
       // /////////////// //
       // write workspace //
-      // ////////////// //
+      // /////////////// //
       monitor.subTask( " - Modell wird geschrieben..." );
       final SetContentHelper contentHelper = new SetContentHelper()
       {
@@ -336,7 +337,7 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams, boolean isTuhhProject ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams, boolean isNotTuhhProject ) throws IOException, ParseException
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
 
@@ -477,7 +478,7 @@ public class WspWinImporter
     // ///////////////////////////// //
     try
     {
-      if( isTuhhProject )
+      if( !isNotTuhhProject )
         importCalculations( tuhhProject, zustandBean, status, reach, profDir, baseName, readRunOffEvents );
     }
     catch( final Exception e )
