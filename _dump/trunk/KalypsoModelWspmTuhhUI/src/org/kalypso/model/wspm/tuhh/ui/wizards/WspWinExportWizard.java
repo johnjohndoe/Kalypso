@@ -83,6 +83,8 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
       setDialogSettings( section );
     else
       setDialogSettings( pluginSettings.addNewSection( "WspWinExportWizard" ) );//$NON-NLS-1$
+
+    setForcePreviousAndNextButtons( false );
   }
 
   /*

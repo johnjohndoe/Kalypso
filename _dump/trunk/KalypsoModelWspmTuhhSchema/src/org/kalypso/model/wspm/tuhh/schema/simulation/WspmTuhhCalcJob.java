@@ -55,7 +55,6 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
@@ -245,13 +244,23 @@ public class WspmTuhhCalcJob implements ISimulation
               // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
               // Geometrie ausdünnen, (welche) Parameter aus ANT?
               // WST an Punkte dranhängen und neue Geometrie machen
-              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( new URL( lengthSectionObsFile.getAbsolutePath() ) );
-              final Feature rootFeature = obsWks.getRootFeature();
-              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
-              for( final WspmReachProfileSegment reach : reachProfileSegments )
-              {
-                reach.getGeometry().getAsLineString();
-              }
+
+              // @Monika: auskommentiert, weils zur Zeit ne exception gibt, dass
+              // die datei zeichen falschen encodings enthält.
+              // vermutlich problem der header/footer dateien
+              // das gml wird mit dem encoding gelesen, welches in der 1.Zeile angegeben ist.
+              
+              // P.S.: Du musst übrigends den header footer gar nicht aus dem zip entpacken, sondern
+              // könntest auch bequem direkt per
+              // getClass().getResourceAsString( "resources/header.txt" ) drauf zugreifen
+              
+//              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionObsFile.toURL() );
+//              final Feature rootFeature = obsWks.getRootFeature();
+//              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+//              for( final WspmReachProfileSegment reach : reachProfileSegments )
+//              {
+//                reach.getGeometry().getAsLineString();
+//              }
 
               // final File breaklineFile = null;
               //

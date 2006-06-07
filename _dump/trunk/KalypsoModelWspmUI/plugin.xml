@@ -4,6 +4,125 @@
      <extension-point id="profilPointsSource" name="profilPointsSource" schema="schema/profilPointsSource.exsd"/>
    <extension-point id="profilPointsTarget" name="profilPointsTarget" schema="schema/profilPointsTarget.exsd"/>
    
+        <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              class="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
+              category="com.bce.profil.eclipse.preferences.ProfileditorPreferencePage"
+              name="Tabelle"
+              id="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"/>
+     </extension>
+   
+        <extension
+           point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.kalypso.model.wspm.ui.preferences.PreferenceInitializer"/>
+     </extension>
+     <extension
+           point="org.eclipse.ui.viewActions">
+        <viewContribution
+              id="com.bce.profil.eclipse.view.legendContribution"
+              targetID="org.kalypso.model.wspm.ui.view.legend.LegendView">
+           <action
+                 class="org.kalypso.model.wspm.ui.view.legend.LayerViewActionDelegate"
+                 disabledIcon="icons/dlcl16/profil_legend_props.gif"
+                 enablesFor="1"
+                 icon="icons/elcl16/profil_legend_props.gif"
+                 id="com.bce.profil.eclipse.view.legend.LayerViewAction"
+                 label="Eigenschaften"
+                 style="push"
+                 toolbarPath="additions"
+                 tooltip="Öffnet die Profileditor Layeransicht"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate"
+                 disabledIcon="icons/dtool16/delete_layer.gif"
+                 enablesFor="1"
+                 icon="icons/etool16/delete_layer.gif"
+                 id="com.bce.profil.eclipse.view.legend.RemoveLayerAction"
+                 label="Datensatz löschen"
+                 style="push"
+                 toolbarPath="additions"
+                 tooltip="Löscht den selektierten Datensatz aus dem Profil."/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate"
+                 icon="icons/etool16/add_layer.gif"
+                 id="com.bce.profil.eclipse.view.legend.AddLayerAction"
+                 label="Datensatz hinzufügen"
+                 style="push"
+                 toolbarPath="additions"
+                 tooltip="Fügt einen neuen Datensatz in das Profil ein."/>
+        </viewContribution>
+        <viewContribution
+              id="com.bce.profil.eclipse.view.tableContribution"
+              targetID="org.kalypso.model.wspm.ui.view.table.TableView">
+           <menu
+                 id="tableViewMenu"
+                 label="Profiltabelle">
+              <groupMarker name="points"/>
+              <separator name="additions"/>
+           </menu>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.InsertPointsActionDelegate"
+                 icon="icons/elcl16/table_insert_points.gif"
+                 id="com.bce.profil.eclipse.view.table.insertPoints"
+                 label="Punkte einfügen..."
+                 menubarPath="points"
+                 style="push"
+                 toolbarPath="points"
+                 tooltip="Punkte in die Tabelle einfügen"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate"
+                 id="com.bce.profil.eclipse.view.table.douglasPeucker"
+                 label="Profil ausdünnen..."
+                 menubarPath="points"
+                 style="push"
+                 tooltip="Löscht nicht benötigte Punkte aus dem Profil."/>
+        </viewContribution>
+     </extension>
+        <extension
+           point="org.eclipse.ui.editors">
+        <editor
+              class="org.kalypso.model.wspm.ui.editor.ProfilchartEditor"
+              contributorClass="org.kalypso.model.wspm.ui.editor.ProfilchartEditorContributor"
+              default="true"
+              extensions="prf"
+              icon="icons/eview16/profil_editor.gif"
+              id="org.kalypso.model.wspm.ui.editor.ProfilchartEditor"
+              matchingStrategy="org.kalypso.contribs.eclipse.ui.FileResourceEditorMatchingStrategy"
+              name="Profil Grafikeditor"/>
+     </extension>
+     <extension
+           point="org.eclipse.ui.views">
+        <category
+              name="Profileditor"
+              id="com.bce.profil.eclipse.app.view.category"/>
+        <view
+              allowMultiple="false"
+              category="com.bce.profil.eclipse.app.view.category"
+              class="org.kalypso.model.wspm.ui.view.legend.LegendView"
+              icon="icons/eview16/profil_legend.gif"
+              id="org.kalypso.model.wspm.ui.view.legend.LegendView"
+              name="Profileditor Legende"/>
+        <view
+              allowMultiple="false"
+              category="com.bce.profil.eclipse.app.view.category"
+              class="org.kalypso.model.wspm.ui.view.LayerView"
+              icon="icons/eview16/profil_panel.gif"
+              id="org.kalypso.model.wspm.ui.view.LayerView"
+              name="Profileditor Layeransicht"/>
+        <view
+              allowMultiple="true"
+              category="com.bce.profil.eclipse.app.view.category"
+              class="org.kalypso.model.wspm.ui.view.table.TableView"
+              icon="icons/eview16/profil_table.gif"
+              id="org.kalypso.model.wspm.ui.view.table.TableView"
+              name="Profileditor Tabelle"/>
+        <view
+              class="org.kalypso.model.wspm.ui.view.chart.ChartView"
+              id="org.kalypso.model.wspm.ui.view.chart.ChartView"
+              name="Profil Diagrammansicht"/>
+     </extension>
+   
+   
    <extension
          id="profilemarker"
          name="Profil Validierung"
@@ -58,21 +177,6 @@
               id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget"
               label="am Profilende"/>
      </extension>
-      <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspm#ProfileReachSegment"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="Profil anzeigen"/>
-      </objectContribution>
-   </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
@@ -91,5 +195,61 @@
          <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
       </factory>
    </extension>
-
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprofile#Profile"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               label="Profil anzeigen"/>
+      </objectContribution>
+   </extension>
+     <extension
+           point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+              id="com.bce.profil.eclipse.view.table.popup"
+              targetID="org.kalypso.model.wspm.ui.view.table.TableView">
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.DeletePointDelegate"
+                 enablesFor="+"
+                 id="com.bce.profil.eclipse.view.table.deletepoint"
+                 label="Punkt löschen"
+                 menubarPath="additions"
+                 tooltip="Löscht den(die) selektierten Punkt(e)"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.InsertPointDelegate"
+                 enablesFor="?"
+                 id="com.bce.profil.eclipse.view.table.insertpoint"
+                 label="Punkt einfügen"
+                 menubarPath="additions"
+                 tooltip="Fügt einen neuen Profilpunkt hinter dem selektierten ein."/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.FillValuesDelegate"
+                 enablesFor="+"
+                 id="com.bce.profil.eclipse.view.table.fillvalues"
+                 label="Werte übertragen"
+                 menubarPath="additions"
+                 tooltip="Überträgt innerhalb einer Spalte die Werte der aktiven Zelle auf alle selektierten Zellen."/>
+        </viewerContribution>
+        <objectContribution
+              adaptable="true"
+              id="com.bce.profil.objectControbution.profilLayer"
+              objectClass="com.bce.profil.ui.view.chart.layer.IProfilChartLayer">
+           <action
+                 class="org.kalypso.model.wspm.ui.action.ProfilLayerActionDelegate"
+                 enablesFor="1"
+                 icon="icons/elcl16/profil_legend_props.gif"
+                 id="com.bce.profil.app.profilLayerContributions.showProperties"
+                 label="Eigenschaften"
+                 menubarPath="additions"
+                 style="push"
+                 tooltip="Zeigt die Eigenschaften des Themas in der Themenansicht"/>
+        </objectContribution>
+     </extension>
 </plugin>

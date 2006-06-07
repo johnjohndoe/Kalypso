@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,15 +51,21 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
+import org.kalypso.model.wspm.core.profil.ProfilDeviderMap;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -68,7 +75,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
-
 
 /**
  * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile
@@ -106,9 +112,25 @@ public class ProfileFeatureFactory implements IWspmConstants
       final TupleResult result = new TupleResult();
       final LinkedList<POINT_PROPERTY> pointProperties = profile.getPointProperties( false );
       final Map<POINT_PROPERTY, IComponent> compMap = new HashMap<POINT_PROPERTY, IComponent>( pointProperties.size() );
-      
-      int compCount = 0;
-      
+      final ProfilDeviderMap deviderMap = new ProfilDeviderMap( profile );
+
+      final Map<DEVIDER_TYP, IComponent> deviderComponents = new HashMap<DEVIDER_TYP, IComponent>();
+      deviderComponents.put( DEVIDER_TYP.DURCHSTROEMTE, new ValueComponent( 0, "Durchströmte Bereiche", "Markierung Durchströmte Bereiche", XmlTypes.XS_BOOLEAN, Boolean.FALSE, "-" ) );
+      deviderComponents.put( DEVIDER_TYP.BORDVOLL, new ValueComponent( 1, "Bordvollpunkte", "Markierung Bordvollpunkte", XmlTypes.XS_BOOLEAN, Boolean.FALSE, "-" ) );
+      deviderComponents.put( DEVIDER_TYP.TRENNFLAECHE, new ValueComponent( 2, "Trennflächen", "Markierung Trennflächen", XmlTypes.XS_STRING, "none", "-" ) );
+      deviderComponents.put( DEVIDER_TYP.WEHR, new ValueComponent( 3, "Trennlinie Wehr", "Markierung Trennlinie Wehr", XmlTypes.XS_DOUBLE, Double.NaN, "-" ) );
+
+      // add all devider types which have deviders
+      // if we don't do it here, we get later null entries in the result
+      for( final DEVIDER_TYP dTyp : DEVIDER_TYP.values() )
+      {
+        final IProfilDevider[] devider = profile.getDevider( dTyp );
+        if( devider != null && devider.length > 0 )
+          result.addComponent( deviderComponents.get( dTyp ) );
+      }
+
+      int compCount = 4;
+
       for( final IProfilPoint point : profile.getPoints() )
       {
         final IRecord record = result.createRecord();
@@ -126,6 +148,41 @@ public class ProfileFeatureFactory implements IWspmConstants
           final double value = point.getValueFor( pp );
           result.setValue( record, comp, new Double( value ) );
         }
+
+        // Handle devider
+        final Collection<IProfilDevider> deviders = deviderMap.get( point );
+        for( final IProfilDevider devider : deviders )
+        {
+          final IComponent component = deviderComponents.get( devider.getTyp() );
+          // don't need to add it, because it should already has been added before
+          final Object value;
+          switch( devider.getTyp() )
+          {
+            case DURCHSTROEMTE:
+              value = Boolean.TRUE;
+              break;
+
+            case TRENNFLAECHE:
+              final Boolean pos = (Boolean) devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG );
+              value = pos.booleanValue() ? "high" : "low";
+              break;
+
+            case BORDVOLL:
+              value = Boolean.TRUE;
+              break;
+
+            case WEHR:
+              value = devider.getValueFor( DEVIDER_PROPERTY.BEIWERT );
+              break;
+
+            default:
+              throw new UnsupportedOperationException( "Unknown devider type: " + devider );
+          }
+
+          if( value == null )
+            throw new NullPointerException();
+          record.setValue( component, value );
+        }
       }
 
       // write the table into the main feature
@@ -136,16 +193,15 @@ public class ProfileFeatureFactory implements IWspmConstants
       //
       // Buildings
       //
-//      final IProfilBuilding building = profile.getBuilding();
-//      final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
-//      final BUILDING_TYP typ = building.getTyp();
-      
-//    final QName memberQName = new QName( NS_WSPMPROF, "member" );
-//    final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
-//    // delete existing features
-//    memberFeatures.clear();
-      
-      
+      // final IProfilBuilding building = profile.getBuilding();
+      // final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
+      // final BUILDING_TYP typ = building.getTyp();
+
+      // final QName memberQName = new QName( NS_WSPMPROF, "member" );
+      // final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
+      // // delete existing features
+      // memberFeatures.clear();
+
       //
       // set station
       //
@@ -170,7 +226,7 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final String unit;
     if( pp == POINT_PROPERTY.RAUHEIT )
-      unit = ((RAUHEIT_TYP)profile.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP )).name();
+      unit = ((RAUHEIT_TYP) profile.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP )).name();
     else
       unit = "?";
 
@@ -185,41 +241,116 @@ public class ProfileFeatureFactory implements IWspmConstants
       throw new IllegalArgumentException( "Feature ist not a profile: " + profileFeature );
 
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
-    
+
     final IProfil profil = ProfilFactory.createProfil();
-    
+
+    //
+    // Metadaten
+    //
+    // TODO: we now create the needed metastrings and such für the prf serializer
+    // this should not be necessary
+    final ArrayList<Object> metastrings = new ArrayList<Object>( 14 );
+    metastrings.add( profileFeature.getWorkspace().getContext().toString() );
+    metastrings.add( "" );
+    metastrings.add( "" );
+    metastrings.add( "" );
+    metastrings.add( "" );
+    metastrings.add( "" );
+    metastrings.add( "Gewässer Zustand" );
+    metastrings.add( "QUERPROFIL 000" );
+    metastrings.add( "STATION KM 000.0000" );
+    metastrings.add( "" );
+    metastrings.add( "01.01.1900" );
+    metastrings.add( "B-1 0 0 0 0 0 0" );
+    metastrings.add( "" );
+    profil.setProperty( IProfil.PROFIL_PROPERTY.METASTRINGS, metastrings );
+    profil.setProperty( IProfil.PROFIL_PROPERTY.STATUS, "Zustand" );
+    profil.setProperty( IProfil.PROFIL_PROPERTY.VERZWEIGUNGSKENNUNG, "0" );
+    profil.setProperty( IProfil.PROFIL_PROPERTY.WASSERSPIEGEL, "Gewaesser" );
+    profil.setProperty( IProfil.PROFIL_PROPERTY.MEHRFELDBRUECKE, "0" );
+
+    //
+    // Tabelle
+    //
     final TupleResult result = observation.getResult();
     final IComponent[] components = result.getComponents();
     final Map<IComponent, IProfilPoint.POINT_PROPERTY> compMap = new HashMap<IComponent, IProfilPoint.POINT_PROPERTY>();
     for( final IComponent component : components )
     {
       final String name = component.getName();
-      final POINT_PROPERTY pp = IProfilPoint.POINT_PROPERTY.valueOf( name );
-      
-      if( pp == POINT_PROPERTY.RAUHEIT )
+      try
       {
-        final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( ((ValueComponent)component).getUnit() );
-        profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, rauheit_typ );
+        final POINT_PROPERTY pp = IProfilPoint.POINT_PROPERTY.valueOf( name );
+        if( pp == POINT_PROPERTY.RAUHEIT )
+        {
+          final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( ((ValueComponent) component).getUnit() );
+          profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, rauheit_typ );
+        }
+
+        profil.addPointProperty( pp );
+        compMap.put( component, pp );
       }
-      
-      profil.addPointProperty( pp );
-      compMap.put( component, pp );
+      catch( final IllegalArgumentException e )
+      {
+        // ignore, name is not know, maybe we have a marker
+      }
     }
-    
+
     for( final IRecord record : result )
     {
       final IProfilPoint point = profil.addPoint( 0.0, 0.0 );
-      
+
       for( final IComponent component : components )
       {
+        final String compName = component.getName();
+        final Object value = record.getValue( component );
+
         final POINT_PROPERTY pp = compMap.get( component );
-        
-        final Double value = (Double) record.getValue( component );
-        
-        point.setValueFor( pp, value );
-      }      
+        if( pp != null )
+        {
+          point.setValueFor( pp, (Double) value );
+          continue;
+        }
+        // Devider
+        else if( "Durchströmte Bereiche".equals( compName ) )
+        {
+          final Boolean hasDevider = (Boolean) value;
+          if( hasDevider.booleanValue() )
+          {
+            final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.DURCHSTROEMTE, point );
+            profil.addDevider( devider );
+          }
+        }
+        else if( "Bordvollpunkte".equals( compName ) )
+        {
+          final Boolean hasDevider = (Boolean) value;
+          if( hasDevider.booleanValue() )
+          {
+            final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.BORDVOLL, point );
+            profil.addDevider( devider );
+          }
+        }
+        else if( "Trennflächen".equals( compName ) )
+        {
+          final String kind = (String) value;
+          if( !"none".equals( kind ) )
+          {
+            final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
+            final Boolean high = Boolean.valueOf( "high".equals( kind ) );
+            devider.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, high );
+            profil.addDevider( devider );
+          }
+          else if( "Trennlinie Wehr".equals( compName ) )
+          {
+            final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
+            devider.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, value );
+            profil.addDevider( devider );
+          }
+        }
+
+      }
     }
-    
+
     return profil;
   }
 }
