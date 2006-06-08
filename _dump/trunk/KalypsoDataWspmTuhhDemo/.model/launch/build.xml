@@ -15,9 +15,12 @@
           target: runCalculation              
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
+		
+		<property name="eps.thinning" value="0.05" />
 
 		<echo message="Result path: ${result.path}" />
 		<echo message="Calc XPath: ${calc.xpath}" />
+		<echo message="Eps for breakline thinning: ${eps.thinning}" />
 
 		<property name="result.dir" value="${calc.dir}/${result.path}" />
 
@@ -30,31 +33,39 @@
 			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
 			<input id="CALC_PATH" path="${calc.xpath}" />
-
+			<input id="EPS_THINNING" path="${eps.thinning}" />
+			
+		    <!-- 
+		    Output des Rechenkerns/CalcJobs -->
 			<output id="SimulationLog" path="${result.path.aktuell.logs}/simulation.log" relativeToCalcCase="true" />
 			<output id="KernelLog" path="${result.path.aktuell.logs}/kernel.log" relativeToCalcCase="true" />
 			<output id="KernelErr" path="${result.path.aktuell.logs}/kernel.err" relativeToCalcCase="true" />
 
+		    <!-- 
+		    results for all modi -->
 			<output id="ControlFile" path="${result.path.aktuell.logs}/Kontroll.log" relativeToCalcCase="true" />
 			<output id="BeiwerteAus" path="${result.path.aktuell}/Beiwerte.aus" relativeToCalcCase="true" />
 			<output id="LambdaI" path="${result.path.aktuell}/lambda_i.txt" relativeToCalcCase="true" />
-			
-			<!-- results for WATERLEVEL mode -->
+
+			<!-- 
+			results for WATERLEVEL mode -->
 			<output id="LengthSection" path="${result.path.aktuell}/laengsschnitt.txt" relativeToCalcCase="true" />
 			<output id="LengthSectionObs" path="${result.path.aktuell}/laengsschnitt.gml" relativeToCalcCase="true" />
-			<output id="resultList" path="${result.path.aktuell}/Ergebnis.list" relativeToCalcCase="true" />
 			<output id="Bruchkanten" path="${result.path.aktuell}/bruchkanten.gml" relativeToCalcCase="true" />
-			<!-- results for BANKFUL NONUNIFORM mode -->
-			<output id="bfLengthSection" path="${result.path.aktuell}/test.qb1" relativeToCalcCase="true" />
+			
+			<!-- 
+			results for WATERLEVEL and BANKFUL UNIFORM mode -->
+			<output id="resultList" path="${result.path.aktuell}/Ergebnis.list" relativeToCalcCase="true" />
+			
+			<!-- 
+			results for BANKFUL UNIFORM mode -->
+			<output id="bfLengthSection" path="${result.path.aktuell}/result.qb1" relativeToCalcCase="true" />
 
-			<!-- results for BANKFUL UNIFORM mode -->
-
-			<!-- noch unsortiert 
-			<output id="Ergebnisse" path="${result.path.aktuell}" relativeToCalcCase="true" />
-			<output id="TabularResult" />
-			<output id="bv_Ergebnisse" />
-			<output id="WQ_Tabellen" />
-			-->
+			<!-- 
+			results for BANKFUL NONUNIFORM mode -->
+			<output id="wqKalMil" path="${result.path.aktuell}/WQ_Tabelle.km" relativeToCalcCase="true" />
+			<output id="wqProProfil" path="${result.path.aktuell}/WQTabs" relativeToCalcCase="true" />
+			<output id="resultListsNonUni" path="${result.path.aktuell}/resultLists" relativeToCalcCase="true" />
 
 			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 			<clearAfterCalc path="${result.path.aktuell}" relativeToCalcCase="true" />
