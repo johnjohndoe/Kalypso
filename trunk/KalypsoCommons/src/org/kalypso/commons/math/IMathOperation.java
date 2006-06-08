@@ -44,5 +44,5 @@ public interface IMathOperation
    *          operands that get operated by the math operation
    * @return result of operation
    */
-  public double calculate( double[] operands );
+  public double calculate( double... operands );
 }

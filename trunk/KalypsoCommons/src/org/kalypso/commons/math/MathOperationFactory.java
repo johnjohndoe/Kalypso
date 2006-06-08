@@ -52,7 +52,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
-        public double calculate( double[] operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )
@@ -66,7 +66,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
-        public double calculate( double[] operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )
@@ -80,7 +80,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
-        public double calculate( double[] operands )
+        public double calculate( double... operands )
         {
           double result = 0;
           for( int i = 0; i < operands.length; i++ )
@@ -94,7 +94,7 @@ public class MathOperationFactory
         /**
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
-        public double calculate( double[] operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )
