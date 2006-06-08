@@ -49,15 +49,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.ExtentType;
-import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.xml.sax.InputSource;
 
 /**
@@ -66,9 +68,6 @@ import org.xml.sax.InputSource;
 
 public class URLActionSetBBoxFromGMT extends AbstractURLAction
 {
-  public static final JAXBContext JC_GISMAP = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  public static final JAXBContext JC_GISTABLE = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
 
   private final static String COMMAND_NAME = "setBBoxInGMT";
 
@@ -108,20 +107,19 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       final URL urlTo = getWorkFlowContext().resolveURL( gmtURLto );
       final IFile gmtFromFile = ResourceUtilities.findFileFromURL( urlFrom );
       final IFile gmtToFile = ResourceUtilities.findFileFromURL( urlTo );
-      final Unmarshaller unmarshaller = JC_GISMAP.createUnmarshaller();
+      final Unmarshaller unmarshaller = GisTemplateHelper.JC_GISMAP.createUnmarshaller();
       // open existing gmt to load bbox from
       final InputSource isfromGMT = new InputSource( new InputStreamReader( gmtFromFile.getContents(), gmtFromFile.getCharset() ) );
       final Gismapview mapviewfrom = (Gismapview) unmarshaller.unmarshal( isfromGMT );
-      final ExtentType bboxFrom = mapviewfrom.getExtent();
       // load existing gmt to write new bbox to
       final InputSource isToGMT = new InputSource( new InputStreamReader( gmtFromFile.getContents(), gmtFromFile.getCharset() ) );
       final Gismapview mapviewto = (Gismapview) unmarshaller.unmarshal( isToGMT );
-      mapviewto.setExtent( bboxFrom );
+      final Gismapview transformedGisMapView = transformExtent( mapviewfrom, mapviewto );
       // write change to file
-      final Marshaller marshaller = JC_GISMAP.createMarshaller();
+      final Marshaller marshaller = GisTemplateHelper.JC_GISMAP.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      marshaller.marshal( mapviewto, bos );
+      marshaller.marshal( transformedGisMapView, bos );
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
       bos.close();
       if( gmtToFile.exists() )
@@ -135,6 +133,33 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       return false;
     }
     return true;
+  }
+
+  private Gismapview transformExtent( Gismapview mapviewfrom, Gismapview mapviewto ) throws Exception
+  {
+    final ExtentType bboxFrom = mapviewfrom.getExtent();
+    final String sourceSrsAsString = bboxFrom.getSrs();
+    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    final ExtentType bboxTo = mapviewto.getExtent();
+    final String targetSrs = bboxTo.getSrs();
+    if( targetSrs.equals( sourceSrsAsString ) )
+    {
+      bboxTo.setBottom( bboxFrom.getBottom() );
+      bboxTo.setTop( bboxFrom.getTop() );
+      bboxTo.setLeft( bboxFrom.getLeft() );
+      bboxTo.setRight( bboxFrom.getRight() );
+    }
+    else if( csFac.isKnownCS( sourceSrsAsString ) && csFac.isKnownCS( targetSrs ) )
+    {
+      final GM_Surface boxAsSurface = GisTemplateHelper.getBoxAsSurface( mapviewfrom, csFac.getCSByName( targetSrs ) );
+      // since the helper returns the bbox as a surface we know that the getEnvelope() method returns the real bbox
+      final GM_Envelope envelope = boxAsSurface.getEnvelope();
+      bboxTo.setBottom( envelope.getMin().getY() );
+      bboxTo.setTop( envelope.getMax().getY() );
+      bboxTo.setLeft( envelope.getMin().getX() );
+      bboxTo.setRight( envelope.getMax().getX() );
+    }
+    return mapviewto;
   }
 
 }

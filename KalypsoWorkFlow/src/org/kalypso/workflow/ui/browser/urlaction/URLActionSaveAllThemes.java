@@ -80,6 +80,8 @@ public class URLActionSaveAllThemes extends AbstractURLAction
       final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
       final MapPanel mapPanel = gisMapEditor.getMapPanel();
       final IMapModell modell = mapPanel.getMapModell();
+      if( modell == null )
+        return false;
       final IKalypsoTheme[] themes = modell.getAllThemes();
       for( int i = 0; i < themes.length; i++ )
       {

@@ -66,6 +66,11 @@ import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -79,6 +84,7 @@ import org.xml.sax.InputSource;
 public class GisTemplateHelper
 {
   public static final JAXBContext JC_GISMAP = JaxbUtilities.createQuiet( ObjectFactory.class );
+
   public static final JAXBContext JC_GISTABLE = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
 
   private GisTemplateHelper( )
@@ -157,7 +163,7 @@ public class GisTemplateHelper
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream ) throws JAXBException
   {
-    final Marshaller marshaller =JaxbUtilities.createMarshaller( JC_GISMAP);
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISMAP );
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.marshal( modellTemplate, outStream );
   }
@@ -224,5 +230,25 @@ public class GisTemplateHelper
     }
     gismapview.setLayers( layersType );
     return gismapview;
+  }
+
+  public static GM_Surface getBoxAsSurface( final Gismapview mapview, final CoordinateSystem targetCS ) throws Exception
+  {
+    final ExtentType extent = mapview.getExtent();
+    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    final String crsName = extent.getSrs();
+    if( csFac.isKnownCS( crsName ) )
+    {
+      final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+      final CS_CoordinateSystem crs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
+      final GM_Surface bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crs );
+      if( targetCS != null )
+      {
+        final GeoTransformer transformer = new GeoTransformer( targetCS );
+        return (GM_Surface) transformer.transform( bboxAsSurface );
+      }
+      return bboxAsSurface;
+    }
+    return null;
   }
 }

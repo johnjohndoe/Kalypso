@@ -81,6 +81,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionStartCalculation() );
       m_defaultInstance.register( new URLActionSetBBoxFromGMT() );
       m_defaultInstance.register( new URLActionImportBPlanGML() );
+      m_defaultInstance.register( new URLActionCreateNewMeasuresCalcCase() );
     }
     catch( URLActionRegistryException e )
     {
