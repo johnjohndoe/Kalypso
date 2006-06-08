@@ -1,6 +1,6 @@
 package org.kalypso.wiskiadapter;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -137,9 +137,62 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "tsinfo_unitname", "<?>" );
   }
 
-  String getWiskiType()
+  String getWiskiParameterType()
   {
     return m_map.getProperty( "parametertype_name", "<?>" );
+  }
+
+  /**
+   * tsinfo_timelevel: time series time step type <br>
+   * 0: high resolution <br>
+   * 1: daily <br>
+   * 2: monthly <br>
+   * 3: year <br>
+   * 4: week <br>
+   * 5: half year <br>
+   * 255: other
+   */
+  int getWiskiTimeLevel()
+  {
+    return Integer.valueOf( m_map.getProperty( "tsinfo_timelevel", "255" ) ).intValue();
+  }
+
+  /**
+   * tsinfo_valuetype: type of data values: <br>
+   * 0: instantaneous <br>
+   * 1: mean <br>
+   * 2: sum <br>
+   * 3: min <br>
+   * 4: max <br>
+   * 255: other
+   */
+  int getWiskiValueType()
+  {
+    return Integer.valueOf( m_map.getProperty( "tsinfo_valuetype", "255" ) ).intValue();
+  }
+
+  /**
+   * @return tsinfo_begin_of als Date, dessen Time-Anteil den Beginn der Integrationszeit des Tageswertes Beschreibt
+   *         (z.B. 07:30 oder ähnlich). Can be null.
+   */
+  Date getWiskiBegin()
+  {
+    final String strDate = m_map.getProperty( "tsinfo_begin_of" );
+    if( strDate == null )
+      return null;
+
+    return new Date( Long.valueOf( strDate ).longValue() );
+  }
+
+  /**
+   * @return tsinfo_offset_of als Long, welcher beschreibt, ob die Quellwerte eines Tageswertes zum Datum x vom Tag x
+   *         bis x+1 einfliessen (offset 0) oder z.B. vom Tag x-1 bis zum Tag x (offset -1). Can be null.
+   */
+  Long getWiskiOffset()
+  {
+    final String strOffset = m_map.getProperty( "tsinfo_offset_of", "0" );
+
+    return Long.valueOf( strOffset );
   }
 
   /**
@@ -230,26 +283,13 @@ public class TsInfoItem implements IRepositoryItem
     }
   }
 
-  int getWiskiDistUnitAsCalendarField()
+  int getWiskiDistUnit()
   {
     final String strWiskiUnit = m_map.getProperty( "tsinfo_distunit" );
     if( strWiskiUnit == null )
       throw new IllegalStateException( "Wiski does not deliver which time-unit to use (Property: tsinfo_distunit)" );
 
-    final int wiskiUnit = Integer.valueOf( strWiskiUnit ).intValue();
-    switch( wiskiUnit )
-    {
-      case 1:
-        return Calendar.SECOND;
-      case 2:
-        return Calendar.MINUTE;
-      case 3:
-        return Calendar.HOUR_OF_DAY;
-      case 4:
-        return Calendar.DAY_OF_YEAR;
-      default:
-        throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
-    }
+   return Integer.valueOf( strWiskiUnit ).intValue();
   }
 
   int getWiskiDistValue()

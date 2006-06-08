@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,12 +63,12 @@ public final class WiskiUtils
       IOUtils.closeQuietly( ins );
     }
   }
-  
+
   public static String getProperty( final String key )
   {
     return getProperties().getProperty( key );
   }
-  
+
   public static String getProperty( final String key, final String defaultValue )
   {
     return getProperties().getProperty( key, defaultValue );
@@ -152,5 +153,84 @@ public final class WiskiUtils
       throw new IllegalArgumentException( "Wiski-Status nicht erkannt: " + wiskiStatus );
 
     return Integer.valueOf( status );
+  }
+
+  /**
+   * @return flag indicating if the date conversion between wiski and kalypso needs to be done
+   */
+  public static boolean isConversionNeeded( final TsInfoItem item )
+  {
+    final int timeLevel = item.getWiskiTimeLevel();
+
+    switch( timeLevel )
+    {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      {
+        final int valueType = item.getWiskiValueType();
+        switch( valueType )
+        {
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+            return true;
+        }
+      }
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * units to take for tsinfo_distvalue
+   * <ul>
+   * <li>1: seconds
+   * <li>2: minutes
+   * <li>3: hours
+   * <li>4: days
+   * </ul>
+   * 
+   * @return corresponding field value as defined in java.util.Calendar
+   */
+  public static int getDistUnitCalendarField( final int tsinfo_distunit )
+  {
+    switch( tsinfo_distunit )
+    {
+      case 1:
+        return Calendar.SECOND;
+      case 2:
+        return Calendar.MINUTE;
+      case 3:
+        return Calendar.HOUR_OF_DAY;
+      case 4:
+        return Calendar.DAY_OF_MONTH;
+      default:
+        throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
+    }
+  }
+
+  /**
+   * Used when converting wiski dates into kalypso dates
+   * 
+   * @return corresponding java.util.Calendar field that corresponds to the timelevel of the given TsInfo object
+   */
+  public static int getConversionCalendarField( final int tsinfo_timelevel )
+  {
+    switch( tsinfo_timelevel )
+    {
+      case 1:
+        return Calendar.DAY_OF_MONTH;
+      case 2:
+        return Calendar.MONTH;
+      case 3:
+        return Calendar.YEAR;
+      case 4:
+        return Calendar.WEEK_OF_YEAR;
+      default:
+        throw new IllegalStateException( "unsupported time level" );
+    }
   }
 }
