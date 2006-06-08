@@ -4,7 +4,6 @@
 <booleanAttribute key="usefeatures" value="false"/>
 <stringAttribute key="bootstrap" value=""/>
 <booleanAttribute key="useProduct" value="false"/>
-<stringAttribute key="deselected_workspace_plugins" value="org.kalypso.services.user.client,org.kalypso.services.user,org.kalypso.grid.interpolation,org.kalypso.services.metadoc,org.kalypso.ui.observationimport,org.kalypso.simulation.core,org.kalypso.rrm.kalininmiljukov,org.kalypso.services.observation.client,org.kalypso.ui.rrm,org.kalypso.services.observation,org.kalypso.dcadapter,org.kalypso.NACalcJob,org.kalypso.services.metadoc.client,org.kalypso.optimize,org.kalypso.services.core,org.kalypso.metaproject,org.kalypso.services.simulation,org.kalypso.ui.addlayer"/>
 <booleanAttribute key="tracing" value="false"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
@@ -15,7 +14,7 @@
 <booleanAttribute key="automaticAdd" value="false"/>
 <stringAttribute key="checked" value="[NONE]"/>
 <booleanAttribute key="includeFragments" value="false"/>
-<stringAttribute key="selected_workspace_plugins" value="org.kalypso.contribs.java,org.kalypso.contribs.eclipsercp,org.kalypso.core,org.kalypso.commons,org.kalypso.ui,org.kalypso.debug,org.kalypso.services.core.client,org.kalypso.gmlschema,org.kalypso.contribs.ogc31,org.kalypso.metadoc,org.kalypso.auth,org.kalypso.contribs.eclipseplatform,org.kalypso.jwsdp,org.kalypso.repository,org.kalypso.deegree"/>
+<stringAttribute key="selected_workspace_plugins" value="org.kalypso.contribs.java,org.kalypso.contribs.eclipsercp,org.kalypso.core,org.kalypso.commons,org.kalypso.simulation.core,org.kalypso.ui,org.kalypso.debug,org.kalypso.services.core.client,org.kalypso.gmlschema,org.kalypso.contribs.ogc31,org.kalypso.metadoc,org.kalypso.NACalcJob,org.kalypso.featureview,org.kalypso.optimize,org.kalypso.auth,org.kalypso.contribs.eclipseplatform,org.kalypso.jwsdp,org.kalypso.repository,org.kalypso.deegree"/>
 <stringAttribute key="location" value="d:\EigeneDateien\runtime-workspace"/>
 <stringAttribute key="configLocation" value=""/>
 <booleanAttribute key="clearws" value="false"/>

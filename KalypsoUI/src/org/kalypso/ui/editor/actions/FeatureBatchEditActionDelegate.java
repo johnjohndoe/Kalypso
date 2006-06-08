@@ -46,6 +46,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -78,7 +80,31 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
    */
   private final class BatchEditParametersInputDialog extends InputDialog
   {
-    private String m_op = "";
+    /**
+     * @author w00t
+     */
+    private final class ButtonSelectionListener extends SelectionAdapter
+    {
+      ButtonSelectionListener( )
+      {
+      }
+
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        super.widgetSelected( e );
+        final Button button = (Button) e.widget;
+        if( button.getSelection() )
+        {
+          m_op = button.getText();
+        }
+      }
+    }
+
+    String m_op = "+";
 
     public BatchEditParametersInputDialog( Shell shell, String title, Object value )
     {
@@ -89,20 +115,24 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     protected Control createDialogArea( final Composite parent )
     {
       final Composite composite = (Composite) super.createDialogArea( parent );
-      final Group radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
-      radioButtonGroup.setText( "Operation" );
-      FillLayout fillLayout = new FillLayout();
+      final Group m_radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
+      m_radioButtonGroup.setText( "Operation" );
+      final FillLayout fillLayout = new FillLayout();
       fillLayout.type = SWT.VERTICAL;
-      radioButtonGroup.setLayout( fillLayout );
-      final Button plusButton = new Button( radioButtonGroup, SWT.RADIO );
+      m_radioButtonGroup.setLayout( fillLayout );
+      final Button plusButton = new Button( m_radioButtonGroup, SWT.RADIO );
+      plusButton.addSelectionListener( new ButtonSelectionListener() );
       plusButton.setText( "+" );
       plusButton.setSelection( true );
-      final Button minusButton = new Button( radioButtonGroup, SWT.RADIO );
+      final Button minusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       minusButton.setText( "-" );
-      final Button timesButton = new Button( radioButtonGroup, SWT.RADIO );
+      minusButton.addSelectionListener( new ButtonSelectionListener() );
+      final Button timesButton = new Button( m_radioButtonGroup, SWT.RADIO );
       timesButton.setText( "*" );
-      final Button divideButton = new Button( radioButtonGroup, SWT.RADIO );
+      timesButton.addSelectionListener( new ButtonSelectionListener() );
+      final Button divideButton = new Button( m_radioButtonGroup, SWT.RADIO );
       divideButton.setText( "/" );
+      divideButton.addSelectionListener( new ButtonSelectionListener() );
       return composite;
     }
 
@@ -115,48 +145,34 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     {
       return Double.parseDouble( getValue() );
     }
-
-    /**
-     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-     */
-    @Override
-    protected void okPressed( )
-    {
-      super.okPressed();
-    }
   }
 
-  private IFeatureSelection m_selection;
+  private IPropertyType m_focusedProperty;
+
+  private Feature[] m_selectedFeatures;
+
+  private CommandableWorkspace m_workspace;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    if( m_selection == null )
-      return;
-    final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-    final IPropertyType focusedProperty = m_selection.getFocusedProperty();
-    if( fes.length == 0 || focusedProperty == null || !(focusedProperty instanceof IValuePropertyType) )
-      return;
-
-    final Feature focusedFeature = m_selection.getFocusedFeature();
-    final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
-
     final Shell shell = Display.getCurrent().getActiveShell();
-    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell, action.getText(), focusedFeature.getProperty( focusedProperty ).toString() );
+    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell, action.getText(), "0");
     dialog.open();
-    final FeatureChange[] changeArray = new FeatureChange[fes.length];
-    for( int i = 0; i < fes.length; i++ )
+    final String op = dialog.getOperator();
+    final FeatureChange[] changeArray = new FeatureChange[m_selectedFeatures.length];
+    for( int i = 0; i < m_selectedFeatures.length; i++ )
     {
-      changeArray[i] = new RelativeFeatureChange( fes[i], (IValuePropertyType) focusedProperty, dialog.getOperator(), dialog.getAmount() );
+      changeArray[i] = new RelativeFeatureChange( m_selectedFeatures[i], (IValuePropertyType) m_focusedProperty, op, dialog.getAmount() );
     }
 
-    final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, changeArray );
+    final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( m_workspace, changeArray );
 
     try
     {
-      workspace.postCommand( changeFeaturesCommand );
+      m_workspace.postCommand( changeFeaturesCommand );
     }
     catch( final Exception e )
     {
@@ -176,7 +192,19 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
   {
     if( selection instanceof IFeatureSelection )
     {
-      m_selection = (IFeatureSelection) selection;
+      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+      m_focusedProperty = featureSelection.getFocusedProperty();
+      if( RelativeFeatureChange.isNumeric( m_focusedProperty ) )
+      {
+        action.setEnabled( true );
+        m_selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
+        final Feature focusedFeature = featureSelection.getFocusedFeature();
+        m_workspace = featureSelection.getWorkspace( focusedFeature );
+      }
+      else
+      {
+        action.setEnabled( false );
+      }
     }
   }
 
