@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.featureview.dialog;
 import java.util.Collection;
 
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 
 /**
  * @author belger

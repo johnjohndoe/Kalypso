@@ -43,15 +43,23 @@ package org.kalypso.ui.editor.actions;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.RelativeFeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -65,6 +73,59 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureBatchEditActionDelegate implements IActionDelegate
 {
 
+  /**
+   * @author Stefan Kurzbach
+   */
+  private final class BatchEditParametersInputDialog extends InputDialog
+  {
+    private String m_op = "";
+
+    public BatchEditParametersInputDialog( Shell shell, String title, Object value )
+    {
+      super( shell, title, null, value.toString(), null );
+    }
+
+    @Override
+    protected Control createDialogArea( final Composite parent )
+    {
+      final Composite composite = (Composite) super.createDialogArea( parent );
+      final Group radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
+      radioButtonGroup.setText( "Operation" );
+      FillLayout fillLayout = new FillLayout();
+      fillLayout.type = SWT.VERTICAL;
+      radioButtonGroup.setLayout( fillLayout );
+      final Button plusButton = new Button( radioButtonGroup, SWT.RADIO );
+      plusButton.setText( "+" );
+      plusButton.setSelection( true );
+      final Button minusButton = new Button( radioButtonGroup, SWT.RADIO );
+      minusButton.setText( "-" );
+      final Button timesButton = new Button( radioButtonGroup, SWT.RADIO );
+      timesButton.setText( "*" );
+      final Button divideButton = new Button( radioButtonGroup, SWT.RADIO );
+      divideButton.setText( "/" );
+      return composite;
+    }
+
+    public String getOperator( )
+    {
+      return m_op;
+    }
+
+    public double getAmount( )
+    {
+      return Double.parseDouble( getValue() );
+    }
+
+    /**
+     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+     */
+    @Override
+    protected void okPressed( )
+    {
+      super.okPressed();
+    }
+  }
+
   private IFeatureSelection m_selection;
 
   /**
@@ -75,24 +136,23 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     if( m_selection == null )
       return;
     final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-    if( fes.length == 0 )
+    final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+    if( fes.length == 0 || focusedProperty == null || !(focusedProperty instanceof IValuePropertyType) )
       return;
 
     final Feature focusedFeature = m_selection.getFocusedFeature();
-    final IPropertyType focusedProperty = m_selection.getFocusedProperty();
     final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
 
-//    final ICommand editCommand = new EditFeatureValueCommand( workspace, fes[0], focusedProperty );
-//    final CompositeCommand compositeCommand = new CompositeCommand( editCommand.getDescription(), editCommand );
-
-    FeatureChange[] changeArray = new FeatureChange[fes.length];
+    final Shell shell = Display.getCurrent().getActiveShell();
+    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell, action.getText(), focusedFeature.getProperty( focusedProperty ).toString() );
+    dialog.open();
+    final FeatureChange[] changeArray = new FeatureChange[fes.length];
     for( int i = 0; i < fes.length; i++ )
     {
-      changeArray[i] = new RelativeFeatureChange(fes[i],focusedProperty);
-//      compositeCommand.addCommand( new EditFeatureValueCommand( workspace, fes[i], focusedProperty ) );
+      changeArray[i] = new RelativeFeatureChange( fes[i], (IValuePropertyType) focusedProperty, dialog.getOperator(), dialog.getAmount() );
     }
 
-    final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand(workspace, changeArray);
+    final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, changeArray );
 
     try
     {
@@ -103,11 +163,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
       e.printStackTrace();
 
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
-
-      // we are in the ui-thread so we get a shell here
-      final Shell shell = Display.getCurrent().getActiveShell();
-      if( shell != null )
-        ErrorDialog.openError( shell, action.getText(), changeFeaturesCommand.getDescription(), status );
+      ErrorDialog.openError( shell, action.getText(), changeFeaturesCommand.getDescription(), status );
     }
 
   }

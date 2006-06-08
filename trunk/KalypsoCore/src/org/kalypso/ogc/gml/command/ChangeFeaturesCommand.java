@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
