@@ -15,16 +15,17 @@
 			kalypso://openURL?&url=KONZEPTPHASE_NULLVARIANTE_START.html;
 		}
 		
-		function messageboxWithNextPageDigitalisieren()
+		function digitalisieren()
 		{
-			kalypso://showMessage?message=Hier+schaltet+sich+eine+View+ein+mit+allen+moeglichen+zu+zeichnenden+FeatureTypes+aus+dem+BPlanGML.+Druch+druecken+des+jeweiligen+Knopfes+wird+der+richtige+Layer+aktiviert+und+das+Zeichenwidget+geladen.
+			kalypso://saveActiveGMT?
 			kalypso://openURL?url=KONZEPTPHASE_BPLAN_ZEICHNEN.html
+			kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.browser&url=KONZEPTPHASE_BPLAN_MASSNAHMEN_DEF.html;
 		}
 	 -->
  </script>
  
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
-  <title>VORPHASE: Plangebietsdefinition</title>
+  <title>KONZEPTPHASE: BPlanentwurf</title>
   
 </head>
 
@@ -119,7 +120,7 @@ besonderen Nutzungszweck.<br />
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold;">digitalisieren...</span></span><a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;" href="kalypso://runScript?type=text/kalypso&function=messageboxWithNextPageDigitalisieren"><img alt="" src="../img/lc10617.gif" style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a><span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold;">digitalisieren...</span></span><a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;" href="kalypso://runScript?type=text/kalypso&function=digitalisieren"><img alt="" src="../img/lc10617.gif" style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a><span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"> &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
