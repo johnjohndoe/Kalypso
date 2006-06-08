@@ -64,7 +64,7 @@ public class RelationCircleFinder
     return findCircle( m_testFeature, new ArrayList<Feature>() );
   }
 
-  private List[] findCircle( final Feature feature, final List<Feature> list )
+  private List<Feature>[] findCircle( final Feature feature, final List<Feature> list )
   {
     final List<List<Feature>> result = new ArrayList<List<Feature>>();
     list.add( feature );
@@ -82,7 +82,7 @@ public class RelationCircleFinder
       }
       else
       {
-        final List[] lists = findCircle( linkFeature, newList );
+        final List<Feature>[] lists = findCircle( linkFeature, newList );
         result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
                                                             // java.util.Arrays: check if this is ok
       }
