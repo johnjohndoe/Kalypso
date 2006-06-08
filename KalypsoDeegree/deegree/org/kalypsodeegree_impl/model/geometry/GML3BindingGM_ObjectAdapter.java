@@ -49,7 +49,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
 import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
@@ -74,6 +79,14 @@ import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.types.DOMConstructor;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.types.UnMarshallResultEater;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -92,7 +105,10 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
@@ -106,6 +122,8 @@ public class GML3BindingGM_ObjectAdapter
   final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
 
   final static ObjectFactory gml3Fac = new ObjectFactory();
+
+  final static JAXBContext GML3_JAXCONTEXT = JaxbUtilities.createQuiet( gml3Fac.getClass() );
 
   private static final String COORDINATES_SEPARATOR = " ";
 
@@ -139,7 +157,51 @@ public class GML3BindingGM_ObjectAdapter
 
   public static Element createElement( GM_Object geometry )
   {
-    // TODO Auto-generated method stub
+
+    try
+    {
+      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final QName qName = new QName( "namespaceabc", "geometry", "pre" );
+      final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
+
+      // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
+      // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
+
+      // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
+
+      final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+      fac.setNamespaceAware( true );
+      final DocumentBuilder builder = fac.newDocumentBuilder();
+      final Document document = builder.newDocument();
+      final UnMarshallResultEater eater = new UnMarshallResultEater()
+      {
+        public void eat( Object value ) throws GMLSchemaException
+        {
+          if( value instanceof Node )
+          {
+            String string = XMLHelper.toString( (Node) value );
+            System.out.println( string );
+          }
+        }
+      };
+//      Element element = document.createElement("test");
+//      document.appendChild(element);
+      final DOMConstructor constructor = new DOMConstructor( document, eater );
+      constructor.startElement("bla","blub" , "b:blub",new AttributesImpl());
+      typeHandler.marshal( qName, geometry, constructor, null, null );
+
+      // marshaller.marshal( bindingElement, document );
+      String string1 = XMLHelper.toString( document );
+      Node node = constructor.getNode();
+      String string2 = XMLHelper.toString( node );
+      return document.getDocumentElement();
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // called from SpatialOperation.toXML()
     return null;
   }
 
@@ -283,7 +345,7 @@ public class GML3BindingGM_ObjectAdapter
       surfaces[i] = createGM_Surface( polyType, co );
       i++;
     }
-    return GeometryFactory.createGM_MultiSurface( surfaces ,co);
+    return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
   private static GM_Surface createGM_Surface( PolygonType type, CS_CoordinateSystem cs ) throws GM_Exception
