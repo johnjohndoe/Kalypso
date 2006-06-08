@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -102,7 +103,8 @@ public class FeaturePath
       return value;
     else if( value instanceof FeatureList && segmentIndex < m_segments.length - 1 )
     {
-      return getFeatureForSegment( workspace,  (Feature) ((FeatureList ) value).get(0), segmentIndex + 1 );
+      final Feature subFeature = (Feature) ((FeatureList)value).get(0);
+      return getFeatureForSegment( workspace, subFeature, segmentIndex + 1 );
     }
     // alles andere ist ein Fehler
     return null;
@@ -232,7 +234,8 @@ public class FeaturePath
         if( m_typename != null )
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
-          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+          final IGMLSchema contexstSchema = workspace.getGMLSchema();
+          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( contexstSchema, false, true );
           for( int i = 0; i < associationFeatureTypes.length; i++ )
           {
             final IFeatureType type = associationFeatureTypes[i];
