@@ -16,7 +16,7 @@
 <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 <PolygonSymbolizer>
 <Geometry>
-<ogc:PropertyName>area</ogc:PropertyName>
+<ogc:PropertyName>position</ogc:PropertyName>
 </Geometry>
 <Fill>
 <CssParameter name="fill-opacity">0.46</CssParameter>
@@ -47,7 +47,7 @@
 <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 <TextSymbolizer>
 <Geometry>
-<ogc:PropertyName>area</ogc:PropertyName>
+<ogc:PropertyName>position</ogc:PropertyName>
 </Geometry>
 <Label>
 <ogc:PropertyName>depth</ogc:PropertyName>
@@ -87,7 +87,7 @@
 <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 <TextSymbolizer>
 <Geometry>
-<ogc:PropertyName>area</ogc:PropertyName>
+<ogc:PropertyName>position</ogc:PropertyName>
 </Geometry>
 <Label>Tiefe des RHBs noch nicht definiert</Label>
 <Font>

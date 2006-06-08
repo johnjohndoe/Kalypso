@@ -54,6 +54,8 @@ public class MeasuresConstants
 
   public static final String IN_DESIGN_AREA_ID = "designArea";
 
+  public static final String IN_MEASURE_PLANNING_ID = "xplanung";
+
   /** properties and FeatureTypes for all measures */
   // retension basin measure
   public static final String RHB_MEASURE_FT = "RhbMeasureFeature";

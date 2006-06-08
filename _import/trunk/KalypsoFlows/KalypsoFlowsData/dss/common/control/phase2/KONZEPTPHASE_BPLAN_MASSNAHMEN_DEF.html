@@ -94,8 +94,12 @@
 			kalypso://activateTheme?theme=GemeinbedarfsFlaeche;
 			kalypso://saveActiveTheme?;
 		}
-		
-	 -->
+		function saveAll()
+		{
+			kalypso://saveAllThemes?;
+			kalypso://saveActiveGMT?;
+		}	 
+-->
  </script>
 
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
@@ -109,44 +113,48 @@
 <span style="font-weight: bold;"><span style="font-family: Arial;">Einf&uuml;gen der Hochwasserrelevanten <br />
 BPlan Fl&auml;chen<br />
 </span></span><br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveBaugebiet"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Baugebietstyp" title="Speichern des Baugebietes" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neuesBaugebiet">Baugebiet einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveBaugebiet"><img style="border: 0px solid ; width: 130px; height: 78px; float: left;" alt="Baugebietstyp" title="Speichern des Baugebietes" src="Baugebiete.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neuesBaugebiet">Baugebiet einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveGruenflaeche"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Gr&uuml;nfl&auml;chentyp" title="Speichern der Gr&uuml;nfl&auml;che" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueGruenflaeche">Gr&uuml;nfl&auml;che einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveGruenflaeche"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="Gr&uuml;nfl&auml;chentyp" title="Speichern der Gr&uuml;nfl&auml;che" src="Gruenflaechen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueGruenflaeche">Gr&uuml;nfl&auml;che einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveUeberbaubareGrundstuecksflaeche"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="UeberbaubareGrundstueckflaechentyp" title="Speichern der &uuml;berbaubaren Grundstuecksflaeche" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueUeberbaubareGrundstuecksflaeche">&Uuml;berbaubare Grundst&uuml;cksfl&auml;che einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveUeberbaubareGrundstuecksflaeche"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="UeberbaubareGrundstueckflaechentyp" title="Speichern der &uuml;berbaubaren Grundstuecksflaeche" src="BebaubareGrundstuecksflaeche.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueUeberbaubareGrundstuecksflaeche">&Uuml;berbaubare Grundst&uuml;cksfl&auml;che einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveGemeinbedarfsflaeche"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Gemeinbedarfsflaechentyp" title="Speichern der Gemeinbedarfsflaeche" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueGemeinbedarfsflaeche">Gemeinbedarfsfl&auml;che einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveGemeinbedarfsflaeche"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="Gemeinbedarfsflaechentyp" title="Speichern der Gemeinbedarfsflaeche" src="Gemeinbedrafsflaechen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueGemeinbedarfsflaeche">Gemeinbedarfsfl&auml;che einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveVerEntsorgungsFlaeche"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Ver- und Entsorgungsflaechetyp" title="Speichern der Ver- und Entsorgungsflaeche" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueVerEntsorgungsFlaeche">Ver- und Entsorgungsfl&auml;che einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveVerEntsorgungsFlaeche"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="Ver- und Entsorgungsflaechetyp" title="Speichern der Ver- und Entsorgungsflaeche" src="VerEntsorgungsflaechen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueVerEntsorgungsFlaeche">Ver- und Entsorgungsfl&auml;che einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveBaulinie"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Baulinienstyp" title="Speichern der Baulinie" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueBaulinie">Baulinie einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveBaulinie"><img style="border: 0px solid ; width: 130px; height: 28px; float: left;" alt="Baulinienstyp" title="Speichern der Baulinie" src="Baulinie.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueBaulinie">Baulinie einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveBaugrenze"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Baugrenzentyp" title="Speichern der Baugrenze" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueBaugrenze">Baugrenzen einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveBaugrenze"><img style="border: 0px solid ; width: 130px; height: 28px; float: left;" alt="Baugrenzentyp" title="Speichern der Baugrenze" src="Baugrenze.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueBaugrenze">Baugrenzen einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveVerkehrsflaecheBesondererZweckbestimmung"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Verkehrsflaeche mit besonderer Zweckbestimmungtyp" title="Speichern der Verkehrsflaeche mit besonderer Zweckbestimmung" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueVerkehrsflaecheBesondererZweckbestimmung">Verkehrsfl&auml;che mit besonderer Zweckbestimmung einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveVerkehrsflaecheBesondererZweckbestimmung"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="Verkehrsflaeche mit besonderer Zweckbestimmungtyp" title="Speichern der Verkehrsflaeche mit besonderer Zweckbestimmung" src="VerkehrsflaechenBesZweckbest.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueVerkehrsflaecheBesondererZweckbestimmung">Verkehrsfl&auml;che mit besonderer Zweckbestimmung einf&uuml;gen...</a><br />
 <br />
 <br />
 <br />
-<a href="kalypso://runScript?type=text/kalypso&function=saveVerkehrsFlaeche"><img style="border: 0px solid ; width: 48px; height: 48px; float: left;" alt="Verkehrsflaechentyp" title="Speichern der Verkehrsflaeche" src="file:///D:/Daten/FLOWS/icons/icon-Fragezeichen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypos://runScript?type=text/kalypso&function=neueVerkehrsFlaeche">Verkehrsfl&auml;che einf&uuml;gen...</a><br />
+<a href="kalypso://runScript?type=text/kalypso&function=saveVerkehrsFlaeche"><img style="border: 0px solid ; width: 134px; height: 83px; float: left;" alt="Verkehrsflaechentyp" title="Speichern der Verkehrsflaeche" src="Verkehrsflaechen.gif" /></a>&nbsp;&nbsp;&nbsp;&nbsp; <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=neueVerkehrsFlaeche">Verkehrsfl&auml;che einf&uuml;gen...</a><br />
+<br />
+<br />
+<br />
+<a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=saveAll"> alles speichern...</a><br />
 
 </body>
 </html>

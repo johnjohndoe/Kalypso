@@ -49,6 +49,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +57,7 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
@@ -82,6 +84,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.visitors.SetPropertyFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -96,30 +99,12 @@ import com.vividsolutions.jts.geom.Point;
 public class KalypsoDssCalcJob implements ISimulation
 {
 
-  // public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet(
-  // org.kalypso.simulation.core.simspec.ObjectFactory.class );
-
   private HashSet<NaModelCalcJob> m_naCalcJobs = new HashSet<NaModelCalcJob>();
 
-  ISimulationResultEater m_naJobResultEater = new ISimulationResultEater()
-  {
+  private File m_resultDirDSS = null;
 
-    public void addResult( String id, File file ) throws SimulationException
-    {
-      if( id.equals( NaModelConstants.OUT_ZML ) )
-      {
-        // bin jetzt im ergbinss folder
-        // hole nur die ergebinse die ich am client weiter geben will
-        // File res = new File("");
-        m_resultEater.addResult( id, file );
-      }
-
-    }
-
-  };
-
-  /** assures to return only directories for a foo.list() call */
-  private FilenameFilter m_filter = new FilenameFilter()
+  /** assures to return only directories for a file.list() call */
+  private FilenameFilter m_dirFilter = new FilenameFilter()
   {
 
     public boolean accept( File dir, String name )
@@ -139,6 +124,12 @@ public class KalypsoDssCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    m_resultDirDSS = new File( tmpdir, "dssResults" );
+    m_resultDirDSS.mkdirs();
+
+    final File hqJobsBaseDir = new File( tmpdir, "hqJobs" );
+    hqJobsBaseDir.mkdirs();
+
     m_resultEater = resultEater;
     final Logger logger = Logger.getAnonymousLogger();
     final URL calcCases = getClass().getResource( "../resources/hq1_bis_hq100.zip" );
@@ -146,18 +137,24 @@ public class KalypsoDssCalcJob implements ISimulation
     try
     {
       // unzip all available calc cases hq1 to hq100
-      ZipUtilities.unzip( calcCases.openStream(), tmpdir );
+      monitor.setMessage( "Vorbereiten des Basismodels" );
+      if( monitor.isCanceled() )
+        return;
+      ZipUtilities.unzip( calcCases.openStream(), hqJobsBaseDir );
       logger.info( " ...calc cases successfully unziped" );
+      monitor.setMessage( "Model ist initialisiert.." );
+      if( monitor.isCanceled() )
+        return;
 
-      String[] directories = tmpdir.list( m_filter );
-      final String tmpdirAsString = tmpdir.toString();
+      String[] directories = hqJobsBaseDir.list( m_dirFilter );
+      final String tmpdirAsString = hqJobsBaseDir.toString();
       dataProvieder = new ArrayList<CalcDataProviderDecorater>();
       for( int i = 0; i < directories.length; i++ )
       {
         final String dirName = directories[i];
         final File baseDir = new File( tmpdirAsString + "\\" + dirName );
-        final NaSimulationDataProvieder naSimulationDataProvieder = new NaSimulationDataProvieder( baseDir );
-        dataProvieder.add( new CalcDataProviderDecorater( naSimulationDataProvieder ) );
+        final NaSimulationDataProvieder naSimulationDataProvider = new NaSimulationDataProvieder( baseDir );
+        dataProvieder.add( new CalcDataProviderDecorater( naSimulationDataProvider ) );
       }
     }
     catch( IOException e )
@@ -165,97 +162,159 @@ public class KalypsoDssCalcJob implements ISimulation
       e.printStackTrace();
     }
     Iterator<CalcDataProviderDecorater> iterator = dataProvieder.iterator();
+    int i = 1;
     while( iterator.hasNext() )
     {
+      final File resultDirRun = new File( m_resultDirDSS, "run" + i );
+      resultDirRun.mkdirs();
+      final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
+      {
+
+        public void addResult( String id, File file ) throws SimulationException
+        {
+          if( id.equals( NaModelConstants.OUT_ZML ) )
+          {
+            try
+            {
+              FileUtils.copyDirectoryToDirectory( file, resultDirRun );
+            }
+            catch( IOException e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
+
+      };
+
       final CalcDataProviderDecorater rrmInputProvider = iterator.next();
+      monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
       mergeMeasures( inputProvider, rrmInputProvider, logger );
+      monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
       final NaModelCalcJob calcJob = new NaModelCalcJob();
       m_naCalcJobs.add( calcJob );
       final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
-      calcJob.run( calcDirUrl, rrmInputProvider, m_naJobResultEater, monitor );
-
+      monitor.setMessage( "Starte Berechnungdurchlauf " + i + " von " + dataProvieder.size() );
+      calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
+      monitor.setMessage( "Berechnungslauf " + i + " beendet" );
+      i++;
     }
-
+    resultEater.addResult( NaModelConstants.OUT_ZML, m_resultDirDSS );
   }
 
   private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
-    boolean writeNewModelFile = false;
+    boolean writeNewModelFile = true;
     boolean writeNewHydrotopFile = false;
     // get the urls for measures and model files
-    final URL measuresRhbURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_RHB_ID );
-    final URL measuresSealingURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_SEALING_ID );
-    final URL measuresMrsURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_MRS_ID );
-    final URL designAreaURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_DESIGN_AREA_ID );
+
+    final URL measuresRhbURL;
+    if( dssInputProvider.hasID( MeasuresConstants.IN_MEASURE_RHB_ID ) )
+      measuresRhbURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_RHB_ID );
+    else
+      measuresRhbURL = null;
+
+    final URL measuresSealingURL;
+    if( dssInputProvider.hasID( MeasuresConstants.IN_MEASURE_SEALING_ID ) )
+      measuresSealingURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_SEALING_ID );
+    else
+      measuresSealingURL = null;
+
+    final URL measuresMrsURL;
+    if( dssInputProvider.hasID( MeasuresConstants.IN_MEASURE_MRS_ID ) )
+      measuresMrsURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_MRS_ID );
+    else
+      measuresMrsURL = null;
+
+    final URL designAreaURL;
+    if( dssInputProvider.hasID( MeasuresConstants.IN_DESIGN_AREA_ID ) )
+      designAreaURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_DESIGN_AREA_ID );
+    else
+      designAreaURL = null;
+
+    final URL planningMeasureURL;
+    if( dssInputProvider.hasID( MeasuresConstants.IN_MEASURE_PLANNING_ID ) )
+      planningMeasureURL = (URL) dssInputProvider.getInputForID( MeasuresConstants.IN_MEASURE_PLANNING_ID );
+    else
+      planningMeasureURL = null;
+
     final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL hydrotopURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+    if( planningMeasureURL != null )
+    {
 
-    GMLWorkspace modelWorkspace = null;
-    GMLWorkspace hydrotopWorkspace = null;
-    try
-    {
-      if( measuresRhbURL != null )
-      {
-        modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
-        insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
-        writeNewModelFile = true;
-      }
-      if( measuresSealingURL != null )
-      {
-        hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
-        insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
-        writeNewHydrotopFile = true;
-      }
-      if( measuresMrsURL != null )
-      {
-        insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
-        writeNewHydrotopFile = true;
-        writeNewModelFile = true;
-      }
     }
-    catch( Exception e )
+    else
     {
-      e.printStackTrace();
-      logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
-      throw new SimulationException( e.getMessage(), e );
-    }
-
-    Writer writerHydroTop = null;
-    Writer writerModel = null;
-    try
-    {
+      GMLWorkspace modelWorkspace = null;
+      GMLWorkspace hydrotopWorkspace = null;
       try
       {
-        // 1. write the changed data to a new rrm and hydrotop file
-        // 2. replacing in the bean the old URL to the new files
-        final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
-        if( writeNewModelFile )
+        modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
+        // set all generate result properties to false
+        setGenerateResults( modelWorkspace, true );
+        if( measuresRhbURL != null )
         {
-          writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
-          GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-          rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
+          insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
+          writeNewModelFile = true;
         }
-        if( writeNewHydrotopFile )
+        if( measuresSealingURL != null )
         {
-          final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
-          writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
-          GmlSerializer.serializeWorkspace( writerHydroTop, hydrotopWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-          rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydroTopFile.toURL() );
+          hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+          insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
+          writeNewHydrotopFile = true;
+        }
+        if( measuresMrsURL != null )
+        {
+          insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
+          writeNewHydrotopFile = true;
+          writeNewModelFile = true;
         }
       }
-      finally
+      catch( Exception e )
       {
-        IOUtils.closeQuietly( writerHydroTop );
-        IOUtils.closeQuietly( writerModel );
+        e.printStackTrace();
+        logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
+        throw new SimulationException( e.getMessage(), e );
       }
 
-    }
-    catch( Exception e )
-    {
-      logger.warning( "There have been problems serializing the measured model and hydrotop files -- The model is calcuate without any measures" );
-      rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
-      rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydrotopURL );
+      Writer writerHydroTop = null;
+      Writer writerModel = null;
+      try
+      {
+        try
+        {
+          // 1. write the changed data to a new rrm and hydrotop file
+          // 2. replacing in the bean the old URL to the new files
+          final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
+          if( writeNewModelFile )
+          {
+            writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+            GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+            rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
+          }
+          if( writeNewHydrotopFile )
+          {
+            final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
+            writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+            GmlSerializer.serializeWorkspace( writerHydroTop, hydrotopWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+            rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydroTopFile.toURL() );
+          }
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writerHydroTop );
+          IOUtils.closeQuietly( writerModel );
+        }
+
+      }
+      catch( Exception e )
+      {
+        logger.warning( "There have been problems serializing the measured model and hydrotop files -- The model is calcuate without any measures" );
+        rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
+        rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydrotopURL );
+      }
     }
   }
 
@@ -578,7 +637,7 @@ public class KalypsoDssCalcJob implements ISimulation
     final FeatureList designAreaList = (FeatureList) designAreaWorkspace.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
     if( designAreaList.size() == 0 )
     {
-//      logger.info( "no design area defined can not insert swale and trench meausre!..skipped" );
+      // logger.info( "no design area defined can not insert swale and trench meausre!..skipped" );
       return;
     }
     // just get first area of planning (there should only be one element in the List)
@@ -627,5 +686,24 @@ public class KalypsoDssCalcJob implements ISimulation
     double slope2 = y21 - y22 / x21 - x22;
 
     return 1;
+  }
+
+  /**
+   * Visits all features in the workspace and sets the <genereateResults/> property to false.
+   * 
+   * @parm the workspace to visit
+   */
+  private void setGenerateResults( GMLWorkspace modelWorkspace, boolean results )
+  {
+    final Feature rootFeature = modelWorkspace.getRootFeature();
+    final IGMLSchema naSchema = modelWorkspace.getGMLSchema();
+    final IFeatureType nodeFT = naSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
+    final IPropertyType genResultPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ) );
+    final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP ) );
+    final HashMap<IPropertyType, Object> map = new HashMap<IPropertyType, Object>();
+    map.put( genResultPT, new Boolean( results ) );
+    map.put( timeSeriesLinkPT, new String() );
+    final SetPropertyFeatureVisitor visitor = new SetPropertyFeatureVisitor( map );
+    modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
   }
 }
