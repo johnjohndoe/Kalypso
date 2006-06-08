@@ -1,7 +1,6 @@
 package org.kalypso.portal.wizard;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,6 +25,7 @@ public class LoadProjectFromWorkspaceWizard extends Wizard implements INewWizard
     m_root = ResourcesPlugin.getWorkspace().getRoot();
   }
 
+  @Override
   public void addPages( )
   {
     super.addPages();
@@ -39,11 +39,12 @@ public class LoadProjectFromWorkspaceWizard extends Wizard implements INewWizard
   public boolean canFinish( )
   {
     boolean complete = super.canFinish();
-    if( (getProject() instanceof IProject) && complete )
+    if( complete )
       return true;
     return false;
   }
 
+  @Override
   public boolean performFinish( )
   {
     return canFinish();

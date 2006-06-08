@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -45,6 +46,9 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
   // initial project archive url to initalize project
   public final static String INIT_PROJ_URL = "sourceURL";
 
+  // TODO woher kommt diese information oder anders gesagt aus welcher configuration kommt die
+  private static final String CALC_CASE_BASE_DIR = "Planvarianten";
+
   @Override
   public void run( IIntroSite site, Properties params )
   {
@@ -82,6 +86,7 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       // get project handle
       final IWizardPage currentPage = dialog.getCurrentPage();
       IWizard wizard = null;
+      final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
       if( currentPage != null )
       {
         wizard = currentPage.getWizard();
@@ -89,11 +94,13 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
         {
           newProject = ((BasicNewProjectResourceWizard) wizard).getNewProject();
           // set modelnature
+          // TODO does not work jet, problem is that we are not allowed to alter the project discribtion once the
+          // project has been created. So we have to write our own new project wizard and cannot use the eclipse one
           try
           {
-            IProjectDescription description = newProject.getDescription();
-            String[] natures = description.getNatureIds();
-            String[] newNatures = new String[natures.length + 1];
+            final IProjectDescription description = newProject.getDescription();
+            final String[] natures = description.getNatureIds();
+            final String[] newNatures = new String[natures.length + 1];
             System.arraycopy( natures, 0, newNatures, 0, natures.length );
             // TODO how do I get the the rrm modelnature from a central place
             newNatures[natures.length] = "org.kalypso.simulation.ui.calccase.ModelNature";
@@ -104,7 +111,6 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
           {
             MessageDialog.openWarning( shell, "Flows Portal Warning", "Aus dem neuen Projekt können sie keine Berechnungen durchführen, initzialisierungs Fehler der Projekt Nature" );
           }
-          final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
           wfContext.setContextProject( newProject );
           InputStream resourceAsStream = null;
           try
@@ -130,9 +136,12 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
         if( wizard instanceof LoadProjectFromWorkspaceWizard )
         {
           newProject = ((LoadProjectFromWorkspaceWizard) wizard).getProject();
-          final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();
           wfContext.setContextProject( newProject );
         }
+        // sets the calc case directory for this project
+        final IFolder calcCasefolder = newProject.getFolder( CALC_CASE_BASE_DIR );
+        if( calcCasefolder.exists() )
+          wfContext.setContextCalcDir( calcCasefolder );
       }
 
       return newProject;
