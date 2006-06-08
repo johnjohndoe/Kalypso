@@ -1574,13 +1574,19 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
     long timeOut = 1000l * 60l * 60l; // max 60 minutes
-    PrintWriter logWriter = null;
-    PrintWriter errorWriter = null;
+    // PrintWriter logWriter = null;
+    // PrintWriter errorWriter = null;
+    FileOutputStream logOS = null;
+    FileOutputStream errorOS = null;
     try
     {
-      logWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
-      errorWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
-      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logWriter, errorWriter );
+      // logWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+      // errorWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
+
+      logOS = new FileOutputStream( new File( basedir, "exe.log" ) );
+      errorOS = new FileOutputStream( new File( basedir, "exe.err" ) );
+      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logOS, errorOS, null );
+
     }
     catch( final Exception e )
     {
@@ -1589,8 +1595,10 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     finally
     {
-      IOUtils.closeQuietly( logWriter );
-      IOUtils.closeQuietly( errorWriter );
+      // IOUtils.closeQuietly( logWriter );
+      // IOUtils.closeQuietly( errorWriter );
+      IOUtils.closeQuietly( logOS );
+      IOUtils.closeQuietly( errorOS );
     }
   }
 

@@ -81,7 +81,6 @@ import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.Pegel;
-import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -366,7 +365,7 @@ public class NAOptimizingJob implements IOptimizingJob
     for( Iterator iter = m_bestResultEater.keySet().iterator(); iter.hasNext(); )
     {
       String id = (String) iter.next();
-      resultEater.addResult( id, (File) m_bestResultEater.get( id ) );
+      resultEater.addResult( id, m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
     System.out.println( "best was #" + m_bestNumber );

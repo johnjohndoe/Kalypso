@@ -169,6 +169,8 @@ public interface NaModelConstants
   public static final String NODE_COLLECTION_FT = "NodeCollection";
 
   public static final String NODE_COLLECTION_MEMBER_PROP = "NodeCollectionMember";
+  
+  public static final String NODE_RESULT_TIMESERIESLINK_PROP = "qberechnetZR";
 
   // catchments
   public static final String CATCHMENT_ELEMENT_FT = "Catchment";
