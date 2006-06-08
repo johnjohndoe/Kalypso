@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
+import org.kalypso.gmlschema.GMLSchemaTest;
 import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSUtilities;
@@ -53,7 +54,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class WFSTest extends TestCase
 {
-  final File testBase = new File( "D:/eclipse3.1/testBase" );
+  final File testBase = new File( "F:/eclipse3.1/testBase" );
 
   /**
    * @throws TypeRegistryException
@@ -70,7 +71,7 @@ public class WFSTest extends TestCase
   /**
    *  
    */
-  public void xxxtestBSU( ) throws Exception
+  public void testBSU( ) throws Exception
   {
     final List<QName> ignoreFT = new ArrayList<QName>();
     // diese sind getested und ok:
@@ -90,12 +91,15 @@ public class WFSTest extends TestCase
     // ignoreFT.add( "DIP_lang_SpezialNutzung_lang" );
     // ignoreFT.add( "stadtteile" );
     // ignoreFT.add( "umriss" );
-    // ignoreFT.add( "wasserschutzgebiete" );
+     ignoreFT.add( new QName("wasserschutzgebiete" ));
     // ignoreFT.add( "EZG_Tarpenbek" );
     // ignoreFT.add( "sip_nord" );
     // ignoreFT.add( "CDD2947D-EE17-4098-A4D0-107E9433173F" );
     // ignoreFT.add( "fisbo_bodkopf" );
-    // ignoreFT.add( "bezirke" );
+
+     
+      ignoreFT.add(new QName( "bezirke" )); // getFeature schliesst nicht ab
+       ignoreFT.add(new QName( "MST_ezg_kollau_tarpenbek" ));// geht nicht
     // ignoreFT.add( "gewaesserguete99_flaechen" );
     // ignoreFT.add( "ortsteile" );
     // ignoreFT.add( "DIP_lang_scheinblock_lang" );
@@ -109,11 +113,19 @@ public class WFSTest extends TestCase
     // vermutlich < oder > in einem String-element
     ignoreFT.add( new QName( "855E4B54-7392-480D-8079-2DF593498C61" ) );
     ignoreFT.add( new QName( "50977EBA-D83C-4561-A9DF-38EE609F7BA6" ) ); // schutzgebiete
+    
+    // 
+    ignoreFT.add( new QName( "gruenplan_2006" ) );
+    ignoreFT.add( new QName( "WSG_in_ezg_kollau_tarpenbek" ) );
+
     final String baseURLAsString = "http://bsu-uio:8081/deegreewfs/wfs";
+
     tryToCreateWorkspaces( baseURLAsString, ignoreFT );
+  
+
   }
 
-  public void testXPlanung( )
+  public void xxxtestXPlanung( )
   {
     // PROXY litzu135.lit.hamburg.de:8080
     // System.setProperty( "proxySet", "true" );
@@ -157,7 +169,7 @@ public class WFSTest extends TestCase
           if( !testResource.exists() )
             writeCompareFile = true;
 
-          // GMLSchemaTest.loadAndTestSchema( schemaURL, testResource.toURL(), writeCompareFile );
+          GMLSchemaTest.loadAndTestSchema( schemaURL, testResource.toURL(), writeCompareFile );
           // hack
           // File file = new File( "D:/eclipse3.1/documents/schemaFromXPlanXSF.xsd" );
           // GMLSchemaTest.loadAndTestSchema( file.toURL(), testResource.toURL(), writeCompareFile );
