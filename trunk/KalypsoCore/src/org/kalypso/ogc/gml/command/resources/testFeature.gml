@@ -51,11 +51,11 @@
    <ns3:base64Binary/>
    <ns3:float>8.75</ns3:float>
    <ns3:decimal>8.75</ns3:decimal>
-   <ns3:integer>6</ns3:integer>
-   <ns3:long>6</ns3:long>
-   <ns3:int>6</ns3:int>
-   <ns3:short>6</ns3:short>
-   <ns3:byte>6</ns3:byte>
+   <ns3:integer>7</ns3:integer>
+   <ns3:long>7</ns3:long>
+   <ns3:int>7</ns3:int>
+   <ns3:short>7</ns3:short>
+   <ns3:byte>7</ns3:byte>
    <ns3:double>8.75</ns3:double>
    <ns3:QName/>
   </ns3:TestFeature>
@@ -91,11 +91,11 @@
    <ns3:base64Binary/>
    <ns3:float>2.5</ns3:float>
    <ns3:decimal>2.5</ns3:decimal>
-   <ns3:integer>2</ns3:integer>
-   <ns3:long>2</ns3:long>
-   <ns3:int>2</ns3:int>
-   <ns3:short>2</ns3:short>
-   <ns3:byte>2</ns3:byte>
+   <ns3:integer>1</ns3:integer>
+   <ns3:long>1</ns3:long>
+   <ns3:int>1</ns3:int>
+   <ns3:short>1</ns3:short>
+   <ns3:byte>1</ns3:byte>
    <ns3:double>2.5</ns3:double>
    <ns3:QName/>
   </ns3:TestFeature>

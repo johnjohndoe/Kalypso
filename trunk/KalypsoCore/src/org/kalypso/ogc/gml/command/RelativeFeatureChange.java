@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -90,80 +91,119 @@ public class RelativeFeatureChange extends FeatureChange
   public Object getNewValue( )
   {
     final Feature feature = getFeature();
-    final Object property = feature.getProperty( getProperty() );
-    if( "".equals( m_operator ) )
+    final Object rawProperty = feature.getProperty( getProperty() );
+    if( rawProperty instanceof Number )
     {
-      return m_operand;
-    }
-    else if( "+".equals( m_operator ) )
-    {
-      return calculate( property, m_operand, "add" );
-    }
-    else if( "-".equals( m_operator ) )
-    {
-      return calculate( property, m_operand, "subtract" );
-    }
-    else if( "*".equals( m_operator ) )
-    {
-      return calculate( property, m_operand, "multiply" );
-    }
-    else if( "/".equals( m_operator ) )
-    {
-      return calculate( property, m_operand, "divide" );
+      final Number numericProperty = (Number) rawProperty;
+      if( "".equals( m_operator ) )
+      {
+        return m_operand;
+      }
+      else if( "+".equals( m_operator ) )
+      {
+        return calculate( numericProperty, m_operand, "add" );
+      }
+      else if( "-".equals( m_operator ) )
+      {
+        return calculate( numericProperty, m_operand, "subtract" );
+      }
+      else if( "*".equals( m_operator ) )
+      {
+        return calculate( numericProperty, m_operand, "multiply" );
+      }
+      else if( "/".equals( m_operator ) )
+      {
+        return calculate( numericProperty, m_operand, "divide" );
+      }
+      else
+      {
+        throw new IllegalArgumentException( "Operator was not one of: empty string, +, -, *, /" );
+      }
     }
     else
     {
-      throw new IllegalArgumentException( "operator was not one of empty string, +, -, *, /." );
+      throw new IllegalArgumentException( "Property not numeric, was: " + rawProperty.getClass().getName() );
     }
+
   }
 
-  private Object calculate( Object firstOperand, double secondOperand, final String bigTypesMethodName )
+  /**
+   * Calculates the result either by treating both arguments as a primitive double value or as a
+   * {@link java.math.BigDecimal}. The result will be of the same type as the first operand.
+   */
+  @SuppressWarnings("unchecked")
+  private <T extends Number> T calculate( final T firstOperand, final double secondOperand, final String bigTypesMethodName )
   {
-    final Class< ? > valueClass = firstOperand.getClass();
+    final T result;
+    final Class< ? extends T> valueClass = firstOperand.getClass();
     if( firstOperand instanceof BigDecimal || firstOperand instanceof BigInteger )
     {
+      final BigDecimal typedSecondOperand = castDoubleAsType( BigDecimal.class, secondOperand );
+      final BigDecimal typedFirstOperand = new BigDecimal( firstOperand.toString() );
+      final BigDecimal bigDecimalResult;
       try
       {
-        final Object typedSecondOperand = castDouble( valueClass, secondOperand );
-        return valueClass.getMethod( bigTypesMethodName, firstOperand.getClass() ).invoke( firstOperand, typedSecondOperand );
+        // call specified method (add, subtract, multiply, divide) on BigDecimal
+        bigDecimalResult = (BigDecimal) BigDecimal.class.getMethod( bigTypesMethodName, BigDecimal.class ).invoke( typedFirstOperand, typedSecondOperand );
       }
       catch( Exception e )
       {
-        e.printStackTrace();
-        return null;
+        throw new IllegalArgumentException( "Could not apply " + secondOperand + " to method BigDecimal." + bigTypesMethodName + "(). First operand was " + firstOperand, e );
+      }
+      if( firstOperand instanceof BigInteger )
+      {
+        result = (T) bigDecimalResult.toBigInteger();
+      }
+      else
+      // firstOperand instanceof BigDecimal
+      {
+        result = (T) bigDecimalResult;
       }
     }
-    else if( firstOperand instanceof Number )
-    {
-      final double typedSecondOperand = ((Number) castDouble( valueClass, secondOperand )).doubleValue();
-      final Double calcResult = MathOperationFactory.createMathOperation( m_operator ).calculate( ((Number) firstOperand).doubleValue(), typedSecondOperand );
-      return castDouble( valueClass, calcResult );
-    }
     else
+    // firstOperand instanceof Number
     {
-      throw new IllegalArgumentException( "first argument not numeric, type was: " + firstOperand.getClass().getName() );
+      final Double calcResult = MathOperationFactory.createMathOperation( m_operator ).calculate( firstOperand.doubleValue(), secondOperand );
+      result = castDoubleAsType( valueClass, calcResult );
     }
+    return result;
   }
 
-  private <T> T castDouble( final Class<T> valueClass, final double doubleValue )
+  /**
+   * Tries to construct an Object of class <code>type</code> using its constructor that takes a String argument. Such
+   * a constructor exists for all subtypes of {@link Number} in the java library, i.e. the primitive wrapper types
+   * {@link Byte}, {@link Double}, {@link Float}, {@link Integer}, {@link Long}, {@link Short} and the big number
+   * types {@link java.math.BigInteger} and {@link java.math.BigDecimal}. Both the double value and the double value
+   * cast as a long are tried. If both strings are not of an appropriate format, a {@link NumberFormatException} will be
+   * thrown. If any other error occurs, an {@link IllegalArgumentException} will be thrown.
+   */
+  private <T extends Number> T castDoubleAsType( final Class<T> type, final double doubleValue ) throws NumberFormatException
   {
     T result;
     try
     {
+      final Constructor<T> stringConstructor = type.getConstructor( String.class );
       try
       {
-        result = valueClass.getConstructor( String.class ).newInstance( "" + doubleValue );
+        result = stringConstructor.newInstance( "" + doubleValue );
       }
       catch( InvocationTargetException e )
       {
-        result = valueClass.getConstructor( String.class ).newInstance( "" + (long) doubleValue );
+        result = stringConstructor.newInstance( "" + (long) doubleValue );
       }
-      return result;
+    }
+    catch( InvocationTargetException e )
+    {
+      // the underlying constructor has probably thrown a NumberFormatException
+      final NumberFormatException newException = new NumberFormatException( "Could not cast double " + doubleValue + " as class " + type.getClass().getName() );
+      newException.initCause( e );
+      throw newException;
     }
     catch( Exception e )
     {
-      e.printStackTrace();
-      return null;
+      throw new IllegalArgumentException( "Could not cast double " + doubleValue + " as class " + type.getClass().getName(), e );
     }
+    return result;
+
   }
 }
