@@ -183,16 +183,6 @@ public class URLActionAddGeometry extends AbstractURLAction
       // TODO check is pt is a list
       newFeature.setProperty( newPT, newPropertValue );
 
-      // final IFeatureType featureType = workspace.getFeatureType( new QName(
-      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiet" ) );
-      // IPropertyType property = featureType.getProperty( new QName(
-      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "gebiet" ) );
-      // newfeature.setProperty( property, newPropertValue );
-      // IRelationType relationType = GMLSchemaFactory.createRelationType( new QName(
-      // "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "Plangebiete" ), rootFeature.getFeatureType(), 0,
-      // IPropertyType.UNBOUND_OCCURENCY );
-      // workspace.addFeatureAsComposition( rootFeature, relationType, 0, newfeature );
-
       final IFile targetResource = ResourceUtilities.findFileFromURL( targetURL );
       final SetContentHelper thread = new SetContentHelper()
       {
