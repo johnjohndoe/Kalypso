@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ImportWfsFilterWizardPage extends WizardPage
 {
 
-  Text m_distance;
+  Text m_bufferDistance;
 
   Button m_bufferButton;
 
@@ -149,18 +149,18 @@ public class ImportWfsFilterWizardPage extends WizardPage
       {
         if( m_bufferButton.getSelection() )
         {
-          m_distance.setVisible( true );
+          m_bufferDistance.setVisible( true );
           updateMessage();
         }
         else
-          m_distance.setVisible( false );
+          m_bufferDistance.setVisible( false );
         setPageComplete( validate() );
       }
     } );
-    m_distance = new Text( topGroup, SWT.SINGLE | SWT.BORDER );
-    m_distance.setText( "Puffer in Meter:" );
-    m_distance.setVisible( false );
-    m_distance.addFocusListener( new FocusAdapter()
+    m_bufferDistance = new Text( topGroup, SWT.SINGLE | SWT.BORDER );
+    m_bufferDistance.setText( "0" );
+    m_bufferDistance.setVisible( false );
+    m_bufferDistance.addFocusListener( new FocusAdapter()
     {
       /**
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
@@ -168,6 +168,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       @Override
       public void focusLost( FocusEvent e )
       {
+        String text = m_bufferDistance.getText();
         setPageComplete( validate() );
       }
 
@@ -236,18 +237,18 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     } );
     final GridData data = new GridData();
-    data.horizontalSpan=2;
-    m_BBoxButton.setLayoutData(data);
-    
+    data.horizontalSpan = 2;
+    m_BBoxButton.setLayoutData( data );
+
     final Button button = new Button( topGroup, SWT.CHECK );
     button.setText( "max. Feature" );
     button.setSelection( m_doFilterMaxFeature );
 
     final Text maxFeatureField = new Text( topGroup, SWT.BORDER );
     maxFeatureField.setText( m_maxFeaturesAsString );
-    final GridData data2 = new GridData(GridData.FILL_HORIZONTAL);
-    data2.grabExcessHorizontalSpace=true;
-    maxFeatureField.setLayoutData(data2);
+    final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
+    data2.grabExcessHorizontalSpace = true;
+    maxFeatureField.setLayoutData( data2 );
     maxFeatureField.addFocusListener( new FocusAdapter()
     {
 
@@ -259,7 +260,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
 
     } );
-    
+
     button.addSelectionListener( new SelectionAdapter()
     {
 
@@ -267,7 +268,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         m_doFilterMaxFeature = !m_doFilterMaxFeature;
-        maxFeatureField.setEnabled(m_doFilterMaxFeature);
+        maxFeatureField.setEnabled( m_doFilterMaxFeature );
       }
     } );
 
@@ -304,7 +305,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( m_BBoxButton.getSelection() )
       message = message + "Der aktive Kartenauschnitt wird als räumlicher Operator verwendet.";
     if( m_bufferButton.getSelection() )
-      message = message + "\nMit einem Puffer von " + m_distance.getText() + " Metern";
+      message = message + "\nMit einem Puffer von " + m_bufferDistance.getText() + " Metern";
     setMessage( message );
 
   }
@@ -330,18 +331,18 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     }
     // the text window can only hold numbers
-    if( m_distance.isVisible() && m_bufferButton.getSelection() )
+    if( m_bufferDistance.isVisible() && m_bufferButton.getSelection() )
     {
       try
       {
-        String text = m_distance.getText();
+        String text = m_bufferDistance.getText();
         Double.parseDouble( text );
-        Integer.parseInt( text );
+        // Integer.parseInt( text );
       }
       catch( NumberFormatException e )
       {
         setErrorMessage( "Es können nur Zahlen in das Textfeld eingegeben werden" );
-        m_distance.setText( "" );
+        m_bufferDistance.setText( "" );
         return false;
       }
       if( !m_BBoxButton.getSelection() && !m_activeSelectionButton.getSelection() )
@@ -358,11 +359,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setErrorMessage( "Es ist kein Element selektiert" );
         return false;
       }
-//      else if( !(m_selectedGeom instanceof GM_Object) )
-//      {
-//        setErrorMessage( "Das selektierte Element ist keine bekannte Geometrie" );
-//        return false;
-//      }
+      // else if( !(m_selectedGeom instanceof GM_Object) )
+      // {
+      // setErrorMessage( "Das selektierte Element ist keine bekannte Geometrie" );
+      // return false;
+      // }
     }
     // the bbox can not be null
     if( m_BBoxButton.getSelection() )
@@ -388,6 +389,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   Filter getFilter( IFeatureType ft )
   {
+    // TODO check checkboxes, maybe no filter at all is wanted
     int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
     String item = m_spatialOpsCombo.getItem( selectionIndex );
     int ops = -1;
@@ -401,21 +403,21 @@ public class ImportWfsFilterWizardPage extends WizardPage
     final IValuePropertyType geom = ft.getDefaultGeometryProperty();
     if( geom == null )
       return null;
-    final PropertyName propertyName = new PropertyName( geom.getQName().getLocalPart() );
+    final PropertyName propertyName = new PropertyName( geom.getQName() );
 
-    String val = m_distance.getText();
+    String val = m_bufferDistance.getText();
     if( val == null || val.length() == 0 )
-      val = String.valueOf( 0 );
+      val = "0";
 
+    final double distance = Double.parseDouble( val );
     if( m_selectedGeom != null )
     {
-
-      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_selectedGeom, Double.parseDouble( val ) );
+      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_selectedGeom, distance );
       return new ComplexFilter( operation );
     }
     else if( m_BBox != null )
     {
-      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_BBox, Double.parseDouble( val ) );
+      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_BBox, distance );
       return new ComplexFilter( operation );
     }
     return null;
