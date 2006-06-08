@@ -45,7 +45,6 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -53,7 +52,6 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 
 /**
  * @author doemming

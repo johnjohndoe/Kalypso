@@ -48,7 +48,6 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.layer.AbstractChartLayer;
 
 /**
  * @author schlienger
