@@ -1,5 +1,6 @@
 package org.kalypso.portal.intro;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 
@@ -36,10 +37,9 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
   public void createContent( String id, Element parent )
   {
     final Document domOwner = parent.getOwnerDocument();
-    final String urlFromConfig = "http://localhost:8080/webdav/dss/intro/intropage.html";
-//    final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.xhtml";
-    // final File file = new File( "C:\\Tomcat 5.0\\webapps\\webdav\\dss\\intro\\intropage.xhtml" );
-    // final File file = new File( "C:/eclipse3.1_workspace/KalypsoFlowsData/dss/intro/intropage.xhtml" );
+    final String urlFromConfig = new File( "E:/eclipse3.1/workspace/KalypsoFlowsData/dss/intro/intropage.html" ).toString();
+//     final String urlFromConfig = "http://bsu-flows:8080/flows/PlanerClient/intro/intropage.html";
+//     final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.html";
     if( "headID".equals( id ) )
     {
       final Comment comment = domOwner.createComment( "headID" );
@@ -54,7 +54,7 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
         // important: must allways follow openURL-introActions to stay in securityContext for excecuting
         // runAction-introActions
         final URL url = new URL( "http://org.eclipse.ui.intro/openURL?url=" + urlFromConfig );
-//        final URL url = new URL( "http://org.eclipse.ui.intro/runAction?goto=" + urlFromConfig +"&");
+        // final URL url = new URL( "http://org.eclipse.ui.intro/runAction?goto=" + urlFromConfig +"&");
         // tricky: generate frame, otherwise relative urls can not be resolved !
         final Element frameSetE = domOwner.createElement( "frameset" );
         parent.appendChild( frameSetE );
