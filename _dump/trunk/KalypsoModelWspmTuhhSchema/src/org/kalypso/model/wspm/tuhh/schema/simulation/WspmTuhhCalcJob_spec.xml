@@ -4,6 +4,7 @@
     Dateien relativ zur Rechenvariante (.../input/calc/) -->
     <input id="MODELL_GML" description="Modelldaten"/>
     <input id="CALC_PATH" type="xs:string" description="Feature-Path zur Berechnung in der Modell.gml"/>
+    <input id="EPS_THINNING" type="xs:string" description="Parameter für die Ausdünnung bei Generierung der Bruchkanten"/>
     <!-- 
     Output des Rechenkerns/CalcJobs -->
     <output id="KernelLog" description="Log of the kernel"/>

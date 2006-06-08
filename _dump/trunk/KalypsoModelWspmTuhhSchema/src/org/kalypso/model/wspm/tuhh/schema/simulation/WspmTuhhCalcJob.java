@@ -47,7 +47,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,9 +58,14 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -66,6 +74,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
@@ -97,13 +106,15 @@ public class WspmTuhhCalcJob implements ISimulation
     long lTimeout = PROCESS_TIMEOUT;
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
-   
+    final String epsThinning = (String) inputProvider.getInputForID( "EPS_THINNING" );
 
     final File simulogFile = new File( tmpDir, "simulation.log" );
     resultEater.addResult( "SimulationLog", simulogFile );
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
+    InputStream headerInputStream = null;
+    InputStream footerInputStream = null;
     FileOutputStream strmKernelLog = null;
     FileOutputStream strmKernelErr = null;
     PrintWriter pwInParams = null;
@@ -158,7 +169,7 @@ public class WspmTuhhCalcJob implements ISimulation
       resultEater.addResult( "KernelErr", fleKernelErr );
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
-      // TODO input.txt und start.bat sollen noch raus (Umstellung Rechenkern durch Wolf)
+      // TODO input.txt und start.bat sollen noch raus (nach Umstellung des Rechenkerns durch Wolf)
       // input.txt: n, prof/calc.properties
       final File fleInParams = new File( tmpDir, "input.txt" );
       pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
@@ -225,11 +236,12 @@ public class WspmTuhhCalcJob implements ISimulation
             // (without header) + new footer
             File lengthSectionObsFile = new File( tmpDir, "lengthSectionObs.gml" );
 
-            final File headLenghSectionFile = new File( tmpDir, "headerLenghSection.txt" );
-            final File footLenghSectionFile = new File( tmpDir, "footerLenghSection.txt" );
+            headerInputStream = getClass().getResourceAsStream( "resources/headerLenghSection.txt" );
+            footerInputStream = getClass().getResourceAsStream( "resources/footerLenghSection.txt" );
 
-            final String strHeader = FileUtils.readFileToString( headLenghSectionFile, WSPMTUHH_CODEPAGE );
-            final String strFooter = FileUtils.readFileToString( footLenghSectionFile, WSPMTUHH_CODEPAGE );
+            // Info: gml header file contains same encoding
+            final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
+            final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
             String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
             // remove first two rows (old header) from laengsschnitt.txt
             int pos = strLengthSection.indexOf( "\n" );
@@ -242,25 +254,24 @@ public class WspmTuhhCalcJob implements ISimulation
               resultEater.addResult( "LengthSectionObs", lengthSectionObsFile );
 
               // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
-              // Geometrie ausdünnen, (welche) Parameter aus ANT?
-              // WST an Punkte dranhängen und neue Geometrie machen
+              // create breaklines.gml
+              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionObsFile.toURL() );
+              final Feature rootFeature = obsWks.getRootFeature();
 
-              // @Monika: auskommentiert, weils zur Zeit ne exception gibt, dass
-              // die datei zeichen falschen encodings enthält.
-              // vermutlich problem der header/footer dateien
-              // das gml wird mit dem encoding gelesen, welches in der 1.Zeile angegeben ist.
-              
-              // P.S.: Du musst übrigends den header footer gar nicht aus dem zip entpacken, sondern
-              // könntest auch bequem direkt per
-              // getClass().getResourceAsString( "resources/header.txt" ) drauf zugreifen
-              
-//              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionObsFile.toURL() );
-//              final Feature rootFeature = obsWks.getRootFeature();
-//              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
-//              for( final WspmReachProfileSegment reach : reachProfileSegments )
-//              {
-//                reach.getGeometry().getAsLineString();
-//              }
+              final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
+              final TupleResult result = lengthSectionObs.getResult();
+              final String strStationierung = "Stationierung";
+              final String strWsp = "Höhe WSP";
+              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+
+              final String emptyShpBase = "";
+
+              // leeres Shape aus Resourcen holen
+              // Breaklines machen:
+              // - Koordinatensystem aus erster PolyLine-Geometrie
+              // - shape holen, deserialize und füllen
+              // WST an Punkte dranhängen und neue Geometrie machen (noch übergeben)
+              BreakLinesHelper.createBreaklinesShape( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), emptyShpBase );
 
               // final File breaklineFile = null;
               //
@@ -325,7 +336,7 @@ public class WspmTuhhCalcJob implements ISimulation
             FileUtils.copyFileToDirectory( file, wqProProfilDir );
           resultEater.addResult( "wqProProfil", wqProProfilDir );
 
-          // *.tab (Ergebnislisten für jeden Abfluss -> Verzeichnis)
+          // *.tb (Ergebnislisten für jeden Abfluss -> Verzeichnis)
           final FileFilter resNonUniFilter = FileFilterUtils.suffixFileFilter( ".tb" );
           final File[] resNonUniFiles = dathDir.listFiles( resNonUniFilter );
           final File resNonUniDir = new File( dathDir, "ResultLists" );
@@ -346,6 +357,8 @@ public class WspmTuhhCalcJob implements ISimulation
     {
       IOUtils.closeQuietly( pwSimuLog );
       IOUtils.closeQuietly( zipInputStream );
+      IOUtils.closeQuietly( headerInputStream );
+      IOUtils.closeQuietly( footerInputStream );
       IOUtils.closeQuietly( strmKernelLog );
       IOUtils.closeQuietly( strmKernelErr );
       IOUtils.closeQuietly( pwInParams );
