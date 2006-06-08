@@ -85,7 +85,7 @@ import org.kalypso.model.km.AbstractKMValue;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
