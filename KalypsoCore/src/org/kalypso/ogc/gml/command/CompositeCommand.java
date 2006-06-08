@@ -38,10 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.actions;
+package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;

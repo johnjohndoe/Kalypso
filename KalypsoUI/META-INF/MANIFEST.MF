@@ -70,7 +70,6 @@ Export-Package: com.keypoint,
  org.jfree.xml.writer,
  org.jfree.xml.writer.coretypes,
  org.kalypso.ogc.gml,
- org.kalypso.ogc.gml.command,
  org.kalypso.ogc.gml.featureTypeDialog,
  org.kalypso.ogc.gml.featureview,
  org.kalypso.ogc.gml.featureview.control,
@@ -174,6 +173,5 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.auth,
  org.kalypso.metadoc;visibility:=reexport,
  org.junit,
- org.kalypso.services.core.client,
- de.belger.swtchart.core
+ org.kalypso.services.core.client
 Eclipse-AutoStart: true

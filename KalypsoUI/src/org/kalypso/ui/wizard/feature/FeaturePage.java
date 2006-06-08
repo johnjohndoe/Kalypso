@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;

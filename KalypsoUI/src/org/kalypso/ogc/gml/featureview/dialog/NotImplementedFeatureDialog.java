@@ -45,7 +45,7 @@ import java.util.Collection;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 
 /**
  * @author belger

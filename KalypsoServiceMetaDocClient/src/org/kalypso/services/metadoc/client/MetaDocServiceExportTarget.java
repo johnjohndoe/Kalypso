@@ -83,7 +83,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.services.metadoc.impl.DocumentBean;
 import org.kalypso.services.metadoc.impl.KalypsoMetaDocService;

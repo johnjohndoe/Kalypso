@@ -37,7 +37,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypsodeegree.model.feature.Feature;

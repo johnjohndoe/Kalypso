@@ -80,6 +80,8 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelLikeTableCursor;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1.ADVANCE_MODE;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,7 +92,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -131,9 +133,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
-  public static final String COLUMN_PROP_FORMAT = "columnFormat";
-
-  private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
+  public static final String COLUMN_PROP_FORMAT = "columnFormat";  
 
   private final IFeatureModifierFactory m_featureControlFactory;
 
@@ -280,7 +280,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // disable capture to let selection of table and tableviewer in sync
     table.setCapture( false );
 
-    final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
+    final TableCursor tc = new ExcelTableCursor3_1( this, SWT.NONE,ExcelTableCursor3_1.ADVANCE_MODE.DOWN, true );
     m_tableCursor = tc;
 
     final OpenStrategy strategy = new OpenStrategy( tc );
@@ -810,6 +810,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public Gistableview createTableTemplate( )
   {
+    final ObjectFactory m_gistableviewFactory = new ObjectFactory();
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final Layer layer = m_gistableviewFactory.createGistableviewLayer();
 

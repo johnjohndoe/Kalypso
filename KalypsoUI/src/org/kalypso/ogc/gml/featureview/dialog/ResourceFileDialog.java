@@ -41,7 +41,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

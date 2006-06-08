@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview;
 
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

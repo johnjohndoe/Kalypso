@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
