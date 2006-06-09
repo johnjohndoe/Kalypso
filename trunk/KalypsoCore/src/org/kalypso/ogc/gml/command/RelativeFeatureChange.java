@@ -46,6 +46,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.kalypso.commons.math.MathOperationFactory;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -204,6 +205,15 @@ public class RelativeFeatureChange extends FeatureChange
       throw new IllegalArgumentException( "Could not cast double " + doubleValue + " as class " + type.getClass().getName(), e );
     }
     return result;
-
+  }
+  
+  /**
+   * checks if the property type is a {@link org.kalypso.gmlschema.property.IValuePropertyType} and can be cast as
+   * {@link Number}
+   */
+  @SuppressWarnings("unchecked")
+  public static boolean isNumeric( IPropertyType propertyType )
+  {
+    return propertyType instanceof IValuePropertyType && Number.class.isAssignableFrom( ((IValuePropertyType) propertyType).getValueClass() );
   }
 }
