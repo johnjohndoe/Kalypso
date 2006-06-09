@@ -43,6 +43,11 @@ package org.kalypsodeegree.model.geometry;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
@@ -53,6 +58,9 @@ import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
@@ -65,10 +73,9 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
-
   public GenericGM_ObjectBindingTypeHandler( JAXBContext jaxbContext, QName xmlTypeQName, QName xmlTagQName, Class gm_objectClass, boolean isGeometry )
   {
-    super( jaxbContext, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false,true );
+    super( jaxbContext, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false, true );
   }
 
   /**
@@ -86,7 +93,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
         try
         {
           final Class geometryClass = getValueClass();
-          geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object(  value ,geometryClass);
+          geometryValue = GML3BindingGM_ObjectAdapter.createGM_Object( value, geometryClass );
           marshalResultEater.eat( geometryValue );
         }
         catch( final GM_Exception e )
@@ -118,4 +125,29 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
       throw new TypeRegistryException( e );
     }
   }
+
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  @Override
+  public Object cloneObject( final Object objectToClone ) throws CloneNotSupportedException
+  {
+    try
+    {
+      final GM_Object geometry = (GM_Object) objectToClone;
+
+      final AbstractGeometryType wrappedValue = GML3BindingGM_ObjectAdapter.createBindingGeometryType( geometry );
+
+      final Object object = super.cloneObject( wrappedValue );
+
+      final Class geometryClass = getValueClass();
+
+      return GML3BindingGM_ObjectAdapter.createGM_Object( object, geometryClass );
+    }
+    catch( GM_Exception e )
+    {
+      throw new CloneNotSupportedException( e.getLocalizedMessage() );
+    }
+  }
+
 }

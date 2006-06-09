@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -61,6 +64,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class GeometryUtilities
 {
+  public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
+  public static final QName QN_POINT = new QName( NS.GML3, "Point" );
+  public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
+  public static final QName QN_LINE_STRING_PROPERTY = new QName( NS.GML3, "LineStringPropertyType" );
+  public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
+  public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
+  public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
+  
   public GeometryUtilities( )
   {
     super();
