@@ -104,6 +104,8 @@ public class RestoreSelectionHelper
       return;
 
     final CommandableWorkspace workspace = getWorkspace( m_key );
+    if( workspace == null ) // REMARK: kommisch dass der Workspace hier null ist nach der Rechnung...
+      return;
 
     final List easyFeatures = new ArrayList( m_oldSelectionState.length );
     for( int i = 0; i < m_oldSelectionState.length; i++ )
