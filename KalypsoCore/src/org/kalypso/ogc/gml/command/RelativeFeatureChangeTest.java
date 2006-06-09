@@ -115,7 +115,7 @@ public class RelativeFeatureChangeTest extends TestCase
     m_originalProperties = m_original.getFeatureType().getProperties();
     for( IPropertyType propertyType : m_originalProperties )
     {
-      if( isNumeric( propertyType ) )
+      if( RelativeFeatureChange.isNumeric( propertyType ) )
       {
         // add 2.5 to value
         final RelativeFeatureChange fcADD = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "+", 2.5 );
@@ -148,7 +148,7 @@ public class RelativeFeatureChangeTest extends TestCase
 
       for( IPropertyType propertyType : m_originalProperties )
       {
-        if( isNumeric( propertyType ) )
+        if( RelativeFeatureChange.isNumeric( propertyType ) )
         {
           final Object propertyExpected = m_result[i].getProperty( propertyType );
           final Object propertyResult = m_original.getProperty( propertyType );
@@ -157,15 +157,5 @@ public class RelativeFeatureChangeTest extends TestCase
         }
       }
     }
-  }
-
-  /**
-   * checks if the property type is a {@link org.kalypso.gmlschema.property.IValuePropertyType} and can be cast as
-   * {@link Number}
-   */
-  @SuppressWarnings("unchecked")
-  private boolean isNumeric( IPropertyType propertyType )
-  {
-    return propertyType instanceof IValuePropertyType && Number.class.isAssignableFrom( ((IValuePropertyType) propertyType).getValueClass() );
   }
 }
