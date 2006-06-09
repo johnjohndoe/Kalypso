@@ -44,12 +44,20 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author thuel2
@@ -79,24 +87,48 @@ public class BreakLinesHelper
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
     {
-      wspMap.put( (Double) record.getValue( stationComp ), ((BigDecimal)record.getValue( wspComp )).doubleValue()  );
+      wspMap.put( ((BigDecimal) record.getValue( stationComp )).doubleValue(), ((BigDecimal) record.getValue( wspComp )).doubleValue() );
     }
 
-    final Map<Double, GM_LineString> geomsMap = new TreeMap<Double, GM_LineString>();
     for( final WspmReachProfileSegment reach : reachProfileSegments )
     {
-      final GM_LineString newProfile = thinOut( reach.getGeometry().getAsLineString(), epsThinning );
-      geomsMap.put( reach.getStation().doubleValue(), newProfile );
+      GM_Curve thinProfile = thinnedOutClone( reach.getGeometry(), epsThinning );
+      GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wspMap.get( reach.getStation().doubleValue() ) );
     }
-    // TODO zusammenbasteln...
-    // und in Shape verpacken...
+
+    // TODO in Shape verpacken...
   }
 
-
-
-  private static GM_LineString thinOut( GM_LineString lineString, Double epsThinning )
+  private static GM_Curve setValueZ( final GM_LineString newProfile, double value ) throws GM_Exception
   {
-    // TODO thin out (and clone!!!)
-    return lineString;
+    final GM_Position[] positions = newProfile.getPositions();
+    final CS_CoordinateSystem crs = newProfile.getCoordinateSystem();
+    GM_Position[] newPositions = new GM_Position[positions.length];
+    for( int i = 0; i < positions.length; i++ )
+    {
+      GM_Position position = positions[i];
+      newPositions[i] = GeometryFactory.createGM_Position( position.getX(), position.getY(), value );
+    }
+    return GeometryFactory.createGM_Curve(newPositions, crs);
+  }
+
+  private static GM_Curve thinnedOutClone( final GM_Curve curve, final Double epsThinning )
+  {
+    try
+    {
+      final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
+      final Object cloneObject = lineStringTypeHandler.cloneObject( curve );
+
+      return (GM_Curve) cloneObject;
+    }
+    catch( CloneNotSupportedException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    // TODO thin out
+
+    return curve;
   }
 }
