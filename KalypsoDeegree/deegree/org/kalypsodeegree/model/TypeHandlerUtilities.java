@@ -77,6 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author doemming
@@ -531,15 +532,15 @@ public class TypeHandlerUtilities
     final JAXBContext context = KalypsoOGC31JAXBcontext.getContext();
 
     // geometry types
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
 
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), new QName( NS.GML3, "Point" ), GM_Point.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "LineStringPropertyType" ), new QName( NS.GML3, "LineString" ), GM_Curve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), GeometryUtilities.QN_POINT, GM_Point.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
     // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3,
     // "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPointPropertyType" ), new QName( NS.GML3, "MultiPoint" ), GM_MultiPoint.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiLineStringPropertyType" ), new QName( NS.GML3, "MultiLineString" ), GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPolygonPropertyType" ), new QName( NS.GML3, "MultiPolygon" ), GM_MultiSurface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPointPropertyType" ), GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiLineStringPropertyType" ), GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPolygonPropertyType" ), GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
     
     // TODO: the next line is wrong; GM_Envelope is no GM_Object
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
