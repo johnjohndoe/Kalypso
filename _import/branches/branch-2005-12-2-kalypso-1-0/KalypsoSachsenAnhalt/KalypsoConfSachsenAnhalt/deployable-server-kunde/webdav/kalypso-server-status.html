@@ -5,11 +5,21 @@
 </head>
 
 <body>
-<h1>KALYPSO Server Status</h1>
+
+<p><img src="./etc/kalypso.bmp" alt="KALYPSO" align="right" vspace="10" hspace="20"/></p>
+
+<h1>Standort-Umschaltung</h1>
 
 <hr/>
 
-<p><img src="./etc/kalypso.bmp" alt="KALYPSO" align="right" vspace="10" hspace="20"/></p>
+<p>Für die Umschaltung Magdeburg-Halle gehen Sie bitte zu folgender Seite:<br><br>
+<b><a href="./umschaltung/umschaltung.html">Infoseite Umschaltung MD-HAL</a></b>.
+
+<br><br><br><br>
+
+<h1>Server Status</h1>
+
+<hr/>
 
 <h2>Verfügbarkeit der KALYPSO-Webdienste</h2>
 
@@ -17,15 +27,18 @@
 Webdienstbeschreibungen (sog. WSDL-Datei). Bei diesen Beschreibungen handelt es sich um XML-Dokumente. Beim öffnen
 werden die Dokumente im Webbrowser angezeigt.
 </p>
-<p>
-Benutzen Sie die <b>Zurück</b>-Funktion des Browsers, um wieder auf diese Seite zu gelangen, nachdem Sie einen Dienst getestet haben.
-</p>
+
 <ul>
-<li><a href="../Kalypso_UserService/IUserService?WSDL" title="Benutzerdienst testen">Benutzerdienst testen</a></li>
-<li><a href="../Kalypso_ObservationService/IObservationService?WSDL" title="Zeitreihendienst testen">Zeitreihendienst testen</a></li>
-<li><a href="../Kalypso_CalculationService/ICalculationService?WSDL" title="Berechnungsdienst testen">Berechnungsdienst testen</a></li>
-<li><a href="../Kalypso_MetaDocService/IMetaDocService?WSDL" title="Dokumentendienst testen">Dokumentendienst testen</a></li>
+	<li><b><a href="../Kalypso_UserService/IUserService?WSDL" title="Benutzerdienst testen" target="result">Benutzerdienst testen</a></b></li>
+	<li><b><a href="../Kalypso_ObservationService/IObservationService?WSDL" title="Zeitreihendienst testen" target="result">Zeitreihendienst testen</a></b></li>
+	<li><b><a href="../Kalypso_CalculationService/ICalculationService?WSDL" title="Berechnungsdienst testen" target="result">Berechnungsdienst testen</a></b></li>
+	<li><b><a href="../Kalypso_MetaDocService/IMetaDocService?WSDL" title="Dokumentendienst testen" target="result">Dokumentendienst testen</a></b></li>
 </ul>
+
+<p>
+Das Ergebnis des Tests eines Dienstes wird hier angezeigt:
+</p>
+<iframe name="result" width="900" height="300"></iframe>
 
 <h2>Systemdienst</h2>
 
@@ -39,9 +52,6 @@ Eintrag <b>Apache Tomcat KalypsoServer</b> und starten Sie der Dienst erneut (en
 
 <p>Ein Prozess namens <b>tomcat5.exe</b> muss in die Prozessliste des Task-Manager sichtbar sein wenn der Tomcat Application Server
 richtig gestartet wurde.</p>
-
-
-<hr/>
 
 </body>
 
