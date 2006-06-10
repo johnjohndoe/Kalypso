@@ -67,7 +67,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -195,12 +195,24 @@ public class FeatureFactory
     return result.toArray( new IPropertyType[result.size()] );
   }
 
-  public static GMLWorkspace createGMLWorkspace( GMLSchema schema, Feature rootFeature, URL context, String schemaLocation )
+  public static GMLWorkspace createGMLWorkspace( IGMLSchema schema, Feature rootFeature, URL context, String schemaLocation )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     // final URL url = schema.getUrl();
     // final String href = url == null ? null : url.toExternalForm();
     return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, schemaLocation );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
+  public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType )
+  {
+    final IGMLSchema schema = rootFeatureType.getGMLSchema();
+    final URL context = null;
+    final String schemaLocation = null;
+    final Feature rootFeature = FeatureFactory.createDefaultFeature( null, "root", rootFeatureType, false );
+    return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation );
   }
 
 }

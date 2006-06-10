@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -42,7 +41,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final IFeatureType[] m_featureTypes;
 
-  private final GMLSchema m_schema;
+  private final IGMLSchema m_schema;
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
@@ -53,7 +52,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   // schema , featureTypes, rootFeature, context
-  public GMLWorkspace_Impl( final GMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
+  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
   {
     m_schema = schema;
     m_featureTypes = featureTypes;
@@ -166,7 +165,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public Feature[] getFeatures( final IFeatureType ft )
   {
     final CollectorVisitor collector = new CollectorVisitor();
-    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( m_schema, collector, ft, false );
+    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( collector, ft, false );
     try
     {
       accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -414,7 +413,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return ft;
     }
 
-    // HACK: because a workspace has only its one feature types
+    // HACK: because a workspace has only its own feature types
     // maybe allways use this method?
     return m_schema.getFeatureType( featureQName );
   }
@@ -654,14 +653,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private void unregisterFeature( final Feature childFeature )
   {
     m_indexMap.remove( childFeature.getId() );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
-   */
-  public Map getNamespaceMap( )
-  {
-    return m_schema.getNamespaceMap();
   }
 
   /**

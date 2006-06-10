@@ -186,7 +186,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     if( m_gmlSchema == null )
       m_gmlSchema = loadGMLSchema( uri, atts );
 
-    final String localUri = ( uri == null || uri.length() < 1 ) ? m_gmlSchema.getTargetNamespace() : uri;
+    final String localUri = (uri == null || uri.length() < 1) ? m_gmlSchema.getTargetNamespace() : uri;
     switch( m_status )
     {
       case FIRST_FEATURE:
@@ -339,7 +339,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     if( schema == null && m_useSchemaCatalog )
       try
       {
-        schema = GMLSchemaCatalog.getSchema( uri.toString(), (String)null );
+        schema = GMLSchemaCatalog.getSchema( uri.toString(), (String) null );
       }
       catch( Exception e )
       {
@@ -361,7 +361,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       System.out.println( "warning: errors occured with schemalocation" );
       schemaNotFoundExceptions.printStackTrace();
     }
-    
+
     return schema;
   }
 
@@ -383,7 +383,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       m_exceptionContentHandler.endElement( uri, localName, qName );
       return;
     }
-
+    /**
+     * deegreehack, deegree1 WFS doesn't define namespace in GetFeature-Result gml<br>
+     * do not remove (doemming)
+     */
     if( uri == null || uri.length() < 1 )
       uri = m_gmlSchema.getTargetNamespace();
 

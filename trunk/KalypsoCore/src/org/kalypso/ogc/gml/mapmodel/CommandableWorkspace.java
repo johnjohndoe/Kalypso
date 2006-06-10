@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -294,14 +293,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType propName, Feature childFeature )
   {
     return m_workspace.removeLinkedAsCompositionFeature( parentFeature, propName, childFeature );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
-   */
-  public Map getNamespaceMap( )
-  {
-    return m_workspace.getNamespaceMap();
   }
 
   /**

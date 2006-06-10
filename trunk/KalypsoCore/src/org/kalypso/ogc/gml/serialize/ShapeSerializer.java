@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLHelper;
+import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -211,7 +211,7 @@ public class ShapeSerializer
       for( int i = 0; i < count; i++ )
       {
         final Feature fe = sf.getFeatureByRecNo( rootFeature, i + 1, true );
-        GMLHelper.setCrs( fe, sourceCrs );
+        GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
           list.add( fe );
       }
