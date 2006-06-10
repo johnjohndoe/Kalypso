@@ -965,4 +965,22 @@
             id="org.kalypso.ui.actionFilter.featureTypeFilter"
             targetType="org.kalypsodeegree.model.feature.Feature"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.kalypso.ui.newwizards.gml"
+            name="Kalypso"/>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.gml"
+            class="org.kalypso.ui.wizard.NewGMLFileWizard"
+            hasPages="true"
+            id="org.kalypso.ui.wizard.NewGMLFileWizard"
+            name="GML Datei">
+         <description>
+            Erzeugt eine neue GML Datei
+         </description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
  </plugin>

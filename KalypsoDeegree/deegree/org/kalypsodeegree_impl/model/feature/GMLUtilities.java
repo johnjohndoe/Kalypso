@@ -1,9 +1,5 @@
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -13,7 +9,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author vdoemming
  */
-public class GMLHelper
+public class GMLUtilities
 {
   public static void setCrs( Feature fe, CS_CoordinateSystem srcCS )
   {
@@ -22,10 +18,10 @@ public class GMLHelper
     {
       Object prop = fe.getProperty( ftp[i].getName() );
       if( prop != null && prop instanceof Feature )
-        setCrs( (Feature)prop, srcCS );
+        setCrs( (Feature) prop, srcCS );
       else if( prop != null && prop instanceof GM_Object )
       {
-        ( (GM_Object_Impl)prop ).setCoordinateSystem( srcCS );
+        ((GM_Object_Impl) prop).setCoordinateSystem( srcCS );
       }
     }
   }
@@ -41,13 +37,15 @@ public class GMLHelper
     {
       Object prop = fe.getProperty( ftp[i].getName() );
       if( prop != null && prop instanceof Feature )
-        checkCrs( (Feature)prop, defaultCS );
+        checkCrs( (Feature) prop, defaultCS );
       else if( prop != null && prop instanceof GM_Object )
       {
-        GM_Object_Impl gmlProp = (GM_Object_Impl)prop;
+        GM_Object_Impl gmlProp = (GM_Object_Impl) prop;
         if( gmlProp.getCoordinateSystem() == null )
           gmlProp.setCoordinateSystem( defaultCS );
       }
     }
   }
+
+  
 }

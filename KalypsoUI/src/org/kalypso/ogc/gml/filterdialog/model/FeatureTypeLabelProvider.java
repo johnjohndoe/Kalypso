@@ -82,6 +82,9 @@ public class FeatureTypeLabelProvider extends LabelProvider
         descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
       if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
+      
+      // TODO: dispose those images!
+      // use a helper class from your plugin, see for example KalypsInformDss Plugin classes
       if( descriptor != null )
         return descriptor.createImage();
     }

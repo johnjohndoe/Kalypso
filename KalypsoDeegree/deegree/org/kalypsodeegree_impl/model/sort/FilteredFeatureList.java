@@ -35,7 +35,7 @@ public class FilteredFeatureList implements FeatureList
   public FilteredFeatureList( final FeatureList original, final String typeLocalName, final boolean acceptIfSubstituting )
   {
     m_original = original;
-    m_filterVisitor = new FeatureTypeVisitor(null, null, typeLocalName, acceptIfSubstituting );
+    m_filterVisitor = new FeatureTypeVisitor( null, typeLocalName, acceptIfSubstituting );
   }
 
   /**

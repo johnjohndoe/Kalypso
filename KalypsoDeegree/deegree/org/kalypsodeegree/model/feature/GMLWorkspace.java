@@ -133,8 +133,6 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   public boolean removeLinkedAsCompositionFeature( Feature parentFeature, final IRelationType linkProperty, Feature childFeature );
 
-  public Map getNamespaceMap( );
-
   /**
    * return true if these feature are related
    */
