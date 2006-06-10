@@ -122,7 +122,7 @@ public class WspCfgBean
       // ignore the values, we read the count from the linecount
       // just parse the type
       final char type = firstLine.charAt( firstLine.length() - 1 );
-      if( type != 'b' || type != 'l' )
+      if( type != 'b' && type != 'l' )
         bean.setType( 'b' ); // default to pasche
       else
         bean.setType( type );

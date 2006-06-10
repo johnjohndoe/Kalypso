@@ -82,6 +82,10 @@ public class RunOffEventBean
   /** Reads a qwt or wsf file */
   public static RunOffEventBean[] read( final File qwtFile ) throws ParseException, IOException
   {
+    // the qwt and wsf files may not exist; return empty list of beans
+    if( !qwtFile.exists() )
+      return new RunOffEventBean[] {};
+
     final List<RunOffEventBean> beans = new ArrayList<RunOffEventBean>( 10 );
 
     LineIterator lineIt = null;
