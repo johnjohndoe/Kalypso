@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -443,7 +444,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final IRelationType ftp = (IRelationType) rootFT.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-    final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+    final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
     final IFeatureType shapeFT = associationFeatureTypes[0];
     return shapeFT;
   }

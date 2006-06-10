@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -88,7 +89,7 @@ public class ImportShapeFile
       final IRelationType ftp = (IRelationType) rootFT.getProperty( "featureMember" );
 
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
       final IFeatureType shapeFT = associationFeatureTypes[0];
       final IPropertyType[] sourceFtp = shapeFT.getProperties();
 
