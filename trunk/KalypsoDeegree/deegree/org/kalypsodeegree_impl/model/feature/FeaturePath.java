@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -103,7 +104,7 @@ public class FeaturePath
       return value;
     else if( value instanceof FeatureList && segmentIndex < m_segments.length - 1 )
     {
-      final Feature subFeature = (Feature) ((FeatureList)value).get(0);
+      final Feature subFeature = (Feature) ((FeatureList) value).get( 0 );
       return getFeatureForSegment( workspace, subFeature, segmentIndex + 1 );
     }
     // alles andere ist ein Fehler
@@ -235,20 +236,20 @@ public class FeaturePath
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contexstSchema = workspace.getGMLSchema();
-          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( contexstSchema, false, true );
+          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contexstSchema, false, true );
           for( int i = 0; i < associationFeatureTypes.length; i++ )
           {
             final IFeatureType type = associationFeatureTypes[i];
-            
-            final IFeatureType[] substituts = type.getSubstituts( workspace.getGMLSchema(), true, true );
+
+            final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( type, workspace.getGMLSchema(), true, true );
             for( final IFeatureType substType : substituts )
             {
-              if( m_typename.equals( substType.getName() ))
+              if( m_typename.equals( substType.getName() ) )
                 return substType;
             }
-            
-//            if( m_typename.equals( type.getName() ) )
-//              return type;
+
+            // if( m_typename.equals( type.getName() ) )
+            // return type;
           }
 
           return null;

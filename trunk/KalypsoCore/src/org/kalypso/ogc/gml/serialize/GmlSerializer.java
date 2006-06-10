@@ -97,20 +97,21 @@ public final class GmlSerializer
   {
     try
     {
-      final TransformerFactory tFac = TransformerFactory.newInstance();
-//      tFac.setAttribute( "indent-number", new Integer( 4 ) );
-      final Transformer transformer = tFac.newTransformer();
-      transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
-      transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-
       final XMLReader reader = new GMLWorkspaceReader();
       reader.setFeature( "http://xml.org/sax/features/namespaces", true );
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true );
-      final InputSource inpuSource = new GMLWorkspaceInputSource( gmlWorkspace );
-      final Source source = new SAXSource( reader, inpuSource );
+      
+      final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
+      inputSource.setEncoding( charsetEncoding );
+      
+      final Source source = new SAXSource( reader, inputSource );
       final StreamResult result = new StreamResult( writer );
-      transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+
+      final TransformerFactory tFac = TransformerFactory.newInstance();
+      final Transformer transformer = tFac.newTransformer();
+      transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+      transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
       transformer.transform( source, result );
     }
     catch( final Exception e )

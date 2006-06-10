@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -63,7 +64,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   @Override
   public boolean performDrop( Object data )
   {
-    //System.out.print( "performDrop - " );
+    // System.out.print( "performDrop - " );
     final Object currentTargetObject = getCurrentTarget();
     if( currentTargetObject instanceof FeatureAssociationTypeElement )
     {
@@ -103,7 +104,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     final IFeatureSelection featureSelection = (IFeatureSelection) m_viewer.getSelection();
     final Feature[] selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
 
-    //System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
+    // System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
 
     Feature targetFeature = null;
     IFeatureType matchingFt = null;
@@ -121,7 +122,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       targetFeature = targetFatElement.getParentFeature();
       // try to find matching IFeatureType
       IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
-      matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), targetFeatureType.getSubstituts( null, false, true ) );
+      matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), GMLSchemaUtilities.getSubstituts( targetFeatureType, null, false, true ) );
       // System.out.println( "matchingFT = " + matchingFt.getName() );
       if( matchingFt == null )
         return false;
@@ -220,7 +221,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         if( property instanceof IRelationType )
         {
           final IFeatureType associationFeatureType = ((IRelationType) property).getTargetFeatureType();
-          final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
           for( int k = 0; k < associationFeatureTypes.length; k++ )
           {
             final IFeatureType aFType = associationFeatureTypes[k];

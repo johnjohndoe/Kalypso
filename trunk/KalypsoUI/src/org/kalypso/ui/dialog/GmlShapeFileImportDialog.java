@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -735,7 +736,7 @@ protected void handleBrowseButton2Selected( )
       final IRelationType ftp = link.getAssociationTypeProperty();
 
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
       for( int i = 0; i < associationFeatureTypes.length; i++ )
       {

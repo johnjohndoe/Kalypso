@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -232,7 +233,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     // final IFeatureType[] substiFTs =
     // GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
-    final IFeatureType[] substiFTs = linkSrcFeatureType.getSubstituts( m_schema, false, true );
+    final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
 
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {

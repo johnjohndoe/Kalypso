@@ -55,6 +55,7 @@ import org.xml.sax.SAXException;
 
 public class IndentingContentHandler implements ContentHandler
 {
+  // TODO: use System.getProperty or such like
 	private final char[] m_newLine = new char[]
 	{ '\n' };
 

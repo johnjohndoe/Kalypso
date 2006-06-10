@@ -49,6 +49,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -110,7 +111,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       final IFeatureType destFT2 = relation.getDestFT(); // where is the
       // difference ?
       final IFeatureType associationFeatureType = relation.getLink2().getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
@@ -127,7 +128,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       final IFeatureType destFT2 = relation.getDestFT();
       final IFeatureType associationFeatureType = relation.getLink().getTargetFeatureType();
 
-      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
@@ -156,7 +157,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
           {
             // heavy relationship ?
             final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
-            final IFeatureType[] ft2s = ft2a.getSubstituts( null, false, true );
+            final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
             for( int j = 0; j < ft2s.length; j++ )
             {
               final IPropertyType[] properties2 = ft2s[j].getProperties();

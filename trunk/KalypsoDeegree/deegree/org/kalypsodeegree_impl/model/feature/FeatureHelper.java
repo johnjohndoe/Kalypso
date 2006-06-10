@@ -358,7 +358,7 @@ public class FeatureHelper
     {
 
       IFeatureType ft = ((IRelationType) property).getTargetFeatureType();
-      afT = ft.getSubstituts( null, false, true );
+      afT = GMLSchemaUtilities.getSubstituts( ft, null, false, true );
     }
     return afT;
   }
