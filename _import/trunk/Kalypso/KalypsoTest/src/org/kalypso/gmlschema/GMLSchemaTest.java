@@ -30,7 +30,9 @@
 package org.kalypso.gmlschema;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Map;
 
@@ -52,6 +54,7 @@ import org.kalypso.test.TestUtilities;
 public class GMLSchemaTest extends TestCase
 {
   public static final String NS_GML2 = "http://www.opengis.net/gml";
+
   private File m_tmpFileCache;
 
   /*
@@ -108,7 +111,7 @@ public class GMLSchemaTest extends TestCase
 
     // m_listToTest
   }
-  
+
   /**
    * @see junit.framework.TestCase#tearDown()
    */
@@ -116,11 +119,11 @@ public class GMLSchemaTest extends TestCase
   protected void tearDown( ) throws Exception
   {
     KalypsoTest.release();
-    
+
     FileUtilities.deleteRecursive( m_tmpFileCache );
   }
 
-  public void testSchemas( ) throws Exception
+  public void testBPlan( ) throws Exception
   {
     try
     {
@@ -129,12 +132,37 @@ public class GMLSchemaTest extends TestCase
           getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
           getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
           , false );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
+  }
 
+  public void testNA( ) throws Exception
+  {
+    try
+    {
       loadAndTestSchema( // 
           getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
           getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
           , false );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
+  }
 
+  public void testWspm( ) throws Exception
+  {
+    try
+    {
+      loadAndTestSchema( //
+          getClass().getResource( "resources/GML3_wspm/wspm.xsd" ), //
+          getClass().getResource( "resources/GML3_wspm/schematree.txt" ), false );
     }
     catch( Exception e )
     {
@@ -158,11 +186,12 @@ public class GMLSchemaTest extends TestCase
       if( writeCompareFile )
       {
         File file = null;
-        FileWriter writer = null;
+        Writer writer = null;
         try
         {
           file = new File( testResource.toURI() );
-          writer = new FileWriter( file );
+          // use UTF-8 because TestUtilities allways uses UTF-8
+          writer = new OutputStreamWriter( new FileOutputStream( file ), "UTF-8" );
           writer.write( buffer.toString() );
           System.out.println( " wrote schema to " + file.toString() + "\n next run you can compare" );
         }
@@ -173,10 +202,9 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        // System.out.println( buffer.toString() );
+        System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }
   }
-
 }
