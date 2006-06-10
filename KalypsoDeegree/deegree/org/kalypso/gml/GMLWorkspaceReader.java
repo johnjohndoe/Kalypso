@@ -79,10 +79,6 @@ public class GMLWorkspaceReader implements XMLReader
   private ErrorHandler m_errorHandler;
 
   /**
-   * @see org.xml.sax.XMLReader#getFeature(java.lang.String)
-   */
-
-  /**
    * @see org.xml.sax.XMLReader#parse(org.xml.sax.InputSource)
    */
   public void parse( final InputSource input ) throws SAXException
@@ -92,8 +88,7 @@ public class GMLWorkspaceReader implements XMLReader
 
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
-     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
-//    final IndentingContentHandler indentHandler = new IndentingContentHandler( toStringHandler, 1 );
+    final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
 
     final SAXFactory factory = new SAXFactory( indentHandler );
     handler.startDocument();

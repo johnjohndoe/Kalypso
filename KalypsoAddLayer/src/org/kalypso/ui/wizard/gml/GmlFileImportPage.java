@@ -71,6 +71,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -311,7 +312,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       final IRelationType ftp = link.getAssociationTypeProperty();
 
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes = associationFeatureType.getSubstituts( null, false, true );
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
       for( int i = 0; i < associationFeatureTypes.length; i++ )
       {

@@ -36,6 +36,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
@@ -45,7 +46,6 @@ import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -60,8 +60,7 @@ public class AddEmptyLinkAction extends Action
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp,
-      Feature parentFeature, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp, Feature parentFeature, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
     super( text, image );
     m_fatp = fatp;
@@ -71,11 +70,11 @@ public class AddEmptyLinkAction extends Action
   }
 
   @Override
-  public void run()
+  public void run( )
   {
-    
+
     final IFeatureType featureType = m_fatp.getTargetFeatureType();
-    final IFeatureType[] featureTypes = featureType.getSubstituts(null, false, true);
+    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
     Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     ICommand command = null;
     FeatureTypeSelectionDialog dialog = null;

@@ -52,7 +52,6 @@ public class GMLWorkspaceInputSource extends InputSource
 
   public GMLWorkspaceInputSource( final GMLWorkspace gmlWorkspace )
   {
-    super();
     m_gmlWorkspace = gmlWorkspace;
   }
 
@@ -60,4 +59,6 @@ public class GMLWorkspaceInputSource extends InputSource
   {
     return m_gmlWorkspace;
   }
+  
+  
 }
