@@ -133,13 +133,13 @@
    <extension
            point="org.eclipse.ui.preferencePages">
         <page
-              class="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"
+              class="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"
               name="Profileditor"
-              id="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"/>
+              id="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"/>
         <page
-              category="org.kalypso.model.wspm.ui.profil.preferences.ProfileditorPreferencePage"
-              class="org.kalypso.model.wspm.ui.profil.preferences.ValidatorPreferencePage"
-              id="org.kalypso.model.wspm.ui.profil.preferences.ValidatorPreferencePage"
+              category="org.kalypso.model.wspm.ui.preferences.ProfileditorPreferencePage"
+              class="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
+              id="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
               name="Validator"/>
      </extension>
      <extension

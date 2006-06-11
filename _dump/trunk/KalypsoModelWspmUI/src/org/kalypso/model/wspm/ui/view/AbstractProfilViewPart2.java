@@ -7,16 +7,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.ui.PartAdapter;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
@@ -26,32 +23,13 @@ import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.action.ProfilChartViewActionBarContributor;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilViewPart2, IProfilViewDataListener, IProfilListener, IProfilProviderListener
+public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilViewPart2, IProfilViewDataListener, IProfilListener, IProfilProviderListener, IAdapterEater
 {
   private final ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
 
-  private final IPartListener m_partListener = new PartAdapter()
-  {
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
-     */
-    @Override
-    public void partActivated( final IWorkbenchPart part )
-    {
-      AbstractProfilViewPart2.this.partActivated( part );
-    }
-
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
-     */
-    @Override
-    public void partClosed( final IWorkbenchPart part )
-    {
-      AbstractProfilViewPart2.this.partClosed( part );
-    }
-  };
+  private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( IProfilProvider2.class, this, new EditorFirstAdapterFinder(), new EditorFirstAdapterFinder() );
 
   private IProfilEventManager m_pem = null;
 
@@ -61,16 +39,14 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
   private IProfilProvider2 m_provider;
 
-  private IWorkbenchPart m_part;
-
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
 
     final IWorkbenchPage page = site.getPage();
-    page.addPartListener( m_partListener );
 
+    m_adapterPartListener.init( page );
     m_actionContributor.init( page );
 
     final IActionBars actionBars = site.getActionBars();
@@ -79,10 +55,17 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_actionContributor.contributeTo( actionBars.getStatusLineManager() );
   }
 
-  protected void setProvider( final IWorkbenchPart part, final IProfilProvider2 provider )
+  public void setAdapter( final Object adapter )
   {
+    final IProfilProvider2 provider = (IProfilProvider2) adapter;
     if( provider == m_provider )
+    {
+      // for first initialization, provider empty profile
+      if( provider == null )
+        onProfilProviderChanged( null, null, null, null, null );
+
       return;
+    }
 
     if( m_provider != null )
     {
@@ -90,15 +73,18 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       m_provider.dispose();
     }
 
+    final IProfilEventManager oldPem = getProfilEventManager();
+    final ProfilViewData oldViewData = getProfilViewData();
+
     m_provider = provider;
-    m_part = part;
 
     if( m_provider != null )
-    {
       m_provider.addProfilProviderListener( this );
-      onProfilProviderChanged( m_provider, null, provider.getEventManager(), null, provider.getViewData() );
-    }
 
+    final IProfilEventManager newPem = m_provider == null ? null : m_provider.getEventManager();
+    final ProfilViewData newViewData = m_provider == null ? null : m_provider.getViewData();
+
+    onProfilProviderChanged( m_provider, oldPem, newPem, oldViewData, newViewData );
   }
 
   /**
@@ -107,11 +93,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   @Override
   public void dispose( )
   {
-    getSite().getPage().removePartListener( m_partListener );
+    m_adapterPartListener.dispose();
+    m_actionContributor.dispose();
 
     unhookProvider();
-
-    m_actionContributor.dispose();
 
     super.dispose();
   }
@@ -128,62 +113,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     gridLayout.marginWidth = 0;
     m_control.setLayout( gridLayout );
 
-    // find the part which populates this view. The parts are searched in this order:
-    // - active part (probaly this object)
-    // - active editor
-    // - other editors
-    // - other views
-    final IWorkbenchPage page = getSite().getPage();
-    final IWorkbenchPart activePart = page.getActivePart();
-    if( partActivated( activePart ) )
-      return;
-
-    if( partActivated( page.getActiveEditor() ) )
-      return;
-
-    for( final IEditorReference reference : page.getEditorReferences() )
-    {
-      if( partActivated( reference.getPart( false ) ) )
-        return;
-    }
-
-    for( final IViewReference reference : page.getViewReferences() )
-    {
-      if( partActivated( reference.getPart( false ) ) )
-        return;
-    }
-
-    // if nothing is found, set null profile event manager to init the control
-    onProfilProviderChanged( null, null, null, null, null );
-  }
-
-  /**
-   * Tries to find a IProfileProvider from the given part.
-   * 
-   * @return true, if a profile provider was found.
-   */
-  protected boolean partActivated( final IWorkbenchPart part )
-  {
-    if( part == null )
-      return false;
-
-    final IProfilProvider2 provider = (IProfilProvider2) part.getAdapter( IProfilProvider2.class );
-    if( provider == null )
-      return false;
-
-    setProvider( part, provider );
-
-    return true;
-  }
-
-  protected void partClosed( final IWorkbenchPart part )
-  {
-    if( part == m_part )
-    {
-      unhookProvider();
-      m_part = null;
-      onProfilProviderChanged( null, m_pem, null, m_viewData, null );
-    }
+    onProfilProviderChanged( m_provider, null, m_pem, null, getProfilViewData() );
   }
 
   /**
@@ -195,8 +125,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     unhookProvider();
 
-    setTitleToolTip( "Kein Profil selektiert" );
-    setPartName( "Profil Diagrammansicht" );
+    setPartNames( "Profil Diagrammansicht", "Kein Profil selektiert" );
 
     m_pem = newPem;
     m_viewData = newViewData;
@@ -208,6 +137,29 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       m_viewData.addProfilViewDataListener( this );
 
     onProfilChanged();
+  }
+
+  private void setPartNames( final String partName, final String tooltip )
+  {
+    final Composite control = getControl();
+    if( control != null && !control.isDisposed() )
+    {
+      final Runnable object = new Runnable()
+      {
+        public void run( )
+        {
+          if( !control.isDisposed() )
+            setPartNamesInternal( partName, tooltip );
+        }
+      };
+      control.getDisplay().asyncExec( object );
+    }
+  }
+
+  protected void setPartNamesInternal( final String partName, final String tooltip )
+  {
+    setTitleToolTip( tooltip );
+    setPartName( partName );
   }
 
   private void unhookProvider( )
@@ -241,27 +193,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       {
         public void run( )
         {
-          final IFile file = m_provider == null ? null : m_provider.getFile();
-          if( file != null )
-            setTitleToolTip( file.getFullPath().toOSString() );
-
-          if( m_pem != null )
-          {
-            final IProfil profil = m_pem.getProfil();
-            setPartName( "Station km " + profil );
-          }
-
-          final Composite parent = getControl();
-          if( parent == null || parent.isDisposed() )
-            return;
-
-          for( final Control c : parent.getChildren() )
-            c.dispose();
-
-          final Control control = createContent( parent );
-          if( control != null )
-            control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-          parent.layout();
+          handleProfilChanged();
         }
       } );
   }
@@ -279,21 +211,40 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     return m_pem;
   }
 
+  public ProfilViewData getProfilViewData( )
+  {
+    return m_viewData;
+  }
+
   public IFile getFile( )
   {
     return m_provider == null ? null : m_provider.getFile();
   }
 
-  /**
-   * @see com.bce.profil.ui.view.IProfilViewDataListener#onProfilViewDataChanged()
-   */
-  public void onProfilViewDataChanged( )
+  /** Used internally. Must be called in the SWT-Thread. */
+  protected void handleProfilChanged( )
   {
-    // ?
+    final IFile file = m_provider == null ? null : m_provider.getFile();
+
+    final String partName = m_pem == null ? "Profil Diagrammansicht" : "Station km " + m_pem.getProfil().hashCode();
+    final String tooltip = file == null ? null : file.getFullPath().toOSString();
+
+    setPartNames( partName, tooltip );
+
+    final Composite parent = getControl();
+    if( parent == null || parent.isDisposed() )
+      return;
+
+    for( final Control c : parent.getChildren() )
+      c.dispose();
+
+    final Control control = createContent( parent );
+    if( control != null )
+      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    parent.layout();
   }
 
   protected abstract Control createContent( final Composite parent );
 
   protected abstract void saveState( );
-
 }

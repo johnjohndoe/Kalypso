@@ -18,12 +18,11 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.profil.view.panel.BuildingPanel;
 
@@ -40,7 +39,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
     return getProfil().getPoints();
   }
 
-  public BrueckeBuildingLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor,
+  public BrueckeBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor,
       final Color editColor )
 
   {
@@ -103,7 +102,6 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
     return new BuildingPanel( pem, viewData );
   }
 
-  @Override
   public void removeYourself( )
   {
     final IProfilEventManager pem = getProfilEventManager();
@@ -111,13 +109,5 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 
     final ProfilOperation operation = new ProfilOperation( " entfernen", pem, change, true );
     new ProfilOperationJob( operation ).schedule();
-  }
-
-  /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
-  {
   }
 }

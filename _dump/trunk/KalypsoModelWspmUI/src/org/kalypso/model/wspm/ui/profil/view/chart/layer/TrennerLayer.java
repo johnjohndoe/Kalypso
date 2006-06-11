@@ -23,9 +23,9 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.panel.TrennerPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -136,7 +136,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     }
   }
 
-  public TrennerLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final ColorRegistry colorRegistry )
+  public TrennerLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final ColorRegistry colorRegistry )
   {
     super( pvp, domainRange, valueRange );
     m_colorRegistry = colorRegistry;
@@ -158,7 +158,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( final GCWrapper gc )
   {
     try
@@ -247,7 +246,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
-  @Override
   public Rectangle2D getBounds( )
   {
     try
@@ -417,7 +415,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
    * @see java.lang.Object#toString()
    */
 
-  @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException();
@@ -430,7 +427,5 @@ public class TrennerLayer extends AbstractProfilChartLayer
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    // TODO Auto-generated method stub
-
   }
 }

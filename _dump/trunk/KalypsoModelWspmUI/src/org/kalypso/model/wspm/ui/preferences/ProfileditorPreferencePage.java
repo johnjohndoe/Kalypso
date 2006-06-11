@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.ui.profil.preferences;
+package org.kalypso.model.wspm.ui.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;

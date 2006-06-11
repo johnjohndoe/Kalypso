@@ -18,8 +18,8 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -30,7 +30,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   private Color m_color;
 
-  public HochRechtsLayer( final IProfilViewProvider  pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public HochRechtsLayer( final ProfilChartView  pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
     super( pvp,domainRange, valueRange );
 
@@ -44,7 +44,6 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
     return null;
   }
 
-  @Override
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[2];
@@ -55,7 +54,6 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
     new ProfilOperationJob( operation ).schedule();
   }
 
-  @Override
   public Rectangle2D getBounds( )
   {
     try
@@ -111,7 +109,6 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
     gc.drawLine( left - 2, bottom, right, bottom );
 
     gc.drawOval( midx, midy, 3, 3 );
-
   }
   
 
@@ -127,18 +124,13 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   @Override
   protected void editProfil( Point point, Object data )
   {
-    // TODO Auto-generated method stub
-    
   }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( GCWrapper gc )
   {
-    // TODO Auto-generated method stub
-    
   }
 
   /**
@@ -147,7 +139,5 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    // TODO Auto-generated method stub
-    
   }
 }

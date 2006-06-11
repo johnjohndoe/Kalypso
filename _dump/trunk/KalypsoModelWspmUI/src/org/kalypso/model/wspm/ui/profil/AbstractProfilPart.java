@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.PlatformObject;
@@ -52,24 +55,28 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.DefaultProfilColorRegistryFactory;
+import org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider;
+import org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 import de.belger.swtchart.legend.ChartLegend;
 
 /**
+ * The common code for showing a {@link IProfile} as a chart.
+ * 
  * @author Gernot Belger
  */
-public class AbstractProfilPart extends PlatformObject
+public class AbstractProfilPart extends PlatformObject implements IProfilChartViewProvider
 {
+  private final List<IProfilChartViewProviderListener> m_listener = new ArrayList<IProfilChartViewProviderListener>();
+
   private final ProfilViewData m_viewdata = new ProfilViewData();
 
   protected final Runnable m_updateControlRunnable = new Runnable()
@@ -163,8 +170,14 @@ public class AbstractProfilPart extends PlatformObject
     {
       final Label label = new Label( m_control, SWT.CENTER );
       label.setText( "Kein Profil selektiert." );
-      final GridData gridData = new GridData( GridData.FILL_BOTH );
+      final GridData gridData = new GridData(  );
+      gridData.grabExcessHorizontalSpace = true;
+      gridData.horizontalAlignment = SWT.FILL;
+      gridData.horizontalIndent = 10;
+      gridData.grabExcessVerticalSpace = true;
+      gridData.verticalAlignment = SWT.CENTER;
       gridData.verticalIndent = 10;
+      
       label.setLayoutData( gridData );
     }
     else
@@ -182,6 +195,8 @@ public class AbstractProfilPart extends PlatformObject
     }
 
     m_control.layout();
+
+    fireOnProfilChartViewChanged();
   }
 
   public ProfilUndoContext getUndoContext( )
@@ -238,6 +253,9 @@ public class AbstractProfilPart extends PlatformObject
     if( adapter == ProfilChartView.class )
       return m_chartview;
 
+    if( adapter == IProfilChartViewProvider.class )
+      return this;
+
     return super.getAdapter( adapter );
   }
 
@@ -281,13 +299,34 @@ public class AbstractProfilPart extends PlatformObject
       m_chartview.runChartAction( chartAction );
   }
 
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#getProfilChartView()
+   */
+  public ProfilChartView getProfilChartView( )
   {
-    if( m_chartview != null )
-    {
-      final Control control = m_chartview.getControl();
-      if( !control.isDisposed() )
-        control.getDisplay().asyncExec( m_repaintRunnable );
-    }
+    return m_chartview;
   }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#addProfilChartViewProviderListener(org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
+   */
+  public void addProfilChartViewProviderListener( final IProfilChartViewProviderListener l )
+  {
+    m_listener.add( l );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
+   */
+  public void removeProfilChartViewProviderListener( IProfilChartViewProviderListener l )
+  {
+    m_listener.remove( l );
+  }
+
+  private void fireOnProfilChartViewChanged( )
+  {
+    for( IProfilChartViewProviderListener l : m_listener )
+      l.onProfilChartViewChanged( getProfilChartView() );
+  }
+
 }

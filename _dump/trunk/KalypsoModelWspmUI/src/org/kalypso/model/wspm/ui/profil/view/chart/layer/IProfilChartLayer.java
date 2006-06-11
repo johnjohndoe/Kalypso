@@ -3,10 +3,13 @@
  */
 package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 import de.belger.swtchart.layer.IChartLayer;
 
@@ -28,5 +31,8 @@ public interface IProfilChartLayer extends IChartLayer
    * @throws UnsupportedOperationException Falls diese Art von Layer nicht gelöscht werden kann.
    */
   public void removeYourself( ) throws ProfilDataException;
-
+  
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  
+  public ProfilChartView getProfilChartView();
 }

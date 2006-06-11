@@ -19,7 +19,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -71,7 +71,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   private final boolean m_mayEditVert;
 
-  public AbstractPolyLineLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor, final List<POINT_PROPERTY> lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
+  public AbstractPolyLineLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor, final List<POINT_PROPERTY> lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
   {
     super( pvp, domainRange, valueRange );
     m_selectedcolor = selectedcolor;
@@ -108,7 +108,6 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( final GCWrapper gc )
   {
     try
@@ -152,7 +151,6 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
-  @Override
   public Rectangle2D getBounds( )
   {
     Rectangle2D bounds = null;

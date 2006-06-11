@@ -23,8 +23,8 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.profil.view.panel.WehrPanel;
 
@@ -38,12 +38,10 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   @Override
   public List<IProfilPoint> getPoints( )
   {
-
     return ProfilUtil.getInnerPoints( getProfil(), DEVIDER_TYP.TRENNFLAECHE );
   }
 
-  public WehrBuildingLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor )
-
+  public WehrBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor )
   {
     super( pvp, domainRange, valueRange, colors, selectedcolor, stationColor, editColor, Arrays.asList( POINT_PROPERTY.OBERKANTEWEHR ), false, false, false );
   }
@@ -82,7 +80,6 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     return new WehrPanel( pem, viewData );
   }
 
-  @Override
   public void removeYourself( )
   {
     final IProfilEventManager pem = getProfilEventManager();

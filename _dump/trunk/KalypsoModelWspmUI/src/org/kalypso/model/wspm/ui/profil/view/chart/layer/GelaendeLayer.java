@@ -19,8 +19,8 @@ import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.panel.GelaendePanel;
 
 import de.belger.swtchart.axis.AxisRange;
@@ -38,7 +38,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     return getProfil().getPoints();
   }
 
-  public GelaendeLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color selectedcolor, final Color stationColor,
+  public GelaendeLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color selectedcolor, final Color stationColor,
       final Color editColor )
   {
     super( pvp, domainRange, valueRange, Arrays.asList(color), selectedcolor, stationColor, editColor, Arrays.asList( POINT_PROPERTY.HOEHE ), true, true, true );
@@ -80,7 +80,6 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   /**
    * @see IProfilChartLayer#removeYourself()
    */
-  @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException();

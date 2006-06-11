@@ -20,8 +20,8 @@ import org.kalypso.model.wspm.core.result.IResultSet;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.core.result.IResultSet.TYPE;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.panel.WspPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -43,7 +43,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
   private double m_height;
 
-  public WspLayer(final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final IStationResult result )
+  public WspLayer(final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final IStationResult result )
   {
     super(pvp, domainRange, valueRange );
 
@@ -56,7 +56,6 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
-  @Override
   public Rectangle2D getBounds( )
   {
     return new Rectangle2D.Double( Double.NaN, m_height, Double.NaN, 0.0 );
@@ -65,7 +64,6 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
@@ -191,7 +189,6 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
     return new WspPanel( pem, viewData, m_result );
   }
 
-  @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException();

@@ -301,9 +301,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         }
         if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isBuildingDataChanged() || hint.isDeviderMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
         {
-          for( IChartLayer layer : m_chart.getLayers() )
+          for( final IChartLayer layer : m_chart.getLayers() )
           {
-            layer.onProfilChanged( hint, changes );
+            if( layer instanceof IProfilChartLayer )
+              ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
           }
         }
         redrawChart();
@@ -333,10 +334,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           m_chart.repaint();
           break;
         case FIX_RATIO_3:
-          m_chart.setFixAspectRatio( 5.0);
+          m_chart.setFixAspectRatio( 5.0 );
           m_chart.repaint();
           break;
-          
+
         case ZOOM_IN:
           m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
           break;
@@ -357,7 +358,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         case EXPORT_IMAGE:
           saveChartAsImage( m_chart );
           break;
-          
+
         case FIX_RATIO:
           break;
       }

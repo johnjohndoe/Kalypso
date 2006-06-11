@@ -19,8 +19,8 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -33,7 +33,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   private static String TOOLTIP_FORMAT = " AX: %.4f %n AY: %.4f %n DP: %.4f";
 
-  public BewuchsLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public BewuchsLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
     super(pvp, domainRange, valueRange );
 
@@ -48,7 +48,6 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     return null;
   }
 
-  @Override
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
@@ -59,7 +58,6 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     new ProfilOperationJob( operation ).schedule();
   }
 
-  @Override
   public Rectangle2D getBounds( )
   {
     try
@@ -158,7 +156,6 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     drawIcon( gc, gc.getClipping() );
   }
 
-  @Override
   public void paint( GCWrapper gc )
   {
     final Point2D[] points = getPoints();
@@ -219,8 +216,6 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   protected void editProfil( Point point, Object data )
   {
-    // TODO Auto-generated method stub
-    
   }
 
   /**
@@ -229,7 +224,5 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    // TODO Auto-generated method stub
-    
   }
 }

@@ -82,7 +82,7 @@ public class ChartView extends AbstractProfilViewPart2
    */
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    m_profilPart.onProfilChanged( hint, changes );
+    // do nothing the ProfilChartView is itself a listener on the profile
   }
 
   /**
@@ -96,6 +96,14 @@ public class ChartView extends AbstractProfilViewPart2
       return adapted;
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.IProfilViewDataListener#onProfilViewDataChanged()
+   */
+  public void onProfilViewDataChanged( )
+  {
+    // probably nothing to do
   }
 
 }

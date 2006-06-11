@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.ui.profil.preferences;
+package org.kalypso.model.wspm.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -11,7 +11,6 @@ import org.kalypso.contribs.eclipse.jface.preference.ChecklistFieldEditor;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 
 
 /**

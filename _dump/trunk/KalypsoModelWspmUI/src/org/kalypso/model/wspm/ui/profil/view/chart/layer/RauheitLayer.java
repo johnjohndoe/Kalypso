@@ -21,8 +21,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.panel.RauheitenPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -30,7 +30,7 @@ import de.belger.swtchart.axis.AxisRange;
 import de.belger.swtchart.util.LogicalRange;
 
 /**
- * @author gernot
+ * @author Gernot Belger
  */
 public class RauheitLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -40,7 +40,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 
   private final Color m_fillColor;
 
-  public RauheitLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
+  public RauheitLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
   {
     super( pvp, domainRange, valueRange );
 
@@ -52,7 +52,6 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
-  @Override
   public Rectangle2D getBounds( )
   {
     final List<IProfilPoint> points = m_profil.getPoints();
@@ -86,7 +85,6 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( final GCWrapper gc )
   {
     final Color background = gc.getBackground();
@@ -229,7 +227,6 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   /**
    * @see IProfilChartLayer#removeYourself()
    */
-  @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException();

@@ -20,7 +20,8 @@ public final class PointPropertyRemove implements IProfilChange
 
   public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
   {
-    if (hint!=null) hint.setPointPropertiesChanged();
+    if( hint != null )
+      hint.setPointPropertiesChanged();
 
     final double[] oldValue = m_profil.getValuesFor( m_property );
     m_profil.getProfilPoints().removeProperty( m_property );
@@ -33,7 +34,7 @@ public final class PointPropertyRemove implements IProfilChange
    */
   public Object getObject( )
   {
-        return null;
+    return null;
   }
 
   /**
@@ -41,7 +42,7 @@ public final class PointPropertyRemove implements IProfilChange
    */
   public POINT_PROPERTY getPointProperty( )
   {
-      return m_property;
+    return m_property;
   }
 
   /**
@@ -52,5 +53,4 @@ public final class PointPropertyRemove implements IProfilChange
     return null;
   }
 
- 
 }

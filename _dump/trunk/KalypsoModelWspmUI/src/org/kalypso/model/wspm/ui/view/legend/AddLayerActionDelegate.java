@@ -18,9 +18,9 @@ import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 
 public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
@@ -28,8 +28,9 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
   public void run( final IAction action )
   {
     // welche layer-typen können hinzugefügt werden?
-    final ProfilchartEditor editor = getView().getProfilchartEditor();
-    final IProfil profil = editor == null ? null : editor.getProfil();
+    
+    final ProfilChartView profilChartView = getView().getProfilChartView();
+    final IProfil profil = profilChartView.getProfil();
     if( profil == null )
     {
       handleError( "Es wird gerade kein Profil editiert." );
@@ -56,7 +57,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     // TODO: reset undo + message to user
     try
     {
-      ((AddableLayer)result[0]).perform( profil, editor.getProfilEventManager() );
+      ((AddableLayer)result[0]).perform( profil, profilChartView.getProfilEventManager() );
     }
     catch( final ProfilDataException e )
     {

@@ -15,7 +15,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.buildings.AbstractBuildingLayer;
 
 import de.belger.swtchart.axis.AxisRange;
@@ -25,7 +25,7 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class TrapezBuildingLayer extends AbstractBuildingLayer
 {
-  public TrapezBuildingLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public TrapezBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
     super( pvp, domainRange, valueRange, color );
   }
@@ -33,7 +33,6 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
    */
-  @Override
   public Rectangle2D getBounds( )
   {
     try
@@ -67,7 +66,6 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
   public void paint( final GCWrapper gc )
   {
     try

@@ -23,7 +23,7 @@ import de.belger.swtchart.layer.IChartLayer;
  * Z.B. welcher Layer sind sichtabr, welcher wird editiert etc.
  * </p>
  * 
- * @author gernot
+ * @author Gernot Belger
  * 
  */
 public class ProfilViewData
@@ -39,8 +39,6 @@ public class ProfilViewData
   protected boolean m_editvert = true;
 
   private IChartLayer m_activeLayer;
-
-  // private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
   private Collection<IProfilViewDataListener> m_listener = new ArrayList<IProfilViewDataListener>();
 

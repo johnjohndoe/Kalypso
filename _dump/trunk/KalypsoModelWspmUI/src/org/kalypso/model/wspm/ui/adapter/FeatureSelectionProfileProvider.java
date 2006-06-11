@@ -149,9 +149,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         }
 
         if( profileMember != null )
-        {
           profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-        }
       }
     }
     catch( final ProfilDataException e )

@@ -47,48 +47,22 @@ import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.contribs.eclipse.ui.PartAdapter;
 import org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 
 /**
  * @author Gernot Belger
  */
-public class ProfilChartViewActionBarContributor implements IActionBarContributor
+public class ProfilChartViewActionBarContributor implements IActionBarContributor, IAdapterEater
 {
   private final StatusPosContributionItem m_statusPosItem = new StatusPosContributionItem( "profilChartViewStatusPosItem" );
 
-  /** The currently active workbench part, the provider for the ProfilChartView. */
-  private IWorkbenchPart m_part = null;
-
-  private final IPartListener m_partListener = new PartAdapter()
-  {
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
-     */
-    @Override
-    public void partActivated( IWorkbenchPart part )
-    {
-      ProfilChartViewActionBarContributor.this.partActivated( part );
-    }
-
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
-     */
-    @Override
-    public void partClosed( IWorkbenchPart part )
-    {
-      ProfilChartViewActionBarContributor.this.partClosed( part );
-    }
-  };
-
-  private IWorkbenchPage m_page;
+  private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( ProfilChartView.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   private final List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
 
@@ -180,11 +154,9 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
    */
   public void dispose( )
   {
-    unhook();
-
     m_statusPosItem.dispose();
 
-    m_page.removePartListener( m_partListener );
+    m_adapterPartListener.dispose();
   }
 
   /**
@@ -193,56 +165,16 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
    */
   public void init( final IWorkbenchPage page )
   {
-    m_page = page;
-    m_page.addPartListener( m_partListener );
-
-    // try to find the part with the chart
-    if( partActivated( page.getActiveEditor() ) )
-      return;
-
-    for( final IEditorReference reference : page.getEditorReferences() )
-    {
-      if( partActivated( reference.getPart( false ) ) )
-        return;
-    }
-
-    for( final IViewReference reference : page.getViewReferences() )
-    {
-      if( partActivated( reference.getPart( false ) ) )
-        return;
-    }
-
-    setChartView( null, null );
+    m_adapterPartListener.init(page);
   }
 
-  private void unhook( )
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
+   */
+  public void setAdapter( final Object adapter )
   {
-    m_part = null;
-  }
-
-  protected boolean partActivated( final IWorkbenchPart part )
-  {
-    if( part == null )
-      return false;
-
-    final ProfilChartView chartView = (ProfilChartView) part.getAdapter( ProfilChartView.class );
-    setChartView( part, chartView );
-
-    return true;
-  }
-
-  protected void partClosed( final IWorkbenchPart part )
-  {
-    if( part == m_part )
-      unhook();
-  }
-
-  private void setChartView( final IWorkbenchPart part, final ProfilChartView chartView )
-  {
-    unhook();
-
-    m_part = part;
-
+    final ProfilChartView chartView = (ProfilChartView) adapter;
+    
     m_statusPosItem.setChartView( chartView );
 
     for( final ChartAction action : m_chartActions )

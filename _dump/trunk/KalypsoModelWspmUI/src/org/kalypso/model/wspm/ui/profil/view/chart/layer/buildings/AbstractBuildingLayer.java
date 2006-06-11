@@ -13,10 +13,9 @@ import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.profil.view.panel.BuildingPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -24,20 +23,15 @@ import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
- * 
  */
-public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer implements IProfilChartLayer
+public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 {
-
-  private final IProfilEventManager m_pem;
-
   private final Color m_color;
 
-  public AbstractBuildingLayer( final IProfilViewProvider pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public AbstractBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
-    super(pvp, domainRange, valueRange );
+    super( pvp, domainRange, valueRange );
 
-    m_pem = pvp.getProfilEventManager();
     m_color = color;
   }
 
@@ -48,7 +42,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer imp
 
   protected final IProfilBuilding getBuilding( )
   {
-    return m_pem.getProfil().getBuilding();
+    return getProfil().getBuilding();
   }
 
   /**
@@ -66,6 +60,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer imp
   {
     return new BuildingPanel( pem, viewData );
   }
+
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
@@ -76,12 +71,11 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer imp
     return null;
   }
 
-  @Override
   public void removeYourself( )
   {
-    final IProfilChange pc = new BuildingSet( m_pem.getProfil(), null );
-    final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", m_pem, pc, true );
-    new ProfilOperationJob(operation).schedule();
+    final IProfilChange pc = new BuildingSet( getProfil(), null );
+    final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfilEventManager(), pc, true );
+    new ProfilOperationJob( operation ).schedule();
   }
 
 }
