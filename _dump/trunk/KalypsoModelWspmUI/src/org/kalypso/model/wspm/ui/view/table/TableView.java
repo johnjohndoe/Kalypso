@@ -10,25 +10,25 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.editor.IProfilchartEditorListener;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditorContributor;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
+import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.table.swt.ProfilSWTTableView;
 
 /**
@@ -36,20 +36,19 @@ import org.kalypso.model.wspm.ui.profil.view.table.swt.ProfilSWTTableView;
  * 
  * @author belger
  */
-public class TableView extends ViewPart implements IPropertyChangeListener, IProfilchartEditorListener
+public class TableView extends ViewPart implements IPropertyChangeListener, IAdapterEater, IProfilProviderListener
 {
-  private ProfilSWTTableView m_view;
+  private final AdapterPartListener m_profilProviderListener = new AdapterPartListener( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private ProfilchartEditor m_editor;
+  private ProfilSWTTableView m_view;
 
   private Composite m_control;
 
   private UndoRedoActionGroup m_group;
 
-  public ProfilchartEditor getEditor( )
-  {
-    return m_editor;
-  }
+  private IProfilProvider2 m_provider;
+
+  private IProfilEventManager m_pem;
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
@@ -59,37 +58,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
   {
     super.init( site );
 
-    final IWorkbenchWindow workbenchWindow = site.getWorkbenchWindow();
-    if( workbenchWindow != null && workbenchWindow.getActivePage() != null )
-    {
-      final IEditorPart activeEditor = workbenchWindow.getActivePage().getActiveEditor();
-      if( activeEditor instanceof ProfilchartEditor )
-      {
-        final ProfilchartEditor profilchartEditor = (ProfilchartEditor) activeEditor;
-        setEditor( profilchartEditor );
-      }
-    }
-
-    final IWorkbenchPage myPage = getSite().getPage();
-    myPage.addPartListener( new PartAdapter2()
-    {
-      @Override
-      public void partClosed( final IWorkbenchPartReference partRef )
-      {
-        final IWorkbenchPart part = partRef.getPart( false );
-        if( part == TableView.this )
-        {
-          myPage.removePartListener( this );
-        }
-        else if( part == getEditor() )
-        {
-          if( !workbenchWindow.getWorkbench().isClosing() )
-            myPage.hideView( TableView.this );
-          else
-            TableView.this.dispose();
-        }
-      }
-    } );
+    m_profilProviderListener.init( site.getPage() );
 
     KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener( this );
   }
@@ -98,6 +67,10 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
   public void dispose( )
   {
     super.dispose();
+
+    unhookProvider();
+
+    m_profilProviderListener.dispose();
 
     if( m_group != null )
       m_group.dispose();
@@ -109,6 +82,16 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
       m_control.dispose();
 
     KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener( this );
+  }
+
+  private void unhookProvider( )
+  {
+    if( m_provider != null )
+    {
+      m_provider.removeProfilProviderListener( this );
+      m_provider = null;
+    }
+
   }
 
   /**
@@ -126,11 +109,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
     updateControl();
   }
 
-  protected ProfilSWTTableView getView( )
-  {
-    return m_view;
-  }
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
@@ -145,32 +123,11 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
     }
   }
 
-  public void setEditor( final ProfilchartEditor editor )
-  {
-    if( m_editor != null )
-      m_editor.removeProfilchartEditorListener( this );
-
-    m_editor = editor;
-
-    if( m_editor != null )
-      m_editor.addProfilchartEditorListener( this );
-
-    // register to global actions of editor
-    final IActionBars actionBars = getViewSite().getActionBars();
-    m_editor.registerCommonGlobalActions( actionBars );
-    actionBars.updateActionBars();
-
-    onProfilChanged( m_editor, (IProfil) m_editor.getAdapter( IProfil.class ) );
-  }
-
-  /** Gibt zurück, ob diese TableView bereits einem ProfilchartEditor zugeordnet ist oder nicht. */
-  public boolean isAttached( )
-  {
-    return m_editor != null;
-  }
-
   protected void updateControl( )
   {
+    if( m_control == null || m_control.isDisposed() )
+      return;
+    
     final Control[] childcontrols = m_control.getChildren();
     for( final Control c : childcontrols )
       c.dispose();
@@ -180,8 +137,10 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
 
     unregisterGlobalActions();
 
-    final IProfilViewProvider pvp = m_editor == null ? null : (IProfilViewProvider) m_editor.getAdapter( IProfilViewProvider.class );
-    if( pvp == null )
+    final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
+    final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
+
+    if( pem == null || pvd == null )
     {
       final Label label = new Label( m_control, SWT.BORDER );
       label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -189,7 +148,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
     }
     else
     {
-      m_view = new ProfilSWTTableView( pvp.getProfilEventManager(), pvp.getViewData(), (IFile) m_editor.getAdapter( IFile.class ) );
+      final IFile file = (IFile) m_profilProviderListener.getPart().getAdapter( IFile.class );
+
+      m_view = new ProfilSWTTableView( pem, pvd, file );
 
       registerGlobalActions( m_view );
 
@@ -202,11 +163,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
     }
 
     m_control.layout();
-  }
-
-  public ProfilSWTTableView getTableView( )
-  {
-    return m_view;
   }
 
   private void registerGlobalActions( final ProfilSWTTableView tableView )
@@ -236,22 +192,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
   }
 
   /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( m_editor != null )
-    {
-      final Object a = m_editor.getAdapter( adapter );
-      if( a != null )
-        return a;
-    }
-
-    return super.getAdapter( adapter );
-  }
-
-  /**
    * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
    */
   public void propertyChange( final PropertyChangeEvent event )
@@ -270,40 +210,78 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IPro
     return ProfilSWTTableView.getAdvanceModes();
   }
 
-  /**
-   * @see com.bce.profil.eclipse.editor.IProfilchartEditorListener#onProfilChanged(com.bce.profil.eclipse.editor.ProfilchartEditor,
-   *      com.bce.profil.profilinterface.IProfil)
-   */
-  public void onProfilChanged( final ProfilchartEditor editor, final IProfil newprofil )
-  {
-    if( m_group != null )
-    {
-      m_group.dispose();
-      m_group = null;
-    }
-
-    m_group = new UndoRedoActionGroup( editor.getSite(), new ProfilUndoContext( editor.getProfil() ), true );
-    final IActionBars actionBars = getViewSite().getActionBars();
-    m_group.fillActionBars( actionBars );
-
-    if( m_control != null && !m_control.isDisposed() )
-    {
-      m_control.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          actionBars.updateActionBars();
-          updatePartNameAndControl( editor );
-        }
-      } );
-    }
-  }
-
   /** Must be called in the swt thread */
   protected void updatePartNameAndControl( final ProfilchartEditor editor )
   {
     setPartName( editor.getPartName() );
     if( !m_control.isDisposed() ) // control may have been disposed in the meantime
       updateControl();
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
+   */
+  public void setAdapter( final Object adapter )
+  {
+    final IProfilProvider2 provider = (IProfilProvider2) adapter;
+
+    if( m_provider == provider && provider != null )
+      return;
+
+    unhookProvider();
+
+    m_provider = provider;
+
+    if( m_provider != null )
+      m_provider.addProfilProviderListener( this );
+
+    final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
+    final ProfilViewData viewData = m_provider == null ? null : m_provider.getViewData();
+    onProfilProviderChanged( m_provider, null, pem, null, viewData );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.view.IProfilProvider2,
+   *      org.kalypso.model.wspm.core.profil.IProfilEventManager,
+   *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
+   *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
+   */
+  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, ProfilViewData newViewData )
+  {
+//    if( m_group != null )
+//    {
+//      m_group.dispose();
+//      m_group = null;
+//    }
+//
+//    m_group = new UndoRedoActionGroup( getSite(), new ProfilUndoContext( getProfil() ), true );
+//    final IActionBars actionBars = getViewSite().getActionBars();
+//    m_group.fillActionBars( actionBars );
+//
+//    if( m_control != null && !m_control.isDisposed() )
+//    {
+//      m_control.getDisplay().asyncExec( new Runnable()
+//      {
+//        public void run( )
+//        {
+//          actionBars.updateActionBars();
+//          updatePartNameAndControl( editor );
+//        }
+//      } );
+//    }
+
+    m_pem = newPem;
+
+    updateControl();
+  }
+
+  public IProfilEventManager getProfilEventManager( )
+  {
+    return m_pem;
+  }
+
+  public ProfilSWTTableView getTableView( )
+  {
+    return m_view;
   }
 }

@@ -112,7 +112,7 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
     {
       m_markerIndex.clear();
 
-      if( m_pem == null )
+      if( m_pem == null || m_file == null )
         return;
 
       final IMarker[] markers = m_file.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );

@@ -41,10 +41,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.ui.JavaFileEditorInput;
@@ -67,7 +65,6 @@ import org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
-import org.kalypso.model.wspm.ui.view.table.TableView;
 
 import serializer.prf.PrfSink;
 import serializer.prf.PrfSource;
@@ -464,50 +461,50 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
 
   public void openTableview( )
   {
-    try
-    {
-      final IWorkbenchPage page = getEditorSite().getPage();
-
-      // weil eventuell vom letzten Start noch ein Table-Editor da ist, holen wir uns den
-      // als die erste TableView holen, die noch keinen Editor zugeordnet hat
-
-      final IViewReference[] viewReferences = page.getViewReferences();
-
-      // if any tableview already is attached to this editor, simply
-      // activate it and return
-      for( final IViewReference reference : viewReferences )
-      {
-        if( reference.getId().equals( TableView.class.getName() ) )
-        {
-          final TableView view = (TableView) reference.getView( false );
-          if( view != null && view.getEditor() == this )
-          {
-            page.activate( view );
-            return;
-          }
-        }
-      }
-
-      for( final IViewReference reference : viewReferences )
-      {
-        if( reference.getId().equals( TableView.class.getName() ) )
-        {
-          final TableView view = (TableView) reference.getView( false );
-          if( view != null && !view.isAttached() )
-          {
-            view.setEditor( this );
-            return;
-          }
-        }
-      }
-
-      // keine offene, leere TableView gefunden, neue aufmachen
-      page.showView( TableView.class.getName(), this.toString(), IWorkbenchPage.VIEW_ACTIVATE );
-    }
-    catch( final PartInitException e )
-    {
-      e.printStackTrace();
-    }
+//    try
+//    {
+//      final IWorkbenchPage page = getEditorSite().getPage();
+//
+//      // weil eventuell vom letzten Start noch ein Table-Editor da ist, holen wir uns den
+//      // als die erste TableView holen, die noch keinen Editor zugeordnet hat
+//
+//      final IViewReference[] viewReferences = page.getViewReferences();
+//
+//      // if any tableview already is attached to this editor, simply
+//      // activate it and return
+//      for( final IViewReference reference : viewReferences )
+//      {
+//        if( reference.getId().equals( TableView.class.getName() ) )
+//        {
+//          final TableView view = (TableView) reference.getView( false );
+//          if( view != null && view.getEditor() == this )
+//          {
+//            page.activate( view );
+//            return;
+//          }
+//        }
+//      }
+//
+//      for( final IViewReference reference : viewReferences )
+//      {
+//        if( reference.getId().equals( TableView.class.getName() ) )
+//        {
+//          final TableView view = (TableView) reference.getView( false );
+//          if( view != null && !view.isAttached() )
+//          {
+//            view.setEditor( this );
+//            return;
+//          }
+//        }
+//      }
+//
+//      // keine offene, leere TableView gefunden, neue aufmachen
+//      page.showView( TableView.class.getName(), this.toString(), IWorkbenchPage.VIEW_ACTIVATE );
+//    }
+//    catch( final PartInitException e )
+//    {
+//      e.printStackTrace();
+//    }
   }
 
   public void addProfilchartEditorListener( final IProfilchartEditorListener l )

@@ -29,7 +29,7 @@ public class InsertPointsActionDelegate extends ActionDelegate implements IViewA
   @Override
   public void run( final IAction action )
   {
-    final InsertPointsWizard wizard = new InsertPointsWizard( m_view.getView().getProfilEventManager());
+    final InsertPointsWizard wizard = new InsertPointsWizard( m_view.getProfilEventManager());
     final WizardDialog dialog = new WizardDialog( m_view.getViewSite().getShell(), wizard );
     dialog.open();
   }

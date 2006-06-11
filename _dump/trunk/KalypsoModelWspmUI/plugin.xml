@@ -93,31 +93,34 @@
      <extension
            point="org.eclipse.ui.views">
         <category
-              name="Profileditor"
-              id="com.bce.profil.eclipse.app.view.category"/>
+              id="org.kalypso.model.wspm.profil.view.category"
+              name="Profil"
+              />
         <view
               allowMultiple="false"
-              category="com.bce.profil.eclipse.app.view.category"
+              category="org.kalypso.model.wspm.profil.view.category"
               class="org.kalypso.model.wspm.ui.view.legend.LegendView"
               icon="icons/eview16/profil_legend.gif"
               id="org.kalypso.model.wspm.ui.view.legend.LegendView"
               name="Profileditor Legende"/>
         <view
               allowMultiple="false"
-              category="com.bce.profil.eclipse.app.view.category"
+              category="org.kalypso.model.wspm.profil.view.category"
               class="org.kalypso.model.wspm.ui.view.LayerView"
               icon="icons/eview16/profil_panel.gif"
               id="org.kalypso.model.wspm.ui.view.LayerView"
               name="Profileditor Layeransicht"/>
         <view
-              allowMultiple="true"
-              category="com.bce.profil.eclipse.app.view.category"
+              allowMultiple="false"
+              category="org.kalypso.model.wspm.profil.view.category"
               class="org.kalypso.model.wspm.ui.view.table.TableView"
               icon="icons/eview16/profil_table.gif"
               id="org.kalypso.model.wspm.ui.view.table.TableView"
               name="Profileditor Tabelle"/>
         <view
+              category="org.kalypso.model.wspm.profil.view.category"
               class="org.kalypso.model.wspm.ui.view.chart.ChartView"
+              icon="icons/eview16/profil_table.gif"
               id="org.kalypso.model.wspm.ui.view.chart.ChartView"
               name="Profil Diagrammansicht"/>
      </extension>

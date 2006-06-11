@@ -221,7 +221,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     // just open layer view
     try
     {
-      getSite().getPage().showView( "com.bce.profil.eclipse.view.LayerView" );
+      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" );
     }
     catch( final PartInitException ex )
     {

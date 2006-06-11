@@ -65,7 +65,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
       if( adaptableObject instanceof IWorkbenchPart )
       {
         final IWorkbenchPart part = (IWorkbenchPart) adaptableObject;
-
+// TODO: cahce this
         final IFile file = (IFile) part.getAdapter( IFile.class );
         return new FeatureSelectionProfileProvider( file, part.getSite().getSelectionProvider() );
       }
