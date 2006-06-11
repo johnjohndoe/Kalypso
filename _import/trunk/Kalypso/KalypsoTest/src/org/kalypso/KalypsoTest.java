@@ -63,9 +63,9 @@ public class KalypsoTest
       if( tmpDir != null )
         return;
 
-//      System.setProperty( "proxySet", "true" );
-//      System.setProperty( "proxyHost", "proxy.bce01.de" );
-//      System.setProperty( "proxyPort", "8080" );
+      // System.setProperty( "proxySet", "true" );
+      // System.setProperty( "proxyHost", "proxy.bce01.de" );
+      // System.setProperty( "proxyPort", "8080" );
 
       final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
@@ -74,6 +74,8 @@ public class KalypsoTest
           , new UrlCatalogOGC()//
           , new DeegreeUrlCatalog() //
           , new URLCatalogFlows() //
+          // CAN'T use it here, because this catalog uses plugin mechanisms to find the schemas
+//          , new org.kalypso.contribs.ogc31.UrlCatalogOGC() //
           } );
       final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
       if( !cacheDirectory.exists() )
