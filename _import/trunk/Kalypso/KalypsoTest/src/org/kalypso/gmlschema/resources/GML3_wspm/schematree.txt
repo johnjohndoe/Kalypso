@@ -150,20 +150,20 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  [1,oo]  Relation: {http://www.opengis.net/swe}member
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  Feature: {http://www.opengis.net/swe}Phenomenon
 .  .  .  .  ContentType: {http://www.opengis.net/swe}PhenomenonType
 .  .  .  .  .  extended by
@@ -501,10 +501,10 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  [1,oo]  Relation: {http://www.opengis.net/swe}component
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
-.  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  Feature: {http://www.opengis.net/swe}CompositePhenomenon
 .  .  .  .  ContentType: {http://www.opengis.net/swe}CompositePhenomenonType
 .  .  .  .  .  extended by
@@ -573,14 +573,18 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/swe}map
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemArray	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}ObjectArray
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}IndexArray
 .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/swe}tupleMap
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
-.  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/swe}map
 .  .  .  .  .  .   -> {http://www.opengis.net/swe}ItemArray	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}ObjectArray
+.  .  .  .  .  .   -> {http://www.opengis.net/swe}IndexArray
 .  .  Feature: {http://www.opengis.net/om}CommonObservation
 .  .  .  ContentType: {http://www.opengis.net/om}CommonObservationType
 .  .  .  .  extended by
@@ -600,25 +604,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -646,6 +653,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -656,34 +665,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  Feature: {http://www.opengis.net/om}ObservationProcedure
 .  .  .  ContentType: {http://www.opengis.net/om}ObservationProcedureType
@@ -757,25 +764,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
@@ -809,25 +819,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -855,6 +868,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -865,34 +880,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [1,1]Property: {http://www.opengis.net/om}result
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}integer
@@ -912,25 +925,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .       Class: class java.lang.String
@@ -954,25 +970,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
@@ -983,9 +1002,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
+.  .  .  .  .   -> {http://www.opengis.net/om}Instrument
 .  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
-.  .  .  .  .   -> {http://www.opengis.net/om}Instrument
 .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}termParameter
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .       Class: class java.lang.String
@@ -1014,25 +1033,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1067,25 +1089,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
@@ -1113,6 +1138,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1123,34 +1150,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  Feature: {http://www.opengis.net/om}Station
 .  .  .  ContentType: {http://www.opengis.net/om}StationType
@@ -1167,6 +1192,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -1192,25 +1220,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1238,6 +1269,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1248,34 +1281,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [1,1]Property: {http://www.opengis.net/om}result
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
@@ -1299,25 +1330,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1345,6 +1379,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1355,41 +1391,39 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/om}resultDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
-.  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
 .  .  .  .  [1,1]Property: {http://www.opengis.net/om}result
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}anyType
 .  .  .  .       Class: class java.lang.String
@@ -1412,25 +1446,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1458,6 +1495,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1468,34 +1507,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [1,1]Property: {http://www.opengis.net/om}result
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
@@ -1603,25 +1640,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1649,6 +1689,8 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}featureOfInterest
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1659,34 +1701,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [1,1]Property: {http://www.opengis.net/om}result
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
@@ -1710,25 +1750,28 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/om}time
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeObject	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeTopologyComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeComplex	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeIntervalGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeInstantGrid
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeAggregate
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGeometricComplex
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/swe}TimeGrid	  [x] abstract
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}precedingEvent
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
@@ -1739,9 +1782,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Instrument
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Instrument
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/om}termParameter
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
@@ -1840,6 +1883,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -1897,12 +1943,17 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1913,38 +1964,38 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}featureMembers
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -1955,34 +2006,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  Feature: {http://www.opengis.net/gml}ObliqueCartesianCS
 .  .  .  ContentType: {http://www.opengis.net/gml}ObliqueCartesianCSType
@@ -2114,6 +2163,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -2123,6 +2175,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}rangeSet
 .  .  .  .       Value: {http://www.opengis.net/gml}RangeSetType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.RangeSetType
@@ -2181,30 +2236,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  Feature: {http://www.opengis.net/gml}TopoSolid
 .  .  .  ContentType: {http://www.opengis.net/gml}TopoSolidType
 .  .  .  .  extended by
@@ -2366,81 +2421,81 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}dictionaryEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}Definition
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
-.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
 .  .  .  .  .   -> {http://www.opengis.net/om}Instrument
-.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
-.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
-.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
-.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}UserDefinedCS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ObliqueCartesianCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
+.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
+.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
-.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
-.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeClock
+.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeOrdinalReferenceSystem
-.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
 .  .  .  .  .   -> {http://www.opengis.net/swe}ConstrainedPhenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
-.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
-.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}indirectEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}Dictionary
@@ -2469,81 +2524,81 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}dictionaryEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}Definition
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/om}ObservationProcedure
 .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureSequence
-.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
 .  .  .  .  .   -> {http://www.opengis.net/om}Instrument
-.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
-.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
-.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
-.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
-.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/om}CalculationProcedure
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureType	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedurePackage
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}UserDefinedCS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ObliqueCartesianCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
-.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeodeticDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}Dictionary
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Datum	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}UnitDefinition
+.  .  .  .  .   -> {http://www.opengis.net/gml}Ellipsoid
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
+.  .  .  .  .   -> {http://www.opengis.net/gml}BaseUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PrimeMeridian
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameter
-.  .  .  .  .   -> {http://www.opengis.net/gml}OperationParameterGroup
-.  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}ConcatenatedOperation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
-.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendar
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCoordinateSystem
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeClock
+.  .  .  .  .   -> {http://www.opengis.net/gml}SphericalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeCalendarEra
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralOperationParameter	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}PolarCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeOrdinalReferenceSystem
-.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}LinearCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CylindricalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}CoordinateSystemAxis
+.  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateOperation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
+.  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeReferenceSystem	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}ConventionalUnit
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ImageDatum
+.  .  .  .  .   -> {http://www.opengis.net/gml}CartesianCS
+.  .  .  .  .   -> {http://www.opengis.net/gml}EllipsoidalCS
 .  .  .  .  .   -> {http://www.opengis.net/swe}CompoundPhenomenon	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}Phenomenon
 .  .  .  .  .   -> {http://www.opengis.net/swe}ConstrainedPhenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
-.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
-.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
-.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
-.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
 .  .  .  .  .   -> {http://www.opengis.net/swe}ItemSeriesDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}PhenomenonSeries
+.  .  .  .  .   -> {http://www.opengis.net/swe}ItemDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}SWE_RecordSchema	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/swe}RecordDefinition
+.  .  .  .  .   -> {http://www.opengis.net/swe}CompositePhenomenon
+.  .  .  .  .   -> {http://www.opengis.net/swe}GridDefinition
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}indirectEntry
 .  .  .  .  .   -> {http://www.opengis.net/gml}DefinitionProxy
 .  .  Feature: {http://www.opengis.net/gml}Definition
@@ -2611,14 +2666,14 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  [2,oo]  Relation: {http://www.opengis.net/gml}includesCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  Feature: {http://www.opengis.net/gml}_SingleOperation
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractCoordinateOperationType
 .  .  .  .  extended by
@@ -2662,30 +2717,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  Feature: {http://www.opengis.net/gml}TimeCalendar
 .  .  .  ContentType: {http://www.opengis.net/gml}TimeCalendarType
 .  .  .  .  extended by
@@ -2779,14 +2834,14 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}baseCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}definedByConversion
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
@@ -3004,6 +3059,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -3013,6 +3071,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}gridDomain
 .  .  .  .       Value: {http://www.opengis.net/gml}GridDomainType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.GridDomainType
@@ -3097,30 +3158,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}metaDataProperty
 .  .  .  .       Value: {http://www.opengis.net/gml}MetaDataPropertyType
 .  .  .  .       Class: interface java.util.List
@@ -3138,30 +3199,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .       Class: class java.lang.String
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  Feature: {http://www.opengis.net/gml}GeometryStyle
 .  .  .  ContentType: {http://www.opengis.net/gml}GeometryStyleType
 .  .  .  .  extended by
@@ -3309,38 +3370,38 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [2,oo]  Relation: {http://www.opengis.net/gml}usesSingleOperation
 .  .  .  .  .   -> {http://www.opengis.net/gml}_SingleOperation	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
 .  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
+.  .  .  .  .   -> {http://www.opengis.net/gml}PassThroughOperation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  Feature: {http://www.opengis.net/gml}UnitDefinition
 .  .  .  ContentType: {http://www.opengis.net/gml}UnitDefinitionType
 .  .  .  .  extended by
@@ -3750,14 +3811,14 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}baseCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}definedByConversion
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
@@ -3872,6 +3933,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -4009,6 +4073,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -4018,6 +4085,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}rangeSet
 .  .  .  .       Value: {http://www.opengis.net/gml}RangeSetType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.RangeSetType
@@ -4080,30 +4150,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}metaDataProperty
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}MetaDataPropertyType
 .  .  .  .  .  .       Class: interface java.util.List
@@ -4121,30 +4191,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesMethod
 .  .  .  .  .   -> {http://www.opengis.net/gml}OperationMethod
 .  .  Feature: {http://www.opengis.net/gml}_Style
@@ -4291,14 +4361,14 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}baseCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}definedByConversion
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
@@ -4323,6 +4393,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -4332,6 +4405,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}rangeSet
 .  .  .  .       Value: {http://www.opengis.net/gml}RangeSetType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.RangeSetType
@@ -4402,6 +4478,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -4411,6 +4490,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}rectifiedGridDomain
 .  .  .  .       Value: {http://www.opengis.net/gml}RectifiedGridDomainType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.RectifiedGridDomainType
@@ -4446,12 +4528,17 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -4462,38 +4549,38 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}featureMembers
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -4504,34 +4591,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  Feature: {http://www.opengis.net/gml}MovingObjectStatus
 .  .  .  ContentType: {http://www.opengis.net/gml}MovingObjectStatusType
@@ -4550,11 +4635,11 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}validTime
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}dataSource
 .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
@@ -4690,30 +4775,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}metaDataProperty
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}MetaDataPropertyType
 .  .  .  .  .  .       Class: interface java.util.List
@@ -4747,20 +4832,25 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}validTime
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}using
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -4771,34 +4861,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}direction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}DirectionPropertyType
@@ -4943,39 +5031,39 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [1,oo]Property: {http://www.opengis.net/gml}modifiedCoordinate
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}positiveInteger
 .  .  .  .       Class: class java.math.BigInteger
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}usesOperation
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Operation	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralTransformation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}Transformation
 .  .  .  .  .   -> {http://www.opengis.net/gml}Conversion
+.  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralConversion	  [x] abstract
 .  .  Feature: {http://www.opengis.net/gml}_TimeSlice
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractTimeSliceType
 .  .  .  .  extended by
@@ -4991,11 +5079,11 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}validTime
 .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}dataSource
 .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
@@ -5162,30 +5250,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .       Class: class java.lang.String
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  Feature: {http://www.opengis.net/gml}_TopoPrimitive
 .  .  .  ContentType: {http://www.opengis.net/gml}AbstractTopoPrimitiveType
 .  .  .  .  extended by
@@ -5246,30 +5334,30 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .       Class: class java.lang.String
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}sourceCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}targetCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CRS	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_CoordinateReferenceSystem	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}CompoundCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeocentricCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_GeneralDerivedCRS	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}EngineeringCRS
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TemporalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}VerticalCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GeographicCRS
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ImageCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DerivedCRS
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}ProjectedCRS
 .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}metaDataProperty
 .  .  .  .       Value: {http://www.opengis.net/gml}MetaDataPropertyType
 .  .  .  .       Class: interface java.util.List
@@ -5314,20 +5402,25 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}validTime
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}using
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -5338,34 +5431,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}direction
 .  .  .  .       Value: {http://www.opengis.net/gml}DirectionPropertyType
@@ -5537,20 +5628,25 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
 .  .  .  .  [1,1]  Relation: {http://www.opengis.net/gml}validTime
 .  .  .  .  .   -> {http://www.opengis.net/gml}_TimePrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeEdge
-.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeTopologyPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimePeriod
+.  .  .  .  .   -> {http://www.opengis.net/gml}TimeNode
+.  .  .  .  .   -> {http://www.opengis.net/gml}_TimeGeometricPrimitive	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}TimeInstant
 .  .  .  .  [0,1]  Relation: {http://www.opengis.net/gml}using
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}Reach
+.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
+.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
 .  .  .  .  .   -> {org.kalypso.model.wspm}Result
 .  .  .  .  .   -> {org.kalypso.model.wspm}VegetationDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}WaterBody
@@ -5561,34 +5657,32 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinition
 .  .  .  .  .   -> {org.kalypso.model.wspm}AbstractReachSegment	  [x] abstract
 .  .  .  .  .   -> {org.kalypso.model.wspm}RoughnessDefinitionCollection
-.  .  .  .  .   -> {org.kalypso.model.wspm}InfluentReachSegment
-.  .  .  .  .   -> {org.kalypso.model.wspm}ProfileReachSegment
-.  .  .  .  .   -> {http://www.opengis.net/om}Event
-.  .  .  .  .   -> {http://www.opengis.net/om}Station
-.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
-.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
-.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/om}CommonObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ObservationCollection
 .  .  .  .  .   -> {http://www.opengis.net/om}CountObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}Event
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureEvent
+.  .  .  .  .   -> {http://www.opengis.net/om}CompositeObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}AbstractObservation	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/om}Station
 .  .  .  .  .   -> {http://www.opengis.net/om}Measurement
 .  .  .  .  .   -> {http://www.opengis.net/om}Observation
 .  .  .  .  .   -> {http://www.opengis.net/om}CategoryObservation
 .  .  .  .  .   -> {http://www.opengis.net/om}TruthObservation
+.  .  .  .  .   -> {http://www.opengis.net/om}ProcedureHistory
 .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
-.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
-.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
-.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
-.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
-.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiCurveCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}GridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}_DiscreteCoverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSurfaceCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiSolidCoverage
 .  .  .  .  .   -> {http://www.opengis.net/gml}RectifiedGridCoverage
+.  .  .  .  .   -> {http://www.opengis.net/gml}FeatureCollection
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservationAtDistance
+.  .  .  .  .   -> {http://www.opengis.net/gml}DirectedObservation
+.  .  .  .  .   -> {http://www.opengis.net/gml}Observation
+.  .  .  .  .   -> {http://www.opengis.net/gml}_ContinuousCoverage	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_Coverage	  [x] abstract
 .  .  .  .  .   -> {http://www.opengis.net/gml}MultiPointCoverage
 .  .  Feature: {http://www.opengis.net/gml}TopoCurve
 .  .  .  ContentType: {http://www.opengis.net/gml}TopoCurveType
@@ -5796,6 +5890,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -5983,6 +6080,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6223,6 +6323,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6232,6 +6335,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}coverageFunction
 .  .  .  .  .  .       Value: {http://www.opengis.net/gml}CoverageFunctionType
 .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.CoverageFunctionType
+.  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [1,1]Property: {http://www.opengis.net/gml}rangeSet
 .  .  .  .       Value: {http://www.opengis.net/gml}RangeSetType
 .  .  .  .       Class: class ogc31.www.opengis.net.gml.RangeSetType
@@ -6364,6 +6470,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6404,6 +6513,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6429,6 +6541,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6463,6 +6578,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6498,6 +6616,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6542,6 +6663,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6604,6 +6728,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6635,6 +6762,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6668,6 +6798,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6694,6 +6827,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6720,6 +6856,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6761,6 +6900,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType
@@ -6784,6 +6926,9 @@ GMLSchema: org.kalypso.model.wspm
 .  .  .  .  .  .  .  .  .  [0,oo]Property: {http://www.opengis.net/gml}name
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}string
 .  .  .  .  .  .  .  .  .       Class: class java.lang.String
+.  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}boundedBy
+.  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}BoundingShapeType
+.  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  .  .  [0,1]Property: {http://www.opengis.net/gml}location
 .  .  .  .  .  .  .       Value: {http://www.opengis.net/gml}LocationPropertyType
 .  .  .  .  .  .  .       Class: class ogc31.www.opengis.net.gml.LocationPropertyType

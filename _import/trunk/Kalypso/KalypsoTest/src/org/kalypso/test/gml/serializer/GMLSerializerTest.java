@@ -31,7 +31,9 @@ package org.kalypso.test.gml.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -80,32 +82,31 @@ public class GMLSerializerTest extends TestCase
     final File testFileParsed = File.createTempFile( "testParsed", ".gml" );
     final File testFileParsed2 = File.createTempFile( "testParsed2", ".gml" );
 
-    FileWriter writerOrg = null;
-    FileWriter writerParsed = null;
-    FileWriter writerParsed2 = null;
+    OutputStreamWriter writerOrg = null;
+    OutputStreamWriter writerParsed = null;
+    OutputStreamWriter writerParsed2 = null;
     
     try
     {
-      // Remark: why write it into a separate file? Load it directyl for comparison
+      // Remark: why write it into a separate file? Load it directly for comparison
       // via URL.open();
-      writerOrg = new FileWriter( testFileOrg );
+      writerOrg = new OutputStreamWriter( new FileOutputStream( testFileOrg ), "UTF-8" );
       final URL resource = getClass().getResource( "resources/calcCase.gml" );
       final Document documentOrg = XMLTools.parse( resource );
       XMLHelper.writeDOM( documentOrg, "UTF-8", writerOrg );
       writerOrg.close();
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
-
-      writerParsed = new FileWriter( testFileParsed );
+      writerParsed = new OutputStreamWriter( new FileOutputStream( testFileParsed ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writerParsed, workspace, "UTF-8" );
       writerParsed.close();
 
       final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( testFileParsed.toURL() );
-      writerParsed2 = new FileWriter( testFileParsed2 );
+      writerParsed2 = new OutputStreamWriter( new FileOutputStream( testFileParsed2 ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writerParsed2, workspace2, "UTF-8" );
       writerParsed.close();
 
-      assertTrue( StreamUtilities.isEqual( new FileInputStream( testFileOrg ), new FileInputStream( testFileParsed ) ) );
+      assertTrue( StreamUtilities.isEqual( new FileInputStream( testFileParsed2 ), new FileInputStream( testFileParsed ) ) );
     }
     finally
     {
@@ -113,9 +114,9 @@ public class GMLSerializerTest extends TestCase
       IOUtils.closeQuietly( writerParsed );
       IOUtils.closeQuietly( writerParsed2 );
 
-      testFileOrg.delete();
-      testFileParsed.delete();
-      testFileParsed2.delete();
+//      testFileOrg.delete();
+//      testFileParsed.delete();
+//      testFileParsed2.delete();
     }
   }
 
