@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoPictureTheme;
-import org.kalypso.ogc.gml.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 
 /**
  * @author belger

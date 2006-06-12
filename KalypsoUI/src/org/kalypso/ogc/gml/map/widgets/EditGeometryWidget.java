@@ -204,7 +204,7 @@ public class EditGeometryWidget extends AbstractWidget
         final double gStartY = transform.getSourceY( m_startPoint.getY() );
 
         final double[] translation = new double[] { gDragX - gStartX, gDragY - gStartY };
-        final double[] undoTranslation = new double[] { -translation[0], -translation[1] };
+//        final double[] undoTranslation = new double[] { -translation[0], -translation[1] };
 
         // test for validity
 //        for( final Handle handle : m_editHandles )

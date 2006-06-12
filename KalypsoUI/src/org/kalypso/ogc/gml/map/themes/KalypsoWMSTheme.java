@@ -38,18 +38,15 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ogc.gml.map.themes;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,11 +75,11 @@ import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.RemoteWMService;
-import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -91,11 +88,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.AbstractKalypsoTheme;
+import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
+import org.kalypso.ogc.gml.wms.WMSCapabilitiesHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.services.wms.WMSCapabilitiesHelper;
-import org.kalypsodeegree_impl.tools.NetWorker;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
@@ -113,6 +111,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
   public static final String KEY_STYLES = "STYLES";
 
+  protected final static ISchedulingRule m_jobMutexRule = new MutexRule();
+
   /** layerlist to fetch from WMS */
   private final String m_layers;
 
@@ -126,7 +126,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private final String m_source;
 
   /** bbox that is requested by last paint call */
-  GM_Envelope m_requestedEnvLocalSRS = null;
+  protected GM_Envelope m_requestedEnvLocalSRS = null;
 
   /** the local CS */
   private final CS_CoordinateSystem m_localSRS;
@@ -141,10 +141,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private WMSCapabilities m_wmsCaps;
 
   /** buffered image */
-  Image m_buffer = null;
+  private Image m_buffer = null;
 
   /** envelope of buffered image (local SRS) */
-  GM_Envelope m_bufferEnvLocalSRS = null;
+  private GM_Envelope m_bufferEnvLocalSRS = null;
 
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
@@ -157,7 +157,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
   private int m_lastHeight;
 
-  final protected static ISchedulingRule m_jobMutexRule = new MutexRule();
+  private boolean m_isInitialized = false;
+
+  private boolean m_isInvalid = false;
+
+  private final String m_service;
 
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS )
   {
@@ -165,32 +169,16 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
     m_layers = sourceProps.getProperty( KEY_LAYERS, null );
     m_styles = sourceProps.getProperty( KEY_STYLES, null );
-    final String service = sourceProps.getProperty( KEY_URL, null );
+    m_service = sourceProps.getProperty( KEY_URL, null );
     m_localSRS = localSRS;
     m_source = source;
+  }
 
+  private void init( )
+  {
     try
     {
-      final URL url = WMSCapabilitiesHelper.createCapabilitiesRequest( new URL( service ) );
-
-      final URLConnection c = url.openConnection();
-
-      // TODO this is another mechanism than used normally in Kalypso -> we will get problems here with proxies
-      NetWorker.configureProxy( c );
-
-      // warum nochmal??
-      c.addRequestProperty( "SERVICE", "WMS" );
-      c.addRequestProperty( "REQUEST", "GetCapabilities" );
-
-      // create capabilites from the request
-      // TODO check that this does not wait forever, if there is no connection
-      // TODO: refacotr to use same mechanism as ImportWMSWizardPage to read capabilities
-      // TODO: close connection + stream!!!
-      final Reader reader = new InputStreamReader( c.getInputStream() );
-
-      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-      m_wmsCaps = wmsCapFac.createCapabilities( reader );
-
+      m_wmsCaps = WMSCapabilitiesHelper.loadCapabilities( new URL( m_service ), new NullProgressMonitor() );
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
 
       // match the local with the remote coordiante system
@@ -206,13 +194,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       final GeoTransformer gt = new GeoTransformer( m_localSRS );
       m_maxEnvLocalSRS = gt.transformEnvelope( maxEnvRemoteSRS, m_remoteSRS );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // nothing to do
       e.printStackTrace();
-      // TODO: this may leave this object uninitialized, leading to NullPointerExceptions later
-      // better: set a invalid flag somewhere or test allways for null
+
+      m_isInvalid = true;
     }
+
+    m_isInitialized = true;
   }
 
   /**
@@ -222,6 +212,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    */
   public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox, final boolean selected )
   {
+    // if invalid, just return
+    if( m_isInvalid )
+      return;
+
+    if( !m_isInitialized )
+      init();
+
     m_requestedEnvLocalSRS = bbox;
     m_lastWidth = (int) g.getClip().getBounds().getWidth();
     m_lastHeight = (int) g.getClip().getBounds().getHeight();
@@ -241,25 +238,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
         // simply do not paint it
       }
     }
-
-    // the image is only updated when the wish bbox is ok
-    // if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
-    // {
-    // GM_Envelope remoteEnv = null;
-    // try
-    // {
-    // GeoTransformer gt = new GeoTransformer( m_remoteCSR );
-    // remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
-    // WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, geoTransform, g );
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
-    // }
   }
 
-  public void updateImage( final GeoTransform geoTransformToLocalSRS, GM_Envelope envRequestLocalSRS ) throws Exception
+  private void updateImage( final GeoTransform geoTransformToLocalSRS, GM_Envelope envRequestLocalSRS ) throws Exception
   {
     if( m_wmsCaps == null )
       return;
