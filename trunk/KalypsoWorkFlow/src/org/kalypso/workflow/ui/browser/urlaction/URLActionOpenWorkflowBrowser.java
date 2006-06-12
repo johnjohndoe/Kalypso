@@ -98,13 +98,15 @@ public class URLActionOpenWorkflowBrowser extends AbstractURLAction
     {
       // activate the appropriate view (select the folder), where the new View will be relative to and
       // shown in
+      final IWorkbenchPage activePage = getActivePage();
       if( activePartId != null && activePartId.length() > 1 )
-        getActivePage().showView( activePartId );
+        activePage.showView( activePartId );
       if( secondaryViewID != null )
-        viewPart = getActivePage().showView( WORKFLOW_BROWSER_PART_ID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
+        viewPart = activePage.showView( WORKFLOW_BROWSER_PART_ID, secondaryViewID, IWorkbenchPage.VIEW_ACTIVATE );
       else
-        viewPart = getActivePage().showView( WORKFLOW_BROWSER_PART_ID );
-
+        viewPart = activePage.showView( WORKFLOW_BROWSER_PART_ID );
+      // set view active
+      activePage.bringToTop( viewPart );
       if( viewPart instanceof CommandURLBrowserView )
       {
         final CommandURLBrowserView browserView = (CommandURLBrowserView) viewPart;
