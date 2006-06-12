@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizard.wms;
+package org.kalypso.util.net;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,31 +47,19 @@ import java.net.URL;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableContext;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class URLGetter implements ICoreRunnableWithProgress
 {
-  /**
-   * Utility method to retrieve a stream from a url, this is done in the background
-   */
-  public static InputStream getFromURL( final IRunnableContext runnableCcontext, final URL url, final int timeOut ) throws CoreException
+  public static URLGetter createURLGetter( final URL url, final int timeOut )
   {
     final HttpClient client = KalypsoGisPlugin.getDefault().createConfiguredHttpClient( timeOut );
 
-    final URLGetter getter = new URLGetter( client, url );
-    final IStatus status = RunnableContextHelper.execute( runnableCcontext, true, true, getter );
-
-    if( !status.isOK() )
-      throw new CoreException( status );
-
-    return getter.getResult();
+    return new URLGetter( client, url );
   }
   
   private InputStream m_result = null;

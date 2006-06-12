@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wms;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +48,10 @@ import java.util.List;
 
 import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -76,17 +76,48 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.ogc.gml.wms.WMSCapabilitiesHelper;
 import org.kalypso.ui.ImageProvider;
-import org.kalypsodeegree_impl.services.wms.WMSCapabilitiesHelper;
 
 /**
  * @author Kuepferle, Doemming
  */
 public class ImportWmsWizardPage extends WizardPage
 {
-  TreeViewer m_capabilitiesTree;
+  private final class CapabilitiesGetter implements ICoreRunnableWithProgress
+  {
+    private final URL m_service;
 
-  ListViewer m_selectedLayers;
+    private WMSCapabilities m_capas = null;
+
+    private CapabilitiesGetter( URL service )
+    {
+      super();
+      m_service = service;
+    }
+
+    public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+    {
+      final WMSCapabilities capabilities = WMSCapabilitiesHelper.loadCapabilities( m_service, monitor );
+
+      m_capabilites.put( m_service, capabilities );
+      m_capas = capabilities;
+      // store url and capabilites in a map so it is only loaded once
+
+      return Status.OK_STATUS;
+    }
+
+    public WMSCapabilities getCapabilities( )
+    {
+      return m_capas;
+    }
+  }
+
+  protected TreeViewer m_capabilitiesTree;
+
+  protected ListViewer m_selectedLayers;
 
   private static final int MIN_LIST_WITH = 150;
 
@@ -94,18 +125,18 @@ public class ImportWmsWizardPage extends WizardPage
   private Composite m_layerSelection;
 
   /** capabilites cache in this wizard */
-  private HashMap<URL, WMSCapabilities> m_capabilites = new HashMap<URL, WMSCapabilities>();
+  protected final  HashMap<URL, WMSCapabilities> m_capabilites = new HashMap<URL, WMSCapabilities>();
 
   private static final String MSG_BASEURL_ERROR = "Die gewählte URL ist ungültig ";
 
-  Button m_multiLayerButton;
+  protected Button m_multiLayerButton;
 
   /** current selected base url */
   private URL m_baseURL = null;
 
   protected boolean m_urlModified = false;
 
-  Combo m_urlCombo;
+  protected Combo m_urlCombo;
 
   /**
    *  
@@ -364,55 +395,18 @@ public class ImportWmsWizardPage extends WizardPage
     } );
 
     m_urlCombo.select( 0 );
-
-    // // add spacer
-    // final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
-    // label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
-
   }
-
-  // /**
-  // * TODO summary sentence for modifyText ...
-  // *
-  // * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-  // * @param e
-  // */
-  // public void modifyText( ModifyEvent e )
-  // {
-  // if( e.widget != null && e.widget instanceof Text )
-  // ( (Text)e.widget ).setForeground( null );
-  // getContainer().updateButtons();
-  // }
 
   private synchronized WMSCapabilities getCapabilites( final URL service ) throws Exception
   {
     if( m_capabilites.containsKey( service ) )
       return m_capabilites.get( service );
 
-    // create quuery url
-    final URL urlGetCapabilities = WMSCapabilitiesHelper.createCapabilitiesRequest( service );
+    final CapabilitiesGetter runnable = new CapabilitiesGetter( service );
 
-    // TODO set timeout somewhere
-    // maybe inside the createHttpClient Method of the Plugin-Class
-    // get the timeout from global preferences
-    final int timeOut = 20000;
-    final InputStream inputStream = URLGetter.getFromURL( getContainer(), urlGetCapabilities, timeOut );
-    final Reader urlReader = new InputStreamReader( inputStream );
+    RunnableContextHelper.execute( getContainer(), false, false, runnable );
 
-//    final String capabilitiesAsString = IOUtils.toString( urlReader );
-//    final StringReader reader = new StringReader( capabilitiesAsString );
-
-//    System.out.println( capabilitiesAsString );
-    
-    final Reader reader = urlReader;
-
-    // TODO: handle exceptions and at least close streams! this is no error handling!
-    final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-    final WMSCapabilities capabilities = wmsCapFac.createCapabilities( reader );
-    // store url and capabilites in a map so it is only loaded once
-    m_capabilites.put( service, capabilities );
-
-    return capabilities;
+    return runnable.getCapabilities();
   }
 
   private URL validateURLField( final String url )

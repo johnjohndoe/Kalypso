@@ -42,9 +42,6 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class WMSCapabilitiesContentProvider implements ITreeContentProvider
 {
-
-  private Object m_input = null;
-
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
@@ -69,7 +66,6 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    m_input = newInput;
   }
 
   /**

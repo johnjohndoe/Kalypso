@@ -52,10 +52,11 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
+            category="org.kalypso.ui.newwizards.gml"
             class="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"
             icon="icon/kalypso_gmt.gif"
-            name="%org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.name"
-            id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"/>
+            id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"
+            name="%org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.name"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
