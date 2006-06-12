@@ -173,6 +173,5 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.auth,
  org.kalypso.metadoc;visibility:=reexport,
  org.junit,
- org.kalypso.services.core.client,
- de.belger.swtchart.core
+ org.kalypso.services.core.client
 Eclipse-AutoStart: true

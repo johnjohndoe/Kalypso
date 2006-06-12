@@ -40,81 +40,73 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.chart;
 
-import java.awt.geom.Rectangle2D;
-
-import org.eclipse.swt.graphics.Point;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.observation.result.TupleResult;
-
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author schlienger
  */
 public class TupleResultChartLayer //extends AbstractChartLayer
 {
-  private final TupleResult m_result;
+//  private final TupleResult m_result;
 
-  public TupleResultChartLayer( TupleResult result, AxisRange domainRange, AxisRange valueRange )
-  {
-    //super( domainRange, valueRange );
-    m_result = result;
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#getBounds()
-   */
-  public Rectangle2D getBounds( )
-  {
-    return null;
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
-   */
-  public EditInfo getHoverInfo( Point point )
-  {
-    return null;
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Point, java.lang.Object)
-   */
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
-   */
-  public void paintLegend( GCWrapper gc )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
-   */
-  public void paint( GCWrapper gc )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#edit(org.eclipse.swt.graphics.Point, java.lang.Object)
-   */
-  public void edit( Point point, Object data )
-  {
-
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(java.lang.Object)
-   */
-  public void setActivePoint( Object data )
-  {
-
-  }
+//  public TupleResultChartLayer( TupleResult result, AxisRange domainRange, AxisRange valueRange )
+//  {
+//    //super( domainRange, valueRange );
+//    m_result = result;
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#getBounds()
+//   */
+//  public Rectangle2D getBounds( )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
+//   */
+//  public EditInfo getHoverInfo( Point point )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Point, java.lang.Object)
+//   */
+//  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+//  {
+//
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+//   */
+//  public void paintLegend( GCWrapper gc )
+//  {
+//
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+//   */
+//  public void paint( GCWrapper gc )
+//  {
+//
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#edit(org.eclipse.swt.graphics.Point, java.lang.Object)
+//   */
+//  public void edit( Point point, Object data )
+//  {
+//
+//  }
+//
+//  /**
+//   * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(java.lang.Object)
+//   */
+//  public void setActivePoint( Object data )
+//  {
+//
+//  }
 }

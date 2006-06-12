@@ -40,41 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.chart;
 
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
-
-import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.layer.IChartLayer;
-import de.belger.swtchart.layer.ILayerProvider;
-import de.belger.swtchart.util.SwitchDelegate;
 
 /**
  * @author schlienger
  *
  */
-public class ObservationLayerProvider implements ILayerProvider
+public class ObservationLayerProvider //implements ILayerProvider
 {
-  private final IObservation<TupleResult> m_obs;
-  private final IComponent m_domainComponent;
-  private final IComponent m_rangeComponent;
-
-  public ObservationLayerProvider( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent rangeComponent )
-  {
-    m_obs = obs;
-    m_domainComponent = domainComponent;
-    m_rangeComponent = rangeComponent;
-  }
-  
-  /**
-   * @see de.belger.swtchart.layer.ILayerProvider#getLayers()
-   */
-  public IChartLayer[] getLayers( )
-  {
-    final AxisRange domRange = new AxisRange( m_domainComponent.getName(), SwitchDelegate.HORIZONTAL );
-    final AxisRange valueRange = new AxisRange( m_rangeComponent.getName(), SwitchDelegate.VERTICAL );
-    
-    //return new IChartLayer[] { new TupleResultChartLayer( m_obs.getResult(), domRange, valueRange ) };
-    return null;
-  }
+//  private final IObservation<TupleResult> m_obs;
+//  private final IComponent m_domainComponent;
+//  private final IComponent m_rangeComponent;
+//
+//  public ObservationLayerProvider( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent rangeComponent )
+//  {
+//    m_obs = obs;
+//    m_domainComponent = domainComponent;
+//    m_rangeComponent = rangeComponent;
+//  }
+//  
+//  /**
+//   * @see de.belger.swtchart.layer.ILayerProvider#getLayers()
+//   */
+//  public IChartLayer[] getLayers( )
+//  {
+//    final AxisRange domRange = new AxisRange( m_domainComponent.getName(), SwitchDelegate.HORIZONTAL );
+//    final AxisRange valueRange = new AxisRange( m_rangeComponent.getName(), SwitchDelegate.VERTICAL );
+//    
+//    //return new IChartLayer[] { new TupleResultChartLayer( m_obs.getResult(), domRange, valueRange ) };
+//    return null;
+//  }
 }
