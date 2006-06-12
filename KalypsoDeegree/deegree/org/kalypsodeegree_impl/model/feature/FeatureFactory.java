@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +68,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -201,6 +205,16 @@ public class FeatureFactory
     // final URL url = schema.getUrl();
     // final String href = url == null ? null : url.toExternalForm();
     return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, schemaLocation );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
+  public static GMLWorkspace createGMLWorkspace( final String schemaNamespace, final QName rootFeatureQName ) throws InvocationTargetException
+  {
+    final IGMLSchema schema = GMLSchemaCatalog.getSchema( schemaNamespace, (String) null );
+    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
+    return createGMLWorkspace( rootFeatureType );
   }
 
   /**
