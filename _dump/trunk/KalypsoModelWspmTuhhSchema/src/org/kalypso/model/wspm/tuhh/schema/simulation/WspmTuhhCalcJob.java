@@ -146,7 +146,7 @@ public class WspmTuhhCalcJob implements ISimulation
       monitor.setMessage( "Writing kernel data" );
 
       // write calculation to tmpDir
-      WspWinExporter.writeForTuhhKernel( calculation, tmpDir, modellGmlURL );
+      WspWinExporter.writeForTuhhKernel( calculation, tmpDir );
 
       // ensure availability of DATH directory (for results)
       final File dathDir = new File( tmpDir, "dath" );

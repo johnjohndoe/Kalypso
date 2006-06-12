@@ -70,7 +70,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     if( m_provider != null )
     {
       m_provider.removeProfilProviderListener( this );
-      m_provider.dispose();
+      m_provider = null;
     }
 
     final IProfilEventManager oldPem = getProfilEventManager();
@@ -226,7 +226,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     final IFile file = m_provider == null ? null : m_provider.getFile();
 
-    final String partName = m_pem == null ? "Profil Diagrammansicht" : "Station km " + m_pem.getProfil().hashCode();
+    final String partName = m_pem == null ? "Profil Diagrammansicht" : "Station km " + m_pem.getProfil().getStation();
     final String tooltip = file == null ? null : file.getFullPath().toOSString();
 
     setPartNames( partName, tooltip );

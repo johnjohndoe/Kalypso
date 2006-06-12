@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.adapter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
 
 /**
@@ -50,11 +56,34 @@ import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
  */
 public class ProfileProviderAdapterFactory implements IAdapterFactory
 {
-  public ProfileProviderAdapterFactory( )
+  private final Map<IWorkbenchPart, FeatureSelectionProfileProvider> m_providers = new HashMap<IWorkbenchPart, FeatureSelectionProfileProvider>();
+
+  private IPartListener2 m_partAdapter = new PartAdapter2()
   {
-    super();
+    /**
+     * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partClosed( final IWorkbenchPartReference partRef )
+    {
+      ProfileProviderAdapterFactory.this.partClosed( partRef.getPart( false ) );
+    }
+
+  };
+
+  protected void partClosed( final IWorkbenchPart part )
+  {
+    synchronized( m_providers )
+    {
+      if( m_providers.containsKey( part ) )
+      {
+        final FeatureSelectionProfileProvider provider = m_providers.get( part );
+        provider.dispose();
+        m_providers.remove( part );
+      }
+    }
   }
-  
+
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
@@ -65,9 +94,20 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
       if( adaptableObject instanceof IWorkbenchPart )
       {
         final IWorkbenchPart part = (IWorkbenchPart) adaptableObject;
-// TODO: cahce this
-        final IFile file = (IFile) part.getAdapter( IFile.class );
-        return new FeatureSelectionProfileProvider( file, part.getSite().getSelectionProvider() );
+
+        synchronized( m_providers )
+        {
+          if( m_providers.containsKey( part ) )
+            return m_providers.get( part );
+
+          final IFile file = (IFile) part.getAdapter( IFile.class );
+          final FeatureSelectionProfileProvider featureSelectionProfileProvider = new FeatureSelectionProfileProvider( file, part.getSite().getSelectionProvider() );
+
+          m_providers.put( part, featureSelectionProfileProvider );
+          part.getSite().getPage().addPartListener( m_partAdapter );
+
+          return featureSelectionProfileProvider;
+        }
       }
     }
 

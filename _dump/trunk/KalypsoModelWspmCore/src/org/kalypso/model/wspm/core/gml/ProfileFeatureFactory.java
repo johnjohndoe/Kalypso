@@ -107,6 +107,12 @@ public class ProfileFeatureFactory implements IWspmConstants
     try
     {
       //
+      // Station
+      //
+      final double station = profile.getStation();
+      targetFeature.setProperty( new QName( NS_WSPMPROF, "station" ), new Double( station ) );
+
+      //
       // read tuple data into tuple-observation
       //
       final TupleResult result = new TupleResult();
@@ -268,6 +274,12 @@ public class ProfileFeatureFactory implements IWspmConstants
     profil.setProperty( IProfil.PROFIL_PROPERTY.VERZWEIGUNGSKENNUNG, "0" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.WASSERSPIEGEL, "Gewaesser" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.MEHRFELDBRUECKE, "0" );
+
+    //
+    // Station
+    //
+    final Double property = (Double) profileFeature.getProperty( new QName( NS_WSPMPROF, "station" ) );
+    profil.setStation( property == null ? Double.NaN : property.doubleValue() );
 
     //
     // Tabelle

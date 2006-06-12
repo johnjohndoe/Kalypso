@@ -18,10 +18,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditorContributor;
@@ -118,7 +115,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_view != null )
     {
       final Control control = m_view.getControl();
-      if( control != null )
+      if( control != null && !m_control.isDisposed() )
         control.setFocus();
     }
   }
@@ -127,7 +124,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     if( m_control == null || m_control.isDisposed() )
       return;
-    
+
     final Control[] childcontrols = m_control.getChildren();
     for( final Control c : childcontrols )
       c.dispose();
@@ -248,27 +245,27 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
    */
   public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, ProfilViewData newViewData )
   {
-//    if( m_group != null )
-//    {
-//      m_group.dispose();
-//      m_group = null;
-//    }
-//
-//    m_group = new UndoRedoActionGroup( getSite(), new ProfilUndoContext( getProfil() ), true );
-//    final IActionBars actionBars = getViewSite().getActionBars();
-//    m_group.fillActionBars( actionBars );
-//
-//    if( m_control != null && !m_control.isDisposed() )
-//    {
-//      m_control.getDisplay().asyncExec( new Runnable()
-//      {
-//        public void run( )
-//        {
-//          actionBars.updateActionBars();
-//          updatePartNameAndControl( editor );
-//        }
-//      } );
-//    }
+    // if( m_group != null )
+    // {
+    // m_group.dispose();
+    // m_group = null;
+    // }
+    //
+    // m_group = new UndoRedoActionGroup( getSite(), new ProfilUndoContext( getProfil() ), true );
+    // final IActionBars actionBars = getViewSite().getActionBars();
+    // m_group.fillActionBars( actionBars );
+    //
+    // if( m_control != null && !m_control.isDisposed() )
+    // {
+    // m_control.getDisplay().asyncExec( new Runnable()
+    // {
+    // public void run( )
+    // {
+    // actionBars.updateActionBars();
+    // updatePartNameAndControl( editor );
+    // }
+    // } );
+    // }
 
     m_pem = newPem;
 

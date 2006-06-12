@@ -199,7 +199,7 @@ public class WspWinImporter
       // Load WspWin Project //
       // /////////////////// //
       final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
-      
+
       final boolean isNotTuhhProject = wspCfgBean.getType() != 'b';
       if( isNotTuhhProject )
       {
@@ -396,7 +396,7 @@ public class WspWinImporter
     //
     // TEMPORARY: write geometries from profile into reach feature
     //
-    updateReachGeometries( reach );
+    updateReachProperties( reach );
 
     final WspmWaterBody waterBody = reach.getWaterBody();
 
@@ -600,7 +600,7 @@ public class WspWinImporter
     }
   }
 
-  private static void updateReachGeometries( final TuhhReach reach )
+  private static void updateReachProperties( final TuhhReach reach )
   {
     final WspmReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final WspmReachProfileSegment segment : reachProfileSegments )
@@ -609,6 +609,8 @@ public class WspWinImporter
       {
         final WspmProfile profileMember = segment.getProfileMember();
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+
+        segment.setStation( profil.getStation() );
 
         final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
         final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : POINT_PROPERTY.BREITE;

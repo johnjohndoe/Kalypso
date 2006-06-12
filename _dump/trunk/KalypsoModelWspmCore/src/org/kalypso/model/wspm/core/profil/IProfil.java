@@ -33,8 +33,6 @@ public interface IProfil
     MEHRFELDBRUECKE,
     /** ObjectTyp=List<String> */
     METASTRINGS,
-    /** ObjectTyp=String */
-    STATION,
     /** ObjectTyp=RAUHEIT_TYP */
     RAUHEIT_TYP,
     /** ObjectTyp=String */
@@ -224,4 +222,8 @@ public interface IProfil
   public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible );
 
   public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp );
+
+  public void setStation( final double station );
+  
+  public double getStation( );
 }

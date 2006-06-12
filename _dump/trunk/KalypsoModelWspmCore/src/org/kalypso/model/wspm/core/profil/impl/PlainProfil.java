@@ -25,7 +25,6 @@ import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoints;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
-
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
@@ -49,7 +48,9 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
-  public PlainProfil()
+  private double m_station = Double.NaN;
+
+  public PlainProfil( )
   {
     m_profilMetaData = new HashMap<Object, Object>();
     m_points = new ProfilPoints();
@@ -139,7 +140,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     return pkt;
   }
 
-  public IProfilPoint findNearestPoint( final double breite, final double hoehe,final POINT_PROPERTY property )
+  public IProfilPoint findNearestPoint( final double breite, final double hoehe, final POINT_PROPERTY property )
   {
     IProfilPoint pkt = m_points.getFirst();
 
@@ -149,7 +150,7 @@ public class PlainProfil implements IProfilConstants, IProfil
       {
         IProfilPoint p = ptIt.next();
         if( (Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p.getValueFor( POINT_PROPERTY.BREITE ) - breite ))
-        || (Math.abs( pkt.getValueFor( property ) - hoehe ) > Math.abs( p.getValueFor( property ) - hoehe )) )
+            || (Math.abs( pkt.getValueFor( property ) - hoehe ) > Math.abs( p.getValueFor( property ) - hoehe )) )
           pkt = p;
       }
       catch( ProfilDataException e )
@@ -180,8 +181,8 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   public IProfilPoint findPoint( final double breite, final double hoehe, final POINT_PROPERTY property )
   {
-    final IProfilPoint pkt = findNearestPoint( breite, hoehe,property );
-    final Double delta = (Double)property.getParameter(PARAMETER.PRECISION);
+    final IProfilPoint pkt = findNearestPoint( breite, hoehe, property );
+    final Double delta = (Double) property.getParameter( PARAMETER.PRECISION );
     try
     {
       final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
@@ -318,7 +319,8 @@ public class PlainProfil implements IProfilConstants, IProfil
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#addPoint(org.kalypso.model.wspm.core.profilinterface.IPoint, double, double)
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#addPoint(org.kalypso.model.wspm.core.profilinterface.IPoint,
+   *      double, double)
    */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite, final double hoehe )
   {
@@ -386,9 +388,10 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public boolean removePoint( final IProfilPoint point )
   {
-    for(IProfilDevider devider:m_devider)
+    for( IProfilDevider devider : m_devider )
     {
-      if (devider.getPoint() == point) return false;
+      if( devider.getPoint() == point )
+        return false;
     }
     return m_points.removePoint( point );
   }
@@ -478,4 +481,16 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_activePoint;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setStation(double)
+   */
+  public void setStation( final double station )
+  {
+    m_station = station;
+  }
+
+  public double getStation( )
+  {
+    return m_station;
+  }
 }

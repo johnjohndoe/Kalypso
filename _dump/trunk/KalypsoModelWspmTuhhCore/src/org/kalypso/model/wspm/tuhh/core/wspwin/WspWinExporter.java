@@ -88,8 +88,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import serializer.prf.ProfilesSerializer;
 
-
-
 /**
  * @author thuel2
  */
@@ -156,13 +154,8 @@ public class WspWinExporter
             for( final TuhhCalculation calculation : tuhhCalcs )
             {
               final File dir = new File( wspwinProjDir, calculation.getFeature().getId() );
-              writeForTuhhKernel( calculation, dir, modelGmlUrl );
+              writeForTuhhKernel( calculation, dir );
             }
-
-            // reachTuhh
-
-            //
-
           }
         }
         else
@@ -189,7 +182,7 @@ public class WspWinExporter
    * @param context
    *          Context to resolve links inside the gml structure.
    */
-  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir, final URL context ) throws IOException, ProfilDataException
+  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException, ProfilDataException
   {
     dir.mkdirs();
 
@@ -202,7 +195,7 @@ public class WspWinExporter
     final boolean isDirectionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
-    write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile, context );
+    write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile );
     write1DTuhhRunOff( calculation.getRunOffEvent(), isDirectionUpstreams, qwtFile );
   }
 
@@ -365,7 +358,7 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile, final URL context ) throws IOException, ProfilDataException
+  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException, ProfilDataException
   {
     final WspmReachProfileSegment[] segments = reach.getReachProfileSegments();
 
@@ -396,17 +389,11 @@ public class WspWinExporter
         // TODO mindestens 4, besser 5 Nachkommastellen?
         zustWriter.println( station.doubleValue() );
 
-        // TODO: write profile into prf file
-        // TODO: write corresponding energy losses (zeta, Velustbeiwerte) into psiFile
-//        psiWriter.print("");
-
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-        profil.setProperty( IProfil.PROFIL_PROPERTY.STATION, station );
+        profil.setStation( station.doubleValue() );
 
-        // final URL prfFile = new URL( context, href );
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
         ProfilesSerializer.store( profil, outPrfFile );
-        // FileUtils.copyURLToFile( prfFile, outPrfFile );
       }
 
       zustWriter.close();
