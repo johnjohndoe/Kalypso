@@ -28,5 +28,11 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
 
     catalog.put( NS_NA_WSPM, myClass.getResource( "schemata/couplingNaWspm.xsd" ) );
     prefixes.put( NS_NA_WSPM, "wspmna" );
-  }
+
+    catalog.put( NS_WSPM_BREAKLINE, myClass.getResource( "schemata/breakline.xsd" ) );
+    prefixes.put( NS_WSPM_BREAKLINE, "breakline" );
+
+    catalog.put( NS_WSPM_BOUNDARY, myClass.getResource( "schemata/floodBoundary.xsd" ) );
+    prefixes.put( NS_WSPM_BOUNDARY, "boundary" );
+}
 }

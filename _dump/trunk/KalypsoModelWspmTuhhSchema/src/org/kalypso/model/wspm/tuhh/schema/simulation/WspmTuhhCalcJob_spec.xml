@@ -20,6 +20,8 @@
     <output id="LengthSection" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt)"/>
     <output id="LengthSectionObs" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt) as observation"/>
     <output id="Bruchkanten" optional="true" description="Bruchkanten.gml"/>
+    <output id="Modellgrenzen" optional="true" description="Modellgrenzen.gml"/>
+    <output id="Ueberschwemmungslinie" optional="true" description="Überschwemmungslinie.gml"/>
     <!-- 
     results for WATERLEVEL and BANKFUL UNIFORM mode -->
     <output id="resultList" optional="true" description="Ergebnis.list (TAB-Datei)"/>

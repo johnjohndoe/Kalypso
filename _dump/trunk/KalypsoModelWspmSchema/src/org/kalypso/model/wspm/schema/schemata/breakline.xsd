@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmbreakline"
+	xmlns:breakline="org.kalypso.model.wspmbreakline" elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<!-- schema for breaklines -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<element name="BreaklineCollection" type="breakline:BreaklineCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bruchkanten</label>
+				<tooltip>Bruchkanten</tooltip>
+				<description>Bruchkanten</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!--
+	-->
+	<element name="breaklineMember" type="breakline:BreaklinePropertyType" substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bruchkante</label>
+				<tooltip>Bruchkante</tooltip>
+				<description>Bruchkante</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="Breakline" type="breakline:BreaklineType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bruchkante ${property:org.kalypso.model.wspmbreakline#station}</label>
+				<tooltip>Bruchkante</tooltip>
+				<description>Bruchkante</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________
+	-->
+	<complexType name="BreaklineCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="breakline:BreaklineCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="BreaklineCollectionType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="breakline:breaklineMember" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bruchkanten</label>
+								<tooltip>Bruchkanten</tooltip>
+								<description>Bruchkanten</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--
+	-->
+	<complexType name="BreaklinePropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="breakline:Breakline"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="BreaklineType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="geometry" type="gml:LineStringPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bruchkantengeometrie</label>
+								<tooltip>Bruchkantengeometrie</tooltip>
+								<description>Bruchkantengeometrie</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="station" type="wspmcommon:stationDouble">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Station</label>
+								<tooltip>Station</tooltip>
+								<description>Station</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="wsp" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wasserspiegel</label>
+								<tooltip>Wasserspiegel</tooltip>
+								<description>Wasserspiegel</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

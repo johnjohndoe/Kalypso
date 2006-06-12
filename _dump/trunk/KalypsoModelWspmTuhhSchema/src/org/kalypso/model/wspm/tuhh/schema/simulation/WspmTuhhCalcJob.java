@@ -47,10 +47,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -63,7 +60,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -74,7 +70,6 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
@@ -253,30 +248,60 @@ public class WspmTuhhCalcJob implements ISimulation
             {
               resultEater.addResult( "LengthSectionObs", lengthSectionObsFile );
 
-              // TODO process lenghtsection and reaches to breaklines.gml (Bruchkanten.gml)
-              // create breaklines.gml
+              // Read Length-Section GML
               final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionObsFile.toURL() );
               final Feature rootFeature = obsWks.getRootFeature();
-
+              
               final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
               final TupleResult result = lengthSectionObs.getResult();
               final String strStationierung = "Stationierung";
               final String strWsp = "Höhe WSP";
-              WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
-
-              final String emptyShpBase = "";
-
-              // leeres Shape aus Resourcen holen
-              // Breaklines machen:
-              // - Koordinatensystem aus erster PolyLine-Geometrie
-              // - shape holen, deserialize und füllen
-              // WST an Punkte dranhängen und neue Geometrie machen (noch übergeben)
-              BreakLinesHelper.createBreaklinesShape( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), emptyShpBase );
-
-              // final File breaklineFile = null;
+              final WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+              
               //
-              // if( breaklineFile.exists() )
-              // resultEater.addResult( "Bruchkanten", breaklineFile );
+              // Breaklines
+              //
+              try
+              {
+                final File breaklineFile = new File( tmpDir, "Bruchkanten.gml" );
+                BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), breaklineFile );
+                if( breaklineFile.exists() )
+                  resultEater.addResult( "Bruchkanten", breaklineFile );
+              }
+              catch( final Exception e )
+              {
+                pwSimuLog.println( "Bruchkanten konnten nicht erzeugt werden: " + e.getLocalizedMessage() );
+              }
+
+              //
+              // Model-Boundaries
+              //
+              try
+              {
+                final File file = new File( tmpDir, "Modellgrenzen.gml" );
+                BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, false );
+                if( file.exists() )
+                  resultEater.addResult( "Modellgrenzen", file );
+              }
+              catch( final Exception e )
+              {
+                pwSimuLog.println( "Modellgrenzen konnten nicht erzeugt werden: " + e.getLocalizedMessage() );
+              }
+
+              //
+              // Waterlevel
+              //
+              try
+              {
+                final File file = new File( tmpDir, "Überschwemmungslinie.gml" );
+                BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, true );
+                if( file.exists() )
+                  resultEater.addResult( "Ueberschwemmungslinie", file );
+              }
+              catch( final Exception e )
+              {
+                pwSimuLog.println( "Überschwemmungslinie konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+              }
             }
           }
 
@@ -351,6 +376,7 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new SimulationException( "Fehler bei der Berechnung", e );
     }
     finally
