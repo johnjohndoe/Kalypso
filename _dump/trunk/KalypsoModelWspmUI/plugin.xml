@@ -255,4 +255,10 @@
                  tooltip="Zeigt die Eigenschaften des Themas in der Themenansicht"/>
         </objectContribution>
      </extension>
+     <extension
+           point="org.kalypso.core.catalogContribution">
+        <catalogContribution
+              class="org.kalypso.model.wspm.ui.sld.WspmFeatureTypeStyleCatalogContribution"
+              name="Wspm Style Catalog"/>
+     </extension>
 </plugin>
