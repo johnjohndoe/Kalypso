@@ -31,7 +31,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     configurer.setShowStatusLine( true );
     configurer.setShowProgressIndicator( true );
     configurer.setShowMenuBar( true );
-    configurer.setShowPerspectiveBar( true );
+    configurer.setShowPerspectiveBar( false );
     configurer.setTitle( "FLOWS Planer Portal" );
     configureCoolBar( configurer );
 
