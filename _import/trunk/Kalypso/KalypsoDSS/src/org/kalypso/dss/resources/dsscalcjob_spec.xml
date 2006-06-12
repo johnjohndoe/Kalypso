@@ -10,11 +10,11 @@
 	<input id="measureMRS"
 		description="Modelldaten - Massnahme Mulden-Rigolen" optional="true" />
 	<input id="measureSealing"
-		description="Modelldaten - Massnahme Entsiegelung" />
+		description="Modelldaten - Massnahme Entsiegelung" optional="true"/>
 	<input id="designArea" description="Modelldaten - Plangebiet" />
 	<input id="SceConf" description="Modelldaten - Optimierung"
 		optional="true" />
-	<!-- <input id="ErgebnisDir" description="??" optional="true"/>	-->
+	<input id="xplanung" description="Modelldaten - BPlan Massnahmen" optional="true"/>
 
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->

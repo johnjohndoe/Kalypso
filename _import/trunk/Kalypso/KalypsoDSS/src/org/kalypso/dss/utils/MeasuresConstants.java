@@ -45,6 +45,8 @@ public class MeasuresConstants
 
   public static final String NS_DESIGNAREA = "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd";
 
+  public static final String NS_XPLANUNG = "http://www.xplanung.de/bplangml";
+
   /** Bean id's */
   public static final String IN_MEASURE_RHB_ID = "measureRHB";
 
@@ -110,4 +112,23 @@ public class MeasuresConstants
 
   public static final String DESINGAREA_GEOM_PROP = "gebiet";
 
+  /** XPlanung (BPlan) */
+  
+  public static final String XPLANUNG_GEOM_PROP = "position";
+
+  public static final String XPLANUNG_GRZ_PROP = "GRZ";
+  
+  public static final String XPLANUNG_ART_BAULICHNUTZ_PROP = "artDerBaulichenNutzung";
+
+  public static final String XPLANUNG_GEMEINBED_FT = "GemeinbedarfsFlaeche";
+  
+  public static final String XPLANUNG_VERKEHRSFMITBESZWECK_FT = "VerkehrsflaecheBesondererZweckbestimmung";
+
+  public static final String XPLANUNG_VERKEHRSFL_FT = "VerkehrsFlaeche";
+  
+  public static final String XPLANUNG_GRUENFL_FT = "GruenFlaeche";
+
+  public static final String XPLANUNG_BAUGEBIET_FT = "BaugebietsFlaechenTeil";
+  
+  
 }

@@ -241,81 +241,141 @@ public class KalypsoDssCalcJob implements ISimulation
     final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL hydrotopURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
-    if( planningMeasureURL != null )
+
+    GMLWorkspace modelWorkspace = null;
+    GMLWorkspace hydrotopWorkspace = null;
+    try
     {
+      modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
+      // set all generate result properties to false
+      setGenerateResults( modelWorkspace, false );
+      if( planningMeasureURL != null )
+      {
+
+        hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+        insertPlanningMeasure( planningMeasureURL, hydrotopWorkspace, rrmInputProvider, logger );
+        writeNewHydrotopFile = true;
+      }
+      if( measuresRhbURL != null )
+      {
+        insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
+        writeNewModelFile = true;
+      }
+      if( measuresSealingURL != null )
+      {
+        if( hydrotopWorkspace == null )
+          hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+        insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
+        writeNewHydrotopFile = true;
+      }
+      if( measuresMrsURL != null )
+      {
+        insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
+        writeNewHydrotopFile = true;
+        writeNewModelFile = true;
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
+      throw new SimulationException( e.getMessage(), e );
+    }
+
+    Writer writerHydroTop = null;
+    Writer writerModel = null;
+    try
+    {
+      try
+      {
+        // 1. write the changed data to a new rrm and hydrotop file
+        // 2. replacing in the bean the old URL to the new files
+        final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
+        if( writeNewModelFile )
+        {
+          writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+          GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+          rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
+        }
+        if( writeNewHydrotopFile )
+        {
+          final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
+          writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+          GmlSerializer.serializeWorkspace( writerHydroTop, hydrotopWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+          rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydroTopFile.toURL() );
+        }
+      }
+      finally
+      {
+        IOUtils.closeQuietly( writerHydroTop );
+        IOUtils.closeQuietly( writerModel );
+      }
 
     }
-    else
+    catch( Exception e )
     {
-      GMLWorkspace modelWorkspace = null;
-      GMLWorkspace hydrotopWorkspace = null;
-      try
-      {
-        modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
-        // set all generate result properties to false
-        setGenerateResults( modelWorkspace, true );
-        if( measuresRhbURL != null )
-        {
-          insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
-          writeNewModelFile = true;
-        }
-        if( measuresSealingURL != null )
-        {
-          hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
-          insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
-          writeNewHydrotopFile = true;
-        }
-        if( measuresMrsURL != null )
-        {
-          insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
-          writeNewHydrotopFile = true;
-          writeNewModelFile = true;
-        }
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
-        throw new SimulationException( e.getMessage(), e );
-      }
+      logger.warning( "There have been problems serializing the measured model and hydrotop files -- The model is calcuate without any measures" );
+      rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
+      rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydrotopURL );
+    }
 
-      Writer writerHydroTop = null;
-      Writer writerModel = null;
-      try
+  }
+
+  private void insertPlanningMeasure( URL measuresPlanningURL, GMLWorkspace hydrotopWorkspace, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws Exception
+  {
+    // TODO finish insert method
+    final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL );
+    final Feature rootFeature = planningWorkspace.getRootFeature();
+    final IFeatureType rootFT = rootFeature.getFeatureType();
+    final IGMLSchema planningSchema = planningWorkspace.getGMLSchema();
+    final IFeatureType gruenflFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRUENFL_FT ) );
+    final Feature[] gruenflFE = planningWorkspace.getFeatures( gruenflFT );
+    final QName geomXplan = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEOM_PROP );
+    final QName geomHydro = new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM );
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    // adjust coordinate system
+    if( hydroList.size() > 0 )
+    {
+      final Feature feature = (Feature) hydroList.get( 0 );
+      final GM_Object geom = feature.getGeometryProperties()[0];
+      final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
+      final TransformVisitor visitor = new TransformVisitor( targetCS );
+      planningWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
+    }
+    int c_success = 0;
+    int c_error = 0;
+    for( int i = 0; i < gruenflFE.length; i++ )
+    {
+      final Feature gfFE = gruenflFE[i];
+      final GM_Object xplanGeom = (GM_Object) gfFE.getProperty( geomXplan );
+      final Geometry xplanJTSGeom = JTSAdapter.export( xplanGeom );
+      final GM_Envelope envGfFE = xplanGeom.getEnvelope();
+      final List hydroInEnv = hydroList.query( envGfFE, null );
+      for( Iterator iter = hydroInEnv.iterator(); iter.hasNext(); )
       {
+        final Feature hydro = (Feature) iter.next();
+        final GM_Object geomHyd = (GM_Object) hydro.getProperty( geomHydro );
+        final Geometry hydroJTSGeom = JTSAdapter.export( geomHyd );
+
+        Geometry intersection = null;
         try
         {
-          // 1. write the changed data to a new rrm and hydrotop file
-          // 2. replacing in the bean the old URL to the new files
-          final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
-          if( writeNewModelFile )
-          {
-            writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
-            GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-            rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
-          }
-          if( writeNewHydrotopFile )
-          {
-            final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
-            writerHydroTop = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( hydroTopFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
-            GmlSerializer.serializeWorkspace( writerHydroTop, hydrotopWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-            rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydroTopFile.toURL() );
-          }
+          intersection = xplanJTSGeom.intersection( hydroJTSGeom );
+          if( intersection.isEmpty() )
+            continue;
+          c_success++;
         }
-        finally
+        catch( Exception e )
         {
-          IOUtils.closeQuietly( writerHydroTop );
-          IOUtils.closeQuietly( writerModel );
+          c_error++;
         }
+        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydro, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
+        final double areaIntersection = intersection.getArea();
+        final double areaHydro = hydroJTSGeom.getArea();
+      }
 
-      }
-      catch( Exception e )
-      {
-        logger.warning( "There have been problems serializing the measured model and hydrotop files -- The model is calcuate without any measures" );
-        rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
-        rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydrotopURL );
-      }
     }
+
   }
 
   /**
