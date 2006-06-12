@@ -105,9 +105,9 @@ public class DssCalcJobTest extends TestCase
         if( "measureMRS".equals( id ) )
           return clazz.getResource( "dss/mrsMeasure1.gml" );
         if( "designArea".equals( id ) )
-          return clazz.getResource( "dss/plangebiet1.gml" );
-        if( "ErgebnisDir".equals( id ) )
-          return clazz.getResource( "dss/.results" );
+          return clazz.getResource( "dss/BPlan/plangebiet.gml" );
+        if( "xplanung".equals( id ) )
+          return clazz.getResource( "dss/BPlan/xplanung.gml" );
         if( "SceConf".equals( id ) )
           return clazz.getResource( "dss/.sce.xml" );
         return null;
