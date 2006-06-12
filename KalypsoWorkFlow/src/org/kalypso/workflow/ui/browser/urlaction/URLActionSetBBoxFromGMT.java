@@ -112,7 +112,7 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       final InputSource isfromGMT = new InputSource( new InputStreamReader( gmtFromFile.getContents(), gmtFromFile.getCharset() ) );
       final Gismapview mapviewfrom = (Gismapview) unmarshaller.unmarshal( isfromGMT );
       // load existing gmt to write new bbox to
-      final InputSource isToGMT = new InputSource( new InputStreamReader( gmtFromFile.getContents(), gmtFromFile.getCharset() ) );
+      final InputSource isToGMT = new InputSource( new InputStreamReader( gmtToFile.getContents(), gmtToFile.getCharset() ) );
       final Gismapview mapviewto = (Gismapview) unmarshaller.unmarshal( isToGMT );
       final Gismapview transformedGisMapView = transformExtent( mapviewfrom, mapviewto );
       // write change to file

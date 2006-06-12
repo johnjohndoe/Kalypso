@@ -66,6 +66,12 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
 
   private final static String PARAM_SOURCE = "sourceURL";
 
+  private static final String PARAM_MEASURE_GMT = "measureGMT";
+
+  private static final String PARAM_XPLAN_GMT = "xplanGMT";
+
+  private static final String PARAM_REF_BBOX_GMT = "bboxGMT";
+
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
@@ -79,8 +85,12 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
+    final String measureGMT = commandURL.getParameter( PARAM_MEASURE_GMT );
+    final String xplanGMT = commandURL.getParameter( PARAM_XPLAN_GMT );
+    final String bboxFromGMT = commandURL.getParameter( PARAM_REF_BBOX_GMT );
     final String sourceURLAsString = commandURL.getParameter( PARAM_SOURCE );
-    final WorkflowContext context = getWorkFlowContext();
+    final WorkflowContext workFlowContext = getWorkFlowContext();
+    final WorkflowContext context = workFlowContext;
     IFolder calcCaseFolder = null;
     final IFolder contextCalcDir = context.getContextCalcDir();
     final CreateNewMeasureCalcCaseDialog dialog = new CreateNewMeasureCalcCaseDialog( getShell(), contextCalcDir );
@@ -110,11 +120,33 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
       MessageDialog.openError( getShell(), "FLOWS Planer Client Fehlermeldung", "Fehler beim erstellen eines neuen Rechenfalls. Zielordner nicht gefunden!" );
       return false;
     }
-
+    // extract the calcCase.zip to the new calc folder
     final IURLAction extractAction = m_defaultActionRegistry.getURLAction( "extract" );
     final ICommandURL extractCommandURL = CommandURLFactory.createCommandURL( "kalypso://extract?sourceURL=" + sourceURL.toString() + "&target=" + calcCasePathAsString );
-    extractAction.init( getWorkFlowContext() );
-    return extractAction.run( extractCommandURL );
+    extractAction.init( workFlowContext );
+    if( !extractAction.run( extractCommandURL ) )
+      return false;
+
+    // open the right map
+    String gmtLoactionString = null;
+    final IURLAction openEditorAction = m_defaultActionRegistry.getURLAction( "openEditor" );
+    if( measureGMT != null )
+      gmtLoactionString = calcCasePathAsString + measureGMT;
+    else if( xplanGMT != null )
+      gmtLoactionString = calcCasePathAsString + xplanGMT;
+    // set bbox from previous map
+    if( bboxFromGMT != null )
+    {
+      final IURLAction setBBoxAction = m_defaultActionRegistry.getURLAction( "setBBoxInGMT" );
+      ICommandURL setBBoxCommand = CommandURLFactory.createCommandURL( "kalypso://setBBoxInGMT?urlGMTfrom=" + bboxFromGMT + "&urlGMTto=" + gmtLoactionString );
+      setBBoxAction.init( workFlowContext );
+      if( !setBBoxAction.run( setBBoxCommand ) )
+        return false;
+    }
+    // open the editor
+    final ICommandURL openEditorCommand = CommandURLFactory.createCommandURL( "kalypso://openEditor?input=" + gmtLoactionString + "&activate=" + true );
+    openEditorAction.init( workFlowContext );
+    return openEditorAction.run( openEditorCommand );
   }
 
 }
