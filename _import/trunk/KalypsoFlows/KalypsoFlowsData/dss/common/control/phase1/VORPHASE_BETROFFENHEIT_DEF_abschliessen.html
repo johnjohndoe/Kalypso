@@ -12,12 +12,11 @@
 		function loadNextPage()
 		{
 			kalypso://saveActiveGMT?;
-			kalypso://setBBoxInGMT?urlGMTfrom=project:/.maps/Plangebiet_definieren.gmt&urlGMTto=project:/.maps/BPlan_Editieren.gmt;
-			kalypso://createMeasureCalcCase?sourceURL=calcCase.zip;
+			kalypso://createMeasureCalcCase?sourceURL=calcCase.zip&xplanGMT=BPlan_Editieren.gmt&bboxGMT=project:/.maps/Plangebiet_definieren.gmt;
 			kalypso://openURL?url=../phase2/KONZEPTPHASE_BPLAN_LADEN_ZEICHNEN.html;
-			kalypso://openEditor?input=project:/.maps/BPlan_Editieren.gmt;
 		}
 	 -->
+<!--			kalypso://setBBoxInGMT?urlGMTfrom=project:/.maps/Plangebiet_definieren.gmt&urlGMTto=project:/.maps/BPlan_Editieren.gmt; -->
  </script>
   <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
   
