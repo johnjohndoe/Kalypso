@@ -35,6 +35,7 @@
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.ant.ui"/>
       <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.core.boot"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filebuffers"/>
@@ -116,7 +117,6 @@
       <plugin id="org.kalypso.services.metadoc.client"/>
       <plugin id="org.kalypso.services.observation"/>
       <plugin id="org.kalypso.services.observation.client"/>
-      <plugin id="org.kalypso.services.simulation"/>
       <plugin id="org.kalypso.services.user"/>
       <plugin id="org.kalypso.services.user.client"/>
       <plugin id="org.kalypso.simulation.core"/>

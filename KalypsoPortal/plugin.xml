@@ -20,13 +20,13 @@
             name="Kalypso Enterprise">
          <property
                name="aboutImage"
-               value="icons/aboutKalypso.gif"/>
+               value="etc/aboutKalypso.gif"/>
          <property
                name="aboutText"
                value="%productBlurb"/>
          <property
                name="windowImages"
-               value="icons/planerIconApplication.gif"/>
+               value="etc/kalypso16.gif"/>
       </product>
    </extension>
    <extension
