@@ -532,22 +532,22 @@ public class TypeHandlerUtilities
     final JAXBContext context = KalypsoOGC31JAXBcontext.getContext();
 
     // geometry types
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PolygonPropertyType" ), GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_POLYGON_PROPERTY, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
 
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "PointPropertyType" ), GeometryUtilities.QN_POINT, GM_Point.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
     // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3,
     // "PolygonPropertyType" ), new QName( NS.GML3, "Polygon" ), GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPointPropertyType" ), GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiLineStringPropertyType" ), GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "MultiPolygonPropertyType" ), GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+
     // TODO: the next line is wrong; GM_Envelope is no GM_Object
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( context, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
 
     // other GML3 types:
-    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "DirectionPropertyType" ), new QName( NS.GML3, "direction" ), DirectionPropertyType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( context, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.GML3, "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
@@ -561,9 +561,13 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new MetaDataPropertyTypeHandler() );
 
     // swe types
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType" ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false, false ) );
-//    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false, false, false ) );
-//    registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ), new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true, false ) );
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "PhenomenonPropertyType"
+    // ), new QName( NS.SWE, "observedProperty" ), PhenomenonPropertyType.class, false, false, false ) );
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE,
+    // "DataDefinitionPropertyType" ), new QName( NS.SWE, "resultDefinition" ), DataDefinitionPropertyType.class, false,
+    // false, false ) );
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "RelativeMeasureType" ),
+    // new QName( NS.SWE, "RelativeMeasureType" ), RelativeMeasureType.class, false, true, false ) );
 
     registry.registerTypeHandler( new RepresentationTypeHandler() );
     // registry.registerTypeHandler( new GenericBindingTypeHandler( context, new QName( NS.SWE, "DataDefinition" ), new

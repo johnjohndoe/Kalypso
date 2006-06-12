@@ -65,13 +65,37 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class GeometryUtilities
 {
   public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
+
+  public static final QName QN_POLYGON_PROPERTY = new QName( NS.GML3, "PolygonPropertyType" );
+
   public static final QName QN_POINT = new QName( NS.GML3, "Point" );
+
+  public static final QName QN_POINT_PROPERTY = new QName( NS.GML3, "PointPropertyType" );
+
   public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
+
   public static final QName QN_LINE_STRING_PROPERTY = new QName( NS.GML3, "LineStringPropertyType" );
+
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
+
+  public static final QName QN_MULTI_POINT_PROPERTY = new QName( NS.GML3, "MultiPointPropertyType" );
+
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
+
+  public static final QName QN_MULTI_LINE_STRING_PROPERTY = new QName( NS.GML3, "MultiLineStringPropertyType" );
+
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
-  
+
+  public static final QName QN_MULTI_POLYGON_PROPERTY = new QName( NS.GML3, "MultiPolygonPropertyType" );
+
+  public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
+
+  public static final QName QN_LOCATION_PROPERTY = new QName( NS.GML3, "LocationPropertyType" );
+
+  public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
+
+  public static final QName QN_DIRECTION_PROPERTY = new QName( NS.GML3, "DirectionPropertyType" );
+
   public GeometryUtilities( )
   {
     super();
