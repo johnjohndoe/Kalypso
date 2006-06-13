@@ -44,21 +44,40 @@ import java.util.List;
 
 import org.kalypso.commons.metadata.MetadataObject;
 
-
 /**
  * @author schlienger
  */
 public interface IObservation<T>
 {
-  public String getName();
+  public String getName( );
+
   public void setName( final String name );
-  
-  public String getDescription();
+
+  public String getDescription( );
+
   public void setDescription( final String desc );
-  
-  public List<MetadataObject> getMetadataList();
+
+  public List<MetadataObject> getMetadataList( );
+
   public void setMedataList( final List<MetadataObject> list );
 
+  /**
+   * Returns the phenomenon the the observation.
+   * <p>
+   * TODO: for now, only string are supported. Later we should have a real phenomenon-class here.
+   * </p>
+   */
+  public String getPhenomenon( );
+
+  /**
+   * Sets the phenomenon of the observation.
+   * <p>
+   * TODO: for now, only string are supported. Later we should have a real phenomenon-class here.
+   * </p>
+   */
+  public void setPhenomenon( final String phenomenon );
+
   public T getResult( );
+
   public void setResult( final T values );
 }

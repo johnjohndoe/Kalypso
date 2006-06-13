@@ -132,13 +132,13 @@ public abstract class AbstractTuppleModel implements ITuppleModel
         final DoubleComparator dc = new DoubleComparator( 0.000001 );
         for( int i = 0; i < getCount(); i++ )
         {
-          final Object value = getElement( i, axis );
+          final Number value = (Number) getElement( i, axis );
 
           if( dc.compare( value, lower ) < 0 )
-            lower = (Number) value;
+            lower = value;
 
           if( dc.compare( value, upper ) > 0 )
-            upper = (Number) value;
+            upper = value;
         }
 
         return new DefaultAxisRange( lower, upper );

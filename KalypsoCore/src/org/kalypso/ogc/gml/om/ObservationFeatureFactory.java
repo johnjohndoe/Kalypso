@@ -81,6 +81,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" );
 
+  public final static QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" );
+
   public final static QName OM_RESULT = new QName( NS.OM, "result" );
 
   public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" );
@@ -112,6 +114,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String desc = (String) FeatureHelper.getFirstProperty( f, GML_DESCRIPTION );
     final List<MetadataObject> meta = (List<MetadataObject>) f.getProperty( GML_METADATA );
 
+    // TODO: only strings, no linked features are supported now
+    final Object phenProp = f.getProperty( OM_OBSERVED_PROP );
+    final String phenomenon = phenProp instanceof String ? (String)phenProp : null;
+
     final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
 
     final String result = (String) f.getProperty( OM_RESULT );
@@ -119,7 +125,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final TupleResult tupleResult = buildTupleResult( recordDefinition, withoutCDATA );
 
-    return new Observation<TupleResult>( name, desc, tupleResult, meta );
+    final IObservation<TupleResult> observation = new Observation<TupleResult>( name, desc, tupleResult, meta );
+    observation.setPhenomenon( phenomenon );
+
+    return observation;
   }
 
   /**
@@ -229,6 +238,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final List<MetadataObject> mdList = source.getMetadataList();
     targetObsFeature.setProperty( GML_METADATA, mdList );
 
+    targetObsFeature.setProperty( OM_OBSERVED_PROP, source.getPhenomenon() );
+
     final TupleResult result = source.getResult();
 
     final Map<IComponent, ComponentDefinition> map = buildComponentDefinitions( result );
@@ -307,8 +318,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
   }
 
   /**
-   * TODO do not directly return an observation, but rather an observation provider
-   * TODO do not create an observation twice for the same feature, pooling?
+   * TODO do not directly return an observation, but rather an observation provider TODO do not create an observation
+   * twice for the same feature, pooling?
    * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */

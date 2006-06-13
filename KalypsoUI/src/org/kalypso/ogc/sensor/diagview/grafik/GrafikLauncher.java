@@ -458,10 +458,12 @@ public class GrafikLauncher
             if( range != null )
             {
               final DoubleComparator dc = new DoubleComparator( 0.001 );
-              if( dc.compare( range.getLower(), yLower ) < 0 )
-                yLower = (Number) range.getLower();
-              if( dc.compare( range.getUpper(), yUpper ) > 0 )
-                yUpper = (Number) range.getUpper();
+              final Number lower = (Number) range.getLower();
+              final Number upper = (Number) range.getUpper();
+              if( dc.compare( lower, yLower ) < 0 )
+                yLower = lower;
+              if( dc.compare( upper, yUpper ) > 0 )
+                yUpper = upper;
             }
           }
           catch( final SensorException e )
