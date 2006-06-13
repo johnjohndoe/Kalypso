@@ -160,12 +160,12 @@ public class ZmlTest extends TestCase
     assertNotNull( vAxis2 );
 
     assertEquals( values.getElement( 0, dateAxis ), df.parse( "01.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( 0, vAxis1 ), Double.valueOf( "1.0" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( 0, vAxis2 ), new Double( 11 ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( 0, vAxis1 ), Double.valueOf( "1.0" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( 0, vAxis2 ), new Double( 11 ) ) == 0 );
 
     assertEquals( values.getElement( 20, dateAxis ), df.parse( "21.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( 20, vAxis1 ), Double.valueOf( "16.6" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( 20, vAxis2 ), Double.valueOf( "18.5" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( 20, vAxis1 ), Double.valueOf( "16.6" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( 20, vAxis2 ), Double.valueOf( "18.5" ) ) == 0 );
   }
 
   private void _testSetValues( final IObservation obs ) throws SensorException, ParseException
@@ -210,18 +210,18 @@ public class ZmlTest extends TestCase
 
     int i = 19;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "20.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "44" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "11" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "44" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "11" ) ) == 0 );
 
     i = 20;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "21.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "55" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "22" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "55" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "22" ) ) == 0 );
 
     i = 21;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "22.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "66" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "33" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis1 ), Double.valueOf( "66" ) ) == 0 );
+    assertTrue( dc.compare( (Number) values.getElement( i, vAxis2 ), Double.valueOf( "33" ) ) == 0 );
   }
 
   /**

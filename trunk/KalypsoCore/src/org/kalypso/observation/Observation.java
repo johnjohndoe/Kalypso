@@ -50,9 +50,14 @@ import org.kalypso.commons.metadata.MetadataObject;
 public class Observation<T> implements IObservation<T>
 {
   private String m_name;
+
   private String m_desc;
+
   private T m_result;
+
   private List<MetadataObject> m_md;
+
+  private String m_phenomenon;
 
   public Observation( final String name, final String desc, final T result, final List<MetadataObject> md )
   {
@@ -61,7 +66,7 @@ public class Observation<T> implements IObservation<T>
     m_result = result;
     m_md = md;
   }
-  
+
   /**
    * @see org.kalypso.om.IObservation#getName()
    */
@@ -124,5 +129,21 @@ public class Observation<T> implements IObservation<T>
   public void setResult( final T values )
   {
     m_result = values;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getPhenomenon()
+   */
+  public String getPhenomenon( )
+  {
+    return m_phenomenon;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setPhenomenon(java.lang.String)
+   */
+  public void setPhenomenon( String phenomenon )
+  {
+    m_phenomenon = phenomenon;
   }
 }
