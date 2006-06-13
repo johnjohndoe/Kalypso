@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.schemata;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -56,7 +57,8 @@ public class UrlCatalogUpdateObservationMapping extends AbstractUrlCatalog
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
-  protected void fillCatalog( final Class myClass, final Map catalog, Map<String, String> prefixes )
+  @Override
+  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NS, getClass().getResource( "updateObservationMapping/V1.0/updateObservationMapping.xsd" ) );
   }

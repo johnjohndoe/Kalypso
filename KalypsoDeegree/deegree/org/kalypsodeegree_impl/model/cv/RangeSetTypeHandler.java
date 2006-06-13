@@ -88,6 +88,9 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
   @Override
   public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver )
   {
+    // Gernots Remarks on Grids: TODO: do not parse this at all, just use bindings
+    // Use a wrapper class to access grid data
+    
     // TODO do not give context here, better give resolver
     Node node_File = ((Element) node).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
     Node node_FileName = ((Element) node_File).getElementsByTagNameNS( NSRGC, "fileName" ).item( 0 );

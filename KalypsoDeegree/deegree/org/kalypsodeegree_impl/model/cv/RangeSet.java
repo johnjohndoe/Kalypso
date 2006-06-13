@@ -6,14 +6,13 @@ import java.util.Vector;
  * Class which holds the rangeSetData of a RectifiedGridCoverage
  * 
  * @author N. Peiler
- *  
  */
 public class RangeSet
 {
   /**
    * Vector, which stores the rangeSet data; the data of each row is stored in a Vector
    */
-  private Vector m_rangeSetData = null;
+  private Vector<Vector<Double>> m_rangeSetData = null;
 
   /**
    * name of rangeSetData-file ("xy.dat")
@@ -36,7 +35,7 @@ public class RangeSet
   /**
    * @return Returns the rangeSetData.
    */
-  public Vector getRangeSetData()
+  public Vector getRangeSetData( )
   {
     return m_rangeSetData;
   }
@@ -45,7 +44,7 @@ public class RangeSet
    * @param rangeSetData
    *          The rangeSetData to set.
    */
-  public void setRangeSetData( Vector rangeSetData )
+  public void setRangeSetData( Vector<Vector<Double>> rangeSetData )
   {
     this.m_rangeSetData = rangeSetData;
   }
@@ -53,7 +52,7 @@ public class RangeSet
   /**
    * @return Returns the name of the rangeSetDataFile.
    */
-  public String getRangeSetDataFile()
+  public String getRangeSetDataFile( )
   {
     return m_rangeSetDataFile;
   }
@@ -68,50 +67,54 @@ public class RangeSet
   }
 
   /**
+   * Gernots Remarks on Grids: TODO: Move this to a utility class
+   * 
    * @return the minValue of the rangeSetData
    */
-  public double getMinValue()
+  public double getMinValue( )
   {
     double min = Double.MAX_VALUE;
     for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      Vector rowData = (Vector)m_rangeSetData.get( i );
+      Vector rowData = m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
         {
-          double actualValue = ( (Double)rowData.get( j ) ).doubleValue();
+          double actualValue = ((Double) rowData.get( j )).doubleValue();
           if( actualValue < min )
           {
             min = actualValue;
           }
         }
-      }//for j
-    }//for i
+      }// for j
+    }// for i
     return min;
   }
 
   /**
+   * Gernots Remarks on Grids: TODO: Move this to a utility class
+   * 
    * @return the maxValue of the rangeSetData
    */
-  public double getMaxValue()
+  public double getMaxValue( )
   {
     double max = Double.MIN_VALUE;
     for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      Vector rowData = (Vector)m_rangeSetData.get( i );
+      Vector rowData = m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
         {
-          double actualValue = ( (Double)rowData.get( j ) ).doubleValue();
+          double actualValue = ((Double) rowData.get( j )).doubleValue();
           if( actualValue > max )
           {
             max = actualValue;
           }
         }
-      }//for j
-    }//for i
+      }// for j
+    }// for i
     return max;
   }
 }
