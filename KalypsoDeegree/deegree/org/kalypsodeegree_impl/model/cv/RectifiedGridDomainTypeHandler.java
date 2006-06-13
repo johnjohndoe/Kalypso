@@ -132,18 +132,18 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
     String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
     double[] low = new double[lows.length];
     for( int i = 0; i < low.length; i++ )
-    {
       low[i] = Double.parseDouble( lows[i] );
-    }
+
     System.out.println( low[0] + " " + low[1] );
+    
     Node n_high = ((Element) node_gridEnv).getElementsByTagNameNS( NSRGC, "high" ).item( 0 );
     String[] highs = n_high.getFirstChild().getNodeValue().trim().split( " " );
     double[] high = new double[highs.length];
     for( int i = 0; i < high.length; i++ )
-    {
       high[i] = Double.parseDouble( highs[i] );
-    }
+
     System.out.println( high[0] + " " + high[1] );
+    
     GridRange gridRange = new GridRange_Impl( low, high );
 
     Node n_origin = ((Element) node_rg).getElementsByTagNameNS( NSRGC, "origin" ).item( 0 );
