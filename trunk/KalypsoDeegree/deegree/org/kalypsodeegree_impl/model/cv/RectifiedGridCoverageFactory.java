@@ -18,8 +18,15 @@ public class RectifiedGridCoverageFactory
    */
   public static RectifiedGridCoverage createRectifiedGridCoverage( Feature feat )
   {
+    // Gernots Remarks on Grids: TODO: directly work on the RectifiedGridCoverageMember - Feature
+    // do not suppose its the root feature
+
     Feature feat_rectifiedGridCoverage = (Feature) feat.getProperty( "RectifiedGridCoverageMember" );
+
+    // Gernots Remarks on Grids: TODO: this probably won't work, because the GridDomain is now parsed via the binding
+    // types
     RectifiedGridDomain rgDomain = (RectifiedGridDomain) feat_rectifiedGridCoverage.getProperty( "rectifiedGridDomain" );
+
     RangeSet rangeSet = (RangeSet) feat_rectifiedGridCoverage.getProperty( "rangeSet" );
     RectifiedGridCoverage gridCoverage = new RectifiedGridCoverage( rgDomain, rangeSet );
     return gridCoverage;
