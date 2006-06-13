@@ -50,7 +50,7 @@
 			<!-- 
 			results for WATERLEVEL mode -->
 			<output id="LengthSection" path="${result.path.aktuell}/laengsschnitt.txt" relativeToCalcCase="true" />
-			<output id="LengthSectionObs" path="${result.path.aktuell}/laengsschnitt.gml" relativeToCalcCase="true" />
+			<output id="LengthSectionGml" path="${result.path.aktuell}/laengsschnitt.gml" relativeToCalcCase="true" />
 			<output id="Bruchkanten" path="${result.path.aktuell}/bruchkanten.gml" relativeToCalcCase="true" />
 			
 			<!-- 
