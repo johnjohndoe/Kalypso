@@ -52,18 +52,23 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderMap;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -75,6 +80,8 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile
@@ -84,6 +91,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ProfileFeatureFactory implements IWspmConstants
 {
   public final static QName QN_PROF_PROFILE = new QName( NS_WSPMPROF, "Profile" );
+
+  public static final String URN_PHENOMENON_BUILDING = "urn:ogc:phenomenon:wspm:building:";
 
   private ProfileFeatureFactory( )
   {
@@ -97,7 +106,7 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  public static void toFeature( final IProfil profile, final Feature targetFeature )
+  public static void toFeature( final IProfil profile, final Feature targetFeature ) throws GMLSchemaException
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
@@ -197,28 +206,19 @@ public class ProfileFeatureFactory implements IWspmConstants
       ObservationFeatureFactory.toFeature( tableObs, targetFeature );
 
       //
-      // Buildings
+      // Building
       //
-      // final IProfilBuilding building = profile.getBuilding();
-      // final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
-      // final BUILDING_TYP typ = building.getTyp();
+      final QName memberQName = new QName( NS_WSPMPROF, "member" );
+      final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
+      memberFeatures.clear(); // delete existing features
 
-      // final QName memberQName = new QName( NS_WSPMPROF, "member" );
-      // final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
-      // // delete existing features
-      // memberFeatures.clear();
-
-      //
-      // set station
-      //
-      // final Feature stationFeature = FeatureHelper.getSubFeature( targetFeature, new QName( NS_WSPMPROF, "station" )
-      // );
-      // ignore for now
-
-      //
-      // read buildings & markers
-      //
-
+      final IProfilBuilding building = profile.getBuilding();
+      if( building != null )
+      {
+        final IObservation<TupleResult> buildingObs = observationFromBuilding( building );
+        final Feature buildingFeature = FeatureHelper.addFeature( targetFeature, memberQName, new QName( NS.OM, "Observation" ) );
+        ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
+      }
     }
     catch( final ProfilDataException e )
     {
@@ -226,6 +226,33 @@ public class ProfileFeatureFactory implements IWspmConstants
 
       // TODO: handle exceptions
     }
+  }
+
+  private static IObservation<TupleResult> observationFromBuilding( IProfilBuilding building ) throws ProfilDataException
+  {
+    final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
+
+    final TupleResult result = new TupleResult();
+    final IRecord record = result.createRecord();
+    result.add( record );
+
+    int compCount = 0;
+    for( final BUILDING_PROPERTY bp : buildingProperties )
+    {
+      final ValueComponent component = new ValueComponent( compCount++, bp.name(), "", new QName( NS.XSD_SCHEMA, "double" ), 0.0, "" );
+      result.addComponent( component );
+      record.setValue( component, building.getValueFor( bp ) );
+    }
+
+    final List<MetadataObject> metaList = new ArrayList<MetadataObject>();
+
+    final BUILDING_TYP typ = building.getTyp();
+    final String phenomenon = URN_PHENOMENON_BUILDING + typ.name();
+
+    final IObservation<TupleResult> observation = new Observation<TupleResult>( typ.toString(), "Bauwerk-Observation", result, metaList );
+    observation.setPhenomenon( phenomenon );
+
+    return observation;
   }
 
   private static ValueComponent componentForPointProperty( final int pos, final IProfil profile, final POINT_PROPERTY pp )
@@ -280,6 +307,15 @@ public class ProfileFeatureFactory implements IWspmConstants
     //
     final Double property = (Double) profileFeature.getProperty( new QName( NS_WSPMPROF, "station" ) );
     profil.setStation( property == null ? Double.NaN : property.doubleValue() );
+
+    //
+    // Building
+    //
+    // REMARK: handle buildings before table, because the setBuilding method resets the
+    // corresponding table properties.
+    final Feature buildingFeature = (Feature) FeatureHelper.getFirstProperty( profileFeature, new QName( NS_WSPMPROF, "member" ) );
+    if( buildingFeature != null )
+      profil.setBuilding( buildingFromFeature( buildingFeature ) );
 
     //
     // Tabelle
@@ -364,5 +400,26 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
 
     return profil;
+  }
+
+  private static IProfilBuilding buildingFromFeature( final Feature buildingFeature ) throws ProfilDataException
+  {
+    final IObservation<TupleResult> buildingObs = ObservationFeatureFactory.toObservation( buildingFeature );
+
+    final String phenomenon = buildingObs.getPhenomenon();
+    final BUILDING_TYP bType = BUILDING_TYP.valueOf( phenomenon.substring( URN_PHENOMENON_BUILDING.length() ) );
+
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( bType );
+
+    final TupleResult result = buildingObs.getResult();
+    final IRecord record = result.get( 0 );
+    for( final IComponent component : result.getComponents() )
+    {
+      final BUILDING_PROPERTY bProperty = BUILDING_PROPERTY.valueOf( component.getName() );
+      final Object value = record.getValue( component );
+      building.setValue( bProperty, value );
+    }
+
+    return building;
   }
 }

@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -196,9 +197,17 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final IProfil profil = m_pem.getProfil();
     if( profil != null && m_feature != null )
     {
-      ProfileFeatureFactory.toFeature( profil, m_feature );
-      // use m_mep as ModellEventProvider to remember where the event came from
-      m_feature.getWorkspace().fireModellEvent( new ModellEvent( m_mep, ModellEvent.FEATURE_CHANGE ) );
+      try
+      {
+        ProfileFeatureFactory.toFeature( profil, m_feature );
+        // use m_mep as ModellEventProvider to remember where the event came from
+        m_feature.getWorkspace().fireModellEvent( new ModellEvent( m_mep, ModellEvent.FEATURE_CHANGE ) );
+      }
+      catch( final GMLSchemaException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 

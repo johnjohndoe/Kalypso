@@ -105,10 +105,10 @@ public class PlainProfil implements IProfilConstants, IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty )
-
   {
     if( pointProperty == null )
       return null;
+    
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
 
     for( POINT_PROPERTY pd : depending )
@@ -367,7 +367,6 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException
   {
-
     final IProfilBuilding oldBuilding = m_building;
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding) m_building).removeProfilProperties( this );
@@ -433,7 +432,7 @@ public class PlainProfil implements IProfilConstants, IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setBuilding(org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP)
    */
-  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
+  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException 
   {
     if( m_building != null )
       removeBuilding();
