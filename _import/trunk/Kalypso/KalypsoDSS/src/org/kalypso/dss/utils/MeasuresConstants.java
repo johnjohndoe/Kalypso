@@ -113,22 +113,74 @@ public class MeasuresConstants
   public static final String DESINGAREA_GEOM_PROP = "gebiet";
 
   /** XPlanung (BPlan) */
-  
+
   public static final String XPLANUNG_GEOM_PROP = "position";
 
   public static final String XPLANUNG_GRZ_PROP = "GRZ";
-  
+
   public static final String XPLANUNG_ART_BAULICHNUTZ_PROP = "artDerBaulichenNutzung";
 
+  public static final String XPLANUNG_BAUGEBIET_FT = "BaugebietsFlaechenTeil";
+
   public static final String XPLANUNG_GEMEINBED_FT = "GemeinbedarfsFlaeche";
-  
+
   public static final String XPLANUNG_VERKEHRSFMITBESZWECK_FT = "VerkehrsflaecheBesondererZweckbestimmung";
 
   public static final String XPLANUNG_VERKEHRSFL_FT = "VerkehrsFlaeche";
-  
+
   public static final String XPLANUNG_GRUENFL_FT = "GruenFlaeche";
 
-  public static final String XPLANUNG_BAUGEBIET_FT = "BaugebietsFlaechenTeil";
-  
-  
+  public static final String XPLANUNG_RWG_PROP = "ReinesWohngebiet";
+
+  public static final String XPLANUNG_AWG_PROP = "AllgWohngebiet";
+
+  public static final String XPLANUNG_BWG_PROP = "BesonderesWohngebiet";
+
+  public static final String XPLANUNG_DG_PROP = "Dorfgebiet";
+
+  public static final String XPLANUNG_MG_PROP = "Mischgebiet";
+
+  public static final String XPLANUNG_KG_PROP = "Kerngebiet";
+
+  public static final String XPLANUNG_GG_PROP = "Gewerbegebiet";
+
+  public static final String XPLANUNG_IG_PROP = "Industriegebiet";
+
+  public static final String XPLANUNG_SGE_PROP = "SondergebietErholung";
+
+  public static final String XPLANUNG_SGS_PROP = "SondergebietSonst";
+
+  public static final String XPLANUNG_KS_PROP = "Kleinsiedlungsgebiet";
+
+  // default landuse type
+  public static final String XPLANUNG_UNDEFINED_LANDUSE_NAME = "20";
+
+  // Landuse type like Baugebiete
+  public static final String XPLANUNG_GEMEINBED_LANDUSE_NAME = XPLANUNG_UNDEFINED_LANDUSE_NAME;
+
+  // Landuse type Straßen- und Wegeflächen
+  public static final String XPLANUNG_VERKEHRSFL_LANDUSE_NAME = "19";
+
+  // Landuse type Grün- und Parkanlagen
+  public static final String XPLANUNG_GRUENFL_LANDUSE_NAME = "12";
+
+  // Lanuse type Hochhaus, Einzelhaus, Industrie, Gewerbe, etc.
+  public static final String XPLANUNG_IG_LANDUSE_NAME = "BPlan_10";
+
+  public static final String XPLANUNG_SG_LANDUSE_NAME = "BPlan_08";
+
+  public static final String XPLANUNG_MG_LANDUSE_NAME = "BPlan_07";
+
+  public static final String XPLANUNG_DG_LANDUSE_NAME = "BPlan_06";
+
+  public static final String XPLANUNG_BWG_LANDUSE_NAME = "BPlan_05";
+
+  public static final String XPLANUNG_AWG_LANDUSE_NAME = "BPlan_04";
+
+  public static final String XPLANUNG_RWG_LANDUSE_NAME = "BPlan_03";
+
+  public static final String XPLANUNG_KS_LANDUSE_NAME = "BPlan_02";
+
+  public static final String XPLANUNG_KG_LANDUSE_NAME = "BPlan_01";
+
 }

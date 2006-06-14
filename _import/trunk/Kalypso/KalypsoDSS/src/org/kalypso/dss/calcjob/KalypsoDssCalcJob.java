@@ -87,11 +87,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.SetPropertyFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author kuepfer
@@ -189,6 +189,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
       final CalcDataProviderDecorater rrmInputProvider = iterator.next();
       monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
+      // insert measures defined from the client application
       mergeMeasures( inputProvider, rrmInputProvider, logger );
       monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
       final NaModelCalcJob calcJob = new NaModelCalcJob();
@@ -204,7 +205,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
   private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
-    boolean writeNewModelFile = true;
+    boolean writeNewModelFile = false;
     boolean writeNewHydrotopFile = false;
     // get the urls for measures and model files
 
@@ -323,17 +324,15 @@ public class KalypsoDssCalcJob implements ISimulation
 
   private void insertPlanningMeasure( URL measuresPlanningURL, GMLWorkspace hydrotopWorkspace, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws Exception
   {
-    // TODO finish insert method
+    final URL paramURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
+    final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL );
     final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL );
-    final Feature rootFeature = planningWorkspace.getRootFeature();
-    final IFeatureType rootFT = rootFeature.getFeatureType();
     final IGMLSchema planningSchema = planningWorkspace.getGMLSchema();
-    final IFeatureType gruenflFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRUENFL_FT ) );
-    final Feature[] gruenflFE = planningWorkspace.getFeatures( gruenflFT );
-    final QName geomXplan = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEOM_PROP );
-    final QName geomHydro = new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM );
-    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
-    // adjust coordinate system
+    final QName qNameGeom = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEOM_PROP );
+    final QName qNameGRZ = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRZ_PROP );
+    // get all hydros in the model
+    FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    // transform planning workspace coordinate system to match coordinate system of hydrotop files
     if( hydroList.size() > 0 )
     {
       final Feature feature = (Feature) hydroList.get( 0 );
@@ -342,40 +341,69 @@ public class KalypsoDssCalcJob implements ISimulation
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       planningWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
-    int c_success = 0;
-    int c_error = 0;
+    // handel GruenFlaech features
+    final IFeatureType gruenflFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRUENFL_FT ) );
+    final Feature[] gruenflFE = planningWorkspace.getFeatures( gruenflFT );
     for( int i = 0; i < gruenflFE.length; i++ )
     {
       final Feature gfFE = gruenflFE[i];
-      final GM_Object xplanGeom = (GM_Object) gfFE.getProperty( geomXplan );
-      final Geometry xplanJTSGeom = JTSAdapter.export( xplanGeom );
-      final GM_Envelope envGfFE = xplanGeom.getEnvelope();
-      final List hydroInEnv = hydroList.query( envGfFE, null );
-      for( Iterator iter = hydroInEnv.iterator(); iter.hasNext(); )
-      {
-        final Feature hydro = (Feature) iter.next();
-        final GM_Object geomHyd = (GM_Object) hydro.getProperty( geomHydro );
-        final Geometry hydroJTSGeom = JTSAdapter.export( geomHyd );
-
-        Geometry intersection = null;
-        try
-        {
-          intersection = xplanJTSGeom.intersection( hydroJTSGeom );
-          if( intersection.isEmpty() )
-            continue;
-          c_success++;
-        }
-        catch( Exception e )
-        {
-          c_error++;
-        }
-        final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydro, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
-        final double areaIntersection = intersection.getArea();
-        final double areaHydro = hydroJTSGeom.getArea();
-      }
-
+      setNewLandUseAndCorrSealingFactor( gfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_GRUENFL_LANDUSE_NAME, logger );
     }
+    // handel VerkehrsFlaech features
+    final IFeatureType verkehrsFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFL_FT ) );
+    final Feature[] verkersFEs = planningWorkspace.getFeatures( verkehrsFlaechFT );
+    for( int i = 0; i < verkersFEs.length; i++ )
+    {
+      final Feature vfFE = verkersFEs[i];
+      setNewLandUseAndCorrSealingFactor( vfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
+    }
+    // handel VerkehrsflaecheBesondererZweckbestimmung features
+    final IFeatureType verkehrsflaechBesZweckFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFMITBESZWECK_FT ) );
+    final Feature[] verkehrsflaechBesZweckFEs = planningWorkspace.getFeatures( verkehrsflaechBesZweckFT );
+    for( int i = 0; i < verkehrsflaechBesZweckFEs.length; i++ )
+    {
+      final Feature vfBZbFE = verkehrsflaechBesZweckFEs[i];
+      setNewLandUseAndCorrSealingFactor( vfBZbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
+    }
+    // handel GemeinbedarfsFlaeche features
+    final IFeatureType gemeinBedFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEMEINBED_FT ) );
+    final Feature[] gemeinBedFlaechFEs = planningWorkspace.getFeatures( gemeinBedFlaechFT );
+    for( int i = 0; i < gemeinBedFlaechFEs.length; i++ )
+    {
+      final Feature gbFE = gemeinBedFlaechFEs[i];
+      setNewLandUseAndCorrSealingFactor( gbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_GEMEINBED_LANDUSE_NAME, logger );
+    }
+    // handel BaugebietsFlaechenTeil (Baugebiete) features
+    final IFeatureType bauGebFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) );
+    final Feature[] bauGebFEs = planningWorkspace.getFeatures( bauGebFT );
+    for( int i = 0; i < bauGebFEs.length; i++ )
+    {
+      final Feature bgFE = bauGebFEs[i];
+      final Object artBaulicherNutzung = bgFE.getProperty( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_ART_BAULICHNUTZ_PROP ) );
+      final String type;
+      if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_RWG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_RWG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_AWG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_AWG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_BWG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_BWG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_DG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_DG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_GG_PROP ) || artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_IG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_IG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_KG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_KG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_MG_PROP ) )
+        type = MeasuresConstants.XPLANUNG_MG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_SGE_PROP ) || artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_SGS_PROP ) )
+        type = MeasuresConstants.XPLANUNG_SG_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_KS_PROP ) )
+        type = MeasuresConstants.XPLANUNG_KS_LANDUSE_NAME;
+      else
+        type = MeasuresConstants.XPLANUNG_UNDEFINED_LANDUSE_NAME;
 
+      setNewLandUseAndCorrSealingFactor( bgFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, type, logger );
+    }
   }
 
   /**
@@ -434,12 +462,13 @@ public class KalypsoDssCalcJob implements ISimulation
 
       final GM_Object measureGEOM = (GM_Object) sealFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_GEOMETRY_PROP ) );
       final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
-      // final double areaMeasure = jtsMeasureGEOM.getArea();
       final GM_Envelope selENV = sealFE.getEnvelope();
       final List<JMSpatialIndex> hydrosInENV = hydroList.query( selENV, null );
       for( Iterator iter = hydrosInENV.iterator(); iter.hasNext(); )
       {
         final Feature hydroFE = (Feature) iter.next();
+        final double originalSealingFactor = getSealingFactorForHydrotop( hydroFE, paraWorkspace ); // TODO abfangen
+        // wenn
 
         final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ) );
         final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
@@ -467,7 +496,6 @@ public class KalypsoDssCalcJob implements ISimulation
          * To account for the change of the old and new sealing factor we have to calculate the new correction factor,
          * because we can not change the original sealing factor in the parameter.gml.
          */
-        final double originalSealingFactor = getSealingForHydrotop( hydroFE, paraWorkspace ); // TODO abfangen wenn
         // sealHydro = 0
         // sonst infinity
         final double sealingAreaIntersection = areaIntersection * sealMeasure * corrSealingHydroOld;
@@ -506,7 +534,7 @@ public class KalypsoDssCalcJob implements ISimulation
    * @param paramWorkspace
    *          workspace containing the parameter-gml
    */
-  private double getSealingForHydrotop( final Feature hydroFE, final GMLWorkspace paramWorkspace )
+  private double getSealingFactorForHydrotop( final Feature hydroFE, final GMLWorkspace paramWorkspace )
   {
     final Object property = hydroFE.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) );
     final FeatureList features = (FeatureList) paramWorkspace.getFeatureFromPath( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
@@ -588,7 +616,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
   }
 
-  private void insertSwaleTrenchMeasure( final URL measuresMrsURL, GMLWorkspace naModelWorkspace, GMLWorkspace hydrotopWorkspace, final URL designAreaURL, final Logger logger ) throws Exception
+  private void insertSwaleTrenchMeasure( final URL measuresMrsURL, final GMLWorkspace naModelWorkspace, final GMLWorkspace hydrotopWorkspace, final URL designAreaURL, final Logger logger ) throws Exception
   {
     try
     {
@@ -704,18 +732,12 @@ public class KalypsoDssCalcJob implements ISimulation
     final Feature designAreaFe = (Feature) designAreaList.iterator().next();
     final GM_Object designAreaGEOM = (GM_Object) designAreaFe.getProperty( new QName( MeasuresConstants.NS_DESIGNAREA, MeasuresConstants.DESINGAREA_GEOM_PROP ) );
     final Geometry designAreaJTS = JTSAdapter.export( designAreaGEOM );
-    // int points = mrsJTS.getNumPoints();
-    // Point point1 = mrsJTS.getStartPoint();
-    // Point point2 = mrsJTS.getPointN( 2 );
-    // Point pointN = mrsJTS.getEndPoint();
-    // Point pointNminus1 = mrsJTS.getPointN( points - 1 );
-
     // calculate buffer width
     final double totalLength = mrsJTS.getLength();
     final double area = designAreaJTS.getArea();
     final double bufferWidth = area * percentage.doubleValue() / 100 / totalLength / 2;
 
-    // cut off half circle at the end of the
+    // the buffered area is to large, this inaccuracy is neclegted
     final Geometry bufferedArea = mrsJTS.buffer( bufferWidth );
 
     final GM_Object geomBufferdArea = JTSAdapter.wrap( bufferedArea );
@@ -729,23 +751,6 @@ public class KalypsoDssCalcJob implements ISimulation
       if( hydGeomInEnv.intersects( bufferedArea ) )
         hydFe.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ), NaModelConstants.HYDRO_ENUM_HYDTYPE_SWALETRENCH );
     }
-  }
-
-  private double getBufferMask( Point p11, Point p12, Point p21, Point p22, double buffer )
-  {
-    double x11 = p11.getCoordinate().x;
-    double x12 = p12.getCoordinate().x;
-    double y11 = p11.getCoordinate().y;
-    double y12 = p12.getCoordinate().y;
-    double slope1 = y11 - y12 / x11 - x12;
-
-    double x21 = p21.getCoordinate().x;
-    double x22 = p22.getCoordinate().x;
-    double y21 = p21.getCoordinate().y;
-    double y22 = p22.getCoordinate().y;
-    double slope2 = y21 - y22 / x21 - x22;
-
-    return 1;
   }
 
   /**
@@ -765,5 +770,109 @@ public class KalypsoDssCalcJob implements ISimulation
     map.put( timeSeriesLinkPT, new String() );
     final SetPropertyFeatureVisitor visitor = new SetPropertyFeatureVisitor( map );
     modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  private void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, final String landUseProp, final Logger logger ) throws Exception
+  {
+    // init counter
+    int c_success = 0;
+    int c_error = 0;
+    // find Landuse for measure
+    final IGMLSchema parameterSchema = paraWorkspace.getGMLSchema();
+    final IFeatureType landUseFT = parameterSchema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_NAME ) );
+    final Feature[] landUseFEs = paraWorkspace.getFeatures( landUseFT );
+    final QName qNameLandUse = new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP );
+    Feature landUseFE = null;
+    for( int i = 0; i < landUseFEs.length; i++ )
+    {
+      landUseFE = landUseFEs[i];
+      final Object property = landUseFE.getProperty( qNameLandUse );
+      if( landUseProp.equals( property ) )
+        break;
+    }
+    // get all hydrotopes in workspace
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
+    // do the intersecting business
+    final GM_Object measureGEOM = (GM_Object) planningMeasureFE.getProperty( sealingGeom );
+    final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
+    final QName qNameHydroGeom = new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM );
+    final List query = hydroList.query( measureGEOM.getEnvelope(), null );
+    final Iterator iter = query.iterator();
+    while( iter.hasNext() )
+    {
+      final Feature hydroFE = (Feature) iter.next();
+      if( hydroFE == null )
+        continue;
+      final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( qNameHydroGeom );
+      final CS_CoordinateSystem storedCrs = hydroGEOM.getCoordinateSystem();
+      final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
+      Geometry intersection = null;
+      Geometry difference = null;
+      try
+      {
+        intersection = jtsMeasureGEOM.intersection( jtsHydroGEOM );
+        // keep the diffrence from the original hydrotop
+        difference = jtsHydroGEOM.difference( jtsMeasureGEOM );
+        if( intersection.isEmpty() )
+          continue;
+        c_success++;
+      }
+      catch( Exception e )
+      {
+        c_error++;
+      }
+      // get hydroCollection and add new hydroFE to collection
+      final Feature hydroRootFeature = hydrotopWorkspace.getRootFeature();
+      final IFeatureType rootFT = hydroRootFeature.getFeatureType();
+      final IRelationType linkPropHydro = (IRelationType) rootFT.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_MEMBER ) );
+      final IFeatureType hydroFT = hydrotopWorkspace.getFeatureTypeFromPath( NaModelConstants.HYDRO_MEMBER );
+      final Feature newHydroFE = hydrotopWorkspace.createFeature( hydroRootFeature, hydroFT );
+      hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
+      // copy all propterties from the intersected hydrotop to the newly created hydrotop
+      FeatureHelper.copySimpleProperties( hydroFE, newHydroFE );
+      if( !difference.isEmpty() )
+      {
+        final GM_Object geomWithOldParam = JTSAdapter.wrap( difference );
+        // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
+        geomWithOldParam.setCoordinateSystem( storedCrs );
+        // set the inverse Geometry of the intersection at the old hydrotop FE
+        hydroFE.setProperty( qNameHydroGeom, GeometryUtilities.ensureIsMultiPolygon( geomWithOldParam ) );
+      }
+      // final double grzMeasureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, 0.5d );
+      // final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, new QName(
+      // NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
+      // final double areaIntersection = intersection.getArea();
+      // TODO check for numerical best order, and account for corrFactor from hydrotop element
+      // remark: it does not matter, if in next loop the same hydrotop again is affected
+
+      /**
+       * The corrSealingHydroOld is the fixed correction factor from the calibrated model. If the measure dose not
+       * affect the whole hydrotop then a new overall sealing factor as a mean value has to be calculated. <br>
+       * To account for the change of the old and new sealing factor we have to calculate the new correction factor,
+       * because we can not change the original sealing factor in the parameter.gml.
+       */
+      // final double originalSealingFactor = getSealingFactorForHydrotop( hydroFE, paraWorkspace );
+      // final double sealingAreaIntersection = areaIntersection * grzMeasureSealingFactor * corrSealingHydroOld;
+      // final double sealingAreaOld = areaIntersection * originalSealingFactor * corrSealingHydroOld;
+      // final double virtualSealingFactor = (sealingAreaIntersection + sealingAreaOld) / areaIntersection;
+      // double corrSealingHydroNew = virtualSealingFactor / (originalSealingFactor * corrSealingHydroOld);
+      // double corrSealingHydroNew = grzMeasureSealingFactor / originalSealingFactor;
+      // if( Double.isInfinite( corrSealingHydroNew ) || Double.isNaN( corrSealingHydroNew ) )
+      // corrSealingHydroNew = 1.0d;
+      // override copied props that are not valid anymore
+      final GM_Object geomWithNewMeasure = JTSAdapter.wrap( intersection );
+      // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
+      geomWithNewMeasure.setCoordinateSystem( storedCrs );
+      // set new properties for hydrotop
+      // newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR
+      // ), new Double( corrSealingHydroNew ) );
+      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
+      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ), new Double( intersection.getArea() ) );
+      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
+    }
+    if( c_error > 0 )
+      logger.info( "Fehler BPlan-Measure: " + c_error + " Fehler/" + (c_success + c_error) + " Total\n" );
+    else
+      logger.info( "BPlan-Maßnahme" + planningMeasureFE.getClass().toString() + " erfolgreich eingefügt!" );
   }
 }
