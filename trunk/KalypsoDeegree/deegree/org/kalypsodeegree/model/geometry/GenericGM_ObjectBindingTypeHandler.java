@@ -42,10 +42,8 @@ package org.kalypsodeegree.model.geometry;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
@@ -76,7 +74,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnMarshallResultEater eater = new UnMarshallResultEater()
     {
@@ -99,7 +97,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
       }
     };
 
-    super.unmarshal( xmlReader, urlResolver, eater, gmlVersion );
+    super.unmarshal( xmlReader, context, eater, gmlVersion );
   }
 
   /**

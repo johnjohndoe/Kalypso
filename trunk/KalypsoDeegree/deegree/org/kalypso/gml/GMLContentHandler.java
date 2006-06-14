@@ -551,4 +551,9 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
   {
     return m_schemaLocationString;
   }
+
+  public URL getContext( )
+  {
+    return m_context;
+  }
 }
