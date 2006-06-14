@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Stack;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -56,6 +56,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -105,10 +106,13 @@ public class PropertyParser
     final String gmlVersion = parentFE.getFeatureType().getGMLSchema().getGMLVersion();
     // TODO hack, check if there is a better way to set the attributes (maybe in IMarshallingTypeHandler.unmarshall() ?)
     if( typeHandler.getClass() == GenericBindingTypeHandler.class )
-      ((GenericBindingTypeHandler) typeHandler).setAttributes( atts );
-
-    final UrlResolver urlResolver = null;
+      ((GenericBindingTypeHandler)typeHandler).setAttributes( atts );
+    
+    URL context = null;
     final ContentHandler orgCH = xmlReader.getContentHandler();
+    if( orgCH instanceof GMLContentHandler )
+      context = ((GMLContentHandler)orgCH).getContext();
+    
     final UnMarshallResultEater resultEater = new UnMarshallResultEater()
     {
       public void eat( final Object value ) throws GMLSchemaException
@@ -140,7 +144,7 @@ public class PropertyParser
 
     try
     {
-      typeHandler.unmarshal( xmlReader, urlResolver, resultEater, gmlVersion );
+      typeHandler.unmarshal( xmlReader, context, resultEater, gmlVersion );
     }
     catch( TypeRegistryException e )
     {
