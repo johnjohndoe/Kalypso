@@ -42,7 +42,9 @@ package org.kalypso.workflow.ui.browser.urlaction;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.core.resources.FindFirstFileVisitor;
@@ -95,5 +97,4 @@ public class URLActionSelectEditor extends AbstractURLAction
     }
     return true;
   }
-
 }
