@@ -9,75 +9,143 @@
           target: calculationProperties                      Initializes properties from .calculation
          ================================= -->
 	<target name="calculationProperties">
+		<echo message="Result path: ${result.path}" />
+		<echo message="Calc XPath: ${calc.xpath}" />
+
+		<property name="result.dir" value="${calc.dir}/${result.path}" />
+
+		<!-- der Result path ist immer relativ zum Modellverzeichnis -->
+		<property name="result.path.aktuell" value="${result.path}/_aktuell" />
+		<property name="result.path.aktuell.logs" value="${result.path.aktuell}/Log-Dateien" />
+		<property name="result.path.aktuell.data" value="${result.path.aktuell}/Daten" />
+		<property name="result.dir.aktuell" value="${result.dir}/_aktuell" />
 	</target>
 
 	<!-- ================================= 
           target: runCalculation              
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
-		
+		<antcall target="runWspmCalculation" />
+		<antcall target="runGmlProcessConstDelaunay" />
+		<antcall target="copyResults" />
+	</target>
+	<!-- ================================= 
+          target: runWspmCalculation              
+         ================================= -->
+	<target name="runWspmCalculation" description="Führt die WSPM-Berechnung durch" depends="calculationProperties">
 		<property name="eps.thinning" value="0.05" />
-
-		<echo message="Result path: ${result.path}" />
-		<echo message="Calc XPath: ${calc.xpath}" />
 		<echo message="Eps for breakline thinning: ${eps.thinning}" />
 
-		<property name="result.dir" value="${calc.dir}/${result.path}" />
-
-		<!-- der Result path ist immer relativ zum Modellverzeichnis -->
-		<property name="result.path.aktuell" value="${result.path}/#aktuell" />
-		<property name="result.path.aktuell.logs" value="${result.path.aktuell}/Log-Dateien" />
-		<property name="result.dir.aktuell" value="${result.dir}/#aktuell" />
 
 		<kalypso.runCalculation typeID="WspmTuhhV1.0" calcCaseFolder="${calc.path}">
-			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+			<!-- Dateien nicht relativ zur Rechenvariante -->
+			<input id="OVW_MAP_GENERAL" path=".model/templates/Übersicht_allg.gmt" relativeToCalcCase="false" optional="true" />
+
+			<!-- Dateien relativ zur Rechenvariante -->
 			<input id="MODELL_GML" path="wspmTuhhModel.gml" relativeToCalcCase="true" />
 			<input id="CALC_PATH" path="${calc.xpath}" />
 			<input id="EPS_THINNING" path="${eps.thinning}" />
-			
-		    <!-- 
+			<input id="OVW_MAP_SPECIAL" path="Vorlagen/Übersicht_spez.gmt" relativeToCalcCase="true" optional="true" />
+
+			<!-- 
 		    Output des Rechenkerns/CalcJobs -->
 			<output id="SimulationLog" path="${result.path.aktuell.logs}/simulation.log" relativeToCalcCase="true" />
 			<output id="KernelLog" path="${result.path.aktuell.logs}/kernel.log" relativeToCalcCase="true" />
 			<output id="KernelErr" path="${result.path.aktuell.logs}/kernel.err" relativeToCalcCase="true" />
 
-		    <!-- 
+			<!-- 
 		    results for all modi -->
 			<output id="ControlFile" path="${result.path.aktuell.logs}/Kontroll.log" relativeToCalcCase="true" />
-			<output id="BeiwerteAus" path="${result.path.aktuell}/Beiwerte.aus" relativeToCalcCase="true" />
-			<output id="LambdaI" path="${result.path.aktuell}/lambda_i.txt" relativeToCalcCase="true" />
+			<output id="BeiwerteAus" path="${result.path.aktuell.data}/Beiwerte.aus" relativeToCalcCase="true" />
+			<output id="LambdaI" path="${result.path.aktuell.data}/lambda_i.txt" relativeToCalcCase="true" />
 
 			<!-- 
 			results for WATERLEVEL mode -->
-			<output id="LengthSection" path="${result.path.aktuell}/laengsschnitt.txt" relativeToCalcCase="true" />
-			<output id="LengthSectionGml" path="${result.path.aktuell}/laengsschnitt.gml" relativeToCalcCase="true" />
-			<output id="Bruchkanten" path="${result.path.aktuell}/bruchkanten.gml" relativeToCalcCase="true" />
-			
+			<output id="LengthSectionTab" path="${result.path.aktuell}/Längsschnitt.ott" relativeToCalcCase="true" />
+			<output id="LengthSectionDiag" path="${result.path.aktuell}/Längsschnitt.odt" relativeToCalcCase="true" />
+			<output id="OvwMap" path="${result.path.aktuell}/Karte.gmt" relativeToCalcCase="true" />
+
+			<output id="LengthSection" path="${result.path.aktuell.data}/Längsschnitt.txt" relativeToCalcCase="true" />
+			<output id="LengthSectionGml" path="${result.path.aktuell.data}/Längsschnitt.gml" relativeToCalcCase="true" />
+			<output id="Bruchkanten" path="${result.path.aktuell.data}/Bruchkanten.gml" relativeToCalcCase="true" />
+			<output id="Modellgrenzen" path="${result.path.aktuell.data}/Modellgrenzen.gml" relativeToCalcCase="true" />
+			<output id="Ueberschwemmungslinie" path="${result.path.aktuell.data}/Überschwemmungslinie.gml" relativeToCalcCase="true" />
+
 			<!-- 
 			results for WATERLEVEL and BANKFUL UNIFORM mode -->
 			<output id="resultList" path="${result.path.aktuell}/Ergebnis.list" relativeToCalcCase="true" />
-			
+
 			<!-- 
 			results for BANKFUL UNIFORM mode -->
-			<output id="bfLengthSection" path="${result.path.aktuell}/result.qb1" relativeToCalcCase="true" />
+			<output id="bfLengthSection" path="${result.path.aktuell.data}/result.qb1" relativeToCalcCase="true" />
 
 			<!-- 
 			results for BANKFUL NONUNIFORM mode -->
-			<output id="wqKalMil" path="${result.path.aktuell}/WQ_Tabelle.km" relativeToCalcCase="true" />
+			<output id="wqKalMil" path="${result.path.aktuell.data}/WQ_Tabelle.km" relativeToCalcCase="true" />
 			<output id="wqProProfil" path="${result.path.aktuell}/WQTabs" relativeToCalcCase="true" />
 			<output id="resultListsNonUni" path="${result.path.aktuell}/resultLists" relativeToCalcCase="true" />
 
 			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 			<clearAfterCalc path="${result.path.aktuell}" relativeToCalcCase="true" />
 		</kalypso.runCalculation>
+	</target>
 
-		<!-- copy results to timestamped dir-->
+	<!-- ================================= 
+          target: runGmlProcessConstDelaunay              
+         ================================= -->
+	<target name="runGmlProcessConstDelaunay" description="Führt eine Triangulation durch" depends="calculationProperties">
+		<kalypso.runCalculation typeID="KalypsoGmlProcesses.ConstraintDelaunayV1.0" calcCaseFolder="${calc.path}">
+			<!-- 
+	        Dateien relativ zur Rechenvariante  -->
+			<input id="BREAKLINES_GML" path="${result.path.aktuell.data}/Bruchkanten.gml" relativeToCalcCase="true" />
+			<input id="BREAKLINES_PATH" path="BreaklineCollection/breaklineMember/Breakline/geometry" />
+			<!-- "org.kalypso.model.wspmbreakline" -->
+
+			<!-- 
+	    Ergebnisse -->
+			<output id="ResultFilePoly" path="${result.path.aktuell.data}/triangle.poly" relativeToCalcCase="true" />
+			<output id="ResultFileEle" path="${result.path.aktuell.data}/triangle.ele" relativeToCalcCase="true" />
+			<output id="ResultFileGML" path="${result.path.aktuell.data}/triangle.gml" relativeToCalcCase="true" />
+
+			<!-- 
+	    Output des CalcJobs -->
+			<output id="SimulationLog" path="${result.path.aktuell.logs}/ConstraintDelaunay.log"  relativeToCalcCase="true"/>
+			<output id="KernelLog" path="${result.path.aktuell.logs}/ConstraintDelaunay.out"  relativeToCalcCase="true"/>
+			<output id="KernelErr" path="${result.path.aktuell.logs}/ConstraintDelaunay.err"  relativeToCalcCase="true"/>
+		</kalypso.runCalculation>
+	</target>
+
+	<!-- ================================= 
+          target: copyResults	copy results to timestamped dir             
+         ================================= -->
+	<target name="copyResults" depends="calculationProperties" description="Copies the results into a time-stamped folder.">
 		<tstamp>
-			<format property="now" pattern="yyyy.MM.dd#HH_mm_ss" />
+			<format property="now" pattern="yyyy.MM.dd__HH_mm_ss" />
 		</tstamp>
 		<property name="result.dir.time" value="${result.dir}/${now}" />
 		<copy todir="${result.dir.time}">
 			<fileset dir="${result.dir.aktuell}" includes="**/*" />
 		</copy>
 	</target>
+
 </project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
