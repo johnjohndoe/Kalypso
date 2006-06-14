@@ -195,4 +195,6 @@ public interface GM_Object
    * provide optimized proximity queries within for a distance . calvin added on 10/21/2003
    */
   boolean isWithinDistance( GM_Object gmo, double distance );
+
+  void setCoordinateSystem( CS_CoordinateSystem crs );
 }
