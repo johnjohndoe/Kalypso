@@ -17,8 +17,10 @@
 		
 		function digitalisieren()
 		{
-			kalypso://saveActiveGMT?;
+			kalypso://closeEditor?input=project:/.maps/Plangebiet_definieren.gmt&doSave=false;
 			kalypso://openURL?url=KONZEPTPHASE_BPLAN_ZEICHNEN.html;
+			kalyoso://setBBoxInGMT?urlGMTfrom=project:/.maps/Plangebiet_definieren.gmt&urlGMTto=project:/.maps/BPlan_Editieren.gmt;
+			kalypso://openEditor?input=project:/.maps/BPlan_Editieren.gmt&activate=true;
 			kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.browser&url=KONZEPTPHASE_BPLAN_MASSNAHMEN_DEF.html&activePartId=org.eclipse.ui.views.ResourceNavigator;
 			kalypso://openView?partId=org.kalypso.featureview.views.FeatureView&activePartId=org.eclipse.ui.views.ResourceNavigator;
 		}

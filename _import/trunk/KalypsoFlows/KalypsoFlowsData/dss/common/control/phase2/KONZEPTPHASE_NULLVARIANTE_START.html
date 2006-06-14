@@ -10,6 +10,11 @@
 			kalypso://openWorkflowBrowser?secondaryPartId=measure.browser&url=KONZEPTPHASE_MASSNAHMEN_DEF.html;
 			kalypso://openURL?&url=KONZEPTPHASE_NULLVARIANTE_START.html;
 		}
+		function runCalculation() 
+		{
+			kalypso://copyFile?source=project:/.data/xplanung.gml&target=calcdir;
+			kalypso://startCalc?
+		}
 	 -->
  </script>
  
@@ -129,7 +134,7 @@ die Planungsvariante <br />
 <span
 	style="font-family: Helvetica,Arial,sans-serif; font-weight: bold;">Berechnung&nbsp;starten...</span>
 <a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"
-	href="kalypso://startCalc?"><img
+	href="kalypso://runScript?type=text/kalypso&function=runCalculation"><img
 	alt="" src="../img/lc10617.gif"
 	style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a>
 <span style="font-family: Helvetica,Arial,sans-serif;"></span>
