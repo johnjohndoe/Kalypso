@@ -65,6 +65,7 @@ import ogc31.www.opengis.net.gml.PointType;
 import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
 
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -97,7 +98,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 
   final static ObjectFactory gml3Fac = new ObjectFactory();
 
-  final static JAXBContext GML3_JAXCONTEXT = JaxbUtilities.createQuiet( gml3Fac.getClass() );
+  final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 
   private static final String COORDINATES_SEPARATOR = " ";
 

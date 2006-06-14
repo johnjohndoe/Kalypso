@@ -192,6 +192,8 @@ public class FeatureHelper
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws CloneNotSupportedException
   {
+    final GMLWorkspace workspace = sourceFeature.getWorkspace();
+    final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
     for( final Iterator pIt = propertyMap.entrySet().iterator(); pIt.hasNext(); )
     {
       final Map.Entry entry = (Entry) pIt.next();
@@ -210,7 +212,7 @@ public class FeatureHelper
 
       final Object object = sourceFeature.getProperty( sourceFTP );
 
-      final Object newobject = cloneData( object, sourceFTP );
+      final Object newobject = cloneData( object, sourceFTP, gmlVersion );
 
       targetFeature.setProperty( targetFTP, newobject );
     }
@@ -221,7 +223,7 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Object object, final IPropertyType pt ) throws CloneNotSupportedException
+  public static Object cloneData( final Object object, final IPropertyType pt, final String gmlVersion ) throws CloneNotSupportedException
   {
     if( object == null )
       return null;
@@ -229,8 +231,9 @@ public class FeatureHelper
     // if we have an IMarhsallingTypeHandler, it will do the clone for us.
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( pt );
+
     if( typeHandler != null )
-      return typeHandler.cloneObject( object );
+      return typeHandler.cloneObject( object, gmlVersion );
 
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
@@ -446,13 +449,16 @@ public class FeatureHelper
    * @param property
    * @throws CloneNotSupportedException
    */
-  public static void copySimpleProperty( Feature srcFE, Feature targetFE, IPropertyType property ) throws CloneNotSupportedException
+  public static void copySimpleProperty( final Feature srcFE, final Feature targetFE, final IPropertyType property ) throws CloneNotSupportedException
   {
     if( property instanceof IValuePropertyType )
     {
+      final GMLWorkspace workspace = srcFE.getWorkspace();
+      final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
+
       final IValuePropertyType pt = (IValuePropertyType) property;
       final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = cloneData( valueOriginal, pt );
+      final Object cloneValue = cloneData( valueOriginal, pt, gmlVersion );
       targetFE.setProperty( pt, cloneValue );
     }
   }

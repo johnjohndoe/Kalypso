@@ -76,5 +76,9 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     // WFS
     catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
     prefixes.put( NS.WFS, "wfs" );
+
+    // Common
+    catalog.put( NS.COMMON, getClass().getResource( "commons/commons.xsd" ) );
+    prefixes.put( NS.COMMON, "common" );
   }
 }
