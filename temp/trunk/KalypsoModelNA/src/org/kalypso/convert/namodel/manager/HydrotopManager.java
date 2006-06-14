@@ -243,10 +243,6 @@ public class HydrotopManager extends AbstractManager
     b.append( " " + anzHydrotope );
     b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
     final String corrFactAsString = FeatureHelper.getAsString( feature, "corrSealing" );
-    if( corrFactAsString.equals( "Infinity" ) )
-    {
-      System.out.println( corrFactAsString );
-    }
     b.append( " " + FortranFormatHelper.printf( corrFactAsString, "*" ) );
 
     final String hydType = (String) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ) );

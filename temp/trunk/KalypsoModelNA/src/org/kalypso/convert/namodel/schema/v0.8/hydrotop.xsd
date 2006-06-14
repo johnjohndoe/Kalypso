@@ -139,20 +139,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="m_f1gws" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zuflussanteil GW</label>
-								<tooltip>Zuflussanteil Grundwasser [-] (= 0-1)</tooltip>
-								<description>Zuflussanteil Grundwasser [-] (= 0-1)</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Inflow rate GW</label>
-								<tooltip>Inflow rate of groundwater [-] (= 0-1)</tooltip>
-								<description>Inflow rate of groundwater  [-] (= 0-1)</description>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="hydType" type="hyd:hydTypeEnumerationType">
 						<annotation>
 							<documentation xml:lang="de">

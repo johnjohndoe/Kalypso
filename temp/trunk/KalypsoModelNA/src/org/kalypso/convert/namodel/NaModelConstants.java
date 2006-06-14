@@ -116,6 +116,8 @@ public interface NaModelConstants
   // hydrotop
   public static final String HYDRO_MEMBER = "hydrotopMember";
 
+  public static final String HYDRO_FT = "HydrotopFeatureType";
+
   public static final String HYDRO_PROP_SEAL_CORR_FACTOR = "corrSealing";
 
   public static final String HYDRO_PROP_GEOM = "position";
@@ -169,7 +171,7 @@ public interface NaModelConstants
   public static final String NODE_COLLECTION_FT = "NodeCollection";
 
   public static final String NODE_COLLECTION_MEMBER_PROP = "NodeCollectionMember";
-  
+
   public static final String NODE_RESULT_TIMESERIESLINK_PROP = "qberechnetZR";
 
   // catchments
@@ -214,6 +216,11 @@ public interface NaModelConstants
   public static final String MRS_INFLOW_GW_PROP = "InflowGW";
 
   // parameter
+
+  public static final String PARA_LANDUSE_FT = "LanduseType";
+
+  public static final String PARA_LANDUSE_NAME = "Landuse";
+
   public static final String PARA_PROP_SEALING_MEMBER = "sealingMember";
 
   public static final String PARA_PROP_LANDUSE_MEMBER = "landuseMember";
@@ -221,6 +228,8 @@ public interface NaModelConstants
   public static final String PARA_LANDUSE_PROP_SEALING = "m_vers";
 
   public static final String PARA_LANDUSE_PROP_SEALING_LINK = "sealingLink";
+
+  public static final String PARA_LANDUSE_PROP_LANDUSE_LINK = "idealLandUsePeriodLink";
 
   // link Properties
   public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
@@ -234,7 +243,7 @@ public interface NaModelConstants
   // default values
   public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
 
-  public static final String DEFAULT_MRS_LANDUSE_PROP = "MRS_N";
+  public static final String DEFAULT_MRS_LANDUSE_PROP = "6";
 
   // misc
   public static final String GENERATE_RESULT_PROP = "generateResult";
