@@ -67,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @author doemming
  */
-public class SAXFactory
+public class GMLSAXFactory
 {
   private final NSPrefixProvider m_nsMapper = NSUtilities.getNSProvider();
 
@@ -77,10 +77,12 @@ public class SAXFactory
 
   private final ContentHandler m_handler;
 
-  public SAXFactory( final ContentHandler handler ) throws SAXException
+  private String m_gmlVersion;
+
+  public GMLSAXFactory( final ContentHandler handler ) throws SAXException
   {
     m_handler = handler;
-    
+
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
   }
@@ -94,7 +96,7 @@ public class SAXFactory
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
-
+    m_gmlVersion = workspace.getGMLSchema().getGMLVersion();
     // final Set<String> uriSet = new HashSet<String>();
     final IFeatureType[] featureTypes = workspace.getGMLSchema().getAllFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
@@ -193,22 +195,15 @@ public class SAXFactory
 
       for( final Object singleValue : ((List) value) )
       {
-
-        // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
-//        m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
         try
         {
-          th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context );
+          th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context, m_gmlVersion );
         }
         catch( TypeRegistryException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-
-        // TODO parse content
-        // m_handler.ignorableWhitespace(new char[]{' '}, 0, 1);
-//        m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
       }
     }
     else
@@ -218,12 +213,7 @@ public class SAXFactory
       final LexicalHandler lexicalHandler = null;
       try
       {
-        // m_handler.startElement(uri, localPart, getQName(qName),
-        // new AttributesImpl());
-        th.marshal( prefixedQName, value, m_handler, lexicalHandler, context );
-        // th.marshal(vpt.getQName(), value, m_handler, lexicalHandler,
-        // context);
-        // m_handler.endElement(uri, localPart, getQName(qName));
+        th.marshal( prefixedQName, value, m_handler, lexicalHandler, context, m_gmlVersion );
       }
       catch( final TypeRegistryException e )
       {

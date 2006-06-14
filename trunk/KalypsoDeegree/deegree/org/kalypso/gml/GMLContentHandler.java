@@ -113,12 +113,13 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public GMLContentHandler( XMLReader xmlReader, final URL context )
   {
-    m_context = context;
-    m_xmlReader = xmlReader;
-    m_featureParser = new FeatureParser( this );
-    m_propParser = new PropertyParser();
-    m_schemaLocationHint = null;
-    m_useSchemaCatalog = true;
+    this(xmlReader,null,true,context);
+//    m_xmlReader = xmlReader;
+//    m_schemaLocationHint = null;
+//    m_useSchemaCatalog = true;
+//    m_context = context;
+//    m_featureParser = new FeatureParser( this );
+//    m_propParser = new PropertyParser();
   }
 
   public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context )

@@ -67,7 +67,7 @@ import org.xml.sax.XMLReader;
 public class PropertyParser
 {
   final Stack<IPropertyType> m_stackPT = new Stack<IPropertyType>();
-  
+
   public PropertyParser( )
   {
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -102,11 +102,11 @@ public class PropertyParser
   public void setContent( final Feature parentFE, final IValuePropertyType pt, final XMLReader xmlReader, final String uri, final String localName, final String qName, Attributes atts )
   {
     final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) pt.getTypeHandler();
-
+    final String gmlVersion = parentFE.getFeatureType().getGMLSchema().getGMLVersion();
     // TODO hack, check if there is a better way to set the attributes (maybe in IMarshallingTypeHandler.unmarshall() ?)
     if( typeHandler.getClass() == GenericBindingTypeHandler.class )
-      ((GenericBindingTypeHandler)typeHandler).setAttributes( atts );
-    
+      ((GenericBindingTypeHandler) typeHandler).setAttributes( atts );
+
     final UrlResolver urlResolver = null;
     final ContentHandler orgCH = xmlReader.getContentHandler();
     final UnMarshallResultEater resultEater = new UnMarshallResultEater()
@@ -127,7 +127,7 @@ public class PropertyParser
 
         if( value == null )
           return;
-        
+
         if( pt.isList() )
         {
           final List<Object> list = (List<Object>) parentFE.getProperty( pt );
@@ -140,7 +140,7 @@ public class PropertyParser
 
     try
     {
-      typeHandler.unmarshal( xmlReader, urlResolver, resultEater );
+      typeHandler.unmarshal( xmlReader, urlResolver, resultEater, gmlVersion );
     }
     catch( TypeRegistryException e )
     {

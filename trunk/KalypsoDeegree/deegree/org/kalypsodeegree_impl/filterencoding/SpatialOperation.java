@@ -69,7 +69,10 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
+import org.kalypsodeegree_impl.model.geometry.AdapterGmlIO;
+import org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.w3c.dom.Element;
 
@@ -162,7 +165,20 @@ public class SpatialOperation extends AbstractOperation
     }
 
     PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
-    final GM_Object gmlGeometry = GML3BindingGM_ObjectAdapter.createGM_Object( child2 );
+    final String gmlVersion = "2.1.2";
+    final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
+
+    final Object geometry;
+    try
+    {
+      geometry = bindingToGM_ObjectAdapter.wrapFromNode( child2 );
+    }
+    catch( Exception e1 )
+    {
+      e1.printStackTrace();
+      throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name + "'-operation: " + e1.getMessage() );
+    }
+    final GM_Object gmlGeometry = (GM_Object) geometry;
 
     if( gmlGeometry == null )
     {
@@ -309,8 +325,22 @@ public class SpatialOperation extends AbstractOperation
     sb.append( "<ogc:" ).append( getOperatorName() );
     sb.append( " xmlns:gml='http://www.opengis.net/gml' " ).append( ">" );
     sb.append( m_propertyName.toXML() );
+    // TODO support gml verisons in filter !!
+    final String gmlVersion = "2.1";
 
-    Element element = GML3BindingGM_ObjectAdapter.createElement( m_geometry );
+    final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
+    final Element element;
+    try
+    {
+      element = objectToGMLBindingAdapter.wrapToElement( m_geometry );
+    }
+    catch( GM_Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new UnsupportedOperationException();
+    }
+    // final Element element = AdapterBindingToValue_GML31.createElement( gmlVersion, m_geometry );
     XMLTools.appendNode( element, "", sb );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
 

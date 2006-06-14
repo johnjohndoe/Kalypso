@@ -75,9 +75,9 @@ public class FilterFactory
   private static FilterFactory m_instance = null;
 
   /** jaxb context for filter stuff */
-  private static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet(
+  private static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet( //
 
-  ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class
+      ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class
 
   );
 
@@ -142,8 +142,8 @@ public class FilterFactory
     final IObservation obsFilter;
     try
     {
-      final JAXBElement<AbstractFilterType> value= (JAXBElement<AbstractFilterType>) JC_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
-//      final IntervallFilterType ift = (IntervallFilterType) value.getValue();
+      final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) JC_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
+      // final IntervallFilterType ift = (IntervallFilterType) value.getValue();
       final AbstractFilterType af = value.getValue();
       sr.close();
       final IFilterCreator creator = getCreatorInstance( af );

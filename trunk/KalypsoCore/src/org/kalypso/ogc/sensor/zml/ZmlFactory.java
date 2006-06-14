@@ -49,12 +49,14 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -506,25 +508,55 @@ public class ZmlFactory
       }
 
       final List<AxisType> axisList = obsType.getAxis();
-      final IAxis[] axes = obs.getAxisList();
-      for( int i = 0; i < axes.length; i++ )
+      // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
+      // Junit-Test)
+      final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
       {
-        if( axes[i].isPersistable() )
+
+        public int compare( IAxis a1, IAxis a2 )
+        {
+          String type1 = a1.getType();
+          String type2 = a2.getType();
+          if( type1 == null )
+            type1 = "";
+          if( type2 == null )
+            type2 = "";
+          if( type1.equals( type2 ) )
+          {
+            String n1 = a1.getName();
+            String n2 = a2.getName();
+            if( n1 == null )
+              n1 = "";
+            if( n2 == null )
+              n2 = "";
+            return n1.compareTo( n2 );
+          }
+          return type1.compareTo( type2 );
+        }
+
+      } );
+
+      for( IAxis axis : obs.getAxisList() )
+        sortedAxis.add( axis );
+
+      for( IAxis axis : sortedAxis )
+      {
+        if( axis.isPersistable() )
         {
           final AxisType axisType = OF.createAxisType();
 
-          final String xsdType = getXSDTypeFor( axes[i].getDataClass().getName() );
+          final String xsdType = getXSDTypeFor( axis.getDataClass().getName() );
 
           axisType.setDatatype( xsdType );
-          axisType.setName( axes[i].getName() );
-          axisType.setUnit( axes[i].getUnit() );
-          axisType.setType( axes[i].getType() );
-          axisType.setKey( axes[i].isKey() );
+          axisType.setName( axis.getName() );
+          axisType.setUnit( axis.getUnit() );
+          axisType.setType( axis.getType() );
+          axisType.setKey( axis.isKey() );
 
           final ValueArray valueArrayType = OF.createAxisTypeValueArray();
 
           valueArrayType.setSeparator( ";" );
-          valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
+          valueArrayType.setValue( buildValueString( values, axis, timezone ) );
 
           axisType.setValueArray( valueArrayType );
 
