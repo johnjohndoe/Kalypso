@@ -82,7 +82,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -116,8 +115,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
   final static ObjectFactory gml3Fac = new ObjectFactory();
 
-  final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();// JaxbUtilities.createQuiet(
-                                                                                  // gml3Fac.getClass() );
+  final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 
   public AdapterBindingToValue_GML31( )
   {

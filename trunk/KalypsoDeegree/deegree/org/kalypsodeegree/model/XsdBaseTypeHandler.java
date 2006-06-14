@@ -169,7 +169,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( final Object objectToClone )
+  public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
     final String stringOfClone = convertToXMLString( (T) objectToClone );
     return parseType( stringOfClone );

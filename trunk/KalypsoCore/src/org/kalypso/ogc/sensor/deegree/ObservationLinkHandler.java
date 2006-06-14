@@ -157,7 +157,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone )
+  public Object cloneObject( Object objectToClone, final String gmlVersion )
   {
     final TimeseriesLinkType link = (TimeseriesLinkType) objectToClone;
     final TimeseriesLinkType clone = m_factory.createTimeseriesLinkType();

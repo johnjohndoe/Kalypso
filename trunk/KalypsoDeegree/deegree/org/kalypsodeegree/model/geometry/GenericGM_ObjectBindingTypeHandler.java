@@ -127,20 +127,20 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
   @Override
-  public Object cloneObject( final Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     try
     {
       final GM_Object geometry = (GM_Object) objectToClone;
 
-      final String gmlVersion = "3.1";
-
+//      final String gmlVersion = "3.1";
+//
       final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
       final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
 
       final Object bindingGeometry = objectToGMLBindingAdapter.wrapToBinding( geometry );
 
-      final Object clonedBindingGeometry = super.cloneObject( bindingGeometry );
+      final Object clonedBindingGeometry = super.cloneObject( bindingGeometry, gmlVersion );
 
       final Class geometryClass = getValueClass();
       final Object result = bindingToGM_ObjectAdapter.wrapFromBinding( clonedBindingGeometry, geometryClass );

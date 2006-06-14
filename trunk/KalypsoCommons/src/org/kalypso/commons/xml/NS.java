@@ -92,4 +92,6 @@ public interface NS
   public static final String SLD = "http://www.opengis.net/sld";
 
   public static final String OGC = "http://www.opengis.net/ogc";
+
+  public static final String COMMON = "org.kalypso.gml.common";;
 }

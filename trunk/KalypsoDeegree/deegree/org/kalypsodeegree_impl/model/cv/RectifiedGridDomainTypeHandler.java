@@ -202,7 +202,7 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
    * @throws CloneNotSupportedException
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  public Object cloneObject( Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException( "Clone is not supported!" );
   }

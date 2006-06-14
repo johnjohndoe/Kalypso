@@ -31,7 +31,6 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -170,7 +169,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone )
+  public Object cloneObject( Object objectToClone, final String gmlVersion )
   {
     final StringWriter sw = new StringWriter();
     IObservation clone = null;

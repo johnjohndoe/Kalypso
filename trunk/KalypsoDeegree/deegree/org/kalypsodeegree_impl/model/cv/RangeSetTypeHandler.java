@@ -223,7 +223,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone )
+  public Object cloneObject( Object objectToClone, final String gmlVersion )
   {
     RangeSet rangeSet = (RangeSet) objectToClone;
     Vector rangeSetData = rangeSet.getRangeSetData();
