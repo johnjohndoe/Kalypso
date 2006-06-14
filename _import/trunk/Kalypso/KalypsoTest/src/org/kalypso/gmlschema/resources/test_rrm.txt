@@ -40,6 +40,25 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}CatchmentCollection
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
+.  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  Feature: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollectionType
 .  .  .  restricted by
@@ -68,6 +87,25 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}CatchmentCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  .  .  [0,oo]  Relation: {http://www.tuhh.de/kalypsoNA}swaleTrenchMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
 .  Feature: {http://www.tuhh.de/kalypsoNA}Verzweigung
@@ -136,7 +174,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Class: class java.lang.Double
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}hvvsqd
 .  .  .       Value: {inline.zml.kalypso.org}ZmlInlineWVQType
-.  .  .       Class: interface org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler$WVQ
+.  .  .       Class: interface org.kalypso.ogc.sensor.IObservation
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}generateResult
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
 .  .  .       Class: class java.lang.Boolean
@@ -160,10 +198,10 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
 .  .  .       Class: class java.lang.Boolean
 .  .  .  [0,1]  Relation: {http://www.tuhh.de/kalypsoNA}downStreamChannelMember
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}pegelZR
 .  .  .       Value: {obslink.zml.kalypso.org}TimeseriesLinkFeatureProperty
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
@@ -177,11 +215,11 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Value: {obslink.zml.kalypso.org}TimeseriesLinkFeatureProperty
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
 .  .  .  [0,1]  Relation: {http://www.tuhh.de/kalypsoNA}branchingMember
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
 .  Feature: {http://www.tuhh.de/kalypsoNA}CatchmentCollection
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}CatchmentCollectionType
 .  .  .  restricted by
@@ -210,6 +248,25 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}CatchmentCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  .  .  [0,oo]  Relation: {http://www.tuhh.de/kalypsoNA}catchmentMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
 .  Feature: {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
@@ -383,10 +440,10 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Value: {http://www.opengis.net/gml}PolygonPropertyType
 .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Surface
 .  .  .  [1,1]  Relation: {http://www.tuhh.de/kalypsoNA}entwaesserungsStrangMember
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}generateResult
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}boolean
 .  .  .       Class: class java.lang.Boolean
@@ -472,7 +529,7 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .       Class: class org.kalypso.zml.obslink.TimeseriesLinkType
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}zft
 .  .  .       Value: {inline.zml.kalypso.org}ZmlInlineTAType
-.  .  .       Class: interface org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler$TA
+.  .  .       Class: interface org.kalypso.ogc.sensor.IObservation
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}faktorBianf
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
@@ -513,11 +570,30 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}CatchmentCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  .  .  [0,oo]  Relation: {http://www.tuhh.de/kalypsoNA}channelMember
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
-.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
 .  Feature: {http://www.tuhh.de/kalypsoNA}KMParameter
 .  .  ContentType: {http://www.tuhh.de/kalypsoNA}KMParameterType
 .  .  .  extended by
@@ -654,6 +730,25 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Catchment
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}CatchmentCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}ChannelCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KMChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontEntnahme
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}KontZufluss
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}NodeCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}StorageChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrench
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}SwaleAndTrenchCollection
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Ueberlauf
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Verzweigung
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}VirtualChannel
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Branching	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}_Channel	  [x] abstract
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur
+.  .  .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}grundwasserabfluss
 .  .  .  [0,oo]  Relation: {http://www.tuhh.de/kalypsoNA}nodeMember
 .  .  .  .   -> {http://www.tuhh.de/kalypsoNA}Node
 .  Feature: {http://www.tuhh.de/kalypsoNA}Ueberlauf
@@ -676,4 +771,3 @@ GMLSchema: http://www.tuhh.de/kalypsoNA
 .  .  .  [1,1]Property: {http://www.tuhh.de/kalypsoNA}queb
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
-

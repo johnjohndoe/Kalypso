@@ -50,16 +50,15 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 /**
+ * test succeedes when <br>
+ * 1. GML(version 3.1) schemas get parsed from OGC-site and stored in local jar-archive<br>
+ * AND<br>
+ * 2. the local jar-archive gets parsed to another jar-archive to see if first one is valid
+ * 
  * @author doemming
  */
 public class GMLSchemaSerializeTest extends TestCase
 {
-  /**
-   * test succeedes when <br>
-   * 1. GML(version 3.1) schemas get parsed from OGC-site and stored in local jar-archive<br>
-   * AND<br>
-   * 2. the local jar-archive gets parsed to another jar-archive to see if first one is valid
-   */
   public void testCreateSchemaJarArchive( ) throws Exception
   {
     File tmpArchive1 = null;

@@ -38,82 +38,82 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
+.  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AbgrabungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanAuszug
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}TextlicheFestsetzung
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlan
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanAuszug
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugebiet
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FreiFlaeche
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinbedarfsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlan
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerfahrensMerkmal
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GruenFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}TextlicheFestsetzung
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerfahrensMerkmal
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
 .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WaldFlaeche
-.  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
-.  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
+.  .  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
 .  Feature: {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
 .  .  ContentType: {http://www.xplanung.de/bplangml}BodenschaetzeFlaecheType
 .  .  .  extended by
@@ -181,12 +181,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -264,12 +264,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -458,12 +458,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -534,12 +534,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -614,12 +614,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -710,12 +710,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -796,12 +796,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -891,12 +891,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -981,12 +981,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1064,12 +1064,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1145,12 +1145,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1240,12 +1240,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1331,12 +1331,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1423,12 +1423,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1502,12 +1502,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1585,12 +1585,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1732,12 +1732,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1849,12 +1849,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -1927,12 +1927,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2010,12 +2010,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2091,12 +2091,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2172,12 +2172,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2249,12 +2249,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .       Class: class java.lang.Double
 .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  Feature: {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
@@ -2326,12 +2326,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2424,12 +2424,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2509,12 +2509,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2646,12 +2646,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2736,12 +2736,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2817,12 +2817,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -2913,82 +2913,82 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Class: interface org.kalypsodeegree.model.geometry.GM_Envelope
 .  .  .  .  .  [0,oo]  Relation: {http://www.opengis.net/gml}featureMember
 .  .  .  .  .  .   -> {http://www.opengis.net/gml}_Feature	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
+.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AbgrabungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanAuszug
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}TextlicheFestsetzung
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlan
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanAuszug
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugebiet
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}FreiFlaeche
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinbedarfsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlan
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerfahrensMerkmal
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}GruenFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}TextlicheFestsetzung
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerfahrensMerkmal
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WaldFlaeche
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
-.  .  .  .  .  .   -> {http://www.opengis.net/gml}_FeatureCollection	  [x] abstract
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
 .  Feature: {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
 .  .  ContentType: {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaecheType
 .  .  .  extended by
@@ -3056,12 +3056,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3147,12 +3147,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3228,12 +3228,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3309,12 +3309,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3387,12 +3387,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3438,77 +3438,77 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  [1,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlan
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlan
 .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}fachobjekt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
-.  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
 .  .  .  .   -> {http://www.xplanung.de/bplangml}AbgrabungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
-.  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
-.  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
-.  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
-.  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
-.  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
-.  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
-.  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
-.  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
-.  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
-.  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
-.  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
 .  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsLinie
+.  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
+.  .  .  .   -> {http://www.xplanung.de/bplangml}AufschuettungsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsMassnahme
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenobjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFlaechenschlussobjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLinienobjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanObjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanUeberlagerungsobjekt	  [x] abstract
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BahnFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BahnLinie
 .  .  .  .   -> {http://www.xplanung.de/bplangml}Baugebiet
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BaugebietsFlaechenTeil
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Baugrenze
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Baulinie
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BereichOhneEinAusfahrt
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BodenschaetzeFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzBereich
+.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
+.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEnsemble
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrt
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Einfahrtsbereich
+.  .  .  .   -> {http://www.xplanung.de/bplangml}ErhaltungsBereich
+.  .  .  .   -> {http://www.xplanung.de/bplangml}FirstRichtung
+.  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheAllgemein
+.  .  .  .   -> {http://www.xplanung.de/bplangml}FlaecheMitBesonderemNutzungszweck
+.  .  .  .   -> {http://www.xplanung.de/bplangml}FoerderungsFlaeche
 .  .  .  .   -> {http://www.xplanung.de/bplangml}FreiFlaeche
 .  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinbedarfsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}DenkmalschutzEinzelanlage
-.  .  .  .   -> {http://www.xplanung.de/bplangml}AusgleichsFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
-.  .  .  .   -> {http://www.xplanung.de/bplangml}AnpflanzungBindungErhaltungsMassnahme
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPunktobjekt	  [x] abstract
-.  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
-.  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .   -> {http://www.xplanung.de/bplangml}GemeinschaftsanlagenFlaeche
 .  .  .  .   -> {http://www.xplanung.de/bplangml}GruenFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}HoehenObjekt
+.  .  .  .   -> {http://www.xplanung.de/bplangml}ImmissionsschutzFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}KennzeichnungFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}LandwirtschaftsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}LinieAllgemein
+.  .  .  .   -> {http://www.xplanung.de/bplangml}LuftreinhalteFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}LuftverkehrFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}NebenanlagenFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}PersGruppenBestimmteFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}PunktAllgemein
+.  .  .  .   -> {http://www.xplanung.de/bplangml}RaeumlicherGeltungsbereich
+.  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzPflegeEntwicklungsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}SchutzgebietFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}SpielSportanlagenFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenbegrenzungslinie
+.  .  .  .   -> {http://www.xplanung.de/bplangml}Strassenkoerper
+.  .  .  .   -> {http://www.xplanung.de/bplangml}StrassenkoerperLinie
+.  .  .  .   -> {http://www.xplanung.de/bplangml}TechnikBestimmteFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}UeberbaubareGrundstuecksflaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}VerEntsorgungsleitung
+.  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}VerkehrsflaecheBesondererZweckbestimmung
+.  .  .  .   -> {http://www.xplanung.de/bplangml}VorbHochwSchutzFlaeche
 .  .  .  .   -> {http://www.xplanung.de/bplangml}WaldFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserrechtlicheFestsetzungsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}WasserwirtschaftsFlaeche
+.  .  .  .   -> {http://www.xplanung.de/bplangml}WegerechteBelasteteFlaeche
 .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}praesentationsobjekt
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  Feature: {http://www.xplanung.de/bplangml}VerkehrsFlaeche
 .  .  ContentType: {http://www.xplanung.de/bplangml}VerkehrsFlaecheType
 .  .  .  extended by
@@ -3578,12 +3578,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3706,12 +3706,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3799,12 +3799,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3880,12 +3880,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -3961,12 +3961,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4114,12 +4114,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4224,12 +4224,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4304,12 +4304,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4387,12 +4387,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4470,12 +4470,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4551,12 +4551,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4639,12 +4639,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4741,12 +4741,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4829,12 +4829,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4910,12 +4910,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -4988,12 +4988,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5090,12 +5090,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5175,12 +5175,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  [0,1]Property: {http://www.xplanung.de/bplangml}maxZahlWohnungen
@@ -5308,12 +5308,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5394,12 +5394,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5531,12 +5531,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5745,12 +5745,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5828,12 +5828,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -5961,12 +5961,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6042,12 +6042,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6158,12 +6158,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6238,12 +6238,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6324,12 +6324,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6422,12 +6422,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY
@@ -6566,12 +6566,12 @@ GMLSchema: http://www.xplanung.de/bplangml
 .  .  .  .  .  .  .  .  .       Value: {http://www.w3.org/2001/XMLSchema}double
 .  .  .  .  .  .  .  .  .       Class: class java.lang.Double
 .  .  .  .  .  .  .  .  .  [0,oo]  Relation: {http://www.xplanung.de/bplangml}benutzt
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanFPO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
-.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanLTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPPO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPTO
+.  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanPraesentationsobjekt	  [x] abstract
 .  .  .  .  .  .  .  .  .  [0,1]  Relation: {http://www.xplanung.de/bplangml}gehoertZuBPlanEbene
 .  .  .  .  .  .  .  .  .  .   -> {http://www.xplanung.de/bplangml}BPlanEbene
 .  .  .  .  .  .  .  [1,1]Property: {http://www.xplanung.de/bplangml}position    [X] GEOMETRY

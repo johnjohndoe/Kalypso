@@ -49,6 +49,9 @@ import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
 import org.kalypso.test.TestUtilities;
 
 /**
+ * this test parses GML application schemas and produces a ASCII-Tree-output. this output is compared by validated
+ * treeoutputs in the resources. This Test is intended to fail on changes in schema parsing.
+ * 
  * @author doemming
  */
 public class GMLSchemaTest extends TestCase
@@ -162,7 +165,8 @@ public class GMLSchemaTest extends TestCase
     {
       loadAndTestSchema( //
           getClass().getResource( "resources/GML3_wspm/wspm.xsd" ), //
-          getClass().getResource( "resources/GML3_wspm/schematree.txt" ), false );
+          getClass().getResource( "resources/GML3_wspm/schematree.txt" )//
+          , false );
     }
     catch( Exception e )
     {
@@ -202,7 +206,7 @@ public class GMLSchemaTest extends TestCase
       }
       else
       {
-        System.out.println( buffer.toString() );
+        // System.out.println( buffer.toString() );
         TestUtilities.compare( "gmlschemaparser", testResource, buffer.toString() );
       }
     }

@@ -54,6 +54,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
+ * Test for GMLXPath validation<br>
+ * test is intended to fail on corrupt GMLXpaths or on invalid results of GMLXPathes
+ * 
  * @author doemming
  */
 public class GMLXPathTest extends TestCase
@@ -66,7 +69,7 @@ public class GMLXPathTest extends TestCase
   {
     KalypsoTest.init();
   }
-  
+
   /**
    * @see junit.framework.TestCase#tearDown()
    */

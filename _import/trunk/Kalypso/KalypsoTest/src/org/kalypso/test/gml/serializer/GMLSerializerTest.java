@@ -32,7 +32,6 @@ package org.kalypso.test.gml.serializer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
@@ -48,7 +47,8 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 
 /**
- * TODO: insert type comment here
+ * Test does a load & save & load & save on a gml file<br>
+ * Test is intended to fila on differencess the two saved files
  * 
  * @author doemming
  */
@@ -73,10 +73,30 @@ public class GMLSerializerTest extends TestCase
     KalypsoTest.release();
   }
 
+  public void testNAModell( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/calcCase.gml" );
+    multiLoadAndSaveGMLWorkspace( resource );
+  }
+
+  public void testNAHydros( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/calcHydrotop.gml" );
+    multiLoadAndSaveGMLWorkspace( resource );
+  }
+
+  // not working at the moment as the schemacatalog is not available in test
+  // TODO reactivate test soon
+  // public void testWspmTuhhModel( ) throws Exception
+  // {
+  // final URL resource = getClass().getResource( "resources/wspmTuhhModel.gml" );
+  // multiLoadAndSaveGMLWorkspace( resource );
+  // }
+
   /**
    * Class under test for GMLWorkspace createGMLWorkspace(URL)
    */
-  public void testCreateGMLWorkspaceURL( ) throws Exception
+  public void multiLoadAndSaveGMLWorkspace( final URL resourceURL ) throws Exception
   {
     final File testFileOrg = File.createTempFile( "testOriginal", ".gml" );
     final File testFileParsed = File.createTempFile( "testParsed", ".gml" );
@@ -85,18 +105,17 @@ public class GMLSerializerTest extends TestCase
     OutputStreamWriter writerOrg = null;
     OutputStreamWriter writerParsed = null;
     OutputStreamWriter writerParsed2 = null;
-    
+
     try
     {
       // Remark: why write it into a separate file? Load it directly for comparison
       // via URL.open();
       writerOrg = new OutputStreamWriter( new FileOutputStream( testFileOrg ), "UTF-8" );
-      final URL resource = getClass().getResource( "resources/calcCase.gml" );
-      final Document documentOrg = XMLTools.parse( resource );
+      final Document documentOrg = XMLTools.parse( resourceURL );
       XMLHelper.writeDOM( documentOrg, "UTF-8", writerOrg );
       writerOrg.close();
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resourceURL );
       writerParsed = new OutputStreamWriter( new FileOutputStream( testFileParsed ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writerParsed, workspace, "UTF-8" );
       writerParsed.close();
@@ -114,9 +133,9 @@ public class GMLSerializerTest extends TestCase
       IOUtils.closeQuietly( writerParsed );
       IOUtils.closeQuietly( writerParsed2 );
 
-//      testFileOrg.delete();
-//      testFileParsed.delete();
-//      testFileParsed2.delete();
+      // testFileOrg.delete();
+      // testFileParsed.delete();
+      // testFileParsed2.delete();
     }
   }
 
