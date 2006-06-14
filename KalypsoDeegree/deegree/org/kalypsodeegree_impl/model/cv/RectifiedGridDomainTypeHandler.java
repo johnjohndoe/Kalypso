@@ -11,7 +11,9 @@ import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapte
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GML3BindingGM_ObjectAdapter;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -150,7 +152,8 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
     Node n_point = ((Element) n_origin).getElementsByTagNameNS( NSGML, "Point" ).item( 0 );
     try
     {
-      GM_Point origin = (GM_Point) GML3BindingGM_ObjectAdapter.createGM_Object( (Element) n_point );
+      AdapterBindingToValue adapter = new AdapterBindingToValue_GML2x();
+      GM_Point origin = (GM_Point) adapter.wrapFromNode(  n_point );
       // GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
       // GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );
       System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );

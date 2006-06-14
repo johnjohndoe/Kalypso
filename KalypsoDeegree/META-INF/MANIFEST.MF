@@ -19,7 +19,8 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,
  org.kalypso.contribs.java,
  org.junit,
- org.kalypso.gmlschema;visibility:=reexport
+ org.kalypso.gmlschema;visibility:=reexport,
+ org.kalypso.contribs.ogc2x
 Eclipse-AutoStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: Acme,

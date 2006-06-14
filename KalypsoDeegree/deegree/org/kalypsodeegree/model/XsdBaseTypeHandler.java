@@ -77,7 +77,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context ) throws TypeRegistryException
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -106,7 +106,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, IUrlResolver urlResolver, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -127,14 +127,14 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
           try
           {
             final String stringResult = buffer.toString();
-            
+
             // HACK: remove CDATA section markers
             // TODO shouldn't the saxparser handle this? Check if this is ok what is done here...
             final String withoutCDATA = stringResult.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
-            
-//            if( !withoutCDATA.equals( stringResult ) )
-//              System.out.println();
-            
+
+            // if( !withoutCDATA.equals( stringResult ) )
+            // System.out.println();
+
             return parseType( withoutCDATA );
           }
           catch( final Exception e )
@@ -172,7 +172,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    */
   public Object cloneObject( final Object objectToClone )
   {
-    final String stringOfClone = convertToXMLString( (T)objectToClone );
+    final String stringOfClone = convertToXMLString( (T) objectToClone );
     return parseType( stringOfClone );
   }
 

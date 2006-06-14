@@ -31,6 +31,7 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -89,7 +90,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
       marshaller.marshal( xml, sw );
       sw.close();
       final String toString = sw.toString();
-      Document ownerDocument = node.getOwnerDocument();
+      final Document ownerDocument = node.getOwnerDocument();
       // Text text = ownerDocument.createTextNode( toString );
       // node.appendChild( text );
       final CDATASection section = ownerDocument.createCDATASection( toString );
