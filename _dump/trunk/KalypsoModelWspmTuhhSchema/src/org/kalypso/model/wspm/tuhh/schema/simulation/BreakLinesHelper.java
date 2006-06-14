@@ -104,11 +104,13 @@ public class BreakLinesHelper implements IWspmConstants
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NS_WSPM_BREAKLINE, new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ) );
       final Feature rootFeature = workspace.getRootFeature();
 
+      final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
+      
       for( final WspmReachProfileSegment reach : reachProfileSegments )
       {
         final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
 
-        final GM_Curve thinProfile = thinnedOutClone( reach.getGeometry(), epsThinning );
+        final GM_Curve thinProfile = thinnedOutClone( reach.getGeometry(), epsThinning, gmlVersion );
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
         final GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wsp );
@@ -160,12 +162,12 @@ public class BreakLinesHelper implements IWspmConstants
     return GeometryFactory.createGM_Curve( newPositions, crs );
   }
 
-  private static GM_Curve thinnedOutClone( final GM_Curve curve, final Double epsThinning )
+  private static GM_Curve thinnedOutClone( final GM_Curve curve, final Double epsThinning, final String gmlVersion )
   {
     try
     {
       final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
-      final Object cloneObject = lineStringTypeHandler.cloneObject( curve );
+      final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
 
       return (GM_Curve) cloneObject;
     }
