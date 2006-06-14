@@ -89,8 +89,7 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
     final String xplanGMT = commandURL.getParameter( PARAM_XPLAN_GMT );
     final String bboxFromGMT = commandURL.getParameter( PARAM_REF_BBOX_GMT );
     final String sourceURLAsString = commandURL.getParameter( PARAM_SOURCE );
-    final WorkflowContext workFlowContext = getWorkFlowContext();
-    final WorkflowContext context = workFlowContext;
+    final WorkflowContext context = getWorkFlowContext();
     IFolder calcCaseFolder = null;
     final IFolder contextCalcDir = context.getContextCalcDir();
     final CreateNewMeasureCalcCaseDialog dialog = new CreateNewMeasureCalcCaseDialog( getShell(), contextCalcDir );
@@ -112,6 +111,10 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
     try
     {
       sourceURL = context.resolveURL( sourceURLAsString );
+      // FIXME schlechtes handlig: die resource-Url enthält -> platform:/resource// (doppelter slash)
+      // wenn der editor input über new FileEditorInput ( myInput) gemacht wird steht da nur ein slash, d.h. in der
+      // URLActionOpenEditor findet eclipse den editor über activePage.find( new FileEditorInput ( myInput) ) nicht weil
+      // der Pfad sich über die anzahl der Slashes unterscheidet!
       calcCasePathAsString = ResourceUtilities.createURL( calcCaseFolder ).toString();
     }
     catch( MalformedURLException e )
@@ -123,7 +126,7 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
     // extract the calcCase.zip to the new calc folder
     final IURLAction extractAction = m_defaultActionRegistry.getURLAction( "extract" );
     final ICommandURL extractCommandURL = CommandURLFactory.createCommandURL( "kalypso://extract?sourceURL=" + sourceURL.toString() + "&target=" + calcCasePathAsString );
-    extractAction.init( workFlowContext );
+    extractAction.init( context );
     if( !extractAction.run( extractCommandURL ) )
       return false;
 
@@ -139,14 +142,18 @@ public class URLActionCreateNewMeasuresCalcCase extends AbstractURLAction
     {
       final IURLAction setBBoxAction = m_defaultActionRegistry.getURLAction( "setBBoxInGMT" );
       ICommandURL setBBoxCommand = CommandURLFactory.createCommandURL( "kalypso://setBBoxInGMT?urlGMTfrom=" + bboxFromGMT + "&urlGMTto=" + gmtLoactionString );
-      setBBoxAction.init( workFlowContext );
+      setBBoxAction.init( context );
       if( !setBBoxAction.run( setBBoxCommand ) )
         return false;
     }
     // open the editor
-    final ICommandURL openEditorCommand = CommandURLFactory.createCommandURL( "kalypso://openEditor?input=" + gmtLoactionString + "&activate=" + true );
-    openEditorAction.init( workFlowContext );
-    return openEditorAction.run( openEditorCommand );
+    if( gmtLoactionString != null )
+    {
+      final ICommandURL openEditorCommand = CommandURLFactory.createCommandURL( "kalypso://openEditor?input=" + gmtLoactionString + "&activate=" + true );
+      openEditorAction.init( context );
+      return openEditorAction.run( openEditorCommand );
+    }
+    return false;
   }
 
 }
