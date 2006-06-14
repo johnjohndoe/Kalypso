@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,6 +142,8 @@ public class FeatureHelper
     if( value instanceof String )
       return Double.valueOf( (String) value ).doubleValue();
     // should be a Double
+    if( value instanceof BigDecimal )
+      return ((BigDecimal) value).doubleValue();
     return ((Double) value).doubleValue();
   }
 
