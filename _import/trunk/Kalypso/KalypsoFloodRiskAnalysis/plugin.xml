@@ -64,5 +64,11 @@
             simulationClass="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
             typeID="CalculateStatisticJob"/>
    </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"
+            id="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"/>
+   </extension>
 
 </plugin>
