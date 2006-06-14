@@ -91,18 +91,18 @@
 	<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???reachWspmTuhhSteadyStateMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Gewässerstränge</label>
+				<tooltip>Gewässerstränge</tooltip>
+				<description>Gewässerstränge</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType" substitutionGroup="wspm:Reach">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???reachWspmTuhhSteadyState</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -132,18 +132,18 @@
 	<element name="profileReachSegmentWspmTuhhSteadyStateMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???profileReachSegmentWspmTuhhSteadyStateMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Strangsegmente</label>
+				<tooltip>Strangsegmente</tooltip>
+				<description>Strangsegmente</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???profileReachSegmentWspmTuhhSteadyState</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Station - ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station - ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station - ${property:org.kalypso.model.wspm#station}</description>
 			</documentation>
 		</annotation>
 	</element>

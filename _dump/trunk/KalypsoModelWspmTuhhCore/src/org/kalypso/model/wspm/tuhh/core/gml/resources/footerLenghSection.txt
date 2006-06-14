@@ -1,4 +1,0 @@
-
-]]>
-    </om:result>
-</om:Observation>

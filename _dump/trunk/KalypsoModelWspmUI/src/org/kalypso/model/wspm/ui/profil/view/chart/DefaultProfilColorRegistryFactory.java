@@ -21,8 +21,8 @@ public class DefaultProfilColorRegistryFactory
   {
     final ColorRegistry registry = new ColorRegistry( display, true );
 
-    registry.put( IProfilColorSet.COLOUR_GELAENDE, new RGB( 200, 50, 0 ) );
-    registry.put( IProfilColorSet.COLOUR_GELAENDE_MARKED, new RGB( 255, 150, 0 ) );
+    registry.put( IProfilColorSet.COLOUR_GELAENDE, new RGB( 255, 150, 0 ) );
+    registry.put( IProfilColorSet.COLOUR_GELAENDE_MARKED, new RGB( 200, 50, 0 ) );
     registry.put( IProfilColorSet.COLOUR_AXIS_FOREGROUND, new RGB( 0, 0, 0 ) );
     registry.put( IProfilColorSet.COLOUR_AXIS_BACKGROUND, new RGB( 255, 255, 255 ) );
     registry.put( IProfilColorSet.COLOUR_STATIONS, new RGB( 128, 128, 128 ) );

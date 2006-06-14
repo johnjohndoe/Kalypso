@@ -269,7 +269,17 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     m_pem = newPem;
 
-    updateControl();
+    if( m_control != null && !m_control.isDisposed() )
+    {
+      m_control.getDisplay().syncExec( new Runnable()
+      {
+        public void run( )
+        {
+          updateControl();
+        }
+      } );
+    }
+
   }
 
   public IProfilEventManager getProfilEventManager( )

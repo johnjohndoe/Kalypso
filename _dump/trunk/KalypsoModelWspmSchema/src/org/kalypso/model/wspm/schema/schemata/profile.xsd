@@ -16,7 +16,15 @@
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
-	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation"/>
+	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</label>
+				<tooltip>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</tooltip>
+				<description>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="ProfileType">
 		<annotation>
 			<documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent benutzt um
