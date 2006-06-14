@@ -556,4 +556,28 @@ public class GeometryUtilities
       return true;
     return false;
   }
+
+  /**
+   * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
+   * polygon is wrapped to a multi polygon.
+   * 
+   * @param geomToCheck
+   *          geometry object to check
+   * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
+   *         itself
+   * @exception a
+   *              GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
+   */
+  public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
+  {
+    Class< ? extends GM_Object> class1 = geomToCheck.getClass();
+    if( geomToCheck == null )
+      return null;
+    else if( getMultiPolygonClass().isAssignableFrom( class1 ) )
+      return (GM_MultiSurface) geomToCheck;
+    else if( getPolygonClass().isAssignableFrom( class1 ) )
+      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface) geomToCheck }, ((GM_Surface) geomToCheck).getCoordinateSystem() );
+    else
+      throw new GM_Exception( "This geometry can not be a MultiPolygon..." );
+  }
 }
