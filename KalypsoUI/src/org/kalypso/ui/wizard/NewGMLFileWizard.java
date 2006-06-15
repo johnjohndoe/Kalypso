@@ -105,7 +105,9 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   {
     final IPath containerName = m_fileCreationPage.getContainerFullPath();
     final String fileName = m_fileCreationPage.getFileName();
-
+    final IFeatureType featureType = m_featureTypeSelectionPage.getSelectedFeatureType();
+    final IWorkbenchPage page = m_workbench.getActiveWorkbenchWindow().getActivePage();
+    
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
@@ -116,7 +118,6 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         // Workspace
         //
         monitor.subTask( " - creating GMLWorkspace" );
-        final IFeatureType featureType = m_featureTypeSelectionPage.getSelectedFeatureType();
         final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( featureType );
         monitor.worked( 1 );
 
@@ -148,7 +149,6 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         {
           public void run( )
           {
-            final IWorkbenchPage page = m_workbench.getActiveWorkbenchWindow().getActivePage();
             try
             {
               IDE.openEditor( page, file, true );

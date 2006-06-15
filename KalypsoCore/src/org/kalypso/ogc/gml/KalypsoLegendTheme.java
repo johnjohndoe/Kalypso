@@ -74,7 +74,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   private Color backColor = new Color( 240, 240, 240);
 
-  private int m_styleWidth = 170;
+//  private int m_styleWidth = 170;
 
   private int m_styleHeight = 50;
 

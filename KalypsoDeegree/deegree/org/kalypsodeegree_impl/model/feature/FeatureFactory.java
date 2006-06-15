@@ -212,7 +212,15 @@ public class FeatureFactory
    */
   public static GMLWorkspace createGMLWorkspace( final String schemaNamespace, final QName rootFeatureQName ) throws InvocationTargetException
   {
-    final IGMLSchema schema = GMLSchemaCatalog.getSchema( schemaNamespace, (String) null );
+    return createGMLWorkspace( schemaNamespace, rootFeatureQName, null );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
+  public static GMLWorkspace createGMLWorkspace( final String schemaNamespace, final QName rootFeatureQName, final String gmlVersion ) throws InvocationTargetException
+  {
+    final IGMLSchema schema = GMLSchemaCatalog.getSchema( schemaNamespace, gmlVersion );
     final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
     return createGMLWorkspace( rootFeatureType );
   }
