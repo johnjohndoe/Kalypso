@@ -99,8 +99,7 @@
 	        Dateien relativ zur Rechenvariante  -->
 			<input id="BREAKLINES_GML" path="${result.path.aktuell.data}/Bruchkanten.gml" relativeToCalcCase="true" />
 			<input id="BREAKLINES_PATH" path="BreaklineCollection/breaklineMember/Breakline/geometry" />
-			<!-- "org.kalypso.model.wspmbreakline" -->
-
+			<input id="QUALITY_MIN_ANGLE" path="15" />
 			<!-- 
 	    Ergebnisse -->
 			<output id="ResultFilePoly" path="${result.path.aktuell.data}/triangle.poly" relativeToCalcCase="true" />
