@@ -486,11 +486,28 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private String createFeatureId( final IFeatureType type )
   {
-    String id = type.getQName().getLocalPart();
-    int no = 0;
-    while( m_indexMap.containsKey( id + Integer.toString( no ) ) )
-      no++;
-    return id + Integer.toString( no );
+    // REMARK: Performance Bufix
+    // The commented code (see below) caused a serious performance
+    // problem to long lists of homogenous features.
+
+    // SLOW: do not comment in!
+    // int no = 0;
+    // while( m_indexMap.containsKey( id + Integer.toString( no ) ) )
+    // no++;
+    // return id + Integer.toString( no );
+
+    // We now create random numbered feature ids,
+    // which normally should lead to only one try for finding a new id
+    final String name = type.getQName().getLocalPart();
+    while( true )
+    {
+      final long rnd = Math.round( Math.random() * m_indexMap.size() );
+      final long time = System.currentTimeMillis();
+      final String id = name + time + rnd;
+      if( !m_indexMap.containsKey( id ) )
+        return id;
+    }
+
   }
 
   /**
@@ -561,7 +578,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     else if( srcFE.getProperty( linkProp ) == null )
       srcFE.setProperty( linkProp, featureID );
     else
-      throw new Exception( "New Feature as allready set" );
+      throw new Exception( "New Feature as already set" );
   }
 
   /**
