@@ -10,6 +10,7 @@
          ================================= -->
 	<target name="calculationProperties">
 		<echo message="Result path: ${result.path}" />
+		<echo message="Calc path: ${calc.path}" />
 		<echo message="Calc XPath: ${calc.xpath}" />
 
 		<property name="result.dir" value="${calc.dir}/${result.path}" />
@@ -111,6 +112,28 @@
 			<output id="SimulationLog" path="${result.path.aktuell.logs}/ConstraintDelaunay.log"  relativeToCalcCase="true"/>
 			<output id="KernelLog" path="${result.path.aktuell.logs}/ConstraintDelaunay.out"  relativeToCalcCase="true"/>
 			<output id="KernelErr" path="${result.path.aktuell.logs}/ConstraintDelaunay.err"  relativeToCalcCase="true"/>
+		</kalypso.runCalculation>
+	</target>
+
+	<!-- ================================= 
+          target: runGmlProcessFloodDepth              
+         ================================= -->
+	<target name="runGmlProcessFloodDepth" description="Führt die Fliesstiefenermittlung durch" depends="calculationProperties">
+		<kalypso.runCalculation typeID="KalypsoGmlProcesses.FloodDepthV1.0" calcCaseFolder="${calc.path}">
+		    <!-- 
+		        Dateien relativ zur Rechenvariante  -->
+		    <input id="TRIANGLES_GML" path="${result.path.aktuell.data}/triangle.gml" relativeToCalcCase="true"/>
+		    <input id="DTM_GML" path="Grunddaten/dgm_unterlauf.gml" relativeToCalcCase="false"/>
+		    <input id="DTM_RASTER" path="Grunddaten/dgm_unterlauf.tif" relativeToCalcCase="false"/>
+		    <!-- 
+		    Ergebniss -->
+		    <output id="ResultFileGML" path="${result.path.aktuell.data}/floodDepth.gml"/>
+
+		    <!-- 
+		    Output des CalcJobs -->
+			<output id="SimulationLog" path="${result.path.aktuell.logs}/FloodDepth.log"  relativeToCalcCase="true"/>
+			<output id="KernelLog" path="${result.path.aktuell.logs}/FloodDepth.out"  relativeToCalcCase="true"/>
+			<output id="KernelErr" path="${result.path.aktuell.logs}/FloodDepth.err"  relativeToCalcCase="true"/>
 		</kalypso.runCalculation>
 	</target>
 
