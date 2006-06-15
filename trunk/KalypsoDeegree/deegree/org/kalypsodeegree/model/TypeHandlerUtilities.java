@@ -56,7 +56,6 @@ import ogc31.www.opengis.net.gml.DirectionPropertyType;
 import ogc31.www.opengis.net.gml.GridDomainType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
 import ogc31.www.opengis.net.gml.RangeSetType;
-import ogc31.www.opengis.net.gml.RectifiedGridDomainType;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -78,6 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandlerGml3;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import ork.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
@@ -563,7 +563,11 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false ) );
+    // We do not use the binding classes, because they do not work
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
+    // "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false )
+    // );
+    registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
 
     // for the elements of ConventionalUnitType
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true, false ) );
