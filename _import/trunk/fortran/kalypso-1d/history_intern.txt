@@ -793,19 +793,19 @@ Kalypso 1.1b   02. Juni 2006
                                                     Wolf Plöger, 02.06.2006
 
 Kalypso 1.1c   03. Juni 2006
----------------------------
+----------------------------
 1.)  Analysieren des Übergabefehlers von MENGF-OVRLA und MENGL-PUNLA.
 
                                                     Wolf Plöger, 03.06.2006
 
 Kalypso 1.1d   06. Juni 2006
----------------------------
+----------------------------
 1.)  Behebung des Übergabefehlers von MENGF-OVRLA und MENGL-PUNLA.
 
                                                     Wolf Plöger, 06.06.2006
 
 Kalypso 1.1e   06. Juni 2006
----------------------------
+----------------------------
 1.)  Explizite Definition aller Variablen in WSPBER, dabei Behebung eines
      Fehlers beim Hochzaehlen der Blattnummer (NBLATT). Trotzdem immer
      BUG bei der Blattzahl bei WQ-Tabellen.
@@ -816,5 +816,13 @@ Kalypso 1.1e   06. Juni 2006
 3.)  Löschen der Datei "mitvor.f90" und Definition einer neuen REAL FUNCTION
      zur Berechnung der mitwirkenden Vorlandbreite GET_MITVOR in
      "globale_funktionen.f90". Aenderung beim Aufruf in PASCHE.
+
+                                                    Wolf Plöger, 06.06.2006
+
+Kalypso 1.1f   06. Juni 2006
+----------------------------
+1.)  BUG gefunden in PASCHE bei der Berechnung des 
+     Trennflächenwiderstandes. Fehler: CTFAK kann nicht berechnet werden.
+     Fehler tritt auf bei Kollau Projekt von Klütz & Collegen (Wagener)
 
                                                     Wolf Plöger, 06.06.2006

@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:03 pm
+!     Last change:  WP   13 Jun 2006   10:00 am
 !--------------------------------------------------------------------------
 ! This code, Abfluss.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 SUBROUTINE abfluss (ad, aue, apg, wl, rhy, raub, breite, he1, hr3,&
                   & qd, qw, qges, aue3, wl3, iart)
 
-!**
+
 !JK   BESCHREIBUNG: BERECHNUNG DES GESAMTABFLUSSES AN EINEM             
 !JK                 BRUECKENPROFIL; DRUCKABFLUSS + UEBERFALLABFLUSS     
 !**                                                                     

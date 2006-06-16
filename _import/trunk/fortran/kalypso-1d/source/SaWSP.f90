@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Aug 2005    3:34 pm
+!     Last change:  WP    7 Jun 2006    4:36 pm
 !--------------------------------------------------------------------------
 ! This code, SaWSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -113,21 +113,23 @@ END SUBROUTINE schnpkt
 
 
 !***********************************************************************
-SUBROUTINE schwpkt (max, n, xu, yu, xs, ys, f, igra, gen)
+SUBROUTINE schwpkt (maxkla, n, xu, yu, xs, ys, f, igra, gen)
                                                                         
 ! das programm findet den schwerpunkt eines Flaechenbereiches
-                                                                        
-! max 		: input, maximallaenge von vektoren x,y
-! n   		: input, anzahl der grenzpunkte
-! xu,yu 	: input, koordinaten der grenzpunkte
-! xs,ys 	: output, schwerpunktkoordinaten
-! f     	: output, flaecheninhalt des gebietes
-! igra=1 	: mit grafik
-! igra=0 	: ohne grafik
-                                                                        
-DIMENSION x (200), y (200)
-                                                                        
-DIMENSION xu (max), yu (max)
+
+! Calling variables
+INTEGER, INTENT(IN) 	:: maxkla       ! maximallaenge von vektoren x,y
+INTEGER, INTENT(IN) 	:: n            ! anzahl der grenzpunkte
+REAL, DIMENSION(maxkla) :: xu, yu       ! koordinaten der grenzpunkte
+REAL                    :: f            ! flaecheninhalt des gebietes
+REAL                    :: gen          ! Genauigkeit
+REAL, INTENT(OUT)       :: xs, ys       ! schwerpunktkoordinaten
+INTEGER                 :: igra         ! =1 mit grafik, =0 ohne grafik
+
+! Local variables
+DIMENSION x (maxkla), y (maxkla)
+INTEGER :: i, ivz, n1, iflag
+
                                                                         
 
 DO i = 1, n
@@ -146,7 +148,7 @@ ELSE
   n1 = n
 ENDIF
 
-CALL flae_inh (max, n1, x, y, f) 
+CALL flae_inh (maxkla, n1, x, y, f)
                                                                         
 IF (abs (f) .lt.gen) then
   ! Flaeche ist null.
@@ -157,20 +159,20 @@ ENDIF
 
 IF (f.lt.0.) then
   iflag = 1
-  CALL reih_inv (max, n1, x, y)
+  CALL reih_inv (maxkla, n1, x, y)
   f = - f
 ENDIF
                                                                         
-CALL integrat (max, n1, x, y, fx, - 1)
-CALL integrat (max, n1, y, x, fy, + 1)
+CALL integrat (maxkla, n1, x, y, fx, - 1)
+CALL integrat (maxkla, n1, y, x, fy, + 1)
 
 xs = fx / f
 ys = fy / f
 
 CALL t0f (x, y, xs, ys, xmax, xmin, ymax, ymin, n1, - 1)
-! if(igra.eq.1) call grafik(max,n1,x,y,xs,ys)
 
-IF (iflag.eq.1) call reih_inv (max, n1, x, y)
+
+IF (iflag.eq.1) call reih_inv (maxkla, n1, x, y)
 
 f = f * (xmax - xmin) * (ymax - ymin) 
 

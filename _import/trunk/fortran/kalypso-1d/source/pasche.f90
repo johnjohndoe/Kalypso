@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    3:21 pm
+!     Last change:  WP    6 Jun 2006    4:28 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -142,8 +142,7 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 !**   itrli   --      Punktnummer der linken Trennfl‰che                
 !**   itrre   --      Punktnummer der rechten Trennfl‰che               
 !**   l_hg    --      Widerstandsbeiwert des Fluﬂschauches
-!**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes          
-!**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes          
+!**   l_ks    --      Widerstandsbeiwert eines Teilabschnittes
 !**   l_tr    --      Widerstandsbeiwert der Trennfl‰che                
 !**   l_tr(1) --      Widerstandsbeiwert der linken Trennfl‰che         
 !**   l_tr(2) --      Widerstandsbeiwert der rechten Trennfl‰che        
@@ -746,11 +745,13 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                 ctfak = u_tr (i1) / l_ks (ik)
               ELSE
                 !UT  SCHREIBEN IN KONTROLLFILE
-                write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich.'' )')
+                write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. l_ks(ik) < 1.e-04!'' )')
+                write (UNIT_OUT_LOG, 8902) ik, l_ks(ik), i1, u_tr(i1), l_tr(i1)
+                8902 format (1X, 'IK=', i3, ' l_ks(ik) = ', F10.6, ' I1 = ', I3, ' u_tr(i1) = ', F10.5, ' l_tr(i1) = ', F10.5)
               ENDIF
             ELSE
               !UT     SCHREIBEN IN KONTROLLFILE
-              write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich.'')')
+              write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. ik <= 0!'')')
             ENDIF
 
             ianf_hg = max (itrli, ischl)

@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    2:32 pm
+!     Last change:  WP    7 Jun 2006    3:57 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -408,7 +408,12 @@ if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
       qvar = MAX_Q
     ENDIF
 
+
+    !--------------------------------------------------------------
     CALL wspber ()
+    !--------------------------------------------------------------
+
+
 
     !************************************************
     !**    Ergaenzung vom 27.10.92 J. Csocsan

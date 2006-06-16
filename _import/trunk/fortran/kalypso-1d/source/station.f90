@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:56 pm
+!     Last change:  WP    7 Jun 2006    4:17 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,75 +38,75 @@
 ! Research Associate
 !***********************************************************************
 
+
+
+!-----------------------------------------------------------------------
 SUBROUTINE station (sgef, nprof, hgrenz, q, hr, hv, rg, indmax,   &
          & hvst, hrst, psiein, psiort, hi, xi, s, ikenn, froud, str,    &
          & ifehl, nblatt, nz, idr1)
-
-!***********************************************************************
-!**                                                                     
-!**   SUBROUTINE STATION ZU WSPWIN                                      
-!**                                                                     
-!**                                                                     
-!**   Bestimmung eines stationaer gleichfoermigen wasserspiegels bei    
-!**   angenommenem sohlgefaelle sgef                                    
-!**                                                                     
-!**                                                                     
-!**   IN DIESER SUBROUTINE VERWENDETE VARIABLEN                         
-!**   -----------------------------------------                         
-!**                                                                     
-!**   del     --      Grenzkriterium
-!**   dela    --      Grenzkriterium                                    
-!**   dfh     --      Höhendifferenz                                    
-!**   dfh     --      Höhendifferenz                                    
-!**   dx      --      Schrittweite                                      
-!**   froud   --      Froud-Zahl                                        
-!**   hborda  --      Einengungsverlust                                 
-!**   hdif1   --      Höhendifferenz                                    
-!**   hdif2   --      Höhendifferenz                                    
-!**   heins   --      Einlaufverlust                                    
-!**   hgrenz  --      Grenztiefe                                        
-!**   hmax    --      maximale Höhe                                     
-!**   hmin    --      minimale Höhe                                     
-!**   horts   --      Auslaufverlust                                    
-!**   hr      --      Wasserspiegelhöhe                                 
-!**   hra     --      Wasserspiegelhöhe                                 
-!**   hraa    --      Wasserspiegelhöhe                                 
-!**   hrb     --      Wasserspiegelhöhe                                 
-!**   hrst    --      Reibungsverlust                                   
-!**   hrsta   --      Reibungsverlust                                   
-!**   hrstb   --      Reibungsverlust                                   
-!**   hukmax  --      maximale Höhe der Brückenunterkante               
-!**   hvst    --      Geschwindigkeitsverlust                           
-!**   ibridge --      Abfrage Brückenprofil                             
-!**   idruck  --      Charakterisierung des Druckabflusses              
-!**   ifehl   --      Fehlervariable                                    
-!**   iprof   --      Art des Profiles                                  
-!**   istat   --      Stationsnummer                                    
-!**   jdruck  --      Charakterisierung des Druckabflusses              
-!**   nblatt  --      Anzahl der Blätter des Ergebnisfiles
-!**   nprof   --      Anzahl der Punkte in einem Profil                 
-!**   nz      --      Anzahl der Zeilen des Ergebnisfiles               
-!**   q       --      Abfluß                                            
-!**   q1      --      Abfluß                                            
-!**   rdruck  --      Charakterisierung des Druckabflusses              
-!**   salt    --      Verhältnis Reibungsverlust / Stationsabstand      
-!**   sgef    --      Sohlgefälle                                       
-!**   sist    --      Verhältnis Reibungsverlust / Stationsabstand      
-!**   sista   --      Verhältnis Reibungsverlust / Stationsabstand      
-!**   sistb   --      Verhältnis Reibungsverlust / Stationsabstand      
-!**   str     --      Stationsabstand                                   
-!**   ws1     --      Wasserspiegelhöhe                                 
-!**                                                                     
-!**                                                                     
-!**   AUFGERUFENE ROUTINEN                                              
-!**   --------------------                                              
-!JK   abskst                                                            
-!**   verluste(str,q,q1,nprof,hr,hv,rg,hvst,hrst,indmax,                
-!**            psiein,psiort,jw5,hi,xi,s,istat,froud,ifehlg,itere1)     
-!JK   erfroud                                                           
-!JK   kopf                                                              
-!**                                                                     
-!***********************************************************************
+!
+! Beschreibung
+! ------------
+! Bestimmung eines stationaer gleichfoermigen wasserspiegels bei
+! angenommenem sohlgefaelle sgef
+!
+!
+! IN DIESER SUBROUTINE VERWENDETE VARIABLEN
+! -----------------------------------------
+!
+! del     --      Grenzkriterium
+! dela    --      Grenzkriterium
+! dfh     --      Höhendifferenz
+! dfh     --      Höhendifferenz
+! dx      --      Schrittweite
+! froud   --      Froud-Zahl
+! hborda  --      Einengungsverlust
+! hdif1   --      Höhendifferenz
+! hdif2   --      Höhendifferenz
+! heins   --      Einlaufverlust
+! hgrenz  --      Grenztiefe
+! hmax    --      maximale Höhe
+! hmin    --      minimale Höhe
+! horts   --      Auslaufverlust
+! hr      --      Wasserspiegelhöhe
+! hra     --      Wasserspiegelhöhe
+! hraa    --      Wasserspiegelhöhe
+! hrb     --      Wasserspiegelhöhe
+! hrst    --      Reibungsverlust
+! hrsta   --      Reibungsverlust
+! hrstb   --      Reibungsverlust
+! hukmax  --      maximale Höhe der Brückenunterkante
+! hvst    --      Geschwindigkeitsverlust
+! ibridge --      Abfrage Brückenprofil
+! idruck  --      Charakterisierung des Druckabflusses
+! ifehl   --      Fehlervariable
+! iprof   --      Art des Profiles
+! istat   --      Stationsnummer
+! jdruck  --      Charakterisierung des Druckabflusses
+! nblatt  --      Anzahl der Blätter des Ergebnisfiles
+! nprof   --      Anzahl der Punkte in einem Profil
+! nz      --      Anzahl der Zeilen des Ergebnisfiles
+! q       --      Abfluß
+! q1      --      Abfluß
+! rdruck  --      Charakterisierung des Druckabflusses
+! salt    --      Verhältnis Reibungsverlust / Stationsabstand
+! sgef    --      Sohlgefälle
+! sist    --      Verhältnis Reibungsverlust / Stationsabstand
+! sista   --      Verhältnis Reibungsverlust / Stationsabstand
+! sistb   --      Verhältnis Reibungsverlust / Stationsabstand
+! str     --      Stationsabstand
+! ws1     --      Wasserspiegelhöhe
+!
+!
+! AUFGERUFENE ROUTINEN
+! --------------------
+! abskst
+! verluste(str,q,q1,nprof,hr,hv,rg,hvst,hrst,indmax,
+!          psiein,psiort,jw5,hi,xi,s,istat,froud,ifehlg,itere1)
+! erfroud
+! kopf
+!
+!*******************************************************************
 
 USE DIM_VARIABLEN
 USE IO_UNITS
@@ -164,13 +164,6 @@ COMMON / gef_sohl / g_sohl
 ! COMMON-Block /GES/ ----------------------------------------------------------
 REAL 		:: fges, brges, uges, akges, vges, rhges, alges
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
-! -----------------------------------------------------------------------------
-
-
-! COMMON-Block /P1/ -----------------------------------------------------------
-!CHARACTER(LEN=nch80) :: ereignis, fnam1, fluss
-!CHARACTER(LEN=1) :: bordvoll
-!COMMON / p1 / ereignis, fnam1, bordvoll, fluss
 ! -----------------------------------------------------------------------------
 
 
