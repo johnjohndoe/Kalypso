@@ -44,7 +44,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -97,11 +96,16 @@ public class URLActionCopyFile extends AbstractURLAction
       }
       else
         targetPath = context.getContextCalcDir().getFullPath().addTrailingSeparator().append( sourceFile.getName() );
+      getWorkspaceRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( MalformedURLException e )
     {
       e.printStackTrace();
       return false;
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
     }
     // check if resource allready exists
     final IResource member = getWorkspaceRoot().findMember( targetPath );
@@ -110,7 +114,7 @@ public class URLActionCopyFile extends AbstractURLAction
       if( MessageDialog.openConfirm( getShell(), "FLOWS Planer Portal", "Sollen die existierenden Maßnahmen für die neue Berechnung überschieben werden?" ) )
         try
         {
-          member.delete( false, null );
+          member.delete( true, null );
         }
         catch( CoreException e )
         {
@@ -124,7 +128,7 @@ public class URLActionCopyFile extends AbstractURLAction
       try
       {
         getWorkspaceRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
-        sourceFile.copy( targetPath, false, null );
+        sourceFile.copy( targetPath, true, null );
       }
       catch( CoreException e )
       {

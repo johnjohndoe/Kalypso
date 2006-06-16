@@ -90,7 +90,7 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             category="org.kalypso.portal.loadProject.wizard"
-            class="org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard"
+            class="org.kalypso.portal.wizard.NewDssProjectWizard"
             id="org.kalypso.portal.wizard.newPlanerProject"
             name="neues Planer-Client Projekt"
             project="true"/>
