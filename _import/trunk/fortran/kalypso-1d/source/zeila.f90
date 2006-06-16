@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:54 pm
+!     Last change:  WP   16 Jun 2006    5:41 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -540,34 +540,7 @@ IF (mark.eq.1.or.mark.eq.3) then
      ENDIF
 
 
-     !WP 26.04.2006
-     !WP Folgender Block wurde durch die unten aufgeführten Ausgaben ersetzt.
-     ! ST --------------------------------------------------------------------
-     ! ST 30.03.2005
-     ! Schreibe in Datei laengsschnitt.txt Tabelle
-
-     !Tabellenkopf
-     !WRITE (UNIT_OUT_LAENGS, 7) MMTTJJ , HHMMSS
-     !WRITE (UNIT_OUT_LAENGS, 8) 'Stat', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
-     !                        & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re'
-
-     !WRITE (UNIT_OUT_LAENGS, 8) 'km'  , 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
-     !                        & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm'
-
-
-     !Werte für jedes Profil
-     !DO i = 1, nprof
-     !
-     !  tau_fl(i) = (rk_fl(i) / 8) * rho * vp_fl(i)**2
-     !
-     !  WRITE (UNIT_OUT_LAENGS, 9) Stat1(i), sohl1(i), wsp1(i), hen1(i), bv1(i), boli1(i), bore1(i), vbv1(i), &
-     !             & tau_fl(i), rk_li(i), rk_fl(i), rk_re(i), fp_li(i), fp_fl(i), fp_re(i), br_li(i), br_fl(i), br_re(i)
-     !
-     !END DO
-
-     !write (UNIT_OUT_LAENGS, *)
-
-
+     !WP Kopfzeile der Ausgabedatei "laengsschnitt.txt"
      WRITE (UNIT_OUT_LAENGS, 80) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
                              & 'tau_fl', 'lamb_li', 'lamb_fl', 'lamb_re', 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
                              & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN'
@@ -578,6 +551,16 @@ IF (mark.eq.1.or.mark.eq.3) then
 
 
      do i = 1, anz_prof(1)
+
+       !WP 16.06.2006
+       !WP Durch die komplizierten Iterationsschleifen bei der Lambda-Berechnung kann
+       !WP Lambda sehr groß werden. Das ist unrealistisch. Um das Format zu wahren,
+       !WP werden die Lambda-Werte bei der Ausgabe auf 99.9999 begrenzt!
+       do j = 1, 3
+         if (out_IND(i,1,j)%lambda > 99.9999) then
+           out_IND(i,1,j)%lambda = 99.9999
+         end if
+       end do
 
        write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
                                 & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
