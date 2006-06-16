@@ -130,13 +130,13 @@ public class KalypsoDssCalcJob implements ISimulation
 
     final File hqJobsBaseDir = new File( tmpdir, "hqJobs" );
     hqJobsBaseDir.mkdirs();
-    // read .calculation
     final URL controlURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_METADATA_ID );
     // TODO implement optimizing job
     boolean optimize = false;
     String choiseCalcCase = null;
     try
     {
+      // read .calculation
       final GMLWorkspace control = GmlSerializer.createGMLWorkspace( controlURL );
       final Feature rootFeatureControl = control.getRootFeature();
       choiseCalcCase = (String) rootFeatureControl.getProperty( new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_CALCCASE_PROP ) );
@@ -309,6 +309,8 @@ public class KalypsoDssCalcJob implements ISimulation
       setAllResultFlags( modelWorkspace, false );
       final Feature[] affectedChannels = getAffectedChannels( modelWorkspace, designAreaURL );
       setFeaturesWithResults( modelWorkspace, affectedChannels );
+      // the calcCase always generates results for all elements in the rrm
+      setAllResultFlags( modelWorkspace, true );
     }
     catch( Exception e )
     {
@@ -996,8 +998,6 @@ public class KalypsoDssCalcJob implements ISimulation
       if( property != null )
         m_featruesWithResults.add( (String) property );
     }
-    setAllResultFlags( modelworkspace, true );
-
   }
 
   private List getRootNetElements( HashMap<String, NetElement> netElements, Feature rootNode ) throws Exception
