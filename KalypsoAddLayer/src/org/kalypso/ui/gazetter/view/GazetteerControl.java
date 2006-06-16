@@ -59,6 +59,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper.CoreRunnableWrapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.wfs.WFSUtilities;
 import org.kalypso.view.gazetter.GazetterLocationType;
@@ -145,7 +148,6 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     }
     else
       return; // never happens
-
     final Job job = new Job( "Gazetter: load" + featureTypeToLoad.getLocalPart() )
     {
       @Override
@@ -153,7 +155,6 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       {
         try
         {
-
           setContent( WFSUtilities.createGMLWorkspaceFromGetFeature( m_baseURL, featureTypeToLoad, targetCRS, filter, maxFeatureAsString ) );
           setEnable( true );
         }
@@ -162,6 +163,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
           e.printStackTrace();
           setContent( null );
           setEnable( false );
+          return StatusUtilities.createErrorStatus( "Fehler beim Zugriff auf den Gazetteer-Server. Es sind keine Daten abrufbar. Wiederholen Sie den Vorgang zu einem spaeteren Zeitpunkt oder wenden Sie sich an den Administrator/Provider" );
         }
         return Status.OK_STATUS;
       }

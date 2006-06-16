@@ -44,9 +44,10 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
-import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
+import org.kalypso.gmlschema.types.AbstractGM_EnvelopeBindingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
@@ -62,19 +63,22 @@ import org.xml.sax.ext.LexicalHandler;
  * 
  * @author doemming
  */
-public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
+public class GM_EnvelopeBindingTypeHandler extends AbstractGM_EnvelopeBindingTypeHandler
 {
-  public GenericGM_ObjectBindingTypeHandler( JAXBContextProvider jaxbContextProvider, QName xmlTypeQName, QName xmlTagQName, Class gm_objectClass, boolean isGeometry )
+  private QName m_xmlTagNameGML2 = new QName( NS.GML2, "Box" );
+
+  private QName m_xmlTagNameGML3 = new QName( NS.GML3, "Envelope" );
+
+  public GM_EnvelopeBindingTypeHandler( JAXBContextProvider jaxbContextProvider, QName xmlTypeQName, Class gm_objectClass, boolean isGeometry )
   {
-    super( jaxbContextProvider, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false, true );
+    super( jaxbContextProvider, xmlTypeQName, gm_objectClass, isGeometry, false, true );
   }
 
   /**
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  @Override
-  public void unmarshal( XMLReader xmlReader, URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     final UnMarshallResultEater eater = new UnMarshallResultEater()
     {
@@ -96,24 +100,24 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
         }
       }
     };
-
-    super.unmarshal( xmlReader, context, eater, gmlVersion );
+    final QName xmlTagName = getXMLTagNameForGMLVersion( gmlVersion );
+    unmarshal( xmlTagName, xmlReader,  eater, gmlVersion );
   }
 
   /**
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  @Override
   public void marshal( QName propQName, Object geometry, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
       final AdapterValueToGMLBinding valueToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
-      final Object bindingObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Object) geometry );
+      final Object bindingObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Envelope) geometry );
       // final AbstractGeometryType wrappedValue = GMLBindingGM_ObjectAdapter_GML31.createBindingGeometryType(
       // gmlVersion, geometry );
-      super.marshal( propQName, bindingObject, contentHandler, lexicalHandler, context, gmlVersion );
+      final QName xmlTagName = getXMLTagNameForGMLVersion( gmlVersion );
+      super.marshal( xmlTagName, propQName, bindingObject, contentHandler, lexicalHandler, context, gmlVersion );
     }
     catch( final Exception e )
     {
@@ -125,21 +129,18 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  @Override
-  public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
+  public Object cloneObject( final Object objectToClone, String gmlVersion ) throws CloneNotSupportedException
   {
     try
     {
       final GM_Object geometry = (GM_Object) objectToClone;
 
-//      final String gmlVersion = "3.1";
-//
       final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
       final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
 
       final Object bindingGeometry = objectToGMLBindingAdapter.wrapToBinding( geometry );
-
-      final Object clonedBindingGeometry = super.cloneObject( bindingGeometry, gmlVersion );
+      final QName xmlTagName = getXMLTagNameForGMLVersion( gmlVersion );
+      final Object clonedBindingGeometry = cloneObject( bindingGeometry, xmlTagName );
 
       final Class geometryClass = getValueClass();
       final Object result = bindingToGM_ObjectAdapter.wrapFromBinding( clonedBindingGeometry, geometryClass );
@@ -149,6 +150,13 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     {
       throw new CloneNotSupportedException( e.getLocalizedMessage() );
     }
+  }
+
+  private QName getXMLTagNameForGMLVersion( final String gmlVersion )
+  {
+    if( gmlVersion != null && gmlVersion.startsWith( "3" ) )
+      return m_xmlTagNameGML3;
+    return m_xmlTagNameGML2; // gml2
   }
 
 }

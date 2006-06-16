@@ -50,9 +50,6 @@ import java.util.StringTokenizer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
 import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
@@ -75,13 +72,7 @@ import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
-import org.kalypso.gmlschema.types.DOMConstructor;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -97,10 +88,8 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
@@ -124,8 +113,8 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
   public GM_Object createGM_Object( Element element )
   {
-    // TODO Auto-generated method stub
-    return null;
+    // see gml2xadapter
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -133,52 +122,53 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
    */
   public Element createElement( final String gmlVersion, GM_Object geometry )
   {
+    // see gml2xadapter
+    throw new UnsupportedOperationException();
     // TODO
-    try
-    {
-      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      final QName qName = new QName( "namespaceabc", "geometry", "pre" );
-      final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
-
-      // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
-      // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
-
-      // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
-
-      final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-      fac.setNamespaceAware( true );
-      final DocumentBuilder builder = fac.newDocumentBuilder();
-      final Document document = builder.newDocument();
-      final UnMarshallResultEater eater = new UnMarshallResultEater()
-      {
-        public void eat( Object value )
-        {
-          if( value instanceof Node )
-          {
-            String string = XMLHelper.toString( (Node) value );
-            System.out.println( string );
-          }
-        }
-      };
-      // Element element = document.createElement("test");
-      // document.appendChild(element);
-      final DOMConstructor constructor = new DOMConstructor( document, eater );
-      constructor.startElement( "bla", "blub", "b:blub", new AttributesImpl() );
-      typeHandler.marshal( qName, geometry, constructor, null, null, gmlVersion );
-
-      // marshaller.marshal( bindingElement, document );
-      String string1 = XMLHelper.toString( document );
-      Node node = constructor.getNode();
-      String string2 = XMLHelper.toString( node );
-      return document.getDocumentElement();
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    // called from SpatialOperation.toXML()
-    return null;
+//    try
+//    {
+//      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+//      final QName qName = new QName( "namespaceabc", "geometry", "pre" );
+//      final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
+//
+//      // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
+//      // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
+//
+//      // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
+//
+//      final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+//      fac.setNamespaceAware( true );
+//      final DocumentBuilder builder = fac.newDocumentBuilder();
+//      final Document document = builder.newDocument();
+//      final UnMarshallResultEater eater = new UnMarshallResultEater()
+//      {
+//        public void eat( Object value )
+//        {
+//          if( value instanceof Node )
+//          {
+//            String string = XMLHelper.toString( (Node) value );
+//            System.out.println( string );
+//          }
+//        }
+//      };
+//      // Element element = document.createElement("test");
+//      // document.appendChild(element);
+//      final DOMConstructor constructor = new DOMConstructor( document, eater );
+//      constructor.startElement( "bla", "blub", "b:blub", new AttributesImpl() );
+//      typeHandler.marshal( qName, geometry, constructor, null, null, gmlVersion );
+//
+//      // marshaller.marshal( bindingElement, document );
+//      String string1 = XMLHelper.toString( document );
+//      Node node = constructor.getNode();
+//      String string2 = XMLHelper.toString( node );
+//      return document.getDocumentElement();
+//    }
+//    catch( Exception e )
+//    {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+//    // called from SpatialOperation.toXML()
   }
 
   private GM_Envelope createGM_Envelope( EnvelopeType bindingEnvelope )
@@ -193,8 +183,26 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       return GeometryFactory.createGM_Envelope( minPos, maxPos );
     }
     final CoordinatesType coordinates = bindingEnvelope.getCoordinates();
-    final GM_Position[] positions = createGM_Positions( coordinates );
-    return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
+    if( coordinates != null )
+    {
+
+      final GM_Position[] positions = createGM_Positions( coordinates );
+      return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
+    }
+    // TODO coordinates
+    DirectPositionType lowerCorner = bindingEnvelope.getLowerCorner();
+    DirectPositionType upperCorner = bindingEnvelope.getUpperCorner();
+    // TODO directPosition lower and upper
+    final List<DirectPositionType> pos = bindingEnvelope.getPos();
+    if( pos != null && !pos.isEmpty() )
+    {
+      final List<Double> min = pos.get( 0 ).getValue();
+      final List<Double> max = pos.get( 1 ).getValue();
+      final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
+      final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos );
+    }
+    throw new UnsupportedOperationException();
   }
 
   private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs )

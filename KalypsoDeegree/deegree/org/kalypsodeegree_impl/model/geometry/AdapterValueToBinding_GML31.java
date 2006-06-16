@@ -66,8 +66,8 @@ import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
 
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -339,5 +339,14 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     {
       throw new GM_Exception( "could not marshall to Element", e );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public Object wrapToBinding( GM_Envelope geometry )
+  {
+    // TODO see gml2x adapter
+    throw new UnsupportedOperationException();
   }
 }

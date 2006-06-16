@@ -71,9 +71,11 @@ import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.swe.RepresentationTypeHandler;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_EnvelopeBindingTypeHandler;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
@@ -554,8 +556,12 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
 
+//    {http://www.opengis.net/gml}GeometryPropertyType
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName(NS.GML3,"GeometryPropertyType"), GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
     // TODO: the next line is wrong; GM_Envelope is no GM_Object
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
+    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
+    // "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
+    registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // other GML3 types:
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );

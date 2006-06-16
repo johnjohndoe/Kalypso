@@ -30,6 +30,8 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -44,6 +46,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -152,6 +155,7 @@ public class WFSUtilities
     }
     sb.append( "</wfs:Query>\n" );
     sb.append( "</wfs:GetFeature>" );
+    System.out.println(sb.toString());
     return sb.toString();
   }
 
@@ -190,14 +194,15 @@ public class WFSUtilities
 
         // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
-
-        // Hack for testing, please leave this comments in the sources
-        // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
-        // final File tmpFile = new File( "C:/TMP/xplanung.gml" );
-        // final OutputStream outStream = new FileOutputStream( tmpFile );
-        // StreamUtilities.streamCopy( inputStream, outStream );
-        // IOUtils.closeQuietly( inputStream );
-        // IOUtils.closeQuietly( outStream );
+//
+//        // Hack for testing, please leave this comments in the sources (doemming)
+////         final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
+//         final File tmpFile = new File( "F:/eclipse3.1/tmp/gmlEnvelope.gml" );
+////         final File tmpFile = new File( "C:/TMP/xplanung.gml" );
+//         final OutputStream outStream = new FileOutputStream( tmpFile );
+//         StreamUtilities.streamCopy( inputStream, outStream );
+//         IOUtils.closeQuietly( inputStream );
+//         IOUtils.closeQuietly( outStream );
 
         final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);

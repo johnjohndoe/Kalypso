@@ -210,7 +210,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
           g.setFont( m_font );
           g.setColor( Color.black );
           final String title = featureTheme.getName();
-          g.drawString( title, 2, m_font.getSize() );
+          if(title!=null)
+            g.drawString( title, 2, m_font.getSize() );
         }
         stylesCol.add( styleImage );
       }
