@@ -99,11 +99,11 @@ public class DssCalcJobTest extends TestCase
       {
         Class clazz = getClass();
         if( "measureSealing".equals( id ) )
-          return clazz.getResource( "dss/sealingMeasure1.gml" );
+          return clazz.getResource( "ds/sealingMeasure1.gml" );
         if( "measureRHB".equals( id ) )
-          return clazz.getResource( "dss/rhbMeasure1.gml" );
+          return clazz.getResource( "ds/rhbMeasure1.gml" );
         if( "measureMRS".equals( id ) )
-          return clazz.getResource( "dss/mrsMeasure1.gml" );
+          return clazz.getResource( "ds/mrsMeasure1.gml" );
         if( "designArea".equals( id ) )
           return clazz.getResource( "dss/BPlan/plangebiet.gml" );
         if( "xplanung".equals( id ) )
