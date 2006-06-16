@@ -5,8 +5,8 @@
 <mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
 <mapEntry key="eclipse.running" value="true"/>
 <mapEntry key="eclipse.home" value="c:\Programme\eclipse3.1"/>
-<mapEntry key="result.path" value="Ergebnisse/kollau-ist - HQ_Feb2002"/>
-<mapEntry key="calc.path" value="\\KalypsoDataWspmTuhhDemo\test\Kollau"/>
+<mapEntry key="result.path" value="Ergebnisse/Kollau-Bestand - HQ100_TUHH"/>
+<mapEntry key="calc.path" value="\\KalypsoDataWspmTuhhDemo\test\Kollau_neu"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
