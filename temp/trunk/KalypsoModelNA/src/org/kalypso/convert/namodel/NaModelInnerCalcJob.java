@@ -89,6 +89,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
@@ -995,7 +996,8 @@ public class NaModelInnerCalcJob implements ISimulation
     loadTextFileResults( tmpdir, logger, resultDir );
     if( conf.getIniWrite() )
     {
-      loadIniValues( tmpdir, logger, resultEater );
+      final LzsimManager lzsimManager = new LzsimManager();
+      lzsimManager.initialValues(conf.getIdManager(),tmpdir,logger,resultEater);
     }
     loadLogs( tmpdir, logger, resultEater );
     final File[] files = resultDir.listFiles();
@@ -1012,31 +1014,6 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void loadIniValues( final File tmpDir, final Logger logger, final ISimulationResultEater resultEater )
-  {
-    try
-    {
-      final String[] wildcards = new String[] { "*" + "lzs", "*" + "lzg" };
-      File lzsimDir = new File( tmpDir, "lzsim" );
-      final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
-      final File[] lzsimFiles = lzsimDir.listFiles( filter );
-      File lzsimZIP = new File( tmpDir, "lzsim.zip" );
-      try
-      {
-        ZipUtilities.zip( lzsimZIP, lzsimFiles, lzsimDir );
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-      resultEater.addResult( NaModelConstants.LZSIM_OUT_ID, lzsimZIP );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
-  }
 
   private String getTitleForSuffix( String suffix )
   {

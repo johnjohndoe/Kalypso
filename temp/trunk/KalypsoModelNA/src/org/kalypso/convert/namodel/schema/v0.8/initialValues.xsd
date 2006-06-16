@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:ini="http://www.tuhh.de/initialValues" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/initialValues" elementFormDefault="qualified" version="0.8">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<import namespace="inline.zml.kalypso.org" schemaLocation="zmlinline.xsd"/>
+	<element name="InitialValues" type="ini:IniType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Anfangswerte</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>initial values</label>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="IniType">
+		<complexContent>
+			<extension base="ini:NonGeometricAbstractFeatureType">
+				<sequence>
+					<element name="catchmentMember" type="ini:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Teilgebietsliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>snow list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="channelMember" type="ini:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Strangliste</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil alyer list</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="iniDate" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Datum</label>
+								<tooltip>Datum der Anfangswerte</tooltip>
+								<description>Datum, für welches die Anfangswertsituation abgelegt ist</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>date</label>
+								<tooltip>date of initial values</tooltip>
+								<description>date of initial values</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NonGeometricAbstractFeatureType" abstract="true">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<!--___Catchment_________________________________________________-->
+	<complexType name="CatchmentAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="ini:Catchment"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Catchment" type="ini:CatchmentType" substitutionGroup="gml:_Feature"/>
+	<complexType name="CatchmentType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="featureId" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>TeilgebietsID</label>
+								<tooltip>TeilgebietsID</tooltip>
+								<description>TeilgebietsID</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>subcatchmentsID</label>
+								<tooltip>subcatchmentsID</tooltip>
+								<description>subcatchmentsID</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="geometry" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geometrie</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="h" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schneehöhe</label>
+								<tooltip>Schneehöhe</tooltip>
+								<description>Schneehöhe [mm]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>snow depth</label>
+								<tooltip>snow depth</tooltip>
+								<description>snow depth [mm]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO:Ist dies der wassergehalt?-->
+					<element name="ws" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wassergehalt</label>
+								<tooltip>Wassergehalt</tooltip>
+								<description>Wassergehalt</description>
+							</documentation>
+							<!--							<documentation xml:lang="en">
+								<label></label>
+								<tooltip></tooltip>
+								<description></description>
+							</documentation>-->
+						</annotation>
+					</element>
+					<element name="hgws" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Grundwasserstand</label>
+								<tooltip>Grundwasserstand</tooltip>
+								<description>Grundwasserstand [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>groundwater table</label>
+								<tooltip>groundwater table</tooltip>
+								<description>groundwater table [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qb" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Basisabfluss</label>
+								<tooltip>Basisabfluss</tooltip>
+								<description>Basisabfluss</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>baseflow</label>
+								<tooltip>baseflow</tooltip>
+								<description>baseflow</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="hyd" type="ini:bofAssociationType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenfeuchte (Link)</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>soil moisture (link)</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--___Channel_________________________________________________-->
+	<complexType name="ChannelAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="ini:Channel"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Channel" type="ini:ChannelType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ChannelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="featureId" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>StrangID</label>
+								<tooltip>StrangID</tooltip>
+								<description>StrangID</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>channelID</label>
+								<tooltip>channelID</tooltip>
+								<description>channelID</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="geometry" type="gml:LineStringPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geometrie</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="qgs" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abfluss</label>
+								<tooltip>Abfluss</tooltip>
+								<description>Abfluss [m³/s]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>discharge</label>
+								<tooltip>discharge</tooltip>
+								<description>discharge [m³/s]</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="bofAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="ini:IniHyd"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="IniHyd" type="ini:IniHydType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bodenanfangsfeuchte</label>
+				<tooltip>Bodenanfangsfeuchte</tooltip>
+				<description>Bodenanfangsfeuchte</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>initial soil moisture</label>
+				<tooltip>initial soil moisture</tooltip>
+				<description>initial soil moisture</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="IniHydType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="featureId" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>hydrotopID</label>
+								<tooltip>hydrotopID</tooltip>
+								<description>hydrotopID</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>hydrotopID</label>
+								<tooltip>hydrotopID</tooltip>
+								<description>hydrotopID</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bi" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Interzeptionsspeicherinhalt</label>
+								<tooltip>Interzeptionsspeicherinhalt</tooltip>
+								<description>Interzeptionsspeicherinhalt</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>inteception</label>
+								<tooltip>inteception</tooltip>
+								<description>inteception</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bofs" type="double" maxOccurs="10">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Feuchte </label>
+								<tooltip>hydrotopID</tooltip>
+								<description>hydrotopID</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>hydrotopID</label>
+								<tooltip>hydrotopID</tooltip>
+								<description>hydrotopID</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

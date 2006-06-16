@@ -2,6 +2,7 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -76,6 +77,8 @@ public class HydrotopManager extends AbstractManager
 
   final Hashtable<String, Double> m_landuseMap = new Hashtable<String, Double>();
 
+  final List<String> m_hydIdList = new ArrayList<String>();
+
   public HydrotopManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getHydrotopFormatURL() );
@@ -149,11 +152,9 @@ public class HydrotopManager extends AbstractManager
         };
 
         TreeSet<Object> hydWriteSet = new TreeSet<Object>( comparator );
-
         double versFlaeche = 0.0;
         double natFlaeche = 0.0;
         double gesFlaeche = 0.0;
-        // final List hydWriteList = new ArrayList();
         final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
 
         // Hydrotope im TeilgebietsEnvelope
@@ -169,7 +170,6 @@ public class HydrotopManager extends AbstractManager
           final Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
           if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
           {
-            // hydWriteList.add( hydFeature );
             hydWriteSet.add( hydFeature );
             double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
             String landuse = (String) hydFeature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) );
@@ -183,7 +183,6 @@ public class HydrotopManager extends AbstractManager
 
         }
 
-        // int hydAnzahl = hydWriteList.size();
         int hydAnzahl = hydWriteSet.size();
 
         double tGArea = GeometryUtilities.calcArea( tGGeomProp );
@@ -202,14 +201,15 @@ public class HydrotopManager extends AbstractManager
         asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + (long) versFlaeche + " " + (long) natFlaeche + " " + (long) gesFlaeche + "\n" );
 
         Iterator hydIter = hydWriteSet.iterator();
-        // Iterator hydIter = hydWriteList.iterator();
         int anzHydrotope = 0;
         while( hydIter.hasNext() )
         {
           anzHydrotope += 1;
           final Feature hydrotopFE = (Feature) hydIter.next();
+          m_hydIdList.add( anzHydrotope - 1, hydrotopFE.getId() );
           writeFeature( asciiBuffer, hydrotopFE, anzHydrotope );
         }
+        idManager.addHydroInfo( catchmentFE, m_hydIdList );
       }
     }
   }
@@ -230,20 +230,29 @@ public class HydrotopManager extends AbstractManager
     }
     long natHFlaeche = (long) (HGesFlaeche - (HGesFlaeche * HVersGrad * HKorVersGrad));
     // 3
+    // (flaech4,a10)(nutz,a10)_(boden,a10)(m_perkm,*)_(m_f1gws,*)_(n_hydid,*)_(m_versGes,*)_(m_hydTyp,*)
     StringBuffer b = new StringBuffer();
     b.append( FortranFormatHelper.printf( Long.toString( natHFlaeche ), "a10" ) );
     b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "landuse" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "soiltype" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
-    b.append( " " + "0.000" );
-    b.append( " " + "10.000" );
-    b.append( " " + "0.27" );
-    b.append( " " + "0.000" );
+    // b.append( " " + "0.000" );
+    // b.append( " " + "10.000" );
+    // b.append( " " + "0.27" );
+    // b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
-    b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
-    final String corrFactAsString = FeatureHelper.getAsString( feature, "corrSealing" );
-    b.append( " " + FortranFormatHelper.printf( corrFactAsString, "*" ) );
+    // INFO: the sealing rate and the correction factor was not needed in fortran code version 2.0.4. after
+    // implementation of
+    // swale and trench the sealing rate is needed in fortran. we had to change the hydrotop format and put the real
+    // sealing rate (= sealing rate * correction factor).
+    double versGrad = m_landuseMap.get( feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) ) ).doubleValue();
+    double korVersGrad = ((Double) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ) )).doubleValue();
+    double gesVersGrad = (versGrad * korVersGrad);
+    b.append( " " + FortranFormatHelper.printf( gesVersGrad, "*" ) );
+    // b.append( " " + FortranFormatHelper.printf( SealingRate.toString(), "*" ) );
+    // final String corrFactAsString = FeatureHelper.getAsString( feature, "corrSealing" );
+    // b.append( " " + FortranFormatHelper.printf( corrFactAsString, "*" ) );
 
     final String hydType = (String) feature.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_HYDTYPE ) );
     int hydTypeNumber = 0;
@@ -258,11 +267,17 @@ public class HydrotopManager extends AbstractManager
     b.append( " " + hydTypeNumber );
     asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
   }
+
   /**
    * @param asciiBuffer
    * @param hydrotopeWorkspace
    * @param modelWorkspace
    * @param parameterWorkspace
    */
+
+  public List<String> getHydIdList( )
+  {
+    return m_hydIdList;
+  }
 
 }

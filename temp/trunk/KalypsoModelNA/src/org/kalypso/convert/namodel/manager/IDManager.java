@@ -32,16 +32,17 @@ package org.kalypso.convert.namodel.manager;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * 
  * @author doemming
  */
 public class IDManager
@@ -52,11 +53,17 @@ public class IDManager
 
   public final static int NODE = 3;
 
-  final Hashtable m_featureIDMap = new Hashtable(); // feature -> IDMap
+  final Hashtable<Object, IDMap> m_featureIDMap = new Hashtable<Object, IDMap>(); // feature -> IDMap
 
-  final Hashtable m_idMapFeature = new Hashtable(); // IDMap -> feature
+  final Hashtable<IDMap, Object> m_idMapFeature = new Hashtable<IDMap, Object>(); // IDMap -> feature
 
-  public IDManager()
+  /**
+   * key: catchemntID<br>
+   * value: list hydID in reihenfolge
+   */
+  private Hashtable<String, List<String>> m_hydrohash = new Hashtable<String, List<String>>();
+
+  public IDManager( )
   {
     m_idMapFeature.put( new IDMap( 10000, NODE ), new Object() );
     m_idMapFeature.put( new IDMap( 9001, NODE ), new Object() );
@@ -67,7 +74,7 @@ public class IDManager
     final IDMap map = new IDMap( asciiID, type );
     if( m_idMapFeature.containsKey( map ) )
     {
-      return (Feature)m_idMapFeature.get( map );
+      return (Feature) m_idMapFeature.get( map );
     }
     return null;
   }
@@ -80,7 +87,7 @@ public class IDManager
       m_featureIDMap.put( feature, idMap );
       m_idMapFeature.put( idMap, feature );
     }
-    return ( (IDMap)m_featureIDMap.get( feature ) ).getAsciiID();
+    return ((IDMap) m_featureIDMap.get( feature )).getAsciiID();
   }
 
   /**
@@ -99,27 +106,26 @@ public class IDManager
   }
 
   /**
-   * 
    * @param feature
    */
   private IDMap generateAsciiID( Feature feature )
   {
     final String idProp = "name";
     int type = getType( feature );
-    //    switch( type )
-    //    {
-    //    case CATCHMENT:
-    //      idProp = "inum";
-    //      break;
-    //    case CHANNEL:
-    //      idProp = "inum";
-    //      break;
-    //    case NODE:
-    //      idProp = "num";
-    //      break;
-    //    default:
-    //      idProp = "name";
-    //    }
+    // switch( type )
+    // {
+    // case CATCHMENT:
+    // idProp = "inum";
+    // break;
+    // case CHANNEL:
+    // idProp = "inum";
+    // break;
+    // case NODE:
+    // idProp = "num";
+    // break;
+    // default:
+    // idProp = "name";
+    // }
     final Object property = feature.getProperty( idProp );
     /**
      * reserviert sind die Knoten 9001 (Anfangsknoten) <br>
@@ -130,7 +136,7 @@ public class IDManager
       if( property != null )
       {
         int testID = NumberUtils.toInteger( property.toString() );
-        //      int testID = Integer.parseInt( property.toString() );
+        // int testID = Integer.parseInt( property.toString() );
         if( testID >= 1000 && testID < 10000 )
         {
           final IDMap map = new IDMap( testID, type );
@@ -141,7 +147,7 @@ public class IDManager
     }
     catch( ParseException e )
     {
-//      e.printStackTrace();
+      // e.printStackTrace();
       // ignore exception and generate new id
     }
     int testID = 1000;
@@ -166,8 +172,8 @@ public class IDManager
 
       public int compare( Object o1, Object o2 )
       {
-        IDMap m1 = (IDMap)o1;
-        IDMap m2 = (IDMap)o2;
+        IDMap m1 = (IDMap) o1;
+        IDMap m2 = (IDMap) o2;
         int typeDiff = m1.getType() - m2.getType();
         if( typeDiff != 0 )
           return typeDiff;
@@ -177,19 +183,30 @@ public class IDManager
     sort.addAll( m_idMapFeature.keySet() );
     for( Iterator iter = sort.iterator(); iter.hasNext(); )
     {
-      IDMap idmap = (IDMap)iter.next();
+      IDMap idmap = (IDMap) iter.next();
       writer.write( idmap.toString() );
       writer.write( "\t" );
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
-        Feature feature = (Feature)value;
+        Feature feature = (Feature) value;
         writer.write( feature.getId() );
       }
       else
         writer.write( "dummy" );
       writer.write( "\n" );
     }
+  }
+
+  public List<Feature> getAllFeaturesFromType( int type )
+  {
+    final List<Feature> result = new ArrayList<Feature>();
+    for( final Object featureObject : m_featureIDMap.keySet() )
+    {
+      if( featureObject instanceof Feature && getType( (Feature) featureObject ) == type )
+        result.add( (Feature) featureObject );
+    }
+    return result;
   }
 
   public class IDMap
@@ -204,17 +221,17 @@ public class IDManager
       this.asciiID = asciiID;
     }
 
-    public int getAsciiID()
+    public int getAsciiID( )
     {
       return asciiID;
     }
 
-    public int getType()
+    public int getType( )
     {
       return type;
     }
 
-    public String toString()
+    public String toString( )
     {
       return asciiID + "\t" + type;
     }
@@ -224,18 +241,30 @@ public class IDManager
      */
     public boolean equals( Object other )
     {
-      if( !( other instanceof IDMap ) )
+      if( !(other instanceof IDMap) )
         return false;
-      final IDMap otherMap = (IDMap)other;
+      final IDMap otherMap = (IDMap) other;
       return otherMap.getAsciiID() == asciiID && otherMap.getType() == type;
     }
 
     /**
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode()
+    public int hashCode( )
     {
       return asciiID + type * 100000;
     }
+  }
+
+  public void addHydroInfo( Feature catchmentFE, List<String> hydrIdList )
+  {
+    m_hydrohash.put( catchmentFE.getId(), hydrIdList );
+
+  }
+
+  public String getHydroFeatureId( Feature catchmentFE, int pos )
+  {
+    final List<String> hydIdList = m_hydrohash.get( catchmentFE.getId() );
+    return hydIdList.get( pos );
   }
 }

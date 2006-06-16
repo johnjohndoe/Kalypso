@@ -48,6 +48,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -113,7 +116,8 @@ public class NAControlConverter
         Boolean write = (Boolean) fe.getProperty( "write" );
         if( write )
         {
-          Date initialDate = (Date) fe.getProperty( "initialDate" );
+          final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( "initialDate" ) );
+//          Date initialDate = (Date) fe.getProperty( "initialDate" );
           SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
           String iniDate = format.format( initialDate );
           b.append( iniDate + "\n" );

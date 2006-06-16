@@ -59,6 +59,8 @@ public interface NaModelConstants
   public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
 
   public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
+  
+  public static final String NS_INIVALUES = "http://www.tuhh.de/initialValues";
 
   /** server client bean constants */
   // input
