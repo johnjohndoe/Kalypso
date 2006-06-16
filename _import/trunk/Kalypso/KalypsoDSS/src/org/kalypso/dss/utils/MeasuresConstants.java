@@ -47,7 +47,11 @@ public class MeasuresConstants
 
   public static final String NS_XPLANUNG = "http://www.xplanung.de/bplangml";
 
+  public static final String NS_MESURESMETA = "http://schema.kalypso.wb.tu-harburg.de/measure/control";
+
   /** Bean id's */
+  public static final String IN_METADATA_ID = "metadata";
+
   public static final String IN_MEASURE_RHB_ID = "measureRHB";
 
   public static final String IN_MEASURE_MRS_ID = "measureMRS";
@@ -57,6 +61,13 @@ public class MeasuresConstants
   public static final String IN_DESIGN_AREA_ID = "designArea";
 
   public static final String IN_MEASURE_PLANNING_ID = "xplanung";
+
+  /** propterties for metadata file (.calculation) */
+  public static final String METADATA_OPTIMIZE_PROP = "optimize";
+
+  public static final String METADATA_CALCCASE_PROP = "calccase";
+
+  public static final String METADATA_CALCCASE_ENUM_ALL = "alle auf dem Server";
 
   /** properties and FeatureTypes for all measures */
   // retension basin measure

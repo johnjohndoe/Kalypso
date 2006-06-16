@@ -49,6 +49,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,10 +60,16 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.manager.NetFileManager;
+import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.dss.utils.MeasuresConstants;
 import org.kalypso.dss.utils.MeasuresHelper;
@@ -84,6 +91,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.visitors.CollectFeaturesWithProperty;
 import org.kalypsodeegree_impl.model.feature.visitors.SetPropertyFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -92,6 +100,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * @author kuepfer
@@ -103,18 +112,10 @@ public class KalypsoDssCalcJob implements ISimulation
 
   private File m_resultDirDSS = null;
 
-  /** assures to return only directories for a file.list() call */
-  private FilenameFilter m_dirFilter = new FilenameFilter()
-  {
+  List<String> m_featruesWithResults = new ArrayList<String>();
 
-    public boolean accept( File dir, String name )
-    {
-      File file = new File( dir, name );
-      if( file.isDirectory() )
-        return true;
-      return false;
-    }
-  };
+  /** assures to return only directories for a file.list() call */
+  private FileFilter m_dirFilter = new FileFilter();
 
   ISimulationResultEater m_resultEater;
 
@@ -129,11 +130,27 @@ public class KalypsoDssCalcJob implements ISimulation
 
     final File hqJobsBaseDir = new File( tmpdir, "hqJobs" );
     hqJobsBaseDir.mkdirs();
-
+    // read .calculation
+    final URL controlURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_METADATA_ID );
+    // TODO implement optimizing job
+    boolean optimize = false;
+    String choiseCalcCase = null;
+    try
+    {
+      final GMLWorkspace control = GmlSerializer.createGMLWorkspace( controlURL );
+      final Feature rootFeatureControl = control.getRootFeature();
+      choiseCalcCase = (String) rootFeatureControl.getProperty( new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_CALCCASE_PROP ) );
+      optimize = FeatureHelper.booleanIsTrue( rootFeatureControl, new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_OPTIMIZE_PROP ), false );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     m_resultEater = resultEater;
     final Logger logger = Logger.getAnonymousLogger();
     final URL calcCases = getClass().getResource( "../resources/hq1_bis_hq100.zip" );
     ArrayList<CalcDataProviderDecorater> dataProvieder = null;
+    String[] files = new String[0];
     try
     {
       // unzip all available calc cases hq1 to hq100
@@ -145,13 +162,15 @@ public class KalypsoDssCalcJob implements ISimulation
       monitor.setMessage( "Model ist initialisiert.." );
       if( monitor.isCanceled() )
         return;
+      if( !choiseCalcCase.equals( MeasuresConstants.METADATA_CALCCASE_ENUM_ALL ) )
+        m_dirFilter.add( new String[] { choiseCalcCase } );
 
-      String[] directories = hqJobsBaseDir.list( m_dirFilter );
+      files = hqJobsBaseDir.list( m_dirFilter );
       final String tmpdirAsString = hqJobsBaseDir.toString();
       dataProvieder = new ArrayList<CalcDataProviderDecorater>();
-      for( int i = 0; i < directories.length; i++ )
+      for( int i = 0; i < files.length; i++ )
       {
-        final String dirName = directories[i];
+        final String dirName = files[i];
         final File baseDir = new File( tmpdirAsString + "\\" + dirName );
         final NaSimulationDataProvieder naSimulationDataProvider = new NaSimulationDataProvieder( baseDir );
         dataProvieder.add( new CalcDataProviderDecorater( naSimulationDataProvider ) );
@@ -165,7 +184,7 @@ public class KalypsoDssCalcJob implements ISimulation
     int i = 1;
     while( iterator.hasNext() )
     {
-      final File resultDirRun = new File( m_resultDirDSS, "run" + i );
+      final File resultDirRun = new File( m_resultDirDSS, files[i - 1] );
       resultDirRun.mkdirs();
       final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
       {
@@ -176,7 +195,14 @@ public class KalypsoDssCalcJob implements ISimulation
           {
             try
             {
-              FileUtils.copyDirectoryToDirectory( file, resultDirRun );
+              final ResultFileFilter filter = new ResultFileFilter( m_featruesWithResults );
+              FileUtils.listFiles( file, filter, TrueFileFilter.INSTANCE );
+              File[] resultfiles = filter.getMatchingFiles();
+              for( int j = 0; j < resultfiles.length; j++ )
+              {
+                File f = resultfiles[j];
+                FileUtils.copyDirectoryToDirectory( f, resultDirRun );
+              }
             }
             catch( IOException e )
             {
@@ -205,7 +231,6 @@ public class KalypsoDssCalcJob implements ISimulation
 
   private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
-    boolean writeNewModelFile = false;
     boolean writeNewHydrotopFile = false;
     // get the urls for measures and model files
 
@@ -248,8 +273,6 @@ public class KalypsoDssCalcJob implements ISimulation
     try
     {
       modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
-      // set all generate result properties to false
-      setGenerateResults( modelWorkspace, false );
       if( planningMeasureURL != null )
       {
 
@@ -260,7 +283,6 @@ public class KalypsoDssCalcJob implements ISimulation
       if( measuresRhbURL != null )
       {
         insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
-        writeNewModelFile = true;
       }
       if( measuresSealingURL != null )
       {
@@ -273,7 +295,6 @@ public class KalypsoDssCalcJob implements ISimulation
       {
         insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
         writeNewHydrotopFile = true;
-        writeNewModelFile = true;
       }
     }
     catch( Exception e )
@@ -281,6 +302,18 @@ public class KalypsoDssCalcJob implements ISimulation
       e.printStackTrace();
       logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
       throw new SimulationException( e.getMessage(), e );
+    }
+    try
+    {
+      // set all generate result properties to false
+      setAllResultFlags( modelWorkspace, false );
+      final Feature[] affectedChannels = getAffectedChannels( modelWorkspace, designAreaURL );
+      setFeaturesWithResults( modelWorkspace, affectedChannels );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      setAllResultFlags( modelWorkspace, true );
     }
 
     Writer writerHydroTop = null;
@@ -292,12 +325,10 @@ public class KalypsoDssCalcJob implements ISimulation
         // 1. write the changed data to a new rrm and hydrotop file
         // 2. replacing in the bean the old URL to the new files
         final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
-        if( writeNewModelFile )
-        {
-          writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
-          GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-          rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
-        }
+        writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+        GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+        rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
+
         if( writeNewHydrotopFile )
         {
           final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
@@ -322,7 +353,27 @@ public class KalypsoDssCalcJob implements ISimulation
 
   }
 
-  private void insertPlanningMeasure( URL measuresPlanningURL, GMLWorkspace hydrotopWorkspace, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws Exception
+  private Feature[] getAffectedChannels( GMLWorkspace modelWorkspace, URL designAreaURL ) throws Exception
+  {
+    final GMLWorkspace designArea = GmlSerializer.createGMLWorkspace( designAreaURL );
+    FeatureList designAreaFEs = (FeatureList) designArea.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
+    Feature designAreaFE = (Feature) designAreaFEs.get( 0 );
+    final FeatureList catchmentList = (FeatureList) modelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
+    final ArrayList<Feature> channelCollector = new ArrayList<Feature>();
+    final List catchments = catchmentList.query( designAreaFE.getEnvelope(), null );
+    for( Iterator iter = catchments.iterator(); iter.hasNext(); )
+    {
+      final Feature f = (Feature) iter.next();
+      final IFeatureType featureType = f.getFeatureType();
+      final IRelationType linkCatchmentChannel = (IRelationType) featureType.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CATCHMENT_CHANNEL ) );
+      final Feature resolvedLink = modelWorkspace.resolveLink( f, linkCatchmentChannel );
+      if( resolvedLink != null )
+        channelCollector.add( resolvedLink );
+    }
+    return (Feature[]) channelCollector.toArray( new Feature[channelCollector.size()] );
+  }
+
+  private void insertPlanningMeasure( final URL measuresPlanningURL, final GMLWorkspace hydrotopWorkspace, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws Exception
   {
     final URL paramURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL );
@@ -753,23 +804,27 @@ public class KalypsoDssCalcJob implements ISimulation
     }
   }
 
-  /**
-   * Visits all features in the workspace and sets the <genereateResults/> property to false.
-   * 
-   * @parm the workspace to visit
-   */
-  private void setGenerateResults( GMLWorkspace modelWorkspace, boolean results )
+  private void setGenerateResults( GMLWorkspace modelWorkspace, URL designAreaURL ) throws Exception
   {
-    final Feature rootFeature = modelWorkspace.getRootFeature();
-    final IGMLSchema naSchema = modelWorkspace.getGMLSchema();
-    final IFeatureType nodeFT = naSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
-    final IPropertyType genResultPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ) );
-    final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP ) );
-    final HashMap<IPropertyType, Object> map = new HashMap<IPropertyType, Object>();
-    map.put( genResultPT, new Boolean( results ) );
-    map.put( timeSeriesLinkPT, new String() );
-    final SetPropertyFeatureVisitor visitor = new SetPropertyFeatureVisitor( map );
-    modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+    final GMLWorkspace designAreaWorkspace = GmlSerializer.createGMLWorkspace( designAreaURL );
+    final FeatureList designAreaList = (FeatureList) designAreaWorkspace.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
+    // always take the first geometry ( it is assumed that there is only one )
+    final Feature designAreaFE = (Feature) designAreaList.get( 0 );
+    final GM_Object designAreaGeom = (GM_Object) designAreaFE.getProperty( new QName( MeasuresConstants.NS_DESIGNAREA, MeasuresConstants.DESINGAREA_GEOM_PROP ) );
+    final Geometry jtsDesignAreaGeom = JTSAdapter.export( designAreaGeom );
+    final FeatureList catchmentList = (FeatureList) modelWorkspace.getFeatureFromPath( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final List catchmentEnvList = catchmentList.query( designAreaFE.getEnvelope(), null );
+    final List<Feature> affectedChannels = new ArrayList<Feature>();
+    for( Iterator iter = catchmentEnvList.iterator(); iter.hasNext(); )
+    {
+      final Feature catchment = (Feature) iter.next();
+      final IRelationType catchmentChannelLink = (IRelationType) catchment.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CATCHMENT_CHANNEL ) );
+      final GM_Object catchmentGeom = (GM_Object) catchment.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CATCHMENT_GEOM_PROP ) );
+      final Geometry jtsCatchementGeom = JTSAdapter.export( catchmentGeom );
+      if( jtsCatchementGeom.intersects( jtsDesignAreaGeom ) )
+        affectedChannels.add( modelWorkspace.resolveLink( catchment, catchmentChannelLink ) );
+    }
+
   }
 
   private void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, final String landUseProp, final Logger logger ) throws Exception
@@ -810,16 +865,22 @@ public class KalypsoDssCalcJob implements ISimulation
       Geometry difference = null;
       try
       {
+
+        boolean intersects = jtsMeasureGEOM.intersects( jtsHydroGEOM );
+        if( !intersects )
+          continue;
         intersection = jtsMeasureGEOM.intersection( jtsHydroGEOM );
         // keep the diffrence from the original hydrotop
         difference = jtsHydroGEOM.difference( jtsMeasureGEOM );
-        if( intersection.isEmpty() )
-          continue;
         c_success++;
       }
-      catch( Exception e )
+      catch( TopologyException e )
       {
         c_error++;
+        e.printStackTrace();
+        logger.warning( "Fehler beim verschneiden der Topoloigien. HydrotopId=" + hydroFE.getId() + " mit measureId=" + planningMeasureFE.getId()
+            + ".Es wird trotzdem weitergerechnet diese Operation wurde ingnorier!" );
+        continue;
       }
       // get hydroCollection and add new hydroFE to collection
       final Feature hydroRootFeature = hydrotopWorkspace.getRootFeature();
@@ -830,7 +891,7 @@ public class KalypsoDssCalcJob implements ISimulation
       hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
       // copy all propterties from the intersected hydrotop to the newly created hydrotop
       FeatureHelper.copySimpleProperties( hydroFE, newHydroFE );
-      if( !difference.isEmpty() )
+      if( difference != null && !difference.isEmpty() )
       {
         final GM_Object geomWithOldParam = JTSAdapter.wrap( difference );
         // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
@@ -838,35 +899,39 @@ public class KalypsoDssCalcJob implements ISimulation
         // set the inverse Geometry of the intersection at the old hydrotop FE
         hydroFE.setProperty( qNameHydroGeom, GeometryUtilities.ensureIsMultiPolygon( geomWithOldParam ) );
       }
-      // final double grzMeasureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, 0.5d );
-      // final double corrSealingHydroOld = FeatureHelper.getAsDouble( hydroFE, new QName(
-      // NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
-      // final double areaIntersection = intersection.getArea();
-      // TODO check for numerical best order, and account for corrFactor from hydrotop element
-      // remark: it does not matter, if in next loop the same hydrotop again is affected
-
-      /**
-       * The corrSealingHydroOld is the fixed correction factor from the calibrated model. If the measure dose not
-       * affect the whole hydrotop then a new overall sealing factor as a mean value has to be calculated. <br>
-       * To account for the change of the old and new sealing factor we have to calculate the new correction factor,
-       * because we can not change the original sealing factor in the parameter.gml.
-       */
-      // final double originalSealingFactor = getSealingFactorForHydrotop( hydroFE, paraWorkspace );
-      // final double sealingAreaIntersection = areaIntersection * grzMeasureSealingFactor * corrSealingHydroOld;
-      // final double sealingAreaOld = areaIntersection * originalSealingFactor * corrSealingHydroOld;
-      // final double virtualSealingFactor = (sealingAreaIntersection + sealingAreaOld) / areaIntersection;
-      // double corrSealingHydroNew = virtualSealingFactor / (originalSealingFactor * corrSealingHydroOld);
-      // double corrSealingHydroNew = grzMeasureSealingFactor / originalSealingFactor;
-      // if( Double.isInfinite( corrSealingHydroNew ) || Double.isNaN( corrSealingHydroNew ) )
-      // corrSealingHydroNew = 1.0d;
       // override copied props that are not valid anymore
       final GM_Object geomWithNewMeasure = JTSAdapter.wrap( intersection );
       // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
       geomWithNewMeasure.setCoordinateSystem( storedCrs );
-      // set new properties for hydrotop
-      // newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR
-      // ), new Double( corrSealingHydroNew ) );
+      /**
+       * since the original sealing factor (from landuse feature) can not be alterd, the new sealing factor form the
+       * measure is achieved by using the sealing correction factor at each hydrotop. It could be that a correction
+       * factors has been used to calibrate the model, hence we have to incorporate the change of sealing and the old
+       * correction factor into an new correction factor. Now do the business!
+       */
+      final IRelationType linkSealing = (IRelationType) landUseFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
+      final Feature landuseSealingFE = paraWorkspace.resolveLink( landUseFE, linkSealing );
+      double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, 0.5d );
+      // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
+      boolean plus50ProzentNebenflaechen = false;
+      final IFeatureType measureFT = planningMeasureFE.getFeatureType();
+      final QName qnameMeasure = measureFT.getQName();
+      if( qnameMeasure.equals( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) ) )
+        plus50ProzentNebenflaechen = true;
+      // kappungsgrenze GRZ 0.8
+      if( plus50ProzentNebenflaechen )
+      {
+        double test = measureSealingFactor + measureSealingFactor * 0.5;
+        if( test < 0.8d )
+          measureSealingFactor = test;
+        else
+          measureSealingFactor = 0.8d;
+      }
+      final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 0.5d );
+      final double originalCorrFactor = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
+      final double newCorrectionFactor = originalCorrFactor * measureSealingFactor / landuseSealingFactor;
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
+      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( newCorrectionFactor ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ), new Double( intersection.getArea() ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
     }
@@ -874,5 +939,147 @@ public class KalypsoDssCalcJob implements ISimulation
       logger.info( "Fehler BPlan-Measure: " + c_error + " Fehler/" + (c_success + c_error) + " Total\n" );
     else
       logger.info( "BPlan-Maßnahme" + planningMeasureFE.getClass().toString() + " erfolgreich eingefügt!" );
+  }
+
+  /**
+   * Visits all features in the workspace and sets the <genereateResults/> property.
+   * 
+   * @param modelWorkspace
+   *          the rrm workspace to visit and modify.
+   * @param state
+   *          true to generate results, false otherwise.
+   */
+
+  private void setAllResultFlags( final GMLWorkspace modelWorkspace, final boolean state )
+  {
+    final Feature rootFeature = modelWorkspace.getRootFeature();
+    final IGMLSchema naSchema = modelWorkspace.getGMLSchema();
+    final IFeatureType nodeFT = naSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
+    final IPropertyType genResultPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ) );
+    final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP ) );
+    final HashMap<IPropertyType, Object> map = new HashMap<IPropertyType, Object>();
+    map.put( genResultPT, new Boolean( state ) );
+    map.put( timeSeriesLinkPT, new String() );
+    final SetPropertyFeatureVisitor visitor = new SetPropertyFeatureVisitor( map );
+    modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  /**
+   * This method generates the net and sets only the lowest node to generate results for.
+   * 
+   * @param modelworkspace
+   *          the rrm model workspace
+   * @param affectedChannels
+   *          the channels to take the downstream node as a possible rootnode of the net
+   */
+
+  private void setFeaturesWithResults( final GMLWorkspace modelworkspace, final Feature[] affectedChannels ) throws Exception
+  {
+    final NAConfiguration naConfiguration = NAConfiguration.getGml2AsciiConfiguration( modelworkspace.getContext(), null );
+    final NetFileManager netManager = new NetFileManager( naConfiguration );
+    final HashMap<String, NetElement> netElements = netManager.generateNetElements( modelworkspace, null );
+    for( int i = 0; i < affectedChannels.length; i++ )
+    {
+      final Feature channel = affectedChannels[i];
+      final NetElement rootElement = netElements.get( channel.getId() );
+      getRootNetElements( netElements, rootElement.getDownStreamNode() );
+    }
+    final HashMap<QName, Object> qNames = new HashMap<QName, Object>();
+    qNames.put( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( true ) );
+    final CollectFeaturesWithProperty visitor = new CollectFeaturesWithProperty( qNames, null );
+    modelworkspace.accept( visitor, modelworkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+    final Feature[] resultFE = visitor.getFeatures();
+    for( int i = 0; i < resultFE.length; i++ )
+    {
+      final Feature feature = resultFE[i];
+      Object property = feature.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) );
+      if( property != null )
+        m_featruesWithResults.add( (String) property );
+    }
+    setAllResultFlags( modelworkspace, true );
+
+  }
+
+  private List getRootNetElements( HashMap<String, NetElement> netElements, Feature rootNode ) throws Exception
+  {
+    Collection<NetElement> netElemtentCollection = netElements.values();
+    // collect netelements that are direct upstream of result nodes
+    final RootNodeCollectorVisitor rootNodeVisitor;
+    if( rootNode == null )
+      rootNodeVisitor = new RootNodeCollectorVisitor();
+    else
+      rootNodeVisitor = new RootNodeCollectorVisitor( rootNode );
+    for( Iterator iter = netElemtentCollection.iterator(); iter.hasNext(); )
+    {
+      NetElement element = (NetElement) iter.next();
+      element.accept( rootNodeVisitor );
+    }
+    return rootNodeVisitor.getRootNodeElements();
+  }
+
+  /**
+   * Simple filter class Fthat assures only directories and the optionaly directories with a specific name are valid.
+   */
+
+  class FileFilter implements FilenameFilter
+  {
+
+    HashSet<String> m_hashtable = new HashSet<String>();
+
+    public boolean accept( File dir, String name )
+    {
+      File file = new File( dir, name );
+      if( file.isDirectory() && (m_hashtable.contains( name ) || m_hashtable.isEmpty()) )
+        return true;
+      return false;
+    }
+
+    public void add( String[] ommit )
+    {
+      for( int i = 0; i < ommit.length; i++ )
+        m_hashtable.add( ommit[i] );
+    }
+
+  }
+
+  class ResultFileFilter implements IOFileFilter
+  {
+
+    ArrayList<File> m_matchingFiles = new ArrayList<File>();
+
+    HashSet<String> m_hashtable = new HashSet<String>();
+
+    ResultFileFilter( final List<String> toMatch )
+    {
+      for( Iterator iter = toMatch.iterator(); iter.hasNext(); )
+        m_hashtable.add( (String) iter.next() );
+    }
+
+    /**
+     * @see org.apache.commons.io.filefilter.IOFileFilter#accept(java.io.File)
+     */
+    public boolean accept( File file )
+    {
+      final String filename = file.getName();
+      if( file.isDirectory() && m_hashtable.contains( filename ) )
+      {
+        m_matchingFiles.add( file );
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * @see org.apache.commons.io.filefilter.IOFileFilter#accept(java.io.File, java.lang.String)
+     */
+    public boolean accept( File file, String name )
+    {
+      return false;
+    }
+
+    public File[] getMatchingFiles( )
+    {
+      return m_matchingFiles.toArray( new File[m_matchingFiles.size()] );
+    }
   }
 }

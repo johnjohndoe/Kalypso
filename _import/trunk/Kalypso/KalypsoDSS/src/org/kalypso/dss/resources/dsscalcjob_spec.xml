@@ -3,18 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	typeID="KalypsoDSS">
 
-
+	<input id="metadata"
+		description="Metadaten - Zur Steuerung des Calcjob" />
 	<input id="measureRHB"
 		description="Modelldaten - Massnahme Rueckhaltebecken"
 		optional="true" />
 	<input id="measureMRS"
 		description="Modelldaten - Massnahme Mulden-Rigolen" optional="true" />
 	<input id="measureSealing"
-		description="Modelldaten - Massnahme Entsiegelung" optional="true"/>
+		description="Modelldaten - Massnahme Entsiegelung" optional="true" />
 	<input id="designArea" description="Modelldaten - Plangebiet" />
 	<input id="SceConf" description="Modelldaten - Optimierung"
 		optional="true" />
-	<input id="xplanung" description="Modelldaten - BPlan Massnahmen" optional="true"/>
+	<input id="xplanung" description="Modelldaten - BPlan Massnahmen"
+		optional="true" />
 
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->

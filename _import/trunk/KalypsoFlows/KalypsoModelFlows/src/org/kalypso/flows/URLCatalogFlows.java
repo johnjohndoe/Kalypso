@@ -56,6 +56,7 @@ public class URLCatalogFlows extends AbstractUrlCatalog
     catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", getClass().getResource( "resources/v0.3/rhbMeasure.xsd" ) );
     catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/mrs", getClass().getResource( "resources/v0.3/mrsMeasure.xsd" ) );
     catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/sealing", getClass().getResource( "resources/v0.3/sealingMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/control", getClass().getResource( "resources/v0.3/measuresControl.xsd" ) );
 
   }
 

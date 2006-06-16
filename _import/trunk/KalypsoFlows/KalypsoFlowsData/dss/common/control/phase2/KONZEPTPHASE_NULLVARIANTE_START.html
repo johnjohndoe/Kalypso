@@ -4,16 +4,17 @@
 
 <script type="text/kalypso"> 
 	<!--
-		function messageboxWithNextPage() 
+		function prepareCalculation() 
 		{
-			kalypso://showMessage?message=Auswertung+in+einer+View+anzeigen.;
-			kalypso://openWorkflowBrowser?secondaryPartId=measure.browser&url=KONZEPTPHASE_MASSNAHMEN_DEF.html;
+			kalypso://openEditor?input=project:/.templates/control.gft&activate=true;
 			kalypso://openURL?&url=KONZEPTPHASE_NULLVARIANTE_START.html;
 		}
 		function runCalculation() 
 		{
+			kalypso://closeEditor?input=project:/.templates/control.gft&doSave=true;
 			kalypso://copyFile?source=project:/.data/xplanung.gml&target=calcdir;
 			kalypso://startCalc?
+			kalypso://openURL?url=KONZEPTPHASE_NULLVARIANTE_ERGEBNISSE.html;
 		}
 	 -->
  </script>
@@ -132,6 +133,90 @@ die Planungsvariante <br />
 &nbsp;
 &nbsp;
 <span
+	style="font-family: Helvetica,Arial,sans-serif; font-weight: bold;">Rechenfall vorbereiten...</span>
+<a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"
+	href="kalypso://runScript?type=text/kalypso&function=prepareCalculation"><img
+	alt="" src="../img/lc10617.gif"
+	style="border: 0px solid ; width: 26px; height: 26px;" align="middle" /></a>
+<span style="font-family: Helvetica,Arial,sans-serif;"></span>
+<span
+	style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br />
+</span>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+<span
 	style="font-family: Helvetica,Arial,sans-serif; font-weight: bold;">Berechnung&nbsp;starten...</span>
 <a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"
 	href="kalypso://runScript?type=text/kalypso&function=runCalculation"><img
@@ -147,6 +232,7 @@ die Planungsvariante <br />
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br />
 </span>
+
 <span
 	style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span>
 &nbsp;
