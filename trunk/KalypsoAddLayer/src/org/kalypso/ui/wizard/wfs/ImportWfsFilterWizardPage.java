@@ -98,12 +98,6 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   private Button m_BBoxButton;
 
-  Button m_intersectButton;
-
-  Button m_containsButton;
-
-  Button m_touchesButton;
-
   private Combo m_spatialOpsCombo;
 
   String OPS_INTERSECTION = "Schneidet das Objekt";

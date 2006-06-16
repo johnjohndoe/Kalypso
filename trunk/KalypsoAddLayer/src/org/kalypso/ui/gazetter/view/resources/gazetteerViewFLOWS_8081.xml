@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:huis="http://www.bsu.hamburg.de/huis"
 	xsi:schemaLocation="gazetter.view.kalypso.org ../../../../../../../../KalypsoCore/etc/schemas/gazetter/gazetterView.xsd">
-	<gz:baseURL>http://bsu-uio:8082/deegreewfs-g/gazetteer</gz:baseURL>
+	<gz:baseURL>http://bsu-uio:8081/deegreewfs-g/gazetteer</gz:baseURL>
 	<gz:GazetterLocation>
 		<gz:label>Bezirk</gz:label>
 		<gz:description>Auswahl Hamburger Bezirk</gz:description>

@@ -130,12 +130,17 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
             final int maxfeatures = m_filterWFSPage.getMaxFeatures();
             source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) );
           }
-          // final String[] featurePathes= GMLSchemaUtilities.createFeaturePathes(layer.getFeatureType());
-          // final String featurePath = "featureMember[" + layer.getQName().getLocalPart() + "]";
-          final String featurePath = "//*";//
-
-          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, layer.getTitle(), "wfs", featurePath, source.toString() );
+          final String featurePath = "featureMember[" + layer.getQName().getLocalPart() + "]";
+          // final String[] featurePathes= GMLSchemaUtilities.createFeaturePathes(schema,featurePath, featureType);
+          String title = layer.getTitle();
+          if( title == null )
+            title = layer.getQName().getLocalPart();
+          // for( String fPath: featurePathes )
+          // {
+          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, title, "wfs", featurePath, source.toString() );
           m_outlineviewer.postCommand( command, null );
+          //            
+          // }
         }
       }
       catch( Exception e )

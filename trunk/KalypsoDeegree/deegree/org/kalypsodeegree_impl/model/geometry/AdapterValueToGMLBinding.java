@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.w3c.dom.Element;
@@ -50,9 +51,14 @@ import org.w3c.dom.Element;
 public interface AdapterValueToGMLBinding
 {
   /**
-   * @return binding geometry
+   * @return binding type elements
    */
   public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception;
+
+  /**
+   * @return binding type elements
+   */
+  public Object wrapToBinding( final GM_Envelope geometry ) throws GM_Exception;
 
   public Element wrapToElement( GM_Object geometry ) throws GM_Exception;
 

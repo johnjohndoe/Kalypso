@@ -45,10 +45,10 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import ogc2.www.opengis.net.gml.BoxType;
 import ogc2.www.opengis.net.gml.CoordinatesType;
 import ogc2.www.opengis.net.gml.GeometryAssociationType;
 import ogc2.www.opengis.net.gml.LineStringMember;
@@ -67,14 +67,8 @@ import ogc2.www.opengis.net.gml.PolygonMember;
 import ogc2.www.opengis.net.gml.PolygonMemberType;
 import ogc2.www.opengis.net.gml.PolygonType;
 
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.types.DOMConstructor;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -86,12 +80,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author doemming
@@ -307,7 +298,8 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
       fac.setNamespaceAware( true );
       final DocumentBuilder builder = fac.newDocumentBuilder();
       final Document document = builder.newDocument();
-      marshaller.marshal( bindingGeometry, document );
+      final JAXBElement jaxbElement = createJAXBGeometryElement( bindingGeometry );
+      marshaller.marshal( jaxbElement, document );
       return document.getDocumentElement();
     }
     catch( Exception e )
@@ -315,5 +307,36 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
       // TODO Auto-generated catch block
       throw new GM_Exception( "could not marshall to Element", e );
     }
+  }
+
+  private JAXBElement createJAXBGeometryElement( final Object geometry )
+  {
+    if( geometry instanceof PointType )
+      return gml2Fac.createPoint( (PointType) geometry );
+    if( geometry instanceof LineStringType )
+      return gml2Fac.createLineString( (LineStringType) geometry );
+    if( geometry instanceof PolygonType )
+      return gml2Fac.createPolygon( (PolygonType) geometry );
+
+    if( geometry instanceof MultiPointType )
+      return gml2Fac.createMultiPoint( (MultiPointType) geometry );
+    if( geometry instanceof MultiLineStringType )
+      return gml2Fac.createMultiLineString( (MultiLineStringType) geometry );
+    if( geometry instanceof MultiPolygonType )
+      return gml2Fac.createMultiPolygon( (MultiPolygonType) geometry );
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public Object wrapToBinding( GM_Envelope geometry )
+  {
+    final BoxType boxType = gml2Fac.createBoxType();
+    GM_Position[] positions = new GM_Position[] { geometry.getMin(), geometry.getMax() };
+    CoordinatesType coordinatesType = createCoordinatesType( positions );
+    boxType.setCoordinates( coordinatesType );
+    // TODO support srsname when refactored GM_Envelop to have a SRS
+    return boxType;
   }
 }

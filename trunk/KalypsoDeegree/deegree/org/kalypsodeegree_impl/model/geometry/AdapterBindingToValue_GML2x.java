@@ -63,7 +63,6 @@ import ogc2.www.opengis.net.gml.MultiPolygonType;
 import ogc2.www.opengis.net.gml.ObjectFactory;
 import ogc2.www.opengis.net.gml.PointType;
 import ogc2.www.opengis.net.gml.PolygonType;
-import ogc2.www.opengis.net.ogc.BBOXType;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -93,8 +92,9 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
   final static ObjectFactory gml2Fac = new ObjectFactory();
 
-  final static JAXBContext GML2_JAXCONTEXT =KalypsoOGC2xJAXBcontext.getContext(); 
-//    JaxbUtilities.createQuiet( gml2Fac.getClass() );
+  final static JAXBContext GML2_JAXCONTEXT = KalypsoOGC2xJAXBcontext.getContext();
+
+  // JaxbUtilities.createQuiet( gml2Fac.getClass() );
 
   private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs )
   {
@@ -318,22 +318,21 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
       if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }
-    if( bindingGeometry instanceof BBOXType )
+    if( bindingGeometry instanceof BoxType )
     {
-      return createGM_Envelope( (BBOXType) bindingGeometry );
+      return createGM_Envelope( (BoxType) bindingGeometry );
     }
     throw new UnsupportedOperationException( bindingGeometry.getClass().getName() + " is not supported" );
   }
 
-  private Object createGM_Envelope( BBOXType bboxType )
+  private Object createGM_Envelope( BoxType boxType )
   {
     final GM_Position[] positions;
-    final BoxType box = bboxType.getBox();
-    final List<CoordType> coords = box.getCoord();
+    final List<CoordType> coords = boxType.getCoord();
     if( coords != null && (!coords.isEmpty()) )
       positions = createGM_Positions( coords );
     else
-      positions = createGM_Positions( box.getCoordinates() );
+      positions = createGM_Positions( boxType.getCoordinates() );
     if( positions.length == 2 )
       return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
     throw new UnsupportedOperationException( "invalid bbox" );

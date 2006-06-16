@@ -190,9 +190,18 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       // set max extent for Map Layer
 
       // set max envelope
-      final GM_Envelope maxEnvRemoteSRS = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteSRS );
-      final GeoTransformer gt = new GeoTransformer( m_localSRS );
-      m_maxEnvLocalSRS = gt.transformEnvelope( maxEnvRemoteSRS, m_remoteSRS );
+      try
+      {
+        final GM_Envelope maxEnvRemoteSRS = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteSRS );
+        final GeoTransformer gt = new GeoTransformer( m_localSRS );
+        m_maxEnvLocalSRS = gt.transformEnvelope( maxEnvRemoteSRS, m_remoteSRS );
+      }
+      catch( Exception e )
+      {
+        // hack, when the WMS serves unparseble boundingboxes
+        e.printStackTrace();
+        m_maxEnvLocalSRS = null;
+      }
     }
     catch( final Exception e )
     {

@@ -279,7 +279,8 @@ public class GazetterView extends ViewPart
   private org.kalypso.view.gazetter.GazetterView getGazetterView( )
   {
 //    final URL resource = getClass().getResource( "resources/gazetteerView.xml" );
-    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS.xml" );
+//    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS.xml" );
+    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS_8081.xml" );
     final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
     try
     {
