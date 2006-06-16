@@ -283,6 +283,11 @@ public class WspmTuhhCalcJob implements ISimulation
             final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
             final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
             String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
+            
+            // introduce space around 'NaN' and '***' values to make it parseable
+            strLengthSection = strLengthSection.replaceAll( "NaN" , " -999.999 " );
+//            strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
+            
             // remove first two rows (old header) from laengsschnitt.txt
             int pos = strLengthSection.indexOf( "\n" );
             pos = strLengthSection.indexOf( "\n", pos + 1 );

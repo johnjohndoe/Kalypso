@@ -105,16 +105,19 @@ public class BreakLinesHelper implements IWspmConstants
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
-      
+
       for( final WspmReachProfileSegment reach : reachProfileSegments )
       {
-        final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
+        final GM_Curve geometry = reach.getGeometry();
+        if( geometry == null ) // ignore profiles without geometry
+          continue;
 
-        final GM_Curve thinProfile = thinnedOutClone( reach.getGeometry(), epsThinning, gmlVersion );
+        final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
         final GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wsp );
 
+        final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
         breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
         breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
         breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
@@ -195,10 +198,16 @@ public class BreakLinesHelper implements IWspmConstants
       final Feature rootFeature = workspace.getRootFeature();
 
       // we assume that all points have the same crs
-      final CS_CoordinateSystem crs = reachProfileSegments[0].getGeometry().getCoordinateSystem();
 
+      CS_CoordinateSystem crs = null;
       for( final WspmReachProfileSegment reach : reachProfileSegments )
       {
+        final GM_Curve geometry = reach.getGeometry();
+        if( geometry == null ) //ignore profiles without geometry
+          continue;
+        
+        if( crs == null ) // search the crs, we assume that all geometries have the same crs
+          crs = geometry.getCoordinateSystem();
         final WspmProfile profileMember = reach.getProfileMember();
 
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
@@ -245,6 +254,12 @@ public class BreakLinesHelper implements IWspmConstants
 
   private static GM_Position[] calculateWspPoints( final IProfil profil, final double wspHoehe ) throws ProfilDataException
   {
+    final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
+    final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
+    final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
+    if( ppRW == null || ppHW == null ) // ignore profile without geo-coordinates
+      return new GM_Position[] {};
+
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final IProfilPoint firstPoint = points.getFirst();
     final IProfilPoint lastPoint = points.getLast();

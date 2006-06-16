@@ -138,7 +138,6 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-
     final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import-Log", null );
 
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
@@ -613,23 +612,34 @@ public class WspWinImporter
         segment.setStation( profil.getStation() );
 
         final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
-        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : POINT_PROPERTY.BREITE;
+        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
         final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
+        // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT
+        // :
+        // POINT_PROPERTY.BREITE;
+        // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
+        // null;
         final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
 
-        final LinkedList<IProfilPoint> points = profil.getPoints();
-        final GM_Position[] positions = new GM_Position[points.size()];
-        int count = 0;
-        for( final IProfilPoint point : points )
+        final GM_Curve curve;
+        if( ppRW == null || ppHW == null || ppH == null )
+          curve = null;
+        else
         {
-          final double rw = point.getValueFor( ppRW );
-          final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
-          final double h = point.getValueFor( ppH );
+          final LinkedList<IProfilPoint> points = profil.getPoints();
+          final GM_Position[] positions = new GM_Position[points.size()];
+          int count = 0;
+          for( final IProfilPoint point : points )
+          {
+            final double rw = point.getValueFor( ppRW );
+            final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
+            final double h = point.getValueFor( ppH );
 
-          positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
+            positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
+          }
+          curve = GeometryFactory.createGM_Curve( positions, null );
         }
 
-        final GM_Curve curve = GeometryFactory.createGM_Curve( positions, null );
         segment.setGeometry( curve );
       }
       catch( final ProfilDataException e )
