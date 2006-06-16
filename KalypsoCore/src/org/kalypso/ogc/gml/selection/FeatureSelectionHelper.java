@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -124,6 +127,23 @@ public class FeatureSelectionHelper
         result.add( feature );
     }
     return result.toArray( new Feature[result.size()] );
+  }
+  
+  public static Feature[] getAllFeaturesOfType( IFeatureSelection selection, QName substitueeName )
+  {
+    final EasyFeatureWrapper[] features = selection.getAllFeatures();
+
+    final List<Feature> resFeatures = new ArrayList<Feature>();
+    
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i].getFeature();
+
+      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), substitueeName ) )
+        resFeatures.add( feature );
+    }
+    
+    return resFeatures.toArray( new Feature[resFeatures.size() ] );
   }
 
   /**
