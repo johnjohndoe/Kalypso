@@ -98,6 +98,9 @@ public class DssCalcJobTest extends TestCase
       public Object getInputForID( String id )
       {
         Class clazz = getClass();
+        
+        if( "metadata".equals( id ) )
+          return clazz.getResource( "dss/.calculation" );
         if( "measureSealing".equals( id ) )
           return clazz.getResource( "ds/sealingMeasure1.gml" );
         if( "measureRHB".equals( id ) )
@@ -105,9 +108,9 @@ public class DssCalcJobTest extends TestCase
         if( "measureMRS".equals( id ) )
           return clazz.getResource( "ds/mrsMeasure1.gml" );
         if( "designArea".equals( id ) )
-          return clazz.getResource( "dss/BPlan/plangebiet.gml" );
+          return clazz.getResource( "dss/plangebiet1.gml" );
         if( "xplanung".equals( id ) )
-          return clazz.getResource( "dss/BPlan/xplanung.gml" );
+          return clazz.getResource( "ds/BPlan/xplanung.gml" );
         if( "SceConf".equals( id ) )
           return clazz.getResource( "dss/.sce.xml" );
         return null;
