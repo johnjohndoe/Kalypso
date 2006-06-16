@@ -83,6 +83,10 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
+    m_tableViewer = ((DefaultTableViewer) viewer);
+    if( oldInput != null )
+      m_tableViewer.removeAllColumns();
+    
     if( newInput == null )
       return;
 
@@ -94,9 +98,6 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
     m_model.addListener( this );
 
     m_labelProvider.setModel( m_model );
-
-    m_tableViewer = ((DefaultTableViewer) viewer);
-    m_tableViewer.removeAllColumns();
 
     for( final MTRMColumn col : m_model.getColumnKeySet() )
       m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
@@ -142,7 +143,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   public void onColumnAdded( MTRMColumn col )
   {
     m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
-    //m_tableViewer.refreshColumnProperties();
+    m_tableViewer.refreshColumnProperties();
     
     m_tableViewer.refresh();
   }
