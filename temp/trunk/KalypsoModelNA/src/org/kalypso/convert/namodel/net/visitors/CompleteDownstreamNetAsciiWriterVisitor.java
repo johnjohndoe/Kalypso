@@ -56,10 +56,9 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
   private int m_virtualChannelId = 10001;
 
-  private List m_completedNodes = new ArrayList();
+  private List<Feature> m_completedNodes = new ArrayList<Feature>();
 
   /*
-   * 
    * @author doemming
    */
   public CompleteDownstreamNetAsciiWriterVisitor( AsciiBuffer asciiBuffer )
@@ -70,6 +69,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
   /**
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
+  @Override
   public boolean visit( NetElement netElement )
   {
     if( !netElement.isCalculated() )
@@ -89,7 +89,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     boolean needToComplete = true;
     for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
     {
-      final NetElement childElement = (NetElement)iter.next();
+      final NetElement childElement = (NetElement) iter.next();
       if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() )
       {
         visit( childElement );

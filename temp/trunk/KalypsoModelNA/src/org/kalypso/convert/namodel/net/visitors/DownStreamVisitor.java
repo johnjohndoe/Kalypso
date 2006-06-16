@@ -52,7 +52,6 @@ public class DownStreamVisitor extends NetElementVisitor
   private final NetElementVisitor m_innerVisitor;
 
   /*
-   * 
    * @author doemming
    */
   public DownStreamVisitor( NetElementVisitor innerVisitor )
@@ -61,10 +60,10 @@ public class DownStreamVisitor extends NetElementVisitor
   }
 
   /**
-   * 
    * @throws Exception
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
+  @Override
   public boolean visit( NetElement netElement ) throws Exception
   {
     if( m_innerVisitor.visit( netElement ) )
@@ -72,7 +71,7 @@ public class DownStreamVisitor extends NetElementVisitor
       final List downStreamNetElements = netElement.getDownStreamNetElements();
       for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
       {
-        NetElement element = (NetElement)iter.next();
+        NetElement element = (NetElement) iter.next();
         visit( element );
       }
     }

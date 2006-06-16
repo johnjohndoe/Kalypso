@@ -67,7 +67,6 @@ public class NaNodeResultProvider
 
   public NaNodeResultProvider( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace, URL context )
   {
-    //  m_context = modellWorkspace.getContext();
     m_context = context;
     final Feature controlFE = controlWorkspace.getRootFeature();
     m_useResults = FeatureHelper.booleanIsTrue( controlFE, "useResults", true );

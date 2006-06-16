@@ -60,7 +60,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
@@ -214,7 +213,7 @@ public class NetFileManager extends AbstractManager
       for( Iterator iter = set.iterator(); iter.hasNext(); )
       {
         Entry element = (Entry) iter.next();
-//        System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
+        // System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
       }
 
       // adding Timeseries links
@@ -305,14 +304,17 @@ public class NetFileManager extends AbstractManager
     readNet( reader, nodeCollector );
   }
 
-  /*
-   *  
+  /**
+   * generate NetElements for rrm model
+   * 
+   * @param workspace
+   *          the rrm workspace
+   * @param synthNWorkspace
+   *          the synth precipitation workspace
+   * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
+  public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
-    // to remove yellow thing ;-)
-    nodeResultProvider.getClass();
-
     final IFeatureType nodeFT = workspace.getFeatureType( "Node" );
     final IFeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
     // final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
@@ -342,8 +344,8 @@ public class NetFileManager extends AbstractManager
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
-    
-      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace,synthNWorkspace, channelFEs[i], m_conf ) );
+
+      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, synthNWorkspace, channelFEs[i], m_conf ) );
 
     // find dependencies
     // dependency: node - node
@@ -456,11 +458,22 @@ public class NetFileManager extends AbstractManager
         downStreamElement.addUpStream( upStreamElement );
       }
     }
+    return netElements;
+  }
 
-    //
-    // write asciifiles
-    //
-
+  /**
+   * writes netfile (ascii)
+   * 
+   * @param asciiBuffer
+   *          buffer for output buffering
+   * @param workspace
+   *          rrm workspace
+   * @param synthNWorkspace
+   *          workspace for synthetic precipitation
+   */
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
+  {
+    final HashMap<String, NetElement> netElements = generateNetElements( workspace, synthNWorkspace );
     // collect netelements that are direct upstream of result nodes
     final RootNodeCollectorVisitor rootNodeVisitor;
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );

@@ -43,14 +43,16 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-
 public class RootNodeCollectorVisitor extends NetElementVisitor
 {
-  private final List m_rootNetElements = new ArrayList();
+  private final List<NetElement> m_rootNetElements = new ArrayList<NetElement>();
 
   private final Feature m_singleResultNode;
 
@@ -70,7 +72,7 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
   /**
    * collect all netelements that have direct downstream depedency to a result node
    */
-  public RootNodeCollectorVisitor()
+  public RootNodeCollectorVisitor( )
   {
     m_singleResultNode = null;
   }
@@ -86,22 +88,21 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
       return true;
     if( m_singleResultNode == null )
     {
-      if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
+      if( FeatureHelper.booleanIsTrue( nodeFE, new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), false ) )
         m_rootNetElements.add( netElement );
     }
     else
     {
-//      final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
-//          nodeFE == m_singleResultNode ) );
-      nodeFE.setProperty( "generateResult", new Boolean(
-          nodeFE == m_singleResultNode ) );
+      // final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
+      // nodeFE == m_singleResultNode ) );
+      nodeFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( nodeFE == m_singleResultNode ) );
       if( m_singleResultNode == nodeFE )
         m_rootNetElements.add( netElement );
     }
     return true;
   }
 
-  public List getRootNodeElements()
+  public List getRootNodeElements( )
   {
     return m_rootNetElements;
   }

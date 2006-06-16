@@ -75,23 +75,23 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * channel written in capital letter in the middle.
  * 
  * <pre>
- *                                        Node-----&gt;-----Node
- *                                          |              |
- *                                          V              V
- *                                          |              |
- *                       Catchment---&gt;---CHANNEL        Channel (downstream)
- *                           |              |           
- *                           |              V           
- *                           V              |           
- *                           |             Node
- *                           |              |
- *                        Catchment         V
- *                           |              |
- *                           V           Channel (downstream)
- *                           |
- *                        Channel (downstream)
- *                     
- *                     
+ *                                          Node-----&gt;-----Node
+ *                                            |              |
+ *                                            V              V
+ *                                            |              |
+ *                         Catchment---&gt;---CHANNEL        Channel (downstream)
+ *                             |              |           
+ *                             |              V           
+ *                             V              |           
+ *                             |             Node
+ *                             |              |
+ *                          Catchment         V
+ *                             |              |
+ *                             V           Channel (downstream)
+ *                             |
+ *                          Channel (downstream)
+ *                       
+ *                       
  * </pre>
  */
 public class NetElement
@@ -218,8 +218,8 @@ public class NetElement
           if( linkT != null )
           {
             final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
-//            final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
-            final URL linkURLT = m_urlUtils.resolveURL(conf.getZMLContext(), hrefT );
+            // final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
+            final URL linkURLT = m_urlUtils.resolveURL( conf.getZMLContext(), hrefT );
             final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" );
             final FileWriter writer = new FileWriter( targetFileT );
             NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
@@ -233,7 +233,7 @@ public class NetElement
           if( linkV != null )
           {
             final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
-//            final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
+            // final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
             final URL linkURLV = m_urlUtils.resolveURL( conf.getZMLContext(), hrefV );
             final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" );
             final FileWriter writer = new FileWriter( targetFileV );

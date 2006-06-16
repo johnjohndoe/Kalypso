@@ -52,26 +52,25 @@ public class SimulationVisitor extends NetElementVisitor
 {
   private final NetElementVisitor m_innerVisitor;
 
-  private final List m_simulated;
+  private final List<NetElement> m_simulated;
 
-  private final List m_cycleTest = new ArrayList();
+  private final List<NetElement> m_cycleTest = new ArrayList<NetElement>();
 
   /*
-   * 
    * @author doemming
    */
   public SimulationVisitor( NetElementVisitor innerVisitor )
   {
     m_innerVisitor = innerVisitor;
-    m_simulated = new ArrayList();
+    m_simulated = new ArrayList<NetElement>();
 
   }
 
   /**
-   * 
    * @throws Exception
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
+  @Override
   public boolean visit( NetElement netElement ) throws Exception
   {
     if( m_simulated.contains( netElement ) )
@@ -83,7 +82,7 @@ public class SimulationVisitor extends NetElementVisitor
       System.out.println( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" + netElement );
 
       // check circle (shortest connection)
-      //TODO: Better output handling, in this way it is not easy to find the circle
+      // TODO: Better output handling, in this way it is not easy to find the circle
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
       List[] circleList = circlefinder.findCircle();
       b.append( "circle for : " + netElement + ":\n" );
@@ -95,7 +94,7 @@ public class SimulationVisitor extends NetElementVisitor
       log( b.toString() );
       throw new Exception( b.toString() );
     }
-    
+
     m_cycleTest.add( netElement );
 
     // first calculate upstream
@@ -103,7 +102,7 @@ public class SimulationVisitor extends NetElementVisitor
     final List upStreamNetElements = netElement.getUpStreamNetElements();
     for( Iterator iter = upStreamNetElements.iterator(); iter.hasNext(); )
     {
-      NetElement element = (NetElement)iter.next();
+      NetElement element = (NetElement) iter.next();
       visit( element );
     }
     // then calculate current

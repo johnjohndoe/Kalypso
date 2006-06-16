@@ -243,7 +243,7 @@ public class NAModellConverter
 
     AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace, nodeResultProvider );
+    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
     m_swaleAndTrenchManager.writeFile( asciiBuffer, modelWorkspace );

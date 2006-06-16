@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypsodeegree.model.feature.Feature;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -51,24 +52,23 @@ public class WriteAsciiVisitor extends NetElementVisitor
 {
   private final AsciiBuffer m_asciiBuffer;
 
-  private final List m_nodeCollector;
+  private final List<Feature> m_nodeCollector;
 
-  private final List m_visitedElements = new ArrayList();
+  private final List<NetElement> m_visitedElements = new ArrayList<NetElement>();
 
   /*
-   * 
    * @author doemming
    */
   public WriteAsciiVisitor( AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
-    m_nodeCollector = new ArrayList();
+    m_nodeCollector = new ArrayList<Feature>();
   }
 
   /**
-   * 
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
+  @Override
   public boolean visit( NetElement netElement )
   {
     netElement.write( m_asciiBuffer, m_nodeCollector );
@@ -85,12 +85,12 @@ public class WriteAsciiVisitor extends NetElementVisitor
     return true;
   }
 
-  public List getVisitedElements()
+  public List getVisitedElements( )
   {
     return m_visitedElements;
   }
 
-  public List getNodeCollector()
+  public List getNodeCollector( )
   {
     return m_nodeCollector;
   }
