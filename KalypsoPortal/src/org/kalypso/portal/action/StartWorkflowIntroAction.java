@@ -35,6 +35,7 @@ import org.kalypso.contribs.eclipse.ui.MementoUtils;
 import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 import org.kalypso.portal.KalypsoPortalPlugin;
 import org.kalypso.portal.wizard.LoadProjectFromWorkspaceWizard;
+import org.kalypso.portal.wizard.NewDssProjectWizard;
 import org.kalypso.workflow.WorkflowContext;
 import org.kalypso.workflow.ui.KalypsoWorkFlowPlugin;
 
@@ -90,27 +91,9 @@ public class StartWorkflowIntroAction extends AbstractIntroAction
       if( currentPage != null )
       {
         wizard = currentPage.getWizard();
-        if( wizard instanceof BasicNewProjectResourceWizard )
+        if( wizard instanceof NewDssProjectWizard )
         {
-          newProject = ((BasicNewProjectResourceWizard) wizard).getNewProject();
-          // set modelnature
-          // TODO does not work jet, problem is that we are not allowed to alter the project discribtion once the
-          // project has been created. So we have to write our own new project wizard and cannot use the eclipse one
-          try
-          {
-            final IProjectDescription description = newProject.getDescription();
-            final String[] natures = description.getNatureIds();
-            final String[] newNatures = new String[natures.length + 1];
-            System.arraycopy( natures, 0, newNatures, 0, natures.length );
-            // TODO how do I get the the rrm modelnature from a central place
-            newNatures[natures.length] = "org.kalypso.simulation.ui.calccase.ModelNature";
-            description.setNatureIds( newNatures );
-            newProject.setDescription( description, null );
-          }
-          catch( CoreException e )
-          {
-            MessageDialog.openWarning( shell, "Flows Portal Warning", "Aus dem neuen Projekt können sie keine Berechnungen durchführen, initzialisierungs Fehler der Projekt Nature" );
-          }
+          newProject = ((NewDssProjectWizard) wizard).getNewProject();
           wfContext.setContextProject( newProject );
           InputStream resourceAsStream = null;
           try

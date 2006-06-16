@@ -12,6 +12,7 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
 
   // The shared instance.
   private static KalypsoPortalPlugin plugin;
+  private static String m_id = "org.kalypso.portal";
 
 //  private URL m_context = null;
 
@@ -60,6 +61,11 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   public static ImageDescriptor getImageDescriptor( String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "KalypsoPortal", path );
+  }
+
+  public static String getID( )
+  {
+    return m_id;
   }
 
   // public void setContext( final IProject project )

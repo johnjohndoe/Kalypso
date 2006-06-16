@@ -37,9 +37,9 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
   public void createContent( String id, Element parent )
   {
     final Document domOwner = parent.getOwnerDocument();
-    final String urlFromConfig = new File( "E:/eclipse3.1/workspace/KalypsoFlowsData/dss/intro/intropage.html" ).toString();
+//    final String urlFromConfig = new File( "E:/eclipse3.1/workspace/KalypsoFlowsData/dss/intro/intropage.html" ).toString();
 //     final String urlFromConfig = "http://bsu-flows:8080/flows/PlanerClient/intro/intropage.html";
-//     final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.html";
+     final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.html";
     if( "headID".equals( id ) )
     {
       final Comment comment = domOwner.createComment( "headID" );
