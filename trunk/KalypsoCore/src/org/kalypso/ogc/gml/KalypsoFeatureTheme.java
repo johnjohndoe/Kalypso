@@ -340,7 +340,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     private int m_maxDisplayArray = 0;
 
-    public StyleDisplayMap( UserStyle style )
+    public StyleDisplayMap( final UserStyle style )
     {
       m_style = new UserStyle[] { style };
     }
@@ -430,15 +430,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           m_vaildEnvelope = m_vaildEnvelope.getMerged( env );
         m_displayElements.clear();
         m_maxDisplayArray = 0;
-        final List features = m_featureList.query( m_vaildEnvelope, null );
-        for( Iterator iter = features.iterator(); iter.hasNext(); )
+        // TODO
+        // TODO: uncomment next line
+        // final List features = m_featureList.query( m_vaildEnvelope, null );
+        for( final Object next : m_featureList )
         {
-
-          final Object next = iter.next();
           if( next instanceof Feature )
             addDisplayElements( (Feature) next );
-          else
-            System.out.println( "dsssebug" );
         }
       }
     }

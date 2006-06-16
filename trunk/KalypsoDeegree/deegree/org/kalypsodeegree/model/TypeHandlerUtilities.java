@@ -566,7 +566,7 @@ public class TypeHandlerUtilities
     // other GML3 types:
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
     // We do not use the binding classes, because they do not work

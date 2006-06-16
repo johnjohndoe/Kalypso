@@ -159,8 +159,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
       }
 
       final String token = tk.nextToken();
-      final Object value = definitions[nb].getTypeHandler().convertToJavaValue( token );
-      record.setValue( components[nb], value );
+      try
+      {
+        final Object value = definitions[nb].getTypeHandler().convertToJavaValue( token );
+        record.setValue( components[nb], value );
+      }
+      catch( final NumberFormatException e )
+      {
+        // TODO: set null here: Problem: the other components can't handle null now, they should
+        record.setValue( components[nb], null );
+      }
 
       nb++;
       nb = nb % definitions.length;

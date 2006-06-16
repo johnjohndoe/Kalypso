@@ -118,9 +118,9 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles, GMLWorkspace workspace )
+  public static DisplayElement[] createDisplayElement( final Object o, final UserStyle[] styles, final GMLWorkspace workspace )
   {
-    final ArrayList list = new ArrayList( 20 );
+    final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>( styles.length );
 
     if( o instanceof Feature )
     {
@@ -132,7 +132,6 @@ public class DisplayElementFactory
 
         for( int i = 0; i < styles.length; i++ )
         {
-
           if( styles[i] == null )
           {
             // create display element from default style
@@ -205,9 +204,13 @@ public class DisplayElementFactory
         System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
         e.printStackTrace();
       }
+      catch( Throwable t )
+      {
+        t.printStackTrace();
+      }
     }
 
-    DisplayElement[] de = new DisplayElement[list.size()];
+    final DisplayElement[] de = new DisplayElement[list.size()];
     return (DisplayElement[]) list.toArray( de );
   }
 

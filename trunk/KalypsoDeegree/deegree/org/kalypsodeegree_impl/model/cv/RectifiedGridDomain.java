@@ -129,7 +129,7 @@ public class RectifiedGridDomain
    */
   public double getOffsetX( CS_CoordinateSystem cs ) throws Exception
   {
-    if( m_origin.getCoordinateSystem().equals( cs ) )
+    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offset[0];
 
     GM_Envelope destEnv = getGM_Envelope( cs );
@@ -141,7 +141,7 @@ public class RectifiedGridDomain
    */
   public double getOffsetY( CS_CoordinateSystem cs ) throws Exception
   {
-    if( m_origin.getCoordinateSystem().equals( cs ) )
+    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offset[1];
 
     GM_Envelope destEnv = getGM_Envelope( cs );
@@ -152,19 +152,27 @@ public class RectifiedGridDomain
    * @return Returns the GM_Envelope of the RectifiedGridDomain
    * @throws Exception
    */
-  public GM_Envelope getGM_Envelope( CS_CoordinateSystem cs ) throws Exception
+  public GM_Envelope getGM_Envelope( final CS_CoordinateSystem cs ) throws Exception
   {
+    final double minX = m_origin.getX();
+    final double minY = m_origin.getY();
+    final double maxX = minX + (getNumColumns() * m_offset[0]);
+    final double maxY = minY + (getNumRows() * m_offset[1]);
 
-    GM_Position min = GeometryFactory.createGM_Position( m_origin.getX(), m_origin.getY() );
-    double maxX = m_origin.getX() + (getNumColumns() * m_offset[0]);
-    double maxY = m_origin.getY() + (getNumRows() * m_offset[1]);
-    GM_Position max = GeometryFactory.createGM_Position( maxX, maxY );
-    GM_Envelope envelope = new GM_Envelope_Impl( min, max );
-
+    final double eMinX = Math.min( minX, maxX );
+    final double eMinY = Math.min( minY, maxY );
+    final double eMaxX = Math.max( minX, maxX );
+    final double eMaxY = Math.max( minY, maxY );
+    
+    final GM_Position min = GeometryFactory.createGM_Position( eMinX, eMinY );
+    final GM_Position max = GeometryFactory.createGM_Position( eMaxX, eMaxY );
+    
+    final GM_Envelope envelope = new GM_Envelope_Impl( min, max );
+    
     if( m_origin.getCoordinateSystem().equals( cs ) )
       return envelope;
 
-    GeoTransformer geoTrans = new GeoTransformer( cs );
+    final GeoTransformer geoTrans = new GeoTransformer( cs );
     return geoTrans.transformEnvelope( envelope, m_origin.getCoordinateSystem() );
   }
 
