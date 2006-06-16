@@ -77,7 +77,7 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
     addColumn( COL_OBS, "Zeitreihe", 250, true );
     addColumn( COL_HREF, "Kennzeichen", 400, true );
 
-    refreshColumnProperties();
+    //refreshColumnProperties();
   }
 
   /**
