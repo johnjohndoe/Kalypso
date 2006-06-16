@@ -39,8 +39,8 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Bruchkante ${property:org.kalypso.model.wspmbreakline#station}</label>
-				<tooltip>Bruchkante</tooltip>
-				<description>Bruchkante</description>
+				<tooltip>Bruchkante ${property:org.kalypso.model.wspmbreakline#station</tooltip>
+				<description>Bruchkante ${property:org.kalypso.model.wspmbreakline#station</description>
 			</documentation>
 		</annotation>
 	</element>

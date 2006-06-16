@@ -19,9 +19,9 @@
 	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</label>
-				<tooltip>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</tooltip>
-				<description>Profil Station - ${property:org.kalypso.model.wspmprofile#station}</description>
+				<label>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</label>
+				<tooltip>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</tooltip>
+				<description>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</description>
 			</documentation>
 		</annotation>
 	</element>

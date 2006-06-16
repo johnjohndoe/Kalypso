@@ -54,7 +54,14 @@
 			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
 					<element ref="wspm:calculationMember" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded">						<annotation>
+						<documentation xml:lang="de">
+							<label>Gewässer</label>
+							<tooltip>Gewässer</tooltip>
+							<description>Gewässer</description>
+						</documentation>
+					</annotation>
+					</element>
 					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0" maxOccurs="unbounded"/>
 					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>

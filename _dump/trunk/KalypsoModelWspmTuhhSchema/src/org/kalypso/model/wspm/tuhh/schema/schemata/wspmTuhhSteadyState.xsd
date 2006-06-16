@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -21,8 +21,8 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>${property:http://www.opengis.net/gml#name}</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -32,8 +32,8 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Untere Randbedingung (1. Profil)</label>
-				<tooltip>Untere Randbedingung (1. Profil)</tooltip>
-				<description>Untere Randbedingung (1. Profil)</description>
+				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
+				<description>Untere Randbedingung (am 1. Profil)</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -41,8 +41,8 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Untere Randbedingung (1. Profil)</label>
-				<tooltip>Untere Randbedingung (1. Profil)</tooltip>
-				<description>Untere Randbedingung (1. Profil)</description>
+				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
+				<description>Untere Randbedingung (am 1. Profil)</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -111,9 +111,9 @@
 	<element name="influentReachSegmentWspmTuhhSteadyStateMember" type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???influentReachSegmentWspmTuhhSteadyStateMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
+				<label>Zufluss-Strangsegmente</label>
+				<tooltip>Zufluss-Strangsegmente</tooltip>
+				<description>Zufluss-Strangsegmente</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -121,7 +121,7 @@
 	<element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType" substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>???influentReachSegmentWspmTuhhSteadyState</label>
+				<label>huhu???influentReachSegmentWspmTuhhSteadyState</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
 			</documentation>
@@ -132,18 +132,18 @@
 	<element name="profileReachSegmentWspmTuhhSteadyStateMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Strangsegmente</label>
-				<tooltip>Strangsegmente</tooltip>
-				<description>Strangsegmente</description>
+				<label>Profil-Strangsegmente</label>
+				<tooltip>Profil-Strangsegmente</tooltip>
+				<description>Profil-Strangsegmente</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Station - ${property:org.kalypso.model.wspm#station}</label>
-				<tooltip>Station - ${property:org.kalypso.model.wspm#station}</tooltip>
-				<description>Station - ${property:org.kalypso.model.wspm#station}</description>
+				<label>Station km - ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station km - ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station km - ${property:org.kalypso.model.wspm#station}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -279,9 +279,9 @@
 					<element ref="tuhh:reachWspmTuhhSteadyStateMember">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Strang, siehe Tooltip</label>
-								<tooltip>Beispiel für eine Annotation an einem referenzierenden Element.</tooltip>
-								<description>Gewässerstrang</description>
+								<label>Gewässerstrang</label>
+								<tooltip>Referenz auf Gewässerstrang</tooltip>
+								<description>Referenz auf Gewässerstrang</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -295,8 +295,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussereignis</label>
-								<tooltip>Abflussereignis</tooltip>
-								<description>Abflussereignis</description>
+								<tooltip>Referenz auf Abflussereignis</tooltip>
+								<description>Referenz auf Abflussereignis</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -569,14 +569,23 @@
 					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
 					<element ref="gml:description"/>
 					<element ref="gml:name"/>
-					<element ref="wspm:waterBodyMember"/>
+					<element ref="wspm:waterBodyMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässer</label>
+								<tooltip>Referenz auf Gewässer</tooltip>
+								<description>Referenz auf Gewässer</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="gml:lineStringMember"/>
 					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
 					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
-					<choice minOccurs="0" maxOccurs="unbounded">
+					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">
 						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
 						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
 					</choice>
+					-->
 				</sequence>
 			</restriction>
 		</complexContent>
