@@ -84,4 +84,10 @@
               id="pasche.bewuchs"
               type="Pasche"/>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.wspm.tuhh.ui.sld.WspmTuhhFeatureTypeStyleCatalogContribution"
+            name="Wspm Tuhh Style Catalog"/>
+   </extension>
 </plugin>
