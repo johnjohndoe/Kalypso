@@ -114,9 +114,20 @@ public class FeatureHelper
     return null;
   }
 
+  /**
+   * @deprecated use booleanIsTrue( Feature feature, QName propQName, boolean defaultStatus )
+   */
   public static boolean booleanIsTrue( Feature feature, String propName, boolean defaultStatus )
   {
     final Object property = feature.getProperty( propName );
+    if( property != null && property instanceof Boolean )
+      return ((Boolean) property).booleanValue();
+    return defaultStatus;
+  }
+
+  public static boolean booleanIsTrue( final Feature feature, final QName propQName, final boolean defaultStatus )
+  {
+    final Object property = feature.getProperty( propQName );
     if( property != null && property instanceof Boolean )
       return ((Boolean) property).booleanValue();
     return defaultStatus;
