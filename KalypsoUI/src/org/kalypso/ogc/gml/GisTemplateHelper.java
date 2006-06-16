@@ -160,10 +160,11 @@ public class GisTemplateHelper
     return (Gistableview) unmarshaller.unmarshal( is );
   }
 
-  public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream ) throws JAXBException
+  public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream, final String encoding ) throws JAXBException
   {
     final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISMAP );
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
     marshaller.marshal( modellTemplate, outStream );
   }
 

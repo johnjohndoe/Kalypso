@@ -192,13 +192,14 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-      GisTemplateHelper.saveGisMapView( modellTemplate, bos );
+      final IFile file = input.getFile();
+      
+      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
       bos.close();
       monitor.worked( 1000 );
 
-      final IFile file = input.getFile();
       if( file.exists() )
         file.setContents( bis, false, true, monitor );
       else
