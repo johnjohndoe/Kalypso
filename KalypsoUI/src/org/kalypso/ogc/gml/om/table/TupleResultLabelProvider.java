@@ -99,7 +99,11 @@ public class TupleResultLabelProvider implements ITableLabelProvider
     if( element instanceof IRecord )
     {
       final IRecord record = (IRecord) element;
-      final IComponent comp = record.getOwner().getComponents()[columnIndex];
+      final IComponent[] comps = record.getOwner().getComponents();
+      if( columnIndex > comps.length )
+        return null;
+
+      final IComponent comp = comps[columnIndex];
       
       return record.getValue( comp ).toString();
     }

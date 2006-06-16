@@ -65,14 +65,15 @@ public class TupleResultContentProvider implements IStructuredContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
+    final DefaultTableViewer tableViewer = (DefaultTableViewer) viewer;
+    if( oldInput != null )
+      tableViewer.removeAllColumns();
+
     if( newInput == null )
       return;
-    
-    final DefaultTableViewer tableViewer = (DefaultTableViewer) viewer;
-    tableViewer.removeAllColumns();
-    
+
     final TupleResult result = (TupleResult) newInput;
-    
+
     final IComponent[] components = result.getComponents();
     for( int i = 0; i < components.length; i++ )
       tableViewer.addColumn( components[i].getName(), components[i].getName(), 100, true );

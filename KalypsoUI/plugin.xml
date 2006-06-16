@@ -155,12 +155,26 @@
             name="%Extension.Views.EditOptionen"
             id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
       <view
+            allowMultiple="false"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ogc.gml.om.table.ObservationTableView"
+            icon="icons/kalypso_ott.gif"
+            id="org.kalypso.ogc.gml.om.table.ObservationTableView"
+            name="Observation-Tabelle (Selection)"/>
+      <view
             allowMultiple="true"
             category="org.kalypso.ui.kalypso"
-            class="org.kalypso.ogc.gml.om.views.MultiTupleResultView"
+            class="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView"
             icon="icons/kalypso_ott.gif"
-            id="org.kalypso.ogc.gml.om.views.MultiTupleResultView"
-            name="Observation-Tabelle"/>
+            id="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView"
+            name="Observation-Tabelle (Multi)"/>
+      <!--view
+            allowMultiple="true"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ogc.gml.om.chart.ObservationChartView"
+            icon="icons/kalypso_odt.gif"
+            id="org.kalypso.ogc.gml.om.chart.ObservationChartView"
+            name="Observation-Diagramm (Multi)"/-->
    </extension>
    <extension
          id="editorActions"
@@ -774,6 +788,9 @@
              adaptable="false"
              id="org.kalypso.objectclass.observationfeature"
              objectClass="org.kalypsodeegree.model.feature.Feature">
+          <filter
+                name="featureType"
+                value="http://www.opengis.net/om#Observation"/>
           <action
                 class="org.kalypso.ogc.gml.om.EditObservationAction"
                 enablesFor="1"
@@ -782,9 +799,12 @@
                 label="Observation editieren"
                 style="push"
                 tooltip="Editiert die ausgewählte Feature als Observation"/>
-          <filter
-                name="featureType"
-                value="http://www.opengis.net/om#Observation"/>
+          <action
+                class="org.kalypso.ogc.gml.om.ShowObservationAction"
+                icon="icons/kalypso_ott.gif"
+                id="org.kalypso.ogc.gml.om.ShowObservationAction"
+                label="Observation Tabelle"
+                tooltip="Observation als Tabelle visualisieren"/>
        </objectContribution>
    </extension>
    <extension
