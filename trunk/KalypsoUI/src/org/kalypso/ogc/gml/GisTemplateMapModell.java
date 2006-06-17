@@ -65,7 +65,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
  * @author Belger
  */
 public class GisTemplateMapModell implements IMapModell
