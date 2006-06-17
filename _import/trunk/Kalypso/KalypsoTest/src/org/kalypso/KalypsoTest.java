@@ -58,6 +58,12 @@ public class KalypsoTest
   /** Returns the temporarily used directory to allow clients to delete it. */
   public synchronized static void init( ) throws Exception
   {
+    init( getCatalog() );
+  }
+
+  /** Returns the temporarily used directory to allow clients to delete it. */
+  public synchronized static void init( final IUrlCatalog catalog ) throws Exception
+  {
     try
     {
       if( tmpDir != null )
@@ -70,13 +76,6 @@ public class KalypsoTest
       final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
       KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
-      final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
-          , new UrlCatalogOGC()//
-          , new DeegreeUrlCatalog() //
-          , new URLCatalogFlows() //
-          // CAN'T use it here, because this catalog uses plugin mechanisms to find the schemas
-//          , new org.kalypso.contribs.ogc31.UrlCatalogOGC() //
-          } );
       final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
       if( !cacheDirectory.exists() )
         cacheDirectory.mkdirs();
@@ -96,6 +95,18 @@ public class KalypsoTest
 
     }
     //
+  }
+
+  private static MultiUrlCatalog getCatalog( )
+  {
+    final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
+        , new UrlCatalogOGC()//
+        , new DeegreeUrlCatalog() //
+        , new URLCatalogFlows() //
+        // CAN'T use it here, because this catalog uses plugin mechanisms to find the schemas
+        // , new org.kalypso.contribs.ogc31.UrlCatalogOGC() //
+        } );
+    return catalog;
   }
 
   /** Release the by init taken resources. */
