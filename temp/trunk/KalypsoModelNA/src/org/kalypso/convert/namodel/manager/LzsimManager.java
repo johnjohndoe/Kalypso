@@ -188,7 +188,7 @@ public class LzsimManager
               status = STATUS_READ_GWSP;
             else if( matcherBODF.matches() && line.startsWith( "19960824" ) )
             {
-              System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
+//              System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
               status = STATUS_READ_BODF;
               String dateString = matcherBODF.group( 1 );
               Date date = dateFormat.parse( dateString );
@@ -311,7 +311,7 @@ public class LzsimManager
     Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) );
-    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd HH" ) );
+    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
     String iniDate = dateFormat.format( initialDate );
 
     // write initial conditions for the strands
