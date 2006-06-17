@@ -113,7 +113,7 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
       }
       if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
       {
-        return new URL( m_calcDir.toURL(), "Ergebnisse/Anfangswerte/lzsim.zip" );
+        return new URL( m_calcDir.toURL(), "Ergebnisse/Anfangswerte/lzsim.gml" );
       }
       if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       {
@@ -143,8 +143,7 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
   {
     if( id.equals( NaModelConstants.LZSIM_IN_ID ) || id.equals( NaModelConstants.IN_CONTROL_ID ) || id.equals( NaModelConstants.IN_GAUGING_STATION_ID ) || id.equals( NaModelConstants.IN_HYDROTOP_ID )
         || id.equals( NaModelConstants.IN_KLIMA_DIR_ID ) || id.equals( NaModelConstants.IN_META_ID ) || id.equals( NaModelConstants.IN_MODELL_ID ) || id.equals( NaModelConstants.IN_OPTIMIZECONF_ID )
-        || id.equals( NaModelConstants.IN_PARAMETER_ID ) || id.equals( NaModelConstants.IN_RAINFALL_ID ) || id.equals( NaModelConstants.IN_RESULTS_DIR_ID )
-        || id.equals( NaModelConstants.IN_TEMPLATE_ID ) )
+        || id.equals( NaModelConstants.IN_PARAMETER_ID ) || id.equals( NaModelConstants.IN_RAINFALL_ID ) || id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       return true;
     return false;
   }

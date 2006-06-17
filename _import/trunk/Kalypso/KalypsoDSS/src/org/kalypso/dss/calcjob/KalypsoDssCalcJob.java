@@ -63,6 +63,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelCalcJob;
@@ -310,7 +312,7 @@ public class KalypsoDssCalcJob implements ISimulation
       final Feature[] affectedChannels = getAffectedChannels( modelWorkspace, designAreaURL );
       setFeaturesWithResults( modelWorkspace, affectedChannels );
       // the calcCase always generates results for all elements in the rrm
-      setAllResultFlags( modelWorkspace, true );
+      // setAllResultFlags( modelWorkspace, true );
     }
     catch( Exception e )
     {
@@ -378,6 +380,8 @@ public class KalypsoDssCalcJob implements ISimulation
   private void insertPlanningMeasure( final URL measuresPlanningURL, final GMLWorkspace hydrotopWorkspace, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws Exception
   {
     final URL paramURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
+    final URL initValuesURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+    final GMLWorkspace initValuesWorkspace = GmlSerializer.createGMLWorkspace( initValuesURL );
     final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL );
     final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL );
     final IGMLSchema planningSchema = planningWorkspace.getGMLSchema();
@@ -400,7 +404,7 @@ public class KalypsoDssCalcJob implements ISimulation
     for( int i = 0; i < gruenflFE.length; i++ )
     {
       final Feature gfFE = gruenflFE[i];
-      setNewLandUseAndCorrSealingFactor( gfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_GRUENFL_LANDUSE_NAME, logger );
+      setNewLandUseAndCorrSealingFactor( gfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_GRUENFL_LANDUSE_NAME, logger );
     }
     // handel VerkehrsFlaech features
     final IFeatureType verkehrsFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFL_FT ) );
@@ -408,7 +412,7 @@ public class KalypsoDssCalcJob implements ISimulation
     for( int i = 0; i < verkersFEs.length; i++ )
     {
       final Feature vfFE = verkersFEs[i];
-      setNewLandUseAndCorrSealingFactor( vfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
+      setNewLandUseAndCorrSealingFactor( vfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
     }
     // handel VerkehrsflaecheBesondererZweckbestimmung features
     final IFeatureType verkehrsflaechBesZweckFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFMITBESZWECK_FT ) );
@@ -416,7 +420,7 @@ public class KalypsoDssCalcJob implements ISimulation
     for( int i = 0; i < verkehrsflaechBesZweckFEs.length; i++ )
     {
       final Feature vfBZbFE = verkehrsflaechBesZweckFEs[i];
-      setNewLandUseAndCorrSealingFactor( vfBZbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
+      setNewLandUseAndCorrSealingFactor( vfBZbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
     }
     // handel GemeinbedarfsFlaeche features
     final IFeatureType gemeinBedFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEMEINBED_FT ) );
@@ -424,7 +428,7 @@ public class KalypsoDssCalcJob implements ISimulation
     for( int i = 0; i < gemeinBedFlaechFEs.length; i++ )
     {
       final Feature gbFE = gemeinBedFlaechFEs[i];
-      setNewLandUseAndCorrSealingFactor( gbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, MeasuresConstants.XPLANUNG_GEMEINBED_LANDUSE_NAME, logger );
+      setNewLandUseAndCorrSealingFactor( gbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_GEMEINBED_LANDUSE_NAME, logger );
     }
     // handel BaugebietsFlaechenTeil (Baugebiete) features
     final IFeatureType bauGebFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) );
@@ -455,7 +459,7 @@ public class KalypsoDssCalcJob implements ISimulation
       else
         type = MeasuresConstants.XPLANUNG_UNDEFINED_LANDUSE_NAME;
 
-      setNewLandUseAndCorrSealingFactor( bgFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, type, logger );
+      setNewLandUseAndCorrSealingFactor( bgFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, type, logger );
     }
   }
 
@@ -549,8 +553,7 @@ public class KalypsoDssCalcJob implements ISimulation
          * To account for the change of the old and new sealing factor we have to calculate the new correction factor,
          * because we can not change the original sealing factor in the parameter.gml.
          */
-        // sealHydro = 0
-        // sonst infinity
+
         final double sealingAreaIntersection = areaIntersection * sealMeasure * corrSealingHydroOld;
         final double sealingAreaOld = (areaHydro - areaIntersection) * originalSealingFactor * corrSealingHydroOld;
         final double virtualSealingFactor = (sealingAreaIntersection + sealingAreaOld) / areaHydro;
@@ -829,7 +832,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
   }
 
-  private void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, final String landUseProp, final Logger logger ) throws Exception
+  private void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, GMLWorkspace initValuesWorkspace, final String landUseProp, final Logger logger ) throws Exception
   {
     // init counter
     int c_success = 0;
@@ -838,7 +841,7 @@ public class KalypsoDssCalcJob implements ISimulation
     final IGMLSchema parameterSchema = paraWorkspace.getGMLSchema();
     final IFeatureType landUseFT = parameterSchema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_NAME ) );
     final Feature[] landUseFEs = paraWorkspace.getFeatures( landUseFT );
-    final QName qNameLandUse = new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP );
+    final QName qNameLandUse = new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP );
     Feature landUseFE = null;
     for( int i = 0; i < landUseFEs.length; i++ )
     {
@@ -935,12 +938,34 @@ public class KalypsoDssCalcJob implements ISimulation
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( newCorrectionFactor ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ), new Double( intersection.getArea() ) );
-      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
+      newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
+//      setInitialValues( newHydroFE, hydroFE, initValuesWorkspace );
     }
     if( c_error > 0 )
       logger.info( "Fehler BPlan-Measure: " + c_error + " Fehler/" + (c_success + c_error) + " Total\n" );
     else
       logger.info( "BPlan-Maßnahme" + planningMeasureFE.getClass().toString() + " erfolgreich eingefügt!" );
+  }
+
+  private void setInitialValues( final Feature newHydroFE, final Feature hydroFE, final GMLWorkspace initValuesWorkspace ) throws MultiException
+  {
+    final IGMLSchema initalValuesSchema = initValuesWorkspace.getGMLSchema();
+    final IFeatureType hydIniFT = initalValuesSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_MEMBER_PROP ) );
+    final IPropertyType featureIdPT = hydIniFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ) );
+    Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
+    for( int i = 0; i < hydIniFEs.length; i++ )
+    {
+      final Feature hydIniFE = hydIniFEs[i];
+      Object value = hydIniFE.getProperty( featureIdPT );
+      if( hydroFE.getId().equals( value ) )
+      {
+        final Feature catchementIniFE = hydIniFE.getParent();
+        final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, hydIniFT );
+        FeatureHelper.copySimpleProperties( hydIniFE, newHydIniFE );
+        
+      }
+
+    }
   }
 
   /**
@@ -961,7 +986,7 @@ public class KalypsoDssCalcJob implements ISimulation
     final IPropertyType timeSeriesLinkPT = nodeFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP ) );
     final HashMap<IPropertyType, Object> map = new HashMap<IPropertyType, Object>();
     map.put( genResultPT, new Boolean( state ) );
-    map.put( timeSeriesLinkPT, new String() );
+    map.put( timeSeriesLinkPT, null );
     final SetPropertyFeatureVisitor visitor = new SetPropertyFeatureVisitor( map );
     modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
   }
@@ -994,7 +1019,7 @@ public class KalypsoDssCalcJob implements ISimulation
     for( int i = 0; i < resultFE.length; i++ )
     {
       final Feature feature = resultFE[i];
-      Object property = feature.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP ) );
+      Object property = feature.getProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ) );
       if( property != null )
         m_featruesWithResults.add( (String) property );
     }
