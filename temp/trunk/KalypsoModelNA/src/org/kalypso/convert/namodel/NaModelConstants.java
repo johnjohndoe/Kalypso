@@ -114,6 +114,8 @@ public interface NaModelConstants
   /** GML property constants */
   public static final String GML_FEATURE_NAME_PROP = "name";
 
+  public static final String GML_FEATURE_DESCRIPTION_PROP = "description";
+
   /** hydrotop.xsd */
   public static final String HYDRO_MEMBER = "hydrotopMember";
 
@@ -260,4 +262,5 @@ public interface NaModelConstants
   public static final String INI_HYD_FEATUREID_PROP = "featureId";
 
   public static final String INI_CATCHMENT_LINK_HYD_PROP = "hyd";
+
 }

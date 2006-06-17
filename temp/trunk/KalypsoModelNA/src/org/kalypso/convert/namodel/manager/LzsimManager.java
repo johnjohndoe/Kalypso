@@ -188,7 +188,7 @@ public class LzsimManager
               status = STATUS_READ_GWSP;
             else if( matcherBODF.matches() && line.startsWith( "19960824" ) )
             {
-//              System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
+              // System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
               status = STATUS_READ_BODF;
               String dateString = matcherBODF.group( 1 );
               Date date = dateFormat.parse( dateString );
@@ -297,15 +297,15 @@ public class LzsimManager
   {
     IDManager idManager = conf.getIdManager();
 
-    final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType(IDManager.CHANNEL);
-    final Hashtable<String, Feature> channelIDToFeatureHash=new Hashtable<String, Feature>();
+    final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
+    final Hashtable<String, Feature> channelIDToFeatureHash = new Hashtable<String, Feature>();
     for( final Feature feature : allNAChannelFeatures )
-      channelIDToFeatureHash.put(feature.getId(),feature);
+      channelIDToFeatureHash.put( feature.getId(), feature );
 
-    final List<Feature> allNACatchmentFeatures = idManager.getAllFeaturesFromType(IDManager.CATCHMENT);
-    final Hashtable<String, Feature> catchmentIDToFeatureHash=new Hashtable<String, Feature>();
+    final List<Feature> allNACatchmentFeatures = idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
+    final Hashtable<String, Feature> catchmentIDToFeatureHash = new Hashtable<String, Feature>();
     for( final Feature feature : allNACatchmentFeatures )
-      catchmentIDToFeatureHash.put(feature.getId(),feature);
+      catchmentIDToFeatureHash.put( feature.getId(), feature );
 
     File lzsimDir = new File( tmpDir, "lzsim" );
     Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
@@ -322,11 +322,15 @@ public class LzsimManager
       Feature channelFE = (Feature) channelList.get( i );
       StringBuffer lzgBuffer = new StringBuffer();
       String naChannelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) );
-      
-      final Feature naChannelFE = channelIDToFeatureHash.get(naChannelID);
-      int asciiChannelID = idManager.getAsciiID(naChannelFE);
+
+      final Feature naChannelFE = channelIDToFeatureHash.get( naChannelID );
+      // in the channelIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is only
+      // a subnet of the total model the idManager only knows the featuers in the submodel just skip this one.
+      if( naChannelFE == null )
+        continue;
+      int asciiChannelID = idManager.getAsciiID( naChannelFE );
       final String fileName = "we" + asciiChannelID + ".lzg";
-      
+
       File lzgFile = new File( lzsimDir, fileName );
       lzgBuffer.append( iniDate + " h   1 qgs" + "\n" );
       Double h = (Double) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ) );
@@ -336,15 +340,19 @@ public class LzsimManager
       lzgWriter.close();
     }
 
-    // for all catchments inthe calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
+    // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
     List catchmentList = (List) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.CATCHMENT_MEMBER_PROP ) );
     Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {
       StringBuffer lzsBuffer = new StringBuffer();
-      
-      final Feature naCatchmentFE = catchmentIDToFeatureHash.get( catchmentID);
-      int asciiCatchmentID = idManager.getAsciiID(naCatchmentFE);
+
+      final Feature naCatchmentFE = catchmentIDToFeatureHash.get( catchmentID );
+      // in the catchmentIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is only
+      // a subnet of the total model the idManager only knows the featuers in the submodel just skip this one.
+      if( naCatchmentFE == null )
+        continue;
+      int asciiCatchmentID = idManager.getAsciiID( naCatchmentFE );
       final String fileName = "we" + asciiCatchmentID + ".lzs";
 
       File lzsFile = new File( lzsimDir, fileName );
