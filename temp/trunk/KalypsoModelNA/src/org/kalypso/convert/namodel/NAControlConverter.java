@@ -117,11 +117,11 @@ public class NAControlConverter
         if( write )
         {
           final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( "initialDate" ) );
-//          Date initialDate = (Date) fe.getProperty( "initialDate" );
+          // Date initialDate = (Date) fe.getProperty( "initialDate" );
           SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
           String iniDate = format.format( initialDate );
           b.append( iniDate + "\n" );
-          conf.setIniWrite(true);
+          conf.setIniWrite( true );
         }
       }
     }
@@ -151,6 +151,9 @@ public class NAControlConverter
     // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
     b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" );
     b.append( getBoolean( controlFE.getProperty( "vet" ) ) + "       Evapotranspiration         .vet\n" );
+    // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
+    // nur mit der v2.5 (ask Christoph)
+    b.append( getBoolean( controlFE.getProperty( "qmr" ) ) + "       Ausgabe MRS                .qmr\n" );
     b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe Hydrotope          .hyd\n" );
     // if "2": output of *.txt and *.bil
     if( ((Boolean) (controlFE.getProperty( "bil" ))).booleanValue() )

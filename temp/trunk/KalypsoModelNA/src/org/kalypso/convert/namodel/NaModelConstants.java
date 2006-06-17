@@ -59,7 +59,7 @@ public interface NaModelConstants
   public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
 
   public static final String NS_SYNTHN = "http://www.tuhh.de/synthN";
-  
+
   public static final String NS_INIVALUES = "http://www.tuhh.de/initialValues";
 
   /** server client bean constants */
@@ -114,8 +114,7 @@ public interface NaModelConstants
   /** GML property constants */
   public static final String GML_FEATURE_NAME_PROP = "name";
 
-  /** RRM constants */
-  // hydrotop
+  /** hydrotop.xsd */
   public static final String HYDRO_MEMBER = "hydrotopMember";
 
   public static final String HYDRO_FT = "HydrotopFeatureType";
@@ -138,6 +137,7 @@ public interface NaModelConstants
 
   public static final String HYDRO_ENUM_HYDTYPE_REGULAR = "Bodenspeicher";
 
+  /** namodell.xsd */
   // channels
   public static final String CHANNEL_COLLECTION_MEMBER_PROP = "ChannelCollectionMember";
 
@@ -217,8 +217,22 @@ public interface NaModelConstants
 
   public static final String MRS_INFLOW_GW_PROP = "InflowGW";
 
-  // parameter
+  // link Properties
+  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
 
+  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
+
+  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
+
+  public static final String LINK_MRS_DISCHARGE_NODE_PROP = "dischargeNode";
+
+  // default values
+  public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
+
+  // misc
+  public static final String GENERATE_RESULT_PROP = "generateResult";
+
+  /** parameter.xsd */
   public static final String PARA_LANDUSE_FT = "LanduseType";
 
   public static final String PARA_LANDUSE_NAME = "Landuse";
@@ -233,21 +247,15 @@ public interface NaModelConstants
 
   public static final String PARA_LANDUSE_PROP_LANDUSE_LINK = "idealLandUsePeriodLink";
 
-  // link Properties
-  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
-
-  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
-
-  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
-
-  public static final String LINK_MRS_DISCHARGE_NODE_PROP = "dischargeNode";
-
   // default values
-  public static final String DEFAULT_MRS_SOIL_PROFIL_PROP = "mrsp";
-
   public static final String DEFAULT_MRS_LANDUSE_PROP = "6";
 
-  // misc
-  public static final String GENERATE_RESULT_PROP = "generateResult";
+  /** initalValues.xsd */
+  public static final String INI_CATCHMENT_MEMBER_PROP = "catchmentMember";
 
+  public static final String INI_CHANNEL_MEMBER_PROP = "channelMember";
+
+  public static final String INI_HYD_MEMBER_PROP = "IniHyd";
+
+  public static final String INI_HYD_FEATUREID_PROP = "featureId";
 }

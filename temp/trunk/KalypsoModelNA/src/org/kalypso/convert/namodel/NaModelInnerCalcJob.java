@@ -211,8 +211,14 @@ public class NaModelInnerCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
       // Kopieren von Berechnungsstandardverzeichnis
-
-      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+      // TODO template is set as optional in the modelspec of the nacalcjob, can be removed because it always comes from
+      // the model itself. ( ask christoph)
+      final URL asciiTemplateURL;
+      // if( inputProvider.hasID( NaModelConstants.IN_TEMPLATE_ID ) )
+      // asciiTemplateURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID );
+      // else
+      asciiTemplateURL = getClass().getResource( "template/emptyAsciiTemplate.zip" );
+      unzipInput( asciiTemplateURL, tmpdir );
 
       // Kopieren von zu verwendenden Anfangswerten in das Berechnungsverzeichnis
       final File lzsimDir = new File( tmpdir, "lzsim" );
@@ -997,7 +1003,7 @@ public class NaModelInnerCalcJob implements ISimulation
     if( conf.getIniWrite() )
     {
       final LzsimManager lzsimManager = new LzsimManager();
-      lzsimManager.initialValues(conf.getIdManager(),tmpdir,logger,resultEater);
+      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultEater );
     }
     loadLogs( tmpdir, logger, resultEater );
     final File[] files = resultDir.listFiles();
@@ -1013,7 +1019,6 @@ public class NaModelInnerCalcJob implements ISimulation
       }
     }
   }
-
 
   private String getTitleForSuffix( String suffix )
   {
