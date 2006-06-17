@@ -118,100 +118,87 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( final Object o, final UserStyle[] styles, final GMLWorkspace workspace )
+  public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle[] styles, final GMLWorkspace workspace )
   {
     final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>( styles.length );
 
-    if( o instanceof Feature )
+    try
     {
-      Feature feature = (Feature) o;
+      final QName featureTypeQName = feature.getFeatureType().getQName();
 
-      try
+      for( final UserStyle userStyle : styles )
       {
-        final QName featureTypeQName = feature.getFeatureType().getQName();
-
-        for( int i = 0; i < styles.length; i++ )
+        if( userStyle == null )
         {
-          if( styles[i] == null )
-          {
-            // create display element from default style
-            DisplayElement de = buildDisplayElement( feature );
-            if( de != null )
-            {
-              list.add( de );
-            }
-          }
-          else
-          {
-            FeatureTypeStyle[] fts = styles[i].getFeatureTypeStyles();
+          // create display element from default style
+          final DisplayElement de = buildDisplayElement( feature );
+          if( de != null )
+            list.add( de );
+        }
+        else
+        {
+          final FeatureTypeStyle[] fts = userStyle.getFeatureTypeStyles();
 
-            for( int k = 0; k < fts.length; k++ )
+          for( int k = 0; k < fts.length; k++ )
+          {
+            final QName styleFTQName = fts[k].getFeatureTypeName();
+            if( styleFTQName == null //
+                || featureTypeQName.equals( styleFTQName ) //
+                || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
             {
-              final QName styleFTQName = fts[k].getFeatureTypeName();
-              if( styleFTQName == null //
-                  || featureTypeQName.equals( styleFTQName ) //
-                  || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
+              final Rule[] rules = fts[k].getRules();
+
+              for( int n = 0; n < rules.length; n++ )
               {
-                Rule[] rules = fts[k].getRules();
 
-                for( int n = 0; n < rules.length; n++ )
+                // does the filter rule apply?
+                Filter filter = rules[n].getFilter();
+
+                if( filter != null )
                 {
-
-                  // does the filter rule apply?
-                  Filter filter = rules[n].getFilter();
-                  
-                  if( filter != null )
-                  {                   
-                    try
-                    {
-                      if( !filter.evaluate( feature ) )
-                      {
-                        continue;
-                      }
-                    }
-                    catch( FilterEvaluationException e )
-                    {
-                      System.out.println( "Error evaluating filter: " + e );
-
-                      continue;
-                    }
-                  }
-
-                  // Filter expression is true for this
-                  // feature, so a
-                  // corresponding DisplayElement has to be
-                  // added to the
-                  // list
-                  Symbolizer[] symbolizers = rules[n].getSymbolizers();
-
-                  for( int u = 0; u < symbolizers.length; u++ )
+                  try
                   {
-                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u], workspace );
-
-                    if( displayElement != null )
-                    {
-                      list.add( displayElement );
-                    }
+                    if( !filter.evaluate( feature ) )
+                      continue;
                   }
+                  catch( FilterEvaluationException e )
+                  {
+                    System.out.println( "Error evaluating filter: " + e );
+
+                    continue;
+                  }
+                }
+
+                // Filter expression is true for this
+                // feature, so a
+                // corresponding DisplayElement has to be
+                // added to the
+                // list
+                Symbolizer[] symbolizers = rules[n].getSymbolizers();
+
+                for( int u = 0; u < symbolizers.length; u++ )
+                {
+                  final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u], workspace );
+                  if( displayElement != null )
+                    list.add( displayElement );
                 }
               }
             }
           }
         }
       }
-      catch( IncompatibleGeometryTypeException e )
-      {
-        System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
-        e.printStackTrace();
-      }
-      catch( Throwable t )
-      {
-        t.printStackTrace();
-      }
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
+      e.printStackTrace();
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
     }
 
-    final DisplayElement[] de = new DisplayElement[list.size()];
-    return (DisplayElement[]) list.toArray( de );
+    return list.toArray( new DisplayElement[list.size()] );
   }
 
   /**
@@ -227,69 +214,64 @@ public class DisplayElementFactory
    *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer, GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( Feature feature, Symbolizer symbolizer, GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
   {
     DisplayElement displayElement = null;
 
-    if( o instanceof Feature )
+    // determine the geometry property to be used
+    GM_Object geoProperty = null;
+    Geometry geometry = symbolizer.getGeometry();
+
+    if( geometry != null )
     {
-      Feature feature = (Feature) o;
-
-      // determine the geometry property to be used
-      GM_Object geoProperty = null;
-      Geometry geometry = symbolizer.getGeometry();
-
-      if( geometry != null )
-      {
-        // check if virtual property
-        // if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
-        final IFeatureType featureType = feature.getFeatureType();
-        final String propertyName = geometry.getPropertyName();
-        final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, propertyName );
-        if( vpt != null )
-          geoProperty = (GM_Object) vpt.getVirtuelValue( feature, workspace );
-        else if( featureType.getProperty( propertyName ) != null )
-          geoProperty = (GM_Object) feature.getProperty( propertyName );
-        else
-          return null;
-      }
+      // check if virtual property
+      // if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
+      final IFeatureType featureType = feature.getFeatureType();
+      final String propertyName = geometry.getPropertyName();
+      final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, propertyName );
+      if( vpt != null )
+        geoProperty = (GM_Object) vpt.getVirtuelValue( feature, workspace );
+      else if( featureType.getProperty( propertyName ) != null )
+        geoProperty = (GM_Object) feature.getProperty( propertyName );
       else
-      {
-        geoProperty = feature.getDefaultGeometryProperty();
-      }
-
-      // if the geometry property is null, do not build a DisplayElement
-
-      if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
-      {
         return null;
-      }
+    }
+    else
+    {
+      geoProperty = feature.getDefaultGeometryProperty();
+    }
 
-      // PointSymbolizer
-      if( symbolizer instanceof PointSymbolizer )
-      {
-        displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer) symbolizer );
-      } // LineSymbolizer
-      else if( symbolizer instanceof LineSymbolizer )
-      {
-        displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer) symbolizer );
-      } // PolygonSymbolizer
-      else if( symbolizer instanceof PolygonSymbolizer )
-      {
-        displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer) symbolizer );
-      }
-      else if( symbolizer instanceof TextSymbolizer )
-      {
-        displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer) symbolizer );
-      } // RasterSymbolizer
-      else if( symbolizer instanceof RasterSymbolizer )
-      {
-        displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
-      }
-      else
-      {
-        System.out.println( "symbolizer...?" );
-      }
+    // if the geometry property is null, do not build a DisplayElement
+
+    if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
+    {
+      return null;
+    }
+
+    // PointSymbolizer
+    if( symbolizer instanceof PointSymbolizer )
+    {
+      displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer) symbolizer );
+    } // LineSymbolizer
+    else if( symbolizer instanceof LineSymbolizer )
+    {
+      displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer) symbolizer );
+    } // PolygonSymbolizer
+    else if( symbolizer instanceof PolygonSymbolizer )
+    {
+      displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer) symbolizer );
+    }
+    else if( symbolizer instanceof TextSymbolizer )
+    {
+      displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer) symbolizer );
+    } // RasterSymbolizer
+    else if( symbolizer instanceof RasterSymbolizer )
+    {
+      displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
+    }
+    else
+    {
+      System.out.println( "symbolizer...?" );
     }
 
     return displayElement;

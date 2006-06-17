@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -109,11 +110,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
-    for( final Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
-    {
-      final StyleDisplayMap map = (StyleDisplayMap) iter.next();
-      map.setDirty();
-    }
+    for( final StyleDisplayMap styleDisplayMap : m_styleDisplayMap.values() )
+      styleDisplayMap.setDirty();
   }
 
   public CommandableWorkspace getWorkspace( )
@@ -178,7 +176,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else
       featuresFilter.removeAll( globalSelectedFeatures );
 
-    for( StyleDisplayMap map : m_styleDisplayMap.values() )
+    for( final StyleDisplayMap map : m_styleDisplayMap.values() )
       map.paintSelected( graphics, projection, scale, bbox, featuresFilter );
   }
 
@@ -222,7 +220,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           setDirty();
         else
         {
-          for( Iterator iterator = features.iterator(); iterator.hasNext(); )
+          for( final Iterator iterator = features.iterator(); iterator.hasNext(); )
           {
             final Feature feature = (Feature) iterator.next();
             // my feature ?
@@ -259,21 +257,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else if( modellEvent.isType( ModellEvent.STYLE_CHANGE ) )
       setDirty();
     else
-    // unknown event, set dirty
-    { // TODO : if the eventhierarchy is implemented correctly the else-part can
-      // be removed
+    {
+      // unknown event, set dirty
+      // TODO : if the eventhierarchy is implemented correctly the else-part can be removed
       setDirty();
     }
     fireModellEvent( modellEvent );
   }
 
-  private void restyleFeature( Feature feature )
+  private void restyleFeature( final Feature feature )
   {
-    for( final Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
-    {
-      StyleDisplayMap sdm = (StyleDisplayMap) iter.next();
-      sdm.restyle( feature );
-    }
+    for( final StyleDisplayMap styleDisplayMap : m_styleDisplayMap.values() )
+      styleDisplayMap.restyle( feature );
   }
 
   /**
@@ -297,7 +292,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( env == null )
       env = getBoundingBox();
     final Set<Feature> result = new HashSet<Feature>();
-    for( StyleDisplayMap map : m_styleDisplayMap.values() )
+    for( final StyleDisplayMap map : m_styleDisplayMap.values() )
       map.queryVisibleFeatures( env, result );
     final FeatureList list = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
     list.addAll( result );
@@ -332,7 +327,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public class StyleDisplayMap
   {
-    private final List<DisplayElement[]> m_displayElements = new ArrayList<DisplayElement[]>();
+    private final Map<Feature, DisplayElement[]> m_displayElements = new HashMap<Feature, DisplayElement[]>();
+
+    // private final List<DisplayElement[]> m_displayElements = new ArrayList<DisplayElement[]>();
 
     private final UserStyle[] m_style;
 
@@ -353,13 +350,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       restyle( env );
 
       // iterate through array to avoid concurrent modification exception
-      final DisplayElement[][] elts = m_displayElements.toArray( new DisplayElement[m_displayElements.size()][] );
-      for( int i = 0; i < elts.length; i++ )
-      {
-        final DisplayElement[] element = elts[i];
-        result.add( element[0].getFeature() );
-      }
-
+      final Set<Feature> keySet = m_displayElements.keySet();
+      final Feature[] features = keySet.toArray( new Feature[keySet.size()] );
+      for( final Feature f : features )
+        result.add( f );
       return result;
     }
 
@@ -374,28 +368,30 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     /**
      * @return List of display elements that fit to selectionMask <br>
      */
-    public List getSelectedDisplayElements( final List featuresToFilter, final GM_Envelope bbox )
+    public List<DisplayElement[]> getSelectedDisplayElements( final List featuresToFilter, final GM_Envelope bbox )
     {
       final List<DisplayElement[]> result = new ArrayList<DisplayElement[]>();
-      for( int i = 0; i < m_displayElements.size(); i++ )
-      {
-        final DisplayElement[] de = m_displayElements.get( i );
-        if( de.length > 0 )
-        {
-          final Feature feature = de[0].getFeature();
 
-          if( featuresToFilter.contains( feature ) && feature.getEnvelope().intersects( bbox ) )
-            result.add( de );
+      for( final Object f : featuresToFilter )
+      {
+        final Feature feature = (Feature) f;
+        if( feature.getEnvelope().intersects( bbox ) )
+        {
+          final DisplayElement[] elements = m_displayElements.get( feature );
+          if( elements != null )
+            result.add( elements );
         }
       }
+
       return result;
     }
 
-    void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final List featureFilter )
+    public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final List featureFilter )
     {
       restyle( bbox );
 
-      final List selectedDE = getSelectedDisplayElements( featureFilter, bbox );
+      final List<DisplayElement[]> selectedDE = getSelectedDisplayElements( featureFilter, bbox );
+      // final List<DisplayElement[]> selectedDE = m_displayElements;
 
       final List<DisplayElement>[] layerList = new List[m_maxDisplayArray];
 
@@ -403,9 +399,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       for( int i = 0; i < layerList.length; i++ )
         layerList[i] = new ArrayList<DisplayElement>();
 
-      for( final Iterator iter = selectedDE.iterator(); iter.hasNext(); )
+      for( final DisplayElement[] element : selectedDE )
       {
-        final DisplayElement[] element = (DisplayElement[]) iter.next();
         for( int i = 0; i < element.length; i++ )
         {
           if( element[i].doesScaleConstraintApply( scale ) )
@@ -415,8 +410,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
       for( int i = 0; i < layerList.length; i++ )
       {
-        for( final Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
-          ((DisplayElement) iterator.next()).paint( g, p );
+        for( final DisplayElement de : layerList[i] )
+          de.paint( g, p );
       }
     }
 
@@ -445,22 +440,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       final DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style, m_workspace );
       if( elements.length > 0 )
-        m_displayElements.add( elements );
+        m_displayElements.put( feature, elements );
       if( elements.length > m_maxDisplayArray )
         m_maxDisplayArray = elements.length;
     }
 
-    public void restyle( Feature feature )
+    public void restyle( final Feature feature )
     {
-      for( Iterator iter = m_displayElements.iterator(); iter.hasNext(); )
-      {
-        DisplayElement[] elements = (DisplayElement[]) iter.next();
-        if( elements[0].getFeature().equals( feature ) )
-        {
-          m_displayElements.remove( elements );
-          break;
-        }
-      }
+      m_displayElements.remove( feature );
       addDisplayElements( feature );
     }
   }

@@ -74,6 +74,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
@@ -157,25 +158,26 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   /**
    * renders the DisplayElement to the submitted graphic context
    */
+  @Override
   public void paint( Graphics g, GeoTransform projection )
   {
     try
     {
       Image image = defaultImg;
 
-      if( ( (PointSymbolizer)symbolizer ).getGraphic() != null )
+      final PointSymbolizer symbolizer = (PointSymbolizer) getSymbolizer();
+      if( symbolizer.getGraphic() != null )
       {
-        image = ( (PointSymbolizer)symbolizer ).getGraphic().getAsImage( feature );
+        image = symbolizer.getGraphic().getAsImage( getFeature() );
       }
-      Graphics2D g2D = (Graphics2D)g;
+      Graphics2D g2D = (Graphics2D) g;
 
+      final GM_Object geometry = getGeometry();
       if( geometry instanceof GM_Point )
-      {
-        drawPoint( g2D, (GM_Point)geometry, projection, image );
-      }
+        drawPoint( g2D, (GM_Point) geometry, projection, image );
       else
       {
-        GM_MultiPoint mp = (GM_MultiPoint)geometry;
+        GM_MultiPoint mp = (GM_MultiPoint) geometry;
 
         for( int i = 0; i < mp.getSize(); i++ )
         {
@@ -195,11 +197,11 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   private void drawPoint( Graphics2D g, GM_Point point, GeoTransform projection, Image image )
   {
     GM_Position source = point.getPosition();
-    int x = (int)( projection.getDestX( source.getX() ) + 0.5 );
-    int y = (int)( projection.getDestY( source.getY() ) + 0.5 );
+    int x = (int) (projection.getDestX( source.getX() ) + 0.5);
+    int y = (int) (projection.getDestY( source.getY() ) + 0.5);
 
-    int x_ = x - ( image.getWidth( null ) >> 1 );
-    int y_ = y - ( image.getHeight( null ) >> 1 );
+    int x_ = x - (image.getWidth( null ) >> 1);
+    int y_ = y - (image.getHeight( null ) >> 1);
     g.drawImage( image, x_, y_, null );
   }
 }

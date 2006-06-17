@@ -132,19 +132,17 @@ public class SplitSort implements FeatureList
   {
     if( object instanceof DisplayElement )
     {
-      DisplayElement de = (DisplayElement) object;
+      final DisplayElement de = (DisplayElement) object;
       return getEnvelope( de.getFeature() );
     }
     else if( object instanceof Feature )
     {
-      Feature fe = (Feature) object;
+      final Feature fe = (Feature) object;
       GM_Envelope env = fe.getEnvelope();
       return env;
     }
-    else
-    {
-      return null;
-    }
+
+    return null;
   }
 
   public void paint( Graphics g, GeoTransform geoTransform )
@@ -169,7 +167,7 @@ public class SplitSort implements FeatureList
     return null;
   }
 
-  public void resort( Feature feature )
+  public void resort( final Feature feature )
   {
     if( !contains( feature ) )
       return;
