@@ -234,6 +234,7 @@ public class KalypsoDssCalcJob implements ISimulation
   private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
     boolean writeNewHydrotopFile = false;
+    boolean writeNewInitalValueFile = false;
     // get the urls for measures and model files
 
     final URL measuresRhbURL;
@@ -268,10 +269,12 @@ public class KalypsoDssCalcJob implements ISimulation
 
     final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL hydrotopURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
+    final URL initValueURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
     final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
 
     GMLWorkspace modelWorkspace = null;
     GMLWorkspace hydrotopWorkspace = null;
+    GMLWorkspace initValuesWorkspace = null;
     try
     {
       modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
@@ -279,8 +282,11 @@ public class KalypsoDssCalcJob implements ISimulation
       {
 
         hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
-        insertPlanningMeasure( planningMeasureURL, hydrotopWorkspace, rrmInputProvider, logger );
+        initValuesWorkspace = GmlSerializer.createGMLWorkspace( initValueURL );
+        // insert measure
+        insertPlanningMeasure( planningMeasureURL, hydrotopWorkspace, initValuesWorkspace, rrmInputProvider, logger );
         writeNewHydrotopFile = true;
+        writeNewInitalValueFile = true;
       }
       if( measuresRhbURL != null )
       {
@@ -302,7 +308,7 @@ public class KalypsoDssCalcJob implements ISimulation
     catch( Exception e )
     {
       e.printStackTrace();
-      logger.info( "Problems while merging measures with modell data - " + e.getMessage() );
+      logger.info( "Problems while merging measures with modell data - " + e.getLocalizedMessage() );
       throw new SimulationException( e.getMessage(), e );
     }
     try
@@ -322,17 +328,29 @@ public class KalypsoDssCalcJob implements ISimulation
 
     Writer writerHydroTop = null;
     Writer writerModel = null;
+    Writer writerInitValue = null;
     try
     {
       try
       {
-        // 1. write the changed data to a new rrm and hydrotop file
-        // 2. replacing in the bean the old URL to the new files
+        /**
+         * 1. write the changed data to a new rrm, hydrotop and inital value file <br>
+         * 2. replacing in the bean the old URL to the new files
+         */
+        // model file
         final File modelFile = File.createTempFile( "measured_model", ".gml", calcDir );
         writerModel = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( modelFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
         GmlSerializer.serializeWorkspace( writerModel, modelWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
         rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelFile.toURL() );
-
+        // inital value file
+        if( writeNewInitalValueFile )
+        {
+          final File initValueFile = File.createTempFile( "measured_initValues", ".gml", calcDir );
+          writerInitValue = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( initValueFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
+          GmlSerializer.serializeWorkspace( writerInitValue, initValuesWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
+          rrmInputProvider.addURL( NaModelConstants.LZSIM_IN_ID, initValueFile.toURL() );
+        }
+        // hydrotop file
         if( writeNewHydrotopFile )
         {
           final File hydroTopFile = File.createTempFile( "measured_hydrotops", ".gml", calcDir );
@@ -343,8 +361,9 @@ public class KalypsoDssCalcJob implements ISimulation
       }
       finally
       {
-        IOUtils.closeQuietly( writerHydroTop );
         IOUtils.closeQuietly( writerModel );
+        IOUtils.closeQuietly( writerInitValue );
+        IOUtils.closeQuietly( writerHydroTop );
       }
 
     }
@@ -377,11 +396,10 @@ public class KalypsoDssCalcJob implements ISimulation
     return (Feature[]) channelCollector.toArray( new Feature[channelCollector.size()] );
   }
 
-  private void insertPlanningMeasure( final URL measuresPlanningURL, final GMLWorkspace hydrotopWorkspace, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws Exception
+  private void insertPlanningMeasure( final URL measuresPlanningURL, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace initValuesWorkspace, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws Exception
   {
     final URL paramURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     final URL initValuesURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
-    final GMLWorkspace initValuesWorkspace = GmlSerializer.createGMLWorkspace( initValuesURL );
     final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL );
     final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL );
     final IGMLSchema planningSchema = planningWorkspace.getGMLSchema();
@@ -895,7 +913,7 @@ public class KalypsoDssCalcJob implements ISimulation
       final Feature newHydroFE = hydrotopWorkspace.createFeature( hydroRootFeature, hydroFT );
       hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
       // copy all propterties from the intersected hydrotop to the newly created hydrotop
-      FeatureHelper.copySimpleProperties( hydroFE, newHydroFE );
+      FeatureHelper.copyNoRelationPropterty( hydroFE, newHydroFE );
       if( difference != null && !difference.isEmpty() )
       {
         final GM_Object geomWithOldParam = JTSAdapter.wrap( difference );
@@ -916,7 +934,8 @@ public class KalypsoDssCalcJob implements ISimulation
        */
       final IRelationType linkSealing = (IRelationType) landUseFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK ) );
       final Feature landuseSealingFE = paraWorkspace.resolveLink( landUseFE, linkSealing );
-      double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, 0.5d );
+      final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 0.5d );
+      double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, landuseSealingFactor );
       // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
       boolean plus50ProzentNebenflaechen = false;
       final IFeatureType measureFT = planningMeasureFE.getFeatureType();
@@ -932,14 +951,14 @@ public class KalypsoDssCalcJob implements ISimulation
         else
           measureSealingFactor = 0.8d;
       }
-      final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 0.5d );
       final double originalCorrFactor = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
       final double newCorrectionFactor = originalCorrFactor * measureSealingFactor / landuseSealingFactor;
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( newCorrectionFactor ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_AREA ), new Double( intersection.getArea() ) );
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_LANDUSE_NAME ), landUseFE.getProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ) ) );
-//      setInitialValues( newHydroFE, hydroFE, initValuesWorkspace );
+      newHydroFE.setProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), "automatically generated hydrotop cloned from hydrotopID=" + hydroFE.getId() );
+      setInitialValues( newHydroFE, hydroFE, initValuesWorkspace );
     }
     if( c_error > 0 )
       logger.info( "Fehler BPlan-Measure: " + c_error + " Fehler/" + (c_success + c_error) + " Total\n" );
@@ -947,22 +966,27 @@ public class KalypsoDssCalcJob implements ISimulation
       logger.info( "BPlan-Maßnahme" + planningMeasureFE.getClass().toString() + " erfolgreich eingefügt!" );
   }
 
-  private void setInitialValues( final Feature newHydroFE, final Feature hydroFE, final GMLWorkspace initValuesWorkspace ) throws MultiException
+  private void setInitialValues( final Feature newHydroFE, final Feature hydroFE, final GMLWorkspace initValuesWorkspace ) throws Exception
   {
     final IGMLSchema initalValuesSchema = initValuesWorkspace.getGMLSchema();
     final IFeatureType hydIniFT = initalValuesSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_MEMBER_PROP ) );
     final IPropertyType featureIdPT = hydIniFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ) );
-    Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
+    final Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
     for( int i = 0; i < hydIniFEs.length; i++ )
     {
       final Feature hydIniFE = hydIniFEs[i];
-      Object value = hydIniFE.getProperty( featureIdPT );
+      final String value = (String) hydIniFE.getProperty( featureIdPT );
       if( hydroFE.getId().equals( value ) )
       {
         final Feature catchementIniFE = hydIniFE.getParent();
         final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, hydIniFT );
-        FeatureHelper.copySimpleProperties( hydIniFE, newHydIniFE );
-        
+        FeatureHelper.copyNoRelationPropterty( hydIniFE, newHydIniFE );
+        newHydIniFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), newHydroFE.getId() );
+        newHydIniFE.setProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), "automatically generated inital value for hydrotopID=" + newHydroFE.getId() );
+        final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
+        initValuesWorkspace.addFeatureAsComposition( catchementIniFE, linkCatchmentHydIni, 0, newHydIniFE );
+        // there is only one match for hydIni.featureID to hydroFE.getId() -> leave the loop now
+        break;
       }
 
     }
