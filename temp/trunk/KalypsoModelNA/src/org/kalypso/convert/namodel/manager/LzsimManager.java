@@ -43,14 +43,22 @@ package org.kalypso.convert.namodel.manager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +69,10 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.contribs.java.util.regex.RegexpUtilities;
+import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -70,9 +81,16 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author huebsch
@@ -118,20 +136,20 @@ public class LzsimManager
 
   public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final ISimulationResultEater resultEater ) throws Exception
   {
-    //TODO: implement for different dates!
+    // TODO: implement for different dates!
     // create new GMLworkspace for lzsim results
     File lzsimDir = new File( tmpDir, "lzsim" );
     final String ns = "http://www.tuhh.de/initialValues";
     final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( ns, new QName( ns, "InitialValues" ) );
     final Feature lzRootFE = lzWorkspace.getRootFeature();
-    
+
     final IFeatureType lzCatchmentFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "Catchment" ) );
     final IFeatureType lzChannelFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "Channel" ) );
     final IFeatureType lzrootFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "InitialValues" ) );
 
     final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( new QName( ns, "catchmentMember" ) );
     final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( new QName( ns, "channelMember" ) );
-    
+
     final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( new QName( ns, "hyd" ) );
     final List<Feature> CatchmentFEs = idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
     final List<Feature> ChannelFEs = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
@@ -159,23 +177,23 @@ public class LzsimManager
       // iterate over lines in file
       while( (line = reader.readLine()) != null )
       {
-        line = line.trim().replaceAll("\\s+"," ");
+        line = line.trim().replaceAll( "\\s+", " " );
         switch( status )
         {
           case STATUS_SEARCH_HEADER:
             final Matcher matcherBODF = patternHeaderBODF.matcher( line );
-            if( line.endsWith( "snow" ) && line.startsWith("19960824"))
+            if( line.endsWith( "snow" ) && line.startsWith( "19960824" ) )
               status = STATUS_READ_SNOW;
-            else if( line.endsWith( "gwsp" ) && line.startsWith("19960824"))
+            else if( line.endsWith( "gwsp" ) && line.startsWith( "19960824" ) )
               status = STATUS_READ_GWSP;
-            else if( matcherBODF.matches() && line.startsWith("19960824"))
+            else if( matcherBODF.matches() && line.startsWith( "19960824" ) )
             {
               System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
               status = STATUS_READ_BODF;
               String dateString = matcherBODF.group( 1 );
-              Date date = dateFormat.parse(dateString);
-              XMLGregorianCalendar calendarDate = DateUtilities.toXMLGregorianCalendar(date);
-              lzRootFE.setProperty(new QName(ns,"iniDate"),calendarDate);
+              Date date = dateFormat.parse( dateString );
+              XMLGregorianCalendar calendarDate = DateUtilities.toXMLGregorianCalendar( date );
+              lzRootFE.setProperty( new QName( ns, "iniDate" ), calendarDate );
               maxHydros = Integer.parseInt( matcherBODF.group( 2 ) );
             }
             break;
@@ -184,7 +202,7 @@ public class LzsimManager
             final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT.getTargetFeatureType() );
             lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
             final String[] strings = line.split( " " );
-            final int pos = Integer.parseInt( strings[0] )-1;
+            final int pos = Integer.parseInt( strings[0] ) - 1;
             final String hydroID = idManager.getHydroFeatureId( feature, pos );
             lzHydFE.setProperty( new QName( ns, "featureId" ), hydroID );
             final Double interception = Double.valueOf( strings[1] );
@@ -208,7 +226,7 @@ public class LzsimManager
           {
             final String[] strings = line.split( " " );
             final Double hgws = Double.valueOf( strings[1] );// hoehe gw
-            final Double qb = Double.valueOf( strings[2]);// basisabfluss
+            final Double qb = Double.valueOf( strings[2] );// basisabfluss
             lzCatchmentFE.setProperty( new QName( ns, "hgws" ), hgws );
             lzCatchmentFE.setProperty( new QName( ns, "qb" ), qb );
             status = STATUS_SEARCH_HEADER;
@@ -249,12 +267,12 @@ public class LzsimManager
       // iterate over lines in file
       while( (line = reader.readLine()) != null )
       {
-        line = line.trim().replaceAll("\\s+"," ");
+        line = line.trim().replaceAll( "\\s+", " " );
         switch( status )
         {
           case STATUS_SEARCH_HEADER:
             // TODO read date
-            if( line.endsWith( "qgs" )&& line.startsWith("19960824") )
+            if( line.endsWith( "qgs" ) && line.startsWith( "19960824" ) )
               // 19960521 00 h 1 qgs
               // 1 0.000
               status = STATUS_READ_QGS;
@@ -273,5 +291,95 @@ public class LzsimManager
     final File lzsimGML = new File( tmpDir, "lzsim.gml" );
     GmlSerializer.serializeWorkspace( lzsimGML, lzWorkspace, "UTF-8" );
     resultEater.addResult( NaModelConstants.LZSIM_OUT_ID, lzsimGML );
+  }
+
+  public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace ) throws IOException
+  {
+    IDManager idManager = conf.getIdManager();
+    File lzsimDir = new File( tmpDir, "lzsim" );
+    Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
+    // Initial value date
+    final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) );
+    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd HH" ) );
+    String iniDate = dateFormat.format( initialDate );
+
+    // write initial conditions for the strands
+    // TODO:write only for strands of the actual calculation
+    List channelList = (List) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.CHANNEL_MEMBER_PROP ) );
+    for( int i = 0; i < channelList.size(); i++ )
+    {
+      Feature channelFE = (Feature) channelList.get( i );
+      StringBuffer lzgBuffer = new StringBuffer();
+      String channelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) );
+      // TODO take ascii ID instead of channelID (featureID)
+      final String fileName = "we" + channelID + ".lzg";
+      File lzgFile = new File( lzsimDir, fileName );
+      lzgBuffer.append( iniDate + " h   1 qgs" + "\n" );
+      Double h = (Double) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ) );
+      lzgBuffer.append( "   1" + FortranFormatHelper.printf( h, "f9.3" ) + "\n" );
+      Writer lzgWriter = new FileWriter( lzgFile );
+      lzgWriter.write( lzgBuffer.toString() );
+      lzgWriter.close();
+    }
+
+    // for all catchments inthe calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
+    List catchmentList = (List) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.CATCHMENT_MEMBER_PROP ) );
+    Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
+    for( final String catchmentID : catchmentIdsFromLzsim )
+    {
+      // TODO take ascii ID instead of catchmentID
+      StringBuffer lzsBuffer = new StringBuffer();
+      final String fileName = "we" + catchmentID + ".lzs";
+      File lzsFile = new File( lzsimDir, fileName );
+      List<String> sortedHydrosIDsfromLzsim = idManager.getSortedHydrosIDsfromLzsim( catchmentID );
+      // find catchmentID in the iniValues
+      for( int i = 0; i < catchmentList.size(); i++ )
+      {
+        Feature catchmentFE = (Feature) catchmentList.get( i );
+        // write lzs for the catchment
+        if( catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) ).equals( catchmentID ) )
+        {
+          // snow
+          lzsBuffer.append( iniDate + " h     1 snow" + "\n" );
+          Double h = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ) );
+          Double ws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ) );
+          lzsBuffer.append( "   1" + FortranFormatHelper.printf( h, "f9.2" ) + FortranFormatHelper.printf( ws, "f9.2" ) + "\n" );
+          // groundwater
+          lzsBuffer.append( iniDate + " h     1 gwsp" + "\n" );
+          Double hgws = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ) );
+          Double qb = (Double) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ) );
+          lzsBuffer.append( "   1" + FortranFormatHelper.printf( hgws, "f9.2" ) + FortranFormatHelper.printf( qb, "f9.2" ) + "\n" );
+          // hydrotops (interception storage content& soil moisture)
+          int hydroPos = 0;
+          List iniHydsList = (List) catchmentFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "hyd" ) );
+          lzsBuffer.append( iniDate + " h  " + FortranFormatHelper.printf( Integer.toString( iniHydsList.size() ), "i4" ) + " bodf" + "\n" );
+          for( String hydroID : sortedHydrosIDsfromLzsim )
+          {
+            hydroPos++;
+            Iterator iter = iniHydsList.iterator();
+            while( iter.hasNext() )
+            {
+              Feature iniHydFe = (Feature) iter.next();
+              // write initial parameters for the hydrotop
+              String hydFeatureId = (String) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) );
+              if( hydFeatureId.equals( hydroID ) )
+              {
+                Double bi = (Double) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ) );
+                lzsBuffer.append( FortranFormatHelper.printf( hydroPos, "i4" ) + FortranFormatHelper.printf( bi, "f7.2" ) );
+                List<Double> bofs = (List<Double>) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ) );
+                for( Double bof : bofs )
+                {
+                  lzsBuffer.append( FortranFormatHelper.printf( bof, "f7.2" ) );
+                }
+                lzsBuffer.append( "\n" );
+              }
+            }
+          }
+          Writer lzsWriter = new FileWriter( lzsFile );
+          lzsWriter.write( lzsBuffer.toString() );
+          lzsWriter.close();
+        }
+      }
+    }
   }
 }

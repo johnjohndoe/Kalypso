@@ -96,6 +96,7 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -221,9 +222,10 @@ public class NaModelInnerCalcJob implements ISimulation
       unzipInput( asciiTemplateURL, tmpdir );
 
       // Kopieren von zu verwendenden Anfangswerten in das Berechnungsverzeichnis
-      final File lzsimDir = new File( tmpdir, "lzsim" );
-      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
+//      final File lzsimDir = new File( tmpdir, "lzsim" );
+//      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
       // performance
+      
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
       {
         // while optimization, you can recycle files from a former run.
@@ -263,6 +265,9 @@ public class NaModelInnerCalcJob implements ISimulation
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
+      final URL iniValuesURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+      final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( iniValuesURL );
+      LzsimManager.writeLzsimFiles(conf,tmpdir,iniValuesWorkspace);
 
       if( monitor.isCanceled() )
         return;

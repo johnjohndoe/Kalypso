@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -89,7 +90,7 @@ public class IDManager
     }
     return ((IDMap) m_featureIDMap.get( feature )).getAsciiID();
   }
-
+  
   /**
    * @param feature
    */
@@ -267,4 +268,15 @@ public class IDManager
     final List<String> hydIdList = m_hydrohash.get( catchmentFE.getId() );
     return hydIdList.get( pos );
   }
+
+  public Set<String> getCatchmentIdsFromLzsim( )
+  {
+    return m_hydrohash.keySet();
+  }
+
+  public List<String> getSortedHydrosIDsfromLzsim( String catchmentID )
+  {
+    return m_hydrohash.get( catchmentID );
+  }
+
 }
