@@ -296,6 +296,17 @@ public class LzsimManager
   public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace ) throws IOException
   {
     IDManager idManager = conf.getIdManager();
+
+    final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType(IDManager.CHANNEL);
+    final Hashtable<String, Feature> channelIDToFeatureHash=new Hashtable<String, Feature>();
+    for( final Feature feature : allNAChannelFeatures )
+      channelIDToFeatureHash.put(feature.getId(),feature);
+
+    final List<Feature> allNACatchmentFeatures = idManager.getAllFeaturesFromType(IDManager.CATCHMENT);
+    final Hashtable<String, Feature> catchmentIDToFeatureHash=new Hashtable<String, Feature>();
+    for( final Feature feature : allNACatchmentFeatures )
+      catchmentIDToFeatureHash.put(feature.getId(),feature);
+
     File lzsimDir = new File( tmpDir, "lzsim" );
     Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
@@ -310,9 +321,12 @@ public class LzsimManager
     {
       Feature channelFE = (Feature) channelList.get( i );
       StringBuffer lzgBuffer = new StringBuffer();
-      String channelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) );
-      // TODO take ascii ID instead of channelID (featureID)
-      final String fileName = "we" + channelID + ".lzg";
+      String naChannelID = (String) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ) );
+      
+      final Feature naChannelFE = channelIDToFeatureHash.get(naChannelID);
+      int asciiChannelID = idManager.getAsciiID(naChannelFE);
+      final String fileName = "we" + asciiChannelID + ".lzg";
+      
       File lzgFile = new File( lzsimDir, fileName );
       lzgBuffer.append( iniDate + " h   1 qgs" + "\n" );
       Double h = (Double) channelFE.getProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ) );
@@ -327,9 +341,12 @@ public class LzsimManager
     Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {
-      // TODO take ascii ID instead of catchmentID
       StringBuffer lzsBuffer = new StringBuffer();
-      final String fileName = "we" + catchmentID + ".lzs";
+      
+      final Feature naCatchmentFE = catchmentIDToFeatureHash.get( catchmentID);
+      int asciiCatchmentID = idManager.getAsciiID(naCatchmentFE);
+      final String fileName = "we" + asciiCatchmentID + ".lzs";
+
       File lzsFile = new File( lzsimDir, fileName );
       List<String> sortedHydrosIDsfromLzsim = idManager.getSortedHydrosIDsfromLzsim( catchmentID );
       // find catchmentID in the iniValues
