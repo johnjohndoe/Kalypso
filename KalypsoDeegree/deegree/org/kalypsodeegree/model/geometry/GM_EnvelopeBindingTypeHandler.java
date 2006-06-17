@@ -101,7 +101,7 @@ public class GM_EnvelopeBindingTypeHandler extends AbstractGM_EnvelopeBindingTyp
       }
     };
     final QName xmlTagName = getXMLTagNameForGMLVersion( gmlVersion );
-    unmarshal( xmlTagName, xmlReader,  eater, gmlVersion );
+    unmarshal( xmlTagName, xmlReader, eater, gmlVersion );
   }
 
   /**
@@ -133,7 +133,9 @@ public class GM_EnvelopeBindingTypeHandler extends AbstractGM_EnvelopeBindingTyp
   {
     try
     {
-      final GM_Object geometry = (GM_Object) objectToClone;
+      if( objectToClone == null )
+        return null;
+      final GM_Envelope geometry = (GM_Envelope) objectToClone;
 
       final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
       final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );

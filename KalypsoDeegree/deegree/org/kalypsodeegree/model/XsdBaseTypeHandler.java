@@ -41,6 +41,8 @@
 package org.kalypsodeegree.model;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -171,6 +173,20 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    */
   public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
+    if( objectToClone == null )
+      return null;
+    if( objectToClone instanceof List )
+    {
+      final List list = (List) objectToClone;
+      final List clonedList = new ArrayList( list.size() );
+      for( final Object listItem : list )
+      {
+        final String stringOfCloneItem = convertToXMLString( (T) listItem );
+        clonedList.add( parseType( stringOfCloneItem ) );
+      }
+      return clonedList;
+    }
+    // no list
     final String stringOfClone = convertToXMLString( (T) objectToClone );
     return parseType( stringOfClone );
   }
