@@ -8,12 +8,9 @@
 	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="true"/>
 	<input id="Parameter" description="Modelldaten - Parameter" optional="true"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
-	<input id="Template" description="Berechnungsverzeichnis"/>
+	<input id="Template" description="Berechnungsverzeichnis" optional="true"/>
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="true"/>	
-
-	<!-- fuer flows -->
-    <input id="Measure" description="Massnahmen" optional="true"/>
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
