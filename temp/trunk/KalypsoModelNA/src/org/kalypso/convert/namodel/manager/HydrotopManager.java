@@ -77,8 +77,6 @@ public class HydrotopManager extends AbstractManager
 
   final Hashtable<String, Double> m_landuseMap = new Hashtable<String, Double>();
 
-  final List<String> m_hydIdList = new ArrayList<String>();
-
   public HydrotopManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getHydrotopFormatURL() );
@@ -202,14 +200,15 @@ public class HydrotopManager extends AbstractManager
 
         Iterator hydIter = hydWriteSet.iterator();
         int anzHydrotope = 0;
+        final List<String> hydIdList = new ArrayList<String>();
         while( hydIter.hasNext() )
         {
           anzHydrotope += 1;
           final Feature hydrotopFE = (Feature) hydIter.next();
-          m_hydIdList.add( anzHydrotope - 1, hydrotopFE.getId() );
+          hydIdList.add( hydrotopFE.getId() );
           writeFeature( asciiBuffer, hydrotopFE, anzHydrotope );
         }
-        idManager.addHydroInfo( catchmentFE, m_hydIdList );
+        idManager.addHydroInfo( catchmentFE, hydIdList );
       }
     }
   }
@@ -266,18 +265,6 @@ public class HydrotopManager extends AbstractManager
       System.out.println( "Kein gültiger Hydrotoptyp" );
     b.append( " " + hydTypeNumber );
     asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
-  }
-
-  /**
-   * @param asciiBuffer
-   * @param hydrotopeWorkspace
-   * @param modelWorkspace
-   * @param parameterWorkspace
-   */
-
-  public List<String> getHydIdList( )
-  {
-    return m_hydIdList;
   }
 
 }
