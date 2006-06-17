@@ -17,6 +17,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -27,6 +28,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -471,6 +473,27 @@ public class FeatureHelper
       final Object valueOriginal = srcFE.getProperty( property );
       final Object cloneValue = cloneData( valueOriginal, pt, gmlVersion );
       targetFE.setProperty( pt, cloneValue );
+    }
+  }
+
+  public static void copyNoRelationPropterty( final Feature srcFE, final Feature targetFE ) throws CloneNotSupportedException
+  {
+    final IFeatureType sourceFT = srcFE.getFeatureType();
+    final IFeatureType targetFT = targetFE.getFeatureType();
+    final String gmlVersion = srcFE.getWorkspace().getGMLSchema().getGMLVersion();
+    if( !sourceFT.equals( targetFT ) )
+      throw new CloneNotSupportedException( "source FeatureType=" + sourceFT.getQName() + " is not the same as target featureType=" + targetFT.getQName() );
+    final IPropertyType[] properties = sourceFT.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      final IPropertyType pt = properties[i];
+      if( pt instanceof IValuePropertyType )
+      {
+        final IValuePropertyType vpt = (IValuePropertyType) pt;
+        final IMarshallingTypeHandler sourceTH = (IMarshallingTypeHandler) vpt.getTypeHandler();
+        final Object clonedProptery = sourceTH.cloneObject( srcFE.getProperty( vpt ), gmlVersion );
+        targetFE.setProperty( pt, clonedProptery );
+      }
     }
   }
 
