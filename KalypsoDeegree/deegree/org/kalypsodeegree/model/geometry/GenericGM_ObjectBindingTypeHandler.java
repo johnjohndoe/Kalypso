@@ -45,6 +45,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
@@ -80,13 +81,29 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     {
       public void eat( final Object bindingGeometry ) throws GMLSchemaException
       {
-        final Object geometryValue;
+        Object geometryValue = null;
         try
         {
           final Class geometryClass = getValueClass();
-          // TODO
-          final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
-          geometryValue = bindingToGM_ObjectAdapter.wrapFromBinding( bindingGeometry, geometryClass );
+
+          try
+          {
+            final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
+            geometryValue = bindingToGM_ObjectAdapter.wrapFromBinding( bindingGeometry, geometryClass );
+          }
+          catch( Exception e )
+          {
+            // try to load with other gml version
+            if( gmlVersion.startsWith( "2" ) )
+            {
+              e.printStackTrace();
+              final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( "3.1" );
+              geometryValue = bindingToGM_ObjectAdapter.wrapFromBinding( bindingGeometry, geometryClass );
+            }
+            else
+              throw e;
+          }
+
           // geometryValue = BindingToValueAdapter_GML31.createGM_Object( bindingGeometry, geometryClass );
           marshalResultEater.eat( geometryValue );
         }
@@ -132,8 +149,8 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     {
       final GM_Object geometry = (GM_Object) objectToClone;
 
-//      final String gmlVersion = "3.1";
-//
+      // final String gmlVersion = "3.1";
+      //
       final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
       final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
 
