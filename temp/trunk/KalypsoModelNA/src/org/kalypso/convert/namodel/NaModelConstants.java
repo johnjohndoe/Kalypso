@@ -258,4 +258,6 @@ public interface NaModelConstants
   public static final String INI_HYD_MEMBER_PROP = "IniHyd";
 
   public static final String INI_HYD_FEATUREID_PROP = "featureId";
+
+  public static final String INI_CATCHMENT_LINK_HYD_PROP = "hyd";
 }
