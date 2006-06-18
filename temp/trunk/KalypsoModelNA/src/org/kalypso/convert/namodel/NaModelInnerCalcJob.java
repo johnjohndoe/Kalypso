@@ -55,9 +55,9 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -95,11 +95,8 @@ import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -157,7 +154,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
 
-  final HashMap m_resultMap = new HashMap();
+  final private List<String> m_resultMap = new ArrayList<String>();
 
   public NaModelInnerCalcJob( )
   {
@@ -222,10 +219,10 @@ public class NaModelInnerCalcJob implements ISimulation
       unzipInput( asciiTemplateURL, tmpdir );
 
       // Kopieren von zu verwendenden Anfangswerten in das Berechnungsverzeichnis
-//      final File lzsimDir = new File( tmpdir, "lzsim" );
-//      unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
+      // final File lzsimDir = new File( tmpdir, "lzsim" );
+      // unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
       // performance
-      
+
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
       {
         // while optimization, you can recycle files from a former run.
@@ -267,7 +264,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
       final URL iniValuesURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
       final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( iniValuesURL );
-      LzsimManager.writeLzsimFiles(conf,tmpdir,iniValuesWorkspace);
+      LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
 
       if( monitor.isCanceled() )
         return;
@@ -1025,89 +1022,6 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private String getTitleForSuffix( String suffix )
-  {
-    // j Temperatur .tmp
-    if( suffix.equalsIgnoreCase( "tmp" ) )
-      return "Temperatur";
-    // j Niederschlag .pre
-    if( suffix.equalsIgnoreCase( "pre" ) )
-      return "Niederschlag";
-    // n Schnee .sch
-    if( suffix.equalsIgnoreCase( "sch" ) )
-      return "Schneehoehe";
-    // j Bodenfeuchte .bof
-    if( suffix.equalsIgnoreCase( "bof" ) )
-      return "Bodenfeuchte";
-    // n Bodenspeicher .bsp
-    if( suffix.equalsIgnoreCase( "bsp" ) )
-      return "Bodenspeicherbilanz";
-    // n Grundwasserstand .gws
-    if( suffix.equalsIgnoreCase( "gws" ) )
-      return "Grundwasserstand";
-    // j Gesamtabfluss Knoten .qgs
-    if( suffix.equalsIgnoreCase( "qgs" ) )
-      return "Gesamtabfluss";
-    // n Gesamtabfluss TG .qgg
-    if( suffix.equalsIgnoreCase( "qgg" ) )
-      return "Gesamtabfluss";
-    // n Oberflaechenabfluss .qna
-    if( suffix.equalsIgnoreCase( "qna" ) )
-      return "Oberflaechenabfluss(natuerlich)";
-    // n Interflow .qif
-    if( suffix.equalsIgnoreCase( "qif" ) )
-      return "Interflow";
-    // n Abfluss vers. Flaechen .qvs
-    if( suffix.equalsIgnoreCase( "qvs" ) )
-      return "Oberflaechenabfluss(versiegelt)";
-    // n Basisabfluss .qbs
-    if( suffix.equalsIgnoreCase( "qbs" ) )
-      return "Basisabfluss";
-    // n Kluftgrundw1 .qt1
-    if( suffix.equalsIgnoreCase( "qt1" ) )
-      return "Kluftgrundw1abfluss";
-    // n Kluftgrundw .qtg
-    if( suffix.equalsIgnoreCase( "qtg" ) )
-      return "KluftGWAbfluss";
-    // n Grundwasser .qgw
-    if( suffix.equalsIgnoreCase( "qgw" ) )
-      return "Grundwasserabfluss";
-    // n Evapotranspiration .vet
-    if( suffix.equalsIgnoreCase( "vet" ) )
-      return "Evapotranspiration";
-    // n Ausgabe hydrotope .hyd
-    if( suffix.equalsIgnoreCase( "hyd" ) )
-      return "Hydrotope";
-    // n Abflussbilanz .bil
-    if( suffix.equalsIgnoreCase( "bil" ) )
-      return "Abflussbilanz";
-    // n Statistische Abflusswerte .nmq
-    if( suffix.equalsIgnoreCase( "nmq" ) )
-      return "Abflusswerte(statistisch)";
-    // n Speicherinhalt .spi
-    if( suffix.equalsIgnoreCase( "spi" ) )
-      return "Fuellvolumen";
-    // n Wasserspiegelhöhe .sph
-    if( suffix.equalsIgnoreCase( "sph" ) )
-      return "Wasserspiegelhoehe";
-    // n Verdunstung aus Talsperre .spv
-    if( suffix.equalsIgnoreCase( "spv" ) )
-      return "Talsperrenverdunstung";
-    // n Niederschlag in Talsperre .spn
-    if( suffix.equalsIgnoreCase( "spn" ) )
-      return "Niederschlag";
-    // n Zehrung .spb
-    if( suffix.equalsIgnoreCase( "spb" ) )
-      return "Zehrung";
-    // n Speicherueberlauf .sub
-    if( suffix.equalsIgnoreCase( "sub" ) )
-      return "Speicherueberlauf";
-    // n Kapil.Aufstieg/Perkolation .kap - not available, because not used in the calculation core
-    // if( suffix.equalsIgnoreCase( "kap" ) )
-    // return "Kapil.Aufstieg/Perkolation";
-    return suffix;
-  }
-
   private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
   {
     // j Gesamtabfluss Knoten .qgs
@@ -1206,21 +1120,22 @@ public class NaModelInnerCalcJob implements ISimulation
         // IKalypsoPreferences.LANGUAGE );
         final String lang = "de";
         // hm, so gehts auch nicht
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-        final String annotationLabel = annotation != null ? annotation.getLabel() : feature.getFeatureType().getQName().getLocalPart();
+        // final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
+        // final String annotationLabel = annotation != null ? annotation.getLabel() :
+        // feature.getFeatureType().getQName().getLocalPart();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
-        final String feName = (String) feature.getProperty( titlePropName );
-        final String observationTitle;
-        if( feName != null && feName.length() > 0 )
-          observationTitle = feName;
-        else
-          observationTitle = feature.getId();
+        // final String feName = (String) feature.getProperty( titlePropName );
+        // final String observationTitle;
+        // if( feName != null && feName.length() > 0 )
+        // observationTitle = feName;
+        // else
+        // observationTitle = feature.getId();
 
         final String axisTitle = getAxisTitleForSuffix( suffix );
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        logger.info( "lese berechnetes Ergebnis fuer #" + key + ", Name:" + observationTitle + "\n" );
+        logger.info( "lese berechnetes Ergebnis fuer #" + key + ", Name:" + feature.getFeatureType().getQName() + "(" + suffix + ")" + "\n" );
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
@@ -1290,21 +1205,20 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           // if there is target defined or there are some problems with that
           // we generate one
-
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" + getTitleForSuffix( suffix ) + ".zml";
-          // resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" + suffix +
-          // "(" + observationTitle + ").zml";
+          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
+          // resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" +
+          // getTitleForSuffix( suffix ) + ".zml";
+          //
         }
-        if( !m_resultMap.containsKey( resultPathRelative ) )
+        if( !m_resultMap.contains( resultPathRelative ) )
         {
-          m_resultMap.put( resultPathRelative, observationTitle );
+          m_resultMap.add( resultPathRelative );
         }
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "("
-              + observationTitle + ").zml";
-          m_resultMap.put( resultPathRelative, observationTitle );
+          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
+          m_resultMap.add( resultPathRelative );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }
 
@@ -1312,7 +1226,9 @@ public class NaModelInnerCalcJob implements ISimulation
         resultFile.getParentFile().mkdirs();
 
         // create observation object
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle + " - " + getTitleForSuffix( suffix ) + " " + annotationLabel, false, null, metadataList, axis, qTuppelModel );
+        final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( feature, titlePropName, suffix );
+
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", titleForObservation, false, null, metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
         final String scenarioID = conf.getScenarioID();
