@@ -196,6 +196,7 @@ public class KalypsoDssCalcJob implements ISimulation
       else
         doMeasures = false;
 
+      final List<HTMLFragmentBean> htmlFragmentBeans = new ArrayList<HTMLFragmentBean>();
       final String tmpdirAsString = hqJobsBaseDir.toString();
       // 
       for( int i = 0; i < hqIdentifierToCalculate.length; i++ )
@@ -209,6 +210,7 @@ public class KalypsoDssCalcJob implements ISimulation
         // insert measures defined from the client application
         final List<Feature> resultNodes = mergeMeasures( inputProvider, rrmInputProvider, doMeasures, logger );
         final File dssResultDirRun = new File( m_resultDirDSS, hqIdentifier );
+
         dssResultDirRun.mkdirs();
         final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
         {
@@ -225,7 +227,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
                 try
                 {
-                  FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqIdentifier, resultNode, doMeasures );
+                  FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqIdentifier, resultNode, doMeasures, htmlFragmentBeans );
                 }
                 catch( MalformedURLException e )
                 {
@@ -258,6 +260,10 @@ public class KalypsoDssCalcJob implements ISimulation
         calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
         monitor.setMessage( "Berechnungslauf " + i + " beendet" );
       }
+      final File analyseFile = new File( m_resultDirDSS, "analyse.html" );
+      final File analyseHQFile = new File( m_resultDirDSS, "analyseHQ.html" );
+      FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, htmlFragmentBeans, true );
+      FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, htmlFragmentBeans, false );
     }
     catch( IOException e )
     {

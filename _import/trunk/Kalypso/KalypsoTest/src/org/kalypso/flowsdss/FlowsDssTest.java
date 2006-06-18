@@ -42,11 +42,14 @@ package org.kalypso.flowsdss;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
 import org.kalypso.dss.calcjob.FlowsDSSResultGenerator;
+import org.kalypso.dss.calcjob.HTMLFragmentBean;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
@@ -79,8 +82,8 @@ public class FlowsDssTest extends TestCase
 
     final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
     String hqEventId = "HQ1";
-    boolean doMeasures = false;
-    final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
+    boolean doMeasures = true;
+    // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
     final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
     {
 
@@ -112,7 +115,13 @@ public class FlowsDssTest extends TestCase
       }
 
     };
+    final List<HTMLFragmentBean> fragments = new ArrayList<HTMLFragmentBean>();
     for( final Feature resultNode : resultNodes )
-      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures );
+      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures, fragments );
+    final File analyseFile=new File( dssResultDirRun.getParentFile(), "analyse.html" );
+    final File analyseHQFile=new File( dssResultDirRun.getParentFile(), "analyseHQ.html" );
+    FlowsDSSResultGenerator.generateHTMLFormFragments(analyseFile ,fragments, true );
+    FlowsDSSResultGenerator.generateHTMLFormFragments(analyseHQFile, fragments, false );
+   
   }
 }

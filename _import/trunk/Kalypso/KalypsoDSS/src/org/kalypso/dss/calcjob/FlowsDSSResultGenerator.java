@@ -42,12 +42,16 @@ package org.kalypso.dss.calcjob;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
@@ -55,12 +59,12 @@ import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.utils.MeasuresConstants;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.util.ZMLUtilities;
 import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author doemming
@@ -92,8 +96,10 @@ public class FlowsDSSResultGenerator
    * @param noMeasures
    *          true, if calculation is based only on planing without measures
    */
-  public static void generateDssResultFor( final File dssResultDir, final File rrmResultDir, final ISimulationDataProvider inputProvider, final String hqEventId, final Feature resultNode, final boolean doMeasures ) throws MalformedURLException
+  public static List<HTMLFragmentBean> generateDssResultFor( final File dssResultDir, final File rrmResultDir, final ISimulationDataProvider inputProvider, final String hqEventId, final Feature resultNode, final boolean doMeasures, List<HTMLFragmentBean> htmlFragmentCollector ) throws MalformedURLException
   {
+    if( htmlFragmentCollector == null )
+      htmlFragmentCollector = new ArrayList<HTMLFragmentBean>();
     final String nodeName = (String) resultNode.getProperty( "name" );
     final String resultTitle = hqEventId + " - " + nodeName;
 
@@ -122,8 +128,13 @@ public class FlowsDSSResultGenerator
       // retrieve file from inputdata
       try
       {
-        final URL lastResultContainerURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_LastResults );
-        srcPlanURL = new URL( lastResultContainerURL,"Ergebnisse/" +hqEventId + "/" + containerPath + "/mitPlanung.zml" );
+        if( inputProvider.hasID( MeasuresConstants.IN_LastResults ) )
+        {
+          final URL lastResultContainerURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_LastResults );
+          srcPlanURL = new URL( lastResultContainerURL, "Ergebnisse/" + hqEventId + "/" + containerPath + "/mitPlanung.zml" );
+        }
+        else
+          srcPlanURL = null;
       }
       catch( Exception e )
       {
@@ -273,7 +284,8 @@ public class FlowsDSSResultGenerator
 
     if( gotStatusQuo && gotPlaning && gotPlaningAndMeasure )
     {
-      final String pageHTML = generateHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
+      String nodeTitle = createNodeTitle( resultNode );
+      final String pageHTML = generateHTML( nodeTitle, nodeName, maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId, htmlFragmentCollector );
       OutputStream htmlOutputStream = null;
       try
       {
@@ -284,10 +296,39 @@ public class FlowsDSSResultGenerator
       {
         e.printStackTrace();
       }
+      finally
+      {
+        IOUtils.closeQuietly( htmlOutputStream );
+      }
     }
+    return htmlFragmentCollector;
   }
 
-  private static String generateHTML( double maxStatusQuoQ, double maxPlaningQ, double maxPlaningAndMeasureQ, String hqEventId )
+  private static String createNodeTitle( Feature nodeFE )
+  {
+    final String nodeName = "Knoten " + (String) nodeFE.getProperty( "name" );
+    try
+    {
+      final GM_Object position = (GM_Object) nodeFE.getProperty( "Ort" );
+      final GM_Point centroid = position.getCentroid();
+      double x = centroid.getPosition().getX();
+      double y = centroid.getPosition().getY();
+      final String crsName = centroid.getCoordinateSystem().getName();
+      final String showInMap = "kalypso://showInMap?title=" + nodeName//
+          + "&duration=4000" //
+          + "&x=" + x//
+          + "&y=" + y// 
+          + "&crs=" + crsName;
+      return "<a href=\"" + showInMap + "\">" + nodeName + "</a>";
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return nodeName;
+  }
+
+  private static String generateHTML( String nodeTitle, String nodeName, double maxStatusQuoQ, double maxPlaningQ, double maxPlaningAndMeasureQ, String hqEventId, final List<HTMLFragmentBean> htmlFragmentCollector )
   {
     double overLoadQ = maxPlaningQ - maxStatusQuoQ;
     double reducedQ = maxPlaningQ - maxPlaningAndMeasureQ;
@@ -295,17 +336,128 @@ public class FlowsDSSResultGenerator
     if( overLoadQ == reducedQ )
       reducedPercent = 100;
     else
-      reducedPercent = (int) (100d / (overLoadQ * reducedQ));
+      reducedPercent = (int) (100d * reducedQ / (overLoadQ));
     final String barHTML = generateBarHTML( reducedPercent );
     final String tableHTML = generateTableHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
     final String legendHTML = generateLegendHTMLPart();
-    return "<html><body bgcolor=\"#FFFFCC\">"//
-        + barHTML + //
-        "<br>"//  
-        + tableHTML//
-        + legendHTML//
-        + "<br>"//
-        + "</body></html>";
+
+    final String prefix = hqEventId + "/" + nodeName;
+    final String detailedLink = prefix + "/analyse.html";
+    final String openODTLink = "kalypso://openEditor?input=" + prefix + "/analyse.odt&activate=true;";
+    final String closeODTLink = "kalypso://closeEditor?input=" + prefix + "/analyse.odt&activate=true;";
+
+    // kalypso://openEditor?input=analyse.odt&activate=true;
+    // kalypso://closeEditor?input=analyse.odt&doSave=false;
+
+    final String fragment = "<td>" + barHTML + "</td>"//  
+        + "<td><a href=\"" + detailedLink + "\">info</a>,"//
+        + " Diagram  <a href=\"" + openODTLink + "\">zeigen</a>"//
+        + "|<a href=\"" + closeODTLink + "\">schliessen</a></td>";
+
+    htmlFragmentCollector.add( new HTMLFragmentBean( hqEventId, nodeTitle, fragment ) );
+    StringBuffer result = new StringBuffer( "<html><body bgcolor=\"#FFFFCC\">" );
+
+    result.append( " <table width=\"100%\"><tr><td align=\"left\">" );
+    result.append( " <b>Details zur Analyse: " + hqEventId + " - Knoten " + nodeTitle + "</b>" );
+    result.append( " </td><td align=\"right\">" );
+    result.append( "<a href=\"../../analyse.html\">zur Hauptseite</a>" );
+    result.append( " </td></tr></table>" );
+    result.append( "<br>" );
+    result.append( "Hochwasserverträglichkeit:" );
+    result.append( barHTML );
+    result.append( "<br>" );
+    result.append( "Diagramm <a href=\"" );
+    result.append( "kalypso://openEditor?input=analyse.odt&activate=true;" );
+    result.append( "\">anzeigen</a> | <a href=\"" );
+    result.append( "kalypso://closeEditor?input=analyse.odt&doSave=false" );
+    result.append( "\">schliessen</a>" );
+    result.append( "<br>" );
+    result.append( tableHTML );
+    result.append( legendHTML );
+    result.append( "</body></html>" );
+    return result.toString();
+  }
+
+  public static void generateHTMLFormFragments( File targetFile, List<HTMLFragmentBean> fragments, boolean nodeSorted )
+  {
+    final StringBuffer result = new StringBuffer( "<html><body bgcolor=\"#FFFFCC\">" );
+
+    final Hashtable<String, HTMLFragmentBean> matrix = new Hashtable<String, HTMLFragmentBean>();
+    final SortedSet<String> hqNameSet = new TreeSet<String>();
+    final SortedSet<String> nodeTitleSet = new TreeSet<String>();
+    for( HTMLFragmentBean fragment : fragments )
+    {
+      final String hq = fragment.getHqIdentifier();
+      final String nodeTitle = fragment.getNodeTitle();
+      hqNameSet.add( hq );
+      nodeTitleSet.add( nodeTitle );
+      final String key = hq + "," + nodeTitle;
+      matrix.put( key, fragment );
+    }
+    final SortedSet<String> set1;
+    final SortedSet<String> set2;
+    if( nodeSorted )
+    {
+      set1 = nodeTitleSet;
+      set2 = hqNameSet;
+    }
+    else
+    {
+      set1 = hqNameSet;
+      set2 = nodeTitleSet;
+    }
+
+    result.append( " <table width=\"100%\"><tr><td align=\"left\">" );
+    result.append( " <b>Analyse der Ergebnisse</b>" );
+    result.append( " </td><td align=\"right\">" );
+    if( nodeSorted )
+      result.append( "<a href=\"./analyseHQ.html\"/>(nach Abfluss sortieren)</a>" );
+    else
+      result.append( "<a href=\"./analyse.html\"/>(nach Knoten sortieren)</a>" );
+    result.append( " </td></tr></table>" );
+    result.append( "</br>" );
+    for( final String tableTitle : set1 )
+    {
+      result.append( "<table width=\"100%\">" );
+      result.append( "   <colgroup>"//
+          + "     <col width=\"5%\">"//
+          + "     <col width=\"90%\">"//
+          + "     <col width=\"5%\">"//
+          + "   </colgroup>" );
+      result.append( " <caption  align=\"top\"><b>" + tableTitle + "</b></caption>" );
+      for( final String rowTitle : set2 )
+      {
+        final String key1 = rowTitle + "," + tableTitle;
+        final String key2 = tableTitle + "," + rowTitle;
+        final HTMLFragmentBean fragment;
+        if( matrix.containsKey( key1 ) )
+          fragment = matrix.get( key1 );
+        else
+          fragment = matrix.get( key2 );
+        result.append( "<tr><td><b>" + rowTitle + "</b></td>" );
+        result.append( fragment.getHtmlFragment() );
+        result.append( "</tr>" );
+      }
+
+      result.append( "</table>" );
+    }
+    result.append( generateLegendHTMLPart() );
+    result.append( "</html></body>" );
+    final String content = result.toString();
+    OutputStream htmlOutputStream = null;
+    try
+    {
+      htmlOutputStream = new FileOutputStream( targetFile );
+      IOUtils.write( content, htmlOutputStream );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( htmlOutputStream );
+    }
   }
 
   private final static String GREEN = "#339933";
@@ -317,12 +469,12 @@ public class FlowsDSSResultGenerator
     return " "// 
         + "<table border=\"0\" width=\"100%\" height=\"30\">"//
         + "   <colgroup>"//
-        + "     <col width=\"" + reducedPercent + "%\">"//
         + "     <col width=\"" + (100 - reducedPercent) + "%\">"//
+        + "     <col width=\"" + reducedPercent + "%\">"//
         + "   </colgroup>"//
         + "   <tr>"//
-        + "     <td bgcolor=\"" + GREEN + "\"></td>"//
         + "     <td bgcolor=\"" + RED + "\"></td>"//
+        + "     <td bgcolor=\"" + GREEN + "\"></td>"//
         + "   </tr>"//
         + "</table>";
   }
@@ -333,10 +485,10 @@ public class FlowsDSSResultGenerator
         + "<table border=\"2\" align=\"right\">"//
         + "<caption  align=\"bottom\"><b>Legende</b></caption>"//
         + "<tr>"//
-        + "<td bgcolor=\"" + GREEN + "\">bereits reduzierter Abfluss</td>"//
+        + "<td bgcolor=\"" + GREEN + "\">Abflussredukton durch Massnahmen</td>"//
         + "<tr>"//
         + "</tr>"//
-        + "<td bgcolor=\"" + RED + "\">noch zu reduzierender Abfluss</td>"//
+        + "<td bgcolor=\"" + RED + "\">Abflusszunahme durch Planung</td>"//
         + "</tr>"//
         + "</table>";
   }
