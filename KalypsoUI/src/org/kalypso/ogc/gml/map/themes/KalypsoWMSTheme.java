@@ -461,9 +461,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
+  @Override
   public void dispose( )
   {
-    // do nothing (no graphics to dispose)
+    if( m_buffer != null )
+      m_buffer.flush();
+
+    super.dispose();
   }
 
   /**

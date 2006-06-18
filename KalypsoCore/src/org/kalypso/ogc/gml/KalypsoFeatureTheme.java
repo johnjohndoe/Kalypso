@@ -96,9 +96,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_featureType = getFeatureType();
 
     m_workspace.addModellListener( this );
-
   }
 
+  @Override
   public void dispose( )
   {
     final Set<KalypsoUserStyle> set = m_styleDisplayMap.keySet();
@@ -106,6 +106,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( int i = 0; i < styles.length; i++ )
       removeStyle( styles[i] );
     m_workspace.removeModellListener( this );
+
+    super.dispose();
   }
 
   private void setDirty( )
@@ -425,10 +427,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           m_vaildEnvelope = m_vaildEnvelope.getMerged( env );
         m_displayElements.clear();
         m_maxDisplayArray = 0;
-        // TODO
-        // TODO: uncomment next line
-        // final List features = m_featureList.query( m_vaildEnvelope, null );
-        for( final Object next : m_featureList )
+        final List features = m_featureList.query( m_vaildEnvelope, null );
+        for( final Object next : features )
         {
           if( next instanceof Feature )
             addDisplayElements( (Feature) next );

@@ -223,18 +223,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
   public void setActualWidget( final IWidget newWidget )
   {
-    if( newWidget == null )
-    {
-      m_actualWidget = null;
-      fireWidgetChangeEvent( newWidget );
-      return;
-    }
-
     if( m_actualWidget != null )
       m_actualWidget.finish();
 
     m_actualWidget = newWidget;
-    m_actualWidget.activate( m_commandTarget, m_MapPanel );
+
+    if( m_actualWidget != null )
+      m_actualWidget.activate( m_commandTarget, m_MapPanel );
+
     fireWidgetChangeEvent( newWidget );
   }
 

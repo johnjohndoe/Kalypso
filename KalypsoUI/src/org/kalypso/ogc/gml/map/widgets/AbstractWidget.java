@@ -189,8 +189,8 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void finish( )
   {
-
-    // not implemented by default
+    if( m_mapPanel != null )
+      m_mapPanel.removeModellListener( this );
   }
 
   /**

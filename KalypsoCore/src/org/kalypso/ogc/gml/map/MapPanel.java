@@ -92,7 +92,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider, ISelectionProvider
 {
-
   public static final int MODE_SELECT = 0;
 
   public static final int MODE_TOGGLE = 1;
@@ -184,11 +183,18 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
     removeKeyListener( m_widgetManager );
-
+    removeComponentListener( this );
+    
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
-
-    if( m_model != null )
-      m_model.removeModellListener( this );
+    setMapModell( null );
+    
+    m_modellEventProvider.dispose();
+    m_widgetManager.setActualWidget( null );
+    
+    // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
+    // TODO: where is this ma panel still referenced from?
+    m_selectionListeners.clear();
+    m_mapImage = null;
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -263,10 +269,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         // remark: even calling a repaint in a SwingWorker did not help
 
         // we are optimistic and set valid map true, so while creating new image, other methods can invalidate the map
-        // this fixes the error that sometimes a layer is not visible when are mapview opens
+        // this fixes the error that sometimes a layer is not visible when a mapview opens
         setValidMap( true );
 
-        m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(), getHeight(), model );
+        final GeoTransform projection = getProjection();
+        final GM_Envelope boundingBox = getBoundingBox();
+        m_mapImage = MapModellHelper.createImageFromModell( projection, boundingBox, clipBounds, getWidth(), getHeight(), model );
         if( m_mapImage == null )
           setValidMap( false );
       }

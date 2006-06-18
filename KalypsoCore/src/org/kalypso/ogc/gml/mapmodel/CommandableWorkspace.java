@@ -82,6 +82,14 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace = (GMLWorkspace_Impl) workspace;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
+   */
+  public void dispose( )
+  {
+    m_workspace.dispose();
+  }
+
   public void addCommandManagerListener( ICommandManagerListener l )
   {
     m_commandManager.addCommandManagerListener( l );

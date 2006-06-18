@@ -126,10 +126,7 @@ public class GisTemplateMapModell implements IMapModell
   public void dispose()
   {
     if( m_modell != null )
-    {
       m_modell.dispose();
-      //      m_scrabLayer.removeModellListener( m_modell );
-    }
   }
 
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context )
@@ -318,7 +315,7 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.removeModellListener( listener );
   }
 
-  public void removeTheme( IKalypsoTheme theme )
+  public void removeTheme( final IKalypsoTheme theme )
   {
     m_modell.removeTheme( theme );
     theme.dispose();

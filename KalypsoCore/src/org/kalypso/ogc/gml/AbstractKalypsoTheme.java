@@ -61,7 +61,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 
   private String m_type = "unknown type";
 
-  private ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
+  private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
   public AbstractKalypsoTheme( final String name )
   {
@@ -72,6 +72,14 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   {
     m_name = name;
     m_type = type;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   */
+  public void dispose( )
+  {
+    m_eventProvider.dispose();
   }
 
   public String getName( )
