@@ -41,24 +41,78 @@
 package org.kalypso.flowsdss;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import junit.framework.TestCase;
+
+import org.kalypso.KalypsoTest;
+import org.kalypso.dss.calcjob.FlowsDSSResultGenerator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
 public class FlowsDssTest extends TestCase
 {
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
+  {
+    KalypsoTest.init();
+    super.setUp();
+  }
 
-  public void dotest( )
+  public void testFlowsDSS( ) throws Exception
   {
     final File dssResultDirRun = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/dssResults/HQ1" );
-    final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
-    String hqEventId = "HQ1";
+    final File gmlFile = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcCase.gml" );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
+    final Feature[] resultNodes = new Feature[] { workspace.getFeature( "Node715" ), workspace.getFeature( "Node719" ), workspace.getFeature( "Node721" ) };
     // [Feature Node#Node702, Feature Node#Node715, Feature Node#Node719, Feature Node#Node721, Feature Node#Node722,
     // Feature Node#Node724, Feature Node#Node9728, Feature Node#Node726
+
+    final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
+    String hqEventId = "HQ1";
     boolean doMeasures = false;
     final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
-    FlowsDDSSRe
+    final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
+    {
+
+      public void dispose( )
+      {
+        // TODO Auto-generated method stub
+      }
+
+      public boolean hasID( String id )
+      {
+        return false;
+      }
+
+      public Object getInputForID( String id ) throws SimulationException
+      {
+        if( "lastResults".equals( id ) )
+        {
+          try
+          {
+            return (new File( "C:/TMP/testkdss/lastResults" )).toURL();
+          }
+          catch( MalformedURLException e )
+          {
+            // TODO Auto-generated catch block
+            throw new SimulationException( "", e );
+          }
+        }
+        return null;
+      }
+
+    };
+    for( final Feature resultNode : resultNodes )
+      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures );
   }
 }
