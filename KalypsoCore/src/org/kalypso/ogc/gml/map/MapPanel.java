@@ -51,6 +51,8 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.media.jai.PointOpImage;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
@@ -82,6 +84,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -92,6 +95,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider, ISelectionProvider
 {
+  public List<PointOfinterest> m_pointofInterests = new ArrayList<PointOfinterest>();
+
   public static final int MODE_SELECT = 0;
 
   public static final int MODE_TOGGLE = 1;
@@ -184,13 +189,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     removeMouseMotionListener( m_widgetManager );
     removeKeyListener( m_widgetManager );
     removeComponentListener( this );
-    
+
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
     setMapModell( null );
-    
+
     m_modellEventProvider.dispose();
     m_widgetManager.setActualWidget( null );
-    
+
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this ma panel still referenced from?
     m_selectionListeners.clear();
@@ -230,6 +235,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public synchronized void paint( final Graphics g )
   {
     paintMap( g );
+    paintPointOfInterests( g );
     paintWidget( g );
   }
 
@@ -666,7 +672,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     final FeatureList featureList = theme.getFeatureList();
     if( featureList == null )
       return;
-    
+
     final Feature parentFeature = featureList.getParentFeature();
     final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
 
@@ -729,4 +735,35 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
   }
 
+  public void addPointOfInterest( PointOfinterest pointOfInterest )
+  {
+    m_pointofInterests.add( pointOfInterest );
+    setValidAll( false );
+  }
+
+  private void paintPointOfInterests( Graphics g )
+  {
+
+    final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
+    g.setColor( color );
+    final List<PointOfinterest> toRemove = new ArrayList<PointOfinterest>();
+    final GeoTransform projection = getProjection();
+    for( PointOfinterest poi : m_pointofInterests )
+    {
+      if( !poi.isValid() )
+        toRemove.add( poi );
+      final GM_Point geometry = poi.getGeometry();
+      final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
+      int r = 10;
+      int x = (int) screenPoint.getX();
+      int y = (int) screenPoint.getY();
+      g.drawOval( x - r, y - r, r * 2, r * 2 );
+      String title = poi.getTitle();
+      g.drawString( title, x + 2 * r, y + 2 * r );
+    }
+    for( PointOfinterest ofinterest : toRemove )
+    {
+      m_pointofInterests.remove( ofinterest );
+    }
+  }
 }
