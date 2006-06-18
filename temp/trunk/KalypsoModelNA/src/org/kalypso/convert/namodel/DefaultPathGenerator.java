@@ -59,8 +59,12 @@ public class DefaultPathGenerator
       extraString = extra;
     final String observationTitle = getObservationTitle( feature, titleProperty );
     final String annotationLabel = getAnnotationLabel( feature );
-    return "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
-
+    // final String result = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" +
+    // getTitleForSuffix( suffix ) + ".zml";
+    final String result = "Berechnet/" + annotationLabel + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
+    // hack: the pathes are generated different, depending on language and runtime (IAdaptable and AdaptableFactory),
+    // this hack will generate same pathes, for test and eclipse-run
+    return result.replaceAll( "Node", "Knoten" );
   }
 
   private static String getAnnotationLabel( final Feature feature )

@@ -1205,7 +1205,7 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
+          resultPathRelative = "Ergebnisse/"+DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
           // resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" +
           // getTitleForSuffix( suffix ) + ".zml";
           //
@@ -1217,7 +1217,7 @@ public class NaModelInnerCalcJob implements ISimulation
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
+          resultPathRelative = "Ergebnisse/"+DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
           m_resultMap.add( resultPathRelative );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }
