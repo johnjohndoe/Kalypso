@@ -204,19 +204,23 @@ public class DefaultStyleFactory
   // + property.getName() );
   // }
 
-private Symbolizer createGeometrySymbolizer( IValuePropertyType ftp ) throws StyleNotDefinedException
+  private Symbolizer createGeometrySymbolizer( IValuePropertyType ftp ) throws StyleNotDefinedException
   {
-    
+
     if( GeometryUtilities.isPointGeometry( ftp ) )
       return StyleFactory.createPointSymbolizer();
     else if( GeometryUtilities.isLineStringGeometry( ftp ) )
       return StyleFactory.createLineSymbolizer();
     else if( GeometryUtilities.isPolygonGeometry( ftp ) )
-// return StyleFactory.createPolygonSymbolizer();
-      return  StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), ftp.getName() ) ;
+      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), ftp.getName() );
+    else if( GeometryUtilities.isMultiPolygonGeometry( ftp ) )
+      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), ftp.getName() );
+
     else
       throw new StyleNotDefinedException( "This geometry type: " + ftp.getQName() + " has no default style available" );
-  }  private Symbolizer createRasterSymbolizer( )
+  }
+
+  private Symbolizer createRasterSymbolizer( )
   {
     return StyleFactory.createRasterSymbolizer();
   }
