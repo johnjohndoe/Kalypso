@@ -44,10 +44,8 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.util.ValueIterator;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -132,9 +130,10 @@ public class MeasuresHelper
       // toricelli and set all properties from the measure file.
       generateWaterstageVolumeDischargeRealation( measureRhbFE, newRhbFe );
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_VMIN_PROP ), new Double( 0 ) );
-      newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_C_PROP ), new Double( 0 ) );
       newRhbFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.STORAGE_CHANNEL_SV_PROP ), new Double( 0 ) );
-      newRhbFe.setProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ), new String( "Rhb-Measure" ) );
+      newRhbFe.setProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_NAME_PROP ), new String( "Rhb-Measure_" + newRhbFe.getId() ) );
+      newRhbFe.setProperty( new QName( NS.GML2, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), new String( "automatically generated storage channel-associated with catchmentID= "
+          + catchment.getId() ) );
       // get property of inflowTyp to distingish between option one and two
       final String inflowType = (String) measureRhbFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_INFLOWTYP_PROP ) );
       // get common FeatureTyp's and RelationType's to do the inserting business

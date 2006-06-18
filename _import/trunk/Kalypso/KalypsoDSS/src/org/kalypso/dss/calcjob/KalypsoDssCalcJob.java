@@ -675,7 +675,7 @@ public class KalypsoDssCalcJob implements ISimulation
         double corrSealingHydroNew = virtualSealingFactor / (originalSealingFactor * corrSealingHydroOld);
         if( Double.isInfinite( corrSealingHydroNew ) )
         {
-          corrSealingHydroNew = 1.0d;
+          corrSealingHydroNew = corrSealingHydroOld;
         }
 
         hydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), new Double( corrSealingHydroNew ) );
@@ -1033,21 +1033,22 @@ public class KalypsoDssCalcJob implements ISimulation
       final Feature landuseSealingFE = paraWorkspace.resolveLink( landUseFE, linkSealing );
       final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, new QName( NaModelConstants.NS_NAPARAMETER, NaModelConstants.PARA_LANDUSE_PROP_SEALING ), 0.5d );
       double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, landuseSealingFactor );
-      // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
-      boolean plus50ProzentNebenflaechen = false;
       final IFeatureType measureFT = planningMeasureFE.getFeatureType();
       final QName qnameMeasure = measureFT.getQName();
-      if( qnameMeasure.equals( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) ) )
-        plus50ProzentNebenflaechen = true;
+      // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
+      // boolean plus50ProzentNebenflaechen = false;
+      // if( qnameMeasure.equals( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) )
+      // )
+      // plus50ProzentNebenflaechen = true;
       // kappungsgrenze GRZ 0.8
-      if( plus50ProzentNebenflaechen )
-      {
-        double test = measureSealingFactor + measureSealingFactor * 0.5;
-        if( test < 0.8d )
-          measureSealingFactor = test;
-        else
-          measureSealingFactor = 0.8d;
-      }
+      // if( plus50ProzentNebenflaechen )
+      // {
+      // double test = measureSealingFactor + measureSealingFactor * 0.5;
+      // if( test < 0.8d )
+      // measureSealingFactor = test;
+      // else
+      // measureSealingFactor = 0.8d;
+      // }
       final double originalCorrFactor = FeatureHelper.getAsDouble( hydroFE, new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR ), 1.0d );
       final double newCorrectionFactor = originalCorrFactor * measureSealingFactor / landuseSealingFactor;
       newHydroFE.setProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_PROP_GEOM ), GeometryUtilities.ensureIsMultiPolygon( geomWithNewMeasure ) );
