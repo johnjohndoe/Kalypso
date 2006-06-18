@@ -7,7 +7,9 @@
     <input id="xplanung" path="xplanung.gml" relativeToCalcCase="true" optional="true"/>
     <input id="SceConf" path="project:/.model/.sce.xml" relativeToCalcCase="false" optional="true"/>
     <input id="designArea" path="project:/.data/plangebiet.gml" relativeToCalcCase="false"/>
-<!-- Zeitreihen als Verzeichnisse -->
+    <input id="lastResults" path="Ergebnisse" relativeToCalcCase="true" /> 
+ 	<input id="doMeasures" path=".doMeasures" relativeToCalcCase="true" /> 
+    <!-- Zeitreihen als Verzeichnisse -->
     <output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
 </modeldata>
 
