@@ -157,8 +157,6 @@ public interface NaModelConstants
 
   public static final String STORAGE_CHANNEL_SV_PROP = "sv";
 
-  public static final String STORAGE_CHANNEL_C_PROP = "c";
-
   public static final String STORAGE_CHANNEL_ELEMENT_FT = "StorageChannel";
 
   public static final String KM_CHANNEL_ELEMENT_FT = "KMChannel";
