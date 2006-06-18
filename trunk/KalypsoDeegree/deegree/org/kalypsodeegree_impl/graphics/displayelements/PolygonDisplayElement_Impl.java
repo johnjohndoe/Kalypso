@@ -75,6 +75,7 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -197,10 +198,8 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    */
   private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface ) throws Exception
   {
-    Area areaouter = null;
-
-    PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
-    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
+    final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
+    final Stroke stroke = sym.getStroke();
     float width = 1;
     if( stroke != null )
     {
@@ -209,83 +208,61 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
     try
     {
-      GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
-      GM_Position[] ex = patch.getExteriorRing();
-      GM_Position[][] inner = patch.getInteriorRings();
+      final GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
+      final GM_Position[] ex = patch.getExteriorRing();
+      final GM_Position[][] inner = patch.getInteriorRings();
 
-      int[] x = new int[ex.length];
-      int[] y = new int[ex.length];
-
-      int k = 0;
-      for( int i = 0; i < ex.length; i++ )
-      {
-        GM_Position position = projection.getDestPoint( ex[i] );
-        int xx = (int) (position.getX() + 0.5);
-        int yy = (int) (position.getY() + 0.5);
-
-        if( k > 0 && k < ex.length - 1 )
-        {
-          if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
-          {
-            // if ( xx != x[k-1] || yy != y[k-1] ) {
-            x[k] = xx;
-            y[k] = yy;
-            k++;
-          }
-        }
-        else
-        {
-          x[k] = xx;
-          y[k] = yy;
-          k++;
-        }
-      }
-
-      areaouter = new Area( new Polygon( x, y, k - 1 ) );
+      final Area areaouter = areaFromRing( projection, width, ex );
       if( inner != null )
       {
-        for( int i = 0; i < inner.length; i++ )
+        for( GM_Position[] innerRing : inner )
         {
-          if( inner[i] != null )
-          {
-            k = 0;
-            x = new int[inner[i].length];
-            y = new int[inner[i].length];
-            for( int j = 0; j < inner[i].length; j++ )
-            {
-              GM_Position position = projection.getDestPoint( inner[i][j] );
-              int xx = (int) (position.getX() + 0.5);
-              int yy = (int) (position.getY() + 0.5);
-              if( k > 0 && k < inner[i].length - 1 )
-              {
-                if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
-                {
-                  // if ( xx != x[k-1] || yy != y[k-1] ) {
-                  x[k] = xx;
-                  y[k] = yy;
-                  k++;
-                }
-              }
-              else
-              {
-                x[k] = xx;
-                y[k] = yy;
-                k++;
-              }
-            }
-            Area areainner = new Area( new Polygon( x, y, k - 1 ) );
-            areaouter.subtract( areainner );
-          }
+          if( innerRing != null )
+            areaouter.subtract( areaFromRing( projection, width, innerRing ) );
         }
       }
 
+      return areaouter;
     }
     catch( Exception e )
     {
       Debug.debugException( e, "" );
     }
 
-    return areaouter;
+    return null;
+  }
+
+  private Area areaFromRing( GeoTransform projection, float width, final GM_Position[] ex )
+  {
+    final int[] x = new int[ex.length];
+    final int[] y = new int[ex.length];
+
+    int k = 0;
+    for( int i = 0; i < ex.length; i++ )
+    {
+      GM_Position position = projection.getDestPoint( ex[i] );
+      int xx = (int) (position.getX() + 0.5);
+      int yy = (int) (position.getY() + 0.5);
+
+      if( k > 0 && k < ex.length - 1 )
+      {
+        if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
+        {
+          x[k] = xx;
+          y[k] = yy;
+          k++;
+        }
+      }
+      else
+      {
+        x[k] = xx;
+        y[k] = yy;
+        k++;
+      }
+    }
+
+    final Polygon polygon = new Polygon( x, y, k - 1 );
+    return new Area( polygon );
   }
 
   /**

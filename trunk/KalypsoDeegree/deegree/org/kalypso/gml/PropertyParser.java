@@ -56,7 +56,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -113,6 +112,7 @@ public class PropertyParser
     if( orgCH instanceof GMLContentHandler )
       context = ((GMLContentHandler)orgCH).getContext();
     
+    // TODO: check if there is a better way, instead of creating a new instance each time we parse a property
     final UnMarshallResultEater resultEater = new UnMarshallResultEater()
     {
       public void eat( final Object value ) throws GMLSchemaException

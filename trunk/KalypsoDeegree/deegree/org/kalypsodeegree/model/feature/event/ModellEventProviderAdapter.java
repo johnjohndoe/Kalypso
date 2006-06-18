@@ -8,14 +8,22 @@ import java.util.Collection;
  */
 public class ModellEventProviderAdapter implements ModellEventProvider
 {
-  private final Collection<ModellEventListener> myListeners = new ArrayList<ModellEventListener>();
+  private final Collection<ModellEventListener> m_listeners = new ArrayList<ModellEventListener>();
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
+   */
+  public void dispose( )
+  {
+    m_listeners.clear();
+  }
 
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   public void addModellListener( final ModellEventListener listener )
   {
-    myListeners.add( listener );
+    m_listeners.add( listener );
   }
 
   /**
@@ -23,7 +31,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void removeModellListener( ModellEventListener listener )
   {
-    myListeners.remove( listener );
+    m_listeners.remove( listener );
   }
 
   /**
@@ -31,8 +39,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void fireModellEvent( ModellEvent event )
   {
-    final ModellEventListener[] listeners = myListeners
-        .toArray( new ModellEventListener[myListeners.size()] );
+    final ModellEventListener[] listeners = m_listeners.toArray( new ModellEventListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
       listeners[i].onModellChange( event );
   }
