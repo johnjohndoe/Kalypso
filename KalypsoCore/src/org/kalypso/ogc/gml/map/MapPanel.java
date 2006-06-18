@@ -42,12 +42,17 @@ package org.kalypso.ogc.gml.map;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,7 +240,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public synchronized void paint( final Graphics g )
   {
     paintMap( g );
-    paintPointOfInterests( g );
+
     paintWidget( g );
   }
 
@@ -283,6 +288,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         m_mapImage = MapModellHelper.createImageFromModell( projection, boundingBox, clipBounds, getWidth(), getHeight(), model );
         if( m_mapImage == null )
           setValidMap( false );
+        else
+          paintPointOfInterests( m_mapImage.getGraphics() );
       }
     }
 
@@ -739,27 +746,47 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     m_pointofInterests.add( pointOfInterest );
     setValidAll( false );
+    repaint();
   }
 
   private void paintPointOfInterests( Graphics g )
   {
+    Graphics2D g2d = (Graphics2D) g;
+    final Color color = Color.red;
+    final Color innerColor = new Color( Color.yellow.getRed(), Color.yellow.getGreen(), Color.yellow.getBlue(), 150 );
 
-    final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
-    g.setColor( color );
     final List<PointOfinterest> toRemove = new ArrayList<PointOfinterest>();
     final GeoTransform projection = getProjection();
     for( PointOfinterest poi : m_pointofInterests )
     {
       if( !poi.isValid() )
         toRemove.add( poi );
-      final GM_Point geometry = poi.getGeometry();
-      final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
-      int r = 10;
-      int x = (int) screenPoint.getX();
-      int y = (int) screenPoint.getY();
-      g.drawOval( x - r, y - r, r * 2, r * 2 );
-      String title = poi.getTitle();
-      g.drawString( title, x + 2 * r, y + 2 * r );
+      else
+      {
+        final GM_Point geometry = poi.getGeometry();
+        final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
+        int r = 10;
+        int x = (int) screenPoint.getX();
+        int y = (int) screenPoint.getY();
+        String title = poi.getTitle();
+        g2d.drawString( title, x + 2 * r, y + 2 * r );
+        Font font = g2d.getFont();
+        FontRenderContext frc = ((Graphics2D) g2d).getFontRenderContext();
+        Rectangle2D bounds = font.getStringBounds( title, frc );
+        int bw = (int) bounds.getWidth();
+        int bh = (int) bounds.getHeight();
+        // inner
+        g2d.setColor( innerColor );
+        g2d.fillOval( x - r, y - r, r * 2, r * 2 );
+        g2d.setColor( Color.YELLOW );
+        
+        g2d.fillRect( x + 2 * r, y + 2 * r - bh, bw, bh+3 );
+
+        // outer
+        g2d.setColor( color );
+        g2d.drawOval( x - r, y - r, r * 2, r * 2 );
+        g2d.drawString( title, x + 2 * r, y + 2 * r );
+      }
     }
     for( PointOfinterest ofinterest : toRemove )
     {

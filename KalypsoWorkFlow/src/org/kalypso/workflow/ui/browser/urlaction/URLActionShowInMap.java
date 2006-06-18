@@ -123,6 +123,7 @@ public class URLActionShowInMap extends AbstractURLAction
     String title = commandURL.getParameter( PARAM_TITLE );
     if( title == null )
       title = "";
+    title=title.replaceAll("%20", " ");
     long duration = 3000l; // 3 seconds
     try
     {
@@ -143,9 +144,8 @@ public class URLActionShowInMap extends AbstractURLAction
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       final CS_CoordinateSystem coordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
       final GM_Point point = GeometryFactory.createGM_Point( x, y, coordinateSystem );
-      final Date date = new Date();
       final long timeInMillis = Calendar.getInstance().getTimeInMillis();
-      long validEnd = timeInMillis + duration;
+      long validEnd = timeInMillis + 100;//duration;
       final PointOfinterest pointOfInterest = new PointOfinterest( title, validEnd, point );
       for( IEditorReference reference : editorReferences )
       {
