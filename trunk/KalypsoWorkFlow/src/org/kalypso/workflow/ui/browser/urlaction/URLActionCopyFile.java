@@ -66,6 +66,10 @@ public class URLActionCopyFile extends AbstractURLAction
 
   private static final String PARAM_CALC_DIR = "calcdir";
 
+  private static final String PARAM_NEWFILE_NAME = "newfilename";
+
+  private static final String PARAM_OVERWRITE = "overwrite";
+
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
@@ -81,6 +85,8 @@ public class URLActionCopyFile extends AbstractURLAction
   {
     final String sourceURLAsString = commandURL.getParameter( PARAM_SOURCE_URL );
     final String targetURLAsString = commandURL.getParameter( PARAM_TARGET_URL );
+    final String newFileName = commandURL.getParameter( PARAM_NEWFILE_NAME );
+    final boolean overwrite = Boolean.parseBoolean( commandURL.getParameter( PARAM_OVERWRITE ) );
 
     final WorkflowContext context = getWorkFlowContext();
     IPath targetPath = null;
@@ -93,9 +99,20 @@ public class URLActionCopyFile extends AbstractURLAction
       {
         final URL targetURL = context.resolveURL( targetURLAsString );
         targetPath = ResourceUtilities.findFileFromURL( targetURL ).getFullPath();
+        if( newFileName != null )
+        {
+          final IPath basePath = targetPath.removeLastSegments( 1 );
+          targetPath = basePath.addTrailingSeparator().append( newFileName );
+        }
       }
       else
-        targetPath = context.getContextCalcDir().getFullPath().addTrailingSeparator().append( sourceFile.getName() );
+      {
+        if( newFileName == null )
+          targetPath = context.getContextCalcDir().getFullPath().addTrailingSeparator().append( sourceFile.getName() );
+        else
+          targetPath = context.getContextCalcDir().getFullPath().addTrailingSeparator().append( newFileName );
+
+      }
       getWorkspaceRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( MalformedURLException e )
@@ -107,35 +124,34 @@ public class URLActionCopyFile extends AbstractURLAction
     {
       e.printStackTrace();
     }
-    // check if resource allready exists
+    // check if target allready exists
     final IResource member = getWorkspaceRoot().findMember( targetPath );
-    if( member != null )
+    // check if source exists
+    final boolean exists = sourceFile.exists();
+    if( exists )
     {
-      if( MessageDialog.openConfirm( getShell(), "FLOWS Planer Portal", "Sollen die existierenden Maßnahmen für die neue Berechnung überschieben werden?" ) )
+      final boolean confirmOverwrite;
+      if( overwrite )
+        confirmOverwrite = true;
+      else if( overwrite && member != null )
+        confirmOverwrite = MessageDialog.openConfirm( getShell(), "FLOWS Planer Portal", "Sollen die existierenden Maßnahmen für die neue Berechnung überschieben werden?" );
+      else
+        confirmOverwrite = true;
+      if( confirmOverwrite )
         try
         {
-          member.delete( true, null );
+          if( member != null )
+            member.delete( true, null );
+          sourceFile.copy( targetPath, true, null );
         }
         catch( CoreException e )
         {
           e.printStackTrace();
           return false;
         }
-
     }
-    if( sourceFile.exists() && member == null )
-    {
-      try
-      {
-        getWorkspaceRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
-        sourceFile.copy( targetPath, true, null );
-      }
-      catch( CoreException e )
-      {
-        e.printStackTrace();
-        return false;
-      }
-    }
+    else
+      return false;
     return true;
   }
 

@@ -42,6 +42,7 @@ package org.kalypso.workflow.ui.browser;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.workflow.WorkflowContext;
 import org.kalypso.workflow.ui.browser.urlaction.URLActionRegistry;
 
