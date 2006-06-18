@@ -11,5 +11,17 @@
             id="org.kalypso.workflow.ui.WorkflowBrowserView"
             name="Workflow Browser"/>
    </extension>
+   <extension
+         id="org.kalypso.workflow.editors"
+         name="kalypsoworkfloweditors"
+         point="org.eclipse.ui.editors">
+         <editor
+               default="true"
+               extensions="html"
+               id="org.kalypso.workflow.Launcher"
+               launcher="org.kalypso.workflow.WorkflowLauncher"
+               name="WorkflowLauncher">
+      </editor>
+   </extension>
 
 </plugin>
