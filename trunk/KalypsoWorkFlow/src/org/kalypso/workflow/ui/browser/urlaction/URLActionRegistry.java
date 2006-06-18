@@ -82,6 +82,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionSetBBoxFromGMT() );
       m_defaultInstance.register( new URLActionImportBPlanGML() );
       m_defaultInstance.register( new URLActionCopyFile() );
+      m_defaultInstance.register( new URLActionShowInMap() );
     }
     catch( URLActionRegistryException e )
     {
