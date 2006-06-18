@@ -82,6 +82,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       e.printStackTrace();
     }
   }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
+   */
+  public void dispose( )
+  {
+    m_listener.clear();
+    // release other references?
+  }
 
   public Feature resolveLink( Feature srcFeature, IRelationType linkProperty )
   {

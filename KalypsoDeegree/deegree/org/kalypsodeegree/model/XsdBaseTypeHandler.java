@@ -47,14 +47,9 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.gml.ToStringContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.SimpleTypeUnmarshalingContentHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
-import org.kalypso.gmlschema.types.UnmarshalResultProvider;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
@@ -64,11 +59,13 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
 {
+  private final XsdBaseContentHandler m_contentHandler = new XsdBaseContentHandler( this, null );
+
   private final QName m_typeQName;
 
   private final Class m_valueClass;
 
-  public XsdBaseTypeHandler( String xsdTypeName, Class valueClass )
+  public XsdBaseTypeHandler( final String xsdTypeName, final Class valueClass )
   {
     m_valueClass = valueClass;
     m_typeQName = new QName( NS.XSD_SCHEMA, xsdTypeName );
@@ -107,50 +104,17 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( XMLReader xmlReader, URL context, UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
-      // xml to memory
-      final StringBuffer buffer = new StringBuffer();
-      final ToStringContentHandler toStringHandler = new ToStringContentHandler( new ILogger()
-      {
-        public void log( String message )
-        {
-          buffer.append( message );
-        }
+      // REMARK: We had a small performance and memory problem here, because each time the method
+      // was called a content handler (and severel other classes) where instantiated.
+      // But this method is called quite often!
+      // We now resuse the same content handler. This is safe, because a simle type never contains any other types.
+      m_contentHandler.setMarshalResultEater( marshalResultEater, true );
 
-      } );
-      final UnmarshalResultProvider result = new UnmarshalResultProvider()
-      {
-        public Object getResult( )
-        {
-          try
-          {
-            final String stringResult = buffer.toString();
-
-            // HACK: remove CDATA section markers
-            // TODO shouldn't the saxparser handle this? Check if this is ok what is done here...
-            final String withoutCDATA = stringResult.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
-
-            // if( !withoutCDATA.equals( stringResult ) )
-            // System.out.println();
-
-            return parseType( withoutCDATA );
-          }
-          catch( final Exception e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-            // why no rethrow exception here?
-          }
-          return null;
-        }
-      };
-
-      final SimpleTypeUnmarshalingContentHandler tmpCH = new SimpleTypeUnmarshalingContentHandler( toStringHandler, result, marshalResultEater );
-      xmlReader.setContentHandler( tmpCH );
+      xmlReader.setContentHandler( m_contentHandler );
     }
     catch( final Exception e )
     {

@@ -242,11 +242,8 @@ public class DisplayElementFactory
     }
 
     // if the geometry property is null, do not build a DisplayElement
-
     if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
-    {
       return null;
-    }
 
     // PointSymbolizer
     if( symbolizer instanceof PointSymbolizer )

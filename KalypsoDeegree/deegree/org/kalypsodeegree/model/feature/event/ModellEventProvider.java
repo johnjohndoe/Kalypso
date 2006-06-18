@@ -10,4 +10,6 @@ public interface ModellEventProvider
   public void removeModellListener( final ModellEventListener listener );
 
   public void fireModellEvent( final ModellEvent event );
+
+  public void dispose( );
 }

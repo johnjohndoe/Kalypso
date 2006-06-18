@@ -55,26 +55,25 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 {
-
   private final GMLWorkspace m_workspace;
 
   private final IRelationType m_prelationPT;
 
   private final int m_maxLevel;
 
-  private final List m_result;
+  private final List<GM_Object> m_result;
 
   public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, IRelationType initialPropName, int maxLevel )
   {
     m_workspace = workspace;
     m_prelationPT = initialPropName;
     m_maxLevel = maxLevel;
-    m_result = new ArrayList();
+    m_result = new ArrayList<GM_Object>();
   }
 
   public GM_Object[] getGeometryDestinations( )
   {
-    return (GM_Object[]) m_result.toArray( new GM_Object[m_result.size()] );
+    return m_result.toArray( new GM_Object[m_result.size()] );
   }
 
   /**
@@ -82,7 +81,6 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
    */
   public boolean visit( Feature f )
   {
-
     visit( f, m_prelationPT, 0 );
     return false;
   }
